@@ -87,7 +87,7 @@ const SenseiHome = memo(function SenseiHome() {
           <motion.div className={styles.homeButton} variants={ITEM_VARIANTS}>
             <a href="#Contact" className={BTN_1_CLASS}>Hire Me <FontAwesomeIcon icon={faUserSecret} /></a>
             <a href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf" download className={BTN_2_CLASS}>Download CV <FontAwesomeIcon icon={faFilePdf} /></a>
-            <a href="#Projects" className={`${styles.btn} ${styles.btn3}`}>View Projects <FontAwesomeIcon icon={faBriefcase} /></a>
+            <a href="#Projects" className={`${styles.btn} ${styles.btn2}`}>View Projects <FontAwesomeIcon icon={faBriefcase} /></a>
           </motion.div>
         </motion.div>
       </motion.div>
