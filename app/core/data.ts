@@ -72,9 +72,9 @@ export const aboutMeCards = [
   },
   {
     icon: "fa-solid fa-heart",
-    title: "Hobbies & Interests",
+    title: "Interests & Hobbies",
     description:
-      "Incident response labs, malware analysis, threat hunting, CTF competitions, home lab projects, YARA rule development, and continuous learning in cybersecurity.",
+      "Incident response labs, malware analysis, threat hunting, CTF competitions, home lab projects, YARA rule development, continuous learning in cybersecurity. Also a Modern Pentathlon athlete (6 years at Banha Club) and Track & Field competitor at Al Ahly SC since 2021.",
   },
   {
     icon: "fa-solid fa-graduation-cap",
@@ -99,17 +99,5 @@ export const aboutMeCards = [
     title: "Professional Goals",
     description:
       "Committed to advancing cybersecurity expertise through hands-on projects, continuous learning, and contributing to secure digital environments. Aiming to become a leading SOC and incident response specialist.",
-  },
-  {
-    icon: "fa-solid fa-running", // أيقونة الجري بتعبر عن ألعاب القوى والخماسي
-    title: "Hobbies & Sports",
-    description: "Modern Pentathlon athlete for 6 years at Banha Club. Currently a Track and Field athlete at Al Ahly SC since 2021, showcasing discipline and endurance.",
-  },
-  
-  // ممكن لو حابب تفصل الهوايات التقنية عن الرياضية:
-  {
-    icon: "fa-solid fa-medal",
-    title: "Athletic Career",
-    description: "Proudly represented Al Ahly SC in Athletics (Track & Field) since 2021. Formerly a Modern Pentathlon competitor at Banha Club for over 6 years.",
   }
 ];

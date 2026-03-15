@@ -4,7 +4,7 @@ import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp, faXTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faUserSecret, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faUserSecret, faFilePdf, faBriefcase } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { aboutMeCards } from "@/app/core/data";
@@ -72,7 +72,7 @@ const SenseiHome = memo(function SenseiHome() {
         </motion.div>
 
         <motion.div className={styles.homeContent} variants={ITEM_VARIANTS}>
-          <h1><span className={styles.highlight}><b>Ahmed Emad Nasr</b></span></h1>
+          <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
           <motion.div className={styles.availabilityStatus} variants={ITEM_VARIANTS}>
             <span className={`${styles.statusDot} ${isAvailable ? styles.dotAvailable : styles.dotUnavailable}`}></span>
             <span>{isAvailable ? "Available for Opportunities" : "Currently Unavailable"}</span>
@@ -87,6 +87,7 @@ const SenseiHome = memo(function SenseiHome() {
           <motion.div className={styles.homeButton} variants={ITEM_VARIANTS}>
             <a href="#Contact" className={BTN_1_CLASS}>Hire Me <FontAwesomeIcon icon={faUserSecret} /></a>
             <a href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf" download className={BTN_2_CLASS}>Download CV <FontAwesomeIcon icon={faFilePdf} /></a>
+            <a href="#Projects" className={`${styles.btn} ${styles.btn3}`}>View Projects <FontAwesomeIcon icon={faBriefcase} /></a>
           </motion.div>
         </motion.div>
       </motion.div>
