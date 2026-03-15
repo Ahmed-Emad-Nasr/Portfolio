@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback, JSX } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { JSX } from "react";
 import styles from "./sensei_loader.module.css";
 import loadingGif from "@/public/Assets/loading/loading.gif";
 
@@ -8,26 +9,34 @@ import loadingGif from "@/public/Assets/loading/loading.gif";
  * @Description Fast & Clean Loader Component - GPU Optimized
  */
 function SenseiLoader(): JSX.Element | null {
-  const [showLoader, setShowLoader] = useState(true);
+  const [showLoader, setShowLoader]   = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
-
-  const handlePageLoader = useCallback(() => {
-    setIsFadingOut(true);
-    // بعد انتهاء التلاشي (500ms)، نقوم بحذف العنصر تماماً لتوفير الذاكرة
-    const timeoutId = setTimeout(() => setShowLoader(false), 500);
-    return timeoutId;
-  }, []);
+  const innerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // تم تقليل الوقت إلى 500ms ليكون أسرع وأخف، يمكنك تغييره حسب الحاجة
-    const timeoutId = setTimeout(() => {
-      handlePageLoader();
-    }, 500); 
+    // دالة الـ fade-out — بتشغّل CSS transition وبعدها بتشيل العنصر من الـ DOM
+    const startFadeOut = () => {
+      setIsFadingOut(true);
+      innerTimerRef.current = setTimeout(() => setShowLoader(false), 500);
+    };
 
-    return () => clearTimeout(timeoutId);
-  }, [handlePageLoader]);
+    // لو الصفحة اتحملت بالفعل → fade فوراً
+    if (document.readyState === "complete") {
+      startFadeOut();
+      return;
+    }
 
-  // هذه الإضافة تضمن مسح الـ Loader من الـ DOM بالكامل بعد اختفائه
+    // لسه بتتحمل → استنى حدث load
+    window.addEventListener("load", startFadeOut, { once: true });
+
+    return () => {
+      window.removeEventListener("load", startFadeOut);
+      if (innerTimerRef.current !== null) {
+        clearTimeout(innerTimerRef.current);
+      }
+    };
+  }, []);
+
   if (!showLoader) return null;
 
   return (
