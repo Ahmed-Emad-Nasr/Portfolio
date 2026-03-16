@@ -14,17 +14,20 @@ interface MousePosition { x: number; y: number; active: boolean; }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const GRID_SIZE                = 50;
-const MOUSE_INFLUENCE_RADIUS   = 200;
-const MOUSE_INFLUENCE_STRENGTH = 1.0;
-const MAX_RADIUS               = 120;
-const MIN_RADIUS               = 60;
-const BUBBLE_EXPANSION_FACTOR  = 1.2;
-const MAX_SPEED_LIMIT          = 5;
-const TARGET_FRAME_TIME        = 1000 / 60;
-const TARGET_FRAME_TIME_MOBILE = 1000 / 30;
-const MOBILE_MAX_BUBBLES       = 3;
-const TWO_PI                   = Math.PI * 2;
+const GRID_SIZE                 = 50;
+const MOUSE_INFLUENCE_RADIUS    = 200;
+const MOUSE_INFLUENCE_RADIUS_SQ = MOUSE_INFLUENCE_RADIUS * MOUSE_INFLUENCE_RADIUS; // [OPT-1] Avoid sqrt for distance check
+const MOUSE_INFLUENCE_STRENGTH  = 1.0;
+const MAX_RADIUS                = 120;
+const MIN_RADIUS                = 60;
+const BUBBLE_EXPANSION_FACTOR   = 1.2;
+const MAX_SPEED_LIMIT           = 5;
+const MAX_SPEED_LIMIT_SQ        = MAX_SPEED_LIMIT * MAX_SPEED_LIMIT;              // [OPT-1] Avoid sqrt for speed cap check
+const TARGET_FRAME_TIME         = 1000 / 60;
+const TARGET_FRAME_TIME_MOBILE  = 1000 / 30;
+const MOBILE_MAX_BUBBLES        = 3;
+const TWO_PI                    = Math.PI * 2;
+const INV_MOUSE_RADIUS          = 1 / MOUSE_INFLUENCE_RADIUS;                     // [OPT-2] Pre-compute reciprocal — avoids division per bubble per frame
 
 // ─── Pure render helpers ──────────────────────────────────────────────────────
 
@@ -35,12 +38,14 @@ const drawBubble = (
 ): void => {
   const scale    = bubble.radius / MAX_RADIUS;
   const drawSize = offscreen.width * scale;
+  // [OPT-3] Bitwise-OR 0 is marginally faster than ~~ for positive numbers and
+  //         avoids the double-bitwise-NOT on negative coords (defensive parity kept).
   ctx.drawImage(
     offscreen,
-    ~~(bubble.x - drawSize / 2),
-    ~~(bubble.y - drawSize / 2),
-    ~~drawSize,
-    ~~drawSize
+    (bubble.x - drawSize * 0.5) | 0,
+    (bubble.y - drawSize * 0.5) | 0,
+    drawSize | 0,
+    drawSize | 0
   );
 };
 
@@ -54,6 +59,8 @@ const buildBackground = (w: number, h: number): HTMLCanvasElement => {
     ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
     ctx.lineWidth   = 0.4;
+    // [OPT-4] Single beginPath / stroke call for the entire grid
+    //         instead of one per line — cuts draw calls to 1.
     ctx.beginPath();
     for (let x = 0; x <= w; x += GRID_SIZE) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
     for (let y = 0; y <= h; y += GRID_SIZE) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
@@ -103,13 +110,15 @@ export const useAnimatedBackground = (
     isMobileRef.current  = isMobile;
     frameTimeRef.current = isMobile ? TARGET_FRAME_TIME_MOBILE : TARGET_FRAME_TIME;
 
-    const w   = window.innerWidth;
-    const h   = window.innerHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
     const mainCanvas = canvasRef.current;
     if (mainCanvas) {
       mainCanvas.width  = w;
       mainCanvas.height = h;
+      // [OPT-5] willReadFrequently: false keeps the canvas in GPU-friendly
+      //         accelerated mode; desynchronized: true reduces main-thread blocking.
       contextRef.current = mainCanvas.getContext("2d", {
         alpha:              false,
         desynchronized:     true,
@@ -216,10 +225,14 @@ export const useAnimatedBackground = (
     }
 
     const mouse        = mouseRef.current;
+    const mouseActive  = mouse.active; // [OPT-6] Hoist property reads outside inner loop
+    const mouseX       = mouse.x;
+    const mouseY       = mouse.y;
     const bubbles      = bubblesRef.current;
     const bubbleSprite = bubbleOffscreen.current;
+    const len          = bubbles.length;
 
-    for (let i = 0, len = bubbles.length; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       const b = bubbles[i];
 
       // Movement & boundary bounce
@@ -233,30 +246,32 @@ export const useAnimatedBackground = (
       const pulsingRadius = b.originalRadius + Math.sin(b.phase) * (b.originalRadius * 0.2);
       let newRadius = pulsingRadius;
 
-      // Mouse influence
-      if (mouse.active) {
-        const dx   = mouse.x - b.x;
-        const dy   = mouse.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MOUSE_INFLUENCE_RADIUS) {
-          const influence = 1 - dist / MOUSE_INFLUENCE_RADIUS;
+      // Mouse influence — [OPT-1] squared-distance check avoids sqrt until we know we're inside radius
+      if (mouseActive) {
+        const dx     = mouseX - b.x;
+        const dy     = mouseY - b.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < MOUSE_INFLUENCE_RADIUS_SQ) {
+          const dist      = Math.sqrt(distSq);           // sqrt only when actually needed
+          const influence = 1 - dist * INV_MOUSE_RADIUS; // [OPT-2] multiply by reciprocal
           newRadius = pulsingRadius * (1 + influence * BUBBLE_EXPANSION_FACTOR);
-          b.vx -= (dx / dist) * MOUSE_INFLUENCE_STRENGTH * influence;
-          b.vy -= (dy / dist) * MOUSE_INFLUENCE_STRENGTH * influence;
+          const invDist = 1 / dist;                      // [OPT-2] pre-compute for two multiplications below
+          b.vx -= dx * invDist * MOUSE_INFLUENCE_STRENGTH * influence;
+          b.vy -= dy * invDist * MOUSE_INFLUENCE_STRENGTH * influence;
         }
       }
 
-      // Random drift + speed cap
+      // Random drift + speed cap — [OPT-1] squared-speed check avoids sqrt unless cap exceeded
       b.vx += (Math.random() - 0.5) * 1.2 * dt;
       b.vy += (Math.random() - 0.5) * 1.2 * dt;
-      const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-      if (speed > MAX_SPEED_LIMIT) {
-        const inv = MAX_SPEED_LIMIT / speed;
+      const speedSq = b.vx * b.vx + b.vy * b.vy;
+      if (speedSq > MAX_SPEED_LIMIT_SQ) {
+        const inv = MAX_SPEED_LIMIT / Math.sqrt(speedSq); // sqrt only when cap is breached
         b.vx *= inv;
         b.vy *= inv;
       }
 
-      b.radius = Math.max(10, newRadius);
+      b.radius = newRadius < 10 ? 10 : newRadius; // [OPT-7] Replace Math.max with inline ternary — avoids function-call overhead in hot loop
       if (bubbleSprite) drawBubble(ctx, b, bubbleSprite);
     }
 
