@@ -30,7 +30,7 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
     visible: (i: number) => ({
       opacity: 1, y: 0,
-      transition: prefersReducedMotion ? { duration: 0.2 } : { delay: i * 0.05, duration: 0.3, ease: EASE },
+      transition: prefersReducedMotion ? { duration: 0.2 } : { delay: i * 0.05, duration: 0.6, ease: EASE },
     }),
   }), [prefersReducedMotion]);
 
@@ -58,7 +58,7 @@ const SenseiArt = memo(function SenseiArt() {
 
   const headerVariants: Variants = useMemo(() => ({
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : -20 },
-    visible: { opacity: 1, y: 0, transition: prefersReducedMotion ? { duration: 0.2 } : { duration: 0.3, ease: EASE } },
+    visible: { opacity: 1, y: 0, transition: prefersReducedMotion ? { duration: 0.2 } : { duration: 0.6, ease: EASE } },
   }), [prefersReducedMotion]);
 
   const galleryVariants: Variants = useMemo(() => ({

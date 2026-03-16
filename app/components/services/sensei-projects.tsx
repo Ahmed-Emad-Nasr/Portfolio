@@ -14,13 +14,13 @@ const SLIDE_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.3, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 0.6, ease: SLIDE_EASE } as const;
 
 const ICON_ANIMATE    = { rotate: 0 }   as const;
 const ICON_HOVER      = { rotate: 360 } as const;
-const ICON_TRANSITION = { duration: 0.4, ease: "easeOut" } as const;
+const ICON_TRANSITION = { duration: 0.6, ease: "easeOut" } as const;
 
-const SECTION_HEADER_TRANSITION = { duration: 0.3, delay: 0.1, type: "spring" as const, stiffness: 200, damping: 15 } as const;
+const SECTION_HEADER_TRANSITION = { duration: 0.6, delay: 0.1, type: "spring" as const, stiffness: 200, damping: 15 } as const;
 
 const MOTION_PROPS_SCALE_IN  = { scale: 1 } as const;
 const MOTION_PROPS_SCALE_OUT = {}           as const;
@@ -31,7 +31,7 @@ type ProjectItemProps = { repo: GitHubRepository; index: number };
 const ProjectItem = memo<ProjectItemProps>(({ repo, index }) => {
   const variants: Variants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, delay: index * 0.05, ease: SLIDE_EASE } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.05, ease: SLIDE_EASE } },
   }), [index]);
 
   return (

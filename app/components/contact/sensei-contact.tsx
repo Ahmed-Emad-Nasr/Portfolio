@@ -8,7 +8,6 @@ import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fo
 import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 
-// هنا تم تصحيح النوع ليتوافق مع Framer Motion
 const SLIDE_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1]; 
 
 const CONTAINER_VARIANTS: Variants = {
@@ -18,13 +17,13 @@ const CONTAINER_VARIANTS: Variants = {
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 } as const;
 const HEADER_ANIMATE_OUT = {} as const;
-const HEADER_TRANSITION = { duration: 0.3, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.6, ease: SLIDE_EASE } as const;
 
 const SenseiContact = memo(function SenseiContact() {
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });

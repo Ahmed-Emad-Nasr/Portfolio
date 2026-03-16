@@ -23,7 +23,7 @@
   border: 1.5px solid rgba(var(--main-color-rgb), 0.4);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 
               0 0 15px rgba(var(--main-color-rgb), 0.15);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
 }
 
 .logo {
@@ -34,7 +34,7 @@
   letter-spacing: -1.5px;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), text-shadow 0.3s ease;
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), text-shadow 0.6s ease;
   will-change: transform;
 }
 
@@ -61,7 +61,7 @@
   gap: 0.7rem;
   text-transform: capitalize;
   position: relative;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, box-shadow 0.6s ease, transform 0.4s ease;
 }
 
 .navbar a:hover,

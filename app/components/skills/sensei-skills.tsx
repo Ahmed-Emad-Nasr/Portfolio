@@ -13,11 +13,11 @@ const SLIDE_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.3, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 0.6, ease: SLIDE_EASE } as const;
 
 const ICON_ANIMATE    = { rotate: 0 }  as const;
 const ICON_HOVER      = { rotate: 10 } as const;
-const ICON_TRANSITION = { duration: 0.2, ease: "easeOut" } as const;
+const ICON_TRANSITION = { duration: 0.4, ease: "easeOut" } as const;
 
 const TECHNICAL_SKILLS = [
   { name: "Incident Handling & Response", percentage: 85 }, { name: "SOC Operations & Monitoring", percentage: 90 },
@@ -45,7 +45,7 @@ const SkillCard = memo<SkillCardProps>(({ category, icon, skills, index }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const variants: Variants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, delay: index * 0.05, ease: SLIDE_EASE } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.05, ease: SLIDE_EASE } },
   }), [index]);
 
   const skillsArray = useMemo(() => skills.split(",").map(s => s.trim()).filter(Boolean), [skills]);
@@ -82,7 +82,7 @@ const SkillsSection = memo(function SkillsSection() {
           <SectionHeader japaneseText="技能 スキル" englishText="Skills & Expertise" titleClassName={styles.title} />
         </motion.div>
 
-        <motion.div ref={techRef} className={styles["core-skills-wrapper"]} initial={{ opacity: 0, y: 20 }} animate={techInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.3, ease: SLIDE_EASE }}>
+        <motion.div ref={techRef} className={styles["core-skills-wrapper"]} initial={{ opacity: 0, y: 20 }} animate={techInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.6, ease: SLIDE_EASE }}>
           <h3 className={styles["core-title"]}><FontAwesomeIcon icon={faShieldHalved} /> Technical Competencies</h3>
           <div className={styles["progress-grid"]}>
             {TECHNICAL_SKILLS.map((skill, index) => (
@@ -91,14 +91,14 @@ const SkillsSection = memo(function SkillsSection() {
                   <span>{skill.name}</span><span className={styles["progress-percent"]}>{skill.percentage}%</span>
                 </div>
                 <div className={styles["progress-bg"]}>
-                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={techInView ? { width: `${skill.percentage}%` } : { width: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: index * 0.05 }} />
+                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={techInView ? { width: `${skill.percentage}%` } : { width: 0 }} transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.05 }} />
                 </div>
               </div>
             ))}
           </div>
         </motion.div>
 
-        <motion.div ref={profRef} className={styles["core-skills-wrapper"]} initial={{ opacity: 0, y: 20 }} animate={profInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.3, ease: SLIDE_EASE }}>
+        <motion.div ref={profRef} className={styles["core-skills-wrapper"]} initial={{ opacity: 0, y: 20 }} animate={profInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.6, ease: SLIDE_EASE }}>
           <h3 className={styles["core-title"]}><FontAwesomeIcon icon={faBrain} /> Professional Skills</h3>
           <div className={styles["progress-grid"]}>
             {PROFESSIONAL_SKILLS.map((skill, index) => (
@@ -107,7 +107,7 @@ const SkillsSection = memo(function SkillsSection() {
                   <span>{skill.name}</span><span className={styles["progress-percent"]}>{skill.percentage}%</span>
                 </div>
                 <div className={styles["progress-bg"]}>
-                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={profInView ? { width: `${skill.percentage}%` } : { width: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: index * 0.05 }} />
+                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={profInView ? { width: `${skill.percentage}%` } : { width: 0 }} transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.05 }} />
                 </div>
               </div>
             ))}
