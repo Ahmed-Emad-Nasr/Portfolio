@@ -7,34 +7,13 @@ import HomeSection from "@/app/components/home/sensei-home";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
-const AnimatedBackground = dynamic(
-  () => import("@/app/components/animated_background/animated_background"),
-  { ssr: false }
-);
-const ServicesSection = dynamic(
-  () => import("@/app/components/services/sensei-services-projects"),
-  { ssr: false }
-);
-const ExperienceSection = dynamic(
-  () => import("@/app/components/experience/experience-section"),
-  { ssr: false }
-);
-const ProjectsSection = dynamic(
-  () => import("@/app/components/services/sensei-projects"),
-  { ssr: false }
-);
-const ArtGallerySection = dynamic(
-  () => import("@/app/components/art_gallery/sensei-art"),
-  { ssr: false }
-);
-const SkillsSection = dynamic(
-  () => import("@/app/components/skills/sensei-skills"),
-  { ssr: false }
-);
-const ContactSection = dynamic(
-  () => import("@/app/components/contact/sensei-contact"),
-  { ssr: false }
-);
+const AnimatedBackground = dynamic(() => import("@/app/components/animated_background/animated_background"), { ssr: false });
+const ServicesSection = dynamic(() => import("@/app/components/services/sensei-services-projects"), { ssr: false });
+const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), { ssr: false });
+const ProjectsSection = dynamic(() => import("@/app/components/services/sensei-projects"), { ssr: false });
+const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), { ssr: false });
+const SkillsSection = dynamic(() => import("@/app/components/skills/sensei-skills"), { ssr: false });
+const ContactSection = dynamic(() => import("@/app/components/contact/sensei-contact"), { ssr: false });
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -43,7 +22,8 @@ const MainClient = memo(function MainClient() {
 
   useEffect(() => {
     const handleAppReady = () => {
-      // ⏱️ تم ضبط الوقت لـ 1200 مللي ثانية ليتزامن تماماً مع شاشة التحميل
+      // ⏱️ الـ 1200ms هنا ممتازة جداً لأنها بتدي وقت إضافي للـ Next.js 
+      // عشان يحمل الـ Dynamic Components ورا الكواليس بعد ما الصفحة الأساسية تحمل
       setTimeout(() => {
         setIsAppReady(true);
       }, 1200); 
@@ -59,7 +39,8 @@ const MainClient = memo(function MainClient() {
 
   return (
     <main style={{ position: "relative" }}>
-      {!isAppReady && <LoadingScreen />}
+      {/* تمرير حالة التحميل للـ Loader بدلاً من إخفائه فجأة */}
+      <LoadingScreen isLoading={!isAppReady} />
 
       <div
         style={{
