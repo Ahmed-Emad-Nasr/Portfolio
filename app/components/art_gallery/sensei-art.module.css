@@ -19,7 +19,8 @@
 
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; border-radius: 1rem; border: 2px solid transparent; 
-  transition: box-shadow 0.6s ease, border-color 0.6s ease, transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  /* تم تطبيق قاعدة الـ 0.8s ومنحنى الحركة الموحد */
+  transition: box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color; cursor: pointer;
 }
 

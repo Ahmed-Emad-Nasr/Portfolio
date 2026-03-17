@@ -8,7 +8,7 @@
 
 .homeImg img {
   width: 100%; height: auto; border-radius: 16px; box-shadow: 0 0 31px var(--main-color);
-  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.6s ease; 
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
   cursor: pointer; will-change: transform, filter;
 }
 .homeImg img:hover { transform: scale(1.03); filter: drop-shadow(0 0 40px var(--main-color)); }
@@ -24,16 +24,16 @@
 }
 
 .statusDot { width: 10px; height: 10px; border-radius: 50%; }
-.dotAvailable { background-color: #00e676; box-shadow: 0 0 8px #00e676; animation: pulseGreen 3s infinite; }
-.dotUnavailable { background-color: #ff1744; box-shadow: 0 0 8px #ff1744; animation: pulseRed 3s infinite; }
+.dotAvailable { background-color: #00e676; box-shadow: 0 0 8px #00e676; animation: pulseGreen 4s infinite; }
+.dotUnavailable { background-color: #ff1744; box-shadow: 0 0 8px #ff1744; animation: pulseRed 4s infinite; }
 
 .typingText { font-size: 34px; font-weight: 600; min-width: 300px; margin-bottom: 1.5rem; }
 .typingHighlight { position: relative; color: var(--main-color); }
-.typingHighlight::before { content: " "; animation: words 20s infinite; }
+.typingHighlight::before { content: " "; animation: words 24s infinite; }
 .typingHighlight::after {
   content: " "; position: absolute; background-color: black; width: calc(100% + 8px);
   height: 100%; border-left: 3px solid var(--bg-color); right: 0;
-  animation: cursor 0.6s infinite, typing 20s steps(14) infinite;
+  animation: cursor 0.8s infinite, typing 24s steps(14) infinite;
 }
 
 @keyframes cursor { to { border-left: 2px solid var(--main-color); } }
@@ -56,7 +56,7 @@
   display: flex; justify-content: center; align-items: center; width: 4rem; height: 4rem;
   background: transparent; border: 0.2rem solid var(--main-color); font-size: 2rem;
   border-radius: 1rem; color: var(--main-color);
-  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.6s ease, background 0.6s ease, box-shadow 0.6s ease; 
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
   will-change: transform;
 }
 .socialIcon a:hover {
@@ -68,7 +68,7 @@
 .btn {
   display: inline-flex; align-items: center; padding: 1rem 2.8rem; border-radius: 1rem;
   font-size: 1.6rem; letter-spacing: 0.1rem; font-weight: 600;
-  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), background 0.6s ease, color 0.6s ease, box-shadow 0.6s ease; 
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
   cursor: pointer; text-decoration: none; box-shadow: 0 0 11px var(--main-color);
   will-change: transform;
 }
@@ -88,7 +88,7 @@
 
 .about-me-card {
   background: var(--main-color); border-radius: 20px; overflow: hidden; padding: 2.5rem; text-align: left;
-  transition: background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease, transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
   border: 1px solid var(--main-color); display: flex; flex-direction: column;
 }
@@ -98,17 +98,17 @@
   border-color: rgba(var(--main-color-rgb), 0.5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15);
 }
 
-.card-part-1 { padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.15); transition: border-color 0.6s ease; }
+.card-part-1 { padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.15); transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .about-me-card:hover .card-part-1 { border-bottom-color: rgba(var(--main-color-rgb), 0.4); }
 
-.card-part-1 i, .card-part-1 svg { font-size: 3.5rem; color: var(--bg-color); transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.6s ease, filter 0.6s ease; }
+.card-part-1 i, .card-part-1 svg { font-size: 3.5rem; color: var(--bg-color); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .about-me-card:hover .card-part-1 i, .about-me-card:hover .card-part-1 svg { color: var(--main-color); transform: scale(1.08) rotate(5deg); filter: drop-shadow(0 0 10px rgba(var(--main-color-rgb), 0.5)); }
 
-.card-title { font-size: 1.8rem; margin: 1.5rem 0 0 0; color: var(--bg-color); font-weight: 700; transition: color 0.6s ease; }
+.card-title { font-size: 1.8rem; margin: 1.5rem 0 0 0; color: var(--bg-color); font-weight: 700; transition: color 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .about-me-card:hover .card-title { color: var(--text-color); }
 
 .card-part-2 { padding-top: 1.5rem; flex-grow: 1;}
-.card-description { margin-bottom: 0; color: #222; font-size: 1.4rem; line-height: 1.7; font-weight: 500; transition: color 0.6s ease; }
+.card-description { margin-bottom: 0; color: #222; font-size: 1.4rem; line-height: 1.7; font-weight: 500; transition: color 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .about-me-card:hover .card-description { color: rgba(255, 255, 255, 0.7); }
 
 /* === Media Queries & Mobile Overrides === */

@@ -13,9 +13,8 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
 
   useEffect(() => {
     if (!isLoading) {
-      // بمجرد ما الموقع يخلص تحميل (isLoading = false)
-      // هنستنى 500ms عشان أنيميشن الـ fadeOut يشتغل وبعدين نشيل العنصر من الـ DOM
-      const timer = setTimeout(() => setRender(false), 500);
+      // تم تعديل الوقت لـ 800ms ليتناسب مع وقت انتقال الـ CSS (0.8s) 
+      const timer = setTimeout(() => setRender(false), 800);
       return () => clearTimeout(timer);
     }
   }, [isLoading]);

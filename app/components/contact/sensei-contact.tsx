@@ -8,22 +8,22 @@ import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fo
 import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 
-const SLIDE_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1]; 
+const SLIDE_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]; 
 
 const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
 };
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 } as const;
 const HEADER_ANIMATE_OUT = {} as const;
-const HEADER_TRANSITION = { duration: 0.6, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
 
 const SenseiContact = memo(function SenseiContact() {
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -88,7 +88,7 @@ const SenseiContact = memo(function SenseiContact() {
               <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
                 {isSubmitting ? (<>Sending... <FontAwesomeIcon icon={faSpinner} spin /></>) : (<>Send Message <FontAwesomeIcon icon={faPaperPlane} /></>)}
               </button>
-              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>Message sent successfully! I will get back to you soon.</motion.p>}
+              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
             </form>
           </motion.div>
         </motion.div>

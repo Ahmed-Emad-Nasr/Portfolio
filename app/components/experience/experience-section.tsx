@@ -12,17 +12,17 @@ import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase } from "@
 
 type TimelineItemProps = { tag: string; subTag?: string; subTagHyperlink?: string; desc: string; isRight: boolean; startDate: string; endDate?: string; showDate?: boolean; index: number; };
 
-const SLIDE_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
+const SLIDE_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const HEADER_INITIAL = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 } as const;
 const HEADER_ANIMATE_OUT = {} as const;
-const HEADER_TRANSITION = { duration: 0.6, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
 
 const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHyperlink, desc, index, startDate, endDate, showDate = true }) => {
   const experienceTime = useMemo(() => calculateExperience(startDate, endDate), [startDate, endDate]);
   const variants: Variants = useMemo(() => ({
     hidden: { opacity: 0, x: isRight ? 50 : -50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: index * 0.1, ease: SLIDE_EASE } },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, delay: index * 0.15, ease: SLIDE_EASE } },
   }), [isRight, index]);
 
   const containerClass = `${styles["timeline-container"]} ${isRight ? styles.right : styles.left}`;

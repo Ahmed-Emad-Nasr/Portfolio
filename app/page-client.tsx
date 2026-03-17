@@ -48,7 +48,8 @@ const MainClient = memo(function MainClient() {
           pointerEvents: isAppReady ? "auto" : "none",
           height: isAppReady ? "auto" : "100vh", 
           overflow: isAppReady ? "visible" : "hidden",
-          transition: "opacity 0.8s ease-out", 
+          /* تم توحيد تأثير الظهور مع باقي الموقع */
+          transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)", 
         }}
       >
         <AnimatedBackground />
