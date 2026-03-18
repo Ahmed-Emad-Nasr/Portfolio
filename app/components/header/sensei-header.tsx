@@ -67,10 +67,6 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   return (
     <header className={styles.header}>
-      <a href="#" className={styles.logo} onClick={handleLogoClick}>
-        <span lang="ja">アーメド エマド</span>
-      </a>
-
       <div
         className={menuIconClass}
         onClick={toggleMenu}

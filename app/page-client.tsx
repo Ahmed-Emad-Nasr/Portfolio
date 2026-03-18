@@ -21,29 +21,19 @@ const MainClient = memo(function MainClient() {
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    const handleAppReady = () => {
-      // ⏱️ 1200ms provides optimal time for Next.js to load dynamic components
-      // in the background after the initial page loads
-      const timer = setTimeout(() => {
-        setIsAppReady(true);
-      }, 1200);
-      return () => clearTimeout(timer);
-    };
+    // ⏱️ 1200ms provides optimal time for Next.js to load dynamic components
+    // in the background after the initial page loads
+    const timer = setTimeout(() => {
+      setIsAppReady(true);
+    }, 1200);
 
     // Use readyState to detect if page is already loaded before attaching listener
-    if (document.readyState === "complete" || document.readyState === "interactive") {
-      // Page is already loaded — execute cleanup callback immediately
-      const cleanup = handleAppReady();
-      return cleanup;
-    } else {
-      // Page is still loading — attach event listener
-      const cleanup = handleAppReady();
-      window.addEventListener("load", handleAppReady);
-      return () => {
-        window.removeEventListener("load", handleAppReady);
-        cleanup();
-      };
+    if (document.readyState !== "loading") {
+      // Page is already loaded or loading — do not attach additional listener
+      return () => clearTimeout(timer);
     }
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (

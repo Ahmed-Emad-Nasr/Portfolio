@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Overlock, Yuji_Syuku } from "next/font/google";
+import { Overlock } from "next/font/google";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -35,15 +35,8 @@ const overlock = Overlock({
   display: "swap",
 });
 
-const yujiSyuku = Yuji_Syuku({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-yuji-syuku",
-  display: "swap",
-});
-
 // Derived once — the class string never changes between renders.
-const BODY_CLASS = `bg-black text-white ${overlock.variable} ${yujiSyuku.variable}`;
+const BODY_CLASS = `bg-black text-white ${overlock.variable}`;
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 

@@ -73,8 +73,9 @@ const SenseiContact = memo(function SenseiContact() {
         throw new Error("Server rejected the submission");
       }
     } catch (error) {
-      if (error instanceof Error && error.message !== "HTTP error! status: undefined") {
-        console.error("Error sending message:", error.message);
+      // Log error only if it's not a network abortretry error (user action)
+      if (error instanceof Error && error.name !== "AbortError") {
+        console.error("Form submission error:", error.message);
       }
       setSubmitError(true);
       setTimeout(() => setSubmitError(false), 5000);

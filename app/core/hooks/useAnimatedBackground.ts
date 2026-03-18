@@ -121,7 +121,8 @@ export const useAnimatedBackground = (
     });
     
     if (!ctx) {
-      console.error("Failed to get 2D context from canvas");
+      // Canvas context failure is a critical error that should be logged
+      console.error("Canvas 2D context initialization failed");
       return;
     }
 
