@@ -16,16 +16,20 @@ const SenseiHeader = memo(function SenseiHeader() {
   const handleNavLinkClick = useCallback(
     (section: string) => {
       setActiveSection(section);
+      // Wrapped in try-catch for private browsing mode & cross-origin restrictions
       try {
         localStorage.setItem("activeSection", section);
-      } catch {
-        // localStorage is not available; silently ignore
+      } catch (e) {
+        // localStorage is not available (private browsing, cross-origin iframe, etc.); silently ignore
+        if (process.env.NODE_ENV === "development" && e instanceof Error) {
+          console.debug("localStorage unavailable:", e.message);
+        }
       }
       if (window.innerWidth <= 994) {
         setIsMenuOpen(false);
       }
     },
-    [setActiveSection, setIsMenuOpen]
+    []
   );
 
   const handleLogoClick = useCallback(
@@ -67,6 +71,8 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   return (
     <header className={styles.header}>
+      <div className={styles.logo}>アハメドズ</div>
+      
       <div
         className={menuIconClass}
         onClick={toggleMenu}

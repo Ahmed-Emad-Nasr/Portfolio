@@ -44,6 +44,7 @@ export const useHeader = () => {
     }
 
     let ticking = false; // Flag for requestAnimationFrame
+    let lastSection = "Home"; // Cache to prevent redundant updates
 
     const handleScroll = (): void => {
       if (!ticking) {
@@ -56,7 +57,9 @@ export const useHeader = () => {
             return top <= 150 && bottom >= 150; // Offset adjusted slightly for better UX
           });
           
-          if (current) {
+          // Only update if section actually changed (prevents race condition & storage thrashing)
+          if (current && current !== lastSection) {
+            lastSection = current;
             setActiveSection(current);
             try {
               localStorage.setItem("activeSection", current);

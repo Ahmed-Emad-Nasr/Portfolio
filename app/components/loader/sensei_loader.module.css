@@ -29,6 +29,6 @@
 }
 
 .spinner {
-width: 250px;  /* يجب تعديل العرض هنا */
-  height: 250px; /* يجب تعديل الطول هنا */
+  width: 250px;
+  height: 250px;
 }

@@ -26,20 +26,22 @@
 }
 
 .logo {
-  font-size: 3.5rem;
+  font-size: 2.2rem;
   font-family: "Yuji Syuku", serif;
-  color: var(--text-color);
+  color: var(--main-color);
   font-weight: 800;
-  letter-spacing: -1.5px;
+  letter-spacing: 2px;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.5s ease, color 0.3s ease;
   will-change: transform;
+  user-select: none;
 }
 
 .logo:hover {
-  transform: scale(1.03);
-  text-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.8);
+  transform: scale(1.08);
+  color: var(--main-color);
+  text-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.8), 0 0 40px rgba(var(--main-color-rgb), 0.4);
 }
 
 .navbar {

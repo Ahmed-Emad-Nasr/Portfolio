@@ -22,18 +22,32 @@ const MainClient = memo(function MainClient() {
 
   useEffect(() => {
     // ⏱️ 1200ms provides optimal time for Next.js to load dynamic components
-    // in the background after the initial page loads
-    const timer = setTimeout(() => {
-      setIsAppReady(true);
-    }, 1200);
+    // in the background after the initial page loads. Uses both timer + load event as fallback.
+    let timeoutId: NodeJS.Timeout | null = null;
 
-    // Use readyState to detect if page is already loaded before attaching listener
-    if (document.readyState !== "loading") {
-      // Page is already loaded or loading — do not attach additional listener
-      return () => clearTimeout(timer);
+    const markAppReady = () => {
+      setIsAppReady(true);
+      // Clean up listener after firing
+      window.removeEventListener("load", markAppReady);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+
+    // Primary: Timer-based approach
+    timeoutId = setTimeout(markAppReady, 1200);
+
+    // Fallback: If page already fully loaded, don't wait for timer
+    if (document.readyState === "complete") {
+      markAppReady();
+      return () => {};
     }
 
-    return () => clearTimeout(timer);
+    // Fallback: Listen for window load event in case it fires before timer
+    window.addEventListener("load", markAppReady, { once: true });
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener("load", markAppReady);
+    };
   }, []);
 
   return (

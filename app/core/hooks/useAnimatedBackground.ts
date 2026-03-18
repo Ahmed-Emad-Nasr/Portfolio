@@ -121,12 +121,15 @@ export const useAnimatedBackground = (
     });
     
     if (!ctx) {
-      // Canvas context failure is a critical error that should be logged
-      console.error("Canvas 2D context initialization failed");
+      // Canvas context failure is a critical error that must be logged
+      console.error("CRITICAL: Canvas 2D context initialization failed. Animation rendering disabled.");
+      if (process.env.NODE_ENV === "development") {
+        console.error("Debug: Ensure browser supports WebGL/Canvas. Check for privacy mode or canvas blocking.");
+      }
       return;
     }
 
-    contextRef.current = ctx;
+    contextRef.current = ctx; // Safe check passed; ctx is guaranteed non-null here
 
     bgOffscreen.current = buildBackground(w, h);
 
@@ -298,7 +301,8 @@ export const useAnimatedBackground = (
           animFrameRef.current = null;
         }
       } else if (!isMobileRef.current) {
-        lastTimeRef.current  = performance.now();
+        // Reset lastTimeRef when resuming to prevent huge delta
+        lastTimeRef.current = performance.now();
         animFrameRef.current = requestAnimationFrame(animate);
       }
     };

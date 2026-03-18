@@ -11,7 +11,6 @@ const HEADER_ANIMATE_IN = { opacity: 1, y: 0 }  as const;
 const HEADER_ANIMATE_OUT = {}                    as const;
 const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
 
-// 🔴 التعديل هنا: إزالة الـ 360 واستبدالها بحركة أفخم
 const ICON_ANIMATE  = { rotate: 0, scale: 1 }   as const;
 const ICON_HOVER    = { rotate: 10, scale: 1.1 } as const;
 const ICON_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;

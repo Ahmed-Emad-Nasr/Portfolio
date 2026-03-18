@@ -15,5 +15,14 @@ export const useRandomMedia = () => {
 };
 
 function handleImageClick(): void {
-  window.open(VIDEO_URL, "_blank");
+  // Safely open video link with fallback handling
+  try {
+    const opened = window.open(VIDEO_URL, "_blank");
+    // Check if popup was blocked by browser
+    if (!opened || opened.closed || typeof opened.closed === "undefined") {
+      console.warn("Popup blocked. Consider allowing popups for this site.");
+    }
+  } catch (e) {
+    console.error("Failed to open video:", e instanceof Error ? e.message : String(e));
+  }
 }

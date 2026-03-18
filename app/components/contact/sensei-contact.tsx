@@ -1,5 +1,5 @@
 "use client";
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback, useRef, useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,14 +31,26 @@ const SenseiContact = memo(function SenseiContact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
   const [submitError, setSubmitError] = useState(false);
+  
+  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Clear any pending message timeout from previous submission
+    if (messageTimeoutRef.current !== null) {
+      clearTimeout(messageTimeoutRef.current);
+      messageTimeoutRef.current = null;
+    }
+    
     setIsSubmitting(true);
     setIsSuccess(false);
     setSubmitError(false);
+
+    // Use AbortController for cancellation support & rate limiting
+    const controller = new AbortController();
+    const abortTimeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
     try {
       const formData = new FormData(e.currentTarget);
@@ -51,37 +63,64 @@ const SenseiContact = memo(function SenseiContact() {
 
       if (!name || !email || !subject || !message) {
         setSubmitError(true);
-        setTimeout(() => setSubmitError(false), 5000);
+        messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(String(email))) {
+        setSubmitError(true);
+        messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
         setIsSubmitting(false);
         return;
       }
 
       const response = await fetch("https://formspree.io/f/mlgpbpdr", {
-        method: "POST", body: formData, headers: { 'Accept': 'application/json' }
+        method: "POST", 
+        body: formData, 
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal // Abort if timeout
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Server error: ${response.status}`);
       }
 
       const result = await response.json();
       if (result.ok) {
         setIsSuccess(true);
         e.currentTarget.reset();
-        setTimeout(() => setIsSuccess(false), 5000);
+        messageTimeoutRef.current = setTimeout(() => setIsSuccess(false), 5000);
       } else {
-        throw new Error("Server rejected the submission");
+        throw new Error("Server rejected submission");
       }
     } catch (error) {
-      // Log error only if it's not a network abortretry error (user action)
-      if (error instanceof Error && error.name !== "AbortError") {
-        console.error("Form submission error:", error.message);
+      // Distinguish between different error types for better UX
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          console.error("Form submission timeout or cancelled");
+        } else {
+          console.error("Form submission error:", error.message);
+        }
       }
       setSubmitError(true);
-      setTimeout(() => setSubmitError(false), 5000);
+      messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
     } finally {
+      clearTimeout(abortTimeoutId);
       setIsSubmitting(false);
     }
+  }, []);
+
+  // Clean up any pending timeout when component unmounts
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current !== null) {
+        clearTimeout(messageTimeoutRef.current);
+        messageTimeoutRef.current = null;
+      }
+    };
   }, []);
 
   return (

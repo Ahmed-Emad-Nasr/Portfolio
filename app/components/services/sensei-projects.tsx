@@ -16,7 +16,6 @@ const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
 const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
 
-// 🔴 التعديل هنا: إزالة الـ 360 واستبدالها بحركة أفخم
 const ICON_ANIMATE    = { rotate: 0, scale: 1 }   as const;
 const ICON_HOVER      = { rotate: 10, scale: 1.1 } as const;
 const ICON_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
@@ -86,7 +85,13 @@ const SenseiProjects = memo(function SenseiProjects() {
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} japaneseMotionProps={motionProps} englishMotionProps={motionProps} />
         </motion.div>
         <div className={styles["grid-container"]}>
-          {repos.map((repo, index) => <ProjectItem key={repo.id} repo={repo} index={index} />)}
+          {repos.length > 0 ? (
+            repos.map((repo, index) => <ProjectItem key={repo.id} repo={repo} index={index} />)
+          ) : (
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", opacity: 0.6 }}>
+              <p>Loading projects from GitHub...</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
