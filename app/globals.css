@@ -95,11 +95,4 @@ section {
     padding: 0 1.5rem 5%;
   }
   
-  /* * Safety Net: 
-   * إيقاف أي Transition لأي عنصر على الموبايل كقاعدة عامة
-   * مع السماح للـ Keyframes (animations) بالعمل بشكل طبيعي
-   */
-  * {
-    transition: none !important;
-  }
 }

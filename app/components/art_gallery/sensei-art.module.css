@@ -39,11 +39,6 @@
   .Gallery { grid-template-columns: repeat(2, 1fr); } 
   .art-gallery-content { padding: 0 2rem 5%; } 
   .title { font-size: 3rem; } 
-
-  /* تعطيل كل الحركات وتأثيرات Framer Motion على الموبايل والتابلت */
-  .header-section, .galleryImg {
-    transform: none !important; opacity: 1 !important; transition: none !important;
-  }
 }
 
 @media (max-width: 767px) { 

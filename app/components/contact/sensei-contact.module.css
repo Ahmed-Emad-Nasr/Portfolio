@@ -73,11 +73,6 @@ textarea.input-field { resize: vertical; min-height: 150px; }
 @media (max-width: 991px) { 
   .contact-wrapper { grid-template-columns: 1fr; gap: 3rem; } 
   .title { font-size: 3rem; } 
-
-  /* تعطيل كل الحركات وتأثيرات Framer Motion على الموبايل والتابلت */
-  .info-card, .form-card, .info-item, .icon-box, .input-field, .submit-btn, .contact-socials a {
-    transform: none !important; opacity: 1 !important; transition: none !important;
-  }
 }
 
 @media (max-width: 480px) { 

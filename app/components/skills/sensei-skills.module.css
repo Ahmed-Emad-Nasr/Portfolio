@@ -58,12 +58,6 @@
   .title { font-size: 3rem; } 
   .skills-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; } 
   .progress-grid { grid-template-columns: 1fr; gap: 2rem; } 
-
-  /* تعطيل كل الحركات وتأثيرات Framer Motion على الموبايل والتابلت */
-  .header-section, .core-skills-wrapper, .skill-card, .card-header, 
-  .cardIcon, .category, .skill-tag {
-    transform: none !important; opacity: 1 !important; transition: none !important; filter: none !important;
-  }
 }
 
 @media (max-width: 768px) { 

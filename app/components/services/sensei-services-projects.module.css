@@ -69,11 +69,4 @@
   .title { font-size: 3rem; } 
   .grid-container, .grid-containerp { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; } 
   .single-service, .single-project { padding: 2.5rem 2rem; } 
-
-  /* تعطيل كل الحركات وتأثيرات Framer Motion على الموبايل والتابلت */
-  .header-section, .single-service, .single-project, .part-1, .part-1 i, 
-  .part-1 svg, .part-1 h3, .link-icon, .description, .stat-badge, 
-  .topic-tag, .meta-info {
-    transform: none !important; opacity: 1 !important; transition: none !important; filter: none !important;
-  }
 }

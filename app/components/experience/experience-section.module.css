@@ -71,9 +71,4 @@
   .timeline-container.left::after, .timeline-container.right::after { left: 3rem; right: auto; transform: translateX(-50%); } 
   .content { padding: 2.5rem 2rem; } 
   .date-details { align-items: flex-start; } 
-
-  /* تعطيل كل الحركات وتأثيرات Framer Motion على الموبايل والتابلت */
-  .header-section, .timeline-container, .content, .timeline-container::after {
-    transform: none !important; opacity: 1 !important; transition: none !important;
-  }
 }

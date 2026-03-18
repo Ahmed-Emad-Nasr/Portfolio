@@ -120,12 +120,6 @@
   .about-me-section { padding: 60px 1.5rem; } 
   .about-me-grid { grid-template-columns: repeat(2, 1fr); } 
   .homeContent h1, .homeContent h3 { font-size: 5rem; }
-
-  /* تعطيل كل الحركات وتأثيرات Framer Motion على الموبايل والتابلت */
-  .container, .homeImg, .homeContent, .availabilityStatus, 
-  .socialIcon, .homeButton, .about-me-header, .about-me-card {
-    transform: none !important; opacity: 1 !important; transition: none !important;
-  }
 }
 
 @media (max-width: 968px) { 
