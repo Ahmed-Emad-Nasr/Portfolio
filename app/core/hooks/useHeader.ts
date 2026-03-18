@@ -32,10 +32,15 @@ export const useHeader = () => {
   }, []);
 
   useEffect(() => {
-    const savedSection = localStorage.getItem("activeSection");
-    if (savedSection) {
-      setActiveSection(savedSection);
-      // Optional: document.getElementById(savedSection)?.scrollIntoView({ behavior: "smooth" });
+    // Safely access localStorage with try/catch for cross-origin iframes
+    try {
+      const savedSection = localStorage.getItem("activeSection");
+      if (savedSection && SECTIONS.includes(savedSection)) {
+        setActiveSection(savedSection);
+        // Optional: document.getElementById(savedSection)?.scrollIntoView({ behavior: "smooth" });
+      }
+    } catch {
+      // localStorage is not available (cross-origin iframe, private browsing, etc.)
     }
 
     let ticking = false; // Flag for requestAnimationFrame
@@ -53,7 +58,11 @@ export const useHeader = () => {
           
           if (current) {
             setActiveSection(current);
-            localStorage.setItem("activeSection", current);
+            try {
+              localStorage.setItem("activeSection", current);
+            } catch {
+              // localStorage is not available; silently ignore
+            }
           }
           ticking = false;
         });

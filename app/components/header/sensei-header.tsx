@@ -16,7 +16,11 @@ const SenseiHeader = memo(function SenseiHeader() {
   const handleNavLinkClick = useCallback(
     (section: string) => {
       setActiveSection(section);
-      localStorage.setItem("activeSection", section);
+      try {
+        localStorage.setItem("activeSection", section);
+      } catch {
+        // localStorage is not available; silently ignore
+      }
       if (window.innerWidth <= 994) {
         setIsMenuOpen(false);
       }

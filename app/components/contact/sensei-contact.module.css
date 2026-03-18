@@ -59,6 +59,7 @@ textarea.input-field { resize: vertical; min-height: 150px; }
 .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
 .success-msg { text-align: center; color: #00e676; font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600; }
+.error-msg { text-align: center; color: #ff1744; font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600; }
 
 .contact-socials { display: flex; gap: 1.5rem; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(var(--main-color-rgb), 0.2); }
 .contact-socials a {

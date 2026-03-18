@@ -61,7 +61,6 @@ AboutMeCard.displayName = "AboutMeCard";
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
-  const isAvailable = true; 
   const [containerRef, containerInView] = useInView({ triggerOnce: false, threshold: 0.1 });
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -75,8 +74,8 @@ const SenseiHome = memo(function SenseiHome() {
         <motion.div className={styles.homeContent} variants={ITEM_VARIANTS}>
           <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
           <motion.div className={styles.availabilityStatus} variants={ITEM_VARIANTS}>
-            <span className={`${styles.statusDot} ${isAvailable ? styles.dotAvailable : styles.dotUnavailable}`}></span>
-            <span>{isAvailable ? "Available for Opportunities" : "Currently Unavailable"}</span>
+            <span className={`${styles.statusDot} ${styles.dotAvailable}`}></span>
+            <span>Available for Opportunities</span>
           </motion.div>
           <h2 className={styles.typingText}><span className={styles.typingHighlight} /></h2>
           <p>Computer Science student at Benha University, specializing in SOC, Incident Response, and Cybersecurity. Experienced in monitoring, alert triage, DFIR, and system defense through DEPI & ITI training and SOC projects. Passionate about securing digital environments.</p>

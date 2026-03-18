@@ -12,19 +12,25 @@ const plural = (n: number, word: string): string =>
 // ─── Exports ──────────────────────────────────────────────────────────────────
 
 export const calculateExperience = (startDate: string, endDate?: string): string => {
-  const start = new Date(startDate).getTime();
-  const end   = endDate ? new Date(endDate).getTime() : Date.now();
+  try {
+    const start = new Date(startDate).getTime();
+    const end   = endDate ? new Date(endDate).getTime() : Date.now();
 
-  const totalMonths      = Math.floor((end - start) / MS_PER_MONTH);
-  const years            = Math.floor(totalMonths / 12);
-  const remainingMonths  = totalMonths % 12;
+    if (isNaN(start) || isNaN(end)) return "Invalid date";
 
-  if (years > 0 && remainingMonths > 0)
-    return `${plural(years, "Year")} ${plural(remainingMonths, "Month")}`;
-  if (years > 0)
-    return plural(years, "Year");
-  if (totalMonths > 0)
-    return plural(totalMonths, "Month");
+    const totalMonths      = Math.floor((end - start) / MS_PER_MONTH);
+    const years            = Math.floor(totalMonths / 12);
+    const remainingMonths  = totalMonths % 12;
 
-  return "< 1 mo";
+    if (years > 0 && remainingMonths > 0)
+      return `${plural(years, "Year")} ${plural(remainingMonths, "Month")}`;
+    if (years > 0)
+      return plural(years, "Year");
+    if (totalMonths > 0)
+      return plural(totalMonths, "Month");
+
+    return "< 1 mo";
+  } catch {
+    return "Invalid date";
+  }
 };

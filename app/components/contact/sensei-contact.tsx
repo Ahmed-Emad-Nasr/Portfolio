@@ -32,14 +32,32 @@ const SenseiContact = memo(function SenseiContact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const [submitError, setSubmitError] = useState(false);
+
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setIsSuccess(false);
+    setSubmitError(false);
 
     try {
+      const formData = new FormData(e.currentTarget);
+      
+      // Basic client-side validation
+      const name = formData.get("name");
+      const email = formData.get("email");
+      const subject = formData.get("subject");
+      const message = formData.get("message");
+
+      if (!name || !email || !subject || !message) {
+        setSubmitError(true);
+        setTimeout(() => setSubmitError(false), 5000);
+        setIsSubmitting(false);
+        return;
+      }
+
       const response = await fetch("https://formspree.io/f/mlgpbpdr", {
-        method: "POST", body: new FormData(e.currentTarget), headers: { 'Accept': 'application/json' }
+        method: "POST", body: formData, headers: { 'Accept': 'application/json' }
       });
 
       if (!response.ok) {
@@ -55,8 +73,11 @@ const SenseiContact = memo(function SenseiContact() {
         throw new Error("Server rejected the submission");
       }
     } catch (error) {
-      console.error("Error sending message:", error instanceof Error ? error.message : String(error));
-      setIsSuccess(false);
+      if (error instanceof Error && error.message !== "HTTP error! status: undefined") {
+        console.error("Error sending message:", error.message);
+      }
+      setSubmitError(true);
+      setTimeout(() => setSubmitError(false), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -95,6 +116,7 @@ const SenseiContact = memo(function SenseiContact() {
                 {isSubmitting ? (<>Sending... <FontAwesomeIcon icon={faSpinner} spin /></>) : (<>Send Message <FontAwesomeIcon icon={faPaperPlane} /></>)}
               </button>
               {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
+              {submitError && <motion.p className={styles["error-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Failed to send message. Please try again.</motion.p>}
             </form>
           </motion.div>
         </motion.div>

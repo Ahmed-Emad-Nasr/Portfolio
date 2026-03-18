@@ -55,9 +55,6 @@ export const useGitHubRepos = (): GitHubRepository[] => {
         // Ignore abort errors — they are expected on unmount.
         if (error instanceof Error && error.name !== "AbortError") {
           console.error("Error fetching repositories:", error.message);
-        }
-        // Ensure repos is set to empty array on error
-        if (error instanceof Error && error.name !== "AbortError") {
           setRepos([]);
         }
       }

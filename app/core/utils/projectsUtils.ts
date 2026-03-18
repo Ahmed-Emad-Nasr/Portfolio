@@ -31,5 +31,10 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 export const getIconForLanguage = (language: string | null): string =>
   (language && ICON_MAP[language]) || FALLBACK_ICON;
 
-export const formatDate = (dateString: string): string =>
-  DATE_FORMATTER.format(new Date(dateString));
+export const formatDate = (dateString: string): string => {
+  try {
+    return DATE_FORMATTER.format(new Date(dateString));
+  } catch {
+    return "Unknown date";
+  }
+};

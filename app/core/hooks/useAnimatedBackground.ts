@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useCallback } from "react";
-import debounce from "lodash/debounce";
+import { debounce } from "@/app/core/utils/debounceUtils";
 import type { RefObject } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -114,11 +114,18 @@ export const useAnimatedBackground = (
 
     mainCanvas.width  = w;
     mainCanvas.height = h;
-    contextRef.current = mainCanvas.getContext("2d", {
+    const ctx = mainCanvas.getContext("2d", {
       alpha:              false,
       desynchronized:     true,
       willReadFrequently: false,
     });
+    
+    if (!ctx) {
+      console.error("Failed to get 2D context from canvas");
+      return;
+    }
+
+    contextRef.current = ctx;
 
     bgOffscreen.current = buildBackground(w, h);
 
@@ -196,7 +203,10 @@ export const useAnimatedBackground = (
     const ctx    = contextRef.current;
     if (!canvas || !ctx) return;
 
-    if (document.hidden) return;
+    if (document.hidden) {
+      animFrameRef.current = requestAnimationFrame(animate);
+      return;
+    }
 
     if (!lastTimeRef.current) lastTimeRef.current = timestamp;
     const elapsed = timestamp - lastTimeRef.current;
