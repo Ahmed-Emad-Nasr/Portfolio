@@ -40,7 +40,7 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
           )}
         </div>
         <div className={styles.desc}>
-          <p dangerouslySetInnerHTML={{ __html: desc }} />
+          <p>{desc}</p>
         </div>
         {showDate && (
           <div className={styles["date-details"]}>

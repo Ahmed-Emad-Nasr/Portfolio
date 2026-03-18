@@ -42,6 +42,7 @@ export const useHeader = () => {
 
     const handleScroll = (): void => {
       if (!ticking) {
+        ticking = true;
         window.requestAnimationFrame(() => {
           const current = SECTIONS.find((section) => {
             const el = document.getElementById(section);
@@ -56,7 +57,6 @@ export const useHeader = () => {
           }
           ticking = false;
         });
-        ticking = true;
       }
     };
 

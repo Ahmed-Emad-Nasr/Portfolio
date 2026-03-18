@@ -110,15 +110,15 @@ export const useAnimatedBackground = (
     const h = window.innerHeight;
 
     const mainCanvas = canvasRef.current;
-    if (mainCanvas) {
-      mainCanvas.width  = w;
-      mainCanvas.height = h;
-      contextRef.current = mainCanvas.getContext("2d", {
-        alpha:              false,
-        desynchronized:     true,
-        willReadFrequently: false,
-      });
-    }
+    if (!mainCanvas) return; // Safety check: exit if canvas doesn't exist
+
+    mainCanvas.width  = w;
+    mainCanvas.height = h;
+    contextRef.current = mainCanvas.getContext("2d", {
+      alpha:              false,
+      desynchronized:     true,
+      willReadFrequently: false,
+    });
 
     bgOffscreen.current = buildBackground(w, h);
 

@@ -25,13 +25,19 @@ const SenseiHeader = memo(function SenseiHeader() {
   );
 
   const handleLogoClick = useCallback(
-    () => handleNavLinkClick("Home"), // عدلت دي لتطابق الـ Key الفعلي (Home بحرف كبير)
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      handleNavLinkClick("Home"); // Navigate to home section
+    },
     [handleNavLinkClick]
   );
 
   const handleMenuKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") toggleMenu();
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleMenu();
+      }
     },
     [toggleMenu]
   );

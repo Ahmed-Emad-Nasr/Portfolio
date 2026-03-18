@@ -22,14 +22,15 @@ const MainClient = memo(function MainClient() {
 
   useEffect(() => {
     const handleAppReady = () => {
-      // ⏱️ الـ 1200ms هنا ممتازة جداً لأنها بتدي وقت إضافي للـ Next.js 
-      // عشان يحمل الـ Dynamic Components ورا الكواليس بعد ما الصفحة الأساسية تحمل
+      // ⏱️ 1200ms provides optimal time for Next.js to load dynamic components
+      // in the background after the initial page loads
       setTimeout(() => {
         setIsAppReady(true);
       }, 1200); 
     };
 
-    if (document.readyState === "complete") {
+    // Use readyState to detect if page is already loaded before attaching listener
+    if (document.readyState === "complete" || document.readyState === "interactive") {
       handleAppReady();
     } else {
       window.addEventListener("load", handleAppReady);

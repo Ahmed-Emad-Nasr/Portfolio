@@ -42,15 +42,21 @@ const SenseiContact = memo(function SenseiContact() {
         method: "POST", body: new FormData(e.currentTarget), headers: { 'Accept': 'application/json' }
       });
 
-      if (response.ok) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (result.ok) {
         setIsSuccess(true);
-        (e.target as HTMLFormElement).reset(); 
-        setTimeout(() => setIsSuccess(false), 5000); 
+        e.currentTarget.reset();
+        setTimeout(() => setIsSuccess(false), 5000);
       } else {
-        console.error("Failed to send message. Server responded with an error.");
+        throw new Error("Server rejected the submission");
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error sending message:", error instanceof Error ? error.message : String(error));
+      setIsSuccess(false);
     } finally {
       setIsSubmitting(false);
     }

@@ -43,12 +43,22 @@ export const useGitHubRepos = (): GitHubRepository[] => {
       try {
         const response = await fetch(API_URL, { signal: controller.signal });
         if (!response.ok) throw new Error("Failed to fetch repositories");
-        const data: GitHubRepository[] = await response.json();
-        setRepos(data);
+        const data: unknown = await response.json();
+        // Validate that data is an array before setting state
+        if (Array.isArray(data) && data.length > 0) {
+          setRepos(data as GitHubRepository[]);
+        } else {
+          console.warn("GitHub API returned unexpected data format");
+          setRepos([]);
+        }
       } catch (error) {
         // Ignore abort errors — they are expected on unmount.
         if (error instanceof Error && error.name !== "AbortError") {
-          console.error("Error fetching repositories:", error);
+          console.error("Error fetching repositories:", error.message);
+        }
+        // Ensure repos is set to empty array on error
+        if (error instanceof Error && error.name !== "AbortError") {
+          setRepos([]);
         }
       }
     };
