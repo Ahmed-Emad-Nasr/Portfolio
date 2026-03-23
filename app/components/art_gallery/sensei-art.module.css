@@ -19,14 +19,7 @@
 
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; border-radius: 1rem; border: 2px solid transparent; 
-  /* تم تطبيق قاعدة الـ 0.8s ومنحنى الحركة الموحد */
-  transition: box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color; cursor: pointer;
-}
-
-.art_pic:hover .galleryImg {
-  border-color: var(--main-color); transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(var(--main-color-rgb), 0.2); z-index: 2;
+  cursor: pointer;
 }
 
 /* === Media Queries & Mobile Overrides === */
