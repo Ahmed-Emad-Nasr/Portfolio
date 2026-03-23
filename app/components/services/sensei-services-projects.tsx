@@ -1,6 +1,6 @@
 "use client";
-import { memo, useMemo } from "react";
-import { motion, type Variants } from "framer-motion";
+import { memo } from "react";
+import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import styles from "./sensei-services-projects.module.css";
 
@@ -9,11 +9,7 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const HEADER_INITIAL    = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 }  as const;
 const HEADER_ANIMATE_OUT = {}                    as const;
-const HEADER_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
-
-const ICON_ANIMATE  = { rotate: 0, scale: 1 }   as const;
-const ICON_HOVER    = { rotate: 10, scale: 1.1 } as const;
-const ICON_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
 
 const SERVICES_DATA = [
   { icon: "fa-solid fa-shield-halved", title: "Security Operations Center (SOC) Analysis", description: "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.", },
@@ -26,26 +22,19 @@ const SERVICES_DATA = [
   { icon: "fa-solid fa-virus", title: "Malware Analysis & Prevention", description: "Perform static and dynamic malware analysis in isolated environments. Extract indicators of compromise (IOCs), develop detection signatures, and implement prevention strategies using YARA rules.", },
 ] as const;
 
-type ServiceItemProps = { icon: string; title: string; description: string; index: number; };
+type ServiceItemProps = { icon: string; title: string; description: string; };
 
-const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, index }) => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
-  const variants: Variants = useMemo(() => ({
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1.2, delay: index * 0.14, ease: SLIDE_EASE } },
-  }), [index]);
-
+const ServiceItem = memo<ServiceItemProps>(({ icon, title, description }) => {
   return (
-    <motion.div ref={ref} className={styles["single-service"]} initial="hidden" animate={inView ? "visible" : "hidden"} variants={variants}>
+    <div className={styles["single-service"]}>
       <div className={styles["part-1"]}>
-        <motion.i className={icon} animate={ICON_ANIMATE} whileHover={ICON_HOVER} transition={ICON_TRANSITION} aria-hidden="true" />
+        <i className={icon} aria-hidden="true" />
         <h3 className={styles.title}>{title}</h3>
       </div>
       <div className={styles["part-2"]}>
         <p className={styles.description}>{description}</p>
       </div>
-    </motion.div>
+    </div>
   );
 });
 
@@ -53,6 +42,7 @@ ServiceItem.displayName = "ServiceItem";
 
 function SenseiServicesProjects() {
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [gridRef, gridInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section className={styles["section-services"]} id="Services">
@@ -60,9 +50,9 @@ function SenseiServicesProjects() {
         <motion.div ref={headerRef} className={styles["header-section"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
           <h2 className={styles.title}><span lang="ja">事業 •</span><span lang="en"> Services</span></h2>
         </motion.div>
-        <div className={styles["grid-container"]}>
-          {SERVICES_DATA.map((service, index) => <ServiceItem key={index} {...service} index={index} />)}
-        </div>
+        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>
+          {SERVICES_DATA.map((service, index) => <ServiceItem key={index} {...service} />)}
+        </motion.div>
       </div>
     </section>
   );

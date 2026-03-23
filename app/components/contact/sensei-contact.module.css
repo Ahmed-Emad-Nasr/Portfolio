@@ -26,7 +26,7 @@
 .info-title { font-size: 2.5rem; font-weight: 700; color: var(--text-color); margin-bottom: 1.5rem; }
 .info-desc { font-size: 1.5rem; color: rgba(255, 255, 255, 0.7); line-height: 1.7; margin-bottom: 3rem; }
 
-.info-item { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.info-item { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); text-decoration: none; color: inherit; }
 .info-item:hover { transform: translateX(8px); }
 
 .icon-box {

@@ -1,12 +1,11 @@
 "use client";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { useInView } from "react-intersection-observer";
 import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import styles from "./sensei-services-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
 import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
-import MotionInView from "@/app/core/components/MotionInView";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -14,30 +13,15 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 1.2, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
 
-const ICON_ANIMATE    = { rotate: 0, scale: 1 }   as const;
-const ICON_HOVER      = { rotate: 10, scale: 1.1 } as const;
-const ICON_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
+type ProjectItemProps = { repo: GitHubRepository };
 
-const SECTION_HEADER_TRANSITION = { duration: 1.2, delay: 0.16, type: "spring" as const, stiffness: 70, damping: 20 } as const;
-
-const MOTION_PROPS_SCALE_IN  = { scale: 1 } as const;
-const MOTION_PROPS_SCALE_OUT = {}           as const;
-const MOTION_PROPS_INITIAL   = { scale: 0.8 } as const;
-
-type ProjectItemProps = { repo: GitHubRepository; index: number };
-
-const ProjectItem = memo<ProjectItemProps>(({ repo, index }) => {
-  const variants: Variants = useMemo(() => ({
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1.2, delay: index * 0.14, ease: SLIDE_EASE } },
-  }), [index]);
-
+const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   return (
-    <MotionInView className={styles["single-project"]} variants={variants} onClick={() => window.open(repo.html_url, "_blank")}>
+    <div className={styles["single-project"]} onClick={() => window.open(repo.html_url, "_blank")}>
       <div className={styles["part-1"]}>
-        <motion.i className={getIconForLanguage(repo.language)} animate={ICON_ANIMATE} whileHover={ICON_HOVER} transition={ICON_TRANSITION} aria-hidden="true" />
+        <i className={getIconForLanguage(repo.language)} aria-hidden="true" />
         <h3>
           {repo.name} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles["link-icon"]} />
         </h3>
@@ -64,35 +48,32 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, index }) => {
           <span>Upd: {formatDate(repo.updated_at)}</span>
         </div>
       </div>
-    </MotionInView>
+    </div>
   );
-}, (prev, next) => prev.repo.id === next.repo.id && prev.index === next.index);
+}, (prev, next) => prev.repo.id === next.repo.id);
 
 ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
   const repos = useGitHubRepos();
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
-  const motionProps = useMemo(() => ({
-    initial: MOTION_PROPS_INITIAL, animate: headerInView ? MOTION_PROPS_SCALE_IN : MOTION_PROPS_SCALE_OUT, transition: SECTION_HEADER_TRANSITION,
-  }), [headerInView]);
+  const [gridRef, gridInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section className={styles["section-projects"]} id="Projects">
       <div className={styles.container}>
         <motion.div ref={headerRef} className={styles["header-section"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
-          <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} japaneseMotionProps={motionProps} englishMotionProps={motionProps} />
+          <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
         </motion.div>
-        <div className={styles["grid-container"]}>
+        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>
           {repos.length > 0 ? (
-            repos.map((repo, index) => <ProjectItem key={repo.id} repo={repo} index={index} />)
+            repos.map((repo) => <ProjectItem key={repo.id} repo={repo} />)
           ) : (
             <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", opacity: 0.6 }}>
               <p>Loading projects from GitHub...</p>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -4,26 +4,25 @@ import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faPhone, faLocationDot, faPaperPlane, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 
 const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]; 
 
 const CONTAINER_VARIANTS: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.22 } },
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
 };
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 } as const;
 const HEADER_ANIMATE_OUT = {} as const;
-const HEADER_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
 
 const SenseiContact = memo(function SenseiContact() {
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -135,14 +134,9 @@ const SenseiContact = memo(function SenseiContact() {
             <h3 className={styles["info-title"]}>Let's Connect</h3>
             <p className={styles["info-desc"]}>Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!</p>
             <div className={styles["info-item"]}><div className={styles["icon-box"]}><FontAwesomeIcon icon={faEnvelope} /></div><div className={styles["info-text"]}><h4>Email</h4><p>ahmed.em.nasr@gmail.com</p></div></div>
-            <div className={styles["info-item"]}><div className={styles["icon-box"]}><FontAwesomeIcon icon={faPhone} /></div><div className={styles["info-text"]}><h4>Phone / WhatsApp</h4><p>+20 101 816 6445</p></div></div>
-            <div className={styles["info-item"]}><div className={styles["icon-box"]}><FontAwesomeIcon icon={faLocationDot} /></div><div className={styles["info-text"]}><h4>Location</h4><p>Banha, Egypt</p></div></div>
+            <a className={styles["info-item"]} href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faPhone} /></div><div className={styles["info-text"]}><h4>Phone / WhatsApp</h4><p>+20 101 816 6445</p></div></a>
+            <a className={styles["info-item"]} href="https://www.google.com/maps/search/?api=1&query=Banha%2C+Egypt" target="_blank" rel="noopener noreferrer"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faLocationDot} /></div><div className={styles["info-text"]}><h4>Location</h4><p>Banha, Egypt</p></div></a>
             <div className={styles["contact-socials"]}>
-              <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp"><FontAwesomeIcon icon={faWhatsapp} /></a>
-              <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><FontAwesomeIcon icon={faLinkedin} /></a>
-              <a href="https://x.com/0x3omda" target="_blank" rel="noopener noreferrer" title="X (Twitter)"><FontAwesomeIcon icon={faXTwitter} /></a>
-              <a href="https://instagram.com/ahmed.em.nasr" target="_blank" rel="noopener noreferrer" title="Instagram"><FontAwesomeIcon icon={faInstagram} /></a>
-              <a href="https://t.me/ahmed_em_nasr" target="_blank" rel="noopener noreferrer" title="Telegram"><FontAwesomeIcon icon={faTelegram} /></a>
             </div>
           </motion.div>
 
@@ -155,8 +149,8 @@ const SenseiContact = memo(function SenseiContact() {
               <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
                 {isSubmitting ? (<>Sending... <FontAwesomeIcon icon={faSpinner} spin /></>) : (<>Send Message <FontAwesomeIcon icon={faPaperPlane} /></>)}
               </button>
-              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
-              {submitError && <motion.p className={styles["error-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: SLIDE_EASE }}>Failed to send message. Please try again.</motion.p>}
+              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
+              {submitError && <motion.p className={styles["error-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Failed to send message. Please try again.</motion.p>}
             </form>
           </motion.div>
         </motion.div>

@@ -1,5 +1,5 @@
 "use client";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,46 +13,35 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.2, staggerChildren: 0.22, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
 };
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 1.2, ease: SLIDE_EASE } as const;
-
-const ICON_ANIMATE    = { rotate: 0, scale: 1 }   as const;
-const ICON_HOVER      = { rotate: 10, scale: 1.1 } as const;
-const ICON_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
 
-type AboutMeCardProps = { icon: string; title: string; description: string; index: number; };
+type AboutMeCardProps = { icon: string; title: string; description: string; };
 
-const AboutMeCard = memo<AboutMeCardProps>(({ icon, title, description, index }) => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
-  const variants: Variants = useMemo(() => ({
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1.2, delay: index * 0.14, ease: SLIDE_EASE } },
-  }), [index]);
-
+const AboutMeCard = memo<AboutMeCardProps>(({ icon, title, description }) => {
   return (
-    <motion.div ref={ref} className={styles["about-me-card"]} initial="hidden" animate={inView ? "visible" : "hidden"} variants={variants}>
+    <div className={styles["about-me-card"]}>
       <div className={styles["card-part-1"]}>
-        <motion.i className={icon} animate={ICON_ANIMATE} whileHover={ICON_HOVER} transition={ICON_TRANSITION} />
+        <i className={icon} />
         <h3 className={styles["card-title"]}>{title}</h3>
       </div>
       <div className={styles["card-part-2"]}>
         <p className={styles["card-description"]}>{description}</p>
       </div>
-    </motion.div>
+    </div>
   );
 });
 
@@ -60,8 +49,9 @@ AboutMeCard.displayName = "AboutMeCard";
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
-  const [containerRef, containerInView] = useInView({ triggerOnce: false, threshold: 0.1 });
+  const [containerRef, containerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [aboutGridRef, aboutGridInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section className={styles.home} id="Home">
@@ -95,11 +85,11 @@ const SenseiHome = memo(function SenseiHome() {
         <motion.div ref={headerRef} className={styles["about-me-header"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
           <h2 className={styles["about-me-title"]}><span lang="ja">自己紹介 •</span><span lang="en"> About Me</span></h2>
         </motion.div>
-        <div className={styles["about-me-grid"]}>
+        <motion.div ref={aboutGridRef} className={styles["about-me-grid"]} initial={{ opacity: 0, y: 20 }} animate={aboutGridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>
           {aboutMeCards.map((card, index) => (
-            <AboutMeCard key={`${card.title}-${index}`} {...card} index={index} />
+            <AboutMeCard key={`${card.title}-${index}`} {...card} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
