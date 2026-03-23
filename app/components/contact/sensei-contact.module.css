@@ -3,8 +3,8 @@
  * @Author: Ahmed Emad Nasr
  * @Description: Optimized Glassmorphism Contact Section
  */
-.contact-section { min-height: 100vh; padding: 10rem 0 6rem; position: relative; z-index: 1; }
-.container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
+.contact-section { min-height: 100vh; padding: 10rem 0 6rem; position: relative; z-index: 1; overflow-x: clip; }
+.container { margin: 0 auto; padding: 0 6%; max-width: 1550px; width: 100%; box-sizing: border-box; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3); display: inline-block; padding-bottom: 2rem; }
@@ -12,13 +12,14 @@
 .title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
 .title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.6); }
 
-.contact-wrapper { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem; align-items: start; }
+.contact-wrapper { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem; align-items: start; width: 100%; min-width: 0; }
 
 .info-card, .form-card {
   background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(var(--main-color-rgb), 0.3);
   border-radius: 20px; padding: 4rem 3rem;
   transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
+  width: 100%; min-width: 0; box-sizing: border-box;
 }
 .info-card:hover, .form-card:hover { border-color: rgba(var(--main-color-rgb), 0.8); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15); transform: translateY(-5px); }
 
@@ -36,7 +37,7 @@
 .info-item:hover .icon-box { background: var(--main-color); color: var(--bg-color); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.6); }
 
 .info-text h4 { font-size: 1.6rem; color: rgba(255, 255, 255, 0.6); margin: 0 0 0.5rem 0; font-weight: 500; }
-.info-text p { font-size: 1.6rem; color: var(--text-color); margin: 0; font-weight: 600; }
+.info-text p { font-size: 1.6rem; color: var(--text-color); margin: 0; font-weight: 600; overflow-wrap: anywhere; word-break: break-word; }
 
 .input-group { position: relative; margin-bottom: 2.5rem; }
 .input-field {
@@ -61,7 +62,7 @@ textarea.input-field { resize: vertical; min-height: 150px; }
 .success-msg { text-align: center; color: #00e676; font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600; }
 .error-msg { text-align: center; color: #ff1744; font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600; }
 
-.contact-socials { display: flex; gap: 1.5rem; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(var(--main-color-rgb), 0.2); }
+.contact-socials { display: flex; gap: 1.5rem; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(var(--main-color-rgb), 0.2); flex-wrap: wrap; }
 .contact-socials a {
   display: flex; justify-content: center; align-items: center; width: 4.5rem; height: 4.5rem; background: rgba(var(--main-color-rgb), 0.05);
   border: 1px solid rgba(var(--main-color-rgb), 0.3); font-size: 2rem; border-radius: 50%; color: var(--text-color);
@@ -74,10 +75,15 @@ textarea.input-field { resize: vertical; min-height: 150px; }
 @media (max-width: 991px) { 
   .contact-wrapper { grid-template-columns: 1fr; gap: 3rem; } 
   .title { font-size: 3rem; } 
+  .container { padding: 0 5%; }
+}
+
+@media (max-width: 600px) {
+  .info-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }
 
 @media (max-width: 480px) { 
   .info-card, .form-card { padding: 3rem 2rem; } 
-  .info-item { flex-direction: column; align-items: flex-start; gap: 1rem; } 
+  .container { padding: 0 4%; }
   .contact-socials { justify-content: center; } 
 }

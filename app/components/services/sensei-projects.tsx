@@ -10,17 +10,17 @@ import MotionInView from "@/app/core/components/MotionInView";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const SLIDE_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 1.2, ease: SLIDE_EASE } as const;
 
 const ICON_ANIMATE    = { rotate: 0, scale: 1 }   as const;
 const ICON_HOVER      = { rotate: 10, scale: 1.1 } as const;
-const ICON_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
+const ICON_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
 
-const SECTION_HEADER_TRANSITION = { duration: 0.8, delay: 0.1, type: "spring" as const, stiffness: 100, damping: 22 } as const;
+const SECTION_HEADER_TRANSITION = { duration: 1.2, delay: 0.16, type: "spring" as const, stiffness: 70, damping: 20 } as const;
 
 const MOTION_PROPS_SCALE_IN  = { scale: 1 } as const;
 const MOTION_PROPS_SCALE_OUT = {}           as const;
@@ -31,7 +31,7 @@ type ProjectItemProps = { repo: GitHubRepository; index: number };
 const ProjectItem = memo<ProjectItemProps>(({ repo, index }) => {
   const variants: Variants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: index * 0.1, ease: SLIDE_EASE } },
+    visible: { opacity: 1, y: 0, transition: { duration: 1.2, delay: index * 0.14, ease: SLIDE_EASE } },
   }), [index]);
 
   return (

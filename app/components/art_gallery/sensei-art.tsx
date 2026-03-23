@@ -20,7 +20,7 @@ const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
 const LIGHTBOX_SLIDES = GALLERY_IMAGES.map((image) => ({ src: image.src }));
 
 // تم توحيد الـ Ease ليكون ناعم ومريح (Expo Out)
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]; 
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]; 
 
 const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -31,7 +31,7 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
     visible: (i: number) => ({
       opacity: 1, y: 0,
       // تم تعديل الـ duration إلى 0.8s والـ delay ليكون 0.1
-      transition: prefersReducedMotion ? { duration: 0.2 } : { delay: i * 0.1, duration: 0.8, ease: EASE },
+      transition: prefersReducedMotion ? { duration: 0.2 } : { delay: i * 0.14, duration: 1.2, ease: EASE },
     }),
   }), [prefersReducedMotion]);
 
@@ -60,13 +60,13 @@ const SenseiArt = memo(function SenseiArt() {
   const headerVariants: Variants = useMemo(() => ({
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : -20 },
     // تم تعديل الـ duration إلى 0.8s
-    visible: { opacity: 1, y: 0, transition: prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: EASE } },
+    visible: { opacity: 1, y: 0, transition: prefersReducedMotion ? { duration: 0.2 } : { duration: 1.2, ease: EASE } },
   }), [prefersReducedMotion]);
 
   const galleryVariants: Variants = useMemo(() => ({
     hidden: { opacity: 0 },
     // تم تعديل التتابع ليكون أهدأ (0.1) والانتظار المبدئي 0.15
-    visible: { opacity: 1, transition: prefersReducedMotion ? { duration: 0.2 } : { staggerChildren: 0.1, delayChildren: 0.15 } },
+    visible: { opacity: 1, transition: prefersReducedMotion ? { duration: 0.2 } : { staggerChildren: 0.14, delayChildren: 0.2 } },
   }), [prefersReducedMotion]);
 
   const handleCloseLightbox = useCallback(() => setIndex(-1), []);

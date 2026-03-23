@@ -13,8 +13,8 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
 
   useEffect(() => {
     if (!isLoading) {
-      // تم تعديل الوقت لـ 800ms ليتناسب مع وقت انتقال الـ CSS (0.8s) 
-      const timer = setTimeout(() => setRender(false), 800);
+      // تم تعديل الوقت لـ 1200ms ليتناسب مع وقت انتقال الـ CSS (1.2s)
+      const timer = setTimeout(() => setRender(false), 1200);
       return () => clearTimeout(timer);
     }
   }, [isLoading]);

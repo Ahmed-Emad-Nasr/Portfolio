@@ -9,26 +9,26 @@ import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { aboutMeCards } from "@/app/core/data";
 
-const SLIDE_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, staggerChildren: 0.15, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.2, staggerChildren: 0.22, ease: SLIDE_EASE } },
 };
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 1.2, ease: SLIDE_EASE } as const;
 
 const ICON_ANIMATE    = { rotate: 0, scale: 1 }   as const;
 const ICON_HOVER      = { rotate: 10, scale: 1.1 } as const;
-const ICON_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
+const ICON_TRANSITION = { duration: 1.2, ease: SLIDE_EASE } as const;
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
@@ -40,7 +40,7 @@ const AboutMeCard = memo<AboutMeCardProps>(({ icon, title, description, index })
 
   const variants: Variants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: index * 0.1, ease: SLIDE_EASE } },
+    visible: { opacity: 1, y: 0, transition: { duration: 1.2, delay: index * 0.14, ease: SLIDE_EASE } },
   }), [index]);
 
   return (

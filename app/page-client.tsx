@@ -24,8 +24,11 @@ const MainClient = memo(function MainClient() {
     // ⏱️ 1200ms provides optimal time for Next.js to load dynamic components
     // in the background after the initial page loads. Uses both timer + load event as fallback.
     let timeoutId: NodeJS.Timeout | null = null;
+    let didMarkReady = false;
 
     const markAppReady = () => {
+      if (didMarkReady) return;
+      didMarkReady = true;
       setIsAppReady(true);
       // Clean up listener after firing
       window.removeEventListener("load", markAppReady);
@@ -61,8 +64,6 @@ const MainClient = memo(function MainClient() {
           pointerEvents: isAppReady ? "auto" : "none",
           height: isAppReady ? "auto" : "100vh", 
           overflow: isAppReady ? "visible" : "hidden",
-          /* تم توحيد تأثير الظهور مع باقي الموقع */
-          transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)", 
         }}
       >
         <AnimatedBackground />

@@ -14,14 +14,13 @@ interface MousePosition { x: number; y: number; active: boolean; }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const GRID_SIZE                 = 50;
 const MOUSE_INFLUENCE_RADIUS    = 200;
 const MOUSE_INFLUENCE_RADIUS_SQ = MOUSE_INFLUENCE_RADIUS * MOUSE_INFLUENCE_RADIUS; 
-const MOUSE_INFLUENCE_STRENGTH  = 1.0;
+const MOUSE_INFLUENCE_STRENGTH  = 0.45;
 const MAX_RADIUS                = 120;
 const MIN_RADIUS                = 60;
-const BUBBLE_EXPANSION_FACTOR   = 1.2;
-const MAX_SPEED_LIMIT           = 3.5; // تم تقليل السرعة القصوى (كانت 5)
+const BUBBLE_EXPANSION_FACTOR   = 0.85;
+const MAX_SPEED_LIMIT           = 2.4; // تم تقليل السرعة القصوى (كانت 5)
 const MAX_SPEED_LIMIT_SQ        = MAX_SPEED_LIMIT * MAX_SPEED_LIMIT;              
 const TARGET_FRAME_TIME         = 1000 / 60;
 const TARGET_FRAME_TIME_MOBILE  = 1000 / 30;
@@ -55,12 +54,6 @@ const buildBackground = (w: number, h: number): HTMLCanvasElement => {
   if (ctx) {
     ctx.fillStyle   = "black";
     ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
-    ctx.lineWidth   = 0.4;
-    ctx.beginPath();
-    for (let x = 0; x <= w; x += GRID_SIZE) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
-    for (let y = 0; y <= h; y += GRID_SIZE) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
-    ctx.stroke();
   }
   return canvas;
 };
@@ -165,10 +158,10 @@ export const useAnimatedBackground = (
         y: Math.random() * h,
         radius,
         originalRadius: radius,
-        vx: (Math.random() - 0.5) * 2.5, // تم تقليل السرعة الابتدائية (كانت 4)
-        vy: (Math.random() - 0.5) * 2.5,
+        vx: (Math.random() - 0.5) * 1.6, // تم تقليل السرعة الابتدائية (كانت 4)
+        vy: (Math.random() - 0.5) * 1.6,
         phase: Math.random() * TWO_PI,
-        pulseSpeed: 0.01 + Math.random() * 0.02, // تم إبطاء النبض (كانت 0.02 + 0.04)
+        pulseSpeed: 0.006 + Math.random() * 0.01, // تم إبطاء النبض (كانت 0.02 + 0.04)
       };
     });
   }, [canvasRef]);
@@ -266,8 +259,8 @@ export const useAnimatedBackground = (
       }
 
       // تم تقليل عشوائية الانحراف عشان الحركة تكون أنعم (كانت 1.2)
-      b.vx += (Math.random() - 0.5) * 0.6 * dt;
-      b.vy += (Math.random() - 0.5) * 0.6 * dt;
+      b.vx += (Math.random() - 0.5) * 0.28 * dt;
+      b.vy += (Math.random() - 0.5) * 0.28 * dt;
       
       const speedSq = b.vx * b.vx + b.vy * b.vy;
       if (speedSq > MAX_SPEED_LIMIT_SQ) {
