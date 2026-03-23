@@ -11,23 +11,21 @@ interface GalleryImage { src: string; thumb: string; }
 interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; }
 
 const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
-  src: `/Assets/art-gallery/Images/image_display/${k + 1}.png`,
-  thumb: `/Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
+  src: `Assets/art-gallery/Images/image_display/${k + 1}.png`,
+  thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
 
 const LIGHTBOX_SLIDES = GALLERY_IMAGES.map((image) => ({ src: image.src }));
 
 const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
-  const [thumbSrc, setThumbSrc] = useState(image.thumb);
   const handleClick = useCallback(() => setOpen(index), [setOpen, index]);
-  const handleThumbError = useCallback(() => setThumbSrc(image.src), [image.src]);
 
   return (
     <div className={styles.art_pic}>
       <Image
-        src={thumbSrc} alt={`Art piece ${index + 1}`} width={350} height={350}
+        src={image.thumb} alt={`Art piece ${index + 1}`} width={350} height={350}
         sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
-        onClick={handleClick} onError={handleThumbError} loading="lazy" quality={75} className={styles.galleryImg}
+        onClick={handleClick} loading="lazy" quality={75} className={styles.galleryImg}
       />
     </div>
   );
