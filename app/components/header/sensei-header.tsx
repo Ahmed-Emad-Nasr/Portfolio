@@ -40,21 +40,10 @@ const SenseiHeader = memo(function SenseiHeader() {
   );
 
   const handleLogoClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
+    () => {
       handleNavLinkClick("Home"); // Navigate to home section
     },
     [handleNavLinkClick]
-  );
-
-  const handleMenuKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggleMenu();
-      }
-    },
-    [toggleMenu]
   );
 
   const navLinks = useMemo(
@@ -65,6 +54,7 @@ const SenseiHeader = memo(function SenseiHeader() {
           href={`#${section}`}
           className={activeSection === section ? ACTIVE_CLASS : undefined}
           onClick={() => handleNavLinkClick(section)}
+          aria-current={activeSection === section ? "page" : undefined}
         >
           <FontAwesomeIcon icon={icon} aria-hidden="true" />
           <span className={styles.navText}>{section}</span>
@@ -78,23 +68,22 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>アハメドズ</div>
+      <a href="#Home" className={styles.logo} onClick={handleLogoClick} aria-label="Go to Home section">アハメドズ</a>
       
-      <div
+      <button
+        type="button"
         className={menuIconClass}
         onClick={toggleMenu}
-        onKeyDown={handleMenuKeyDown}
-        tabIndex={0}
-        role="button"
         aria-expanded={isMenuOpen}
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        aria-controls="main-navigation"
       >
         <span aria-hidden="true" />
         <span aria-hidden="true" />
         <span aria-hidden="true" />
-      </div>
+      </button>
 
-      <nav className={navbarClass} aria-label="Main navigation">
+      <nav id="main-navigation" className={navbarClass} aria-label="Main navigation">
         {navLinks}
       </nav>
     </header>

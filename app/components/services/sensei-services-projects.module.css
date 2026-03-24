@@ -4,7 +4,7 @@
  * Purpose: Shared Services and Projects card/grid styles
  */
 
-.section-services, .section-projects { min-height: 100vh; padding: 15rem 0 6rem; position: relative; z-index: 1; }
+.section-services, .section-projects { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3); display: inline-block; padding-bottom: 2rem; }

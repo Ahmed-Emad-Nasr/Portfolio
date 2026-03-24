@@ -25,6 +25,23 @@ export const metadata: Metadata = {
   keywords:
     "Ahmed Emad Nasr, Soc Analyst, Cybersecurity Engineer, Incident Response Analyst, Blue Team, Cybersecurity Instructor, Software Engineer, Portfolio",
   authors: [{ name: "Ahmed Emad Nasr" }],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Ahmed Emad Nasr - Portfolio",
+    description:
+      "SOC Analyst and Cybersecurity Engineer portfolio focused on Incident Response, Threat Hunting, DFIR, and security operations.",
+    type: "website",
+    locale: "en_US",
+    siteName: "Ahmed Emad Nasr Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ahmed Emad Nasr - Portfolio",
+    description:
+      "SOC Analyst and Cybersecurity Engineer portfolio focused on Incident Response, Threat Hunting, DFIR, and security operations.",
+  },
   verification: {
     google: "VCIeVhcDb-vQGmE68weZARtruR_F2bUwv6hcjKYdwqo",
   },

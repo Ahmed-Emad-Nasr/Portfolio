@@ -26,7 +26,13 @@ type ProjectItemProps = { repo: GitHubRepository };
 
 const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   return (
-    <div className={styles["single-project"]} onClick={() => window.open(repo.html_url, "_blank")}>
+    <a
+      className={styles["single-project"]}
+      href={repo.html_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open project ${repo.name} on GitHub`}
+    >
       <div className={styles["part-1"]}>
         <i className={getIconForLanguage(repo.language)} aria-hidden="true" />
         <h3>
@@ -55,7 +61,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
           <span>Upd: {formatDate(repo.updated_at)}</span>
         </div>
       </div>
-    </div>
+    </a>
   );
 }, (prev, next) => prev.repo.id === next.repo.id);
 

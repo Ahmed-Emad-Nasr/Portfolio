@@ -38,7 +38,7 @@ const SenseiHome = memo(function SenseiHome() {
     <section className={styles.home} id="Home">
       <motion.div ref={containerRef} className={styles.container} initial="hidden" animate={containerInView ? "visible" : "hidden"} variants={CONTAINER_VARIANTS}>
         <motion.div className={styles.homeImg} variants={ITEM_VARIANTS}>
-          <img src="Assets/art-gallery/Images/logo/My_Logo.webp" alt="Ahmed Emad Nasr Image" className={styles.image} width={350} height={350} fetchPriority="high" loading="lazy" decoding="async" onClick={handleImageClick} onError={(e) => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E"; }} />
+          <img src="Assets/art-gallery/Images/logo/My_Logo.webp" alt="Ahmed Emad Nasr Image" className={styles.image} width={350} height={350} fetchPriority="high" loading="eager" decoding="async" onClick={handleImageClick} onError={(e) => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E"; }} />
         </motion.div>
 
         <motion.div className={styles.homeContent} variants={ITEM_VARIANTS}>
@@ -50,9 +50,9 @@ const SenseiHome = memo(function SenseiHome() {
           <h2 className={styles.typingText}><span className={styles.typingHighlight} /></h2>
           <p>Computer Science student at Benha University, specializing in SOC, Incident Response, and Cybersecurity. Experienced in monitoring, alert triage, DFIR, and system defense through DEPI & ITI training and SOC projects. Passionate about securing digital environments.</p>
           <motion.div className={styles.socialIcon} variants={ITEM_VARIANTS}>
-            <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin"><FontAwesomeIcon icon={faLinkedin} /></a>
-            <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp"><FontAwesomeIcon icon={faWhatsapp} /></a>
-            <a href="https://x.com/0x3omda" target="_blank" rel="noopener noreferrer" title="X"><FontAwesomeIcon icon={faXTwitter} /></a>
+            <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
+            <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat"><FontAwesomeIcon icon={faWhatsapp} /></a>
+            <a href="https://x.com/0x3omda" target="_blank" rel="noopener noreferrer" title="X" aria-label="X profile"><FontAwesomeIcon icon={faXTwitter} /></a>
           </motion.div>
           <motion.div className={styles.homeButton} variants={ITEM_VARIANTS}>
             <a href="#Contact" className={BTN_1_CLASS}>Hire Me <FontAwesomeIcon icon={faUserSecret} /></a>

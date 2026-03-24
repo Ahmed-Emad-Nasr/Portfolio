@@ -3,7 +3,7 @@
  * Author: Ahmed Emad Nasr
  * Purpose: Contact section styles (layout, cards, form, and responsive rules)
  */
-.contact-section { min-height: 100vh; padding: 10rem 0 6rem; position: relative; z-index: 1; overflow-x: clip; }
+.contact-section { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; overflow-x: clip; }
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; width: 100%; box-sizing: border-box; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
