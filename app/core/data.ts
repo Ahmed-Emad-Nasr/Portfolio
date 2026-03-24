@@ -1,4 +1,10 @@
 
+/*
+ * File: data.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Central static content for sections (timeline entries and about cards)
+ */
+
 export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
 
 export const knowledgeEducationItems = [

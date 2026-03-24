@@ -1,3 +1,9 @@
+/*
+ * File: projectsUtils.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Map project metadata (icons and dates) for UI presentation
+ */
+
 // ─── Statics ──────────────────────────────────────────────────────────────────
 
 // Object literal hoisted at module level — created once, never recreated per call.

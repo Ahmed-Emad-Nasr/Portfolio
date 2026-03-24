@@ -1,4 +1,9 @@
 "use client";
+/*
+ * File: useRandomMedia.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Provide media interaction handlers for the UI (external video open)
+ */
 
 // ─── Statics ──────────────────────────────────────────────────────────────────
 

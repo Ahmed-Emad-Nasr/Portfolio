@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: sensei-services-projects.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render services section cards with scroll-based reveal animations
+ */
+
 import { memo } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -9,7 +16,7 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const HEADER_INITIAL    = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 }  as const;
 const HEADER_ANIMATE_OUT = {}                    as const;
-const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.45, ease: SLIDE_EASE } as const;
 
 const SERVICES_DATA = [
   { icon: "fa-solid fa-shield-halved", title: "Security Operations Center (SOC) Analysis", description: "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.", },
@@ -50,7 +57,7 @@ function SenseiServicesProjects() {
         <motion.div ref={headerRef} className={styles["header-section"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
           <h2 className={styles.title}><span lang="ja">事業 •</span><span lang="en"> Services</span></h2>
         </motion.div>
-        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>
+        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>
           {SERVICES_DATA.map((service, index) => <ServiceItem key={index} {...service} />)}
         </motion.div>
       </div>

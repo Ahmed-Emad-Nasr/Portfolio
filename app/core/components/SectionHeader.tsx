@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: SectionHeader.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Reusable bilingual section heading renderer with optional motion props
+ */
+
 import React, { memo } from "react";
 import { motion, MotionProps } from "framer-motion";
 

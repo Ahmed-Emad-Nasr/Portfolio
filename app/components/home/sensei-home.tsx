@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: sensei-home.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render home hero, social/actions, and about cards sections
+ */
+
 import { memo } from "react";
 import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -13,18 +20,18 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
 };
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 0.45, ease: SLIDE_EASE } as const;
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
@@ -85,7 +92,7 @@ const SenseiHome = memo(function SenseiHome() {
         <motion.div ref={headerRef} className={styles["about-me-header"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
           <h2 className={styles["about-me-title"]}><span lang="ja">自己紹介 •</span><span lang="en"> About Me</span></h2>
         </motion.div>
-        <motion.div ref={aboutGridRef} className={styles["about-me-grid"]} initial={{ opacity: 0, y: 20 }} animate={aboutGridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>
+        <motion.div ref={aboutGridRef} className={styles["about-me-grid"]} initial={{ opacity: 0, y: 20 }} animate={aboutGridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>
           {aboutMeCards.map((card, index) => (
             <AboutMeCard key={`${card.title}-${index}`} {...card} />
           ))}

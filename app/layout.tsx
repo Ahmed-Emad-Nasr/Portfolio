@@ -1,3 +1,9 @@
+/*
+ * File: layout.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Define root app shell, metadata, and global font/base document setup
+ */
+
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";

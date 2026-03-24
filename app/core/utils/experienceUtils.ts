@@ -1,3 +1,9 @@
+/*
+ * File: experienceUtils.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Calculate and format experience duration from date ranges
+ */
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 // Milliseconds in an average month (30.44 days). Hoisted so the arithmetic

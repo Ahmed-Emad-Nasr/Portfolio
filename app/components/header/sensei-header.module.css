@@ -1,7 +1,7 @@
 /*
- * sensei-header.module.css
- * @Author Ahmed Emad Nasr
- * @Description Optimized High-Contrast Floating Navbar with Mobile Animations
+ * File: sensei-header.module.css
+ * Author: Ahmed Emad Nasr
+ * Purpose: Header/navbar styles (desktop and mobile menu)
  */
 
 .header {
@@ -22,7 +22,6 @@
   border: 1.5px solid rgba(var(--main-color-rgb), 0.5);
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 
               0 0 20px rgba(var(--main-color-rgb), 0.25);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .logo {
@@ -33,15 +32,11 @@
   letter-spacing: 2px;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.5s ease, color 0.3s ease;
-  will-change: transform;
   user-select: none;
 }
 
 .logo:hover {
-  transform: scale(1.08);
   color: var(--main-color);
-  text-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.8), 0 0 40px rgba(var(--main-color-rgb), 0.4);
 }
 
 .navbar {
@@ -62,7 +57,6 @@
   gap: 0.6rem;
   text-transform: capitalize;
   position: relative;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar a:hover,
@@ -70,10 +64,6 @@
   background: var(--main-color);
   color: var(--bg-color);
   box-shadow: 0 5px 15px rgba(var(--main-color-rgb), 0.4);
-}
-
-.navbar a:active {
-  transform: scale(0.95); 
 }
 
 /* --- Mobile Menu Icon --- */
@@ -91,8 +81,6 @@
   height: 3px;
   background: var(--main-color);
   border-radius: 10px;
-  /* إعادة تفعيل الـ transition لتحول الأيقونة لـ X بشكل ناعم */
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --- Mobile Adjustments --- */
@@ -103,10 +91,7 @@
     border-radius: 25px;
   }
 
-  .logo { 
-    font-size: 2.1rem; 
-    transition: transform 0.4s ease !important; /* إعادة تفعيل الأنميشن */
-  }
+  .logo { font-size: 2.1rem; }
 
   .MenuIcon { display: flex; }
 
@@ -123,19 +108,15 @@
     border: 1px solid rgba(var(--main-color-rgb), 0.3);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(var(--main-color-rgb), 0.1);
     
-    /* أنيميشن الظهور ناعم بدلاً من display: none */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-20px);
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
-    display: flex; /* يجب أن تكون flex ليعمل الـ transition على الـ opacity */
+    display: flex;
   }
 
   .navbar.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     pointer-events: auto;
   }
 
@@ -144,11 +125,6 @@
     width: 85%;
     justify-content: center;
     margin: 0.5rem 0;
-    transition: all 0.3s ease; /* إعادة تفعيل أنميشن الضغط والتحويم */
   }
 }
 
-/* Menu Icon active state (X shape) */
-.MenuIcon.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.MenuIcon.active span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
-.MenuIcon.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }

@@ -1,7 +1,7 @@
 /*
- * sensei-contact.module.css
- * @Author: Ahmed Emad Nasr
- * @Description: Optimized Glassmorphism Contact Section
+ * File: sensei-contact.module.css
+ * Author: Ahmed Emad Nasr
+ * Purpose: Contact section styles (layout, cards, form, and responsive rules)
  */
 .contact-section { min-height: 100vh; padding: 10rem 0 6rem; position: relative; z-index: 1; overflow-x: clip; }
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; width: 100%; box-sizing: border-box; }
@@ -17,22 +17,22 @@
 .info-card, .form-card {
   background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(var(--main-color-rgb), 0.3);
   border-radius: 20px; padding: 4rem 3rem;
-  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
   width: 100%; min-width: 0; box-sizing: border-box;
 }
-.info-card:hover, .form-card:hover { border-color: rgba(var(--main-color-rgb), 0.8); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15); transform: translateY(-5px); }
+.info-card:hover, .form-card:hover { border-color: rgba(var(--main-color-rgb), 0.8); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15); transform: translateY(-3px); }
 
 .info-title { font-size: 2.5rem; font-weight: 700; color: var(--text-color); margin-bottom: 1.5rem; }
 .info-desc { font-size: 1.5rem; color: rgba(255, 255, 255, 0.7); line-height: 1.7; margin-bottom: 3rem; }
 
-.info-item { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); text-decoration: none; color: inherit; }
-.info-item:hover { transform: translateX(8px); }
+.info-item { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; transition: transform 0.35s ease; text-decoration: none; color: inherit; }
+.info-item:hover { transform: translateX(4px); }
 
 .icon-box {
   width: 50px; height: 50px; min-width: 50px; background: rgba(var(--main-color-rgb), 0.1); border: 1px solid rgba(var(--main-color-rgb), 0.3);
   border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; color: var(--main-color);
-  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
 }
 .info-item:hover .icon-box { background: var(--main-color); color: var(--bg-color); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.6); }
 
@@ -43,7 +43,7 @@
 .input-field {
   width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.6rem 2rem;
   font-size: 1.5rem; color: var(--text-color); font-family: inherit;
-  transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
 }
 .input-field::placeholder { color: rgba(255, 255, 255, 0.4); }
 .input-field:focus { outline: none; border-color: var(--main-color); background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3); }
@@ -53,10 +53,10 @@ textarea.input-field { resize: vertical; min-height: 150px; }
   display: inline-flex; align-items: center; justify-content: center; gap: 1rem; width: 100%; padding: 1.5rem;
   background: var(--main-color); color: var(--bg-color); border: 1px solid var(--main-color); border-radius: 12px;
   font-size: 1.6rem; font-weight: 700; cursor: pointer;
-  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
   will-change: transform;
 }
-.submit-btn:hover:not(:disabled) { background: transparent; color: var(--main-color); box-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.4); transform: translateY(-3px); }
+.submit-btn:hover:not(:disabled) { background: transparent; color: var(--main-color); box-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.4); transform: translateY(-2px); }
 .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
 .success-msg { text-align: center; color: #00e676; font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600; }
@@ -66,10 +66,10 @@ textarea.input-field { resize: vertical; min-height: 150px; }
 .contact-socials a {
   display: flex; justify-content: center; align-items: center; width: 4.5rem; height: 4.5rem; background: rgba(var(--main-color-rgb), 0.05);
   border: 1px solid rgba(var(--main-color-rgb), 0.3); font-size: 2rem; border-radius: 50%; color: var(--text-color);
-  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
   will-change: transform;
 }
-.contact-socials a:hover { background: var(--main-color); color: var(--bg-color); border-color: var(--main-color); transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 20px rgba(var(--main-color-rgb), 0.4); }
+.contact-socials a:hover { background: var(--main-color); color: var(--bg-color); border-color: var(--main-color); transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 20px rgba(var(--main-color-rgb), 0.4); }
 
 /* === Media Queries & Mobile Overrides === */
 @media (max-width: 991px) { 

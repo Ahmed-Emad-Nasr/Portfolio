@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: sensei-header.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render sticky navigation header and mobile menu behavior
+ */
+
 import { useCallback, useMemo, memo } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,9 +1,10 @@
-import MainClient from "./page-client";
-
-/**
- * @author Ahmed Emad Nasr
- * @description Server component — renders the client-side page wrapper.
+/*
+ * File: page.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Server entry page that renders the client page wrapper
  */
+
+import MainClient from "./page-client";
 export default function Main() {
   return <MainClient />;
 }

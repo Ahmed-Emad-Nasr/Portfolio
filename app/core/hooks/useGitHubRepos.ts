@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: useGitHubRepos.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Fetch and expose GitHub repositories data with retry handling
+ */
+
 import { useState, useEffect } from "react";
 import { GITHUB_USERNAME } from "@/app/core/data";
 

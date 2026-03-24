@@ -1,13 +1,15 @@
 "use client";
+
+/*
+ * File: sensei_loader.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render startup loader and manage fade-out lifecycle timing
+ */
+
 import { useState, useEffect } from "react";
 import type { JSX } from "react";
 import styles from "./sensei_loader.module.css";
 import loadingGif from "@/public/Assets/loading/loading.gif";
-
-/**
- * @Author Ahmed Emad Nasr
- * @Description Fast & Clean Loader Component - GPU Optimized
- */
 function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null {
   const [render, setRender] = useState(true);
 

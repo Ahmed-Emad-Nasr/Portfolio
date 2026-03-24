@@ -1,5 +1,11 @@
 "use client";
 
+/*
+ * File: page-client.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Compose page sections and manage initial app loading state
+ */
+
 import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";

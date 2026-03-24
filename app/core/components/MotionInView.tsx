@@ -1,5 +1,11 @@
 "use client";
 
+/*
+ * File: MotionInView.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Reusable in-view motion wrapper with configurable viewport behavior
+ */
+
 import React, { memo } from "react";
 import { motion, MotionProps } from "framer-motion";
 

@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: sensei-projects.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render GitHub projects section with stats, tags, and external links
+ */
+
 import { memo } from "react";
 import { useInView } from "react-intersection-observer";
 import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +20,7 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
 const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.8, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION  = { duration: 0.45, ease: SLIDE_EASE } as const;
 
 type ProjectItemProps = { repo: GitHubRepository };
 
@@ -65,7 +72,7 @@ const SenseiProjects = memo(function SenseiProjects() {
         <motion.div ref={headerRef} className={styles["header-section"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
         </motion.div>
-        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>
+        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>
           {repos.length > 0 ? (
             repos.map((repo) => <ProjectItem key={repo.id} repo={repo} />)
           ) : (

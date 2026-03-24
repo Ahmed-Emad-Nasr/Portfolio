@@ -1,6 +1,7 @@
-/**
- * @description Lightweight debounce utility to replace lodash/debounce
- * Ensures only one execution of a function after a delay, with cancel support
+/*
+ * File: debounceUtils.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Provide a lightweight debounce utility with cancel support
  */
 
 interface DebouncedFunction<T extends (...args: any[]) => any> {

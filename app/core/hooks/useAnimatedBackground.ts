@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: useAnimatedBackground.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Manage animated background canvas lifecycle, rendering, and interactions
+ */
+
 import { useEffect, useRef, useCallback } from "react";
 import { debounce } from "@/app/core/utils/debounceUtils";
 import type { RefObject } from "react";
@@ -14,12 +21,12 @@ interface MousePosition { x: number; y: number; active: boolean; }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const MOUSE_INFLUENCE_RADIUS    = 200;
+const MOUSE_INFLUENCE_RADIUS    = 170;
 const MOUSE_INFLUENCE_RADIUS_SQ = MOUSE_INFLUENCE_RADIUS * MOUSE_INFLUENCE_RADIUS; 
-const MOUSE_INFLUENCE_STRENGTH  = 0.45;
+const MOUSE_INFLUENCE_STRENGTH  = 0.28;
 const MAX_RADIUS                = 120;
 const MIN_RADIUS                = 60;
-const BUBBLE_EXPANSION_FACTOR   = 0.85;
+const BUBBLE_EXPANSION_FACTOR   = 0.45;
 const MAX_SPEED_LIMIT           = 2.4; // تم تقليل السرعة القصوى (كانت 5)
 const MAX_SPEED_LIMIT_SQ        = MAX_SPEED_LIMIT * MAX_SPEED_LIMIT;              
 const TARGET_FRAME_TIME         = 1000 / 60;
@@ -149,7 +156,7 @@ export const useAnimatedBackground = (
     }
 
     const radiusRange = MAX_RADIUS - MIN_RADIUS;
-    const bubbleCount = Math.floor((w * h) / 80000);
+    const bubbleCount = Math.floor((w * h) / 90000);
 
     bubblesRef.current = Array.from({ length: bubbleCount }, () => {
       const radius = Math.random() * radiusRange + MIN_RADIUS;
@@ -158,10 +165,10 @@ export const useAnimatedBackground = (
         y: Math.random() * h,
         radius,
         originalRadius: radius,
-        vx: (Math.random() - 0.5) * 1.6, // تم تقليل السرعة الابتدائية (كانت 4)
-        vy: (Math.random() - 0.5) * 1.6,
+        vx: (Math.random() - 0.5) * 1.1, // Lite mode: calmer cinematic drift
+        vy: (Math.random() - 0.5) * 1.1,
         phase: Math.random() * TWO_PI,
-        pulseSpeed: 0.006 + Math.random() * 0.01, // تم إبطاء النبض (كانت 0.02 + 0.04)
+        pulseSpeed: 0.004 + Math.random() * 0.006, // Lite mode: slower pulse
       };
     });
   }, [canvasRef]);
@@ -241,7 +248,7 @@ export const useAnimatedBackground = (
       if (b.y + b.radius > cvsH || b.y - b.radius < 0) b.vy *= -1;
 
       b.phase += b.pulseSpeed * dt;
-      const pulsingRadius = b.originalRadius + Math.sin(b.phase) * (b.originalRadius * 0.2);
+      const pulsingRadius = b.originalRadius + Math.sin(b.phase) * (b.originalRadius * 0.12);
       let newRadius = pulsingRadius;
 
       if (mouseActive) {
@@ -259,8 +266,8 @@ export const useAnimatedBackground = (
       }
 
       // تم تقليل عشوائية الانحراف عشان الحركة تكون أنعم (كانت 1.2)
-      b.vx += (Math.random() - 0.5) * 0.28 * dt;
-      b.vy += (Math.random() - 0.5) * 0.28 * dt;
+      b.vx += (Math.random() - 0.5) * 0.18 * dt;
+      b.vy += (Math.random() - 0.5) * 0.18 * dt;
       
       const speedSq = b.vx * b.vx + b.vy * b.vy;
       if (speedSq > MAX_SPEED_LIMIT_SQ) {

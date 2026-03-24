@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: useHeader.ts
+ * Author: Ahmed Emad Nasr
+ * Purpose: Handle header navigation state, active section tracking, and mobile menu
+ */
+
 import { useState, useEffect, useCallback } from "react";
 import {
   faHome, 

@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: sensei-contact.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render contact section and handle form submission state/feedback
+ */
+
 import { memo, useState, useCallback, useRef, useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -11,18 +18,18 @@ const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
 };
 
 const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: SLIDE_EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
 };
 
 const HEADER_INITIAL = { opacity: 0, y: -30 } as const;
 const HEADER_ANIMATE_IN = { opacity: 1, y: 0 } as const;
 const HEADER_ANIMATE_OUT = {} as const;
-const HEADER_TRANSITION = { duration: 0.8, ease: SLIDE_EASE } as const;
+const HEADER_TRANSITION = { duration: 0.45, ease: SLIDE_EASE } as const;
 
 const SenseiContact = memo(function SenseiContact() {
   const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -149,8 +156,8 @@ const SenseiContact = memo(function SenseiContact() {
               <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
                 {isSubmitting ? (<>Sending... <FontAwesomeIcon icon={faSpinner} spin /></>) : (<>Send Message <FontAwesomeIcon icon={faPaperPlane} /></>)}
               </button>
-              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
-              {submitError && <motion.p className={styles["error-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: SLIDE_EASE }}>Failed to send message. Please try again.</motion.p>}
+              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
+              {submitError && <motion.p className={styles["error-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>Failed to send message. Please try again.</motion.p>}
             </form>
           </motion.div>
         </motion.div>

@@ -1,4 +1,11 @@
 "use client";
+
+/*
+ * File: sensei-art.tsx
+ * Author: Ahmed Emad Nasr
+ * Purpose: Render art gallery grid and lightbox viewer integration
+ */
+
 import { useCallback, useState, memo } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -51,7 +58,13 @@ const SenseiArt = memo(function SenseiArt() {
           </div>
         </div>
       </div>
-      <Lightbox slides={LIGHTBOX_SLIDES} open={open} index={index} close={handleCloseLightbox} />
+      <Lightbox
+        slides={LIGHTBOX_SLIDES}
+        open={open}
+        index={index}
+        close={handleCloseLightbox}
+        animation={{ fade: 0, swipe: 0 }}
+      />
     </section>
   );
 });
