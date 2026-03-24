@@ -12,7 +12,7 @@ import {
   faUserSecret, 
   faBook, 
   faFolder, 
-  faPalette, 
+  faCertificate,
   faBrain,
   faEnvelope // 1. تم استدعاء أيقونة قسم التواصل
 } from "@fortawesome/free-solid-svg-icons";
@@ -25,7 +25,7 @@ const SECTION_ICONS: Record<string, IconProp> = {
   Projects:   faFolder,
   Services:   faUserSecret,
   Contact:    faEnvelope, 
-  ArtGallery: faPalette,
+  Certifications: faCertificate,
 };
 
 const SECTIONS = Object.keys(SECTION_ICONS);

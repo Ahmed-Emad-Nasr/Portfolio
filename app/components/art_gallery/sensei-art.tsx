@@ -3,7 +3,7 @@
 /*
  * File: sensei-art.tsx
  * Author: Ahmed Emad Nasr
- * Purpose: Render art gallery grid and lightbox viewer integration
+ * Purpose: Render certifications gallery grid and lightbox viewer integration
  */
 
 import { useCallback, useState, memo } from "react";
@@ -30,7 +30,7 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
   return (
     <div className={styles.art_pic}>
       <Image
-        src={image.thumb} alt={`Art piece ${index + 1}`} width={350} height={350}
+        src={image.thumb} alt={`Certification ${index + 1}`} width={350} height={350}
         sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
         onClick={handleClick} loading="lazy" quality={75} className={styles.galleryImg}
       />
@@ -47,10 +47,10 @@ const SenseiArt = memo(function SenseiArt() {
   const handleCloseLightbox = useCallback(() => setIndex(-1), []);
 
   return (
-    <section className={styles["art-gallery-section"]} id="ArtGallery">
+    <section className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
         <div className={styles["header-section"]}>
-          <h2 className={styles.title}><span lang="ja">画廊 •</span><span lang="en"> Art Gallery</span></h2>
+          <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
         </div>
         <div className={styles["art-gallery-content"]}>
           <div className={styles.Gallery}>

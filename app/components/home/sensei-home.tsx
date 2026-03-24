@@ -3,7 +3,7 @@
 /*
  * File: sensei-home.tsx
  * Author: Ahmed Emad Nasr
- * Purpose: Render home hero, social/actions, and about cards sections
+ * Purpose: Render home hero with social links and action buttons
  */
 
 import { memo } from "react";
@@ -14,7 +14,6 @@ import { faLinkedin, faWhatsapp, faXTwitter } from "@fortawesome/free-brands-svg
 import { faUserSecret, faFilePdf, faBriefcase } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
-import { aboutMeCards } from "@/app/core/data";
 
 const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -28,37 +27,12 @@ const ITEM_VARIANTS: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
 };
 
-const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
-const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
-const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.45, ease: SLIDE_EASE } as const;
-
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
-
-type AboutMeCardProps = { icon: string; title: string; description: string; };
-
-const AboutMeCard = memo<AboutMeCardProps>(({ icon, title, description }) => {
-  return (
-    <div className={styles["about-me-card"]}>
-      <div className={styles["card-part-1"]}>
-        <i className={icon} />
-        <h3 className={styles["card-title"]}>{title}</h3>
-      </div>
-      <div className={styles["card-part-2"]}>
-        <p className={styles["card-description"]}>{description}</p>
-      </div>
-    </div>
-  );
-});
-
-AboutMeCard.displayName = "AboutMeCard";
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
   const [containerRef, containerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [aboutGridRef, aboutGridInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section className={styles.home} id="Home">
@@ -87,17 +61,6 @@ const SenseiHome = memo(function SenseiHome() {
           </motion.div>
         </motion.div>
       </motion.div>
-
-      <div className={styles["about-me-section"]}>
-        <motion.div ref={headerRef} className={styles["about-me-header"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
-          <h2 className={styles["about-me-title"]}><span lang="ja">自己紹介 •</span><span lang="en"> About Me</span></h2>
-        </motion.div>
-        <motion.div ref={aboutGridRef} className={styles["about-me-grid"]} initial={{ opacity: 0, y: 20 }} animate={aboutGridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>
-          {aboutMeCards.map((card, index) => (
-            <AboutMeCard key={`${card.title}-${index}`} {...card} />
-          ))}
-        </motion.div>
-      </div>
     </section>
   );
 });
