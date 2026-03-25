@@ -15,7 +15,14 @@ const AnimatedBackground = memo(function AnimatedBackground() {
   // Custom hook manages the requestAnimationFrame loop internally.
   useAnimatedBackground(canvasRef);
 
-  return <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />;
+  return (
+    <>
+      <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
+      <div className={styles.vignette} aria-hidden="true" />
+      <div className={styles.glowOrb} aria-hidden="true" />
+      <div className={styles.scanlines} aria-hidden="true" />
+    </>
+  );
 });
 
 export default AnimatedBackground;

@@ -11,15 +11,15 @@
   transform: translateX(-50%);
   width: calc(100% - 2.4rem);
   padding: 1rem 2.5rem;
-  background: transparent;
-  backdrop-filter: none;
+  background: rgba(8, 8, 8, 0.58);
+  backdrop-filter: blur(12px);
   border-radius: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2.5rem;
   z-index: 1000;
-  border: 1.5px solid rgba(var(--main-color-rgb), 0.5);
+  border: 1.5px solid rgba(var(--main-color-rgb), 0.38);
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 
               0 0 20px rgba(var(--main-color-rgb), 0.25);
 }
@@ -61,7 +61,7 @@
   gap: 0.6rem;
   text-transform: capitalize;
   position: relative;
-  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease;
+  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
 }
 
 .navbar a:hover,
@@ -69,6 +69,7 @@
   background: var(--main-color);
   color: var(--bg-color);
   box-shadow: 0 5px 15px rgba(var(--main-color-rgb), 0.4);
+  transform: translateY(-1px);
 }
 
 /* --- Mobile Menu Icon --- */
@@ -112,6 +113,7 @@
     width: calc(100% - 2rem);
     padding: 0.8rem 1.8rem;
     border-radius: 25px;
+    background: rgba(8, 8, 8, 0.72);
   }
 
   .logo { font-size: 2.1rem; }
@@ -123,8 +125,8 @@
     top: calc(100% + 15px);
     right: 0;
     width: 100%;
-    background: transparent;
-    backdrop-filter: none; 
+    background: rgba(8, 8, 8, 0.78);
+    backdrop-filter: blur(12px); 
     flex-direction: column;
     padding: 2.0rem 0;
     border-radius: 25px;
@@ -159,6 +161,32 @@
     width: 85%;
     justify-content: center;
     margin: 0.5rem 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .header {
+    width: calc(100% - 1.2rem);
+    top: 0.7rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 16px;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.7rem;
+    letter-spacing: 1px;
+  }
+
+  .MenuIcon span {
+    width: 24px;
+    height: 2.5px;
+  }
+
+  .navbar a {
+    width: 92%;
+    font-size: 1.55rem;
+    padding: 0.55rem 1rem;
   }
 }
 

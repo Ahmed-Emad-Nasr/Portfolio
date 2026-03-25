@@ -2,31 +2,34 @@
   "name": "sensei-106",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "verify": "npm run lint && npm run build",
+    "postdeploy-check": "node ./scripts/postdeploy-check.mjs"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^7.2.0",
-    "@fortawesome/free-brands-svg-icons": "^7.2.0",
-    "@fortawesome/free-solid-svg-icons": "^7.2.0",
-    "@fortawesome/react-fontawesome": "^3.2.0",
-    "framer-motion": "^12.38.0",
-    "next": "^16.0.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-intersection-observer": "^10.0.3",
-    "yet-another-react-lightbox": "^3.21.8"
+    "@fortawesome/fontawesome-svg-core": "7.2.0",
+    "@fortawesome/free-brands-svg-icons": "7.2.0",
+    "@fortawesome/free-solid-svg-icons": "7.2.0",
+    "@fortawesome/react-fontawesome": "3.2.0",
+    "framer-motion": "12.38.0",
+    "next": "16.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-intersection-observer": "10.0.3",
+    "yet-another-react-lightbox": "3.21.8"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@types/estree": "^1.0.7",
-    "@types/node": "^25.5.0",
-    "@types/react": "^19.2.2",
-    "eslint": "^10.0.3",
-    "eslint-config-next": "^16.1.6",
-    "typescript": "^5.9.3"
+    "@eslint/eslintrc": "3.3.1",
+    "@types/estree": "1.0.7",
+    "@types/node": "25.5.0",
+    "@types/react": "19.2.2",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.1.6",
+    "typescript": "5.9.3"
   }
 }

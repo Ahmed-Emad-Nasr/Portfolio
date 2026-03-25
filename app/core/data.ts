@@ -143,3 +143,44 @@ export const aboutMeCards = [
       "Location: Cairo, Egypt • Nationality: Egyptian • Age: 21 • Marital Status: Single • Military Status: Postponed (Student) • Open to relocation and remote work",
   }
 ];
+
+export const trustMetrics = [
+  { value: "200+", label: "Simulated SOC Alerts Investigated" },
+  { value: "120+", label: "Learners Trained in Security Topics" },
+  { value: "10+", label: "SOC / DFIR Trainings & Bootcamps" },
+  { value: "4.9/5", label: "Average Training Feedback Score" },
+  { value: "Top 5/360", label: "National University CTF Ranking" },
+  { value: "3.7/4.0", label: "Computer Science GPA" },
+  { value: "95%", label: "eJPT v2 Score" },
+  { value: "98%", label: "CCNA 200-301 Score" },
+];
+
+export const trustTooling = [
+  "Wazuh",
+  "ELK Stack",
+  "Splunk",
+  "Suricata",
+  "MITRE ATT&CK",
+  "YARA",
+  "TryHackMe",
+  "VirusTotal",
+  "Python",
+  "PowerShell",
+];
+
+export const trustAchievements = [
+  "Best Cybersecurity Technical Award at GDG (1st among 200 participants)",
+  "Ranked 44th out of 400 in ITI + CyberTalents CTF",
+  "Top 5 out of 360 teams in National University CTF (Egypt)",
+  "Delivered security training with 40% practical skill improvement",
+];
+
+export const trustCertifications = [
+  "eJPT v2",
+  "eCIR Preparation",
+  "SOC Analyst Path L1/L2",
+  "Cisco Junior Cybersecurity Analyst",
+  "HCIA Cloud & Datacom",
+  "CCNA 200-301",
+  "DEPI Information Security Analyst & Forensics Investigator",
+];

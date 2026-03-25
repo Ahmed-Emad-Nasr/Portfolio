@@ -9,6 +9,7 @@
 import { memo } from "react";
 import styles from "./sensei-services-projects.module.css";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
+import MotionInView from "@/app/core/components/MotionInView";
 
 const SERVICES_DATA = [
   { icon: "fa-solid fa-shield-halved", title: "Security Operations Center (SOC) Analysis", description: "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.", },
@@ -53,7 +54,18 @@ function SenseiServicesProjects() {
           <h2 className={styles.title}><span lang="ja">事業 •</span><span lang="en"> Services</span></h2>
         </div>
         <div className={styles["grid-container"]}>
-          {SERVICES_DATA.map((service, index) => <ServiceItem key={index} {...service} />)}
+          {SERVICES_DATA.map((service, index) => (
+            <MotionInView
+              key={index}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: Math.min(index * 0.06, 0.3) }}
+              threshold={0.12}
+              triggerOnce
+            >
+              <ServiceItem {...service} />
+            </MotionInView>
+          ))}
         </div>
       </div>
     </section>

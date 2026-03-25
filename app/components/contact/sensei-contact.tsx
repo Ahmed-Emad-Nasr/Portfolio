@@ -8,11 +8,13 @@
 
 import { memo, useState, useCallback, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faLocationDot, faPaperPlane, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone, faLocationDot, faPaperPlane, faSpinner, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
+import MotionInView from "@/app/core/components/MotionInView";
+import { trackEvent } from "@/app/core/utils/analytics";
 
 const CONTACT_INFO_DESCRIPTION = "Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!";
 
@@ -51,6 +53,7 @@ const SenseiContact = memo(function SenseiContact() {
       const message = formData.get("message");
 
       if (!name || !email || !subject || !message) {
+        trackEvent("contact_submit_failed", { reason: "missing_fields" });
         setSubmitError(true);
         messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
         setIsSubmitting(false);
@@ -60,11 +63,14 @@ const SenseiContact = memo(function SenseiContact() {
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(String(email))) {
+        trackEvent("contact_submit_failed", { reason: "invalid_email" });
         setSubmitError(true);
         messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
         setIsSubmitting(false);
         return;
       }
+
+      trackEvent("contact_submit_attempt", { source: "contact_form" });
 
       const response = await fetch("https://formspree.io/f/mlgpbpdr", {
         method: "POST", 
@@ -79,6 +85,7 @@ const SenseiContact = memo(function SenseiContact() {
 
       const result = await response.json();
       if (result.ok) {
+        trackEvent("contact_submit_success", { source: "contact_form" });
         setIsSuccess(true);
         e.currentTarget.reset();
         messageTimeoutRef.current = setTimeout(() => setIsSuccess(false), 5000);
@@ -94,6 +101,9 @@ const SenseiContact = memo(function SenseiContact() {
           console.error("Form submission error:", error.message);
         }
       }
+      trackEvent("contact_submit_failed", {
+        reason: error instanceof Error ? error.name : "unknown_error",
+      });
       setSubmitError(true);
       messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
     } finally {
@@ -120,8 +130,15 @@ const SenseiContact = memo(function SenseiContact() {
         </div>
 
         <div className={styles["contact-wrapper"]}>
+          <MotionInView
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            threshold={0.12}
+            triggerOnce
+          >
           <div className={styles["info-card"]}>
-            <h3 className={styles["info-title"]}>Let's Connect</h3>
+            <h3 className={styles["info-title"]}>Let&apos;s Connect</h3>
             <ul className={styles["info-desc-list"]}>
               {infoBullets.map((item, index) => (
                 <li key={`contact-info-${index}`}>{item}</li>
@@ -130,6 +147,25 @@ const SenseiContact = memo(function SenseiContact() {
             <div className={styles["info-item"]}><div className={styles["icon-box"]}><FontAwesomeIcon icon={faEnvelope} /></div><div className={styles["info-text"]}><h4>Email</h4><p>ahmed.em.nasr@gmail.com</p></div></div>
             <a className={styles["info-item"]} href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faPhone} /></div><div className={styles["info-text"]}><h4>Phone / WhatsApp</h4><p>+20 101 816 6445</p></div></a>
             <a className={styles["info-item"]} href="https://www.google.com/maps/search/?api=1&query=Cairo%2C+Egypt" target="_blank" rel="noopener noreferrer" aria-label="Open location in Google Maps"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faLocationDot} /></div><div className={styles["info-text"]}><h4>Location</h4><p>Cairo, Egypt</p></div></a>
+            <a
+              className={styles["book-call-btn"]}
+              href="https://wa.me/201018166445?text=Hi%20Ahmed%2C%20I%20want%20to%20book%20a%20quick%20security%20call."
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Book a quick call on WhatsApp"
+              onClick={() => trackEvent("cta_click", { source: "contact_section", action: "book_call", destination: "whatsapp" })}
+            >
+              Book a Call
+            </a>
+            <a
+              className={styles["download-cv-btn"]}
+              href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
+              download
+              aria-label="Download CV"
+              onClick={() => trackEvent("cta_click", { source: "contact_section", action: "download_cv", destination: "cv_pdf" })}
+            >
+              Download CV <FontAwesomeIcon icon={faFilePdf} />
+            </a>
             <div className={styles["contact-socials"]}>
               <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp profile"><FontAwesomeIcon icon={faWhatsapp} /></a>
               <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
@@ -138,7 +174,15 @@ const SenseiContact = memo(function SenseiContact() {
               <a href="https://t.me/ahmed_em_nasr" target="_blank" rel="noopener noreferrer" title="Telegram" aria-label="Telegram profile"><FontAwesomeIcon icon={faTelegram} /></a>
             </div>
           </div>
+          </MotionInView>
 
+          <MotionInView
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.08 }}
+            threshold={0.12}
+            triggerOnce
+          >
           <div className={styles["form-card"]}>
             <form onSubmit={handleSubmit}>
               <div className={styles["input-group"]}><input type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} /></div>
@@ -152,7 +196,12 @@ const SenseiContact = memo(function SenseiContact() {
               {submitError && <p className={styles["error-msg"]}>Failed to send message. Please try again.</p>}
             </form>
           </div>
+          </MotionInView>
         </div>
+
+        <a className={styles["mobile-call-cta"]} href="https://wa.me/201018166445?text=Hi%20Ahmed%2C%20I%20want%20to%20book%20a%20quick%20security%20call." target="_blank" rel="noopener noreferrer" aria-label="Book a call">
+          Book a Call
+        </a>
       </div>
     </section>
   );

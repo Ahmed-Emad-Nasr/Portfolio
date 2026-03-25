@@ -1,0 +1,131 @@
+/*
+ * File: floating-cta.module.css
+ * Purpose: Floating command palette CTA styling
+ */
+
+.palette {
+  position: fixed;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.35);
+  background: rgba(8, 8, 8, 0.78);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 8.6rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  transition: transform 0.7s ease, background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease;
+}
+
+.primaryAction {
+  color: var(--bg-color);
+  background: var(--main-color);
+  border: 1px solid var(--main-color);
+}
+
+.secondaryAction {
+  color: var(--text-color);
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.primaryAction:hover,
+.secondaryAction:hover {
+  transform: translateY(-2px);
+}
+
+.secondaryAction:hover {
+  color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.6);
+}
+
+@media (max-width: 768px) {
+  .palette {
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.9rem;
+    transform: none;
+    justify-content: center;
+    border-radius: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.9rem 1rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .palette {
+    padding: 0.65rem;
+    gap: 0.55rem;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    padding: 0.78rem 0.72rem;
+    font-size: 1.08rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .palette {
+    left: 0.7rem;
+    right: 0.7rem;
+    bottom: 0.65rem;
+    padding: 0.55rem;
+    gap: 0.45rem;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    padding: 0.72rem 0.58rem;
+    font-size: 1rem;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 320px) {
+  .palette {
+    left: 0.55rem;
+    right: 0.55rem;
+    bottom: 0.55rem;
+    padding: 0.48rem;
+    gap: 0.38rem;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    padding: 0.66rem 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .secondaryAction {
+    transition: none;
+  }
+}

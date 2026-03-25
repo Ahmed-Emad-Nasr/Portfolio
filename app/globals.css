@@ -63,6 +63,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@keyframes sectionFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(var(--main-color-rgb), 0);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(var(--main-color-rgb), 0.18);
+  }
+}
+
 /*--------- 2. Language Specific Styles ---------*/
 :lang(ja) {
   font-family: var(--font-yuji-syuku, serif);
@@ -90,6 +111,16 @@ body {
 section {
   min-height: 100vh;
   padding: 6rem 6% 5rem;
+  position: relative;
+}
+
+section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.03), transparent 40%);
+  z-index: 0;
 }
 
 /*--------- 5. Accessibility Overrides ---------*/
@@ -110,6 +141,10 @@ section {
   section {
     min-height: 100vh;
     padding: 0 1.5rem 5%;
+  }
+
+  body {
+    padding-bottom: 8rem;
   }
   
 }

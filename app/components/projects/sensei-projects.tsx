@@ -6,32 +6,70 @@
  * Purpose: Render GitHub projects section with stats, tags, and external links
  */
 
-import { memo } from "react";
-import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { memo, useMemo, useState } from "react";
+import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare, faCirclePlay, faCode } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
 import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MotionInView from "@/app/core/components/MotionInView";
 
 type ProjectItemProps = { repo: GitHubRepository };
+type ProjectCategory = "All" | "SOC" | "DFIR" | "Automation";
+
+const FILTERS: ProjectCategory[] = ["All", "SOC", "DFIR", "Automation"];
+
+const CATEGORY_KEYWORDS: Record<Exclude<ProjectCategory, "All">, string[]> = {
+  SOC: ["soc", "siem", "wazuh", "suricata", "elk", "splunk", "monitor", "alert"],
+  DFIR: ["forensic", "dfir", "incident", "ioc", "malware", "yara", "response"],
+  Automation: ["automation", "script", "python", "powershell", "bash", "bot", "tooling"],
+};
+
+const getCategoriesForRepo = (repo: GitHubRepository): ProjectCategory[] => {
+  const source = [repo.name, repo.description ?? "", repo.language ?? "", ...repo.topics].join(" ").toLowerCase();
+  const categories = (Object.keys(CATEGORY_KEYWORDS) as Array<Exclude<ProjectCategory, "All">>).filter((category) =>
+    CATEGORY_KEYWORDS[category].some((keyword) => source.includes(keyword))
+  );
+
+  return categories.length > 0 ? categories : ["Automation"];
+};
+
+const buildCaseStudy = (repo: GitHubRepository) => {
+  const baseProblem = (repo.description || "Security workflow challenge")
+    .split(".")
+    .map((item) => item.trim())
+    .filter(Boolean)[0] || "Security workflow challenge";
+
+  const action = repo.topics.length > 0
+    ? `Implemented with ${repo.topics.slice(0, 2).join(" + ")}${repo.language ? ` using ${repo.language}` : ""}.`
+    : `Implemented secure workflow${repo.language ? ` using ${repo.language}` : ""}.`;
+
+  const result = `Open-source impact: ${repo.stargazers_count} stars • ${repo.forks_count} forks • ${repo.watchers_count} watchers.`;
+
+  return { problem: baseProblem, action, result };
+};
 
 const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   const descriptionBullets = toBulletItems(repo.description || "No description available for this repository.");
+  const liveUrl = repo.homepage && repo.homepage.trim().length > 0 ? repo.homepage : repo.html_url;
+  const caseStudy = buildCaseStudy(repo);
 
   return (
-    <a
-      className={styles["single-project"]}
-      href={repo.html_url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Open project ${repo.name} on GitHub`}
-    >
+    <article className={styles["single-project"]}>
       <div className={styles["part-1"]}>
         <i className={getIconForLanguage(repo.language)} aria-hidden="true" />
         <h3>
-          {repo.name} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles["link-icon"]} />
+          <a
+            className={styles["title-link"]}
+            href={repo.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open project ${repo.name} on GitHub`}
+          >
+            {repo.name} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles["link-icon"]} />
+          </a>
         </h3>
       </div>
 
@@ -44,7 +82,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
 
         <div className={styles["stats-container"]}>
           <span className={styles["stat-badge"]} title="Stars"><FontAwesomeIcon icon={faStar} /> {repo.stargazers_count}</span>
-          <span className={styles["stat-badge"]} title="Forks/Issues"><FontAwesomeIcon icon={faCodeBranch} /> {repo.open_issues_count}</span>
+          <span className={styles["stat-badge"]} title="Forks"><FontAwesomeIcon icon={faCodeBranch} /> {repo.forks_count}</span>
           <span className={styles["stat-badge"]} title="Watchers"><FontAwesomeIcon icon={faEye} /> {repo.watchers_count}</span>
         </div>
 
@@ -59,8 +97,23 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
           <span>Lang: <strong>{repo.language ?? "N/A"}</strong></span>
           <span>Upd: {formatDate(repo.updated_at)}</span>
         </div>
+
+        <div className={styles["case-study"]}>
+          <p><strong>Problem:</strong> {caseStudy.problem}</p>
+          <p><strong>Action:</strong> {caseStudy.action}</p>
+          <p><strong>Result:</strong> {caseStudy.result}</p>
+        </div>
+
+        <div className={styles["project-actions"]}>
+          <a href={liveUrl} target="_blank" rel="noopener noreferrer" className={`${styles["action-btn"]} ${styles["primary-action"]}`} aria-label={`Open live project for ${repo.name}`}>
+            <FontAwesomeIcon icon={faCirclePlay} /> Live
+          </a>
+          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className={styles["action-btn"]} aria-label={`Open source code for ${repo.name}`}>
+            <FontAwesomeIcon icon={faCode} /> Code
+          </a>
+        </div>
       </div>
-    </a>
+    </article>
   );
 }, (prev, next) => prev.repo.id === next.repo.id);
 
@@ -68,6 +121,12 @@ ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
   const repos = useGitHubRepos();
+  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
+
+  const filteredRepos = useMemo(() => {
+    if (activeFilter === "All") return repos;
+    return repos.filter((repo) => getCategoriesForRepo(repo).includes(activeFilter));
+  }, [repos, activeFilter]);
 
   return (
     <section className={styles["section-projects"]} id="Projects">
@@ -75,12 +134,35 @@ const SenseiProjects = memo(function SenseiProjects() {
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
         </div>
+        <div className={styles["projects-filter"]}>
+          {FILTERS.map((filterItem) => (
+            <button
+              key={filterItem}
+              type="button"
+              className={`${styles["filter-btn"]} ${activeFilter === filterItem ? styles.active : ""}`}
+              onClick={() => setActiveFilter(filterItem)}
+            >
+              {filterItem}
+            </button>
+          ))}
+        </div>
         <div className={styles["grid-container"]}>
-          {repos.length > 0 ? (
-            repos.map((repo) => <ProjectItem key={repo.id} repo={repo} />)
+          {filteredRepos.length > 0 ? (
+            filteredRepos.map((repo, index) => (
+              <MotionInView
+                key={repo.id}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: Math.min(index * 0.06, 0.3) }}
+                threshold={0.12}
+                triggerOnce
+              >
+                <ProjectItem repo={repo} />
+              </MotionInView>
+            ))
           ) : (
             <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", opacity: 0.6 }}>
-              <p>Loading projects from GitHub...</p>
+              <p>{repos.length === 0 ? "Loading projects from GitHub..." : "No projects match this filter yet."}</p>
             </div>
           )}
         </div>

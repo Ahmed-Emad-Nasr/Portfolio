@@ -28,15 +28,13 @@ const SenseiHeader = memo(function SenseiHeader() {
         localStorage.setItem("activeSection", section);
       } catch (e) {
         // localStorage is not available (private browsing, cross-origin iframe, etc.); silently ignore
-        if (process.env.NODE_ENV === "development" && e instanceof Error) {
-          console.debug("localStorage unavailable:", e.message);
-        }
+        void e;
       }
       if (window.innerWidth <= 994) {
         setIsMenuOpen(false);
       }
     },
-    []
+    [setActiveSection, setIsMenuOpen]
   );
 
   const handleLogoClick = useCallback(

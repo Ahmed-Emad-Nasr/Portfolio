@@ -14,6 +14,7 @@ import { faShieldHalved, faBrain, faBookOpen, faNetworkWired, faBug, faUserSecre
 import { faLinux } from "@fortawesome/free-brands-svg-icons";
 import styles from "./sensei-skills.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
+import MotionInView from "@/app/core/components/MotionInView";
 
 const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -77,6 +78,13 @@ const SkillsSection = memo(function SkillsSection() {
           <SectionHeader japaneseText="技能 スキル" englishText="Skills & Expertise" titleClassName={styles.title} />
         </div>
 
+        <MotionInView
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          threshold={0.12}
+          triggerOnce
+        >
         <div className={styles["core-skills-wrapper"]}>
           <h3 className={styles["core-title"]}><FontAwesomeIcon icon={faShieldHalved} /> Technical Competencies</h3>
           <div className={styles["progress-grid"]}>
@@ -92,7 +100,15 @@ const SkillsSection = memo(function SkillsSection() {
             ))}
           </div>
         </div>
+        </MotionInView>
 
+        <MotionInView
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.08 }}
+          threshold={0.12}
+          triggerOnce
+        >
         <div className={styles["core-skills-wrapper"]}>
           <h3 className={styles["core-title"]}><FontAwesomeIcon icon={faBrain} /> Professional Skills</h3>
           <div className={styles["progress-grid"]}>
@@ -108,10 +124,20 @@ const SkillsSection = memo(function SkillsSection() {
             ))}
           </div>
         </div>
+        </MotionInView>
 
         <div className={styles["skills-grid"]}>
           {BADGES_DATA.map((skill, index) => (
-            <SkillCard key={`badge-${index}`} category={skill.category} icon={skill.icon} skills={skill.skills} />
+            <MotionInView
+              key={`badge-${index}`}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: Math.min(index * 0.06, 0.24) }}
+              threshold={0.12}
+              triggerOnce
+            >
+              <SkillCard category={skill.category} icon={skill.icon} skills={skill.skills} />
+            </MotionInView>
           ))}
         </div>
       </div>

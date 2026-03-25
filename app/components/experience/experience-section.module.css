@@ -36,6 +36,7 @@
   transition: background-color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
   position: relative; text-align: left;
+  overflow: hidden;
 }
 
 .content:hover {
@@ -74,4 +75,31 @@
   .timeline-container.left::after, .timeline-container.right::after { left: 3rem; right: auto; transform: translateX(-50%); } 
   .content { padding: 2.5rem 2rem; } 
   .date-details { align-items: flex-start; } 
+}
+
+@media (max-width: 430px) {
+  .container { padding: 0 1.2rem; }
+  .title { font-size: 2.5rem; }
+  .timeline-container { padding-left: 4.8rem; padding-right: 0.5rem; }
+  .time-line::after { left: 1.8rem; }
+  .timeline-container.left::after,
+  .timeline-container.right::after { left: 1.8rem; width: 18px; height: 18px; border-width: 3px; }
+  .content { padding: 2rem 1.2rem; border-radius: 1.6rem; }
+  .tag h2 { font-size: 1.8rem; }
+  .tag h3 { font-size: 1.4rem; }
+  .desc-list { font-size: 1.35rem; }
+}
+
+.content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.08), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.content:hover::before {
+  opacity: 1;
 }

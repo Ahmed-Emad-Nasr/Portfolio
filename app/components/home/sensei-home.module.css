@@ -4,15 +4,21 @@
  * Purpose: Home section styles (hero, actions, and responsive rules)
  */
 .home { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 2rem; }
-.container { display: flex; justify-content: center; align-items: center; gap: 4rem; max-width: 1200px; width: 100%; min-height: 95vh; padding: 5px 0; }
+.container { display: flex; justify-content: center; align-items: center; gap: 4rem; max-width: 1200px; width: 100%; min-height: 95vh; padding: 5px 0; --parallax-x: 0px; --parallax-y: 0px; }
 .homeImg { flex: 0 0 auto; max-width: 435px; width: 100%; }
+
+.homeContent {
+  animation: sectionFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
+  transition: transform 0.5s ease;
+}
 
 .homeImg img {
   width: 100%; height: auto; border-radius: 16px; box-shadow: 0 0 31px var(--main-color);
   transition: transform 0.7s ease, filter 0.7s ease;
   cursor: pointer; will-change: transform, filter;
 }
-.homeImg img:hover { transform: scale(1.015); filter: drop-shadow(0 0 24px var(--main-color)); }
+.homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1.015); filter: drop-shadow(0 0 24px var(--main-color)); }
 
 .homeContent h1 { font-size: 5.5rem; font-weight: 700; line-height: 1.3; }
 .highlight { color: var(--main-color); }
@@ -27,7 +33,7 @@
 .statusDot { width: 10px; height: 10px; border-radius: 50%; }
 .dotAvailable { background-color: #00e676; box-shadow: 0 0 8px #00e676; animation: pulseGreen 4s infinite; }
 
-.typingText { font-size: 34px; font-weight: 600; min-width: 300px; margin-bottom: 1.5rem; }
+.typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 600; min-width: 0; width: 100%; margin-bottom: 1.5rem; }
 .typingHighlight { position: relative; color: var(--main-color); }
 .typingHighlight::before { content: " "; animation: words 20s infinite; }
 .typingHighlight::after {
@@ -57,25 +63,111 @@
   border-radius: 1rem; color: var(--main-color);
   transition: transform 0.7s ease, color 0.7s ease, background 0.7s ease, box-shadow 0.7s ease;
   will-change: transform;
+  position: relative;
+  overflow: hidden;
 }
 .socialIcon a:hover {
   color: black; transform: scale(1.04) translateY(-2px);
   background: var(--main-color); box-shadow: 0 10px 20px rgba(var(--main-color-rgb), 0.4);
 }
 
-.homeButton { display: flex; gap: 1.5rem; }
+.socialIcon a::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto auto -150%;
+  width: 120%;
+  height: 180%;
+  transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transition: left 0.7s ease;
+}
+
+.socialIcon a:hover::after {
+  left: 120%;
+}
+
+.homeButton { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; padding: 1rem 2.8rem; border-radius: 1rem;
   font-size: 1.6rem; letter-spacing: 0.1rem; font-weight: 600;
   transition: transform 0.7s ease, background 0.7s ease, color 0.7s ease, box-shadow 0.7s ease;
   cursor: pointer; text-decoration: none; box-shadow: 0 0 11px var(--main-color);
   will-change: transform;
+  position: relative;
+  overflow: hidden;
 }
 .btn svg { margin-left: 0.8rem; font-size: 1.8rem; }
 .btn1 { background: transparent; color: var(--main-color); border: 2px solid var(--main-color); }
 .btn1:hover { background: var(--main-color); color: var(--bg-color); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(var(--main-color-rgb), 0.5); }
 .btn2 { background: var(--main-color); color: black; border: 2px solid transparent; }
 .btn2:hover { background: transparent; color: var(--main-color); border: 2px solid var(--main-color); box-shadow: 0 10px 20px rgba(var(--main-color-rgb), 0.5); transform: translateY(-2px); }
+
+.cvBtn {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--main-color);
+  border: 2px dashed rgba(var(--main-color-rgb), 0.72);
+  box-shadow: 0 0 14px rgba(var(--main-color-rgb), 0.22);
+}
+
+.cvBtn:hover {
+  background: var(--main-color);
+  color: var(--bg-color);
+  border-style: solid;
+  border-color: var(--main-color);
+  box-shadow: 0 12px 26px rgba(var(--main-color-rgb), 0.45);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.cvBtn:hover svg {
+  animation: pdfPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes pdfPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(var(--main-color-rgb), 0));
+  }
+  50% {
+    transform: scale(1.14);
+    filter: drop-shadow(0 0 7px rgba(var(--main-color-rgb), 0.55));
+  }
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: -120%;
+  left: -30%;
+  width: 65%;
+  height: 300%;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: rotate(24deg);
+  transition: left 0.7s ease;
+}
+
+.btn:hover::before {
+  left: 120%;
+}
+
+.liveTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.2rem;
+  margin-right: 0.8rem;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.5);
+  border-radius: 999px;
+}
+
+.livePing {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--main-color);
+  animation: softGlow 2.2s ease-in-out infinite;
+}
 
 /* === Media Queries & Mobile Overrides === */
 @media (max-width: 1017px) { .homeContent h1 { font-size: 5.4rem; } }
@@ -90,6 +182,7 @@
   .homeImg { margin-top: 15rem; width: 100%; height: auto; max-width: 450px; } 
   .socialIcon, .homeButton { justify-content: center; } 
   .homeContent p { text-align: justify; margin-left: auto; margin-right: auto; } 
+  .homeContent { transform: none; }
   .homeContent h3 { font-size: 2.5rem; } 
   .btn { padding: 1rem 2rem; font-size: 1.7rem; } 
   .availabilityStatus { margin: 1rem auto 1.5rem auto; } 
@@ -97,7 +190,8 @@
 
 @media (max-width: 768px) { 
   .homeContent h1 { font-size: 4.8rem; } .homeContent h3 { font-size: 3rem; } 
-  .homeButton { flex-direction: row; align-items: center; }
+  .homeButton { flex-direction: column; align-items: stretch; }
+  .btn { justify-content: center; }
 }
 
 @media (max-width: 600px) { 

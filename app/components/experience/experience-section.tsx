@@ -14,6 +14,7 @@ import { knowledgeEducationItems } from "@/app/core/data";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import MotionInView from "@/app/core/components/MotionInView";
 
 type TimelineItemProps = { tag: string; subTag?: string; subTagHyperlink?: string; desc: string; isRight: boolean; startDate: string; endDate?: string; showDate?: boolean; };
 
@@ -25,7 +26,14 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
   const subTagStyle = subTagHyperlink ? ({ cursor: "pointer" } as const) : ({ cursor: "default" } as const);
 
   return (
-    <div className={containerClass}>
+    <MotionInView
+      className={containerClass}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      threshold={0.15}
+      triggerOnce
+    >
       <div className={styles.content}>
         <div className={styles.tag}>
           <h2><FontAwesomeIcon icon={faBriefcase} className={styles.titleIcon} aria-hidden="true" /> {tag}</h2>
@@ -49,7 +57,7 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
           </div>
         )}
       </div>
-    </div>
+    </MotionInView>
   );
 });
 

@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import type { JSX } from "react";
 import styles from "./sensei_loader.module.css";
 import loadingGif from "@/public/Assets/loading/loading.gif";
@@ -30,13 +31,12 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
       aria-hidden="true"
     >
       <div className={styles.loaderContent}>
-        <img
+        <Image
           src={loadingGif.src}
           alt="Loading..."
           width={250}
           height={250}
-          loading="eager"
-          decoding="async"
+          priority
           className={styles.spinner}
         />
       </div>

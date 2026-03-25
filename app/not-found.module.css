@@ -1,0 +1,153 @@
+/*
+ * File: not-found.module.css
+ * Purpose: Cinematic styling for custom 404 page
+ */
+
+.wrapper {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.08), transparent 45%),
+    linear-gradient(145deg, #040404 0%, #0b0b0b 100%);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 75% 25%, rgba(var(--main-color-rgb), 0.14), transparent 48%);
+  filter: blur(18px);
+  animation: floatGlow 14s ease-in-out infinite;
+}
+
+.card {
+  width: min(760px, 100%);
+  text-align: center;
+  padding: 4rem 2.4rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  background: rgba(9, 9, 9, 0.7);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 24px rgba(var(--main-color-rgb), 0.1);
+  position: relative;
+  z-index: 1;
+  animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.code {
+  font-size: clamp(6rem, 18vw, 13rem);
+  line-height: 1;
+  font-weight: 900;
+  color: var(--main-color);
+  text-shadow: 0 0 22px rgba(var(--main-color-rgb), 0.3);
+  margin-bottom: 0.8rem;
+}
+
+.card h1 {
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  color: var(--text-color);
+  margin-bottom: 1.2rem;
+}
+
+.description {
+  font-size: clamp(1.5rem, 2vw, 1.8rem);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.75;
+  max-width: 62rem;
+  margin: 0 auto 2.2rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14rem;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  font-size: 1.45rem;
+  font-weight: 800;
+  transition: transform 0.7s ease, background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+}
+
+.primaryBtn {
+  color: var(--bg-color);
+  background: var(--main-color);
+  border: 1px solid var(--main-color);
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(var(--main-color-rgb), 0.35);
+}
+
+.secondaryBtn {
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(var(--main-color-rgb), 0.32);
+}
+
+.secondaryBtn:hover {
+  transform: translateY(-2px);
+  color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.65);
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatGlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate3d(-1.8%, 1.2%, 0) scale(1.05);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 3rem 1.6rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .glow,
+  .primaryBtn,
+  .secondaryBtn {
+    animation: none;
+    transition: none;
+  }
+}
