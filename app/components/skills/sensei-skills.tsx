@@ -7,16 +7,12 @@
  */
 
 import { memo, useMemo } from "react";
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShieldHalved, faBrain, faBookOpen, faNetworkWired, faBug, faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { faLinux } from "@fortawesome/free-brands-svg-icons";
 import styles from "./sensei-skills.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
-
-const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const TECHNICAL_SKILLS = [
   { name: "Alert Triage & IOC Analysis", percentage: 90 },
@@ -69,10 +65,8 @@ const SkillCard = memo<SkillCardProps>(({ category, icon, skills }) => {
 SkillCard.displayName = "SkillCard";
 
 const SkillsSection = memo(function SkillsSection() {
-  const [skillsRef, skillsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
   return (
-    <section ref={skillsRef} className={styles["skills-section"]} id="Skills">
+    <section className={styles["skills-section"]} id="Skills">
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="技能 スキル" englishText="Skills & Expertise" titleClassName={styles.title} />
@@ -94,7 +88,7 @@ const SkillsSection = memo(function SkillsSection() {
                   <span>{skill.name}</span><span className={styles["progress-percent"]}>{skill.percentage}%</span>
                 </div>
                 <div className={styles["progress-bg"]}>
-                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={{ width: skillsInView ? `${skill.percentage}%` : 0 }} transition={{ duration: 0.7, ease: SLIDE_EASE }} />
+                  <div className={styles["progress-fill"]} style={{ width: `${skill.percentage}%` }} />
                 </div>
               </div>
             ))}
@@ -118,7 +112,7 @@ const SkillsSection = memo(function SkillsSection() {
                   <span>{skill.name}</span><span className={styles["progress-percent"]}>{skill.percentage}%</span>
                 </div>
                 <div className={styles["progress-bg"]}>
-                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={{ width: skillsInView ? `${skill.percentage}%` : 0 }} transition={{ duration: 0.7, ease: SLIDE_EASE }} />
+                  <div className={styles["progress-fill"]} style={{ width: `${skill.percentage}%` }} />
                 </div>
               </div>
             ))}

@@ -145,6 +145,7 @@ export const aboutMeCards = [
 ];
 
 export const trustMetrics = [
+  { value: "8k+", label: "LinkedIn Followers" },
   { value: "200+", label: "Simulated SOC Alerts Investigated" },
   { value: "120+", label: "Learners Trained in Security Topics" },
   { value: "10+", label: "SOC / DFIR Trainings & Bootcamps" },
