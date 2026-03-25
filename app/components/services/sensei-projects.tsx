@@ -7,20 +7,12 @@
  */
 
 import { memo } from "react";
-import { useInView } from "react-intersection-observer";
 import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import { motion } from "framer-motion";
 import styles from "./sensei-services-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
 import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const HEADER_INITIAL     = { opacity: 0, y: -30 } as const;
-const HEADER_ANIMATE_IN  = { opacity: 1, y: 0 }   as const;
-const HEADER_ANIMATE_OUT = {}                      as const;
-const HEADER_TRANSITION  = { duration: 0.45, ease: SLIDE_EASE } as const;
 
 type ProjectItemProps = { repo: GitHubRepository };
 
@@ -69,16 +61,14 @@ ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
   const repos = useGitHubRepos();
-  const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [gridRef, gridInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section className={styles["section-projects"]} id="Projects">
       <div className={styles.container}>
-        <motion.div ref={headerRef} className={styles["header-section"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
+        <div className={styles["header-section"]}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
-        </motion.div>
-        <motion.div ref={gridRef} className={styles["grid-container"]} initial={{ opacity: 0, y: 20 }} animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>
+        </div>
+        <div className={styles["grid-container"]}>
           {repos.length > 0 ? (
             repos.map((repo) => <ProjectItem key={repo.id} repo={repo} />)
           ) : (
@@ -86,7 +76,7 @@ const SenseiProjects = memo(function SenseiProjects() {
               <p>Loading projects from GitHub...</p>
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

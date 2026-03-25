@@ -7,35 +7,13 @@
  */
 
 import { memo, useState, useCallback, useRef, useEffect } from "react";
-import { motion, type Variants } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faPhone, faLocationDot, faPaperPlane, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 
-const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]; 
-
-const CONTAINER_VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
-};
-
-const ITEM_VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: SLIDE_EASE } },
-};
-
-const HEADER_INITIAL = { opacity: 0, y: -30 } as const;
-const HEADER_ANIMATE_IN = { opacity: 1, y: 0 } as const;
-const HEADER_ANIMATE_OUT = {} as const;
-const HEADER_TRANSITION = { duration: 0.45, ease: SLIDE_EASE } as const;
-
 const SenseiContact = memo(function SenseiContact() {
-  const [headerRef, headerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [containerRef, containerInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
@@ -133,12 +111,12 @@ const SenseiContact = memo(function SenseiContact() {
   return (
     <section className={styles["contact-section"]} id="Contact">
       <div className={styles.container}>
-        <motion.div ref={headerRef} className={styles["header-section"]} initial={HEADER_INITIAL} animate={headerInView ? HEADER_ANIMATE_IN : HEADER_ANIMATE_OUT} transition={HEADER_TRANSITION}>
+        <div className={styles["header-section"]}>
           <SectionHeader japaneseText="連絡先" englishText="Contact Me" titleClassName={styles.title} />
-        </motion.div>
+        </div>
 
-        <motion.div ref={containerRef} className={styles["contact-wrapper"]} initial="hidden" animate={containerInView ? "visible" : "hidden"} variants={CONTAINER_VARIANTS}>
-          <motion.div className={styles["info-card"]} variants={ITEM_VARIANTS}>
+        <div className={styles["contact-wrapper"]}>
+          <div className={styles["info-card"]}>
             <h3 className={styles["info-title"]}>Let's Connect</h3>
             <p className={styles["info-desc"]}>Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!</p>
             <div className={styles["info-item"]}><div className={styles["icon-box"]}><FontAwesomeIcon icon={faEnvelope} /></div><div className={styles["info-text"]}><h4>Email</h4><p>ahmed.em.nasr@gmail.com</p></div></div>
@@ -151,9 +129,9 @@ const SenseiContact = memo(function SenseiContact() {
               <a href="https://instagram.com/ahmed.em.nasr" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram profile"><FontAwesomeIcon icon={faInstagram} /></a>
               <a href="https://t.me/ahmed_em_nasr" target="_blank" rel="noopener noreferrer" title="Telegram" aria-label="Telegram profile"><FontAwesomeIcon icon={faTelegram} /></a>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div className={styles["form-card"]} variants={ITEM_VARIANTS}>
+          <div className={styles["form-card"]}>
             <form onSubmit={handleSubmit}>
               <div className={styles["input-group"]}><input type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} /></div>
               <div className={styles["input-group"]}><input type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} /></div>
@@ -162,11 +140,11 @@ const SenseiContact = memo(function SenseiContact() {
               <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
                 {isSubmitting ? (<>Sending... <FontAwesomeIcon icon={faSpinner} spin /></>) : (<>Send Message <FontAwesomeIcon icon={faPaperPlane} /></>)}
               </button>
-              {isSuccess && <motion.p className={styles["success-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>Message sent successfully! I will get back to you soon.</motion.p>}
-              {submitError && <motion.p className={styles["error-msg"]} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: SLIDE_EASE }}>Failed to send message. Please try again.</motion.p>}
+              {isSuccess && <p className={styles["success-msg"]}>Message sent successfully! I will get back to you soon.</p>}
+              {submitError && <p className={styles["error-msg"]}>Failed to send message. Please try again.</p>}
             </form>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );
