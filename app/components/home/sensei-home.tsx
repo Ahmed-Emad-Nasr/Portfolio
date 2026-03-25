@@ -47,7 +47,7 @@ const SenseiHome = memo(function SenseiHome() {
       <div ref={containerRef} className={styles.container} onMouseMove={handlePointerMove} onMouseLeave={resetParallax}>
         <div className={styles.homeImg}>
           <Image
-            src="/Assets/art-gallery/Images/logo/My_Logo.webp"
+            src="Assets/art-gallery/Images/logo/My_Logo.webp"
             alt="Ahmed Emad Nasr Image"
             className={styles.image}
             width={350}
