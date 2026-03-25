@@ -133,7 +133,7 @@ const SenseiContact = memo(function SenseiContact() {
           <MotionInView
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.3 }}
             threshold={0.12}
             triggerOnce
           >
@@ -179,7 +179,7 @@ const SenseiContact = memo(function SenseiContact() {
           <MotionInView
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.08 }}
+            transition={{ duration: 0.3, delay: 0.08 }}
             threshold={0.12}
             triggerOnce
           >

@@ -9,7 +9,6 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import FloatingCTA from "@/app/components/floating_cta/floating-cta";
 import AnalyticsTracker from "@/app/core/components/AnalyticsTracker";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -177,7 +176,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         {children}
-        <FloatingCTA />
       </body>
     </html>
   );

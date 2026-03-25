@@ -11,14 +11,14 @@ export const homeSummaryParagraph =
   "Computer Science student at Benha University, specializing in SOC, Incident Response, and Cybersecurity. Experienced in monitoring, alert triage, DFIR, and system defense through DEPI & ITI training and SOC projects. Passionate about securing digital environments.";
 
 export const aboutSummaryParagraph =
-  "SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts through DEPI, ITI, SOC projects, and home labs. Skilled in SIEM/EDR investigations, alert triage, log & IOC analysis, incident handling, and team collaboration. Focused on improving detection accuracy, reducing alert fatigue via continuous tuning and threat-driven analysis. Open to relocation and remote work.";
+  "SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response. Focused on improving detection accuracy, reducing false positives, and accelerating incident investigation workflows. Open to relocation and remote work.";
 
 export const knowledgeEducationItems = [
   {
     tag: "Incident Response Analyst Intern",
     subTag: "Digital Egypt Pioneers Initiative (DEPI)",
     subTagHyperlink: "https://www.depi.gov.eg/",
-    desc: "Completed a 6-month DEPI training program and solved TryHackMe labs simulating the full Incident Response lifecycle. • Implemented a DEPI graduation project using ELK SIEM, Wazuh EDR, and Suricata, reducing false-positive alerts by 9%.",
+    desc: "Completed a 6-month DEPI training program performing hands-on Incident Response across the full IR lifecycle (TryHackMe labs). • Built and tuned a SIEM environment using ELK, Wazuh, and Suricata, reducing false-positive alerts by 9% and improving alert quality.",
     isRight: true,
     startDate: "2026-01-01",
     showDate: true,
@@ -27,7 +27,7 @@ export const knowledgeEducationItems = [
     tag: "Information Security Analyst Intern",
     subTag: "Digital Egypt Pioneers Initiative (DEPI)",
     subTagHyperlink: "https://www.depi.gov.eg/",
-    desc: "Analyzed and triaged simulated security alerts within TryHackMe environments using SOC lifecycle methodologies. • Developed a DEPI capstone project with Wazuh, Suricata, VirusTotal, and YARA rules, increasing detection capabilities by 12%.",
+    desc: "Analyzed and triaged simulated SOC alerts using structured workflows, improving investigation consistency and response speed. • Developed a detection lab using Wazuh, Suricata, VirusTotal, and YARA rules, increasing detection coverage by 12%.",
     isRight: false,
     startDate: "2025-06-01",
     endDate: "2025-12-01",
@@ -37,7 +37,7 @@ export const knowledgeEducationItems = [
     tag: "Volunteer Cybersecurity Instructor & Technical Trainer",
     subTag: "Google Developer Groups (GDG) and Science in Code (SIC)",
     subTagHyperlink: "https://gdg.community.dev/",
-    desc: "Delivered cybersecurity training to 120+ learners, achieving a 40% improvement in practical skills and a 4.9/5 overall rating. • Conducted sessions on security fundamentals, threat awareness, and online safety for diverse audiences.",
+    desc: "Delivered cybersecurity training to 120+ learners, achieving a 4.9/5 rating and improving practical skills by 40%. • Designed structured training sessions on security fundamentals and threat awareness, increasing learner engagement and retention.",
     isRight: true,
     startDate: "2024-10-01",
     endDate: "2025-10-01",
@@ -177,11 +177,30 @@ export const trustAchievements = [
 ];
 
 export const trustCertifications = [
-  "eJPT v2",
   "eCIR Preparation",
+  "eJPT v2",
   "SOC Analyst Path L1/L2",
+  "DEPI Information Security Analyst & Forensics Investigator",
   "Cisco Junior Cybersecurity Analyst",
   "HCIA Cloud & Datacom",
   "CCNA 200-301",
-  "DEPI Information Security Analyst & Forensics Investigator",
 ];
+
+export const projectBullets: Record<string, string[]> = {
+  "insider-threat-detection-deception": [
+    "Designed a deception environment using honeytokens and Wazuh SIEM to detect insider activity and unauthorized access.",
+    "Integrated pfSense and Suricata for real-time monitoring, enhancing alert reliability and SOC threat visibility.",
+  ],
+  "Malware-Analysis-and-Prevention-Strategy": [
+    "Created an isolated malware lab for analysis and IOC extraction.",
+    "Applied YARA rules and threat intelligence feeds, boosting malware detection accuracy and speeding up investigations.",
+  ],
+  "SOC-Environment": [
+    "Deployed a SOC stack using Wazuh, Suricata, and pfSense for centralized log collection.",
+    "Automated detection workflows and simulated attacks, reducing manual triage and improving incident response efficiency.",
+  ],
+  "Threat-Intelligence-Tool": [
+    "Developed a Python tool integrating VirusTotal and Hybrid Analysis APIs for IOC enrichment.",
+    "Consolidated threat intelligence sources to accelerate malware investigations and enhance detection decisions.",
+  ],
+};

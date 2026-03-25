@@ -14,7 +14,7 @@
   background: #000;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, visibility;
 }
 

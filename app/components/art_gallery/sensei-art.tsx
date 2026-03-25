@@ -23,7 +23,7 @@ const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const sectionHeaderVariants = {
   hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.38, ease: EASE_OUT } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: EASE_OUT } },
 };
 
 const galleryVariants = {
@@ -43,7 +43,7 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.34, ease: EASE_OUT },
+    transition: { duration: 0.2, ease: EASE_OUT },
   },
 };
 
@@ -58,7 +58,7 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
   const handleClick = useCallback(() => setOpen(index), [setOpen, index]);
 
   return (
-    <motion.div className={styles.art_pic} variants={itemVariants} whileHover={{ y: -4 }} transition={{ duration: 0.7, ease: EASE_OUT }}>
+    <motion.div className={styles.art_pic} variants={itemVariants} whileHover={{ y: -4 }} transition={{ duration: 0.4, ease: EASE_OUT }}>
       <Image
         src={image.thumb} alt={`Certification ${index + 1}`} width={350} height={350}
         sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"

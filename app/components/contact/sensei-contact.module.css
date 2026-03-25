@@ -17,7 +17,7 @@
 .info-card, .form-card {
   background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(var(--main-color-rgb), 0.3);
   border-radius: 20px; padding: 4rem 3rem;
-  transition: background-color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
   width: 100%; min-width: 0; box-sizing: border-box;
 }
@@ -28,7 +28,7 @@
 .info-desc-list li { margin-bottom: 0.6rem; }
 .info-desc-list li:last-child { margin-bottom: 0; }
 
-.info-item { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; transition: transform 0.7s ease; text-decoration: none; color: inherit; }
+.info-item { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; transition: transform 0.3s ease; text-decoration: none; color: inherit; }
 .info-item:hover { transform: translateX(4px); }
 
 .book-call-btn {
@@ -44,7 +44,7 @@
   background: var(--main-color);
   font-size: 1.4rem;
   font-weight: 700;
-  transition: transform 0.7s ease, box-shadow 0.7s ease, background-color 0.7s ease, color 0.7s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .book-call-btn:hover {
@@ -68,7 +68,7 @@
   background: rgba(255, 255, 255, 0.04);
   font-size: 1.4rem;
   font-weight: 700;
-  transition: transform 0.7s ease, background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .download-cv-btn:hover {
@@ -99,7 +99,7 @@
 .icon-box {
   width: 50px; height: 50px; min-width: 50px; background: rgba(var(--main-color-rgb), 0.1); border: 1px solid rgba(var(--main-color-rgb), 0.3);
   border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; color: var(--main-color);
-  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 .info-item:hover .icon-box { background: var(--main-color); color: var(--bg-color); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.6); }
 
@@ -110,7 +110,7 @@
 .input-field {
   width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.6rem 2rem;
   font-size: 1.5rem; color: var(--text-color); font-family: inherit;
-  transition: border-color 0.7s ease, background 0.7s ease, box-shadow 0.7s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 .input-field::placeholder { color: rgba(255, 255, 255, 0.4); }
 .input-field:focus { outline: none; border-color: var(--main-color); background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3); }
@@ -120,7 +120,7 @@ textarea.input-field { resize: vertical; min-height: 150px; }
   display: inline-flex; align-items: center; justify-content: center; gap: 1rem; width: 100%; padding: 1.5rem;
   background: var(--main-color); color: var(--bg-color); border: 1px solid var(--main-color); border-radius: 12px;
   font-size: 1.6rem; font-weight: 700; cursor: pointer;
-  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   will-change: transform;
   position: relative;
   overflow: hidden;
@@ -137,7 +137,7 @@ textarea.input-field { resize: vertical; min-height: 150px; }
   height: 320%;
   transform: rotate(24deg);
   background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.24), transparent);
-  transition: left 0.7s ease;
+  transition: left 0.3s ease;
 }
 
 .submit-btn:hover:not(:disabled)::after {

@@ -15,6 +15,7 @@ import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MotionInView from "@/app/core/components/MotionInView";
+import { projectBullets } from "@/app/core/data";
 
 type ProjectItemProps = { repo: GitHubRepository };
 type ProjectCategory = "All" | "SOC" | "DFIR" | "Automation";
@@ -52,7 +53,8 @@ const buildCaseStudy = (repo: GitHubRepository) => {
 };
 
 const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
-  const descriptionBullets = toBulletItems(repo.description || "No description available for this repository.");
+  const customBullets = projectBullets[repo.name];
+  const descriptionBullets = customBullets || toBulletItems(repo.description || "No description available for this repository.");
   const liveUrl = repo.homepage && repo.homepage.trim().length > 0 ? repo.homepage : repo.html_url;
   const caseStudy = buildCaseStudy(repo);
 
@@ -153,7 +155,7 @@ const SenseiProjects = memo(function SenseiProjects() {
                 key={repo.id}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: Math.min(index * 0.06, 0.3) }}
+                transition={{ duration: 0.3, delay: Math.min(index * 0.06, 0.3) }}
                 threshold={0.12}
                 triggerOnce
               >
