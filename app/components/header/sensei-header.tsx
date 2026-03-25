@@ -68,7 +68,14 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   return (
     <header className={styles.header}>
-      <a href="#Home" className={styles.logo} onClick={handleLogoClick} aria-label="Go to Home section">アハメドズ</a>
+      <a
+        href="#Home"
+        className={styles.logo}
+        onClick={handleLogoClick}
+        aria-label="Go to Home section"
+      >
+        アハメドズ
+      </a>
       
       <button
         type="button"
@@ -83,7 +90,11 @@ const SenseiHeader = memo(function SenseiHeader() {
         <span aria-hidden="true" />
       </button>
 
-      <nav id="main-navigation" className={navbarClass} aria-label="Main navigation">
+      <nav
+        id="main-navigation"
+        className={navbarClass}
+        aria-label="Main navigation"
+      >
         {navLinks}
       </nav>
     </header>

@@ -8,6 +8,7 @@
 
 import { memo } from "react";
 import styles from "./sensei-services-projects.module.css";
+import { toBulletItems } from "@/app/core/utils/bulletUtils";
 
 const SERVICES_DATA = [
   { icon: "fa-solid fa-shield-halved", title: "Security Operations Center (SOC) Analysis", description: "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.", },
@@ -23,6 +24,8 @@ const SERVICES_DATA = [
 type ServiceItemProps = { icon: string; title: string; description: string; };
 
 const ServiceItem = memo<ServiceItemProps>(({ icon, title, description }) => {
+  const descriptionBullets = toBulletItems(description);
+
   return (
     <div className={styles["single-service"]}>
       <div className={styles["part-1"]}>
@@ -30,7 +33,11 @@ const ServiceItem = memo<ServiceItemProps>(({ icon, title, description }) => {
         <h3 className={styles.title}>{title}</h3>
       </div>
       <div className={styles["part-2"]}>
-        <p className={styles.description}>{description}</p>
+        <ul className={styles["description-list"]}>
+          {descriptionBullets.map((item, index) => (
+            <li key={`${title}-${index}`}>{item}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );

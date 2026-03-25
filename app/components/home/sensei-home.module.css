@@ -9,7 +9,7 @@
 
 .homeImg img {
   width: 100%; height: auto; border-radius: 16px; box-shadow: 0 0 31px var(--main-color);
-  transition: transform 0.45s ease, filter 0.45s ease;
+  transition: transform 0.7s ease, filter 0.7s ease;
   cursor: pointer; will-change: transform, filter;
 }
 .homeImg img:hover { transform: scale(1.015); filter: drop-shadow(0 0 24px var(--main-color)); }
@@ -55,7 +55,7 @@
   display: flex; justify-content: center; align-items: center; width: 4rem; height: 4rem;
   background: transparent; border: 0.2rem solid var(--main-color); font-size: 2rem;
   border-radius: 1rem; color: var(--main-color);
-  transition: transform 0.35s ease, color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.7s ease, color 0.7s ease, background 0.7s ease, box-shadow 0.7s ease;
   will-change: transform;
 }
 .socialIcon a:hover {
@@ -67,7 +67,7 @@
 .btn {
   display: inline-flex; align-items: center; padding: 1rem 2.8rem; border-radius: 1rem;
   font-size: 1.6rem; letter-spacing: 0.1rem; font-weight: 600;
-  transition: transform 0.35s ease, background 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.7s ease, background 0.7s ease, color 0.7s ease, box-shadow 0.7s ease;
   cursor: pointer; text-decoration: none; box-shadow: 0 0 11px var(--main-color);
   will-change: transform;
 }

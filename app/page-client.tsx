@@ -14,6 +14,7 @@ import LoadingScreen from "@/app/components/loader/sensei_loader";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 const AnimatedBackground = dynamic(() => import("@/app/components/animated_background/animated_background"), { ssr: false });
+const AboutSection = dynamic(() => import("@/app/components/about/sensei-about"), { ssr: false });
 const ServicesSection = dynamic(() => import("@/app/components/services/sensei-services-projects"), { ssr: false });
 const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), { ssr: false });
 const ProjectsSection = dynamic(() => import("@/app/components/services/sensei-projects"), { ssr: false });
@@ -75,6 +76,7 @@ const MainClient = memo(function MainClient() {
         <AnimatedBackground />
         <AppBar />
         <HomeSection />
+        <AboutSection />
         <ExperienceSection />
         <SkillsSection />
         <ProjectsSection />

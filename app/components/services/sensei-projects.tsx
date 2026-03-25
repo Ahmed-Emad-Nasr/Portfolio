@@ -11,12 +11,15 @@ import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare } from "@fortawes
 import styles from "./sensei-services-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
 import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
+import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type ProjectItemProps = { repo: GitHubRepository };
 
 const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
+  const descriptionBullets = toBulletItems(repo.description || "No description available for this repository.");
+
   return (
     <a
       className={styles["single-project"]}
@@ -33,7 +36,11 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
       </div>
       
       <div className={styles["part-2"]}>
-        <p className={styles.description}>{repo.description || "No description available for this repository."}</p>
+        <ul className={styles["description-list"]}>
+          {descriptionBullets.map((item, index) => (
+            <li key={`${repo.id}-${index}`}>{item}</li>
+          ))}
+        </ul>
         
         <div className={styles["stats-container"]}>
           <span className={styles["stat-badge"]} title="Stars"><FontAwesomeIcon icon={faStar} /> {repo.stargazers_count}</span>

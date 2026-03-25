@@ -1,0 +1,112 @@
+.about-section {
+  min-height: 100vh;
+  padding: 0rem 0 6rem;
+  position: relative;
+  z-index: 1;
+  scroll-margin-top: 10rem;
+}
+
+.container {
+  max-width: 1550px;
+  margin: 0 auto;
+  padding: 0 6%;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 6rem;
+}
+
+.title {
+  font-size: clamp(3.2rem, 5vw, 5rem);
+  color: var(--main-color);
+  text-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.35);
+}
+
+.summary {
+  max-width: 94rem;
+  margin: 0 auto 3.6rem;
+  text-align: center;
+  font-size: clamp(1.7rem, 2.2vw, 2rem);
+  line-height: 1.9;
+  color: rgba(var(--main-color-rgb), 0.95);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8rem;
+}
+
+.card {
+  background: rgba(10, 10, 10, 0.78);
+  border: 1px solid rgba(var(--main-color-rgb), 0.22);
+  border-radius: 1.8rem;
+  padding: 2rem;
+  min-height: 23rem;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.42);
+  transition: transform 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--main-color-rgb), 0.52);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
+}
+
+.card-icon-wrapper {
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--main-color-rgb), 0.4);
+  color: var(--main-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  margin-bottom: 1.2rem;
+}
+
+.card h3 {
+  color: var(--main-color);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.card-list {
+  margin: 0;
+  padding-left: 1.8rem;
+  list-style: disc;
+}
+
+.card-list li {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+.card-list li:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .summary {
+    margin-bottom: 2.8rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  .card {
+    min-height: auto;
+  }
+}

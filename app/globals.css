@@ -27,6 +27,17 @@
   outline: none;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(var(--main-color-rgb), 0.35);
+  border-radius: 0.6rem;
+}
+
 /* --- Cinematic Text Selection --- */
 ::selection {
   background-color: rgba(var(--main-color-rgb), 0.3);
@@ -85,6 +96,12 @@ section {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

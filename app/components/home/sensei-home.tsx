@@ -12,6 +12,7 @@ import { faLinkedin, faWhatsapp, faXTwitter } from "@fortawesome/free-brands-svg
 import { faUserSecret, faFilePdf, faBriefcase } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
+import { homeSummaryParagraph } from "@/app/core/data";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
@@ -33,7 +34,7 @@ const SenseiHome = memo(function SenseiHome() {
             <span>Available for Opportunities</span>
           </div>
           <h2 className={styles.typingText}><span className={styles.typingHighlight} /></h2>
-          <p>Computer Science student at Benha University, specializing in SOC, Incident Response, and Cybersecurity. Experienced in monitoring, alert triage, DFIR, and system defense through DEPI & ITI training and SOC projects. Passionate about securing digital environments.</p>
+          <p>{homeSummaryParagraph}</p>
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
             <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat"><FontAwesomeIcon icon={faWhatsapp} /></a>

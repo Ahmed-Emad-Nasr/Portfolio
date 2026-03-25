@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   faHome, 
+  faAddressCard,
   faUserSecret, 
   faBook, 
   faFolder, 
@@ -20,6 +21,7 @@ import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const SECTION_ICONS: Record<string, IconProp> = {
   Home:       faHome,
+  About:      faAddressCard,
   Experience: faBook,
   Skills:     faBrain,
   Projects:   faFolder,

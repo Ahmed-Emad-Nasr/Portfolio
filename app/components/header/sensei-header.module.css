@@ -9,13 +9,13 @@
   top: 1.2rem;
   left: 50%;
   transform: translateX(-50%);
-  width: auto;
+  width: calc(100% - 2.4rem);
   padding: 1rem 2.5rem;
-  background: rgba(15, 15, 15, 0.7);
-  backdrop-filter: blur(12px);
+  background: transparent;
+  backdrop-filter: none;
   border-radius: 60px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 2.5rem;
   z-index: 1000;
@@ -33,16 +33,20 @@
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
+  transition: transform 0.7s ease, text-shadow 0.7s ease;
 }
 
 .logo:hover {
   color: var(--main-color);
+  transform: translateY(-1px);
+  text-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.45);
 }
 
 .navbar {
   display: flex;
   align-items: center;
   gap: 1.2rem;
+  margin-left: auto;
 }
 
 .navbar a {
@@ -57,6 +61,7 @@
   gap: 0.6rem;
   text-transform: capitalize;
   position: relative;
+  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease;
 }
 
 .navbar a:hover,
@@ -85,6 +90,20 @@
   height: 3px;
   background: var(--main-color);
   border-radius: 10px;
+  transition: transform 0.7s ease, opacity 0.7s ease;
+  transform-origin: center;
+}
+
+.MenuIcon.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.MenuIcon.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.MenuIcon.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 /* --- Mobile Adjustments --- */
@@ -104,8 +123,8 @@
     top: calc(100% + 15px);
     right: 0;
     width: 100%;
-    background: rgba(15, 15, 15, 0.98);
-    backdrop-filter: blur(15px); 
+    background: transparent;
+    backdrop-filter: none; 
     flex-direction: column;
     padding: 2.0rem 0;
     border-radius: 25px;
@@ -115,6 +134,12 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    transform: translateY(-10px) scale(0.98);
+    will-change: opacity, transform;
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.7s;
     display: flex;
   }
 
@@ -122,6 +147,11 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    transform: translateY(0) scale(1);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0s;
   }
 
   .navbar a {

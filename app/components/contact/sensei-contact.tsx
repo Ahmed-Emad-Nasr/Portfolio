@@ -12,11 +12,15 @@ import { faEnvelope, faPhone, faLocationDot, faPaperPlane, faSpinner } from "@fo
 import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
+import { toBulletItems } from "@/app/core/utils/bulletUtils";
+
+const CONTACT_INFO_DESCRIPTION = "Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!";
 
 const SenseiContact = memo(function SenseiContact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const infoBullets = toBulletItems(CONTACT_INFO_DESCRIPTION);
   
   const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -118,10 +122,14 @@ const SenseiContact = memo(function SenseiContact() {
         <div className={styles["contact-wrapper"]}>
           <div className={styles["info-card"]}>
             <h3 className={styles["info-title"]}>Let's Connect</h3>
-            <p className={styles["info-desc"]}>Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!</p>
+            <ul className={styles["info-desc-list"]}>
+              {infoBullets.map((item, index) => (
+                <li key={`contact-info-${index}`}>{item}</li>
+              ))}
+            </ul>
             <div className={styles["info-item"]}><div className={styles["icon-box"]}><FontAwesomeIcon icon={faEnvelope} /></div><div className={styles["info-text"]}><h4>Email</h4><p>ahmed.em.nasr@gmail.com</p></div></div>
             <a className={styles["info-item"]} href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faPhone} /></div><div className={styles["info-text"]}><h4>Phone / WhatsApp</h4><p>+20 101 816 6445</p></div></a>
-            <a className={styles["info-item"]} href="https://www.google.com/maps/search/?api=1&query=Banha%2C+Egypt" target="_blank" rel="noopener noreferrer" aria-label="Open location in Google Maps"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faLocationDot} /></div><div className={styles["info-text"]}><h4>Location</h4><p>Banha, Egypt</p></div></a>
+            <a className={styles["info-item"]} href="https://www.google.com/maps/search/?api=1&query=Cairo%2C+Egypt" target="_blank" rel="noopener noreferrer" aria-label="Open location in Google Maps"><div className={styles["icon-box"]}><FontAwesomeIcon icon={faLocationDot} /></div><div className={styles["info-text"]}><h4>Location</h4><p>Cairo, Egypt</p></div></a>
             <div className={styles["contact-socials"]}>
               <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp profile"><FontAwesomeIcon icon={faWhatsapp} /></a>
               <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>

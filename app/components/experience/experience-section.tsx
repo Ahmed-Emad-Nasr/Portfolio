@@ -11,6 +11,7 @@ import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { calculateExperience } from "@/app/core/utils/experienceUtils";
 import { knowledgeEducationItems } from "@/app/core/data";
+import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase } from "@fortawesome/free-solid-svg-icons";
 
@@ -18,6 +19,7 @@ type TimelineItemProps = { tag: string; subTag?: string; subTagHyperlink?: strin
 
 const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHyperlink, desc, startDate, endDate, showDate = true }) => {
   const experienceTime = useMemo(() => calculateExperience(startDate, endDate), [startDate, endDate]);
+  const descriptionBullets = useMemo(() => toBulletItems(desc), [desc]);
 
   const containerClass = `${styles["timeline-container"]} ${isRight ? styles.right : styles.left}`;
   const subTagStyle = subTagHyperlink ? ({ cursor: "pointer" } as const) : ({ cursor: "default" } as const);
@@ -34,7 +36,11 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
           )}
         </div>
         <div className={styles.desc}>
-          <p>{desc}</p>
+          <ul className={styles["desc-list"]}>
+            {descriptionBullets.map((item, index) => (
+              <li key={`${tag}-${index}`}>{item}</li>
+            ))}
+          </ul>
         </div>
         {showDate && (
           <div className={styles["date-details"]}>

@@ -9,13 +9,43 @@
 import { useCallback, useState, memo } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import "yet-another-react-lightbox/styles.css";
 import styles from "./sensei-art.module.css";
+import MotionInView from "@/app/core/components/MotionInView";
 
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
 
 interface GalleryImage { src: string; thumb: string; }
 interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; }
+
+const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const sectionHeaderVariants = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
+};
+
+const galleryVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.7,
+      delayChildren: 0.7,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 18, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.7, ease: EASE_OUT },
+  },
+};
 
 const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.png`,
@@ -28,13 +58,13 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
   const handleClick = useCallback(() => setOpen(index), [setOpen, index]);
 
   return (
-    <div className={styles.art_pic}>
+    <motion.div className={styles.art_pic} variants={itemVariants} whileHover={{ y: -4 }} transition={{ duration: 0.7, ease: EASE_OUT }}>
       <Image
         src={image.thumb} alt={`Certification ${index + 1}`} width={350} height={350}
         sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
         onClick={handleClick} loading="lazy" quality={75} className={styles.galleryImg}
       />
-    </div>
+    </motion.div>
   );
 });
 
@@ -49,14 +79,14 @@ const SenseiArt = memo(function SenseiArt() {
   return (
     <section className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
-        <div className={styles["header-section"]}>
+        <MotionInView className={styles["header-section"]} variants={sectionHeaderVariants}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
-        </div>
-        <div className={styles["art-gallery-content"]}>
-          <div className={styles.Gallery}>
+        </MotionInView>
+        <MotionInView className={styles["art-gallery-content"]} variants={galleryVariants} threshold={0.08}>
+          <motion.div className={styles.Gallery} variants={galleryVariants}>
             {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} />)}
-          </div>
-        </div>
+          </motion.div>
+        </MotionInView>
       </div>
       <Lightbox
         slides={LIGHTBOX_SLIDES}

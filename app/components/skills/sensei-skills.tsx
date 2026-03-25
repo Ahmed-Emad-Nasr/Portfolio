@@ -18,23 +18,28 @@ import SectionHeader from "@/app/core/components/SectionHeader";
 const SLIDE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const TECHNICAL_SKILLS = [
-  { name: "Incident Handling & Response", percentage: 85 }, { name: "SOC Operations & Monitoring", percentage: 90 },
-  { name: "Digital Forensics (DFIR)", percentage: 75 }, { name: "Network Security & CCNA", percentage: 80 },
-  { name: "Threat Hunting", percentage: 65 }, { name: "Malware Analysis", percentage: 70 },
+  { name: "Alert Triage & IOC Analysis", percentage: 90 },
+  { name: "SIEM/EDR Investigations", percentage: 88 },
+  { name: "Incident Response Handling", percentage: 85 },
+  { name: "Threat Hunting & Detection Engineering", percentage: 82 },
+  { name: "Malware Analysis", percentage: 78 },
+  { name: "Network Security Monitoring", percentage: 80 },
 ];
 
 const PROFESSIONAL_SKILLS = [
-  { name: "Analytical & Critical Thinking", percentage: 90 }, { name: "Problem Solving", percentage: 85 },
-  { name: "Effective Communication", percentage: 80 }, { name: "Team Collaboration", percentage: 85 },
+  { name: "Analytical Thinking", percentage: 90 },
+  { name: "Problem Solving", percentage: 88 },
+  { name: "Team Collaboration", percentage: 87 },
+  { name: "Communication & Time Management", percentage: 85 },
 ];
 
 const BADGES_DATA = [
-  { category: "SIEM & Security Tools", icon: faShieldHalved, skills: "Splunk, Wazuh, IBM QRadar, Microsoft Sentinel" },
-  { category: "Frameworks & Standards", icon: faBookOpen, skills: "MITRE ATT&CK, NIST, Cyber Kill Chain, ISO 27001" },
-  { category: "Networking & Traffic Analysis", icon: faNetworkWired, skills: "Wireshark, Zeek, Suricata, Cisco Packet Tracer" },
-  { category: "Operating Systems", icon: faLinux, skills: "Kali Linux, Ubuntu, Windows Server, Active Directory" },
-  { category: "Threat Intelligence", icon: faUserSecret, skills: "Threat Intel Platforms, Insider Threat Detection, Deception" },
-  { category: "Offensive Security", icon: faBug, skills: "Vulnerability Assessment, Penetration Testing, Web App Security" },
+  { category: "SIEM & EDR", icon: faShieldHalved, skills: "Wazuh, ELK Stack, Splunk, Sysmon, Suricata, pfSense" },
+  { category: "Frameworks & SOC Methodologies", icon: faBookOpen, skills: "MITRE ATT&CK, Incident Response Lifecycle, SOC Operations" },
+  { category: "Networking & Monitoring", icon: faNetworkWired, skills: "TCP/IP, IDS/IPS, Network Traffic Analysis (NTA)" },
+  { category: "Operating Systems", icon: faLinux, skills: "Kali Linux, Ubuntu, Windows Server" },
+  { category: "Threat Detection & IR", icon: faUserSecret, skills: "Alert Triage, IOC Analysis, Threat Hunting, Detection Engineering" },
+  { category: "Programming & Automation", icon: faBug, skills: "Python, Bash, PowerShell, C++" },
 ];
 
 type SkillCardProps = { category: string; icon: any; skills: string; };
@@ -51,11 +56,11 @@ const SkillCard = memo<SkillCardProps>(({ category, icon, skills }) => {
         <h3 className={styles.category}>{category}</h3>
       </div>
       <div className={styles["card-body"]}>
-        <div className={styles["skills-tags-container"]}>
+        <ul className={styles["skills-list"]}>
           {skillsArray.map((skillItem, i) => (
-            <span key={`${category}-${i}`} className={styles["skill-tag"]}>{skillItem}</span>
+            <li key={`${category}-${i}`} className={styles["skill-item"]}>{skillItem}</li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );
@@ -81,7 +86,7 @@ const SkillsSection = memo(function SkillsSection() {
                   <span>{skill.name}</span><span className={styles["progress-percent"]}>{skill.percentage}%</span>
                 </div>
                 <div className={styles["progress-bg"]}>
-                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={{ width: skillsInView ? `${skill.percentage}%` : 0 }} transition={{ duration: 0.45, ease: SLIDE_EASE }} />
+                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={{ width: skillsInView ? `${skill.percentage}%` : 0 }} transition={{ duration: 0.7, ease: SLIDE_EASE }} />
                 </div>
               </div>
             ))}
@@ -97,7 +102,7 @@ const SkillsSection = memo(function SkillsSection() {
                   <span>{skill.name}</span><span className={styles["progress-percent"]}>{skill.percentage}%</span>
                 </div>
                 <div className={styles["progress-bg"]}>
-                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={{ width: skillsInView ? `${skill.percentage}%` : 0 }} transition={{ duration: 0.45, ease: SLIDE_EASE }} />
+                  <motion.div className={styles["progress-fill"]} initial={{ width: 0 }} animate={{ width: skillsInView ? `${skill.percentage}%` : 0 }} transition={{ duration: 0.7, ease: SLIDE_EASE }} />
                 </div>
               </div>
             ))}

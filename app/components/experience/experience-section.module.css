@@ -24,7 +24,7 @@
 .timeline-container::after {
   content: ""; position: absolute; width: 24px; height: 24px; background: var(--bg-color);
   border: 4px solid var(--main-color); border-radius: 50%; top: 5rem; z-index: 3;
-  transition: transform 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.7s ease, background 0.7s ease, box-shadow 0.7s ease;
   will-change: transform;
 }
 .timeline-container.left::after { right: -12px; }
@@ -33,7 +33,7 @@
 
 .content {
   background: var(--main-color); padding: 3rem; border-radius: 25px; border: 1px solid var(--main-color);
-  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+  transition: background-color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
   backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
   position: relative; text-align: left;
 }
@@ -43,23 +43,25 @@
   border-color: rgba(var(--main-color-rgb), 0.5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15);
 }
 
-.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: var(--bg-color); transition: color 0.35s ease; }
-.titleIcon { font-size: 1.8rem; opacity: 0.9; transition: transform 0.35s ease, color 0.35s ease; will-change: transform; }
-.tag h3 { margin: 0; font-size: 1.6rem; font-weight: 700; color: #333; transition: color 0.35s ease; display: inline-flex; align-items: center; gap: 0.8rem; }
-.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity 0.35s ease, color 0.35s ease; }
+.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: var(--bg-color); transition: color 0.7s ease; }
+.titleIcon { font-size: 1.8rem; opacity: 0.9; transition: transform 0.7s ease, color 0.7s ease; will-change: transform; }
+.tag h3 { margin: 0; font-size: 1.6rem; font-weight: 700; color: #333; transition: color 0.7s ease; display: inline-flex; align-items: center; gap: 0.8rem; }
+.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity 0.7s ease, color 0.7s ease; }
 .tag h3:hover { cursor: pointer; text-decoration: underline; text-decoration-color: var(--main-color); }
 .tag h3:hover .linkIcon { opacity: 1; color: var(--main-color); }
-.desc p { margin: 1.5rem 0 0; font-size: 1.5rem; line-height: 1.7; color: #222; font-weight: 500; transition: color 0.35s ease; }
+.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: disc; color: #222; font-size: 1.5rem; line-height: 1.7; font-weight: 500; transition: color 0.7s ease; }
+.desc-list li { margin-bottom: 0.6rem; }
+.desc-list li:last-child { margin-bottom: 0; }
 
-.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 0, 0, 0.15); transition: border-color 0.35s ease; gap: 0.8rem; }
+.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 0, 0, 0.15); transition: border-color 0.7s ease; gap: 0.8rem; }
 .experience-time, .date-range { display: flex; align-items: center; gap: 0.7rem; }
-.experience-time { font-size: 1.4rem; font-weight: 700; color: var(--bg-color); transition: color 0.35s ease, text-shadow 0.35s ease; }
-.date-range { font-size: 1.2rem; color: #444; font-weight: 600; transition: color 0.35s ease; }
+.experience-time { font-size: 1.4rem; font-weight: 700; color: var(--bg-color); transition: color 0.7s ease, text-shadow 0.7s ease; }
+.date-range { font-size: 1.2rem; color: #444; font-weight: 600; transition: color 0.7s ease; }
 
 .content:hover .tag h2 { color: var(--text-color); }
 .content:hover .titleIcon { color: var(--main-color); transform: scale(1.02) rotate(2deg); }
 .content:hover .tag h3 { color: rgba(255, 255, 255, 0.8); }
-.content:hover .desc p { color: rgba(255, 255, 255, 0.7); }
+.content:hover .desc-list { color: rgba(255, 255, 255, 0.7); }
 .content:hover .date-details { border-top-color: rgba(var(--main-color-rgb), 0.3); }
 .content:hover .experience-time { color: var(--main-color); text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.4); }
 .content:hover .date-range { color: rgba(255, 255, 255, 0.6); }
