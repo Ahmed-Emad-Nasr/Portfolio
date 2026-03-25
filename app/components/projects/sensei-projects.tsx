@@ -8,7 +8,7 @@
 
 import { memo } from "react";
 import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import styles from "./sensei-services-projects.module.css";
+import styles from "./sensei-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
 import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
@@ -34,14 +34,14 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
           {repo.name} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles["link-icon"]} />
         </h3>
       </div>
-      
+
       <div className={styles["part-2"]}>
         <ul className={styles["description-list"]}>
           {descriptionBullets.map((item, index) => (
             <li key={`${repo.id}-${index}`}>{item}</li>
           ))}
         </ul>
-        
+
         <div className={styles["stats-container"]}>
           <span className={styles["stat-badge"]} title="Stars"><FontAwesomeIcon icon={faStar} /> {repo.stargazers_count}</span>
           <span className={styles["stat-badge"]} title="Forks/Issues"><FontAwesomeIcon icon={faCodeBranch} /> {repo.open_issues_count}</span>
