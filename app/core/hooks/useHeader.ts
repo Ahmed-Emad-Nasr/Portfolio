@@ -12,6 +12,7 @@ import {
   faAddressCard,
   faUserSecret, 
   faBook, 
+  faCertificate,
   faFolder, 
   faHandshake,
   faEnvelope // 1. تم استدعاء أيقونة قسم التواصل
@@ -23,6 +24,7 @@ const SECTION_ICONS: Record<string, IconProp> = {
   About:      faAddressCard,
   Trust:      faHandshake,
   Experience: faBook,
+  Certifications: faCertificate,
   Projects:   faFolder,
   Services:   faUserSecret,
   Contact:    faEnvelope,
