@@ -9,8 +9,8 @@
 import { memo, useRef } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faWhatsapp, faXTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faUserSecret, faFilePdf, faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
+import { faUserSecret, faFilePdf, faBriefcase, faCertificate } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { homeSummaryParagraph } from "@/app/core/data";
@@ -71,7 +71,14 @@ const SenseiHome = memo(function SenseiHome() {
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
             <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat"><FontAwesomeIcon icon={faWhatsapp} /></a>
-            <a href="https://x.com/0x3omda" target="_blank" rel="noopener noreferrer" title="X" aria-label="X profile"><FontAwesomeIcon icon={faXTwitter} /></a>
+            <a
+              href="#Certifications"
+              title="Certifications"
+              aria-label="Go to Certifications section"
+              onClick={() => trackEvent("cta_click", { source: "hero", action: "view_certifications", destination: "#Certifications" })}
+            >
+              <FontAwesomeIcon icon={faCertificate} />
+            </a>
           </div>
           <div className={styles.homeButton}>
             <a

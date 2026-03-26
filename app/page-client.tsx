@@ -20,7 +20,6 @@ const ServicesSection = dynamic(() => import("@/app/components/services/sensei-s
 const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), { ssr: false });
 const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), { ssr: false });
 const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), { ssr: false });
-const SkillsSection = dynamic(() => import("@/app/components/skills/sensei-skills"), { ssr: false });
 const ContactSection = dynamic(() => import("@/app/components/contact/sensei-contact"), { ssr: false });
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
@@ -80,7 +79,6 @@ const MainClient = memo(function MainClient() {
         <AboutSection />
         <TrustSection />
         <ExperienceSection />
-        <SkillsSection />
         <ProjectsSection />
         <ServicesSection />
         <ContactSection />

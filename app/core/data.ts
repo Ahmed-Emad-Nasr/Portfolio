@@ -11,7 +11,7 @@ export const homeSummaryParagraph =
   "Computer Science student, SOC Analyst and Incident Response Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response.";
 
 export const aboutSummaryParagraph =
-  "SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response. Focused on improving detection accuracy, reducing false positives, and accelerating incident investigation workflows. Open to relocation and remote work.";
+  "Computer Science student, SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response. Focused on improving detection accuracy, reducing false positives, and accelerating incident investigation workflows in security operations center environments. Open to relocation and remote work.";
 
 export const knowledgeEducationItems = [
   {
