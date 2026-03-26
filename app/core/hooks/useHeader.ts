@@ -24,9 +24,9 @@ const SECTION_ICONS: Record<string, IconProp> = {
   About:      faAddressCard,
   Trust:      faHandshake,
   Experience: faBook,
-  Certifications: faCertificate,
   Projects:   faFolder,
   Services:   faUserSecret,
+  Certifications: faCertificate,
   Contact:    faEnvelope,
 };
 
