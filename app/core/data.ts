@@ -8,7 +8,7 @@
 export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
 
 export const homeSummaryParagraph =
-  "Computer Science student at Benha University and SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response.";
+  "Computer Science student and SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response.";
 
 export const aboutSummaryParagraph =
   "SOC Analyst with hands-on experience from 10+ SOC trainings and 200+ simulated alerts across DEPI, ITI, and home labs. Skilled in SIEM/EDR investigations, alert triage, IOC analysis, and incident response. Focused on improving detection accuracy, reducing false positives, and accelerating incident investigation workflows. Open to relocation and remote work.";
