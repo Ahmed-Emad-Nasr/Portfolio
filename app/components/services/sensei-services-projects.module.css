@@ -18,8 +18,8 @@
 /* --- The Cards --- */
 .single-service, .single-project {
   background: var(--main-color); border: 1px solid var(--main-color); border-radius: 25px; padding: 3rem 2.5rem; text-align: left;
-  transition: background-color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
-  backface-visibility: hidden; transform: translateZ(0); will-change: transform, box-shadow, border-color, background-color;
+  transition: background-color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+  backface-visibility: hidden; will-change: box-shadow, border-color, background-color;
   position: relative; overflow: hidden; display: flex; flex-direction: column;
 }
 
@@ -36,7 +36,7 @@
 .single-project { cursor: pointer; }
 
 .single-service:hover, .single-project:hover {
-  background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(15px); transform: translateY(-3px);
+  background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(15px);
   border-color: rgba(var(--main-color-rgb), 0.5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15);
 }
 
@@ -50,9 +50,9 @@
 .part-1 { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.15); transition: border-color 0.7s ease; }
 .single-service:hover .part-1, .single-project:hover .part-1 { border-bottom-color: rgba(var(--main-color-rgb), 0.4); }
 
-.part-1 i, .part-1 svg { font-size: 3.5rem; width: 3.5rem; height: 3.5rem; color: var(--bg-color); transition: transform 0.7s ease, color 0.7s ease, filter 0.7s ease; }
+.part-1 i, .part-1 svg { font-size: 3.5rem; width: 3.5rem; height: 3.5rem; color: var(--bg-color); transition: color 0.7s ease, filter 0.7s ease; }
 .single-service:hover .part-1 i, .single-project:hover .part-1 i, .single-service:hover .part-1 svg, .single-project:hover .part-1 svg {
-  color: var(--main-color); transform: scale(1.02) rotate(2deg); filter: drop-shadow(0 0 8px rgba(var(--main-color-rgb), 0.45));
+  color: var(--main-color); filter: drop-shadow(0 0 8px rgba(var(--main-color-rgb), 0.45));
 }
 
 .part-1 h3 { font-size: 2.2rem; color: var(--bg-color); font-weight: 700; letter-spacing: 0.5px; margin: 0; line-height: 1.3; transition: color 0.7s ease; display: flex; justify-content: space-between; width: 100%; align-items: center; }

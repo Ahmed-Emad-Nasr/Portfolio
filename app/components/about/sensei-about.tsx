@@ -19,9 +19,9 @@ const SenseiAbout = memo(function SenseiAbout() {
         </div>
 
         <MotionInView
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
           threshold={0.15}
           triggerOnce
         >
@@ -32,9 +32,9 @@ const SenseiAbout = memo(function SenseiAbout() {
           {aboutMeCards.map((card, index) => (
             <MotionInView
               key={`${card.title}-${index}`}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: Math.min(index * 0.08, 0.24) }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.15) }}
               threshold={0.15}
               triggerOnce
             >

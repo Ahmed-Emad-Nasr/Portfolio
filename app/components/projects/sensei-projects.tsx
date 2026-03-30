@@ -153,9 +153,9 @@ const SenseiProjects = memo(function SenseiProjects() {
             filteredRepos.map((repo, index) => (
               <MotionInView
                 key={repo.id}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: Math.min(index * 0.06, 0.3) }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.2, delay: Math.min(index * 0.04, 0.2) }}
                 threshold={0.12}
                 triggerOnce
               >

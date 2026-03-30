@@ -58,7 +58,7 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
   const handleClick = useCallback(() => setOpen(index), [setOpen, index]);
 
   return (
-    <motion.div className={styles.art_pic} variants={itemVariants} whileHover={{ y: -4 }} transition={{ duration: 0.4, ease: EASE_OUT }}>
+    <motion.div className={styles.art_pic} variants={itemVariants}>
       <Image
         src={image.thumb} alt={`Certification ${index + 1}`} width={350} height={350}
         sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"

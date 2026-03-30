@@ -131,9 +131,9 @@ const SenseiContact = memo(function SenseiContact() {
 
         <div className={styles["contact-wrapper"]}>
           <MotionInView
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
             threshold={0.12}
             triggerOnce
           >
@@ -177,9 +177,9 @@ const SenseiContact = memo(function SenseiContact() {
           </MotionInView>
 
           <MotionInView
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.08 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
             threshold={0.12}
             triggerOnce
           >

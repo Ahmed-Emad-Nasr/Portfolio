@@ -44,11 +44,10 @@
   border-radius: 1.4rem;
   padding: 2rem 1.6rem;
   text-align: center;
-  transition: transform 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+  transition: border-color 0.7s ease, box-shadow 0.7s ease;
 }
 
 .metricCard:hover {
-  transform: translateY(-3px);
   border-color: rgba(var(--main-color-rgb), 0.5);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
 }
@@ -138,14 +137,13 @@
   font-weight: 700;
   color: var(--main-color);
   background: rgba(255, 255, 255, 0.03);
-  transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease, transform 0.7s ease;
+  transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease;
 }
 
 .certMiniBtn:hover {
   background: var(--main-color);
   color: var(--bg-color);
   border-color: var(--main-color);
-  transform: translateY(-1px);
 }
 
 .credCard ul {

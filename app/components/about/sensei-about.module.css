@@ -29,14 +29,13 @@
   font-weight: 700;
   color: var(--main-color);
   background: rgba(255, 255, 255, 0.03);
-  transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease, transform 0.7s ease;
+  transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease;
 }
 
 .certMiniBtn:hover {
   background: var(--main-color);
   color: var(--bg-color);
   border-color: var(--main-color);
-  transform: translateY(-1px);
 }
 
 .title {
@@ -67,11 +66,10 @@
   padding: 2rem;
   min-height: 23rem;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.42);
-  transition: transform 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+  transition: border-color 0.7s ease, box-shadow 0.7s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
   border-color: rgba(var(--main-color-rgb), 0.52);
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
 }
@@ -87,11 +85,10 @@
   justify-content: center;
   font-size: 1.9rem;
   margin-bottom: 1.2rem;
-  transition: transform 0.7s ease, box-shadow 0.7s ease;
+  transition: box-shadow 0.7s ease;
 }
 
 .card:hover .card-icon-wrapper {
-  transform: translateY(-2px) scale(1.03);
   box-shadow: 0 0 16px rgba(var(--main-color-rgb), 0.25);
 }
 

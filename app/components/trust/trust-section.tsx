@@ -18,9 +18,9 @@ const TrustSection = memo(function TrustSection() {
           {trustMetrics.map((item, index) => (
             <MotionInView
               key={`${item.label}-${index}`}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: Math.min(index * 0.07, 0.21) }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.14) }}
               threshold={0.12}
               triggerOnce
             >
@@ -33,9 +33,9 @@ const TrustSection = memo(function TrustSection() {
         </div>
 
         <MotionInView
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.2, delay: 0.06 }}
           threshold={0.12}
           triggerOnce
         >
@@ -51,9 +51,9 @@ const TrustSection = memo(function TrustSection() {
 
         <div className={styles["credibility-grid"]}>
           <MotionInView
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
             threshold={0.12}
             triggerOnce
           >
@@ -68,9 +68,9 @@ const TrustSection = memo(function TrustSection() {
           </MotionInView>
 
           <MotionInView
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.08 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
             threshold={0.12}
             triggerOnce
           >
