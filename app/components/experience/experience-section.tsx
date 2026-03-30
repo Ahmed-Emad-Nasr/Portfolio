@@ -30,7 +30,7 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
       className={containerClass}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.14 }}
       threshold={0.15}
       triggerOnce
     >

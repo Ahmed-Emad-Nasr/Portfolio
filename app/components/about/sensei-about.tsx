@@ -21,7 +21,7 @@ const SenseiAbout = memo(function SenseiAbout() {
         <MotionInView
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.14 }}
           threshold={0.15}
           triggerOnce
         >
@@ -34,7 +34,7 @@ const SenseiAbout = memo(function SenseiAbout() {
               key={`${card.title}-${index}`}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.15) }}
+              transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.08) }}
               threshold={0.15}
               triggerOnce
             >

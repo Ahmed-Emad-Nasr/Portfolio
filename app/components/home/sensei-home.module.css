@@ -10,12 +10,12 @@
 .homeContent {
   animation: sectionFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
-  transition: transform 0.3s ease;
+  transition: transform 0.22s ease;
 }
 
 .homeImg img {
   width: 100%; height: auto; border-radius: 16px; box-shadow: 0 0 31px var(--main-color);
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: transform 0.22s ease, filter 0.22s ease;
   cursor: pointer; will-change: transform, filter;
 }
 .homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1.015); filter: drop-shadow(0 0 24px var(--main-color)); }
@@ -61,7 +61,7 @@
   display: flex; justify-content: center; align-items: center; width: 4rem; height: 4rem;
   background: transparent; border: 0.2rem solid var(--main-color); font-size: 2rem;
   border-radius: 1rem; color: var(--main-color);
-  transition: transform 0.3s ease, color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.22s ease, color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
   will-change: transform;
   position: relative;
   overflow: hidden;
@@ -79,7 +79,7 @@
   height: 180%;
   transform: rotate(25deg);
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
-  transition: left 0.3s ease;
+  transition: left 0.22s ease;
 }
 
 .socialIcon a:hover::after {
@@ -90,7 +90,7 @@
 .btn {
   display: inline-flex; align-items: center; padding: 1rem 2.8rem; border-radius: 1rem;
   font-size: 1.6rem; letter-spacing: 0.1rem; font-weight: 600;
-  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.22s ease, background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
   cursor: pointer; text-decoration: none; box-shadow: 0 0 11px var(--main-color);
   will-change: transform;
   position: relative;
@@ -143,7 +143,7 @@
   height: 300%;
   background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25), transparent);
   transform: rotate(24deg);
-  transition: left 0.3s ease;
+  transition: left 0.22s ease;
 }
 
 .btn:hover::before {

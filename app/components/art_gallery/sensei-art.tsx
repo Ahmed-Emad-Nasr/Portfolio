@@ -23,7 +23,7 @@ const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const sectionHeaderVariants = {
   hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: EASE_OUT } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.16, ease: EASE_OUT } },
 };
 
 const galleryVariants = {
@@ -31,19 +31,18 @@ const galleryVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.035,
-      delayChildren: 0.04,
+      staggerChildren: 0.02,
+      delayChildren: 0.02,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 10, scale: 0.985 },
+  hidden: { opacity: 0, y: 6 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { duration: 0.2, ease: EASE_OUT },
+    transition: { duration: 0.14, ease: EASE_OUT },
   },
 };
 
@@ -82,7 +81,14 @@ const SenseiArt = memo(function SenseiArt() {
         <MotionInView className={styles["header-section"]} variants={sectionHeaderVariants}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
         </MotionInView>
-        <MotionInView className={styles["art-gallery-content"]} variants={galleryVariants} threshold={0.02}>
+        <MotionInView
+          className={styles["art-gallery-content"]}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.14 }}
+          threshold={0.02}
+          triggerOnce
+        >
           <motion.div className={styles.Gallery} variants={galleryVariants}>
             {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} />)}
           </motion.div>

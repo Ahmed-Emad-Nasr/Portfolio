@@ -59,7 +59,7 @@ function SenseiServicesProjects() {
               key={index}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: Math.min(index * 0.04, 0.2) }}
+              transition={{ duration: 0.14, delay: Math.min(index * 0.025, 0.1) }}
               threshold={0.12}
               triggerOnce
             >

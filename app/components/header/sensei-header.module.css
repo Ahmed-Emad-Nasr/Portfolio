@@ -33,7 +33,7 @@
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
-  transition: transform 0.7s ease, text-shadow 0.7s ease;
+  transition: transform 0.35s ease, text-shadow 0.35s ease;
 }
 
 .logo:hover {
@@ -61,7 +61,7 @@
   gap: 0.6rem;
   text-transform: capitalize;
   position: relative;
-  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
+  transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
 }
 
 .navbar a:hover,
@@ -91,7 +91,7 @@
   height: 3px;
   background: var(--main-color);
   border-radius: 10px;
-  transition: transform 0.7s ease, opacity 0.7s ease;
+  transition: transform 0.35s ease, opacity 0.35s ease;
   transform-origin: center;
 }
 
@@ -139,9 +139,9 @@
     transform: translateY(-10px) scale(0.98);
     will-change: opacity, transform;
     transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s linear 0.7s;
+      opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.35s;
     display: flex;
   }
 
@@ -151,8 +151,8 @@
     pointer-events: auto;
     transform: translateY(0) scale(1);
     transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
       visibility 0s linear 0s;
   }
 

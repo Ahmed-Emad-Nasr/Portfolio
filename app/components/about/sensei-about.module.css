@@ -29,7 +29,7 @@
   font-weight: 700;
   color: var(--main-color);
   background: rgba(255, 255, 255, 0.03);
-  transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease;
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
 }
 
 .certMiniBtn:hover {
@@ -66,7 +66,7 @@
   padding: 2rem;
   min-height: 23rem;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.42);
-  transition: border-color 0.7s ease, box-shadow 0.7s ease;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 .card:hover {
@@ -85,7 +85,7 @@
   justify-content: center;
   font-size: 1.9rem;
   margin-bottom: 1.2rem;
-  transition: box-shadow 0.7s ease;
+  transition: box-shadow 0.35s ease;
 }
 
 .card:hover .card-icon-wrapper {

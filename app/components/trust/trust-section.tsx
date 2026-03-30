@@ -20,7 +20,7 @@ const TrustSection = memo(function TrustSection() {
               key={`${item.label}-${index}`}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.14) }}
+              transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.08) }}
               threshold={0.12}
               triggerOnce
             >
@@ -35,7 +35,7 @@ const TrustSection = memo(function TrustSection() {
         <MotionInView
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: 0.06 }}
+          transition={{ duration: 0.14, delay: 0.04 }}
           threshold={0.12}
           triggerOnce
         >
@@ -53,7 +53,7 @@ const TrustSection = memo(function TrustSection() {
           <MotionInView
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.14 }}
             threshold={0.12}
             triggerOnce
           >
@@ -70,7 +70,7 @@ const TrustSection = memo(function TrustSection() {
           <MotionInView
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.2, delay: 0.05 }}
+            transition={{ duration: 0.14, delay: 0.035 }}
             threshold={0.12}
             triggerOnce
           >

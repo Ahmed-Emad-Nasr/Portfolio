@@ -44,7 +44,7 @@
   border-radius: 1.4rem;
   padding: 2rem 1.6rem;
   text-align: center;
-  transition: border-color 0.7s ease, box-shadow 0.7s ease;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 .metricCard:hover {
@@ -137,7 +137,7 @@
   font-weight: 700;
   color: var(--main-color);
   background: rgba(255, 255, 255, 0.03);
-  transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease;
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
 }
 
 .certMiniBtn:hover {
