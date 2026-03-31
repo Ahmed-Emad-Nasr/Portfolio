@@ -1,0 +1,21 @@
+# تطوير
+npm run dev              # تشغيل الموقع في وضع التطوير (localhost:3000)
+npm start               # تشغيل الموقع بعد البناء
+
+# البناء والفحص
+npm run build           # بناء المشروع
+npm run lint            # فحص الأخطاء والتحذيرات
+npm run type-check      # فحص أخطاء TypeScript بدون بناء
+npm run format          # تنسيق الكود تلقائياً
+npm run format:check    # فحص مشاكل التنسيق بدون تعديل
+
+# التنظيف والأمان
+npm run clean           # حذف مجلدات البناء (.next و out)
+npm run audit           # فحص الثغرات الأمنية
+
+# فحص شامل
+npm run verify          # يشغل: lint + type-check + build
+npm run postdeploy-check # فحص روابط الموقع بعد الـ deploy
+
+# تثبيت المتعلقات
+npm install             # تثبيت جميع الـ packages

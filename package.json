@@ -8,7 +8,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "verify": "npm run lint && npm run build",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"app\" \"scripts\" \"*.{json,md,mjs}\"",
+    "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
+    "clean": "rimraf .next out",
+    "audit": "npm audit --omit=dev",
+    "verify": "npm run lint && npm run type-check && npm run build",
     "postdeploy-check": "node ./scripts/postdeploy-check.mjs"
   },
   "dependencies": {
@@ -30,6 +35,8 @@
     "@types/react": "19.2.2",
     "eslint": "9.39.4",
     "eslint-config-next": "16.1.6",
+    "prettier": "^3.0.0",
+    "rimraf": "^6.0.0",
     "typescript": "5.9.3"
   }
 }
