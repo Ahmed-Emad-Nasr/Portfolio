@@ -123,20 +123,7 @@ section::before {
   z-index: 0;
 }
 
-/*--------- 5. Accessibility Overrides ---------*/
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/*--------- 6. Mobile Overrides (Global Fallback) ---------*/
+/*--------- 5. Mobile Overrides (Global Fallback) ---------*/
 @media (max-width: 991px) {
   section {
     min-height: 100vh;

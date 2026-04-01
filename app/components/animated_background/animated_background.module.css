@@ -93,10 +93,3 @@
     animation-duration: 18s;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .glowOrb,
-  .scanlines {
-    animation: none;
-  }
-}

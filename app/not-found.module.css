@@ -141,13 +141,3 @@
     width: 100%;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .glow,
-  .primaryBtn,
-  .secondaryBtn {
-    animation: none;
-    transition: none;
-  }
-}
