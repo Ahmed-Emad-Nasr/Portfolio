@@ -46,7 +46,6 @@ export const useHeader = () => {
       const savedSection = localStorage.getItem("activeSection");
       if (savedSection && SECTIONS.includes(savedSection)) {
         setActiveSection(savedSection);
-        // Optional: document.getElementById(savedSection)?.scrollIntoView({ behavior: "smooth" });
       }
     } catch {
       // localStorage is not available (cross-origin iframe, private browsing, etc.)

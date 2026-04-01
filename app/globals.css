@@ -48,7 +48,7 @@ select:focus-visible {
 html {
   font-size: 62.5%;
   overflow-x: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   /* تم إرجاعها لصفر عشان مسافات السكاشن الخاصة بيك تشتغل صح وميبقاش فيه مسافة فاضية فوق */
   scroll-padding-top: 0; 
 }
@@ -123,7 +123,38 @@ section::before {
   z-index: 0;
 }
 
-/*--------- 5. Mobile Overrides (Global Fallback) ---------*/
+/*--------- 5. Force Icon Animations (Vendor Override) ---------*/
+.fa-beat {
+  animation-name: fa-beat !important;
+}
+
+.fa-bounce {
+  animation-name: fa-bounce !important;
+}
+
+.fa-fade {
+  animation-name: fa-fade !important;
+}
+
+.fa-beat-fade {
+  animation-name: fa-beat-fade !important;
+}
+
+.fa-flip {
+  animation-name: fa-flip !important;
+}
+
+.fa-shake {
+  animation-name: fa-shake !important;
+}
+
+.fa-spin,
+.fa-pulse,
+.fa-spin-pulse {
+  animation-name: fa-spin !important;
+}
+
+/*--------- 6. Mobile Overrides (Global Fallback) ---------*/
 @media (max-width: 991px) {
   section {
     min-height: 100vh;
