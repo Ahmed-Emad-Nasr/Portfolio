@@ -1,0 +1,45 @@
+.wrap {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 1300;
+  display: none;
+  gap: 0.55rem;
+  padding: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 184, 229, 0.34);
+  background: rgba(7, 16, 30, 0.84);
+  backdrop-filter: blur(8px);
+}
+
+.btn {
+  height: 40px;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0 0.95rem;
+  font-weight: 700;
+  font-size: 0.84rem;
+  border: 1px solid transparent;
+}
+
+.primary {
+  color: #041f16;
+  background: #71ecb6;
+}
+
+.secondary {
+  color: #ecf5ff;
+  border-color: rgba(161, 195, 235, 0.44);
+  background: rgba(114, 154, 204, 0.2);
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    display: inline-flex;
+  }
+}

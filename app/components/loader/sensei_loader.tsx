@@ -36,6 +36,8 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
           alt="Loading..."
           width={250}
           height={250}
+          sizes="250px"
+          quality={70}
           priority
           className={styles.spinner}
         />

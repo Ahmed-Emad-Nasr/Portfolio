@@ -1,20 +1,83 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { trackPageView, trackSeoSnapshot } from "@/app/core/utils/analytics";
+import { recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
+
+const VISITOR_SESSION_KEY = "portfolio_visit_notified_v2";
 
 export default function AnalyticsTracker() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const query = searchParams?.toString();
+    if (typeof window === "undefined") return;
+
+    const hasNotified = window.sessionStorage.getItem(VISITOR_SESSION_KEY) === "1";
+    if (hasNotified) return;
+
+    window.sessionStorage.setItem(VISITOR_SESSION_KEY, "1");
+    recordFunnelEvent("site_visit");
+
+    void sendNotificationEmail({
+      subject: "Portfolio alert: new site visitor",
+      cooldownKey: "site_visit_global",
+      cooldownMs: 20_000,
+      lines: [
+        "A new visitor opened the portfolio.",
+        `Time (UTC): ${new Date().toISOString()}`,
+        `Page: ${window.location.href}`,
+        `Referrer: ${document.referrer || "direct"}`,
+        `User Agent: ${navigator.userAgent}`,
+      ],
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const sectionMap = [
+      { id: "Home", event: "section_view_home" as const },
+      { id: "About", event: "section_view_about" as const },
+      { id: "Projects", event: "section_view_projects" as const },
+      { id: "Services", event: "section_view_services" as const },
+      { id: "Contact", event: "section_view_contact" as const },
+    ];
+
+    const observedElements = sectionMap
+      .map((item) => ({ ...item, element: document.getElementById(item.id) }))
+      .filter((item): item is { id: string; event: (typeof sectionMap)[number]["event"]; element: HTMLElement } => Boolean(item.element));
+
+    if (!observedElements.length) return;
+
+    const seenEvents = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const item = observedElements.find((candidate) => candidate.element === entry.target);
+          if (!item || seenEvents.has(item.event)) return;
+
+          seenEvents.add(item.event);
+          recordFunnelEvent(item.event);
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    observedElements.forEach((item) => observer.observe(item.element));
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  useEffect(() => {
+    const query = typeof window !== "undefined" ? window.location.search.replace(/^\?/, "") : "";
     const path = query ? `${pathname}?${query}` : pathname;
 
     trackPageView(path);
     trackSeoSnapshot(path);
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }

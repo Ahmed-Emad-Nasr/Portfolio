@@ -1,0 +1,42 @@
+.toastViewport {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 2000;
+  display: grid;
+  gap: 0.55rem;
+  width: min(92vw, 360px);
+}
+
+.toast {
+  border-radius: 12px;
+  border: 1px solid rgba(154, 189, 230, 0.4);
+  background: rgba(7, 15, 28, 0.92);
+  color: #edf6ff;
+  padding: 0.75rem 0.85rem;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.36);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.info {
+  border-color: rgba(141, 181, 227, 0.42);
+}
+
+.success {
+  border-color: rgba(113, 228, 171, 0.58);
+  color: #d9ffea;
+}
+
+.error {
+  border-color: rgba(255, 132, 132, 0.55);
+  color: #ffe2e2;
+}
+
+@media (max-width: 640px) {
+  .toastViewport {
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
+}

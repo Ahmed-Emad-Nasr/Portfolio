@@ -92,6 +92,15 @@
 .info-text p { font-size: 1.6rem; color: var(--text-color); margin: 0; font-weight: 600; overflow-wrap: anywhere; word-break: break-word; }
 
 .input-group { position: relative; margin-bottom: 2.5rem; }
+.honeypot-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
 .input-field {
   width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.6rem 2rem;
   font-size: 1.5rem; color: var(--text-color); font-family: inherit;
@@ -100,6 +109,12 @@
 .input-field::placeholder { color: rgba(255, 255, 255, 0.4); }
 .input-field:focus { outline: none; border-color: var(--main-color); background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3); }
 textarea.input-field { resize: vertical; min-height: 150px; }
+
+.turnstile-wrap {
+  margin: 0 0 1.8rem;
+  display: flex;
+  justify-content: center;
+}
 
 .submit-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 1rem; width: 100%; padding: 1.5rem;

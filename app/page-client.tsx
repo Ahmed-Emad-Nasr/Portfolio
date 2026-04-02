@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 const AnimatedBackground = dynamic(() => import("@/app/components/animated_background/animated_background"), { ssr: false });
@@ -21,6 +22,7 @@ const ExperienceSection = dynamic(() => import("@/app/components/experience/expe
 const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), { ssr: false });
 const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), { ssr: false });
 const ContactSection = dynamic(() => import("@/app/components/contact/sensei-contact"), { ssr: false });
+const SocialProofSection = dynamic(() => import("@/app/components/social-proof/social-proof-section"), { ssr: false });
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -81,8 +83,10 @@ const MainClient = memo(function MainClient() {
         <ExperienceSection />
         <ProjectsSection />
         <ServicesSection />
+        <SocialProofSection />
         <ContactSection />
         <ArtGallerySection />
+        <MobileQuickActions />
       </div>
     </main>
   );

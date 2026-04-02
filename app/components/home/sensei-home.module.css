@@ -122,6 +122,18 @@
   animation: pdfPulse 0.9s ease-in-out infinite;
 }
 
+.cvBtnAlt {
+  background: linear-gradient(130deg, rgba(111, 234, 178, 0.2), rgba(83, 195, 230, 0.2));
+  border: 2px solid rgba(111, 234, 178, 0.85);
+  color: #94f7cf;
+}
+
+.cvBtnAlt:hover {
+  background: #6feab2;
+  color: #031d14;
+  border-color: #6feab2;
+}
+
 @keyframes pdfPulse {
   0%,
   100% {

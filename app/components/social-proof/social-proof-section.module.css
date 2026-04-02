@@ -1,0 +1,77 @@
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 0;
+}
+
+.container {
+  margin: 0 auto;
+  width: min(92%, 1300px);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.2rem;
+}
+
+.title {
+  margin: 0;
+  color: #f4fbff;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  margin: 0.7rem auto 0;
+  max-width: 720px;
+  color: rgba(214, 229, 247, 0.78);
+  font-size: 1.03rem;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid rgba(117, 171, 214, 0.36);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(12, 20, 35, 0.84), rgba(19, 30, 49, 0.86));
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+  padding: 1.2rem;
+}
+
+.quote {
+  margin: 0;
+  color: rgba(230, 241, 255, 0.9);
+  line-height: 1.65;
+  font-size: 0.98rem;
+}
+
+.person {
+  margin-top: 0.95rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(119, 170, 212, 0.28);
+}
+
+.name {
+  display: block;
+  color: #f6fbff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.role {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(196, 219, 244, 0.8);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 991px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

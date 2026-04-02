@@ -1,0 +1,146 @@
+.page {
+  min-height: 100vh;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(84, 164, 236, 0.16), transparent 35%),
+    radial-gradient(circle at 86% 18%, rgba(106, 231, 187, 0.17), transparent 40%),
+    #070f1c;
+  color: #f2f8ff;
+}
+
+.container {
+  width: min(100%, 920px);
+  margin: 0 auto;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.5vw, 3rem);
+}
+
+.subtitle {
+  margin-top: 0.7rem;
+  color: rgba(206, 225, 248, 0.8);
+  font-size: 1.06rem;
+}
+
+.stateInfo,
+.stateWarn,
+.stateError {
+  margin: 0.65rem 0 0;
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+}
+
+.stateInfo {
+  color: #d6e9ff;
+  border-color: rgba(148, 184, 227, 0.4);
+  background: rgba(62, 104, 157, 0.18);
+}
+
+.stateWarn {
+  color: #ffecc1;
+  border-color: rgba(247, 197, 96, 0.48);
+  background: rgba(174, 122, 32, 0.2);
+}
+
+.stateError {
+  color: #ffd7d7;
+  border-color: rgba(248, 126, 126, 0.55);
+  background: rgba(166, 60, 60, 0.2);
+}
+
+.grid {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.card {
+  border: 1px solid rgba(140, 184, 226, 0.35);
+  border-radius: 14px;
+  padding: 0.95rem;
+  background: rgba(10, 19, 33, 0.8);
+}
+
+.label {
+  margin: 0;
+  color: rgba(205, 225, 248, 0.87);
+  font-size: 1.02rem;
+}
+
+.value {
+  margin-top: 0.35rem;
+  color: #8ef2c5;
+  font-size: 1.85rem;
+  font-weight: 700;
+}
+
+.actions {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.events {
+  margin-top: 1.5rem;
+}
+
+.eventsTitle {
+  margin: 0;
+  font-size: 1.45rem;
+  color: #ecf6ff;
+}
+
+.eventsList {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.eventItem {
+  border: 1px solid rgba(140, 184, 226, 0.3);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  background: rgba(8, 17, 30, 0.82);
+}
+
+.eventName {
+  margin: 0;
+  color: #dff0ff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.eventTime {
+  margin: 0.25rem 0 0;
+  color: rgba(176, 207, 240, 0.9);
+  font-size: 0.9rem;
+}
+
+.eventDetails {
+  margin: 0.35rem 0 0;
+  color: rgba(199, 222, 247, 0.85);
+  font-size: 0.94rem;
+}
+
+.btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid rgba(154, 190, 226, 0.45);
+  background: rgba(82, 130, 179, 0.2);
+  color: #eff7ff;
+  padding: 0.65rem 1.05rem;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

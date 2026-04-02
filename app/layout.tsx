@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
 import AnalyticsTracker from "@/app/core/components/AnalyticsTracker";
+import ToastHost from "@/app/core/components/ToastHost";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -94,6 +95,8 @@ const overlock = Overlock({
 // Derived once — the class string never changes between renders.
 const BODY_CLASS = `bg-black text-white ${overlock.variable}`;
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -111,6 +114,12 @@ const structuredData = {
         "@type": "PostalAddress",
         addressLocality: "Cairo",
         addressCountry: "EG",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "ahmed.em.nasr@gmail.com",
+        availableLanguage: ["en", "ar"],
       },
       sameAs: [
         "https://www.linkedin.com/in/ahmed-emad-nasr/",
@@ -136,6 +145,24 @@ const structuredData = {
         "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
       },
     },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#breadcrumbs",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://ahmed-emad-nasr.github.io/Portfolio/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Contact",
+          item: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact",
+        },
+      ],
+    },
   ],
 };
 
@@ -145,7 +172,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr">
       <head>
-        {/* Preconnect to FontAwesome CDN for early network connection */}
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
@@ -168,9 +194,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 gtag('config', '${GA_ID}', { send_page_view: false });
               `}
             </Script>
-            <AnalyticsTracker />
           </>
         ) : null}
+        {CLARITY_ID ? (
+          <Script id="clarity-init" strategy="afterInteractive">
+            {`
+              (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "${CLARITY_ID}");
+            `}
+          </Script>
+        ) : null}
+        {TURNSTILE_SITE_KEY ? (
+          <Script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+            strategy="afterInteractive"
+          />
+        ) : null}
+        <AnalyticsTracker />
+        <ToastHost />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
