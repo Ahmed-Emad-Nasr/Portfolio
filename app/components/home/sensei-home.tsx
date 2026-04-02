@@ -21,6 +21,7 @@ const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
+const FORCED_CV_VARIANT: CVVariant = "B";
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
@@ -30,21 +31,11 @@ const SenseiHome = memo(function SenseiHome() {
 
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(AB_STORAGE_KEY);
-      if (stored === "A" || stored === "B") {
-        setCvVariant(stored);
-        return;
-      }
-
-      const assignedVariant: CVVariant = Math.random() < 0.5 ? "A" : "B";
-      window.localStorage.setItem(AB_STORAGE_KEY, assignedVariant);
-      setCvVariant(assignedVariant);
-      trackEvent("ab_test_assignment", {
-        test_name: "hero_cv_cta",
-        variant: assignedVariant,
-      });
+      // Keep a stable CTA style across environments by forcing variant B.
+      window.localStorage.setItem(AB_STORAGE_KEY, FORCED_CV_VARIANT);
+      setCvVariant(FORCED_CV_VARIANT);
     } catch {
-      setCvVariant("A");
+      setCvVariant(FORCED_CV_VARIANT);
     }
   }, []);
 
