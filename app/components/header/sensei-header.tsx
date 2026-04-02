@@ -6,7 +6,7 @@
  * Purpose: Render sticky navigation header and mobile menu behavior
  */
 
-import { useCallback, useMemo, memo, useRef, useEffect, useState, type MouseEvent } from "react";
+import { useCallback, useMemo, memo, useRef, useEffect, type MouseEvent } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -20,24 +20,6 @@ const SenseiHeader = memo(function SenseiHeader() {
     isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen,
   } = useHeader();
   const headerRef = useRef<HTMLElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const doc = document.documentElement;
-      const scrollableHeight = doc.scrollHeight - window.innerHeight;
-      if (scrollableHeight <= 0) {
-        setScrollProgress(0);
-        return;
-      }
-      const value = Math.min(100, Math.max(0, (window.scrollY / scrollableHeight) * 100));
-      setScrollProgress(value);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     if (window.innerWidth > 994) {
@@ -81,19 +63,11 @@ const SenseiHeader = memo(function SenseiHeader() {
     [setActiveSection, setIsMenuOpen]
   );
 
-  // Handle keyboard navigation (Escape to close menu, Tab to navigate)
+  // Keep keyboard behavior predictable: Escape closes mobile menu.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMenuOpen) {
         setIsMenuOpen(false);
-      }
-      // Allow Tab to navigate through menu items
-      if (e.key === "Tab" && !isMenuOpen && window.innerWidth <= 994) {
-        // Auto-open menu for better mobile keyboard nav
-        const currentTarget = e.target as HTMLElement;
-        if (currentTarget?.closest("[role='navigation']")) {
-          setIsMenuOpen(true);
-        }
       }
     };
 
@@ -134,7 +108,6 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   return (
     <header ref={headerRef} className={styles.header} data-site-header="true">
-      <span className={styles.progress} style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
       <a
         href="#Home"
         className={styles.logo}

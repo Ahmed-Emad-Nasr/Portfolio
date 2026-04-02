@@ -23,7 +23,9 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
   const descriptionBullets = useMemo(() => toBulletItems(desc), [desc]);
 
   const containerClass = `${styles["timeline-container"]} ${isRight ? styles.right : styles.left}`;
-  const subTagStyle = subTagHyperlink ? ({ cursor: "pointer" } as const) : ({ cursor: "default" } as const);
+  const subTagStyle = subTagHyperlink
+    ? ({ cursor: "pointer", color: "inherit", textDecoration: "none" } as const)
+    : ({ cursor: "default" } as const);
 
   return (
     <MotionInView
@@ -37,11 +39,17 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
       <div className={styles.content}>
         <div className={styles.tag}>
           <h2><FontAwesomeIcon icon={faBriefcase} className={styles.titleIcon} aria-hidden="true" /> {tag}</h2>
-          {subTag && (
-            <h3 onClick={subTagHyperlink ? () => window.open(subTagHyperlink, "_blank") : undefined} style={subTagStyle}>
-              {subTag} {subTagHyperlink && <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles.linkIcon} aria-hidden="true" />}
-            </h3>
-          )}
+          {subTag ? (
+            subTagHyperlink ? (
+              <h3>
+                <a href={subTagHyperlink} target="_blank" rel="noopener noreferrer" style={subTagStyle}>
+                  {subTag} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles.linkIcon} aria-hidden="true" />
+                </a>
+              </h3>
+            ) : (
+              <h3 style={subTagStyle}>{subTag}</h3>
+            )
+          ) : null}
         </div>
         <div className={styles.desc}>
           <ul className={styles["desc-list"]}>

@@ -59,11 +59,23 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
 
   return (
     <motion.div className={styles.art_pic} variants={itemVariants}>
-      <Image
-        src={image.thumb} alt={`Certification ${index + 1}`} width={350} height={350}
-        sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
-        onClick={handleClick} loading="lazy" quality={75} className={styles.galleryImg}
-      />
+      <button
+        type="button"
+        className={styles.imageButton}
+        onClick={handleClick}
+        aria-label={`Open certification image ${index + 1}`}
+      >
+        <Image
+          src={image.thumb}
+          alt={`Certification image ${index + 1}`}
+          width={350}
+          height={350}
+          sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
+          loading="lazy"
+          quality={75}
+          className={styles.galleryImg}
+        />
+      </button>
     </motion.div>
   );
 });

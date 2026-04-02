@@ -112,6 +112,17 @@
 .info-text p { font-size: 1.6rem; color: var(--text-color); margin: 0; font-weight: 600; overflow-wrap: anywhere; word-break: break-word; }
 
 .input-group { position: relative; margin-bottom: 2.5rem; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .error-summary {
   margin: 0 0 1.6rem;
   padding: 1.1rem 1.2rem;

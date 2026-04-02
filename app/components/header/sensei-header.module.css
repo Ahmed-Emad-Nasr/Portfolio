@@ -52,18 +52,6 @@
   pointer-events: none;
 }
 
-.progress {
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: 0.35rem;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(149, 247, 205, 0.9), rgba(131, 214, 255, 0.9));
-  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.28), 0 0 8px rgba(149, 247, 205, 0.18);
-  transition: width 0.14s linear;
-  will-change: width;
-}
-
 .logo {
   font-size: 2.2rem;
   font-family: "Yuji Syuku", serif;

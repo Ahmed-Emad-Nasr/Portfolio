@@ -62,30 +62,22 @@ export const useHeader = () => {
           const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
           const headerHeight = headerElement?.getBoundingClientRect().height ?? (isMobile ? 64 : 76);
           const marker = Math.max(72, Math.round(headerHeight + (isMobile ? 10 : 14)));
-          let current: string | undefined;
+          let current = "Home";
+          let smallestDistance = Number.POSITIVE_INFINITY;
 
           for (const section of SECTIONS) {
             const el = document.getElementById(section);
             if (!el) continue;
             const { top } = el.getBoundingClientRect();
+            const distance = Math.abs(top - marker);
 
-            // Keep advancing while section tops are above marker;
-            // this avoids losing active state in gaps between sections.
-            if (top <= marker) {
+            if (distance < smallestDistance) {
+              smallestDistance = distance;
               current = section;
-              continue;
             }
-
-            // Stop once we passed the first section below marker.
-            break;
-          }
-
-          // Fallback to first section when near page top.
-          if (!current) {
-            current = "Home";
           }
           
-          if (current && current !== lastSection) {
+          if (current !== lastSection) {
             lastSection = current;
             setActiveSection(current);
             try {

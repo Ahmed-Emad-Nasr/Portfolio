@@ -101,9 +101,9 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
         </ul>
 
         <div className={styles["stats-container"]}>
-          <span className={styles["stat-badge"]} title="Stars"><FontAwesomeIcon icon={faStar} /> {repo.stargazers_count}</span>
-          <span className={styles["stat-badge"]} title="Forks"><FontAwesomeIcon icon={faCodeBranch} /> {repo.forks_count}</span>
-          <span className={styles["stat-badge"]} title="Watchers"><FontAwesomeIcon icon={faEye} /> {repo.watchers_count}</span>
+          <span className={styles["stat-badge"]} aria-label={`${repo.stargazers_count} stars`}><FontAwesomeIcon icon={faStar} aria-hidden="true" /> {repo.stargazers_count}</span>
+          <span className={styles["stat-badge"]} aria-label={`${repo.forks_count} forks`}><FontAwesomeIcon icon={faCodeBranch} aria-hidden="true" /> {repo.forks_count}</span>
+          <span className={styles["stat-badge"]} aria-label={`${repo.watchers_count} watchers`}><FontAwesomeIcon icon={faEye} aria-hidden="true" /> {repo.watchers_count}</span>
         </div>
 
         {repo.topics.length > 0 && (
@@ -187,7 +187,7 @@ const SenseiProjects = memo(function SenseiProjects() {
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
           <p className={styles.sectionLead}>GitHub-backed work, grouped by security focus so the right examples are easier to scan.</p>
         </div>
-        <div className={styles["projects-filter"]} role="tablist" aria-label="Project category filters">
+        <div className={styles["projects-filter"]} role="group" aria-label="Project category filters">
           {FILTERS.map((filterItem) => (
             <button
               key={filterItem}

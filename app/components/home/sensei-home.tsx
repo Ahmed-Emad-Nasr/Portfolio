@@ -161,24 +161,30 @@ const SenseiHome = memo(function SenseiHome() {
     <section className={styles.home} id="Home">
       <div ref={containerRef} className={styles.container} onMouseMove={handlePointerMove} onMouseLeave={resetParallax}>
         <div className={styles.homeImg}>
-          <Image
-            src="Assets/art-gallery/Images/logo/My_Logo.webp"
-            alt="Ahmed Emad Nasr Image"
-            className={styles.image}
-            width={350}
-            height={350}
-            sizes="(max-width: 968px) 80vw, 350px"
-            quality={82}
-            priority
+          <button
+            type="button"
+            className={styles.imageButton}
             onClick={handleImageClick}
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";
-            }}
-          />
+            aria-label="Open introduction video in a new tab"
+            title="Open introduction video"
+          >
+            <Image
+              src="Assets/art-gallery/Images/logo/My_Logo.webp"
+              alt="Ahmed Emad Nasr portrait"
+              className={styles.image}
+              width={350}
+              height={350}
+              sizes="(max-width: 968px) 80vw, 350px"
+              quality={82}
+              priority
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";
+              }}
+            />
+          </button>
         </div>
 
         <div className={styles.homeContent}>
-          <p className={styles.eyebrow}>SOC Analyst | Incident Response | Threat Hunting</p>
           <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
           <div className={styles.availabilityStatus}>
             <span className={`${styles.statusDot} ${availability.toneClass}`}></span>

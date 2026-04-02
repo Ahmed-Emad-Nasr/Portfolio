@@ -358,23 +358,33 @@ const SenseiContact = memo(function SenseiContact() {
                 </div>
               ) : null}
               <div className={styles["honeypot-field"]} aria-hidden="true">
-                <label htmlFor="website">Website</label>
                 <input id="website" type="text" name="website" tabIndex={-1} autoComplete="off" />
               </div>
-              <div className={`${styles["input-group"]} ${fieldErrors.name ? styles["input-error"] : ""}`}><input type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} onFocus={() => {
+              <div className={`${styles["input-group"]} ${fieldErrors.name ? styles["input-error"] : ""}`}>
+                <label htmlFor="contact-name" className={styles["sr-only"]}>Your name</label>
+                <input id="contact-name" type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} onFocus={() => {
                 if (!didTrackFormStart) {
                   trackEvent("contact_form_started", { source: "contact_form", first_field: "name" });
                   recordFunnelEvent("contact_form_started");
                   setDidTrackFormStart(true);
                 }
-              }} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, name: null })); }} autoComplete="name" minLength={2} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? "name-error" : undefined} /></div>
+              }} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, name: null })); }} autoComplete="name" minLength={2} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? "name-error" : undefined} />
+              </div>
               {fieldErrors.name ? <span id="name-error" className={styles["field-error"]}>{fieldErrors.name}</span> : null}
-              <div className={`${styles["input-group"]} ${fieldErrors.email ? styles["input-error"] : ""}`}><input type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} autoComplete="email" onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, email: null })); }} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? "email-error" : undefined} /></div>
+              <div className={`${styles["input-group"]} ${fieldErrors.email ? styles["input-error"] : ""}`}>
+                <label htmlFor="contact-email" className={styles["sr-only"]}>Your email</label>
+                <input id="contact-email" type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} autoComplete="email" onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, email: null })); }} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? "email-error" : undefined} />
+              </div>
               {fieldErrors.email ? <span id="email-error" className={styles["field-error"]}>{fieldErrors.email}</span> : null}
-              <div className={`${styles["input-group"]} ${fieldErrors.subject ? styles["input-error"] : ""}`}><input type="text" name="subject" placeholder="Project Subject" required className={styles["input-field"]} minLength={4} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, subject: null })); }} aria-invalid={!!fieldErrors.subject} aria-describedby={fieldErrors.subject ? "subject-error" : undefined} /></div>
+              <div className={`${styles["input-group"]} ${fieldErrors.subject ? styles["input-error"] : ""}`}>
+                <label htmlFor="contact-subject" className={styles["sr-only"]}>Project subject</label>
+                <input id="contact-subject" type="text" name="subject" placeholder="Project Subject" required className={styles["input-field"]} minLength={4} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, subject: null })); }} aria-invalid={!!fieldErrors.subject} aria-describedby={fieldErrors.subject ? "subject-error" : undefined} />
+              </div>
               {fieldErrors.subject ? <span id="subject-error" className={styles["field-error"]}>{fieldErrors.subject}</span> : null}
               <div className={styles["input-group"]}>
+                <label htmlFor="requested_service" className={styles["sr-only"]}>Requested service</label>
                 <select
+                  id="requested_service"
                   name="requested_service"
                   required
                   className={styles["input-field"]}
@@ -395,11 +405,13 @@ const SenseiContact = memo(function SenseiContact() {
                 </select>
               </div>
               {fieldErrors.requested_service ? <span id="requested-service-error" className={styles["field-error"]}>{fieldErrors.requested_service}</span> : null}
-              <details className={styles["optional-fields"]}>
+              <details className={styles["optional-fields"]} aria-label="Optional project details">
                 <summary>Add optional project details</summary>
                 <div className={styles["triple-grid"]}>
                   <div className={styles["input-group"]}>
+                    <label htmlFor="budget_range" className={styles["sr-only"]}>Budget range</label>
                     <select
+                      id="budget_range"
                       name="budget_range"
                       className={styles["input-field"]}
                       defaultValue=""
@@ -415,7 +427,9 @@ const SenseiContact = memo(function SenseiContact() {
                     </select>
                   </div>
                   <div className={styles["input-group"]}>
+                    <label htmlFor="project_timeline" className={styles["sr-only"]}>Project timeline</label>
                     <select
+                      id="project_timeline"
                       name="project_timeline"
                       className={styles["input-field"]}
                       defaultValue=""
@@ -432,7 +446,10 @@ const SenseiContact = memo(function SenseiContact() {
                   </div>
                 </div>
               </details>
-              <div className={`${styles["input-group"]} ${fieldErrors.message ? styles["input-error"] : ""}`}><textarea name="message" placeholder="Tell me your main goal in 1-2 lines" required className={styles["input-field"]} minLength={10} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, message: null })); }} aria-invalid={!!fieldErrors.message} aria-describedby={fieldErrors.message ? "message-error" : undefined}></textarea></div>
+              <div className={`${styles["input-group"]} ${fieldErrors.message ? styles["input-error"] : ""}`}>
+                <label htmlFor="contact-message" className={styles["sr-only"]}>Your message</label>
+                <textarea id="contact-message" name="message" placeholder="Tell me your main goal in 1-2 lines" required className={styles["input-field"]} minLength={10} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, message: null })); }} aria-invalid={!!fieldErrors.message} aria-describedby={fieldErrors.message ? "message-error" : undefined}></textarea>
+              </div>
               {fieldErrors.message ? <span id="message-error" className={styles["field-error"]}>{fieldErrors.message}</span> : null}
               {TURNSTILE_SITE_KEY ? (
                 <div className={styles["turnstile-wrap"]}>

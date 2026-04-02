@@ -7,6 +7,16 @@
 .container { display: flex; justify-content: center; align-items: center; gap: 4rem; max-width: 1200px; width: 100%; min-height: 95vh; padding: 5px 0; --parallax-x: 0px; --parallax-y: 0px; }
 .homeImg { flex: 0 0 auto; max-width: 435px; width: 100%; }
 
+.imageButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
 .homeContent {
   animation: sectionFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
@@ -19,6 +29,10 @@
   cursor: pointer; will-change: transform, filter;
 }
 .homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1.01); filter: drop-shadow(0 0 10px rgba(var(--main-color-rgb), 0.4)); box-shadow: 0 0 18px rgba(var(--main-color-rgb), 0.5); }
+.imageButton:focus-visible img {
+  outline: 3px solid rgba(var(--main-color-rgb), 0.75);
+  outline-offset: 4px;
+}
 
 .homeContent h1 { font-size: 5.8rem; font-weight: 800; line-height: 1.12; letter-spacing: 0.02em; }
 .eyebrow {
