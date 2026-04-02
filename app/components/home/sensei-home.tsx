@@ -6,7 +6,7 @@
  * Purpose: Render home hero with social links and action buttons
  */
 
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
@@ -18,41 +18,111 @@ import { homeSummaryParagraph } from "@/app/core/data";
 import { trackEvent } from "@/app/core/utils/analytics";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
-const BTN_2_CLASS = `${styles.btn} ${styles.btn2}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
-const FORCED_CV_VARIANT: CVVariant = "B";
+const HERO_PROOF_POINTS = ["200+ Alerts Investigated", "35+ Security Sessions", "Reply within 24h"] as const;
+
+const pickVariant = <T extends string>(a: T, b: T): T => (Math.random() < 0.5 ? a : b);
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
   const containerRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const parallaxRafRef = useRef<number | null>(null);
+  const parallaxEnabledRef = useRef(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cvVariant, setCvVariant] = useState<CVVariant>("A");
+  const [clock, setClock] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => setClock(new Date()), 60_000);
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const applyCapability = () => {
+      parallaxEnabledRef.current = mediaQuery.matches && !reducedMotion.matches;
+    };
+
+    applyCapability();
+    mediaQuery.addEventListener("change", applyCapability);
+    reducedMotion.addEventListener("change", applyCapability);
+
+    return () => {
+      mediaQuery.removeEventListener("change", applyCapability);
+      reducedMotion.removeEventListener("change", applyCapability);
+      if (parallaxRafRef.current !== null) {
+        window.cancelAnimationFrame(parallaxRafRef.current);
+      }
+    };
+  }, []);
+
+  const availability = useMemo(() => {
+    const day = clock.getDay();
+    const hour = clock.getHours();
+
+    if (day === 5 || day === 6) {
+      return { label: "Limited Availability", hint: "Weekend response window", toneClass: styles.dotLimited };
+    }
+
+    if (hour >= 10 && hour < 20) {
+      return { label: "Available for Opportunities", hint: "Typically replies today", toneClass: styles.dotAvailable };
+    }
+
+    return { label: "Available (Async)", hint: "Usually replies within 24h", toneClass: styles.dotAsync };
+  }, [clock]);
 
   useEffect(() => {
     try {
-      // Keep a stable CTA style across environments by forcing variant B.
-      window.localStorage.setItem(AB_STORAGE_KEY, FORCED_CV_VARIANT);
-      setCvVariant(FORCED_CV_VARIANT);
+      const storedCV = window.localStorage.getItem(AB_STORAGE_KEY) as CVVariant | null;
+      const assignedCV = storedCV === "A" || storedCV === "B" ? storedCV : pickVariant<CVVariant>("A", "B");
+      window.localStorage.setItem(AB_STORAGE_KEY, assignedCV);
+      setCvVariant(assignedCV);
+
+      trackEvent("hero_ab_assigned", {
+        cv_variant: assignedCV,
+      });
     } catch {
-      setCvVariant(FORCED_CV_VARIANT);
+      setCvVariant("A");
     }
   }, []);
 
   const handlePointerMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!parallaxEnabledRef.current) return;
+
     const element = containerRef.current;
     if (!element) return;
-    const rect = element.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width;
-    const y = (event.clientY - rect.top) / rect.height;
 
-    element.style.setProperty("--parallax-x", `${(x - 0.5) * 10}px`);
-    element.style.setProperty("--parallax-y", `${(y - 0.5) * 10}px`);
+    pointerRef.current = { x: event.clientX, y: event.clientY };
+    if (parallaxRafRef.current !== null) return;
+
+    parallaxRafRef.current = window.requestAnimationFrame(() => {
+      const target = containerRef.current;
+      if (!target) {
+        parallaxRafRef.current = null;
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      const x = (pointerRef.current.x - rect.left) / rect.width;
+      const y = (pointerRef.current.y - rect.top) / rect.height;
+
+      target.style.setProperty("--parallax-x", `${(x - 0.5) * 10}px`);
+      target.style.setProperty("--parallax-y", `${(y - 0.5) * 10}px`);
+      parallaxRafRef.current = null;
+    });
   };
 
   const resetParallax = () => {
     const element = containerRef.current;
     if (!element) return;
+    if (parallaxRafRef.current !== null) {
+      window.cancelAnimationFrame(parallaxRafRef.current);
+      parallaxRafRef.current = null;
+    }
     element.style.setProperty("--parallax-x", "0px");
     element.style.setProperty("--parallax-y", "0px");
   };
@@ -65,6 +135,23 @@ const SenseiHome = memo(function SenseiHome() {
       variant: cvVariant,
     });
     setIsModalOpen(true);
+  };
+
+  const handleHireMeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    trackEvent("cta_click", { source: "hero", action: "start_project", destination: "#Contact" });
+
+    const contactSection = document.getElementById("Contact");
+    if (!contactSection) {
+      window.location.hash = "Contact";
+      return;
+    }
+
+    const header = document.querySelector("header");
+    const headerHeight = header?.getBoundingClientRect().height ?? 72;
+    const top = contactSection.getBoundingClientRect().top + window.scrollY - (headerHeight + 14);
+    window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
   };
 
   const cvBtnClass = `${styles.btn} ${styles.cvBtn} ${cvVariant === "B" ? styles.cvBtnAlt : ""}`;
@@ -93,11 +180,17 @@ const SenseiHome = memo(function SenseiHome() {
         <div className={styles.homeContent}>
           <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
           <div className={styles.availabilityStatus}>
-            <span className={`${styles.statusDot} ${styles.dotAvailable}`}></span>
-            <span>Available for Opportunities</span>
+            <span className={`${styles.statusDot} ${availability.toneClass}`}></span>
+            <span>{availability.label}</span>
+            <small className={styles.availabilityMeta}>{availability.hint}</small>
           </div>
           <h2 className={styles.typingText}><span className={styles.typingHighlight} /></h2>
           <p>{homeSummaryParagraph}</p>
+          <div className={styles.proofRow} aria-label="Key proof points">
+            {HERO_PROOF_POINTS.map((point) => (
+              <span key={point} className={styles.proofPill}>{point}</span>
+            ))}
+          </div>
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
             <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat"><FontAwesomeIcon icon={faWhatsapp} /></a>
@@ -106,7 +199,7 @@ const SenseiHome = memo(function SenseiHome() {
             <a
               href="#Contact"
               className={BTN_1_CLASS}
-              onClick={() => trackEvent("cta_click", { source: "hero", action: "hire_me", destination: "#Contact" })}
+              onClick={handleHireMeClick}
             >
               <span className={styles.liveTag}><span className={styles.livePing} aria-hidden="true" /> Live</span> Hire Me <FontAwesomeIcon icon={faUserSecret} />
             </a>

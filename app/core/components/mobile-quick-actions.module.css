@@ -5,37 +5,38 @@
   transform: translateX(-50%);
   z-index: 1300;
   display: none;
-  gap: 0.55rem;
-  padding: 0.45rem;
+  gap: 0.62rem;
+  padding: 0.5rem;
   border-radius: 999px;
   border: 1px solid rgba(142, 184, 229, 0.34);
   background: rgba(7, 16, 30, 0.84);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(var(--ui-blur));
 }
 
 .btn {
-  height: 40px;
+  min-height: 44px;
   border-radius: 999px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  padding: 0 0.95rem;
+  padding: 0 1rem;
   font-weight: 700;
-  font-size: 0.84rem;
+  font-size: 1rem;
   border: 1px solid transparent;
 }
 
 .primary {
-  color: #041f16;
-  background: #71ecb6;
+  color: #032016;
+  background: linear-gradient(140deg, #8ef7cb, #63dca8);
+  box-shadow: 0 6px 14px rgba(96, 224, 168, 0.26);
 }
 
 .secondary {
   color: #ecf5ff;
-  border-color: rgba(161, 195, 235, 0.44);
-  background: rgba(114, 154, 204, 0.2);
+  border-color: rgba(161, 195, 235, 0.5);
+  background: linear-gradient(140deg, rgba(128, 167, 214, 0.3), rgba(94, 132, 180, 0.26));
 }
 
 @media (max-width: 768px) {

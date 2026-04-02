@@ -10,6 +10,11 @@
   --text-color: #ffffff;
   --main-color: #fef2e2;
   --main-color-rgb: 254, 242, 226;
+  --motion-fast: 180ms;
+  --motion-normal: 260ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ui-blur: 10px;
+  --card-blur: 10px;
   
   color-scheme: dark; 
 }
@@ -48,9 +53,8 @@ select:focus-visible {
 html {
   font-size: 62.5%;
   overflow-x: hidden;
-  scroll-behavior: auto;
-  /* تم إرجاعها لصفر عشان مسافات السكاشن الخاصة بيك تشتغل صح وميبقاش فيه مسافة فاضية فوق */
-  scroll-padding-top: 0; 
+  scroll-behavior: smooth;
+  scroll-padding-top: 11rem;
 }
 
 body {
@@ -61,6 +65,20 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @keyframes sectionFadeUp {
@@ -109,9 +127,25 @@ body {
 
 /*--------- 4. General Section Style ---------*/
 section {
-  min-height: 100vh;
-  padding: 6rem 6% 5rem;
+  min-height: auto;
+  padding: 7rem 6% 6rem;
   position: relative;
+}
+
+@supports (content-visibility: auto) {
+  main section {
+    content-visibility: auto;
+    contain-intrinsic-size: 860px;
+  }
+
+  main section:first-of-type {
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
+  }
+}
+
+main section + section {
+  margin-top: clamp(8rem, 11vw, 14rem);
 }
 
 section::before {
@@ -157,12 +191,25 @@ section::before {
 /*--------- 6. Mobile Overrides (Global Fallback) ---------*/
 @media (max-width: 991px) {
   section {
-    min-height: 100vh;
-    padding: 0 1.5rem 5%;
+    min-height: auto;
+    padding: 3.5rem 1.5rem 4rem;
+  }
+
+  main section + section {
+    margin-top: clamp(5rem, 9vw, 8rem);
   }
 
   body {
     padding-bottom: 8rem;
   }
   
+}
+
+@media (hover: none), (pointer: coarse) {
+  :root {
+    --motion-fast: 140ms;
+    --motion-normal: 200ms;
+    --ui-blur: 6px;
+    --card-blur: 6px;
+  }
 }

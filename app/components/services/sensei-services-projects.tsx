@@ -7,24 +7,24 @@
  */
 
 import { memo } from "react";
+import Link from "next/link";
 import styles from "./sensei-services-projects.module.css";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
+import { serviceCatalog } from "@/app/core/data";
+import { trackEvent } from "@/app/core/utils/analytics";
+import { recordFunnelEvent } from "@/app/core/utils/engagement";
 
-const SERVICES_DATA = [
-  { icon: "fa-solid fa-shield-halved", title: "Security Operations Center (SOC) Analysis", description: "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.", },
-  { icon: "fa-solid fa-fire", title: "Incident Response (IR) & Handling", description: "End-to-end incident response lifecycle management. Perform threat hunting, containment, eradication, and recovery. Execute incident response playbooks using best practices and frameworks.", },
-  { icon: "fa-solid fa-magnifying-glass", title: "Threat Hunting & Detection Engineering", description: "Proactive threat hunting using YARA rules, Suricata IDS/IPS, and behavioral analysis. Create custom detection signatures, reduce false positive alerts, and strengthen security posture.", },
-  { icon: "fa-solid fa-database", title: "SIEM & EDR Implementation", description: "Deploy and configure enterprise-grade SIEM solutions including ELK Stack and Splunk. Implement EDR tools like Wazuh for endpoint detection and response capabilities.", },
-  { icon: "fa-solid fa-file-lines", title: "Log Analysis & Digital Forensics", description: "Comprehensive log analysis, IOC extraction, and digital forensics investigations. Perform memory forensics, malware behavioral analysis, and evidence collection for incident investigations.", },
-  { icon: "fa-solid fa-triangle-exclamation", title: "Vulnerability Assessment & Penetration Testing", description: "Identify security weaknesses through systematic vulnerability assessments. Conduct authorized penetration testing, create detailed reports, and recommend remediation strategies.", },
-  { icon: "fa-solid fa-person-chalkboard", title: "Cybersecurity Training & Awareness", description: "Deliver comprehensive cybersecurity training programs to technical and non-technical audiences. Build security awareness, improve incident response skills, and foster security culture.", },
-  { icon: "fa-solid fa-virus", title: "Malware Analysis & Prevention", description: "Perform static and dynamic malware analysis in isolated environments. Extract indicators of compromise (IOCs), develop detection signatures, and implement prevention strategies using YARA rules.", },
-] as const;
+type ServiceItemProps = {
+  icon: string;
+  title: string;
+  description: string;
+  outcome: string;
+  from: string;
+  slug: string;
+};
 
-type ServiceItemProps = { icon: string; title: string; description: string; };
-
-const ServiceItem = memo<ServiceItemProps>(({ icon, title, description }) => {
+const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, outcome, from, slug }) => {
   const descriptionBullets = toBulletItems(description);
 
   return (
@@ -39,6 +39,20 @@ const ServiceItem = memo<ServiceItemProps>(({ icon, title, description }) => {
             <li key={`${title}-${index}`}>{item}</li>
           ))}
         </ul>
+        <div className={styles.serviceMetaRow}>
+          <span className={styles.outcomeTag}>Deliverable: {outcome}</span>
+          <span className={styles.priceTag}>From {from}</span>
+        </div>
+        <Link
+          href={`/services/${slug}`}
+          className={styles.detailsBtn}
+          onClick={() => {
+            trackEvent("service_card_open", { service: slug });
+            recordFunnelEvent("service_cta_click");
+          }}
+        >
+          View Service Details
+        </Link>
       </div>
     </div>
   );
@@ -54,9 +68,9 @@ function SenseiServicesProjects() {
           <h2 className={styles.title}><span lang="ja">事業 •</span><span lang="en"> Services</span></h2>
         </div>
         <div className={styles["grid-container"]}>
-          {SERVICES_DATA.map((service, index) => (
+          {serviceCatalog.map((service, index) => (
             <MotionInView
-              key={index}
+              key={service.slug}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.14, delay: Math.min(index * 0.025, 0.1) }}

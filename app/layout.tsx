@@ -5,6 +5,7 @@
  */
 
 import "./globals.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
@@ -23,6 +24,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ahmed-emad-nasr.github.io/Portfolio/"),
+  applicationName: "Ahmed Emad Nasr Portfolio",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
@@ -30,12 +32,27 @@ export const metadata: Metadata = {
     title: "Ahmed Portfolio",
     startupImage: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
-  title: "Ahmed Emad Nasr - Portfolio",
+  title: {
+    default: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
+    template: "%s | Ahmed Emad Nasr",
+  },
   description:
-    "Hello! I'm Ahmed Emad, Soc Analyst and Cybersecurity Engineer. I specialize in protecting digital assets and ensuring online safety. With a passion for cybersecurity, I analyze threats, implement security measures, and stay ahead of cybercriminals to safeguard data and systems.",
-  keywords:
-    "Ahmed Emad Nasr, Soc Analyst, Cybersecurity Engineer, Incident Response Analyst, Blue Team, Cybersecurity Instructor, Software Engineer, Portfolio",
+    "Cybersecurity portfolio of Ahmed Emad Nasr offering SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and security training for teams.",
+  keywords: [
+    "Ahmed Emad Nasr",
+    "SOC Analyst",
+    "Cybersecurity Engineer",
+    "Incident Response",
+    "Threat Hunting",
+    "SIEM",
+    "EDR",
+    "DFIR",
+    "Security Training",
+    "Portfolio",
+  ],
   authors: [{ name: "Ahmed Emad Nasr" }],
+  creator: "Ahmed Emad Nasr",
+  publisher: "Ahmed Emad Nasr",
   alternates: {
     canonical: "/",
   },
@@ -52,9 +69,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Ahmed Emad Nasr - Portfolio",
+    title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
     description:
-      "SOC Analyst and Cybersecurity Engineer portfolio focused on Incident Response, Threat Hunting, DFIR, and security operations.",
+      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training services.",
     type: "website",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     locale: "en_US",
@@ -70,10 +87,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmed Emad Nasr - Portfolio",
+    title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
     description:
-      "SOC Analyst and Cybersecurity Engineer portfolio focused on Incident Response, Threat Hunting, DFIR, and security operations.",
+      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training services.",
     creator: "@0x3omda",
+    site: "@0x3omda",
     images: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
   verification: {
@@ -171,13 +189,7 @@ const structuredData = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr">
-      <head>
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        />
-      </head>
+      <head />
       <body className={BODY_CLASS}>
         {GA_ID ? (
           <>

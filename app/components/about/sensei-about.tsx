@@ -13,9 +13,6 @@ const SenseiAbout = memo(function SenseiAbout() {
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="私について" englishText="About Me" titleClassName={styles.title} />
-          <a href="#Certifications" className={styles.certMiniBtn} aria-label="Go to Certifications section">
-            Certifications
-          </a>
         </div>
 
         <MotionInView

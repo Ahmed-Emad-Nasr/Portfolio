@@ -4,7 +4,7 @@
  * Purpose: Art gallery grid and responsive image layout styles
  */
 
-.art-gallery-section { min-height: 100vh; padding: 8rem 0 6rem; margin: 0; position: relative; z-index: 1; }
+.art-gallery-section { min-height: 100vh; padding: 8rem 0 6rem; margin: 0; margin-top: clamp(26rem, 45vh, 60rem); position: relative; z-index: 1; }
 .art-gallery-content { padding: 0 5rem 5%; }
 .header-section { margin-top: 0; text-align: center; }
 
@@ -41,6 +41,7 @@
 }
 
 @media (max-width: 767px) { 
+  .art-gallery-section { margin-top: clamp(18rem, 36vh, 40rem); }
   .Gallery { grid-template-columns: 1fr; gap: 25px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 
 }

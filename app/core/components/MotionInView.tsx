@@ -7,7 +7,7 @@
  */
 
 import React, { memo } from "react";
-import { motion, MotionProps } from "framer-motion";
+import { motion, MotionProps, useReducedMotion } from "framer-motion";
 
 type MotionInViewProps = MotionProps & {
   children: React.ReactNode;
@@ -53,6 +53,7 @@ const MotionInView = memo<MotionInViewProps>(({
   ...rest
 }) => {
   const { transition, ...motionRest } = rest;
+  const shouldReduceMotion = useReducedMotion();
 
   // [OPT-9] Only allocate a new viewport object when the caller passes non-default
   //         values. The common path (defaults) reuses the stable reference above,
@@ -71,8 +72,8 @@ const MotionInView = memo<MotionInViewProps>(({
     //          avoids a mid-animation layer-promotion jank.
     <motion.div
       className={className}
-      initial="hidden"
-      whileInView="visible"
+      initial={shouldReduceMotion ? false : "hidden"}
+      whileInView={shouldReduceMotion ? undefined : "visible"}
       viewport={viewport}
       variants={variants}
       transition={softenTransition(transition as MotionProps["transition"])}

@@ -190,6 +190,121 @@ export const trustCertifications = [
   "CCNA 200-301",
 ];
 
+export const serviceCatalog = [
+  {
+    slug: "soc-analysis",
+    icon: "fa-solid fa-shield-halved",
+    title: "Security Operations Center (SOC) Analysis",
+    description:
+      "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.",
+    outcome: "Prioritized alert report and investigation notes within 24h",
+    from: "$300",
+    deliverables: [
+      "Alert triage workbook with severity ranking",
+      "Detection quality review and false-positive hotspots",
+      "Recommended tuning actions for top noisy rules",
+    ],
+  },
+  {
+    slug: "incident-response",
+    icon: "fa-solid fa-fire",
+    title: "Incident Response (IR) & Handling",
+    description:
+      "End-to-end incident response lifecycle management. Perform threat hunting, containment, eradication, and recovery. Execute incident response playbooks using best practices and frameworks.",
+    outcome: "Actionable response plan and incident timeline",
+    from: "$450",
+    deliverables: [
+      "Incident timeline and attack narrative",
+      "Containment and eradication checklist",
+      "Post-incident lessons learned and hardening plan",
+    ],
+  },
+  {
+    slug: "threat-hunting",
+    icon: "fa-solid fa-magnifying-glass",
+    title: "Threat Hunting & Detection Engineering",
+    description:
+      "Proactive threat hunting using YARA rules, Suricata IDS/IPS, and behavioral analysis. Create custom detection signatures, reduce false positive alerts, and strengthen security posture.",
+    outcome: "Custom detection rules and tuning package",
+    from: "$400",
+    deliverables: [
+      "Hypothesis-driven hunting report",
+      "Detection logic pack (queries, signatures, conditions)",
+      "Validation notes with expected telemetry",
+    ],
+  },
+  {
+    slug: "siem-edr-implementation",
+    icon: "fa-solid fa-database",
+    title: "SIEM & EDR Implementation",
+    description:
+      "Deploy and configure enterprise-grade SIEM solutions including ELK Stack and Splunk. Implement EDR tools like Wazuh for endpoint detection and response capabilities.",
+    outcome: "Monitored pipeline with validated detections",
+    from: "$600",
+    deliverables: [
+      "SIEM/EDR deployment checklist and architecture notes",
+      "Core detection rules for high-priority threats",
+      "Operational handover guide for daily monitoring",
+    ],
+  },
+  {
+    slug: "log-analysis-forensics",
+    icon: "fa-solid fa-file-lines",
+    title: "Log Analysis & Digital Forensics",
+    description:
+      "Comprehensive log analysis, IOC extraction, and digital forensics investigations. Perform memory forensics, malware behavioral analysis, and evidence collection for incident investigations.",
+    outcome: "Forensic findings with IOC package",
+    from: "$500",
+    deliverables: [
+      "Evidence timeline and IOC extraction sheet",
+      "Root cause analysis summary",
+      "Preservation-ready investigation report",
+    ],
+  },
+  {
+    slug: "vapt",
+    icon: "fa-solid fa-triangle-exclamation",
+    title: "Vulnerability Assessment & Penetration Testing",
+    description:
+      "Identify security weaknesses through systematic vulnerability assessments. Conduct authorized penetration testing, create detailed reports, and recommend remediation strategies.",
+    outcome: "Remediation roadmap with severity ranking",
+    from: "$700",
+    deliverables: [
+      "Executive risk summary",
+      "Technical findings with proof of concept",
+      "Prioritized remediation plan by business impact",
+    ],
+  },
+  {
+    slug: "training-awareness",
+    icon: "fa-solid fa-person-chalkboard",
+    title: "Cybersecurity Training & Awareness",
+    description:
+      "Deliver comprehensive cybersecurity training programs to technical and non-technical audiences. Build security awareness, improve incident response skills, and foster security culture.",
+    outcome: "Workshop deck, labs, and attendance report",
+    from: "$250",
+    deliverables: [
+      "Customized learning path and session plan",
+      "Hands-on labs and challenge exercises",
+      "Participation feedback and improvement recommendations",
+    ],
+  },
+  {
+    slug: "malware-analysis",
+    icon: "fa-solid fa-virus",
+    title: "Malware Analysis & Prevention",
+    description:
+      "Perform static and dynamic malware analysis in isolated environments. Extract indicators of compromise (IOCs), develop detection signatures, and implement prevention strategies using YARA rules.",
+    outcome: "Malware behavior report and detection artifacts",
+    from: "$450",
+    deliverables: [
+      "Behavior profile and persistence map",
+      "IOC bundle for SIEM/EDR ingestion",
+      "Prevention controls and signature recommendations",
+    ],
+  },
+] as const;
+
 export const projectBullets: Record<string, string[]> = {
   "insider-threat-detection-deception": [
     "Designed a deception environment using honeytokens and Wazuh SIEM to detect insider activity and unauthorized access.",
@@ -208,3 +323,26 @@ export const projectBullets: Record<string, string[]> = {
     "Accelerated threat analysis by 25% and reduced email triage time by 5 minutes for faster decision-making.",
   ],
 };
+
+export const contactServiceOptions = [
+  "SOC monitoring support",
+  "Incident response assistance",
+  "Threat hunting engagement",
+  "Security training workshop",
+  "General consultation",
+] as const;
+
+export const contactBudgetOptions = [
+  "Under $300",
+  "$300 - $800",
+  "$800 - $2000",
+  "$2000+",
+  "Not sure yet",
+] as const;
+
+export const contactTimelineOptions = [
+  "Urgent (within 48 hours)",
+  "This week",
+  "This month",
+  "Exploring options",
+] as const;

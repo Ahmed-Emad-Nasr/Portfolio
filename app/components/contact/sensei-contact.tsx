@@ -19,6 +19,7 @@ import TurnstileWidget from "@/app/core/components/TurnstileWidget";
 import { trackEvent } from "@/app/core/utils/analytics";
 import { isActionAllowed, recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
 import { showToast } from "@/app/core/utils/toast";
+import { contactBudgetOptions, contactServiceOptions, contactTimelineOptions } from "@/app/core/data";
 
 const CONTACT_INFO_DESCRIPTION = "Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
@@ -30,6 +31,7 @@ const SenseiContact = memo(function SenseiContact() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [didTrackFormStart, setDidTrackFormStart] = useState(false);
   const infoBullets = toBulletItems(CONTACT_INFO_DESCRIPTION);
   
   const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -60,6 +62,9 @@ const SenseiContact = memo(function SenseiContact() {
       const subject = formData.get("subject");
       const message = formData.get("message");
       const website = formData.get("website");
+      const requestedService = formData.get("requested_service");
+      const budgetRange = formData.get("budget_range");
+      const projectTimeline = formData.get("project_timeline");
 
       // Honeypot: if this hidden field is filled, treat as bot and silently block.
       if (website && String(website).trim() !== "") {
@@ -78,7 +83,7 @@ const SenseiContact = memo(function SenseiContact() {
         return;
       }
 
-      if (!name || !email || !subject || !message) {
+      if (!name || !email || !subject || !message || !requestedService || !budgetRange || !projectTimeline) {
         trackEvent("contact_submit_failed", { reason: "missing_fields" });
         showToast({ type: "error", message: "Please fill in all required fields." });
         setSubmitError(true);
@@ -111,7 +116,13 @@ const SenseiContact = memo(function SenseiContact() {
         return;
       }
 
-      trackEvent("contact_submit_attempt", { source: "contact_form" });
+      recordFunnelEvent("contact_submit_attempt");
+      trackEvent("contact_submit_attempt", {
+        source: "contact_form",
+        requested_service: String(requestedService),
+        budget_range: String(budgetRange),
+        project_timeline: String(projectTimeline),
+      });
 
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST", 
@@ -136,6 +147,9 @@ const SenseiContact = memo(function SenseiContact() {
             `Name: ${String(name)}`,
             `Email: ${String(email)}`,
             `Subject: ${String(subject)}`,
+            `Requested service: ${String(requestedService)}`,
+            `Budget range: ${String(budgetRange)}`,
+            `Timeline: ${String(projectTimeline)}`,
             `Time (UTC): ${new Date().toISOString()}`,
             `Page: ${typeof window !== "undefined" ? window.location.href : "unknown"}`,
           ],
@@ -236,19 +250,87 @@ const SenseiContact = memo(function SenseiContact() {
           >
           <div className={styles["form-card"]}>
             <form onSubmit={handleSubmit}>
+              <p className={styles["quick-lead"]}>Need a faster start? Use quick contact and share details later.</p>
+              <div className={styles["quick-actions"]}>
+                <a
+                  href="https://wa.me/201018166445?text=Hi%20Ahmed%2C%20I%20want%20a%20quick%20quote%20for%20a%20cybersecurity%20project."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent("cta_click", { source: "contact_form", action: "quick_quote_whatsapp", destination: "whatsapp" })}
+                >
+                  Quick Quote on WhatsApp
+                </a>
+                <a
+                  href="mailto:ahmed.em.nasr@gmail.com?subject=Security%20Project%20Inquiry"
+                  onClick={() => trackEvent("cta_click", { source: "contact_form", action: "quick_email", destination: "mailto" })}
+                >
+                  Email Directly
+                </a>
+              </div>
               <div className={styles["honeypot-field"]} aria-hidden="true">
                 <label htmlFor="website">Website</label>
                 <input id="website" type="text" name="website" tabIndex={-1} autoComplete="off" />
               </div>
-              <div className={styles["input-group"]}><input type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} /></div>
-              <div className={styles["input-group"]}><input type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} /></div>
-              <div className={styles["input-group"]}><input type="text" name="subject" placeholder="Subject" required className={styles["input-field"]} /></div>
-              <div className={styles["input-group"]}><textarea name="message" placeholder="Your Message..." required className={styles["input-field"]}></textarea></div>
+              <div className={styles["input-group"]}><input type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} onFocus={() => {
+                if (!didTrackFormStart) {
+                  trackEvent("contact_form_started", { source: "contact_form", first_field: "name" });
+                  recordFunnelEvent("contact_form_started");
+                  setDidTrackFormStart(true);
+                }
+              }} autoComplete="name" minLength={2} /></div>
+              <div className={styles["input-group"]}><input type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} autoComplete="email" /></div>
+              <div className={styles["input-group"]}><input type="text" name="subject" placeholder="Subject" required className={styles["input-field"]} minLength={4} /></div>
+              <div className={styles["input-group"]}>
+                <select
+                  name="requested_service"
+                  required
+                  className={styles["input-field"]}
+                  defaultValue=""
+                  onChange={(event) => trackEvent("contact_field_selected", { field: "requested_service", value: event.target.value })}
+                >
+                  <option value="" disabled>Select service needed</option>
+                  {contactServiceOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              <div className={styles["triple-grid"]}>
+                <div className={styles["input-group"]}>
+                  <select
+                    name="budget_range"
+                    required
+                    className={styles["input-field"]}
+                    defaultValue=""
+                    onChange={(event) => trackEvent("contact_field_selected", { field: "budget_range", value: event.target.value })}
+                  >
+                    <option value="" disabled>Budget range</option>
+                    {contactBudgetOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className={styles["input-group"]}>
+                  <select
+                    name="project_timeline"
+                    required
+                    className={styles["input-field"]}
+                    defaultValue=""
+                    onChange={(event) => trackEvent("contact_field_selected", { field: "project_timeline", value: event.target.value })}
+                  >
+                    <option value="" disabled>Timeline</option>
+                    {contactTimelineOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className={styles["input-group"]}><textarea name="message" placeholder="Your Message..." required className={styles["input-field"]} minLength={10}></textarea></div>
               {TURNSTILE_SITE_KEY ? (
                 <div className={styles["turnstile-wrap"]}>
                   <TurnstileWidget onTokenChange={setTurnstileToken} />
                 </div>
               ) : null}
+              <p className={styles["response-time"]}>Typical response time: within 24 hours.</p>
               <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
                 {isSubmitting ? (<>Sending... <FontAwesomeIcon icon={faSpinner} spin /></>) : (<>Send Message <FontAwesomeIcon icon={faPaperPlane} /></>)}
               </button>

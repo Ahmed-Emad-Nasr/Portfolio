@@ -15,7 +15,7 @@ import {
   faCertificate,
   faFolder, 
   faHandshake,
-  faEnvelope // 1. تم استدعاء أيقونة قسم التواصل
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 
@@ -26,8 +26,8 @@ const SECTION_ICONS: Record<string, IconProp> = {
   Experience: faBook,
   Projects:   faFolder,
   Services:   faUserSecret,
-  Certifications: faCertificate,
   Contact:    faEnvelope,
+  Certifications: faCertificate,
 };
 
 const SECTIONS = Object.keys(SECTION_ICONS);
@@ -51,21 +51,21 @@ export const useHeader = () => {
       // localStorage is not available (cross-origin iframe, private browsing, etc.)
     }
 
-    let ticking = false; // Flag for requestAnimationFrame
-    let lastSection = "Home"; // Cache to prevent redundant updates
+    let ticking = false;
+    let lastSection = "Home";
 
     const handleScroll = (): void => {
       if (!ticking) {
         ticking = true;
         window.requestAnimationFrame(() => {
+          const marker = window.innerWidth <= 994 ? 120 : 150;
           const current = SECTIONS.find((section) => {
             const el = document.getElementById(section);
             if (!el) return false;
             const { top, bottom } = el.getBoundingClientRect();
-            return top <= 150 && bottom >= 150; // Offset adjusted slightly for better UX
+            return top <= marker && bottom >= marker;
           });
           
-          // Only update if section actually changed (prevents race condition & storage thrashing)
           if (current && current !== lastSection) {
             lastSection = current;
             setActiveSection(current);
@@ -81,6 +81,7 @@ export const useHeader = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

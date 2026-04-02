@@ -8,12 +8,19 @@ export type FunnelEventName =
   | "resume_preview"
   | "cv_download"
   | "resume_download"
+  | "service_detail_view"
+  | "service_cta_click"
+  | "contact_form_started"
+  | "contact_submit_attempt"
   | "contact_submit_success"
   | "section_view_home"
   | "section_view_about"
+  | "section_view_trust"
+  | "section_view_experience"
   | "section_view_projects"
   | "section_view_services"
-  | "section_view_contact";
+  | "section_view_contact"
+  | "section_view_certifications";
 
 type FunnelStats = Record<FunnelEventName, number>;
 
@@ -57,12 +64,19 @@ const defaultStats: FunnelStats = {
   resume_preview: 0,
   cv_download: 0,
   resume_download: 0,
+  service_detail_view: 0,
+  service_cta_click: 0,
+  contact_form_started: 0,
+  contact_submit_attempt: 0,
   contact_submit_success: 0,
   section_view_home: 0,
   section_view_about: 0,
+  section_view_trust: 0,
+  section_view_experience: 0,
   section_view_projects: 0,
   section_view_services: 0,
   section_view_contact: 0,
+  section_view_certifications: 0,
 };
 
 const canUseStorage = (): boolean => typeof window !== "undefined" && Boolean(window.localStorage);

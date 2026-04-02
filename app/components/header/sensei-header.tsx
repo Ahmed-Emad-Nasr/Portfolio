@@ -6,7 +6,7 @@
  * Purpose: Render sticky navigation header and mobile menu behavior
  */
 
-import { useCallback, useMemo, memo } from "react";
+import { useCallback, useMemo, memo, useRef, type MouseEvent } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -19,10 +19,23 @@ const SenseiHeader = memo(function SenseiHeader() {
   const {
     isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen,
   } = useHeader();
+  const headerRef = useRef<HTMLElement>(null);
 
   const handleNavLinkClick = useCallback(
-    (section: string) => {
+    (section: string, event?: MouseEvent<HTMLAnchorElement>) => {
+      event?.preventDefault();
       setActiveSection(section);
+
+      const target = document.getElementById(section);
+      if (target) {
+        const headerHeight = headerRef.current?.getBoundingClientRect().height ?? (window.innerWidth <= 994 ? 64 : 76);
+        const headerOffset = headerHeight + (window.innerWidth <= 994 ? 10 : 14);
+        const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+      } else {
+        window.location.hash = section;
+      }
+
       // Wrapped in try-catch for private browsing mode & cross-origin restrictions
       try {
         localStorage.setItem("activeSection", section);
@@ -38,8 +51,8 @@ const SenseiHeader = memo(function SenseiHeader() {
   );
 
   const handleLogoClick = useCallback(
-    () => {
-      handleNavLinkClick("Home"); // Navigate to home section
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      handleNavLinkClick("Home", event);
     },
     [handleNavLinkClick]
   );
@@ -51,7 +64,7 @@ const SenseiHeader = memo(function SenseiHeader() {
           key={section}
           href={`#${section}`}
           className={activeSection === section ? ACTIVE_CLASS : undefined}
-          onClick={() => handleNavLinkClick(section)}
+          onClick={(event) => handleNavLinkClick(section, event)}
           aria-current={activeSection === section ? "page" : undefined}
         >
           <FontAwesomeIcon icon={icon} aria-hidden="true" />
@@ -65,7 +78,7 @@ const SenseiHeader = memo(function SenseiHeader() {
   const navbarClass = isMenuOpen ? `${NAVBAR_BASE} ${ACTIVE_CLASS}` : NAVBAR_BASE;
 
   return (
-    <header className={styles.header}>
+    <header ref={headerRef} className={styles.header}>
       <a
         href="#Home"
         className={styles.logo}

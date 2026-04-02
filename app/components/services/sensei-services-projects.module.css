@@ -36,8 +36,8 @@
 .single-project { cursor: pointer; }
 
 .single-service:hover, .single-project:hover {
-  background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(15px);
-  border-color: rgba(var(--main-color-rgb), 0.5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--main-color-rgb), 0.15);
+  background: rgba(15, 15, 15, 0.88); backdrop-filter: blur(var(--card-blur));
+  border-color: rgba(var(--main-color-rgb), 0.45); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.42), 0 0 10px rgba(var(--main-color-rgb), 0.1);
 }
 
 .single-service:hover::before {
@@ -82,6 +82,50 @@
 
 .single-service:hover .description-list, .single-project:hover .description-list { color: rgba(255, 255, 255, 0.85); }
 
+.serviceMetaRow {
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.outcomeTag,
+.priceTag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.45rem 0.8rem;
+}
+
+.outcomeTag {
+  background: rgba(0, 0, 0, 0.08);
+  color: #1f1f1f;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.priceTag {
+  background: rgba(14, 33, 58, 0.14);
+  color: #0e1d31;
+  border: 1px solid rgba(14, 33, 58, 0.2);
+}
+
+.single-service:hover .outcomeTag,
+.single-project:hover .outcomeTag {
+  color: rgba(240, 248, 255, 0.92);
+  background: rgba(228, 241, 255, 0.12);
+  border-color: rgba(210, 230, 255, 0.25);
+}
+
+.single-service:hover .priceTag,
+.single-project:hover .priceTag {
+  color: rgba(230, 248, 237, 0.92);
+  background: rgba(91, 181, 137, 0.18);
+  border-color: rgba(107, 215, 161, 0.36);
+}
+
 /* --- GitHub Project Specifics (Badges & Tags) --- */
 .stats-container { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
 .stat-badge { display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.05); padding: 0.4rem 1rem; border-radius: 20px; font-size: 1.2rem; font-weight: 600; color: #333; transition: background 0.35s ease, color 0.35s ease; }
@@ -106,4 +150,26 @@
   .container { padding: 0 1.2rem; }
   .grid-container { grid-template-columns: 1fr; gap: 1.4rem; }
   .single-service, .single-project { padding: 2rem 1.4rem; border-radius: 1.6rem; }
+}
+
+.detailsBtn {
+  margin-top: 0.9rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 37, 62, 0.28);
+  background: rgba(21, 47, 79, 0.12);
+  color: #13233a;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.single-service:hover .detailsBtn,
+.single-project:hover .detailsBtn {
+  background: rgba(214, 236, 255, 0.14);
+  border-color: rgba(205, 228, 250, 0.28);
+  color: rgba(237, 246, 255, 0.96);
 }

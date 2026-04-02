@@ -6,7 +6,7 @@
  * Purpose: Render certifications gallery grid and lightbox viewer integration
  */
 
-import { useCallback, useState, memo } from "react";
+import { useCallback, useEffect, useRef, useState, memo } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
@@ -70,37 +70,60 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
 ImageItem.displayName = "ImageItem";
 
 const SenseiArt = memo(function SenseiArt() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(-1);
+  const [shouldRenderGallery, setShouldRenderGallery] = useState(false);
   const open = index >= 0;
 
   const handleCloseLightbox = useCallback(() => setIndex(-1), []);
 
+  useEffect(() => {
+    const sectionNode = sectionRef.current;
+    if (!sectionNode) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        setShouldRenderGallery(true);
+        observer.disconnect();
+      },
+      { rootMargin: "220px 0px" }
+    );
+
+    observer.observe(sectionNode);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className={styles["art-gallery-section"]} id="Certifications">
+    <section ref={sectionRef} className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
         <MotionInView className={styles["header-section"]} variants={sectionHeaderVariants}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
         </MotionInView>
-        <MotionInView
-          className={styles["art-gallery-content"]}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.14 }}
-          threshold={0.02}
-          triggerOnce
-        >
-          <motion.div className={styles.Gallery} variants={galleryVariants}>
-            {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} />)}
-          </motion.div>
-        </MotionInView>
+        {shouldRenderGallery ? (
+          <MotionInView
+            className={styles["art-gallery-content"]}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.14 }}
+            threshold={0.02}
+            triggerOnce
+          >
+            <motion.div className={styles.Gallery} variants={galleryVariants}>
+              {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} />)}
+            </motion.div>
+          </MotionInView>
+        ) : null}
       </div>
-      <Lightbox
-        slides={LIGHTBOX_SLIDES}
-        open={open}
-        index={index}
-        close={handleCloseLightbox}
-        animation={{ fade: 0, swipe: 0 }}
-      />
+      {open ? (
+        <Lightbox
+          slides={LIGHTBOX_SLIDES}
+          open={open}
+          index={index}
+          close={handleCloseLightbox}
+          animation={{ fade: 0, swipe: 0 }}
+        />
+      ) : null}
     </section>
   );
 });

@@ -21,7 +21,7 @@
 .subtitle {
   margin-top: 0.7rem;
   color: rgba(206, 225, 248, 0.8);
-  font-size: 1.06rem;
+  font-size: 1.14rem;
 }
 
 .stateInfo,
@@ -31,7 +31,7 @@
   border-radius: 10px;
   padding: 0.6rem 0.75rem;
   border: 1px solid transparent;
-  font-size: 0.95rem;
+  font-size: 1.03rem;
 }
 
 .stateInfo {
@@ -69,7 +69,7 @@
 .label {
   margin: 0;
   color: rgba(205, 225, 248, 0.87);
-  font-size: 1.02rem;
+  font-size: 1.1rem;
 }
 
 .value {
@@ -84,6 +84,59 @@
   display: flex;
   gap: 0.8rem;
   flex-wrap: wrap;
+}
+
+.funnelSection {
+  margin-top: 1.4rem;
+  border: 1px solid rgba(140, 184, 226, 0.3);
+  border-radius: 14px;
+  padding: 0.9rem;
+  background: rgba(9, 18, 32, 0.78);
+}
+
+.funnelTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #e9f4ff;
+}
+
+.funnelList {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.funnelItem {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.funnelTopRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.funnelLabel,
+.funnelValue {
+  margin: 0;
+  color: rgba(209, 229, 250, 0.9);
+  font-size: 1.02rem;
+}
+
+.funnelTrack {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(131, 172, 214, 0.2);
+  overflow: hidden;
+}
+
+.funnelFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #69dfaa, #77c7ff);
 }
 
 .events {
@@ -119,13 +172,13 @@
 .eventTime {
   margin: 0.25rem 0 0;
   color: rgba(176, 207, 240, 0.9);
-  font-size: 0.9rem;
+  font-size: 0.98rem;
 }
 
 .eventDetails {
   margin: 0.35rem 0 0;
   color: rgba(199, 222, 247, 0.85);
-  font-size: 0.94rem;
+  font-size: 1.02rem;
 }
 
 .btn {
@@ -136,7 +189,7 @@
   color: #eff7ff;
   padding: 0.65rem 1.05rem;
   font-weight: 700;
-  font-size: 0.98rem;
+  font-size: 1.04rem;
 }
 
 @media (max-width: 768px) {

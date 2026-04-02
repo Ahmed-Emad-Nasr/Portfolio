@@ -67,13 +67,32 @@ export default function InsightsClient() {
     ["Resume previews", stats.resume_preview],
     ["CV downloads", stats.cv_download],
     ["Resume downloads", stats.resume_download],
+    ["Service detail views", stats.service_detail_view],
+    ["Service CTA clicks", stats.service_cta_click],
+    ["Contact form started", stats.contact_form_started],
+    ["Contact submit attempts", stats.contact_submit_attempt],
     ["Contact success", stats.contact_submit_success],
     ["Home section views", stats.section_view_home],
     ["About section views", stats.section_view_about],
+    ["Trust section views", stats.section_view_trust],
+    ["Experience section views", stats.section_view_experience],
     ["Projects section views", stats.section_view_projects],
     ["Services section views", stats.section_view_services],
     ["Contact section views", stats.section_view_contact],
+    ["Certifications section views", stats.section_view_certifications],
   ] as const;
+
+  const funnelStages = [
+    { label: "Visits", value: stats.site_visit },
+    { label: "Service interest", value: stats.service_cta_click },
+    { label: "Form started", value: stats.contact_form_started },
+    { label: "Submit attempts", value: stats.contact_submit_attempt },
+    { label: "Contact success", value: stats.contact_submit_success },
+  ] as const;
+
+  const funnelBase = Math.max(funnelStages[0].value || 0, 1);
+
+  const rate = (value: number): string => `${Math.round((value / funnelBase) * 100)}%`;
 
   return (
     <main className={styles.page}>
@@ -104,6 +123,27 @@ export default function InsightsClient() {
               <p className={styles.value}>{value}</p>
             </article>
           ))}
+        </section>
+
+        <section className={styles.funnelSection}>
+          <h2 className={styles.funnelTitle}>Conversion Funnel</h2>
+          <div className={styles.funnelList}>
+            {funnelStages.map((stage) => (
+              <article key={stage.label} className={styles.funnelItem}>
+                <div className={styles.funnelTopRow}>
+                  <p className={styles.funnelLabel}>{stage.label}</p>
+                  <p className={styles.funnelValue}>{stage.value} ({rate(stage.value)})</p>
+                </div>
+                <div className={styles.funnelTrack}>
+                  <span
+                    className={styles.funnelFill}
+                    style={{ width: rate(stage.value) }}
+                    aria-hidden="true"
+                  />
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         <div className={styles.actions}>
