@@ -2,9 +2,13 @@
 
 import { memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import styles from "./mobile-quick-actions.module.css";
 import { trackEvent } from "@/app/core/utils/analytics";
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 const MobileQuickActions = memo(function MobileQuickActions() {
   return (
@@ -31,6 +35,18 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         <FontAwesomeIcon icon={faFilePdf} />
         CV
       </a>
+      <button
+        type="button"
+        className={`${styles.btn} ${styles.tertiary}`}
+        aria-label="Scroll to top"
+        onClick={() => {
+          trackEvent("cta_click", { source: "mobile_quick_actions", action: "scroll_top", destination: "page_top" });
+          scrollToTop();
+        }}
+      >
+        <FontAwesomeIcon icon={faArrowUp} />
+        Top
+      </button>
     </div>
   );
 });

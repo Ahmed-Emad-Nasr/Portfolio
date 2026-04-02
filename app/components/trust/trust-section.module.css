@@ -39,17 +39,18 @@
 }
 
 .metricCard {
-  background: rgba(15, 15, 15, 0.72);
-  border: 1px solid rgba(var(--main-color-rgb), 0.25);
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.84), rgba(9, 9, 9, 0.72));
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
   border-radius: 1.4rem;
   padding: 2rem 1.6rem;
   text-align: center;
-  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .metricCard:hover {
   border-color: rgba(var(--main-color-rgb), 0.5);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
+  transform: translateY(-3px);
 }
 
 .metricValue {
@@ -67,8 +68,8 @@
 }
 
 .toolsCard {
-  background: rgba(10, 10, 10, 0.72);
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  background: linear-gradient(180deg, rgba(12, 12, 12, 0.84), rgba(8, 8, 8, 0.7));
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
   border-radius: 1.4rem;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -89,10 +90,10 @@
 .toolTag {
   padding: 0.45rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  border: 1px solid rgba(var(--main-color-rgb), 0.24);
   font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.86);
-  background: rgba(var(--main-color-rgb), 0.08);
+  background: rgba(var(--main-color-rgb), 0.06);
 }
 
 .credibility-grid {
@@ -102,10 +103,11 @@
 }
 
 .credCard {
-  background: rgba(10, 10, 10, 0.72);
-  border: 1px solid rgba(var(--main-color-rgb), 0.22);
+  background: linear-gradient(180deg, rgba(12, 12, 12, 0.84), rgba(8, 8, 8, 0.7));
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
   border-radius: 1.4rem;
   padding: 2rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
 }
 
 .credCard h3 {

@@ -41,6 +41,11 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
           priority
           className={styles.spinner}
         />
+        <div className={styles.loadingCopy}>
+          <span className={styles.loadingLabel}>Preparing experience</span>
+          <span className={styles.loadingHint}>Loading sections, data, and interactions...</span>
+          <span className={styles.loadingBar} />
+        </div>
       </div>
     </div>
   );

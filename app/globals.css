@@ -32,6 +32,27 @@
   outline: none;
 }
 
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 2000;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  background: var(--main-color);
+  color: var(--bg-color);
+  font-size: 1.4rem;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(var(--main-color-rgb), 0.28);
+  transition: top 0.18s ease, transform 0.18s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 1rem;
+  transform: translateY(0);
+}
+
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -55,6 +76,8 @@ html {
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: 11rem;
+  scroll-padding-left: 0;
+  scroll-padding-right: 0;
 }
 
 body {
@@ -78,6 +101,30 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --main-color: #ffffff;
+    --main-color-rgb: 255, 255, 255;
+  }
+
+  body {
+    background: #000000;
+  }
+
+  section::before,
+  section::after {
+    opacity: 0.95;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.75);
   }
 }
 
@@ -128,7 +175,7 @@ body {
 /*--------- 4. General Section Style ---------*/
 section {
   min-height: auto;
-  padding: 7rem 6% 6rem;
+  padding: 6.5rem 6% 5.5rem;
   position: relative;
 }
 
@@ -145,7 +192,7 @@ section {
 }
 
 main section + section {
-  margin-top: clamp(8rem, 11vw, 14rem);
+  margin-top: clamp(6rem, 9vw, 12rem);
 }
 
 section::before {
@@ -155,6 +202,61 @@ section::before {
   pointer-events: none;
   background: radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.03), transparent 40%);
   z-index: 0;
+}
+
+main section:nth-of-type(2n)::before {
+  background: radial-gradient(circle at 80% 12%, rgba(var(--main-color-rgb), 0.025), transparent 34%);
+}
+
+main section:nth-of-type(3n)::before {
+  background: radial-gradient(circle at 50% 0%, rgba(var(--main-color-rgb), 0.018), transparent 30%);
+}
+
+section::after {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.2), transparent);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+main section:nth-of-type(2n)::after {
+  opacity: 0.45;
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 5.5rem 5% 4.5rem;
+  }
+
+  main section + section {
+    margin-top: clamp(4.5rem, 10vw, 7rem);
+  }
+
+  section::before {
+    background: radial-gradient(circle at 20% 12%, rgba(var(--main-color-rgb), 0.018), transparent 36%);
+  }
+
+  main section:nth-of-type(2n)::before,
+  main section:nth-of-type(3n)::before {
+    background: radial-gradient(circle at 80% 12%, rgba(var(--main-color-rgb), 0.014), transparent 34%);
+  }
+
+  section::after {
+    left: 5%;
+    right: 5%;
+    opacity: 0.5;
+  }
+
+  .skip-link {
+    font-size: 1.3rem;
+    padding: 0.8rem 1rem;
+  }
 }
 
 /*--------- 5. Force Icon Animations (Vendor Override) ---------*/
@@ -192,15 +294,20 @@ section::before {
 @media (max-width: 991px) {
   section {
     min-height: auto;
-    padding: 3.5rem 1.5rem 4rem;
+    padding: 3rem 1.35rem 3.5rem;
   }
 
   main section + section {
-    margin-top: clamp(5rem, 9vw, 8rem);
+    margin-top: clamp(3.5rem, 6vw, 6rem);
   }
 
   body {
     padding-bottom: 8rem;
+  }
+  section::after {
+    left: 1.5rem;
+    right: 1.5rem;
+    opacity: 0.45;
   }
   
 }

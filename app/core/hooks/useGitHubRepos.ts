@@ -40,8 +40,9 @@ export interface GitHubRepository {
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export const useGitHubRepos = (): GitHubRepository[] => {
+export const useGitHubRepos = (): { repos: GitHubRepository[]; isLoading: boolean } => {
   const [repos, setRepos] = useState<GitHubRepository[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Abort controller prevents a stale setState call if the component unmounts
@@ -61,15 +62,18 @@ export const useGitHubRepos = (): GitHubRepository[] => {
           // Validate that data is an array before setting state
           if (Array.isArray(data) && data.length > 0) {
             setRepos(data as GitHubRepository[]);
+            setIsLoading(false);
             return; // Success — exit early
           } else {
             console.warn("GitHub API returned unexpected data format");
             setRepos([]);
+            setIsLoading(false);
             return;
           }
         } catch (error) {
           // Ignore abort errors — they are expected on unmount.
           if (error instanceof Error && error.name === "AbortError") {
+            setIsLoading(false);
             return;
           }
 
@@ -79,6 +83,7 @@ export const useGitHubRepos = (): GitHubRepository[] => {
               console.error("Failed to fetch repositories after retries:", error.message);
             }
             setRepos([]);
+            setIsLoading(false);
           } else {
             // Exponential backoff: 1s, 2s, 4s
             const delay = baseDelay * Math.pow(2, attempt);
@@ -92,5 +97,5 @@ export const useGitHubRepos = (): GitHubRepository[] => {
     return () => controller.abort();
   }, []); // No external dependencies — API_URL is a module-level constant.
 
-  return repos;
+  return { repos, isLoading };
 };

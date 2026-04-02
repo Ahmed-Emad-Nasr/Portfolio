@@ -106,6 +106,20 @@
   gap: 0.65rem;
 }
 
+.snapshotGrid {
+  margin-top: 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.snapshotCard {
+  border: 1px solid rgba(140, 184, 226, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem;
+  background: rgba(8, 17, 30, 0.9);
+}
+
 .funnelItem {
   display: grid;
   gap: 0.35rem;
@@ -194,6 +208,10 @@
 
 @media (max-width: 768px) {
   .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .snapshotGrid {
     grid-template-columns: 1fr;
   }
 }

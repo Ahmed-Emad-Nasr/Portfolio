@@ -11,7 +11,9 @@ import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
 import AnalyticsTracker from "@/app/core/components/AnalyticsTracker";
+import WebVitalsTracker from "@/app/core/components/WebVitalsTracker";
 import ToastHost from "@/app/core/components/ToastHost";
+import { serviceCatalog } from "@/app/core/data";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -37,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | Ahmed Emad Nasr",
   },
   description:
-    "Cybersecurity portfolio of Ahmed Emad Nasr offering SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and security training for teams.",
+    "Ahmed Emad Nasr's cybersecurity portfolio for SOC analysis, incident response, threat hunting, SIEM/EDR implementation, digital forensics, and security training.",
   keywords: [
     "Ahmed Emad Nasr",
     "SOC Analyst",
@@ -48,6 +50,8 @@ export const metadata: Metadata = {
     "EDR",
     "DFIR",
     "Security Training",
+    "Digital Forensics",
+    "Cairo",
     "Portfolio",
   ],
   authors: [{ name: "Ahmed Emad Nasr" }],
@@ -71,7 +75,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
     description:
-      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training services.",
+      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
     type: "website",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     locale: "en_US",
@@ -181,6 +185,45 @@ const structuredData = {
         },
       ],
     },
+    {
+      "@type": "WebPage",
+      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#homepage",
+      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
+      description:
+        "A portfolio homepage highlighting cybersecurity services, professional experience, certifications, projects, and contact options.",
+      isPartOf: {
+        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
+      },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp",
+      },
+      about: {
+        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
+      },
+      inLanguage: "en",
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#services",
+      name: "Services",
+      url: "https://ahmed-emad-nasr.github.io/Portfolio/#Services",
+      about: {
+        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
+      },
+      hasPart: serviceCatalog.map((service) => ({
+        "@type": "Service",
+        name: service.title,
+        description: service.description,
+        serviceType: service.title,
+        offers: {
+          "@type": "Offer",
+          price: service.from.replace("$", ""),
+          priceCurrency: "USD",
+        },
+      })),
+    },
   ],
 };
 
@@ -191,6 +234,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" dir="ltr">
       <head />
       <body className={BODY_CLASS}>
+        <a className="skip-link" href="#Home">
+          Skip to main content
+        </a>
         {GA_ID ? (
           <>
             <Script
@@ -226,6 +272,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           />
         ) : null}
         <AnalyticsTracker />
+        <WebVitalsTracker />
         <ToastHost />
         <script
           type="application/ld+json"

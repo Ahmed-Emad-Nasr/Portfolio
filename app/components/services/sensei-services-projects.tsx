@@ -15,6 +15,19 @@ import { serviceCatalog } from "@/app/core/data";
 import { trackEvent } from "@/app/core/utils/analytics";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.18,
+      staggerChildren: 0.03,
+      delayChildren: 0.04,
+    },
+  },
+};
+
 type ServiceItemProps = {
   icon: string;
   title: string;
@@ -64,22 +77,33 @@ function SenseiServicesProjects() {
   return (
     <section className={styles["section-services"]} id="Services">
       <div className={styles.container}>
-        <div className={styles["header-section"]}>
+        <MotionInView
+          className={styles["header-section"]}
+          variants={sectionVariants}
+        >
           <h2 className={styles.title}><span lang="ja">事業 •</span><span lang="en"> Services</span></h2>
-        </div>
+          <p className={styles.sectionLead}>Clear service paths, measurable outcomes, and direct next steps.</p>
+        </MotionInView>
         <div className={styles["grid-container"]}>
-          {serviceCatalog.map((service, index) => (
-            <MotionInView
-              key={service.slug}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.14, delay: Math.min(index * 0.025, 0.1) }}
-              threshold={0.12}
-              triggerOnce
-            >
-              <ServiceItem {...service} />
-            </MotionInView>
-          ))}
+          {serviceCatalog.length > 0 ? (
+            serviceCatalog.map((service, index) => (
+              <MotionInView
+                key={service.slug}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.18, delay: Math.min(index * 0.04, 0.16) }}
+                threshold={0.08}
+                triggerOnce
+              >
+                <ServiceItem {...service} />
+              </MotionInView>
+            ))
+          ) : (
+            <div className={styles.emptyState} aria-live="polite">
+              <p>No services are available right now.</p>
+              <span className={styles.emptyStateHint}>Please check back shortly.</span>
+            </div>
+          )}
         </div>
       </div>
     </section>

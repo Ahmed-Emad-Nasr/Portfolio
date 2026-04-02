@@ -18,6 +18,7 @@ import MotionInView from "@/app/core/components/MotionInView";
 import { projectBullets } from "@/app/core/data";
 
 type ProjectItemProps = { repo: GitHubRepository };
+type ProjectSkeletonProps = { index: number };
 type ProjectCategory = "All" | "SOC" | "DFIR" | "Automation";
 
 const FILTERS: ProjectCategory[] = ["All", "SOC", "DFIR", "Automation"];
@@ -35,6 +36,23 @@ const getCategoriesForRepo = (repo: GitHubRepository): ProjectCategory[] => {
   );
 
   return categories.length > 0 ? categories : ["Automation"];
+};
+
+const getFilterCounts = (repos: GitHubRepository[]) => {
+  const counts: Record<ProjectCategory, number> = {
+    All: repos.length,
+    SOC: 0,
+    DFIR: 0,
+    Automation: 0,
+  };
+
+  repos.forEach((repo) => {
+    getCategoriesForRepo(repo).forEach((category) => {
+      counts[category] += 1;
+    });
+  });
+
+  return counts;
 };
 
 const buildCaseStudy = (repo: GitHubRepository) => {
@@ -119,37 +137,80 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   );
 }, (prev, next) => prev.repo.id === next.repo.id);
 
+
+  const ProjectSkeleton = memo<ProjectSkeletonProps>(({ index }) => (
+    <div className={styles["single-project"]} aria-hidden="true">
+      <div className={styles["part-1"]}>
+        <span className={styles["skeleton-icon"]} />
+        <span className={`${styles["skeleton-line"]} ${styles["skeleton-title"]}`} />
+      </div>
+      <div className={styles["part-2"]}>
+        <div className={styles["skeleton-stack"]}>
+          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
+          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
+          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text-short"]}`} />
+        </div>
+        <div className={styles["skeleton-badges"]}>
+          <span className={styles["skeleton-pill"]} />
+          <span className={styles["skeleton-pill"]} />
+          <span className={styles["skeleton-pill"]} />
+        </div>
+        <div className={styles["skeleton-actions"]}>
+          <span className={styles["skeleton-button"]} />
+          <span className={styles["skeleton-button"]} />
+        </div>
+      </div>
+    </div>
+  ));
+
+  ProjectSkeleton.displayName = "ProjectSkeleton";
 ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
-  const repos = useGitHubRepos();
+  const { repos, isLoading } = useGitHubRepos();
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
+  const filterCounts = useMemo(() => getFilterCounts(repos), [repos]);
 
   const filteredRepos = useMemo(() => {
     if (activeFilter === "All") return repos;
     return repos.filter((repo) => getCategoriesForRepo(repo).includes(activeFilter));
   }, [repos, activeFilter]);
 
+  const summaryText = isLoading
+    ? "Loading project data from GitHub..."
+    : `${filteredRepos.length} project${filteredRepos.length === 1 ? "" : "s"} shown`;
+
   return (
     <section className={styles["section-projects"]} id="Projects">
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
+          <p className={styles.sectionLead}>GitHub-backed work, grouped by security focus so the right examples are easier to scan.</p>
         </div>
-        <div className={styles["projects-filter"]}>
+        <div className={styles["projects-filter"]} role="tablist" aria-label="Project category filters">
           {FILTERS.map((filterItem) => (
             <button
               key={filterItem}
               type="button"
               className={`${styles["filter-btn"]} ${activeFilter === filterItem ? styles.active : ""}`}
+              aria-pressed={activeFilter === filterItem}
               onClick={() => setActiveFilter(filterItem)}
             >
-              {filterItem}
+              <span>{filterItem}</span>
+              <span className={styles["filter-count"]}>{filterCounts[filterItem]}</span>
             </button>
           ))}
         </div>
+        <div className={styles["section-summary"]} aria-live="polite">
+          <span>{summaryText}</span>
+          <span>Focused on SOC, DFIR, and automation work.</span>
+        </div>
         <div className={styles["grid-container"]}>
-          {filteredRepos.length > 0 ? (
+          {isLoading ? (
+            Array.from({ length: 6 }, (_, index) => (
+              <ProjectSkeleton key={`project-skeleton-${index}`} index={index} />
+            ))
+          ) : filteredRepos.length > 0 ? (
             filteredRepos.map((repo, index) => (
               <MotionInView
                 key={repo.id}
@@ -163,8 +224,12 @@ const SenseiProjects = memo(function SenseiProjects() {
               </MotionInView>
             ))
           ) : (
-            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", opacity: 0.6 }}>
+            <div className={styles["empty-state"]}>
               <p>{repos.length === 0 ? "Loading projects from GitHub..." : "No projects match this filter yet."}</p>
+              <span className={styles["empty-state-hint"]}>Try another category or clear the filter to see the full set.</span>
+              {!isLoading && activeFilter !== "All" ? (
+                <button type="button" className={styles["reset-filter-btn"]} onClick={() => setActiveFilter("All")}>Show all projects</button>
+              ) : null}
             </div>
           )}
         </div>

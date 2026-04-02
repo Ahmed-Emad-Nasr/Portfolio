@@ -3,9 +3,13 @@
 import { memo } from "react";
 import styles from "./desktop-quick-cta.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { trackEvent } from "@/app/core/utils/analytics";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 const DesktopQuickCTA = memo(function DesktopQuickCTA() {
   return (
@@ -23,6 +27,17 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         <FontAwesomeIcon icon={faPhoneVolume} />
         Book Call
       </a>
+      <button
+        type="button"
+        className={`${styles.btn} ${styles.tertiary}`}
+        onClick={() => {
+          trackEvent("cta_click", { source: "desktop_quick_cta", action: "scroll_top", destination: "page_top" });
+          scrollToTop();
+        }}
+      >
+        <FontAwesomeIcon icon={faArrowUp} />
+        Top
+      </button>
       <a
         href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
         target="_blank"

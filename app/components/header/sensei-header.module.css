@@ -6,22 +6,62 @@
 
 .header {
   position: fixed;
-  top: 1.2rem;
+  top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 2.4rem);
-  padding: 1rem 2.5rem;
-  background: rgba(8, 8, 8, 0.58);
+  width: min(1500px, calc(100% - 2rem));
+  padding: 1rem 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(18, 22, 28, 0.82), rgba(6, 8, 12, 0.68)),
+    radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.12), transparent 35%),
+    radial-gradient(circle at top right, rgba(118, 156, 206, 0.12), transparent 28%);
   backdrop-filter: blur(var(--ui-blur));
-  border-radius: 60px;
+  border-radius: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2.5rem;
+  gap: 1.25rem;
   z-index: 1000;
-  border: 1.5px solid rgba(var(--main-color-rgb), 0.38);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 12px rgba(var(--main-color-rgb), 0.2);
+  border: 1px solid rgba(var(--main-color-rgb), 0.22);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 22px rgba(var(--main-color-rgb), 0.14);
   will-change: transform;
+  overflow: hidden;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(var(--main-color-rgb), 0.26), rgba(255, 255, 255, 0.08));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  inset: auto 1rem 0.18rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  pointer-events: none;
+}
+
+.progress {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.35rem;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(149, 247, 205, 0.9), rgba(131, 214, 255, 0.9));
+  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.28), 0 0 8px rgba(149, 247, 205, 0.18);
+  transition: width 0.14s linear;
+  will-change: width;
 }
 
 .logo {
@@ -33,13 +73,23 @@
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
-  transition: transform var(--motion-normal) var(--motion-ease), text-shadow var(--motion-normal) var(--motion-ease);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.22s ease, filter 0.22s ease;
+  will-change: transform;
+  padding: 0.25rem 0.3rem;
+  border-radius: 0.7rem;
 }
 
 .logo:hover {
   color: var(--main-color);
-  transform: translateY(-1px);
-  text-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.45);
+  transform: translateY(-2px);
+  text-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.5);
+  filter: brightness(1.05);
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 3px;
+  border-radius: 0.6rem;
 }
 
 .navbar {
@@ -47,13 +97,18 @@
   align-items: center;
   gap: 1.2rem;
   margin-left: auto;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .navbar a {
-  font-size: 1.8rem; 
+  font-size: 1.7rem;
   color: var(--text-color);
-  padding: 0.6rem 1.2rem;
+  padding: 0.85rem 1.1rem;
   border-radius: 40px;
+  min-height: 44px;
   font-weight: 600;
   letter-spacing: 0.8px;
   display: flex;
@@ -61,16 +116,30 @@
   gap: 0.6rem;
   text-transform: capitalize;
   position: relative;
-  transition: background-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
-  will-change: transform;
+  background: transparent;
+  transition:
+    background-color var(--motion-normal) var(--motion-ease),
+    color var(--motion-normal) var(--motion-ease),
+    box-shadow var(--motion-normal) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-normal) var(--motion-ease);
+  will-change: transform, box-shadow;
+  border: 1px solid transparent;
 }
 
 .navbar a:hover,
 .navbar a.active {
-  background: var(--main-color);
+  background: linear-gradient(180deg, rgba(var(--main-color-rgb), 0.94), rgba(var(--main-color-rgb), 0.82));
   color: var(--bg-color);
-  box-shadow: 0 5px 15px rgba(var(--main-color-rgb), 0.4);
-  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 18px rgba(var(--main-color-rgb), 0.26);
+  transform: translateY(-1px) scale(1.01);
+}
+
+.navbar a:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(var(--main-color-rgb), 0.25);
 }
 
 .MenuIcon {
@@ -79,11 +148,16 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
   cursor: pointer;
   z-index: 1001;
-  padding: 5px;
+  padding: 0.8rem;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transition: transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
 .MenuIcon span {
@@ -93,6 +167,13 @@
   border-radius: 10px;
   transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
   transform-origin: center;
+}
+
+.MenuIcon:hover {
+  background: rgba(var(--main-color-rgb), 0.08);
+  border-color: rgba(var(--main-color-rgb), 0.35);
+  box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.12), 0 8px 18px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }
 
 .MenuIcon.active span:nth-child(1) {
@@ -107,12 +188,18 @@
   transform: translateY(-9px) rotate(-45deg);
 }
 
+.backdrop {
+  display: none;
+}
+
 @media (max-width: 994px) {
   .header {
     width: calc(100% - 2rem);
-    padding: 0.8rem 1.8rem;
-    border-radius: 25px;
-    background: rgba(8, 8, 8, 0.72);
+    padding: 0.78rem 1rem;
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, rgba(18, 22, 28, 0.92), rgba(7, 10, 14, 0.88)),
+      radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.12), transparent 40%);
   }
 
   .logo { font-size: 2.1rem; }
@@ -121,16 +208,18 @@
 
   .navbar {
     position: absolute;
-    top: calc(100% + 15px);
+    top: calc(100% + 12px);
     right: 0;
     width: 100%;
-    background: rgba(8, 8, 8, 0.78);
+    background:
+      linear-gradient(180deg, rgba(14, 18, 24, 0.96), rgba(8, 10, 14, 0.94)),
+      radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.08), transparent 35%);
     backdrop-filter: blur(var(--ui-blur)); 
     flex-direction: column;
-    padding: 2.0rem 0;
-    border-radius: 25px;
-    border: 1px solid rgba(var(--main-color-rgb), 0.3);
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.62), 0 0 12px rgba(var(--main-color-rgb), 0.08);
+    padding: 1.2rem 0.85rem;
+    border-radius: 22px;
+    border: 1px solid rgba(var(--main-color-rgb), 0.26);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.64), 0 0 12px rgba(var(--main-color-rgb), 0.08);
     
     opacity: 0;
     visibility: hidden;
@@ -155,11 +244,32 @@
       visibility 0s linear 0s;
   }
 
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 998;
+    background: rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(2px);
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
   .navbar a {
-    font-size: 1.8rem;
-    width: 85%;
+    font-size: 1.7rem;
+    width: 92%;
     justify-content: center;
-    margin: 0.5rem 0;
+    margin: 0.35rem 0;
+    min-height: 48px;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .MenuIcon {
+    min-width: 52px;
+    min-height: 52px;
   }
 }
 
@@ -167,9 +277,9 @@
   .header {
     width: calc(100% - 1.2rem);
     top: 0.7rem;
-    padding: 0.65rem 1.1rem;
-    border-radius: 16px;
-    gap: 1rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 18px;
+    gap: 0.75rem;
   }
 
   .logo {
@@ -183,9 +293,10 @@
   }
 
   .navbar a {
-    width: 92%;
-    font-size: 1.55rem;
-    padding: 0.55rem 1rem;
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 0.65rem 0.9rem;
   }
+
 }
 

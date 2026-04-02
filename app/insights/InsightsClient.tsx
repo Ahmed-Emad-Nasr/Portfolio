@@ -70,6 +70,7 @@ export default function InsightsClient() {
     ["Service detail views", stats.service_detail_view],
     ["Service CTA clicks", stats.service_cta_click],
     ["Contact form started", stats.contact_form_started],
+    ["Contact form abandoned", stats.contact_form_abandon],
     ["Contact submit attempts", stats.contact_submit_attempt],
     ["Contact success", stats.contact_submit_success],
     ["Home section views", stats.section_view_home],
@@ -93,6 +94,9 @@ export default function InsightsClient() {
   const funnelBase = Math.max(funnelStages[0].value || 0, 1);
 
   const rate = (value: number): string => `${Math.round((value / funnelBase) * 100)}%`;
+  const serviceToContactRate = stats.service_cta_click > 0 ? Math.round((stats.contact_form_started / stats.service_cta_click) * 100) : 0;
+  const contactToSuccessRate = stats.contact_form_started > 0 ? Math.round((stats.contact_submit_success / stats.contact_form_started) * 100) : 0;
+  const abandonRate = stats.contact_form_started > 0 ? Math.round((stats.contact_form_abandon / stats.contact_form_started) * 100) : 0;
 
   return (
     <main className={styles.page}>
@@ -143,6 +147,24 @@ export default function InsightsClient() {
                 </div>
               </article>
             ))}
+          </div>
+        </section>
+
+        <section className={styles.funnelSection}>
+          <h2 className={styles.funnelTitle}>Conversion Snapshot</h2>
+          <div className={styles.snapshotGrid}>
+            <article className={styles.snapshotCard}>
+              <p className={styles.label}>Service to form start</p>
+              <p className={styles.value}>{serviceToContactRate}%</p>
+            </article>
+            <article className={styles.snapshotCard}>
+              <p className={styles.label}>Form start to success</p>
+              <p className={styles.value}>{contactToSuccessRate}%</p>
+            </article>
+            <article className={styles.snapshotCard}>
+              <p className={styles.label}>Form abandon rate</p>
+              <p className={styles.value}>{abandonRate}%</p>
+            </article>
           </div>
         </section>
 

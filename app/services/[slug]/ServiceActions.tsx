@@ -9,7 +9,20 @@ type ServiceActionsProps = {
   slug: string;
 };
 
+const ctaBySlug: Record<string, string> = {
+  "soc-analysis": "Start SOC Review",
+  "incident-response": "Plan Incident Response",
+  "threat-hunting": "Start Threat Hunt",
+  "siem-edr-implementation": "Plan SIEM or EDR Setup",
+  "log-analysis-forensics": "Review Investigation Scope",
+  vapt: "Schedule VAPT Scope Call",
+  "training-awareness": "Plan Team Training",
+  "malware-analysis": "Start Malware Analysis",
+};
+
 export default function ServiceActions({ slug }: ServiceActionsProps) {
+  const primaryCtaLabel = ctaBySlug[slug] || "Discuss This Service";
+
   return (
     <div className={styles.actions}>
       <a
@@ -20,7 +33,7 @@ export default function ServiceActions({ slug }: ServiceActionsProps) {
           trackEvent("service_book_call", { service: slug });
         }}
       >
-        Discuss This Service
+        {primaryCtaLabel}
       </a>
       <Link
         className={styles.btnSecondary}
@@ -29,6 +42,7 @@ export default function ServiceActions({ slug }: ServiceActionsProps) {
       >
         Back To Portfolio
       </Link>
+      <p className={styles.trustLine}>Typical response window: within 24 hours. Delivery is structured and remote-friendly.</p>
     </div>
   );
 }

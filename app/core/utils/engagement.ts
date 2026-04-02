@@ -11,6 +11,7 @@ export type FunnelEventName =
   | "service_detail_view"
   | "service_cta_click"
   | "contact_form_started"
+  | "contact_form_abandon"
   | "contact_submit_attempt"
   | "contact_submit_success"
   | "section_view_home"
@@ -67,6 +68,7 @@ const defaultStats: FunnelStats = {
   service_detail_view: 0,
   service_cta_click: 0,
   contact_form_started: 0,
+  contact_form_abandon: 0,
   contact_submit_attempt: 0,
   contact_submit_success: 0,
   section_view_home: 0,

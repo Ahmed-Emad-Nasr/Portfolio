@@ -178,6 +178,7 @@ const SenseiHome = memo(function SenseiHome() {
         </div>
 
         <div className={styles.homeContent}>
+          <p className={styles.eyebrow}>SOC Analyst | Incident Response | Threat Hunting</p>
           <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
           <div className={styles.availabilityStatus}>
             <span className={`${styles.statusDot} ${availability.toneClass}`}></span>
@@ -212,12 +213,13 @@ const SenseiHome = memo(function SenseiHome() {
             </button>
             <a
               href="#Projects"
-              className={`${styles.btn} ${styles.btn2}`}
+              className={BTN_1_CLASS}
               onClick={() => trackEvent("cta_click", { source: "hero", action: "view_projects", destination: "#Projects" })}
             >
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>
           </div>
+          <p className={styles.ctaHint}>Best next step: share your goal and receive a tailored response within 24 hours.</p>
           <CVDownloadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
       </div>

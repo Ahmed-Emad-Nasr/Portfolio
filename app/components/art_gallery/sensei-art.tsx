@@ -18,6 +18,7 @@ const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: fals
 
 interface GalleryImage { src: string; thumb: string; }
 interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; }
+interface GallerySkeletonProps { index: number; }
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -69,6 +70,18 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
 
 ImageItem.displayName = "ImageItem";
 
+const GallerySkeleton = memo(({ index }: GallerySkeletonProps) => (
+  <div className={styles.skeletonItem} aria-hidden="true">
+    <div className={styles.skeletonThumb} />
+    <div className={styles.skeletonCaption}>
+      <span className={styles.skeletonLine} />
+      <span className={styles.skeletonLineShort} />
+    </div>
+  </div>
+));
+
+GallerySkeleton.displayName = "GallerySkeleton";
+
 const SenseiArt = memo(function SenseiArt() {
   const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(-1);
@@ -100,6 +113,13 @@ const SenseiArt = memo(function SenseiArt() {
         <MotionInView className={styles["header-section"]} variants={sectionHeaderVariants}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
         </MotionInView>
+        {!shouldRenderGallery ? (
+          <div className={styles.Gallery} aria-hidden="true">
+            {Array.from({ length: 8 }, (_, index) => (
+              <GallerySkeleton key={`gallery-skeleton-${index}`} index={index} />
+            ))}
+          </div>
+        ) : null}
         {shouldRenderGallery ? (
           <MotionInView
             className={styles["art-gallery-content"]}
