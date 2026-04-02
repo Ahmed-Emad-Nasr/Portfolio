@@ -58,13 +58,32 @@ export const useHeader = () => {
       if (!ticking) {
         ticking = true;
         window.requestAnimationFrame(() => {
-          const marker = window.innerWidth <= 994 ? 120 : 150;
-          const current = SECTIONS.find((section) => {
+          const isMobile = window.innerWidth <= 994;
+          const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
+          const headerHeight = headerElement?.getBoundingClientRect().height ?? (isMobile ? 64 : 76);
+          const marker = Math.max(72, Math.round(headerHeight + (isMobile ? 10 : 14)));
+          let current: string | undefined;
+
+          for (const section of SECTIONS) {
             const el = document.getElementById(section);
-            if (!el) return false;
-            const { top, bottom } = el.getBoundingClientRect();
-            return top <= marker && bottom >= marker;
-          });
+            if (!el) continue;
+            const { top } = el.getBoundingClientRect();
+
+            // Keep advancing while section tops are above marker;
+            // this avoids losing active state in gaps between sections.
+            if (top <= marker) {
+              current = section;
+              continue;
+            }
+
+            // Stop once we passed the first section below marker.
+            break;
+          }
+
+          // Fallback to first section when near page top.
+          if (!current) {
+            current = "Home";
+          }
           
           if (current && current !== lastSection) {
             lastSection = current;

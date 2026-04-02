@@ -133,7 +133,7 @@ const SenseiHeader = memo(function SenseiHeader() {
   const navbarClass = isMenuOpen ? `${NAVBAR_BASE} ${ACTIVE_CLASS}` : NAVBAR_BASE;
 
   return (
-    <header ref={headerRef} className={styles.header}>
+    <header ref={headerRef} className={styles.header} data-site-header="true">
       <span className={styles.progress} style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
       <a
         href="#Home"
