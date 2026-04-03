@@ -492,6 +492,13 @@ export const caseEvidenceLibrary = [
     href: "Assets/Cases/SOC127/AhmedEmad_SOC127.pdf",
   },
   {
+    id: "soc205-pdf",
+    title: "SOC205 Incident Report",
+    platform: "LetsDefend Simulation",
+    type: "PDF Report",
+    href: "Assets/Cases/SOC205/AhmedEmad_SOC205.pdf",
+  },
+  {
     id: "soc257-pdf",
     title: "SOC257 Incident Report",
     platform: "LetsDefend Simulation",
