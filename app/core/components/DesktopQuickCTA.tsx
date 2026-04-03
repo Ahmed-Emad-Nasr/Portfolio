@@ -4,7 +4,6 @@ import { memo, useState } from "react";
 import styles from "./desktop-quick-cta.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { trackEvent } from "@/app/core/utils/analytics";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
 
 function scrollToTop() {
@@ -20,7 +19,6 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
     }
 
     setIsCallLocked(true);
-    trackEvent("cta_click", { source: "desktop_quick_cta", action: "book_call", destination: "whatsapp" });
     recordFunnelEvent("service_cta_click");
     window.setTimeout(() => setIsCallLocked(false), 1000);
   };
@@ -40,10 +38,7 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
       <button
         type="button"
         className={`${styles.btn} ${styles.tertiary}`}
-        onClick={() => {
-          trackEvent("cta_click", { source: "desktop_quick_cta", action: "scroll_top", destination: "page_top" });
-          scrollToTop();
-        }}
+        onClick={scrollToTop}
       >
         <FontAwesomeIcon icon={faArrowUp} />
         Top
@@ -53,7 +48,6 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         target="_blank"
         rel="noopener noreferrer"
         className={`${styles.btn} ${styles.secondary}`}
-        onClick={() => trackEvent("cta_click", { source: "desktop_quick_cta", action: "open_cv", destination: "cv_pdf" })}
       >
         <FontAwesomeIcon icon={faFilePdf} />
         Open CV

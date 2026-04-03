@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import styles from "./page.module.css";
-import { trackEvent } from "@/app/core/utils/analytics";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
 
 type ServiceActionsProps = {
@@ -30,16 +29,11 @@ export default function ServiceActions({ slug }: ServiceActionsProps) {
         href="/#Contact"
         onClick={() => {
           recordFunnelEvent("service_cta_click");
-          trackEvent("service_book_call", { service: slug });
         }}
       >
         {primaryCtaLabel}
       </Link>
-      <Link
-        className={styles.btnSecondary}
-        href="/"
-        onClick={() => trackEvent("service_back_to_portfolio", { service: slug })}
-      >
+      <Link className={styles.btnSecondary} href="/">
         Back To Portfolio
       </Link>
       <p className={styles.trustLine}>Typical response window: within 24 hours. Delivery is structured and remote-friendly.</p>

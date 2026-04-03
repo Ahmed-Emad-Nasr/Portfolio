@@ -5,19 +5,10 @@
 
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import styles from "./not-found.module.css";
-import { trackEvent } from "@/app/core/utils/analytics";
 
 export default function NotFound() {
-  useEffect(() => {
-    trackEvent("not_found_view", {
-      path: window.location.pathname,
-      referrer: document.referrer || "direct",
-    });
-  }, []);
-
   return (
     <main className={styles.wrapper}>
       <div className={styles.glow} aria-hidden="true" />

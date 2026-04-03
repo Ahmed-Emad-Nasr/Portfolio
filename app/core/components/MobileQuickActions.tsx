@@ -4,7 +4,6 @@ import { memo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import styles from "./mobile-quick-actions.module.css";
-import { trackEvent } from "@/app/core/utils/analytics";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -19,7 +18,6 @@ const MobileQuickActions = memo(function MobileQuickActions() {
     }
 
     setIsCallLocked(true);
-    trackEvent("cta_click", { source: "mobile_quick_actions", action: "book_call", destination: "whatsapp" });
     window.setTimeout(() => setIsCallLocked(false), 1000);
   };
 
@@ -42,7 +40,6 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Open CV PDF"
-        onClick={() => trackEvent("cta_click", { source: "mobile_quick_actions", action: "download_cv", destination: "cv_pdf" })}
       >
         <FontAwesomeIcon icon={faFilePdf} />
         Open CV
@@ -51,10 +48,7 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         type="button"
         className={`${styles.btn} ${styles.tertiary}`}
         aria-label="Scroll to top"
-        onClick={() => {
-          trackEvent("cta_click", { source: "mobile_quick_actions", action: "scroll_top", destination: "page_top" });
-          scrollToTop();
-        }}
+        onClick={scrollToTop}
       >
         <FontAwesomeIcon icon={faArrowUp} />
         Top

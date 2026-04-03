@@ -10,8 +10,6 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import AnalyticsTracker from "@/app/core/components/AnalyticsTracker";
-import WebVitalsTracker from "@/app/core/components/WebVitalsTracker";
 import ToastHost from "@/app/core/components/ToastHost";
 import { faqItems, knowledgeEducationItems, serviceCatalog } from "@/app/core/data";
 
@@ -27,7 +25,6 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://ahmed-emad-nasr.github.io/Portfolio/"),
   applicationName: "Ahmed Emad Nasr Portfolio",
-  manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -116,8 +113,6 @@ const overlock = Overlock({
 
 // Derived once — the class string never changes between renders.
 const BODY_CLASS = `bg-black text-white ${overlock.variable}`;
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const structuredData = {
   "@context": "https://schema.org",
@@ -273,54 +268,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a className="skip-link" href="#Home">
           Skip to main content
         </a>
-        {GA_ID ? (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                window.gtag = gtag;
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}', { send_page_view: false });
-              `}
-            </Script>
-          </>
-        ) : null}
-        {CLARITY_ID ? (
-          <Script id="clarity-init" strategy="afterInteractive">
-            {`
-              (function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "${CLARITY_ID}");
-            `}
-          </Script>
-        ) : null}
         {TURNSTILE_SITE_KEY ? (
           <Script
             src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
             strategy="afterInteractive"
           />
         ) : null}
-        <Script id="sw-register" strategy="afterInteractive">
-          {`
-            if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-              window.addEventListener('load', function () {
-                var scopePrefix = window.location.pathname.startsWith('/Portfolio/') ? '/Portfolio' : '';
-                navigator.serviceWorker.register(scopePrefix + '/sw.js?v=2').catch(function () {
-                  // Ignore registration failures in unsupported environments.
-                });
-              });
-            }
-          `}
-        </Script>
-        <AnalyticsTracker />
-        <WebVitalsTracker />
         <ToastHost />
         <script
           type="application/ld+json"

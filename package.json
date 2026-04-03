@@ -11,7 +11,7 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"app\" \"scripts\" \"*.{json,md,mjs}\"",
     "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
-    "clean": "rimraf .next out",
+    "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
     "audit": "npm audit --omit=dev",
     "verify": "npm run lint && npm run type-check && npm run build",
     "postdeploy-check": "node ./scripts/postdeploy-check.mjs"
@@ -26,19 +26,15 @@
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-intersection-observer": "10.0.3",
     "yet-another-react-lightbox": "3.21.8"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.3.1",
-    "@types/estree": "1.0.7",
-    "@types/node": "25.5.0",
+    "@types/node": "25.5.2",
     "@types/react": "19.2.2",
     "@types/react-dom": "^19.2.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.1.6",
     "prettier": "^3.0.0",
-    "rimraf": "^6.0.0",
     "typescript": "5.9.3"
   }
 }

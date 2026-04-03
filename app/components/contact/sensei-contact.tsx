@@ -16,7 +16,6 @@ import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
-import { trackEvent } from "@/app/core/utils/analytics";
 import { isActionAllowed, recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
 import { showToast } from "@/app/core/utils/toast";
 import { contactBudgetOptions, contactServiceOptions, contactTimelineOptions, serviceResponseSla } from "@/app/core/data";
@@ -188,14 +187,12 @@ const SenseiContact = memo(function SenseiContact() {
 
       // Honeypot: if this hidden field is filled, treat as bot and silently block.
       if (website && String(website).trim() !== "") {
-        trackEvent("contact_submit_failed", { reason: "honeypot_triggered" });
         showToast({ type: "error", message: "Submission blocked due to spam check." });
         setIsSubmitting(false);
         return;
       }
 
       if (!isActionAllowed("contact_submit", 30_000)) {
-        trackEvent("contact_submit_failed", { reason: "rate_limited" });
         showToast({ type: "error", message: "You sent a message recently. Please wait 30 seconds and try again." });
         setSubmitError(true);
         messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
@@ -204,7 +201,6 @@ const SenseiContact = memo(function SenseiContact() {
       }
 
       if (!name || !email || !subject || !message || !requestedService) {
-        trackEvent("contact_submit_failed", { reason: "missing_fields" });
         const errors: Record<string, string> = {};
         if (!name) errors.name = "Name is required";
         if (!email) errors.email = "Email is required";
@@ -218,7 +214,6 @@ const SenseiContact = memo(function SenseiContact() {
       }
 
       if (TURNSTILE_SITE_KEY && !turnstileToken) {
-        trackEvent("contact_submit_failed", { reason: "turnstile_missing" });
         showToast({ type: "error", message: "Security check is required. Complete it, then submit again." });
         setSubmitError(true);
         messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
@@ -233,7 +228,6 @@ const SenseiContact = memo(function SenseiContact() {
       // Validate email format
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(String(email))) {
-        trackEvent("contact_submit_failed", { reason: "invalid_email" });
         showToast({ type: "error", message: "Please enter a valid email address." });
         setValidationErrors({ email: "Please enter a valid email address" });
         setIsSubmitting(false);
@@ -241,12 +235,6 @@ const SenseiContact = memo(function SenseiContact() {
       }
 
       recordFunnelEvent("contact_submit_attempt");
-      trackEvent("contact_submit_attempt", {
-        source: "contact_form",
-        requested_service: String(requestedService),
-        budget_range: budgetRange ? String(budgetRange) : "not_provided",
-        project_timeline: projectTimeline ? String(projectTimeline) : "not_provided",
-      });
 
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST", 
@@ -261,7 +249,6 @@ const SenseiContact = memo(function SenseiContact() {
 
       const result = await response.json();
       if (result.ok) {
-        trackEvent("contact_submit_success", { source: "contact_form" });
         recordFunnelEvent("contact_submit_success");
         void sendNotificationEmail({
           subject: "Portfolio alert: contact form success",
@@ -309,9 +296,6 @@ const SenseiContact = memo(function SenseiContact() {
           showToast({ type: "error", message: "Network issue while sending. Please retry or use WhatsApp/Email quick contact." });
         }
       }
-      trackEvent("contact_submit_failed", {
-        reason: error instanceof Error ? error.name : "unknown_error",
-      });
       setSubmitError(true);
       messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
     } finally {
@@ -352,10 +336,6 @@ const SenseiContact = memo(function SenseiContact() {
       if (!isFormDirty || abandonmentTrackedRef.current || isSuccess) return;
       abandonmentTrackedRef.current = true;
       recordFunnelEvent("contact_form_abandon");
-      trackEvent("contact_form_abandon", {
-        source: "contact_form",
-        selected_service: selectedService || "not_selected",
-      });
     };
 
     const handleVisibilityChange = () => {
@@ -428,7 +408,6 @@ const SenseiContact = memo(function SenseiContact() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Book a quick call on WhatsApp"
-              onClick={() => trackEvent("cta_click", { source: "contact_section", action: "book_call", destination: "whatsapp" })}
             >
               Book a Call
             </a>
@@ -457,13 +436,11 @@ const SenseiContact = memo(function SenseiContact() {
                   href={quickQuoteHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackEvent("cta_click", { source: "contact_form", action: "quick_quote_whatsapp", destination: "whatsapp", selected_service: selectedService || "not_selected" })}
                 >
                   Quick Quote on WhatsApp
                 </a>
                 <a
                   href="mailto:ahmed.em.nasr@gmail.com?subject=Security%20Project%20Inquiry"
-                  onClick={() => trackEvent("cta_click", { source: "contact_form", action: "quick_email", destination: "mailto" })}
                 >
                   Email Directly
                 </a>
@@ -491,7 +468,6 @@ const SenseiContact = memo(function SenseiContact() {
                 <label htmlFor="contact-name" className={styles["sr-only"]}>Your name</label>
                 <input id="contact-name" type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} onFocus={() => {
                 if (!didTrackFormStart) {
-                  trackEvent("contact_form_started", { source: "contact_form", first_field: "name" });
                   recordFunnelEvent("contact_form_started");
                   setDidTrackFormStart(true);
                 }
@@ -519,7 +495,6 @@ const SenseiContact = memo(function SenseiContact() {
                   onChange={(event) => {
                     setSelectedService(event.target.value);
                     handleFieldInput("requested_service", event.target.value);
-                    trackEvent("contact_field_selected", { field: "requested_service", value: event.target.value });
                   }}
                   onBlur={(event) => markTouchedAndValidate("requested_service", event.target.value)}
                   aria-invalid={!!fieldErrors.requested_service}
@@ -544,7 +519,6 @@ const SenseiContact = memo(function SenseiContact() {
                       defaultValue=""
                       onChange={(event) => {
                         handleFieldInput("budget_range", event.target.value);
-                        trackEvent("contact_field_selected", { field: "budget_range", value: event.target.value });
                       }}
                     >
                       <option value="">Budget range (optional)</option>
@@ -562,7 +536,6 @@ const SenseiContact = memo(function SenseiContact() {
                       defaultValue=""
                       onChange={(event) => {
                         handleFieldInput("project_timeline", event.target.value);
-                        trackEvent("contact_field_selected", { field: "project_timeline", value: event.target.value });
                       }}
                     >
                       <option value="">Timeline (optional)</option>

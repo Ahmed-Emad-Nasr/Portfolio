@@ -15,7 +15,6 @@ import styles from "./sensei-home.module.css";
 import CVDownloadModal from "@/app/components/cv-download-modal/CVDownloadModal";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { homeSummaryParagraph } from "@/app/core/data";
-import { trackEvent } from "@/app/core/utils/analytics";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
@@ -89,10 +88,6 @@ const SenseiHome = memo(function SenseiHome() {
       const assignedCV = storedCV === "A" || storedCV === "B" ? storedCV : pickVariant<CVVariant>("A", "B");
       window.localStorage.setItem(AB_STORAGE_KEY, assignedCV);
       setCvVariant(assignedCV);
-
-      trackEvent("hero_ab_assigned", {
-        cv_variant: assignedCV,
-      });
     } catch {
       setCvVariant("A");
     }
@@ -136,19 +131,11 @@ const SenseiHome = memo(function SenseiHome() {
   };
 
   const handleDownloadCVClick = () => {
-    trackEvent("cta_click", {
-      source: "hero",
-      action: "download_cv_modal",
-      destination: "cv_modal_open",
-      variant: cvVariant,
-    });
     setIsModalOpen(true);
   };
 
   const handleHireMeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-
-    trackEvent("cta_click", { source: "hero", action: "start_project", destination: "#Contact" });
 
     const contactSection = document.getElementById("Contact");
     if (!contactSection) {
@@ -228,7 +215,6 @@ const SenseiHome = memo(function SenseiHome() {
             <a
               href="#Projects"
               className={BTN_1_CLASS}
-              onClick={() => trackEvent("cta_click", { source: "hero", action: "view_projects", destination: "#Projects" })}
             >
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>

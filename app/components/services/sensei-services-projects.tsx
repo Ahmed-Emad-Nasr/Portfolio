@@ -12,7 +12,6 @@ import styles from "./sensei-services-projects.module.css";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
 import { serviceCatalog } from "@/app/core/data";
-import { trackEvent } from "@/app/core/utils/analytics";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
 
 const sectionVariants = {
@@ -84,7 +83,6 @@ const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, outcome,
           href={`/services/${slug}`}
           className={styles.detailsBtn}
           onClick={() => {
-            trackEvent("service_card_open", { service: slug });
             recordFunnelEvent("service_cta_click");
           }}
         >
@@ -192,7 +190,6 @@ function SenseiServicesProjects() {
                         href={`/services/${service.slug}`}
                         className={styles.tableLink}
                         onClick={() => {
-                          trackEvent("service_card_open", { service: service.slug, source: "comparison_table" });
                           recordFunnelEvent("service_cta_click");
                         }}
                       >
