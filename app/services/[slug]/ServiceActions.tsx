@@ -25,7 +25,7 @@ export default function ServiceActions({ slug }: ServiceActionsProps) {
 
   return (
     <div className={styles.actions}>
-      <a
+      <Link
         className={styles.btnPrimary}
         href="/#Contact"
         onClick={() => {
@@ -34,7 +34,7 @@ export default function ServiceActions({ slug }: ServiceActionsProps) {
         }}
       >
         {primaryCtaLabel}
-      </a>
+      </Link>
       <Link
         className={styles.btnSecondary}
         href="/"

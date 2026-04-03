@@ -15,10 +15,12 @@ import TrustSection from "@/app/components/trust/trust-section";
 import ServicesSection from "@/app/components/services/sensei-services-projects";
 import ExperienceSection from "@/app/components/experience/experience-section";
 import ProjectsSection from "@/app/components/projects/sensei-projects";
+import CaseStudiesSection from "@/app/components/case-studies/sensei-case-studies";
 import ContactSection from "@/app/components/contact/sensei-contact";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
+import ErrorBoundary from "@/app/core/components/ErrorBoundary";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 const AnimatedBackground = dynamic(() => import("@/app/components/animated_background/animated_background"), { ssr: false });
@@ -73,9 +75,18 @@ const MainClient = memo(function MainClient() {
         <AboutSection />
         <TrustSection />
         <ExperienceSection />
-        <ProjectsSection />
-        <ServicesSection />
-        <ContactSection />
+        <ErrorBoundary title="Projects section">
+          <ProjectsSection />
+        </ErrorBoundary>
+        <ErrorBoundary title="Case studies section">
+          <CaseStudiesSection />
+        </ErrorBoundary>
+        <ErrorBoundary title="Services section">
+          <ServicesSection />
+        </ErrorBoundary>
+        <ErrorBoundary title="Contact section">
+          <ContactSection />
+        </ErrorBoundary>
         <ArtGallerySection />
         <DesktopQuickCTA />
         <MobileQuickActions />

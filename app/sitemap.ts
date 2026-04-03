@@ -5,9 +5,12 @@ export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://ahmed-emad-nasr.github.io/Portfolio";
+  const defaultLastModified = process.env.NEXT_PUBLIC_SITE_LASTMOD ?? "2026-04-03";
+  const lastModified = new Date(defaultLastModified);
+
   const serviceUrls = serviceCatalog.map((service) => ({
     url: `${baseUrl}/services/${service.slug}`,
-    lastModified: new Date(),
+    lastModified,
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
@@ -15,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: `${baseUrl}/`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "weekly",
       priority: 1,
     },

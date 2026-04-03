@@ -42,9 +42,11 @@ export default function AnalyticsTracker() {
       { id: "Trust", event: "section_view_trust" as const },
       { id: "Experience", event: "section_view_experience" as const },
       { id: "Projects", event: "section_view_projects" as const },
+      { id: "CaseStudies", event: "section_view_case_studies" as const },
       { id: "Services", event: "section_view_services" as const },
-      { id: "Contact", event: "section_view_contact" as const },
+      { id: "FAQ", event: "section_view_faq" as const },
       { id: "Certifications", event: "section_view_certifications" as const },
+      { id: "Contact", event: "section_view_contact" as const },
     ];
 
     const observedElements = sectionMap

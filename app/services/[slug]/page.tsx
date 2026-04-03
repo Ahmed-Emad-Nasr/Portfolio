@@ -227,6 +227,9 @@ export default function ServiceDetailsPage({ params }: { params: ServicePagePara
       />
       <ServicePageTracker slug={item.slug} />
       <div className={styles.container}>
+        <p className={styles.kicker}>
+          <Link href="/">Home</Link> / <Link href="/#Services">Services</Link> / <span>{item.title}</span>
+        </p>
         <p className={styles.kicker}>Service Brief</p>
         <h1 className={styles.title}>{item.title}</h1>
         <p className={styles.description}>{item.description}</p>

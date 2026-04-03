@@ -167,9 +167,18 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
 ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
-  const { repos, isLoading } = useGitHubRepos();
+  const { repos, isLoading, source, loadError, cacheUpdatedAt } = useGitHubRepos();
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
   const filterCounts = useMemo(() => getFilterCounts(repos), [repos]);
+
+  const cacheLabel = useMemo(() => {
+    if (!cacheUpdatedAt) return null;
+    try {
+      return new Date(cacheUpdatedAt).toLocaleString();
+    } catch {
+      return null;
+    }
+  }, [cacheUpdatedAt]);
 
   const filteredRepos = useMemo(() => {
     if (activeFilter === "All") return repos;
@@ -203,8 +212,16 @@ const SenseiProjects = memo(function SenseiProjects() {
         </div>
         <div className={styles["section-summary"]} aria-live="polite">
           <span>{summaryText}</span>
-          <span>Focused on SOC, DFIR, and automation work.</span>
+          <span>
+            Focused on SOC, DFIR, and automation work.
+            {source === "cache" ? " Showing cached repositories." : ""}
+            {source === "static" ? " Showing curated fallback projects." : ""}
+          </span>
         </div>
+        {loadError ? <p className={styles["empty-state-hint"]}>{loadError}</p> : null}
+        {source === "cache" && cacheLabel ? (
+          <p className={styles["empty-state-hint"]}>Cache last updated: {cacheLabel}</p>
+        ) : null}
         <div className={styles["grid-container"]}>
           {isLoading ? (
             Array.from({ length: 6 }, (_, index) => (

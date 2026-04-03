@@ -346,3 +346,225 @@ export const contactTimelineOptions = [
   "This month",
   "Exploring options",
 ] as const;
+
+export const faqItems = [
+  {
+    category: "Services",
+    q: "How quickly can a SOC or IR engagement start?",
+    a: "Most scopes can start within 24-48 hours after confirming access, goals, and communication flow.",
+  },
+  {
+    category: "Services",
+    q: "Do you work with existing SIEM/EDR deployments?",
+    a: "Yes. I can tune and optimize existing Wazuh, ELK, and Splunk setups without requiring a full rebuild.",
+  },
+  {
+    category: "Delivery",
+    q: "Is remote collaboration supported?",
+    a: "Yes. Delivery is remote-first with structured updates, clear milestones, and documented outcomes.",
+  },
+  {
+    category: "Pricing",
+    q: "How is pricing structured?",
+    a: "Each service has a starting price, and final scope is based on complexity, timeline, and expected deliverables.",
+  },
+  {
+    category: "Process",
+    q: "What do clients receive at the end of an engagement?",
+    a: "You receive a concise report, prioritized action items, and practical technical outputs that your team can use immediately.",
+  },
+  {
+    category: "Support",
+    q: "Do you provide follow-up after delivery?",
+    a: "Yes. Follow-up guidance is available to help with implementation, tuning, and clarification.",
+  },
+] as const;
+
+export const caseStudyHighlights = [
+  {
+    title: "SOC Alert Tuning Sprint",
+    domain: "SOC Analysis",
+    problem:
+      "Alert overload made daily triage noisy and delayed response to high-priority events.",
+    action:
+      "Mapped noisy detections, tuned correlation logic, and introduced severity-first triage flow.",
+    result:
+      "Reduced false positives by 25% in lab SOC operations and improved investigation focus.",
+  },
+  {
+    title: "Threat Hunting Detection Pack",
+    domain: "Threat Hunting",
+    problem:
+      "Detection coverage had blind spots for stealthy behaviors not captured by baseline rules.",
+    action:
+      "Built hypothesis-driven hunt queries and validated signatures against expected telemetry.",
+    result:
+      "Increased practical detection coverage and improved analyst confidence in hunt outcomes.",
+  },
+  {
+    title: "Malware Analysis Workflow",
+    domain: "DFIR",
+    problem:
+      "Malware investigations took too long due to inconsistent IOC extraction and reporting.",
+    action:
+      "Created a controlled analysis flow with IOC packaging and behavior mapping templates.",
+    result:
+      "Cut investigation time by 20% and improved containment readiness for follow-up actions.",
+  },
+  {
+    title: "Security Training Program",
+    domain: "Awareness",
+    problem:
+      "Teams needed practical security skills beyond theoretical knowledge.",
+    action:
+      "Delivered 35+ structured sessions with guided labs and measurable skill checkpoints.",
+    result:
+      "Reached 120+ learners, average feedback 4.9/5, and improved lab performance by 40%.",
+  },
+] as const;
+
+export const caseEvidenceLibrary = [
+  {
+    id: "soc326-report",
+    title: "SOC326 Incident Response Report",
+    platform: "LetsDefend Simulation",
+    type: "PDF Report",
+    href: "/Assets/Cases/SOC326/Incident%20Response%20Case%20Report%20SOC326.pdf",
+  },
+  {
+    id: "soc336-report",
+    title: "SOC336 Incident Response Report",
+    platform: "LetsDefend Simulation",
+    type: "PDF Report",
+    href: "/Assets/Cases/SOC336/Incident%20Response%20Case%20Report%20SOC336.pdf",
+  },
+  {
+    id: "soc342-screens",
+    title: "SOC342 Investigation Walkthrough",
+    platform: "LetsDefend Simulation",
+    type: "Screenshot Evidence",
+    href: "/Assets/Cases/SOC342/Screenshot%20(99).png",
+  },
+  {
+    id: "soc338-screens",
+    title: "SOC338 Investigation Walkthrough",
+    platform: "LetsDefend Simulation",
+    type: "Screenshot Evidence",
+    href: "/Assets/Cases/SOC338/Screenshot%20(90).png",
+  },
+  {
+    id: "soc274-screens",
+    title: "SOC274 Investigation Walkthrough",
+    platform: "LetsDefend Simulation",
+    type: "Screenshot Evidence",
+    href: "/Assets/Cases/SOC274/Screenshot%20(130).png",
+  },
+  {
+    id: "soc257-screens",
+    title: "SOC257 Investigation Walkthrough",
+    platform: "LetsDefend Simulation",
+    type: "Screenshot Evidence",
+    href: "/Assets/Cases/SOC257/Screenshot%20(140).png",
+  },
+  {
+    id: "soc127-screens",
+    title: "SOC127 Investigation Walkthrough",
+    platform: "LetsDefend Simulation",
+    type: "Screenshot Evidence",
+    href: "/Assets/Cases/SOC127/Screenshot%20(134).png",
+  },
+  {
+    id: "ass6-mitre",
+    title: "MITRE Mapping Assignment",
+    platform: "Blue Team Simulation",
+    type: "PDF Report",
+    href: "/Assets/Cases/ass_6/AhmedEmad_MITRE_Report.pdf",
+  },
+  {
+    id: "ass3-exploit",
+    title: "Exploit Analysis Assignment",
+    platform: "Security Simulation",
+    type: "PDF Report",
+    href: "/Assets/Cases/Ass_3/Ahmed_Emad_Eldeen_P5432-exploit.pdf",
+  },
+  {
+    id: "ass2-assessment",
+    title: "Assessment Write-up",
+    platform: "Security Simulation",
+    type: "PDF Report",
+    href: "/Assets/Cases/Ass_2/Ahmed_Emad_Eldeen_P5432.pdf",
+  },
+  {
+    id: "ass1-awareness",
+    title: "Cybersecurity Awareness Best Practices",
+    platform: "Security Training",
+    type: "PDF Guide",
+    href: "/Assets/Cases/Ass_1/AhmedEmad_Cybersecurity_Awareness_Best_Practices.pdf",
+  },
+] as const;
+
+export const staticProjectFallback = [
+  {
+    id: 90001,
+    name: "SOC-Environment",
+    description: "SOC stack with Wazuh, Suricata, and pfSense for detection automation and triage workflows.",
+    language: "Python",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/SOC-Environment",
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-03-01T00:00:00.000Z",
+    created_at: "2025-01-01T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "",
+    },
+    topics: ["soc", "wazuh", "suricata", "siem"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+  },
+  {
+    id: 90002,
+    name: "Malware-Analysis-and-Prevention-Strategy",
+    description: "Isolated malware lab with YARA-based detection and IOC extraction workflow.",
+    language: "Python",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/Malware-Analysis-and-Prevention-Strategy",
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-02-15T00:00:00.000Z",
+    created_at: "2025-02-01T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "",
+    },
+    topics: ["dfir", "malware", "ioc", "yara"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+  },
+  {
+    id: 90003,
+    name: "insider-threat-detection-deception",
+    description: "Insider threat detection environment using honeytokens and SIEM correlation.",
+    language: "TypeScript",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/insider-threat-detection-deception",
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-01-20T00:00:00.000Z",
+    created_at: "2025-03-01T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "",
+    },
+    topics: ["soc", "deception", "incident-response"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+  },
+] as const;

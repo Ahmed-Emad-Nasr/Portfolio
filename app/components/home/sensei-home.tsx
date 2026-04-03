@@ -61,18 +61,26 @@ const SenseiHome = memo(function SenseiHome() {
   }, []);
 
   const availability = useMemo(() => {
-    const day = clock.getDay();
-    const hour = clock.getHours();
+    const cairoParts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Africa/Cairo",
+      weekday: "short",
+      hour: "2-digit",
+      hour12: false,
+    }).formatToParts(clock);
 
-    if (day === 5 || day === 6) {
-      return { label: "Limited Availability", hint: "Weekend response window", toneClass: styles.dotLimited };
+    const weekday = cairoParts.find((part) => part.type === "weekday")?.value ?? "Mon";
+    const hourValue = Number(cairoParts.find((part) => part.type === "hour")?.value ?? "12");
+    const isWeekend = weekday === "Fri" || weekday === "Sat";
+
+    if (isWeekend) {
+      return { label: "Limited Availability", hint: "Weekend response window (Cairo time)", toneClass: styles.dotLimited };
     }
 
-    if (hour >= 10 && hour < 20) {
-      return { label: "Available for Opportunities", hint: "Typically replies today", toneClass: styles.dotAvailable };
+    if (hourValue >= 10 && hourValue < 20) {
+      return { label: "Available for Opportunities", hint: "Typically replies today (Cairo time)", toneClass: styles.dotAvailable };
     }
 
-    return { label: "Available (Async)", hint: "Usually replies within 24h", toneClass: styles.dotAsync };
+    return { label: "Available (Async)", hint: "Usually replies within 24h (Cairo time)", toneClass: styles.dotAsync };
   }, [clock]);
 
   useEffect(() => {

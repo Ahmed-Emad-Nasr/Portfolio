@@ -13,7 +13,7 @@ import Script from "next/script";
 import AnalyticsTracker from "@/app/core/components/AnalyticsTracker";
 import WebVitalsTracker from "@/app/core/components/WebVitalsTracker";
 import ToastHost from "@/app/core/components/ToastHost";
-import { serviceCatalog } from "@/app/core/data";
+import { faqItems, knowledgeEducationItems, serviceCatalog } from "@/app/core/data";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -214,13 +214,49 @@ const structuredData = {
       },
       hasPart: serviceCatalog.map((service) => ({
         "@type": "Service",
+        "@id": `https://ahmed-emad-nasr.github.io/Portfolio/services/${service.slug}#service`,
         name: service.title,
+        url: `https://ahmed-emad-nasr.github.io/Portfolio/services/${service.slug}`,
         description: service.description,
         serviceType: service.title,
+        provider: {
+          "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
+        },
         offers: {
           "@type": "Offer",
           price: service.from.replace("$", ""),
           priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          url: `https://ahmed-emad-nasr.github.io/Portfolio/services/${service.slug}`,
+        },
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#faq",
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.a,
+        },
+      })),
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#experience-list",
+      name: "Education and Experience Timeline",
+      itemListElement: knowledgeEducationItems.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "EducationalOccupationalCredential",
+          name: item.tag,
+          description: item.desc,
+          credentialCategory: item.subTag,
+          validFrom: item.startDate,
+          validUntil: item.endDate,
         },
       })),
     },
@@ -271,6 +307,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             strategy="afterInteractive"
           />
         ) : null}
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+              window.addEventListener('load', function () {
+                var scopePrefix = window.location.pathname.startsWith('/Portfolio/') ? '/Portfolio' : '';
+                navigator.serviceWorker.register(scopePrefix + '/sw.js').catch(function () {
+                  // Ignore registration failures in unsupported environments.
+                });
+              });
+            }
+          `}
+        </Script>
         <AnalyticsTracker />
         <WebVitalsTracker />
         <ToastHost />

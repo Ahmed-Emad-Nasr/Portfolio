@@ -78,9 +78,11 @@ export default function InsightsClient() {
     ["Trust section views", stats.section_view_trust],
     ["Experience section views", stats.section_view_experience],
     ["Projects section views", stats.section_view_projects],
+    ["Case studies section views", stats.section_view_case_studies],
     ["Services section views", stats.section_view_services],
-    ["Contact section views", stats.section_view_contact],
+    ["FAQ section views", stats.section_view_faq],
     ["Certifications section views", stats.section_view_certifications],
+    ["Contact section views", stats.section_view_contact],
   ] as const;
 
   const funnelStages = [

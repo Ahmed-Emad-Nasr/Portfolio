@@ -19,8 +19,10 @@ export type FunnelEventName =
   | "section_view_trust"
   | "section_view_experience"
   | "section_view_projects"
+  | "section_view_case_studies"
   | "section_view_services"
   | "section_view_contact"
+  | "section_view_faq"
   | "section_view_certifications";
 
 type FunnelStats = Record<FunnelEventName, number>;
@@ -58,6 +60,20 @@ const REMOTE_INSIGHTS_URL = process.env.NEXT_PUBLIC_REMOTE_INSIGHTS_URL || "";
 const FALLBACK_WEBHOOK_URL = process.env.NEXT_PUBLIC_NOTIFICATION_FALLBACK_WEBHOOK || "";
 const FUNNEL_STORAGE_KEY = "portfolio_funnel_stats_v1";
 const COOLDOWN_PREFIX = "portfolio_cooldown_";
+const LOG_QUEUE_STORAGE_KEY = "portfolio_remote_log_queue_v1";
+const LOG_MAX_RETRIES = 5;
+
+type QueuedLogItem = {
+  id: string;
+  eventType: string;
+  payload: Record<string, unknown>;
+  timestamp: string;
+  retries: number;
+  nextAttemptAt: number;
+};
+
+let isFlushingRemoteLogs = false;
+let listenersBound = false;
 
 const defaultStats: FunnelStats = {
   site_visit: 0,
@@ -76,30 +92,145 @@ const defaultStats: FunnelStats = {
   section_view_trust: 0,
   section_view_experience: 0,
   section_view_projects: 0,
+  section_view_case_studies: 0,
   section_view_services: 0,
   section_view_contact: 0,
+  section_view_faq: 0,
   section_view_certifications: 0,
 };
 
 const canUseStorage = (): boolean => typeof window !== "undefined" && Boolean(window.localStorage);
 
+const loadQueuedLogs = (): QueuedLogItem[] => {
+  if (!canUseStorage()) return [];
+
+  try {
+    const raw = window.localStorage.getItem(LOG_QUEUE_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as QueuedLogItem[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveQueuedLogs = (items: QueuedLogItem[]): void => {
+  if (!canUseStorage()) return;
+
+  try {
+    window.localStorage.setItem(LOG_QUEUE_STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Ignore queue persistence issues.
+  }
+};
+
+const flushRemoteLogQueue = async (): Promise<void> => {
+  if (!LOG_INGEST_URL || isFlushingRemoteLogs || !canUseStorage()) return;
+  if (typeof navigator !== "undefined" && navigator.onLine === false) return;
+
+  isFlushingRemoteLogs = true;
+
+  try {
+    const now = Date.now();
+    const queued = loadQueuedLogs();
+    if (!queued.length) return;
+
+    const keep: QueuedLogItem[] = [];
+
+    for (const item of queued) {
+      if (item.nextAttemptAt > now) {
+        keep.push(item);
+        continue;
+      }
+
+      try {
+        const response = await fetch(LOG_INGEST_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventType: item.eventType,
+            timestamp: item.timestamp,
+            payload: item.payload,
+          }),
+          keepalive: true,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch {
+        const retries = item.retries + 1;
+        if (retries > LOG_MAX_RETRIES) {
+          continue;
+        }
+
+        keep.push({
+          ...item,
+          retries,
+          nextAttemptAt: now + Math.min(60_000, Math.pow(2, retries) * 1000),
+        });
+      }
+    }
+
+    saveQueuedLogs(keep);
+  } finally {
+    isFlushingRemoteLogs = false;
+  }
+};
+
+const ensureRemoteLogListeners = (): void => {
+  if (!canUseStorage() || listenersBound) return;
+
+  listenersBound = true;
+
+  window.addEventListener("online", () => {
+    void flushRemoteLogQueue();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      void flushRemoteLogQueue();
+    }
+  });
+};
+
 const postRemoteLog = async (eventType: string, payload: Record<string, unknown>): Promise<void> => {
   if (!LOG_INGEST_URL) return;
 
-  try {
-    await fetch(LOG_INGEST_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        eventType,
-        timestamp: new Date().toISOString(),
-        payload,
-      }),
-      keepalive: true,
-    });
-  } catch {
-    // Logging failures should remain silent.
+  if (!canUseStorage()) {
+    try {
+      await fetch(LOG_INGEST_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventType,
+          timestamp: new Date().toISOString(),
+          payload,
+        }),
+        keepalive: true,
+      });
+    } catch {
+      // Logging failures should remain silent.
+    }
+    return;
   }
+
+  ensureRemoteLogListeners();
+
+  const queue = loadQueuedLogs();
+  queue.push({
+    id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+    eventType,
+    payload,
+    timestamp: new Date().toISOString(),
+    retries: 0,
+    nextAttemptAt: Date.now(),
+  });
+  saveQueuedLogs(queue);
+
+  void flushRemoteLogQueue();
+
+  return;
 };
 
 const sendTelegramNotification = async (message: string): Promise<void> => {

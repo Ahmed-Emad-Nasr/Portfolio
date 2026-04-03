@@ -8,6 +8,7 @@
 
 import { memo, useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faPhone, faLocationDot, faPaperPlane, faSpinner, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faWhatsapp, faXTwitter, faInstagram, faTelegram } from "@fortawesome/free-brands-svg-icons";
@@ -15,11 +16,15 @@ import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
-import TurnstileWidget from "@/app/core/components/TurnstileWidget";
 import { trackEvent } from "@/app/core/utils/analytics";
 import { isActionAllowed, recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
 import { showToast } from "@/app/core/utils/toast";
 import { contactBudgetOptions, contactServiceOptions, contactTimelineOptions } from "@/app/core/data";
+
+const TurnstileWidget = dynamic(() => import("@/app/core/components/TurnstileWidget"), {
+  ssr: false,
+  loading: () => <div style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.95rem" }}>Loading security check...</div>,
+});
 
 const CONTACT_INFO_DESCRIPTION = "Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
@@ -111,7 +116,7 @@ const SenseiContact = memo(function SenseiContact() {
 
       if (!isActionAllowed("contact_submit", 30_000)) {
         trackEvent("contact_submit_failed", { reason: "rate_limited" });
-        showToast({ type: "error", message: "Please wait a bit before sending another message." });
+        showToast({ type: "error", message: "You sent a message recently. Please wait 30 seconds and try again." });
         setSubmitError(true);
         messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
         setIsSubmitting(false);
@@ -134,7 +139,7 @@ const SenseiContact = memo(function SenseiContact() {
 
       if (TURNSTILE_SITE_KEY && !turnstileToken) {
         trackEvent("contact_submit_failed", { reason: "turnstile_missing" });
-        showToast({ type: "error", message: "Please complete the security check first." });
+        showToast({ type: "error", message: "Security check is required. Complete it, then submit again." });
         setSubmitError(true);
         messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
         setIsSubmitting(false);
@@ -146,7 +151,7 @@ const SenseiContact = memo(function SenseiContact() {
       }
 
       // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(String(email))) {
         trackEvent("contact_submit_failed", { reason: "invalid_email" });
         showToast({ type: "error", message: "Please enter a valid email address." });
@@ -212,21 +217,22 @@ const SenseiContact = memo(function SenseiContact() {
       if (error instanceof Error) {
         if (error.name === "AbortError") {
           console.error("Form submission timeout or cancelled");
+          showToast({ type: "error", message: "Request timed out. Please check your connection and retry." });
         } else {
           console.error("Form submission error:", error.message);
+          showToast({ type: "error", message: "Network issue while sending. Please retry or use WhatsApp/Email quick contact." });
         }
       }
       trackEvent("contact_submit_failed", {
         reason: error instanceof Error ? error.name : "unknown_error",
       });
-      showToast({ type: "error", message: "Failed to send message. Please try again." });
       setSubmitError(true);
       messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
     } finally {
       clearTimeout(abortTimeoutId);
       setIsSubmitting(false);
     }
-  }, [router, turnstileToken]);
+  }, [router, turnstileToken, setValidationErrors]);
 
   useEffect(() => {
     const handlePotentialAbandon = () => {

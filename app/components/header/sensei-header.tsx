@@ -88,18 +88,22 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   const navLinks = useMemo(
     () =>
-      Object.entries(sectionIcons).map(([section, icon]) => (
-        <a
-          key={section}
-          href={`#${section}`}
-          className={activeSection === section ? ACTIVE_CLASS : undefined}
-          onClick={(event) => handleNavLinkClick(section, event)}
-          aria-current={activeSection === section ? "page" : undefined}
-        >
-          <FontAwesomeIcon icon={icon} aria-hidden="true" />
-          <span className={styles.navText}>{section}</span>
-        </a>
-      )),
+      Object.entries(sectionIcons).map(([section, icon]) => {
+        const navLabel = section.replace(/([a-z])([A-Z])/g, "$1 $2");
+
+        return (
+          <a
+            key={section}
+            href={`#${section}`}
+            className={activeSection === section ? ACTIVE_CLASS : undefined}
+            onClick={(event) => handleNavLinkClick(section, event)}
+            aria-current={activeSection === section ? "page" : undefined}
+          >
+            <FontAwesomeIcon icon={icon} aria-hidden="true" />
+            <span className={styles.navText}>{navLabel}</span>
+          </a>
+        );
+      }),
     [sectionIcons, activeSection, handleNavLinkClick]
   );
 

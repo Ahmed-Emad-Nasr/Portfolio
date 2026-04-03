@@ -1,0 +1,323 @@
+/* Case studies section styles */
+.section {
+  min-height: 100vh;
+  padding: 8rem 0 6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 6%;
+  max-width: 1550px;
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 6rem;
+}
+
+.title {
+  position: relative;
+  font-weight: 800;
+  font-size: 3.5rem;
+  color: var(--text-color);
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3);
+  display: inline-block;
+  padding-bottom: 2rem;
+}
+
+.title::before,
+.title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+}
+
+.title::before {
+  width: 120%;
+  height: 2px;
+  background: rgba(var(--main-color-rgb), 0.2);
+}
+
+.title::after {
+  width: 50%;
+  height: 4px;
+  background: var(--main-color);
+  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.6);
+}
+
+.lead {
+  max-width: 72rem;
+  margin: 1rem auto 0;
+  color: rgba(240, 247, 255, 0.9);
+  font-size: 1.58rem;
+  line-height: 1.85;
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.2rem;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.9), rgba(9, 9, 9, 0.82));
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
+  border-radius: 22px;
+  padding: 2.2rem 2rem;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(var(--main-color-rgb), 0.45);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
+  transform: translateY(-4px);
+}
+
+.domain {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.45);
+  background: rgba(var(--main-color-rgb), 0.08);
+  padding: 0.28rem 0.85rem;
+  font-size: 1.05rem;
+  color: rgba(233, 241, 250, 0.9);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.card h3 {
+  margin: 0 0 1rem;
+  font-size: 1.85rem;
+  color: rgba(240, 247, 255, 0.96);
+}
+
+.card p {
+  margin: 0 0 0.7rem;
+  line-height: 1.72;
+  color: rgba(233, 241, 250, 0.84);
+  font-size: 1.42rem;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.evidenceBlock {
+  margin-top: 3rem;
+}
+
+.evidenceTitle {
+  margin: 0;
+  font-size: 2.1rem;
+  color: rgba(240, 247, 255, 0.96);
+}
+
+.evidenceLead {
+  margin: 0.6rem 0 1.3rem;
+  color: rgba(233, 241, 250, 0.82);
+  font-size: 1.5rem;
+}
+
+.evidenceFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 0 0 0.9rem;
+}
+
+.evidenceFilterBtn {
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(233, 241, 250, 0.9);
+  padding: 0.42rem 0.95rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.evidenceFilterBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--main-color-rgb), 0.55);
+}
+
+.activeFilter {
+  background: rgba(var(--main-color-rgb), 0.9);
+  color: var(--bg-color);
+  border-color: rgba(var(--main-color-rgb), 0.95);
+}
+
+.evidenceCount {
+  margin: 0 0 1rem;
+  color: rgba(233, 241, 250, 0.74);
+  font-size: 1.28rem;
+}
+
+.evidenceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.evidenceCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  border-radius: 14px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.25rem;
+  color: rgba(233, 241, 250, 0.9);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.evidenceCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--main-color-rgb), 0.45);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.evidenceType {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.4);
+  padding: 0.22rem 0.72rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.evidenceCard strong {
+  font-size: 1.65rem;
+  line-height: 1.5;
+}
+
+.evidenceCard small {
+  color: rgba(233, 241, 250, 0.72);
+  font-size: 1.28rem;
+}
+
+.faqBlock {
+  margin-top: 3rem;
+}
+
+.faqTitle {
+  margin: 0;
+  font-size: 2.1rem;
+  color: rgba(240, 247, 255, 0.96);
+}
+
+.faqLead {
+  margin: 0.6rem 0 1.3rem;
+  color: rgba(233, 241, 250, 0.82);
+  font-size: 1.5rem;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.faqCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+
+.faqCategory {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.4);
+  padding: 0.2rem 0.7rem;
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+
+.faqCard h4 {
+  margin: 0 0 0.6rem;
+  font-size: 1.62rem;
+  line-height: 1.55;
+}
+
+.faqCard p {
+  margin: 0;
+  color: rgba(233, 241, 250, 0.82);
+  font-size: 1.42rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 991px) {
+  .container {
+    padding: 0 4%;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.6rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .container {
+    padding: 0 1.2rem;
+  }
+
+  .lead {
+    font-size: 1.42rem;
+    line-height: 1.7;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  .card {
+    padding: 1.8rem 1.4rem;
+    border-radius: 1.6rem;
+  }
+
+  .evidenceCard strong,
+  .faqCard h4 {
+    font-size: 1.5rem;
+  }
+
+  .evidenceCard small,
+  .faqCard p {
+    font-size: 1.3rem;
+  }
+
+  .evidenceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .evidenceFilters {
+    gap: 0.5rem;
+  }
+
+  .evidenceFilterBtn {
+    font-size: 1.12rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .faqGrid {
+    grid-template-columns: 1fr;
+  }
+}
