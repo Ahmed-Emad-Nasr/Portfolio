@@ -46,7 +46,16 @@ const SenseiHeader = memo(function SenseiHeader() {
         const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
         window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
       } else {
-        window.location.hash = section;
+        const path = window.location.pathname;
+        const scopePrefix = path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
+        const homePath = `${scopePrefix}/`;
+
+        if (path !== homePath && path !== scopePrefix) {
+          window.location.assign(`${homePath}#${section}`);
+          return;
+        }
+
+        window.location.hash = `#${section}`;
       }
 
       // Wrapped in try-catch for private browsing mode & cross-origin restrictions

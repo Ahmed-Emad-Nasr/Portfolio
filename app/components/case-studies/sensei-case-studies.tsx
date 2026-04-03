@@ -10,6 +10,20 @@ type EvidenceFilter = "All" | "LetsDefend" | "Simulation" | "Training";
 
 const EVIDENCE_FILTERS: EvidenceFilter[] = ["All", "LetsDefend", "Simulation", "Training"];
 
+const resolveEvidenceHref = (href: string): string => {
+  if (typeof window === "undefined") return href;
+  if (/^https?:\/\//i.test(href)) return href;
+
+  const path = window.location.pathname;
+  const scopePrefix = path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
+
+  if (href.startsWith("/")) {
+    return `${scopePrefix}${href}`;
+  }
+
+  return `${scopePrefix}/${href}`;
+};
+
 const SenseiCaseStudies = memo(function SenseiCaseStudies() {
   const [activeEvidenceFilter, setActiveEvidenceFilter] = useState<EvidenceFilter>("All");
 
@@ -77,7 +91,7 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
               <a
                 key={item.id}
                 className={styles.evidenceCard}
-                href={item.href}
+                href={resolveEvidenceHref(item.href)}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Open ${item.title} (${item.type})`}
