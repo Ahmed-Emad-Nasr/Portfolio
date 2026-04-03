@@ -36,7 +36,14 @@ const SenseiHeader = memo(function SenseiHeader() {
   const scrollToSection = useCallback((section: string): void => {
     const target = document.getElementById(section);
     if (target) {
-      target.scrollIntoView({ behavior: "auto", block: "start" });
+      const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
+      const headerRect = headerElement?.getBoundingClientRect();
+      const computedTop = headerElement ? Number.parseFloat(window.getComputedStyle(headerElement).top || "0") : 0;
+      const headerHeight = headerRect?.height ?? 0;
+      const offset = headerHeight + (Number.isFinite(computedTop) ? computedTop : 0) + 10;
+      const targetTop = window.scrollY + target.getBoundingClientRect().top - offset;
+
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
     }
   }, []);
 
@@ -44,10 +51,17 @@ const SenseiHeader = memo(function SenseiHeader() {
     (section: string, event?: MouseEvent<HTMLAnchorElement>) => {
       event?.preventDefault();
       setActiveSection(section);
-      scrollToSection(section);
+
       if (window.innerWidth <= 994) {
         setIsMenuOpen(false);
+        // Wait a frame so body overflow lock is released before scrolling.
+        window.requestAnimationFrame(() => {
+          scrollToSection(section);
+        });
+        return;
       }
+
+      scrollToSection(section);
     },
     [scrollToSection, setActiveSection, setIsMenuOpen]
   );

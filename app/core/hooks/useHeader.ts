@@ -62,8 +62,11 @@ export const useHeader = () => {
         window.requestAnimationFrame(() => {
           const isMobile = window.innerWidth <= 994;
           const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
-          const headerHeight = headerElement?.getBoundingClientRect().height ?? (isMobile ? 64 : 76);
-          const marker = Math.max(72, Math.round(headerHeight + (isMobile ? 10 : 14)));
+          const headerRect = headerElement?.getBoundingClientRect();
+          const headerHeight = headerRect?.height ?? (isMobile ? 64 : 76);
+          const headerTop = headerElement ? Number.parseFloat(window.getComputedStyle(headerElement).top || "0") : 0;
+          const topOffset = Number.isFinite(headerTop) ? headerTop : 0;
+          const marker = Math.max(72, Math.round(topOffset + headerHeight + (isMobile ? 8 : 12)));
           let current = "Home";
           let smallestDistance = Number.POSITIVE_INFINITY;
 

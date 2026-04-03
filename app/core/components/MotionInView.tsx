@@ -16,13 +16,8 @@ type MotionInViewProps = MotionProps & {
   triggerOnce?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-// [OPT-8] Hoist the static viewport config object outside the component.
-//         Previously a new object literal `{ once, amount }` was allocated on
-//         every render; for the default (triggerOnce=true, threshold=0.1) case
-//         this is now a single shared reference — zero heap allocation per render.
-const DEFAULT_VIEWPORT: MotionProps["viewport"] = { once: true, amount: 0.1 };
-const MAX_REVEAL_DURATION = 0.16;
-const MAX_REVEAL_DELAY = 0.08;
+const MAX_REVEAL_DURATION = 0.28;
+const MAX_REVEAL_DELAY = 0.12;
 
 const softenTransition = (
   transition: MotionProps["transition"] | undefined,
@@ -47,8 +42,8 @@ const softenTransition = (
 const MotionInView = memo<MotionInViewProps>(({
   children,
   className,
-  threshold = 0.1,
-  triggerOnce = true,
+  threshold: _threshold = 0.1,
+  triggerOnce: _triggerOnce = true,
   ...rest
 }) => {
   const {
@@ -62,24 +57,18 @@ const MotionInView = memo<MotionInViewProps>(({
     ...motionRest
   } = rest;
   const shouldReduceMotion = useReducedMotion();
-
-  // [OPT-9] Only allocate a new viewport object when the caller passes non-default
-  //         values. The common path (defaults) reuses the stable reference above,
-  //         which also prevents Framer Motion from running its internal viewport
-  //         equality check unnecessarily.
-  const viewport: MotionProps["viewport"] =
-    triggerOnce === true && threshold === 0.1
-      ? DEFAULT_VIEWPORT
-      : { once: triggerOnce, amount: threshold };
+  const resolvedTransition = softenTransition(transition as MotionProps["transition"]) ?? {
+    duration: 0.24,
+    ease: [0.22, 1, 0.36, 1],
+  };
 
   return (
-    // Keep reveal animations lightweight and consistent across sections.
+    // Use mount fade so late-loaded sections still animate reliably.
     <motion.div
       className={className}
       initial={shouldReduceMotion ? false : { opacity: 0 }}
-      whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
-      viewport={viewport}
-      transition={softenTransition(transition as MotionProps["transition"])}
+      animate={shouldReduceMotion ? undefined : { opacity: 1 }}
+      transition={resolvedTransition}
       style={{ ...(style as React.CSSProperties), willChange: "opacity" }}
       {...motionRest}
     >
