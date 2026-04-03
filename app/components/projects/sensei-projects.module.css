@@ -106,6 +106,30 @@
   background: rgba(var(--main-color-rgb), 0.05);
 }
 
+.refresh-btn {
+  min-height: 42px;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.35);
+  background: rgba(var(--main-color-rgb), 0.1);
+  color: var(--text-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(var(--main-color-rgb), 0.18);
+  border-color: rgba(var(--main-color-rgb), 0.55);
+}
+
+.refresh-btn:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 2px;
+}
+
 /* --- The Cards --- */
 .single-project {
   background: linear-gradient(180deg, rgba(15, 15, 15, 0.9), rgba(9, 9, 9, 0.82)); border: 1px solid rgba(var(--main-color-rgb), 0.18); border-radius: 25px; padding: 3rem 2.5rem; text-align: left;

@@ -74,7 +74,7 @@ select:focus-visible {
 html {
   font-size: 62.5%;
   overflow-x: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 11rem;
   scroll-padding-left: 0;
   scroll-padding-right: 0;

@@ -200,7 +200,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
 ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
-  const { repos, isLoading, source, loadError, cacheUpdatedAt } = useGitHubRepos();
+  const { repos, isLoading, source, loadError, cacheUpdatedAt, refresh } = useGitHubRepos();
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
   const filterCounts = useMemo(() => getFilterCounts(repos), [repos]);
 
@@ -251,6 +251,16 @@ const SenseiProjects = memo(function SenseiProjects() {
             {source === "cache" ? " Showing cached repositories." : ""}
             {source === "static" ? " Showing curated fallback projects." : ""}
           </span>
+          {!isLoading ? (
+            <button
+              type="button"
+              className={styles["refresh-btn"]}
+              onClick={refresh}
+              aria-label="Refresh project data from GitHub"
+            >
+              Refresh data
+            </button>
+          ) : null}
         </div>
         {loadError ? <p className={styles["empty-state-hint"]}>{loadError}</p> : null}
         {source === "cache" && cacheLabel ? (

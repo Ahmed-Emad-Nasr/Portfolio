@@ -46,13 +46,21 @@ const softenTransition = (
 
 const MotionInView = memo<MotionInViewProps>(({
   children,
-  variants,
   className,
   threshold = 0.1,
   triggerOnce = true,
   ...rest
 }) => {
-  const { transition, ...motionRest } = rest;
+  const {
+    transition,
+    style,
+    initial: _initial,
+    whileInView: _whileInView,
+    animate: _animate,
+    exit: _exit,
+    variants: _variants,
+    ...motionRest
+  } = rest;
   const shouldReduceMotion = useReducedMotion();
 
   // [OPT-9] Only allocate a new viewport object when the caller passes non-default
@@ -65,19 +73,14 @@ const MotionInView = memo<MotionInViewProps>(({
       : { once: triggerOnce, amount: threshold };
 
   return (
-    // [OPT-10] Add `style={{ willChange: "opacity, transform" }}` so the browser
-    //          promotes this element to its own compositor layer before the
-    //          animation fires. Framer Motion animates opacity/transform by
-    //          default, so this makes those GPU-composited from the start and
-    //          avoids a mid-animation layer-promotion jank.
+    // Keep reveal animations lightweight and consistent across sections.
     <motion.div
       className={className}
-      initial={shouldReduceMotion ? false : "hidden"}
-      whileInView={shouldReduceMotion ? undefined : "visible"}
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
       viewport={viewport}
-      variants={variants}
       transition={softenTransition(transition as MotionProps["transition"])}
-      style={{ willChange: "opacity, transform" }}
+      style={{ ...(style as React.CSSProperties), willChange: "opacity" }}
       {...motionRest}
     >
       {children}
