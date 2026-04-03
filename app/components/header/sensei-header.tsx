@@ -33,34 +33,23 @@ const SenseiHeader = memo(function SenseiHeader() {
     };
   }, [isMenuOpen]);
 
+  const scrollToSection = useCallback((section: string): void => {
+    const target = document.getElementById(section);
+    if (target) {
+      target.scrollIntoView({ behavior: "auto", block: "start" });
+    }
+  }, []);
+
   const handleNavLinkClick = useCallback(
     (section: string, event?: MouseEvent<HTMLAnchorElement>) => {
       event?.preventDefault();
       setActiveSection(section);
-
-      const path = window.location.pathname;
-      const scopePrefix = path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
-      const homePath = `${scopePrefix}/`;
-
-      if (path !== homePath && path !== scopePrefix) {
-        window.location.assign(`${homePath}#${section}`);
-        return;
-      }
-
-      window.location.hash = `#${section}`;
-
-      // Wrapped in try-catch for private browsing mode & cross-origin restrictions
-      try {
-        localStorage.setItem("activeSection", section);
-      } catch (e) {
-        // localStorage is not available (private browsing, cross-origin iframe, etc.); silently ignore
-        void e;
-      }
+      scrollToSection(section);
       if (window.innerWidth <= 994) {
         setIsMenuOpen(false);
       }
     },
-    [setActiveSection, setIsMenuOpen]
+    [scrollToSection, setActiveSection, setIsMenuOpen]
   );
 
   // Keep keyboard behavior predictable: Escape closes mobile menu.
