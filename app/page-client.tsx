@@ -16,6 +16,7 @@ import ServicesSection from "@/app/components/services/sensei-services-projects"
 import ExperienceSection from "@/app/components/experience/experience-section";
 import ProjectsSection from "@/app/components/projects/sensei-projects";
 import CaseStudiesSection from "@/app/components/case-studies/sensei-case-studies";
+import FAQSection from "@/app/components/faq/sensei-faq";
 import ContactSection from "@/app/components/contact/sensei-contact";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
@@ -80,6 +81,9 @@ const MainClient = memo(function MainClient() {
         </ErrorBoundary>
         <ErrorBoundary title="Case studies section">
           <CaseStudiesSection />
+        </ErrorBoundary>
+        <ErrorBoundary title="FAQ section">
+          <FAQSection />
         </ErrorBoundary>
         <ErrorBoundary title="Services section">
           <ServicesSection />

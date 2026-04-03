@@ -180,10 +180,46 @@
   background: rgba(var(--main-color-rgb), 0.12);
 }
 
+.testimonialsGrid {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.testimonialCard {
+  background: linear-gradient(180deg, rgba(12, 12, 12, 0.84), rgba(8, 8, 8, 0.7));
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
+  border-radius: 1.2rem;
+  padding: 1.5rem 1.3rem;
+  transition: border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
+}
+
+.testimonialCard:hover {
+  border-color: rgba(var(--main-color-rgb), 0.45);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.34);
+  transform: translateY(-2px);
+}
+
+.testimonialQuote {
+  margin: 0;
+  color: rgba(240, 247, 255, 0.9);
+  font-size: 1.3rem;
+  line-height: 1.65;
+}
+
+.testimonialMeta {
+  margin: 0.8rem 0 0;
+  color: rgba(var(--main-color-rgb), 0.88);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
 @media (max-width: 991px) {
   .container { padding: 0 4%; }
   .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .credibility-grid { grid-template-columns: 1fr; }
+  .testimonialsGrid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {

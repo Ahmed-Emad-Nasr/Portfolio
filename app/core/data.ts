@@ -22,6 +22,8 @@ export const knowledgeEducationItems = [
     isRight: true,
     startDate: "2026-01-01",
     showDate: true,
+    skills: ["Incident Response", "Wazuh", "ELK", "Suricata"],
+    certificateUrl: "https://www.depi.gov.eg/",
   },
   {
     tag: "Information Security Analyst Intern",
@@ -32,6 +34,8 @@ export const knowledgeEducationItems = [
     startDate: "2025-06-01",
     endDate: "2025-12-01",
     showDate: true,
+    skills: ["SOC Triage", "YARA", "VirusTotal", "Detection Engineering"],
+    certificateUrl: "https://www.depi.gov.eg/",
   },
   {
     tag: "Volunteer Cybersecurity Instructor & Technical Trainer",
@@ -42,6 +46,8 @@ export const knowledgeEducationItems = [
     startDate: "2024-10-01",
     endDate: "2025-10-01",
     showDate: true,
+    skills: ["Security Training", "Curriculum Design", "Mentoring"],
+    certificateUrl: "https://gdg.community.dev/",
   },
   {
     tag: "Bachelor of Computer Science",
@@ -52,6 +58,8 @@ export const knowledgeEducationItems = [
     startDate: "2022-10-01",
     endDate: "2026-07-01",
     showDate: true,
+    skills: ["DFIR", "Information Security", "CTF", "Digital Forensics"],
+    certificateUrl: "https://www.bu.edu.eg/",
   },
   {
     tag: "Cybertalents Penetration Testing Bootcamp",
@@ -62,6 +70,8 @@ export const knowledgeEducationItems = [
     startDate: "2025-11-01",
     endDate: "2025-12-01",
     showDate: true,
+    skills: ["VAPT", "Web Security", "Exploitation", "Reporting"],
+    certificateUrl: "https://cybertalents.com/",
   },
   {
     tag: "ITI Summer Cybersecurity Program",
@@ -72,6 +82,8 @@ export const knowledgeEducationItems = [
     startDate: "2025-09-01",
     endDate: "2025-11-01",
     showDate: true,
+    skills: ["SOC Simulation", "Alert Correlation", "Incident Triage"],
+    certificateUrl: "https://www.iti.gov.eg/",
   },
   {
     tag: "Introduction to Cybersecurity Bootcamp",
@@ -82,6 +94,8 @@ export const knowledgeEducationItems = [
     startDate: "2024-11-01",
     endDate: "2025-01-01",
     showDate: true,
+    skills: ["Cybersecurity Fundamentals", "Network Security", "Labs"],
+    certificateUrl: "https://cybertalents.com/",
   },
   {
     tag: "HCIA-Cloud Computing V5.0",
@@ -92,6 +106,8 @@ export const knowledgeEducationItems = [
     startDate: "2024-08-01",
     endDate: "2024-09-01",
     showDate: true,
+    skills: ["Cloud Security", "Cloud Networking", "Service Hardening"],
+    certificateUrl: "https://www.huawei.com/minisite/ict-academy/en/",
   },
   {
     tag: "Huawei Routing & Switching Summer Training",
@@ -102,6 +118,8 @@ export const knowledgeEducationItems = [
     startDate: "2023-08-01",
     endDate: "2023-09-01",
     showDate: true,
+    skills: ["Routing", "Switching", "Network Troubleshooting"],
+    certificateUrl: "https://www.huawei.com/",
   },
 ];
 
@@ -138,9 +156,9 @@ export const aboutMeCards = [
   },
   {
     icon: "fa-solid fa-user-shield",
-    title: "Personal Details",
+    title: "Work Preferences",
     description:
-      "Location: Cairo, Egypt • Nationality: Egyptian • Age: 21 • Marital Status: Single • Military Status: Postponed (Student) • Open to relocation and remote work",
+      "Based in Cairo, Egypt • Open to relocation and remote collaborations • Available for project-based engagements and long-term opportunities • Preferred communication: Email, LinkedIn, and WhatsApp",
   }
 ];
 
@@ -190,6 +208,24 @@ export const trustCertifications = [
   "CCNA 200-301",
 ];
 
+export const trustTestimonials = [
+  {
+    quote: "Ahmed helped us reduce noisy detections and made our SOC triage flow much clearer.",
+    role: "Blue Team Lead",
+    context: "SOC Alert Tuning Sprint",
+  },
+  {
+    quote: "Sessions were practical and structured. Our team improved lab outcomes in a short time.",
+    role: "Training Coordinator",
+    context: "Security Training Program",
+  },
+  {
+    quote: "Strong investigation mindset with clear reporting and actionable recommendations.",
+    role: "Incident Response Mentor",
+    context: "DFIR Mentorship",
+  },
+] as const;
+
 export const serviceCatalog = [
   {
     slug: "soc-analysis",
@@ -199,6 +235,8 @@ export const serviceCatalog = [
       "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.",
     outcome: "Prioritized alert report and investigation notes within 24h",
     from: "$300",
+    estimatedDays: "2-4 business days",
+    relatedServices: ["siem-edr-implementation", "incident-response"],
     deliverables: [
       "Alert triage workbook with severity ranking",
       "Detection quality review and false-positive hotspots",
@@ -213,6 +251,8 @@ export const serviceCatalog = [
       "End-to-end incident response lifecycle management. Perform threat hunting, containment, eradication, and recovery. Execute incident response playbooks using best practices and frameworks.",
     outcome: "Actionable response plan and incident timeline",
     from: "$450",
+    estimatedDays: "3-6 business days",
+    relatedServices: ["soc-analysis", "threat-hunting"],
     deliverables: [
       "Incident timeline and attack narrative",
       "Containment and eradication checklist",
@@ -227,6 +267,8 @@ export const serviceCatalog = [
       "Proactive threat hunting using YARA rules, Suricata IDS/IPS, and behavioral analysis. Create custom detection signatures, reduce false positive alerts, and strengthen security posture.",
     outcome: "Custom detection rules and tuning package",
     from: "$400",
+    estimatedDays: "3-5 business days",
+    relatedServices: ["soc-analysis", "malware-analysis"],
     deliverables: [
       "Hypothesis-driven hunting report",
       "Detection logic pack (queries, signatures, conditions)",
@@ -241,6 +283,8 @@ export const serviceCatalog = [
       "Deploy and configure enterprise-grade SIEM solutions including ELK Stack and Splunk. Implement EDR tools like Wazuh for endpoint detection and response capabilities.",
     outcome: "Monitored pipeline with validated detections",
     from: "$600",
+    estimatedDays: "5-10 business days",
+    relatedServices: ["soc-analysis", "threat-hunting"],
     deliverables: [
       "SIEM/EDR deployment checklist and architecture notes",
       "Core detection rules for high-priority threats",
@@ -255,6 +299,8 @@ export const serviceCatalog = [
       "Comprehensive log analysis, IOC extraction, and digital forensics investigations. Perform memory forensics, malware behavioral analysis, and evidence collection for incident investigations.",
     outcome: "Forensic findings with IOC package",
     from: "$500",
+    estimatedDays: "4-7 business days",
+    relatedServices: ["incident-response", "malware-analysis"],
     deliverables: [
       "Evidence timeline and IOC extraction sheet",
       "Root cause analysis summary",
@@ -269,6 +315,8 @@ export const serviceCatalog = [
       "Identify security weaknesses through systematic vulnerability assessments. Conduct authorized penetration testing, create detailed reports, and recommend remediation strategies.",
     outcome: "Remediation roadmap with severity ranking",
     from: "$700",
+    estimatedDays: "5-9 business days",
+    relatedServices: ["log-analysis-forensics", "incident-response"],
     deliverables: [
       "Executive risk summary",
       "Technical findings with proof of concept",
@@ -283,6 +331,8 @@ export const serviceCatalog = [
       "Deliver comprehensive cybersecurity training programs to technical and non-technical audiences. Build security awareness, improve incident response skills, and foster security culture.",
     outcome: "Workshop deck, labs, and attendance report",
     from: "$250",
+    estimatedDays: "1-3 business days",
+    relatedServices: ["soc-analysis", "threat-hunting"],
     deliverables: [
       "Customized learning path and session plan",
       "Hands-on labs and challenge exercises",
@@ -297,6 +347,8 @@ export const serviceCatalog = [
       "Perform static and dynamic malware analysis in isolated environments. Extract indicators of compromise (IOCs), develop detection signatures, and implement prevention strategies using YARA rules.",
     outcome: "Malware behavior report and detection artifacts",
     from: "$450",
+    estimatedDays: "3-6 business days",
+    relatedServices: ["log-analysis-forensics", "threat-hunting"],
     deliverables: [
       "Behavior profile and persistence map",
       "IOC bundle for SIEM/EDR ingestion",
@@ -304,6 +356,14 @@ export const serviceCatalog = [
     ],
   },
 ] as const;
+
+export const serviceResponseSla: Record<string, string> = {
+  "SOC monitoring support": "Replies in 2-6 hours during Cairo business hours.",
+  "Incident response assistance": "Urgent triage reply in 1-3 hours.",
+  "Threat hunting engagement": "Replies in 4-8 hours with scope checklist.",
+  "Security training workshop": "Replies within 24 hours with session options.",
+  "General consultation": "Replies within 24 hours.",
+};
 
 export const projectBullets: Record<string, string[]> = {
   "insider-threat-detection-deception": [
@@ -443,7 +503,7 @@ export const caseEvidenceLibrary = [
     title: "SOC274 Incident Report",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
-    href: "Assets/Cases/SOC274/AhmedEmad_SOC247.pdf",
+    href: "Assets/Cases/SOC274/AhmedEmad_SOC274.pdf",
   },
   {
     id: "soc326-report",

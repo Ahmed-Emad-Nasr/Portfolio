@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import styles from "./mobile-quick-actions.module.css";
@@ -11,6 +11,18 @@ function scrollToTop() {
 }
 
 const MobileQuickActions = memo(function MobileQuickActions() {
+  const [isCallLocked, setIsCallLocked] = useState(false);
+
+  const handleBookCallClick = () => {
+    if (isCallLocked) {
+      return;
+    }
+
+    setIsCallLocked(true);
+    trackEvent("cta_click", { source: "mobile_quick_actions", action: "book_call", destination: "whatsapp" });
+    window.setTimeout(() => setIsCallLocked(false), 1000);
+  };
+
   return (
     <div className={styles.wrap}>
       <a
@@ -19,7 +31,7 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Book a quick call on WhatsApp"
-        onClick={() => trackEvent("cta_click", { source: "mobile_quick_actions", action: "book_call", destination: "whatsapp" })}
+        onClick={handleBookCallClick}
       >
         <FontAwesomeIcon icon={faPhoneVolume} />
         Book Call
@@ -33,7 +45,7 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         onClick={() => trackEvent("cta_click", { source: "mobile_quick_actions", action: "download_cv", destination: "cv_pdf" })}
       >
         <FontAwesomeIcon icon={faFilePdf} />
-        CV
+        Open CV
       </a>
       <button
         type="button"

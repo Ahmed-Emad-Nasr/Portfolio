@@ -6,7 +6,7 @@
  * Purpose: Render services section cards with scroll-based reveal animations
  */
 
-import { memo } from "react";
+import { memo, useMemo, useState } from "react";
 import Link from "next/link";
 import styles from "./sensei-services-projects.module.css";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
@@ -35,9 +35,23 @@ type ServiceItemProps = {
   outcome: string;
   from: string;
   slug: string;
+  estimatedDays: string;
+  relatedServices: readonly string[];
+  titleBySlug: Record<string, string>;
 };
 
-const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, outcome, from, slug }) => {
+type ServiceViewMode = "cards" | "table";
+
+const getComplexity = (from: string, estimatedDays: string): "Low" | "Medium" | "High" => {
+  const numericFrom = Number(from.replace(/[^0-9]/g, ""));
+  const maxDays = Number(estimatedDays.split("-")[1]?.replace(/[^0-9]/g, "") ?? estimatedDays.replace(/[^0-9]/g, ""));
+
+  if (numericFrom >= 600 || maxDays >= 8) return "High";
+  if (numericFrom >= 400 || maxDays >= 5) return "Medium";
+  return "Low";
+};
+
+const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, outcome, from, slug, estimatedDays, relatedServices, titleBySlug }) => {
   const descriptionBullets = toBulletItems(description);
 
   return (
@@ -55,7 +69,17 @@ const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, outcome,
         <div className={styles.serviceMetaRow}>
           <span className={styles.outcomeTag}>Deliverable: {outcome}</span>
           <span className={styles.priceTag}>From {from}</span>
+          <span className={styles.timelineTag}>Typical: {estimatedDays}</span>
         </div>
+        {relatedServices.length > 0 ? (
+          <div className={styles.relatedRow} aria-label="Related services">
+            {relatedServices.map((relatedSlug) => (
+              <Link key={`${slug}-${relatedSlug}`} href={`/services/${relatedSlug}`} className={styles.relatedLink}>
+                {titleBySlug[relatedSlug] ?? relatedSlug}
+              </Link>
+            ))}
+          </div>
+        ) : null}
         <Link
           href={`/services/${slug}`}
           className={styles.detailsBtn}
@@ -74,6 +98,21 @@ const ServiceItem = memo<ServiceItemProps>(({ icon, title, description, outcome,
 ServiceItem.displayName = "ServiceItem";
 
 function SenseiServicesProjects() {
+  const [viewMode, setViewMode] = useState<ServiceViewMode>("cards");
+
+  const titleBySlug = serviceCatalog.reduce<Record<string, string>>((acc, item) => {
+    acc[item.slug] = item.title;
+    return acc;
+  }, {});
+
+  const tableRows = useMemo(() => {
+    return serviceCatalog.map((service) => ({
+      ...service,
+      complexity: getComplexity(service.from, service.estimatedDays),
+      deliverablesCount: service.deliverables.length,
+    }));
+  }, []);
+
   return (
     <section className={styles["section-services"]} id="Services">
       <div className={styles.container}>
@@ -83,28 +122,89 @@ function SenseiServicesProjects() {
         >
           <h2 className={styles.title}><span lang="ja">事業 •</span><span lang="en"> Services</span></h2>
           <p className={styles.sectionLead}>Clear service paths, measurable outcomes, and direct next steps.</p>
+          <div className={styles.viewModeToggle} role="group" aria-label="Services view mode">
+            <button
+              type="button"
+              className={`${styles.viewModeBtn} ${viewMode === "cards" ? styles.activeViewMode : ""}`}
+              aria-pressed={viewMode === "cards"}
+              onClick={() => setViewMode("cards")}
+            >
+              Cards
+            </button>
+            <button
+              type="button"
+              className={`${styles.viewModeBtn} ${viewMode === "table" ? styles.activeViewMode : ""}`}
+              aria-pressed={viewMode === "table"}
+              onClick={() => setViewMode("table")}
+            >
+              Comparison Table
+            </button>
+          </div>
         </MotionInView>
-        <div className={styles["grid-container"]}>
-          {serviceCatalog.length > 0 ? (
-            serviceCatalog.map((service, index) => (
-              <MotionInView
-                key={service.slug}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.18, delay: Math.min(index * 0.04, 0.16) }}
-                threshold={0.08}
-                triggerOnce
-              >
-                <ServiceItem {...service} />
-              </MotionInView>
-            ))
-          ) : (
-            <div className={styles.emptyState} aria-live="polite">
-              <p>No services are available right now.</p>
-              <span className={styles.emptyStateHint}>Please check back shortly.</span>
-            </div>
-          )}
-        </div>
+
+        {viewMode === "cards" ? (
+          <div className={styles["grid-container"]}>
+            {serviceCatalog.length > 0 ? (
+              serviceCatalog.map((service, index) => (
+                <MotionInView
+                  key={service.slug}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: Math.min(index * 0.04, 0.16) }}
+                  threshold={0.08}
+                  triggerOnce
+                >
+                  <ServiceItem {...service} titleBySlug={titleBySlug} />
+                </MotionInView>
+              ))
+            ) : (
+              <div className={styles.emptyState} aria-live="polite">
+                <p>No services are available right now.</p>
+                <span className={styles.emptyStateHint}>Please check back shortly.</span>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className={styles.comparisonWrap}>
+            <table className={styles.comparisonTable}>
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>From</th>
+                  <th>Turnaround</th>
+                  <th>Complexity</th>
+                  <th>Deliverables</th>
+                  <th>Outcome</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map((service) => (
+                  <tr key={`table-${service.slug}`}>
+                    <td>{service.title}</td>
+                    <td>{service.from}</td>
+                    <td>{service.estimatedDays}</td>
+                    <td>{service.complexity}</td>
+                    <td>{service.deliverablesCount}</td>
+                    <td>{service.outcome}</td>
+                    <td>
+                      <Link
+                        href={`/services/${service.slug}`}
+                        className={styles.tableLink}
+                        onClick={() => {
+                          trackEvent("service_card_open", { service: service.slug, source: "comparison_table" });
+                          recordFunnelEvent("service_cta_click");
+                        }}
+                      >
+                        Open
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -155,6 +155,14 @@ export default function ServiceDetailsPage({ params }: { params: ServicePagePara
 
   const relatedServices = serviceCatalog.filter((service) => service.slug !== item.slug).slice(0, 3);
 
+  const howToSteps = [
+    `Define service scope and success criteria for ${item.title}.`,
+    "Collect access, context, and baseline telemetry required for delivery.",
+    playbook.approach,
+    ...item.deliverables.map((deliverable) => `Produce and validate: ${deliverable}.`),
+    `Deliver final outcome package: ${item.outcome}.`,
+  ];
+
   const serviceStructuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -216,6 +224,29 @@ export default function ServiceDetailsPage({ params }: { params: ServicePagePara
           },
         })),
       },
+      {
+        "@type": "HowTo",
+        "@id": `https://ahmed-emad-nasr.github.io/Portfolio/services/${item.slug}#howto`,
+        name: `How ${item.title} Engagement Is Delivered`,
+        description: playbook.problem,
+        totalTime: item.estimatedDays.includes("-")
+          ? `P${item.estimatedDays.split("-")[1]?.replace(/[^0-9]/g, "") || "5"}D`
+          : "P5D",
+        step: howToSteps.map((text, index) => ({
+          "@type": "HowToStep",
+          position: index + 1,
+          name: `Step ${index + 1}`,
+          text,
+          url: `https://ahmed-emad-nasr.github.io/Portfolio/services/${item.slug}#step-${index + 1}`,
+        })),
+        tool: [
+          "Wazuh",
+          "ELK Stack",
+          "Splunk",
+          "Suricata",
+          "YARA",
+        ],
+      },
     ],
   };
 
@@ -247,6 +278,11 @@ export default function ServiceDetailsPage({ params }: { params: ServicePagePara
         <section className={styles.card}>
           <h2>How We Deliver</h2>
           <p className={styles.paragraph}>{playbook.approach}</p>
+          <ol className={styles.stepList}>
+            {howToSteps.map((step, index) => (
+              <li key={`${item.slug}-step-${index}`} id={`step-${index + 1}`}>{step}</li>
+            ))}
+          </ol>
         </section>
 
         <section className={styles.card}>

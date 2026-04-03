@@ -13,12 +13,23 @@ import { calculateExperience } from "@/app/core/utils/experienceUtils";
 import { knowledgeEducationItems } from "@/app/core/data";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase, faCertificate } from "@fortawesome/free-solid-svg-icons";
 import MotionInView from "@/app/core/components/MotionInView";
 
-type TimelineItemProps = { tag: string; subTag?: string; subTagHyperlink?: string; desc: string; isRight: boolean; startDate: string; endDate?: string; showDate?: boolean; };
+type TimelineItemProps = {
+  tag: string;
+  subTag?: string;
+  subTagHyperlink?: string;
+  desc: string;
+  isRight: boolean;
+  startDate: string;
+  endDate?: string;
+  showDate?: boolean;
+  skills?: string[];
+  certificateUrl?: string;
+};
 
-const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHyperlink, desc, startDate, endDate, showDate = true }) => {
+const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHyperlink, desc, startDate, endDate, showDate = true, skills = [], certificateUrl }) => {
   const experienceTime = useMemo(() => calculateExperience(startDate, endDate), [startDate, endDate]);
   const descriptionBullets = useMemo(() => toBulletItems(desc), [desc]);
 
@@ -57,11 +68,23 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
               <li key={`${tag}-${index}`}>{item}</li>
             ))}
           </ul>
+          {skills.length > 0 ? (
+            <div className={styles.skillTags} aria-label="Skills used in this experience item">
+              {skills.map((skill) => (
+                <span key={`${tag}-${skill}`} className={styles.skillTag}>{skill}</span>
+              ))}
+            </div>
+          ) : null}
         </div>
         {showDate && (
           <div className={styles["date-details"]}>
             <div className={styles["experience-time"]}><FontAwesomeIcon icon={faClock} aria-hidden="true" /> <span>{experienceTime}</span></div>
             <div className={styles["date-range"]}><FontAwesomeIcon icon={faCalendarAlt} aria-hidden="true" /> <span>{startDate} {endDate ? `- ${endDate}` : "- Present"}</span></div>
+            {certificateUrl ? (
+              <a className={styles.proofLink} href={certificateUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open proof or credential for ${tag}`}>
+                <FontAwesomeIcon icon={faCertificate} aria-hidden="true" /> Proof / Credential
+              </a>
+            ) : null}
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import styles from "./desktop-quick-cta.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,19 @@ function scrollToTop() {
 }
 
 const DesktopQuickCTA = memo(function DesktopQuickCTA() {
+  const [isCallLocked, setIsCallLocked] = useState(false);
+
+  const handleBookCallClick = () => {
+    if (isCallLocked) {
+      return;
+    }
+
+    setIsCallLocked(true);
+    trackEvent("cta_click", { source: "desktop_quick_cta", action: "book_call", destination: "whatsapp" });
+    recordFunnelEvent("service_cta_click");
+    window.setTimeout(() => setIsCallLocked(false), 1000);
+  };
+
   return (
     <aside className={styles.wrap} aria-label="Quick actions">
       <a
@@ -19,10 +32,7 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         target="_blank"
         rel="noopener noreferrer"
         className={`${styles.btn} ${styles.primary}`}
-        onClick={() => {
-          trackEvent("cta_click", { source: "desktop_quick_cta", action: "book_call", destination: "whatsapp" });
-          recordFunnelEvent("service_cta_click");
-        }}
+        onClick={handleBookCallClick}
       >
         <FontAwesomeIcon icon={faPhoneVolume} />
         Book Call

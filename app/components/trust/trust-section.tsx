@@ -4,7 +4,22 @@ import { memo } from "react";
 import styles from "./trust-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
-import { trustAchievements, trustCertifications, trustMetrics, trustTooling } from "@/app/core/data";
+import { trustAchievements, trustCertifications, trustMetrics, trustTestimonials, trustTooling } from "@/app/core/data";
+
+const METRIC_CONTEXT: Record<string, string> = {
+  "LinkedIn Followers": "Audience reach on professional cybersecurity content and updates.",
+  "Simulated SOC Alerts Investigated": "Hands-on SOC triage volume from labs and simulations.",
+  "Cybersecurity Sessions Delivered": "Technical training sessions delivered across communities and cohorts.",
+  "Learners Trained in Security Topics": "People trained through workshops, guided labs, and mentorship.",
+  "SOC / DFIR Trainings & Bootcamps": "Completed training tracks focused on SOC and incident response.",
+  "Validated Vulnerabilities in Labs": "Confirmed security findings in controlled lab environments.",
+  "Average Training Feedback Score": "Average learner feedback score collected after training sessions.",
+  "National University CTF Ranking": "Best ranking achieved in national-level CTF competition.",
+  "Class Rank (InfoSec & DFIR)": "Academic ranking within Information Security and DFIR track.",
+  "Computer Science GPA": "Current GPA in Bachelor of Computer Science program.",
+  "eJPT v2 Score": "Exam result for eJPT v2 practical certification.",
+  "CCNA 200-301 Score": "Exam result for Cisco CCNA 200-301 certification.",
+};
 
 const TrustSection = memo(function TrustSection() {
   return (
@@ -24,7 +39,7 @@ const TrustSection = memo(function TrustSection() {
               threshold={0.12}
               triggerOnce
             >
-              <article className={styles.metricCard}>
+              <article className={styles.metricCard} title={METRIC_CONTEXT[item.label] ?? item.label}>
                 <p className={styles.metricValue}>{item.value}</p>
                 <p className={styles.metricLabel}>{item.label}</p>
               </article>
@@ -88,6 +103,24 @@ const TrustSection = memo(function TrustSection() {
               </div>
             </article>
           </MotionInView>
+        </div>
+
+        <div className={styles.testimonialsGrid}>
+          {trustTestimonials.map((item, index) => (
+            <MotionInView
+              key={`${item.role}-${index}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.1) }}
+              threshold={0.12}
+              triggerOnce
+            >
+              <article className={styles.testimonialCard}>
+                <p className={styles.testimonialQuote}>"{item.quote}"</p>
+                <p className={styles.testimonialMeta}>{item.role} • {item.context}</p>
+              </article>
+            </MotionInView>
+          ))}
         </div>
       </div>
     </section>

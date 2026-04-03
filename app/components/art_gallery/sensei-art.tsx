@@ -17,7 +17,8 @@ import MotionInView from "@/app/core/components/MotionInView";
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
 
 interface GalleryImage { src: string; thumb: string; }
-interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; }
+interface CertificationMeta { title: string; issuer: string; date: string; verifyUrl: string; }
+interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; meta: CertificationMeta; }
 interface GallerySkeletonProps { index: number; }
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -52,9 +53,27 @@ const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
 
-const LIGHTBOX_SLIDES = GALLERY_IMAGES.map((image) => ({ src: image.src }));
+const CERTIFICATION_METADATA: CertificationMeta[] = Array.from({ length: 24 }, (_, index) => ({
+  title: `Certification ${index + 1}`,
+  issuer: "Cybersecurity Program",
+  date: "2024-2026",
+  verifyUrl: "https://www.linkedin.com/in/ahmed-emad-nasr/",
+}));
 
-const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
+CERTIFICATION_METADATA[0] = { title: "eJPT v2", issuer: "INE", date: "2025", verifyUrl: "https://my.ine.com/" };
+CERTIFICATION_METADATA[1] = { title: "CCNA 200-301", issuer: "Cisco", date: "2025", verifyUrl: "https://www.cisco.com/" };
+CERTIFICATION_METADATA[2] = { title: "SOC Analyst Path L1/L2", issuer: "TryHackMe", date: "2025", verifyUrl: "https://tryhackme.com/" };
+CERTIFICATION_METADATA[3] = { title: "DEPI Information Security Analyst", issuer: "DEPI", date: "2025", verifyUrl: "https://www.depi.gov.eg/" };
+CERTIFICATION_METADATA[4] = { title: "HCIA Cloud & Datacom", issuer: "Huawei ICT Academy", date: "2024", verifyUrl: "https://www.huawei.com/minisite/ict-academy/en/" };
+
+const LIGHTBOX_SLIDES = GALLERY_IMAGES.map((image, index) => ({
+  src: image.src,
+  title: CERTIFICATION_METADATA[index]?.title,
+  description: `${CERTIFICATION_METADATA[index]?.issuer} • ${CERTIFICATION_METADATA[index]?.date}`,
+}));
+
+const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
+  const [thumbSrc, setThumbSrc] = useState(image.thumb);
   const handleClick = useCallback(() => setOpen(index), [setOpen, index]);
 
   return (
@@ -66,16 +85,24 @@ const ImageItem = memo(({ image, index, setOpen }: ImageItemProps) => {
         aria-label={`Open certification image ${index + 1}`}
       >
         <Image
-          src={image.thumb}
-          alt={`Certification image ${index + 1}`}
+          src={thumbSrc}
+          alt={`${meta.title} certification by ${meta.issuer}`}
           width={350}
           height={350}
           sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
           loading="lazy"
           quality={75}
           className={styles.galleryImg}
+          onError={() => setThumbSrc("Assets/art-gallery/Images/logo/My_Logo.webp")}
         />
       </button>
+      <div className={styles.metaBlock}>
+        <strong>{meta.title}</strong>
+        <span>{meta.issuer} • {meta.date}</span>
+        <a href={meta.verifyUrl} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()}>
+          Verify
+        </a>
+      </div>
     </motion.div>
   );
 });
@@ -142,7 +169,7 @@ const SenseiArt = memo(function SenseiArt() {
             triggerOnce
           >
             <motion.div className={styles.Gallery} variants={galleryVariants}>
-              {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} />)}
+              {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />)}
             </motion.div>
           </MotionInView>
         ) : null}

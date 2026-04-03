@@ -191,6 +191,19 @@
 .stat-badge { background: rgba(255, 255, 255, 0.04); color: rgba(233, 241, 250, 0.88); border: 1px solid rgba(var(--main-color-rgb), 0.14); }
 .single-project:hover .stat-badge { background: rgba(255, 255, 255, 0.1); color: var(--text-color); }
 
+.difficulty-badge {
+  border-color: rgba(111, 234, 178, 0.35);
+  background: rgba(111, 234, 178, 0.14);
+  color: rgba(209, 252, 232, 0.95);
+  font-weight: 700;
+}
+
+.single-project:hover .difficulty-badge {
+  border-color: rgba(111, 234, 178, 0.52);
+  background: rgba(111, 234, 178, 0.24);
+  color: #d7ffe9;
+}
+
 .topics-container { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: auto; padding-top: 1.5rem; }
 .topic-tag { background: rgba(var(--main-color-rgb), 0.15); color: #111; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 1.1rem; font-weight: 600; transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease; border: 1px solid transparent; }
 .single-project:hover .topic-tag { background: rgba(var(--main-color-rgb), 0.2); color: var(--main-color); border-color: rgba(var(--main-color-rgb), 0.3); }

@@ -4,7 +4,7 @@ import { memo, useMemo, useState } from "react";
 import styles from "./sensei-case-studies.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
-import { caseEvidenceLibrary, caseStudyHighlights, faqItems } from "@/app/core/data";
+import { caseEvidenceLibrary, caseStudyHighlights } from "@/app/core/data";
 
 type EvidenceFilter = "All" | "LetsDefend" | "Simulation" | "Training";
 
@@ -42,7 +42,7 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
     <section className={styles.section} id="CaseStudies">
       <div className={styles.container}>
         <div className={styles.headerSection}>
-          <SectionHeader japaneseText="事例" englishText="Case Studies + FAQ" titleClassName={styles.title} />
+          <SectionHeader japaneseText="事例" englishText="Case Studies" titleClassName={styles.title} />
           <p className={styles.lead}>Real work snapshots with practical outcomes across SOC, DFIR, and training.</p>
         </div>
 
@@ -101,29 +101,6 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
                 <strong>{item.title}</strong>
                 <small>{item.platform}</small>
               </a>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.faqBlock} id="FAQ">
-          <h3 className={styles.faqTitle}>Frequently Asked Questions</h3>
-          <p className={styles.faqLead}>Quick answers covering scope, delivery, and collaboration.</p>
-          <div className={styles.faqGrid}>
-            {faqItems.map((item, index) => (
-              <MotionInView
-                key={`${item.q}-${index}`}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.14, delay: Math.min(index * 0.02, 0.12) }}
-                threshold={0.12}
-                triggerOnce
-              >
-                <article className={styles.faqCard}>
-                  <span className={styles.faqCategory}>{item.category}</span>
-                  <h4>{item.q}</h4>
-                  <p>{item.a}</p>
-                </article>
-              </MotionInView>
             ))}
           </div>
         </div>

@@ -85,6 +85,47 @@
   filter: brightness(1.05);
 }
 
+.metaBlock {
+  margin-top: 0.7rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  border-radius: 0.85rem;
+  background: rgba(8, 12, 18, 0.72);
+  display: grid;
+  gap: 0.36rem;
+}
+
+.metaBlock strong {
+  font-size: 1.25rem;
+  color: rgba(240, 247, 255, 0.96);
+  line-height: 1.35;
+}
+
+.metaBlock span {
+  font-size: 1.08rem;
+  color: rgba(225, 235, 246, 0.78);
+}
+
+.metaBlock a {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.2rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.28);
+  background: rgba(var(--main-color-rgb), 0.1);
+  color: rgba(234, 245, 255, 0.95);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.metaBlock a:hover {
+  color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.52);
+  background: rgba(var(--main-color-rgb), 0.18);
+}
+
 /* === Media Queries & Mobile Overrides === */
 @media (max-width: 1199px) { 
   .Gallery { grid-template-columns: repeat(3, 1fr); } 

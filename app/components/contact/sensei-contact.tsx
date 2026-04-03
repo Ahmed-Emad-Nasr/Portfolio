@@ -19,7 +19,7 @@ import MotionInView from "@/app/core/components/MotionInView";
 import { trackEvent } from "@/app/core/utils/analytics";
 import { isActionAllowed, recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
 import { showToast } from "@/app/core/utils/toast";
-import { contactBudgetOptions, contactServiceOptions, contactTimelineOptions } from "@/app/core/data";
+import { contactBudgetOptions, contactServiceOptions, contactTimelineOptions, serviceResponseSla } from "@/app/core/data";
 
 const TurnstileWidget = dynamic(() => import("@/app/core/components/TurnstileWidget"), {
   ssr: false,
@@ -29,6 +29,42 @@ const TurnstileWidget = dynamic(() => import("@/app/core/components/TurnstileWid
 const CONTACT_INFO_DESCRIPTION = "Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || "https://formspree.io/f/mlgpbpdr";
+const CONTACT_DRAFT_KEY = "portfolio_contact_draft_v1";
+
+const validateFieldValue = (field: string, value: string): string | null => {
+  const trimmed = value.trim();
+
+  if (field === "name") {
+    if (trimmed.length === 0) return "Name is required";
+    if (trimmed.length < 2) return "Name must be at least 2 characters";
+    return null;
+  }
+
+  if (field === "email") {
+    if (trimmed.length === 0) return "Email is required";
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(trimmed) ? null : "Please enter a valid email address";
+  }
+
+  if (field === "subject") {
+    if (trimmed.length === 0) return "Subject is required";
+    if (trimmed.length < 4) return "Subject must be at least 4 characters";
+    return null;
+  }
+
+  if (field === "requested_service") {
+    if (trimmed.length === 0) return "Please select a service";
+    return null;
+  }
+
+  if (field === "message") {
+    if (trimmed.length === 0) return "Message is required";
+    if (trimmed.length < 10) return "Message must be at least 10 characters";
+    return null;
+  }
+
+  return null;
+};
 
 const SenseiContact = memo(function SenseiContact() {
   const router = useRouter();
@@ -40,12 +76,56 @@ const SenseiContact = memo(function SenseiContact() {
   const [selectedService, setSelectedService] = useState("");
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string|null>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
   const infoBullets = toBulletItems(CONTACT_INFO_DESCRIPTION);
   
   const formRef = useRef<HTMLFormElement | null>(null);
   const errorSummaryRef = useRef<HTMLDivElement | null>(null);
   const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const abandonmentTrackedRef = useRef(false);
+  const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const syncDraftFromForm = useCallback(() => {
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+    const draft = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: String(formData.get("subject") ?? ""),
+      requested_service: String(formData.get("requested_service") ?? ""),
+      budget_range: String(formData.get("budget_range") ?? ""),
+      project_timeline: String(formData.get("project_timeline") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    };
+
+    try {
+      localStorage.setItem(CONTACT_DRAFT_KEY, JSON.stringify(draft));
+    } catch {
+      // Ignore storage errors (private mode / blocked storage).
+    }
+  }, []);
+
+  const markTouchedAndValidate = useCallback((field: string, value: string) => {
+    setTouchedFields((prev) => ({ ...prev, [field]: true }));
+    setFieldErrors((prev) => ({ ...prev, [field]: validateFieldValue(field, value) }));
+  }, []);
+
+  const handleFieldInput = useCallback((field: string, value: string) => {
+    setIsFormDirty(true);
+
+    if (touchedFields[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: validateFieldValue(field, value) }));
+    }
+
+    if (autosaveTimeoutRef.current !== null) {
+      clearTimeout(autosaveTimeoutRef.current);
+    }
+
+    autosaveTimeoutRef.current = setTimeout(() => {
+      syncDraftFromForm();
+    }, 250);
+  }, [syncDraftFromForm, touchedFields]);
 
   const focusFirstFieldError = useCallback((errors: Record<string, string>) => {
     window.requestAnimationFrame(() => {
@@ -200,8 +280,14 @@ const SenseiContact = memo(function SenseiContact() {
         });
         abandonmentTrackedRef.current = true;
         setIsFormDirty(false);
+        try {
+          localStorage.removeItem(CONTACT_DRAFT_KEY);
+        } catch {
+          // Ignore storage errors.
+        }
         setIsSuccess(true);
         setFieldErrors({});
+        setTouchedFields({});
         showToast({ type: "success", message: "Message sent successfully. Redirecting..." });
         setTurnstileToken("");
         e.currentTarget.reset();
@@ -233,6 +319,33 @@ const SenseiContact = memo(function SenseiContact() {
       setIsSubmitting(false);
     }
   }, [router, turnstileToken, setValidationErrors]);
+
+  useEffect(() => {
+    if (!formRef.current) return;
+
+    try {
+      const rawDraft = localStorage.getItem(CONTACT_DRAFT_KEY);
+      if (!rawDraft) return;
+
+      const parsed = JSON.parse(rawDraft) as Record<string, string>;
+      const supportedFields = ["name", "email", "subject", "requested_service", "budget_range", "project_timeline", "message"];
+
+      supportedFields.forEach((field) => {
+        const value = parsed[field];
+        if (typeof value !== "string") return;
+
+        const element = formRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(`[name="${field}"]`);
+        if (!element) return;
+        element.value = value;
+      });
+
+      if (typeof parsed.requested_service === "string") {
+        setSelectedService(parsed.requested_service);
+      }
+    } catch {
+      // Ignore malformed drafts.
+    }
+  }, []);
 
   useEffect(() => {
     const handlePotentialAbandon = () => {
@@ -273,8 +386,16 @@ const SenseiContact = memo(function SenseiContact() {
         clearTimeout(messageTimeoutRef.current);
         messageTimeoutRef.current = null;
       }
+      if (autosaveTimeoutRef.current !== null) {
+        clearTimeout(autosaveTimeoutRef.current);
+        autosaveTimeoutRef.current = null;
+      }
     };
   }, []);
+
+  const dynamicSla = selectedService && serviceResponseSla[selectedService]
+    ? serviceResponseSla[selectedService]
+    : "Typical response time: within 24 hours.";
 
   return (
     <section className={styles["contact-section"]} id="Contact">
@@ -374,17 +495,17 @@ const SenseiContact = memo(function SenseiContact() {
                   recordFunnelEvent("contact_form_started");
                   setDidTrackFormStart(true);
                 }
-              }} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, name: null })); }} autoComplete="name" minLength={2} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? "name-error" : undefined} />
+              }} onBlur={(event) => markTouchedAndValidate("name", event.target.value)} onChange={(event) => handleFieldInput("name", event.target.value)} autoComplete="name" minLength={2} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? "name-error" : undefined} />
               </div>
               {fieldErrors.name ? <span id="name-error" className={styles["field-error"]}>{fieldErrors.name}</span> : null}
               <div className={`${styles["input-group"]} ${fieldErrors.email ? styles["input-error"] : ""}`}>
                 <label htmlFor="contact-email" className={styles["sr-only"]}>Your email</label>
-                <input id="contact-email" type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} autoComplete="email" onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, email: null })); }} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? "email-error" : undefined} />
+                <input id="contact-email" type="email" name="email" placeholder="Your Email" required className={styles["input-field"]} autoComplete="email" onBlur={(event) => markTouchedAndValidate("email", event.target.value)} onChange={(event) => handleFieldInput("email", event.target.value)} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? "email-error" : undefined} />
               </div>
               {fieldErrors.email ? <span id="email-error" className={styles["field-error"]}>{fieldErrors.email}</span> : null}
               <div className={`${styles["input-group"]} ${fieldErrors.subject ? styles["input-error"] : ""}`}>
                 <label htmlFor="contact-subject" className={styles["sr-only"]}>Project subject</label>
-                <input id="contact-subject" type="text" name="subject" placeholder="Project Subject" required className={styles["input-field"]} minLength={4} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, subject: null })); }} aria-invalid={!!fieldErrors.subject} aria-describedby={fieldErrors.subject ? "subject-error" : undefined} />
+                <input id="contact-subject" type="text" name="subject" placeholder="Project Subject" required className={styles["input-field"]} minLength={4} onBlur={(event) => markTouchedAndValidate("subject", event.target.value)} onChange={(event) => handleFieldInput("subject", event.target.value)} aria-invalid={!!fieldErrors.subject} aria-describedby={fieldErrors.subject ? "subject-error" : undefined} />
               </div>
               {fieldErrors.subject ? <span id="subject-error" className={styles["field-error"]}>{fieldErrors.subject}</span> : null}
               <div className={styles["input-group"]}>
@@ -397,10 +518,10 @@ const SenseiContact = memo(function SenseiContact() {
                   defaultValue=""
                   onChange={(event) => {
                     setSelectedService(event.target.value);
-                    setIsFormDirty(true);
-                    setFieldErrors((prev) => ({ ...prev, requested_service: null }));
+                    handleFieldInput("requested_service", event.target.value);
                     trackEvent("contact_field_selected", { field: "requested_service", value: event.target.value });
                   }}
+                  onBlur={(event) => markTouchedAndValidate("requested_service", event.target.value)}
                   aria-invalid={!!fieldErrors.requested_service}
                   aria-describedby={fieldErrors.requested_service ? "requested-service-error" : undefined}
                 >
@@ -422,7 +543,7 @@ const SenseiContact = memo(function SenseiContact() {
                       className={styles["input-field"]}
                       defaultValue=""
                       onChange={(event) => {
-                        setIsFormDirty(true);
+                        handleFieldInput("budget_range", event.target.value);
                         trackEvent("contact_field_selected", { field: "budget_range", value: event.target.value });
                       }}
                     >
@@ -440,7 +561,7 @@ const SenseiContact = memo(function SenseiContact() {
                       className={styles["input-field"]}
                       defaultValue=""
                       onChange={(event) => {
-                        setIsFormDirty(true);
+                        handleFieldInput("project_timeline", event.target.value);
                         trackEvent("contact_field_selected", { field: "project_timeline", value: event.target.value });
                       }}
                     >
@@ -454,7 +575,7 @@ const SenseiContact = memo(function SenseiContact() {
               </details>
               <div className={`${styles["input-group"]} ${fieldErrors.message ? styles["input-error"] : ""}`}>
                 <label htmlFor="contact-message" className={styles["sr-only"]}>Your message</label>
-                <textarea id="contact-message" name="message" placeholder="Tell me your main goal in 1-2 lines" required className={styles["input-field"]} minLength={10} onChange={() => { setIsFormDirty(true); setFieldErrors((prev) => ({ ...prev, message: null })); }} aria-invalid={!!fieldErrors.message} aria-describedby={fieldErrors.message ? "message-error" : undefined}></textarea>
+                <textarea id="contact-message" name="message" placeholder="Tell me your main goal in 1-2 lines" required className={styles["input-field"]} minLength={10} onBlur={(event) => markTouchedAndValidate("message", event.target.value)} onChange={(event) => handleFieldInput("message", event.target.value)} aria-invalid={!!fieldErrors.message} aria-describedby={fieldErrors.message ? "message-error" : undefined}></textarea>
               </div>
               {fieldErrors.message ? <span id="message-error" className={styles["field-error"]}>{fieldErrors.message}</span> : null}
               {TURNSTILE_SITE_KEY ? (
@@ -462,7 +583,7 @@ const SenseiContact = memo(function SenseiContact() {
                   <TurnstileWidget onTokenChange={setTurnstileToken} />
                 </div>
               ) : null}
-              <p className={styles["response-time"]}>Typical response time: within 24 hours.</p>
+              <p className={styles["response-time"]}>{dynamicSla}</p>
               {isSuccess ? (
                 <div className={styles["success-panel"]}>
                   <strong>Message sent successfully.</strong>

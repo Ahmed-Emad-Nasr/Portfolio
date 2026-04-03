@@ -47,6 +47,96 @@
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 3rem; }
 
+.viewModeToggle {
+  margin: 1.5rem auto 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.26);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.35rem;
+}
+
+.viewModeBtn {
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(233, 241, 250, 0.92);
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.viewModeBtn:hover {
+  background: rgba(var(--main-color-rgb), 0.12);
+  border-color: rgba(var(--main-color-rgb), 0.35);
+}
+
+.activeViewMode {
+  background: var(--main-color);
+  color: var(--bg-color);
+  border-color: var(--main-color);
+}
+
+.comparisonWrap {
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  border-radius: 1.4rem;
+  background: linear-gradient(180deg, rgba(12, 12, 12, 0.86), rgba(8, 8, 8, 0.72));
+  overflow: auto;
+}
+
+.comparisonTable {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+}
+
+.comparisonTable th,
+.comparisonTable td {
+  padding: 0.9rem 0.85rem;
+  border-bottom: 1px solid rgba(var(--main-color-rgb), 0.12);
+  color: rgba(235, 243, 252, 0.92);
+  font-size: 1.18rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.comparisonTable th {
+  color: var(--main-color);
+  font-size: 1.22rem;
+  font-weight: 800;
+  background: rgba(var(--main-color-rgb), 0.08);
+}
+
+.comparisonTable tbody tr:hover {
+  background: rgba(var(--main-color-rgb), 0.06);
+}
+
+.tableLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.35);
+  background: rgba(var(--main-color-rgb), 0.14);
+  color: rgba(235, 243, 252, 0.95);
+  font-size: 1.06rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  text-decoration: none;
+}
+
+.tableLink:hover {
+  color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.55);
+  background: rgba(var(--main-color-rgb), 0.2);
+}
+
 /* --- The Cards --- */
 .single-service, .single-project {
   background: linear-gradient(180deg, rgba(14, 14, 14, 0.9), rgba(9, 9, 9, 0.82)); border: 1px solid rgba(var(--main-color-rgb), 0.18); border-radius: 25px; padding: 3rem 2.5rem; text-align: left;
@@ -184,12 +274,15 @@
   .title { font-size: 3rem; } 
   .grid-container { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; } 
   .single-service, .single-project { padding: 2.5rem 2rem; } 
+  .comparisonWrap { border-radius: 1.1rem; }
 }
 
 @media (max-width: 430px) {
   .container { padding: 0 1.2rem; }
   .grid-container { grid-template-columns: 1fr; gap: 1.4rem; }
   .single-service, .single-project { padding: 2rem 1.4rem; border-radius: 1.6rem; }
+  .viewModeToggle { width: 100%; justify-content: center; }
+  .viewModeBtn { flex: 1 1 auto; }
 }
 
 .detailsBtn {
@@ -228,4 +321,49 @@
   .emptyState { padding: 1.8rem 1.1rem; }
   .emptyState p { font-size: 1.35rem; }
   .emptyStateHint { font-size: 1.18rem; }
+}
+
+.timelineTag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.45rem 0.8rem;
+  background: rgba(126, 188, 247, 0.14);
+  color: rgba(225, 241, 255, 0.95);
+  border: 1px solid rgba(143, 197, 249, 0.3);
+}
+
+.single-service:hover .timelineTag,
+.single-project:hover .timelineTag {
+  background: rgba(146, 206, 255, 0.2);
+  border-color: rgba(156, 211, 255, 0.45);
+}
+
+.relatedRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.relatedLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.3rem 0.74rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.22);
+  color: rgba(233, 241, 250, 0.9);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.relatedLink:hover {
+  color: var(--main-color);
+  background: rgba(var(--main-color-rgb), 0.14);
+  border-color: rgba(var(--main-color-rgb), 0.42);
 }

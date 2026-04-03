@@ -70,11 +70,41 @@ const buildCaseStudy = (repo: GitHubRepository) => {
   return { problem: baseProblem, action, result };
 };
 
+const normalizeRepoKey = (name: string): string => name.trim().toLowerCase().replace(/[\s_]+/g, "-");
+
+const getProjectDifficulty = (repo: GitHubRepository): "Beginner" | "Intermediate" | "Advanced" => {
+  const source = [repo.name, repo.description ?? "", repo.language ?? "", ...repo.topics].join(" ").toLowerCase();
+  const hardKeywords = ["siem", "dfir", "forensic", "malware", "incident", "threat", "edr"];
+  const mediumKeywords = ["automation", "script", "tool", "api", "monitor"];
+
+  if (hardKeywords.some((keyword) => source.includes(keyword)) || repo.topics.length >= 5) {
+    return "Advanced";
+  }
+
+  if (mediumKeywords.some((keyword) => source.includes(keyword)) || repo.topics.length >= 3) {
+    return "Intermediate";
+  }
+
+  return "Beginner";
+};
+
+const formatTimeAgo = (timestamp: number): string => {
+  const diffMs = Date.now() - timestamp;
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  if (diffMinutes < 1) return "just now";
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
+};
+
 const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
-  const customBullets = projectBullets[repo.name];
+  const customBullets = projectBullets[repo.name] ?? projectBullets[normalizeRepoKey(repo.name)];
   const descriptionBullets = customBullets || toBulletItems(repo.description || "No description available for this repository.");
   const liveUrl = repo.homepage && repo.homepage.trim().length > 0 ? repo.homepage : repo.html_url;
   const caseStudy = buildCaseStudy(repo);
+  const difficulty = getProjectDifficulty(repo);
 
   return (
     <article className={styles["single-project"]}>
@@ -104,6 +134,9 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
           <span className={styles["stat-badge"]} aria-label={`${repo.stargazers_count} stars`}><FontAwesomeIcon icon={faStar} aria-hidden="true" /> {repo.stargazers_count}</span>
           <span className={styles["stat-badge"]} aria-label={`${repo.forks_count} forks`}><FontAwesomeIcon icon={faCodeBranch} aria-hidden="true" /> {repo.forks_count}</span>
           <span className={styles["stat-badge"]} aria-label={`${repo.watchers_count} watchers`}><FontAwesomeIcon icon={faEye} aria-hidden="true" /> {repo.watchers_count}</span>
+          <span className={`${styles["stat-badge"]} ${styles["difficulty-badge"]}`} aria-label={`Project complexity: ${difficulty}`}>
+            {difficulty}
+          </span>
         </div>
 
         {repo.topics.length > 0 && (
@@ -174,7 +207,8 @@ const SenseiProjects = memo(function SenseiProjects() {
   const cacheLabel = useMemo(() => {
     if (!cacheUpdatedAt) return null;
     try {
-      return new Date(cacheUpdatedAt).toLocaleString();
+      const parsedTime = new Date(cacheUpdatedAt).getTime();
+      return `${new Date(cacheUpdatedAt).toLocaleString()} (${formatTimeAgo(parsedTime)})`;
     } catch {
       return null;
     }
