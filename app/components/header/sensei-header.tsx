@@ -6,7 +6,7 @@
  * Purpose: Render sticky navigation header and mobile menu behavior
  */
 
-import { useCallback, useMemo, memo, useRef, useEffect, type MouseEvent, type RefObject } from "react";
+import { useCallback, useMemo, memo, useEffect, type MouseEvent } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -15,27 +15,10 @@ const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
 
-const scrollToSection = (section: string, headerRef: RefObject<HTMLElement | null>): boolean => {
-  const target = document.getElementById(section);
-  if (!target) return false;
-
-  const headerHeight = headerRef.current?.getBoundingClientRect().height ?? (window.innerWidth <= 994 ? 64 : 76);
-  const headerOffset = headerHeight + (window.innerWidth <= 994 ? 10 : 14);
-  target.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  window.setTimeout(() => {
-    window.scrollBy({ top: -headerOffset, behavior: "smooth" });
-  }, 40);
-
-  window.location.hash = `#${section}`;
-  return true;
-};
-
 const SenseiHeader = memo(function SenseiHeader() {
   const {
     isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen,
   } = useHeader();
-  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (window.innerWidth > 994) {
@@ -55,30 +38,16 @@ const SenseiHeader = memo(function SenseiHeader() {
       event?.preventDefault();
       setActiveSection(section);
 
-      const didScrollNow = scrollToSection(section, headerRef);
-      if (!didScrollNow) {
-        const path = window.location.pathname;
-        const scopePrefix = path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
-        const homePath = `${scopePrefix}/`;
+      const path = window.location.pathname;
+      const scopePrefix = path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
+      const homePath = `${scopePrefix}/`;
 
-        if (path !== homePath && path !== scopePrefix) {
-          window.location.assign(`${homePath}#${section}`);
-          return;
-        }
-
-        window.location.hash = `#${section}`;
-
-        // Retry for sections that mount after initial click (dynamic/lazy sections).
-        let attempts = 0;
-        const maxAttempts = 18;
-        const intervalId = window.setInterval(() => {
-          attempts += 1;
-          const didScroll = scrollToSection(section, headerRef);
-          if (didScroll || attempts >= maxAttempts) {
-            window.clearInterval(intervalId);
-          }
-        }, 90);
+      if (path !== homePath && path !== scopePrefix) {
+        window.location.assign(`${homePath}#${section}`);
+        return;
       }
+
+      window.location.hash = `#${section}`;
 
       // Wrapped in try-catch for private browsing mode & cross-origin restrictions
       try {
@@ -142,7 +111,7 @@ const SenseiHeader = memo(function SenseiHeader() {
   const navbarClass = isMenuOpen ? `${NAVBAR_BASE} ${ACTIVE_CLASS}` : NAVBAR_BASE;
 
   return (
-    <header ref={headerRef} className={styles.header} data-site-header="true">
+    <header className={styles.header} data-site-header="true">
       <a
         href="#Home"
         className={styles.logo}
