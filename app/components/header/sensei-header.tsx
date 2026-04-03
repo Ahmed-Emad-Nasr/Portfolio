@@ -6,7 +6,7 @@
  * Purpose: Render sticky navigation header and mobile menu behavior
  */
 
-import { useCallback, useMemo, memo, useRef, useEffect, type MouseEvent } from "react";
+import { useCallback, useMemo, memo, useRef, useEffect, type MouseEvent, type RefObject } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -14,6 +14,22 @@ import { useHeader } from "@/app/core/hooks/useHeader";
 const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
+
+const scrollToSection = (section: string, headerRef: RefObject<HTMLElement | null>): boolean => {
+  const target = document.getElementById(section);
+  if (!target) return false;
+
+  const headerHeight = headerRef.current?.getBoundingClientRect().height ?? (window.innerWidth <= 994 ? 64 : 76);
+  const headerOffset = headerHeight + (window.innerWidth <= 994 ? 10 : 14);
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  window.setTimeout(() => {
+    window.scrollBy({ top: -headerOffset, behavior: "smooth" });
+  }, 40);
+
+  window.location.hash = `#${section}`;
+  return true;
+};
 
 const SenseiHeader = memo(function SenseiHeader() {
   const {
@@ -39,13 +55,8 @@ const SenseiHeader = memo(function SenseiHeader() {
       event?.preventDefault();
       setActiveSection(section);
 
-      const target = document.getElementById(section);
-      if (target) {
-        const headerHeight = headerRef.current?.getBoundingClientRect().height ?? (window.innerWidth <= 994 ? 64 : 76);
-        const headerOffset = headerHeight + (window.innerWidth <= 994 ? 10 : 14);
-        const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-        window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
-      } else {
+      const didScrollNow = scrollToSection(section, headerRef);
+      if (!didScrollNow) {
         const path = window.location.pathname;
         const scopePrefix = path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
         const homePath = `${scopePrefix}/`;
@@ -56,6 +67,17 @@ const SenseiHeader = memo(function SenseiHeader() {
         }
 
         window.location.hash = `#${section}`;
+
+        // Retry for sections that mount after initial click (dynamic/lazy sections).
+        let attempts = 0;
+        const maxAttempts = 18;
+        const intervalId = window.setInterval(() => {
+          attempts += 1;
+          const didScroll = scrollToSection(section, headerRef);
+          if (didScroll || attempts >= maxAttempts) {
+            window.clearInterval(intervalId);
+          }
+        }, 90);
       }
 
       // Wrapped in try-catch for private browsing mode & cross-origin restrictions

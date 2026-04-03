@@ -312,7 +312,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
               window.addEventListener('load', function () {
                 var scopePrefix = window.location.pathname.startsWith('/Portfolio/') ? '/Portfolio' : '';
-                navigator.serviceWorker.register(scopePrefix + '/sw.js').catch(function () {
+                navigator.serviceWorker.register(scopePrefix + '/sw.js?v=2').catch(function () {
                   // Ignore registration failures in unsupported environments.
                 });
               });

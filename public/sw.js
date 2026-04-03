@@ -1,4 +1,4 @@
-const CACHE_NAME = "portfolio-static-v1";
+const CACHE_NAME = "portfolio-static-v2";
 const CORE_ASSETS = [
   "/",
   "/manifest.webmanifest",
@@ -30,6 +30,9 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  const requestUrl = new URL(event.request.url);
+  const isAssetRequest = /\.(?:js|css|png|jpg|jpeg|webp|svg|gif|ico|woff2?|ttf|pdf|map|json|xml|txt)$/i.test(requestUrl.pathname);
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
@@ -42,7 +45,10 @@ self.addEventListener("fetch", (event) => {
           });
           return response;
         })
-        .catch(() => caches.match("/"));
+        .catch(() => {
+          if (isAssetRequest) return Response.error();
+          return caches.match("/");
+        });
     })
   );
 });

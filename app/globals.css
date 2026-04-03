@@ -179,18 +179,6 @@ section {
   position: relative;
 }
 
-@supports (content-visibility: auto) {
-  main section {
-    content-visibility: auto;
-    contain-intrinsic-size: 860px;
-  }
-
-  main section:first-of-type {
-    content-visibility: visible;
-    contain-intrinsic-size: auto;
-  }
-}
-
 main section + section {
   margin-top: clamp(12rem, 15vw, 20rem);
 }
