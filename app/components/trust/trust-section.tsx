@@ -116,7 +116,7 @@ const TrustSection = memo(function TrustSection() {
               triggerOnce
             >
               <article className={styles.testimonialCard}>
-                <p className={styles.testimonialQuote}>"{item.quote}"</p>
+                <p className={styles.testimonialQuote}>&ldquo;{item.quote}&rdquo;</p>
                 <p className={styles.testimonialMeta}>{item.role} • {item.context}</p>
               </article>
             </MotionInView>

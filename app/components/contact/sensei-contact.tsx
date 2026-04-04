@@ -27,7 +27,7 @@ const TurnstileWidget = dynamic(() => import("@/app/core/components/TurnstileWid
 
 const CONTACT_INFO_DESCRIPTION = "Whether you have a question about cybersecurity, a project proposal, or just want to say hi, my inbox is always open!";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
-const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || "https://formspree.io/f/mlgpbpdr";
+const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || "";
 const CONTACT_DRAFT_KEY = "portfolio_contact_draft_v1";
 
 const validateFieldValue = (field: string, value: string): string | null => {
@@ -236,6 +236,10 @@ const SenseiContact = memo(function SenseiContact() {
 
       recordFunnelEvent("contact_submit_attempt");
 
+      if (!FORMSPREE_ENDPOINT) {
+        throw new Error("Contact endpoint is not configured");
+      }
+
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST", 
         body: formData, 
@@ -255,10 +259,10 @@ const SenseiContact = memo(function SenseiContact() {
           cooldownKey: "contact_success_notify",
           cooldownMs: 8_000,
           lines: [
-            `Name: ${String(name)}`,
-            `Email: ${String(email)}`,
-            `Subject: ${String(subject)}`,
-            `Requested service: ${String(requestedService)}`,
+            `Name: ${name}`,
+            `Email: ${email}`,
+            `Subject: ${subject}`,
+            `Requested service: ${requestedService}`,
             `Budget range: ${budgetRange ? String(budgetRange) : "Not provided"}`,
             `Timeline: ${projectTimeline ? String(projectTimeline) : "Not provided"}`,
             `Time (UTC): ${new Date().toISOString()}`,
@@ -288,6 +292,10 @@ const SenseiContact = memo(function SenseiContact() {
     } catch (error) {
       // Distinguish between different error types for better UX
       if (error instanceof Error) {
+        if (error.message === "Contact endpoint is not configured") {
+          console.error("Missing NEXT_PUBLIC_FORMSPREE_ENDPOINT env var");
+          showToast({ type: "error", message: "Contact form is temporarily unavailable. Please use WhatsApp/Email quick contact." });
+        } else
         if (error.name === "AbortError") {
           console.error("Form submission timeout or cancelled");
           showToast({ type: "error", message: "Request timed out. Please check your connection and retry." });
@@ -351,7 +359,7 @@ const SenseiContact = memo(function SenseiContact() {
       window.removeEventListener("beforeunload", handlePotentialAbandon);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [isFormDirty, isSuccess, selectedService]);
+  }, [isFormDirty, isSuccess]);
 
   const quickQuoteMessage = `Hi Ahmed, I need a quick quote for ${selectedService || "a cybersecurity project"}.`;
   const quickQuoteHref = `https://wa.me/201018166445?text=${encodeURIComponent(quickQuoteMessage)}`;
