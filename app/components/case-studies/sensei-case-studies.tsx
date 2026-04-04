@@ -50,11 +50,7 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
           {caseStudyHighlights.map((item, index) => (
             <MotionInView
               key={item.title}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
               transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.15) }}
-              threshold={0.12}
-              triggerOnce
             >
               <article className={styles.card}>
                 <span className={styles.domain}>{item.domain}</span>

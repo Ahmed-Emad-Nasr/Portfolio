@@ -41,11 +41,7 @@ const TimelineItem = memo<TimelineItemProps>(({ isRight, tag, subTag, subTagHype
   return (
     <MotionInView
       className={containerClass}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
       transition={{ duration: 0.14 }}
-      threshold={0.15}
-      triggerOnce
     >
       <div className={styles.content}>
         <div className={styles.tag}>

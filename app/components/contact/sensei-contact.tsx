@@ -394,11 +394,7 @@ const SenseiContact = memo(function SenseiContact() {
 
         <div className={styles["contact-wrapper"]}>
           <MotionInView
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.14 }}
-            threshold={0.12}
-            triggerOnce
           >
           <div className={styles["info-card"]}>
             <h3 className={styles["info-title"]}>Let&apos;s Connect</h3>
@@ -430,11 +426,7 @@ const SenseiContact = memo(function SenseiContact() {
           </MotionInView>
 
           <MotionInView
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.14, delay: 0.035 }}
-            threshold={0.12}
-            triggerOnce
           >
           <div className={styles["form-card"]}>
             <form ref={formRef} onSubmit={handleSubmit}>

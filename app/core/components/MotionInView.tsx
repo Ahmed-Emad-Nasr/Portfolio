@@ -12,8 +12,6 @@ import { motion, MotionProps } from "framer-motion";
 type MotionInViewProps = MotionProps & {
   children: React.ReactNode;
   className?: string;
-  threshold?: number;
-  triggerOnce?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const MAX_REVEAL_DURATION = 0.28;
@@ -42,8 +40,6 @@ const softenTransition = (
 const MotionInView = memo<MotionInViewProps>(({
   children,
   className,
-  threshold: _threshold = 0.1,
-  triggerOnce: _triggerOnce = true,
   ...rest
 }) => {
   const {

@@ -33,11 +33,7 @@ const TrustSection = memo(function TrustSection() {
           {trustMetrics.map((item, index) => (
             <MotionInView
               key={`${item.label}-${index}`}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
               transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.08) }}
-              threshold={0.12}
-              triggerOnce
             >
               <article className={styles.metricCard} title={METRIC_CONTEXT[item.label] ?? item.label}>
                 <p className={styles.metricValue}>{item.value}</p>
@@ -48,11 +44,7 @@ const TrustSection = memo(function TrustSection() {
         </div>
 
         <MotionInView
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
           transition={{ duration: 0.14, delay: 0.04 }}
-          threshold={0.12}
-          triggerOnce
         >
           <div className={styles.toolsCard}>
             <h3>Trusted Stack</h3>
@@ -66,11 +58,7 @@ const TrustSection = memo(function TrustSection() {
 
         <div className={styles["credibility-grid"]}>
           <MotionInView
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.14 }}
-            threshold={0.12}
-            triggerOnce
           >
             <article className={styles.credCard}>
               <h3>Achievement Highlights</h3>
@@ -83,11 +71,7 @@ const TrustSection = memo(function TrustSection() {
           </MotionInView>
 
           <MotionInView
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.14, delay: 0.035 }}
-            threshold={0.12}
-            triggerOnce
           >
             <article className={styles.credCard}>
               <div className={styles.certHeaderRow}>
@@ -109,11 +93,7 @@ const TrustSection = memo(function TrustSection() {
           {trustTestimonials.map((item, index) => (
             <MotionInView
               key={`${item.role}-${index}`}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
               transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.1) }}
-              threshold={0.12}
-              triggerOnce
             >
               <article className={styles.testimonialCard}>
                 <p className={styles.testimonialQuote}>&ldquo;{item.quote}&rdquo;</p>

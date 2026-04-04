@@ -5,6 +5,7 @@ import styles from "./desktop-quick-cta.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
+import { resolvePublicAssetHref } from "@/app/core/utils/publicAsset";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -12,6 +13,7 @@ function scrollToTop() {
 
 const DesktopQuickCTA = memo(function DesktopQuickCTA() {
   const [isCallLocked, setIsCallLocked] = useState(false);
+  const cvHref = resolvePublicAssetHref("/Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf");
 
   const handleBookCallClick = () => {
     if (isCallLocked) {
@@ -44,7 +46,7 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         Top
       </button>
       <a
-        href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
+        href={cvHref}
         target="_blank"
         rel="noopener noreferrer"
         className={`${styles.btn} ${styles.secondary}`}

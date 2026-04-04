@@ -15,13 +15,7 @@ const SenseiAbout = memo(function SenseiAbout() {
           <SectionHeader japaneseText="私について" englishText="About Me" titleClassName={styles.title} />
         </div>
 
-        <MotionInView
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.14 }}
-          threshold={0.15}
-          triggerOnce
-        >
+        <MotionInView transition={{ duration: 0.14 }}>
           <p className={styles.summary}>{aboutSummaryParagraph}</p>
         </MotionInView>
 
@@ -29,11 +23,7 @@ const SenseiAbout = memo(function SenseiAbout() {
           {aboutMeCards.map((card, index) => (
             <MotionInView
               key={`${card.title}-${index}`}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
               transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.08) }}
-              threshold={0.15}
-              triggerOnce
             >
               <article className={styles.card}>
                 <div className={styles["card-icon-wrapper"]}>

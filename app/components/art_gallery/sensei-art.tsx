@@ -162,11 +162,7 @@ const SenseiArt = memo(function SenseiArt() {
         {shouldRenderGallery ? (
           <MotionInView
             className={styles["art-gallery-content"]}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.14 }}
-            threshold={0.02}
-            triggerOnce
           >
             <motion.div className={styles.Gallery} variants={galleryVariants}>
               {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />)}

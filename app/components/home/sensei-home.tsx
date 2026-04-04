@@ -14,6 +14,7 @@ import { faUserSecret, faFilePdf, faBriefcase} from "@fortawesome/free-solid-svg
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { homeSummaryParagraph } from "@/app/core/data";
+import { resolvePublicAssetHref } from "@/app/core/utils/publicAsset";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
@@ -30,6 +31,7 @@ const SenseiHome = memo(function SenseiHome() {
   const parallaxEnabledRef = useRef(false);
   const [cvVariant, setCvVariant] = useState<CVVariant>("A");
   const [clock, setClock] = useState(() => new Date());
+  const cvHref = resolvePublicAssetHref("/Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf");
 
   useEffect(() => {
     const intervalId = window.setInterval(() => setClock(new Date()), 60_000);
@@ -197,7 +199,7 @@ const SenseiHome = memo(function SenseiHome() {
               <span className={styles.liveTag}><span className={styles.livePing} aria-hidden="true" /> Live</span> Hire Me <FontAwesomeIcon icon={faUserSecret} />
             </a>
             <a
-              href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
+              href={cvHref}
               download="AhmedEmad_CV.pdf"
               className={cvBtnClass}
               aria-label="Download CV"

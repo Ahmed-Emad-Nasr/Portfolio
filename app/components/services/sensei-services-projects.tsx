@@ -146,11 +146,7 @@ function SenseiServicesProjects() {
               serviceCatalog.map((service, index) => (
                 <MotionInView
                   key={service.slug}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.18, delay: Math.min(index * 0.04, 0.16) }}
-                  threshold={0.08}
-                  triggerOnce
                 >
                   <ServiceItem {...service} titleBySlug={titleBySlug} />
                 </MotionInView>
