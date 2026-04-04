@@ -286,7 +286,7 @@
   animation: softGlow 2.2s ease-in-out infinite;
 }
 
-@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+@media (hover: none), (pointer: coarse) {
   .homeContent {
     transform: none;
     transition: none;

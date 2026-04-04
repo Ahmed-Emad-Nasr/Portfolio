@@ -93,12 +93,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .primary {
-    animation: none;
-  }
-}
-
 @media (min-width: 1024px) {
   .wrap {
     display: flex;

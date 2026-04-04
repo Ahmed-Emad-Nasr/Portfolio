@@ -89,12 +89,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .primary {
-    animation: none;
-  }
-}
-
 @media (max-width: 768px) {
   .wrap {
     display: inline-flex;
