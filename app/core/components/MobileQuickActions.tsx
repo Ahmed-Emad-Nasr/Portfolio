@@ -4,7 +4,6 @@ import { memo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import styles from "./mobile-quick-actions.module.css";
-import { resolvePublicAssetHref } from "@/app/core/utils/publicAsset";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -12,7 +11,6 @@ function scrollToTop() {
 
 const MobileQuickActions = memo(function MobileQuickActions() {
   const [isCallLocked, setIsCallLocked] = useState(false);
-  const cvHref = resolvePublicAssetHref("/Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf");
 
   const handleBookCallClick = () => {
     if (isCallLocked) {
@@ -37,7 +35,7 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         Book Call
       </a>
       <a
-        href={cvHref}
+        href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
         className={`${styles.btn} ${styles.secondary}`}
         target="_blank"
         rel="noopener noreferrer"
