@@ -7,7 +7,7 @@
  */
 
 import React, { memo } from "react";
-import { motion, MotionProps, useReducedMotion } from "framer-motion";
+import { motion, MotionProps } from "framer-motion";
 
 type MotionInViewProps = MotionProps & {
   children: React.ReactNode;
@@ -56,7 +56,6 @@ const MotionInView = memo<MotionInViewProps>(({
     variants: _variants,
     ...motionRest
   } = rest;
-  const shouldReduceMotion = useReducedMotion();
   const resolvedTransition = softenTransition(transition as MotionProps["transition"]) ?? {
     duration: 0.24,
     ease: [0.22, 1, 0.36, 1],
@@ -66,8 +65,8 @@ const MotionInView = memo<MotionInViewProps>(({
     // Use mount fade so late-loaded sections still animate reliably.
     <motion.div
       className={className}
-      initial={shouldReduceMotion ? false : { opacity: 0 }}
-      animate={shouldReduceMotion ? undefined : { opacity: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={resolvedTransition}
       style={{ ...(style as React.CSSProperties), willChange: "opacity" }}
       {...motionRest}

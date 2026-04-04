@@ -40,19 +40,16 @@ const SenseiHome = memo(function SenseiHome() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const applyCapability = () => {
-      parallaxEnabledRef.current = mediaQuery.matches && !reducedMotion.matches;
+      parallaxEnabledRef.current = mediaQuery.matches;
     };
 
     applyCapability();
     mediaQuery.addEventListener("change", applyCapability);
-    reducedMotion.addEventListener("change", applyCapability);
 
     return () => {
       mediaQuery.removeEventListener("change", applyCapability);
-      reducedMotion.removeEventListener("change", applyCapability);
       if (parallaxRafRef.current !== null) {
         window.cancelAnimationFrame(parallaxRafRef.current);
       }
