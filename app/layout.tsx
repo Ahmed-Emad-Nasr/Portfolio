@@ -274,27 +274,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             strategy="afterInteractive"
           />
         ) : null}
-        <Script id="legacy-cache-cleanup" strategy="afterInteractive">
+        <Script id="sw-register" strategy="afterInteractive">
           {`(function(){
-  if (typeof window === "undefined") return;
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.getRegistrations()
-      .then(function(registrations){
-        return Promise.all(registrations.map(function(registration){
-          return registration.unregister();
-        }));
-      })
-      .catch(function(){});
-  }
-  if ("caches" in window) {
-    caches.keys()
-      .then(function(keys){
-        return Promise.all(keys.map(function(key){
-          return caches.delete(key);
-        }));
-      })
-      .catch(function(){});
-  }
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+
+  var path = window.location.pathname;
+  var scopePrefix = path === "/Portfolio" || path.startsWith("/Portfolio/") ? "/Portfolio" : "";
+  var swUrl = scopePrefix + "/sw.js";
+
+  navigator.serviceWorker.register(swUrl).catch(function(){});
 })();`}
         </Script>
         <ToastHost />
