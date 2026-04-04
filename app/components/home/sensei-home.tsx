@@ -12,7 +12,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
 import { faUserSecret, faFilePdf, faBriefcase} from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
-import CVDownloadModal from "@/app/components/cv-download-modal/CVDownloadModal";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { homeSummaryParagraph } from "@/app/core/data";
 
@@ -29,7 +28,6 @@ const SenseiHome = memo(function SenseiHome() {
   const pointerRef = useRef({ x: 0, y: 0 });
   const parallaxRafRef = useRef<number | null>(null);
   const parallaxEnabledRef = useRef(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [cvVariant, setCvVariant] = useState<CVVariant>("A");
   const [clock, setClock] = useState(() => new Date());
 
@@ -127,10 +125,6 @@ const SenseiHome = memo(function SenseiHome() {
     element.style.setProperty("--parallax-y", "0px");
   };
 
-  const handleDownloadCVClick = () => {
-    setIsModalOpen(true);
-  };
-
   const handleHireMeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
@@ -202,13 +196,14 @@ const SenseiHome = memo(function SenseiHome() {
             >
               <span className={styles.liveTag}><span className={styles.livePing} aria-hidden="true" /> Live</span> Hire Me <FontAwesomeIcon icon={faUserSecret} />
             </a>
-            <button
-              type="button"
+            <a
+              href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
+              download="AhmedEmad_CV.pdf"
               className={cvBtnClass}
-              onClick={handleDownloadCVClick}
+              aria-label="Download CV"
             >
               {cvBtnLabel} <FontAwesomeIcon icon={faFilePdf} />
-            </button>
+            </a>
             <a
               href="#Projects"
               className={BTN_1_CLASS}
@@ -217,7 +212,6 @@ const SenseiHome = memo(function SenseiHome() {
             </a>
           </div>
           <p className={styles.ctaHint}>Best next step: share your goal and receive a tailored response within 24 hours.</p>
-          <CVDownloadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
       </div>
     </section>

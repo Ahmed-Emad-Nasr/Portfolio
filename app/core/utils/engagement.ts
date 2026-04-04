@@ -3,9 +3,7 @@
 export type FunnelEventName =
   | "site_visit"
   | "cv_preview"
-  | "resume_preview"
   | "cv_download"
-  | "resume_download"
   | "service_detail_view"
   | "service_cta_click"
   | "contact_form_started"
