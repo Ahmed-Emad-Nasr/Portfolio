@@ -28,7 +28,6 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
   const [activeEvidenceFilter, setActiveEvidenceFilter] = useState<EvidenceFilter>("All");
 
   const featuredStory = caseStudyHighlights[0];
-  const articleStories = caseStudyHighlights.slice(1);
 
   const storyMetrics = useMemo(() => {
     const totalProjects = caseStudyHighlights.length;
@@ -110,34 +109,6 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
               </div>
             </article>
           </MotionInView>
-
-          <div className={styles.archiveWrap}>
-            <div className={styles.archiveHeader}>
-              <h3>Latest case notes</h3>
-              <p>Short-form posts written like field updates, not portfolio fillers.</p>
-            </div>
-            <div className={styles.grid}>
-              {articleStories.map((item, index) => (
-                <MotionInView
-                  key={item.title}
-                  transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.12) }}
-                >
-                  <article className={styles.card}>
-                    <div className={styles.cardMetaRow}>
-                      <span className={styles.domain}>{item.domain}</span>
-                      <span className={styles.readTime}>3 min read</span>
-                    </div>
-                    <h3>{item.title}</h3>
-                    <p className={styles.previewText}>{item.problem}</p>
-                    <div className={styles.articleBody}>
-                      <p><strong>Action:</strong> {item.action}</p>
-                      <p><strong>Result:</strong> {item.result}</p>
-                    </div>
-                  </article>
-                </MotionInView>
-              ))}
-            </div>
-          </div>
         </div>
 
         <div className={styles.evidenceBlock}>

@@ -131,7 +131,6 @@
 }
 
 .featuredCard,
-.archiveWrap,
 .evidenceBlock {
   border: 1px solid rgba(var(--main-color-rgb), 0.16);
   background:
@@ -147,7 +146,6 @@
 }
 
 .featuredTop,
-.archiveHeader,
 .evidenceHeader {
   display: flex;
   justify-content: space-between;
@@ -208,8 +206,7 @@
   gap: 0.6rem;
 }
 
-.keywordChip,
-.readTime {
+.keywordChip {
   display: inline-flex;
   align-items: center;
   width: fit-content;
@@ -229,16 +226,12 @@
   gap: 1rem;
 }
 
-.featuredGrid > div,
-.card {
+.featuredGrid > div {
   border-radius: 18px;
   border: 1px solid rgba(var(--main-color-rgb), 0.14);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
     rgba(255, 255, 255, 0.03);
-}
-
-.featuredGrid > div {
   padding: 1.3rem;
 }
 
@@ -259,44 +252,17 @@
   line-height: 1.72;
 }
 
-.archiveWrap {
-  padding: 2rem;
-}
-
-.archiveHeader h3,
 .evidenceTitle {
   margin: 0;
   font-size: 2.2rem;
   color: rgba(240, 247, 255, 0.98);
 }
 
-.archiveHeader p,
 .evidenceLead {
   margin: 0;
   color: rgba(233, 241, 250, 0.82);
   font-size: 1.44rem;
   line-height: 1.75;
-}
-
-.archiveHeader {
-  margin-bottom: 1.4rem;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2.2rem;
-}
-
-.card {
-  padding: 2rem 1.8rem;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  border-color: rgba(var(--main-color-rgb), 0.45);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(var(--main-color-rgb), 0.08), 0 0 36px rgba(var(--main-color-rgb), 0.08);
-  transform: translateY(-4px);
 }
 
 .domain {
@@ -311,40 +277,6 @@
   margin-bottom: 1rem;
   font-weight: 700;
   box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.08), 0 8px 18px rgba(var(--main-color-rgb), 0.06);
-}
-
-.cardMetaRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.card h3 {
-  margin: 0.9rem 0 0.9rem;
-  font-size: 1.85rem;
-  color: rgba(240, 247, 255, 0.96);
-}
-
-.previewText {
-  margin: 0 0 1rem;
-  color: rgba(233, 241, 250, 0.92);
-  font-size: 1.42rem;
-  line-height: 1.72;
-}
-
-.articleBody p,
-.card p {
-  margin: 0 0 0.7rem;
-  line-height: 1.72;
-  color: rgba(233, 241, 250, 0.84);
-  font-size: 1.42rem;
-}
-
-.articleBody p:last-child,
-.card p:last-child {
-  margin-bottom: 0;
 }
 
 .evidenceBlock {
@@ -452,57 +384,10 @@
   font-size: 1.28rem;
 }
 
-.faqBlock {
-  margin-top: 3rem;
-}
-
-.faqTitle {
-  margin: 0;
-  font-size: 2.1rem;
-  color: rgba(240, 247, 255, 0.96);
-}
-
-.faqLead {
-  margin: 0.6rem 0 1.3rem;
-  color: rgba(233, 241, 250, 0.82);
-  font-size: 1.5rem;
-}
-
-.faqGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
-.faqCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  border-radius: 14px;
-  padding: 1.2rem;
-}
-
-.faqCategory {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.4);
-  padding: 0.2rem 0.7rem;
-  font-size: 1.12rem;
-  font-weight: 700;
-  margin-bottom: 0.7rem;
-}
-
-.faqCard h4 {
-  margin: 0 0 0.6rem;
-  font-size: 1.62rem;
-  line-height: 1.55;
-}
-
-.faqCard p {
-  margin: 0;
-  color: rgba(233, 241, 250, 0.82);
-  font-size: 1.42rem;
-  line-height: 1.7;
+.evidenceCard:focus {
+  outline: none;
+  border-color: rgba(var(--main-color-rgb), 0.6);
+  box-shadow: 0 0 0 3px rgba(var(--main-color-rgb), 0.15), 0 10px 20px rgba(0, 0, 0, 0.35);
 }
 
 @media (max-width: 991px) {
@@ -556,7 +441,6 @@
   }
 
   .featuredCard,
-  .archiveWrap,
   .evidenceBlock {
     padding: 1.4rem;
     border-radius: 1.6rem;
@@ -577,23 +461,15 @@
   }
 
   .featuredTop,
-  .archiveHeader,
   .evidenceHeader {
     flex-direction: column;
   }
 
-  .card {
-    padding: 1.8rem 1.4rem;
-    border-radius: 1.6rem;
-  }
-
-  .evidenceCard strong,
-  .faqCard h4 {
+  .evidenceCard strong {
     font-size: 1.5rem;
   }
 
-  .evidenceCard small,
-  .faqCard p {
+  .evidenceCard small {
     font-size: 1.3rem;
   }
 

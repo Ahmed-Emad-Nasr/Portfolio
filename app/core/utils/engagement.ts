@@ -15,7 +15,6 @@ export type FunnelEventName =
   | "section_view_projects"
   | "section_view_case_studies"
   | "section_view_contact"
-  | "section_view_faq"
   | "section_view_certifications";
 
 type NotificationPayload = {
