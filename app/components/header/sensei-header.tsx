@@ -94,8 +94,8 @@ const SenseiHeader = memo(function SenseiHeader() {
   }, [setIsMenuOpen]);
 
   const navLinks = useMemo(
-    () =>
-      Object.entries(sectionIcons).map(([section, icon]) => {
+    () => [
+      ...Object.entries(sectionIcons).map(([section, icon]) => {
         const navLabel = section.replace(/([a-z])([A-Z])/g, "$1 $2");
 
         return (
@@ -111,7 +111,22 @@ const SenseiHeader = memo(function SenseiHeader() {
           </a>
         );
       }),
-    [sectionIcons, activeSection, handleNavLinkClick]
+      <a
+        key="Blog"
+        href="/blog"
+        className={isBlogRoute ? ACTIVE_CLASS : undefined}
+        onClick={() => {
+          if (window.innerWidth <= 994) {
+            setIsMenuOpen(false);
+          }
+        }}
+        aria-label="Open blog page"
+        aria-current={isBlogRoute ? "page" : undefined}
+      >
+        <span className={styles.navText}>Blog</span>
+      </a>,
+    ],
+    [sectionIcons, activeSection, handleNavLinkClick, isBlogRoute, setIsMenuOpen]
   );
 
   const menuIconClass = isMenuOpen ? `${MENU_ICON_BASE} ${ACTIVE_CLASS}` : MENU_ICON_BASE;
@@ -148,14 +163,6 @@ const SenseiHeader = memo(function SenseiHeader() {
       >
         {navLinks}
       </nav>
-      <a
-        href="/blog"
-        className={isBlogRoute ? `${styles.blogLink} ${styles.activeBlog}` : styles.blogLink}
-        aria-label="Open blog page"
-        aria-current={isBlogRoute ? "page" : undefined}
-      >
-        Blog
-      </a>
       {isMenuOpen ? <button type="button" className={styles.backdrop} aria-label="Close navigation menu" onClick={handleBackdropClick} /> : null}
     </header>
   );
