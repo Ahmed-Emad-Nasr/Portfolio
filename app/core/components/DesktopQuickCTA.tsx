@@ -36,6 +36,8 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
       <button
         type="button"
         onClick={scrollToTop}
+        className={`${styles.btn} ${styles.tertiary}`}
+        aria-label="Scroll to top"
       >
         <FontAwesomeIcon icon={faArrowUp} />
         Top
