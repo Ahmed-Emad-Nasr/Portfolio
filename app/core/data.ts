@@ -424,6 +424,16 @@ export const caseStudyHighlights = [
     result:
       "Reached 120+ learners, average feedback 4.9/5, and improved lab performance by 40%.",
   },
+  {
+    title: "Email Analysis Room Investigation",
+    domain: "Email Security",
+    problem:
+      "Suspicious inbound email activity required structured triage to quickly separate malicious messages from false alarms.",
+    action:
+      "Performed header and sender analysis, inspected embedded links and attachments, and documented indicators with a repeatable workflow.",
+    result:
+      "Improved phishing triage consistency and reduced investigation back-and-forth by using a clear evidence-based playbook.",
+  },
 ] as const;
 
 export const caseEvidenceLibrary = [
@@ -538,6 +548,13 @@ export const caseEvidenceLibrary = [
     platform: "Blue Team Simulation",
     type: "PDF Report",
     href: "Assets/Cases/Unload_Malware/AhmedEmad_Unload_Malware_Report.pdf",
+  },
+  {
+    id: "email-analysis-room-report",
+    title: "Email Analysis Room Report",
+    platform: "Blue Team Simulation",
+    type: "PDF Report",
+    href: "Assets/Cases/Email_Analysis_Room/AhmedEmad_EmailAnalysis_Room.pdf",
   },
 ] as const;
 

@@ -59,6 +59,18 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "soc336-report": buildScreenshotRange("SOC336", 165, 178, [169]),
   "soc338-pdf": buildScreenshotRange("SOC338", 83, 90),
   "soc342-pdf": buildScreenshotRange("SOC342", 91, 99),
+  "email-analysis-room-report": [
+    "Assets/Cases/Email_Analysis_Room/1.png",
+    "Assets/Cases/Email_Analysis_Room/2.png",
+    "Assets/Cases/Email_Analysis_Room/3.png",
+    "Assets/Cases/Email_Analysis_Room/4.png",
+    "Assets/Cases/Email_Analysis_Room/5.png",
+    "Assets/Cases/Email_Analysis_Room/6.png",
+    "Assets/Cases/Email_Analysis_Room/7.png",
+    "Assets/Cases/Email_Analysis_Room/8.png",
+    "Assets/Cases/Email_Analysis_Room/9.png",
+    "Assets/Cases/Email_Analysis_Room/10.png",
+  ],
 };
 
 const normalizePublicHref = (href: string): string => {
