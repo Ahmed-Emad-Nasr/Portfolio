@@ -91,6 +91,54 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
+.blogLink {
+  flex-shrink: 0;
+  white-space: nowrap;
+  z-index: 1003;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  font-size: 1.32rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 700;
+  color: #b8ffe3;
+  border: 1px dashed rgba(111, 234, 178, 0.66);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 16px rgba(111, 234, 178, 0.16);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-normal) var(--motion-ease),
+    background-color var(--motion-normal) var(--motion-ease),
+    border-color var(--motion-normal) var(--motion-ease),
+    color var(--motion-normal) var(--motion-ease);
+}
+
+.blogLink:hover {
+  transform: translateY(-2px);
+  color: #031d14;
+  border-style: solid;
+  border-color: #6feab2;
+  background: #6feab2;
+  box-shadow: 0 12px 22px rgba(111, 234, 178, 0.3);
+}
+
+.blogLink:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 3px;
+}
+
+.blogLink.activeBlog {
+  color: #031d14;
+  border-style: solid;
+  border-color: #6feab2;
+  background: #6feab2;
+  box-shadow: 0 0 0 2px rgba(111, 234, 178, 0.28), 0 10px 20px rgba(111, 234, 178, 0.24);
+}
+
 .navbar a {
   font-size: 1.56rem;
   color: var(--text-color);
@@ -193,6 +241,16 @@
 
   .logo { font-size: 2.1rem; }
 
+  .blogLink {
+    order: 1;
+    position: relative;
+    margin-left: auto;
+    margin-right: 0.45rem;
+    padding: 0.62rem 0.92rem;
+    font-size: 1.15rem;
+    min-height: 40px;
+  }
+
   .MenuIcon { display: flex; }
 
   .navbar {
@@ -260,6 +318,7 @@
   .MenuIcon {
     min-width: 52px;
     min-height: 52px;
+    order: 2;
   }
 }
 
@@ -275,6 +334,13 @@
   .logo {
     font-size: 1.7rem;
     letter-spacing: 1px;
+  }
+
+  .blogLink {
+    margin-right: 0.3rem;
+    font-size: 1.02rem;
+    letter-spacing: 0.03em;
+    padding: 0.58rem 0.8rem;
   }
 
   .MenuIcon span {

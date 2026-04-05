@@ -39,8 +39,10 @@
 }
 
 .metricCard {
-  background: linear-gradient(180deg, rgba(14, 14, 14, 0.84), rgba(9, 9, 9, 0.72));
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  background:
+    radial-gradient(circle at 88% 14%, rgba(var(--accent-color-rgb), 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(14, 18, 24, 0.9), rgba(8, 10, 13, 0.78));
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
   border-radius: 1.4rem;
   padding: 2rem 1.6rem;
   text-align: center;
@@ -48,8 +50,8 @@
 }
 
 .metricCard:hover {
-  border-color: rgba(var(--main-color-rgb), 0.5);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
+  border-color: rgba(var(--accent-color-rgb), 0.5);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(var(--accent-color-rgb), 0.11);
   transform: translateY(-3px);
 }
 
@@ -68,7 +70,7 @@
 }
 
 .toolsCard {
-  background: linear-gradient(180deg, rgba(12, 12, 12, 0.84), rgba(8, 8, 8, 0.7));
+  background: linear-gradient(180deg, rgba(12, 16, 22, 0.86), rgba(8, 10, 13, 0.72));
   border: 1px solid rgba(var(--main-color-rgb), 0.18);
   border-radius: 1.4rem;
   padding: 2rem;
@@ -103,7 +105,7 @@
 }
 
 .credCard {
-  background: linear-gradient(180deg, rgba(12, 12, 12, 0.84), rgba(8, 8, 8, 0.7));
+  background: linear-gradient(180deg, rgba(12, 16, 22, 0.86), rgba(8, 10, 13, 0.72));
   border: 1px solid rgba(var(--main-color-rgb), 0.18);
   border-radius: 1.4rem;
   padding: 2rem;
@@ -188,7 +190,7 @@
 }
 
 .testimonialCard {
-  background: linear-gradient(180deg, rgba(12, 12, 12, 0.84), rgba(8, 8, 8, 0.7));
+  background: linear-gradient(180deg, rgba(12, 16, 22, 0.86), rgba(8, 10, 13, 0.72));
   border: 1px solid rgba(var(--main-color-rgb), 0.18);
   border-radius: 1.2rem;
   padding: 1.5rem 1.3rem;

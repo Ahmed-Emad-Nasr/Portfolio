@@ -15,15 +15,17 @@
 .contact-wrapper { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem; align-items: start; width: 100%; min-width: 0; }
 
 .info-card, .form-card {
-  background: rgba(15, 15, 15, 0.68); backdrop-filter: blur(var(--card-blur)); border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  background:
+    radial-gradient(circle at 88% 10%, rgba(var(--accent-color-rgb), 0.12), transparent 34%),
+    rgba(12, 16, 22, 0.76); backdrop-filter: blur(var(--card-blur)); border: 1px solid rgba(var(--main-color-rgb), 0.26);
   border-radius: 20px; padding: 4rem 3rem;
   transition: background-color 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.22s ease, box-shadow 0.22s ease;
   backface-visibility: hidden; will-change: box-shadow, border-color, background-color;
   width: 100%; min-width: 0; box-sizing: border-box;
 }
 .info-card:hover, .form-card:hover, .info-card:focus-within, .form-card:focus-within { 
-  border-color: rgba(var(--main-color-rgb), 0.72); 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(var(--main-color-rgb), 0.12); 
+  border-color: rgba(var(--accent-color-rgb), 0.66); 
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 12px rgba(var(--accent-color-rgb), 0.2); 
   transform: translateY(-2px);
 }
 

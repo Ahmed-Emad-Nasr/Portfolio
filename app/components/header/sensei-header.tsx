@@ -10,15 +10,19 @@ import { useCallback, useMemo, memo, useEffect, type MouseEvent } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
+import { usePathname } from "next/navigation";
 
 const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
 
 const SenseiHeader = memo(function SenseiHeader() {
+  const pathname = usePathname();
   const {
     isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen,
   } = useHeader();
+
+  const isBlogRoute = pathname === "/blog" || pathname.startsWith("/blog/");
 
   useEffect(() => {
     if (window.innerWidth > 994) {
@@ -144,6 +148,14 @@ const SenseiHeader = memo(function SenseiHeader() {
       >
         {navLinks}
       </nav>
+      <a
+        href="/blog"
+        className={isBlogRoute ? `${styles.blogLink} ${styles.activeBlog}` : styles.blogLink}
+        aria-label="Open blog page"
+        aria-current={isBlogRoute ? "page" : undefined}
+      >
+        Blog
+      </a>
       {isMenuOpen ? <button type="button" className={styles.backdrop} aria-label="Close navigation menu" onClick={handleBackdropClick} /> : null}
     </header>
   );

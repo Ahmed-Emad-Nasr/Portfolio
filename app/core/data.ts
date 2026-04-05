@@ -6,12 +6,86 @@
  */
 
 export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
+export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";
+export const YOUTUBE_CHANNEL_ID = "UCb9u196eayC3vO9hDqr2ruA";
+
+export type BlogYoutubeVideo = {
+  videoId: string;
+  title: string;
+  publishedAt: string;
+};
+
+export type FeaturedYoutubeVideo = {
+  videoId: string;
+  title: string;
+  sourceUrl: string;
+};
+
+export type BlogYoutubePlaylist = {
+  playlistId: string;
+  title: string;
+  sourceUrl: string;
+};
 
 export const homeSummaryParagraph =
   "Computer Science student and SOC/IR analyst with 10+ trainings and 200+ simulated alerts. Strong in SIEM/EDR investigations, alert triage, IOC analysis, and incident response.";
 
 export const aboutSummaryParagraph =
   "SOC and Incident Response analyst with hands-on experience from 10+ trainings and 200+ simulated alerts. Focused on SIEM/EDR investigations, alert triage, IOC analysis, and faster incident handling.";
+
+export const blogYoutubeVideos: BlogYoutubeVideo[] = [
+  {
+    videoId: "UNlJszq1Xso",
+    title: "Session Online 1 Part 1",
+    publishedAt: "2025-12-02",
+  },
+  {
+    videoId: "pWkodhNwQy8",
+    title: "StegCracker شرح بسيط",
+    publishedAt: "2025-12-02",
+  },
+  {
+    videoId: "dsK-w6G5zdw",
+    title: "Session Online 1 Part 2",
+    publishedAt: "2025-12-02",
+  },
+  {
+    videoId: "tNH1cBceYwY",
+    title: "Session 2 Online",
+    publishedAt: "2025-12-02",
+  },
+  {
+    videoId: "256UCPWbSqM",
+    title: "StegHide شرح بسيط",
+    publishedAt: "2025-12-02",
+  },
+  {
+    videoId: "GwPbuYulV1U",
+    title: "Configuring and Testing Wazuh With Sysmon",
+    publishedAt: "2025-11-28",
+  },
+];
+
+export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
+  videoId: "orw_kiHZvhU",
+  title: "Featured Video",
+  sourceUrl: "https://youtu.be/orw_kiHZvhU?si=0D4Ri-NSCzCB-Bg_",
+};
+
+export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
+  {
+    playlistId: "PLO1VSSKnwZUgbiE0ev1TUr5wPI9kxxbgL",
+    title: "Wazuh.",
+    sourceUrl:
+      "https://youtube.com/playlist?list=PLO1VSSKnwZUgbiE0ev1TUr5wPI9kxxbgL&si=nVzc9L5Kmxhlc1Rc",
+  },
+  {
+    playlistId: "PLO1VSSKnwZUgdrITjagQD0mikt6Xk64yX",
+    title: "Wazuh Threat Emulation",
+    sourceUrl:
+      "https://youtube.com/playlist?list=PLO1VSSKnwZUgdrITjagQD0mikt6Xk64yX&si=ANb4u1blPp4gyc5F",
+  },
+];
 
 export const knowledgeEducationItems = [
   {
