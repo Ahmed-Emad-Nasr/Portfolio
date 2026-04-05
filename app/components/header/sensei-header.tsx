@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation";
 const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
+const BLOG_PATH = "/Portfolio/blog";
 
 const SenseiHeader = memo(function SenseiHeader() {
   const pathname = usePathname();
@@ -22,7 +23,11 @@ const SenseiHeader = memo(function SenseiHeader() {
     isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen,
   } = useHeader();
 
-  const isBlogRoute = pathname === "/blog" || pathname.startsWith("/blog/");
+  const isBlogRoute =
+    pathname === "/blog" ||
+    pathname.startsWith("/blog/") ||
+    pathname === BLOG_PATH ||
+    pathname.startsWith(`${BLOG_PATH}/`);
 
   useEffect(() => {
     if (window.innerWidth > 994) {
@@ -113,7 +118,7 @@ const SenseiHeader = memo(function SenseiHeader() {
       }),
       <a
         key="Blog"
-        href="/blog"
+        href={BLOG_PATH}
         className={isBlogRoute ? ACTIVE_CLASS : undefined}
         onClick={() => {
           if (window.innerWidth <= 994) {
