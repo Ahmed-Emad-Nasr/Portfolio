@@ -458,6 +458,13 @@ export const caseEvidenceLibrary = [
     type: "PDF Report",
     href: "Assets/Cases/ass_6/AhmedEmad_MITRE_Report.pdf",
   },
+  {
+    id: "unload-malware-report",
+    title: "Unload Malware Analysis Report",
+    platform: "Blue Team Simulation",
+    type: "PDF Report",
+    href: "Assets/Cases/Unload_Malware/AhmedEmad_Unload_Malware_Report.pdf",
+  },
 ] as const;
 
 export const staticProjectFallback = [
