@@ -45,7 +45,7 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         Open CV
       </a>
       <a
-        href="/blog"
+        href="/Portfolio/blog"
         className={`${styles.btn} ${styles.tertiary}`}
         aria-label="Open blog page"
       >

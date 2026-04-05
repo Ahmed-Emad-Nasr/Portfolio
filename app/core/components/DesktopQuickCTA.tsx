@@ -42,7 +42,7 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         Top
       </button>
       <a
-        href="/blog"
+        href="/Portfolio/blog"
         className={`${styles.btn} ${styles.tertiary}`}
         aria-label="Open blog page"
       >
