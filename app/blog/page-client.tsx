@@ -62,8 +62,15 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
 };
 
 const normalizePublicHref = (href: string): string => {
+  if (typeof window === "undefined") return href;
+  if (/^https?:\/\//i.test(href)) return href;
+
+  const path = window.location.pathname;
+  const scopePrefix =
+    path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
+
   const normalized = href.startsWith("/") ? href : `/${href}`;
-  return encodeURI(normalized);
+  return encodeURI(`${scopePrefix}${normalized}`);
 };
 
 const formatDate = (value: string): string => {
