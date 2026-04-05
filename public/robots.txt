@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /thank-you/
+
+Sitemap: https://ahmed-emad-nasr.github.io/Portfolio/sitemap.xml

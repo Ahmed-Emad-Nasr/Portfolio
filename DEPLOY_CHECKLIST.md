@@ -16,15 +16,22 @@
 ## 4) Quick Endpoint Check
 After deploy, verify these URLs return 200:
 - `/`
+- `/robots.txt`
+- `/sitemap.xml`
 
 You can print all required URLs quickly with:
 - `npm run postdeploy-check`
 
-## 5) Search Console (Optional)
+## 5) SEO Crawlability Quick Check
+- Open `/robots.txt` and confirm it points to the deployed sitemap URL.
+- Open `/sitemap.xml` and confirm homepage + all service URLs are listed.
+- Re-submit sitemap URL in Search Console after major content updates.
+
+## 6) Search Console (Optional)
 - Open Google Search Console.
 - Add/verify your property.
 
-## 6) Quick Monitoring Smoke Test
+## 7) Quick Monitoring Smoke Test
 - Open site homepage and click a CTA (Hire/Projects/Book Call).
 - Submit contact form (test message).
 - Open CV modal and test Preview/Download buttons.

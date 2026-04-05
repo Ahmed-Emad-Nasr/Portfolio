@@ -33,32 +33,32 @@ const MainClient = memo(function MainClient() {
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    // Avoid fixed delays so users can interact as soon as the page is actually ready.
+    // Unlock UI at DOM readiness instead of waiting for all assets.
     let didMarkReady = false;
 
     const markAppReady = () => {
       if (didMarkReady) return;
       didMarkReady = true;
       setIsAppReady(true);
-      window.removeEventListener("load", markAppReady);
+      document.removeEventListener("DOMContentLoaded", markAppReady);
     };
 
-    // If the page is already loaded, unlock immediately after the current paint.
-    if (document.readyState === "complete") {
+    // If DOM is already parsed, unlock immediately after the current paint.
+    if (document.readyState !== "loading") {
       window.requestAnimationFrame(markAppReady);
       return () => {};
     }
 
-    // Otherwise wait for the natural load event.
-    window.addEventListener("load", markAppReady, { once: true });
+    // Otherwise wait only for DOMContentLoaded (faster than full window load).
+    document.addEventListener("DOMContentLoaded", markAppReady, { once: true });
 
     return () => {
-      window.removeEventListener("load", markAppReady);
+      document.removeEventListener("DOMContentLoaded", markAppReady);
     };
   }, []);
 
   return (
-    <main style={{ position: "relative" }}>
+    <main id="main-content" style={{ position: "relative" }}>
       {/* تمرير حالة التحميل للـ Loader بدلاً من إخفائه فجأة */}
       <LoadingScreen isLoading={!isAppReady} />
 

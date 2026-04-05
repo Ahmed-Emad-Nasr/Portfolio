@@ -200,7 +200,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
 ProjectItem.displayName = "ProjectItem";
 
 const SenseiProjects = memo(function SenseiProjects() {
-  const { repos, isLoading, source, loadError, cacheUpdatedAt, refresh } = useGitHubRepos();
+  const { repos, isLoading, source, loadNotice, loadError, cacheUpdatedAt, refresh } = useGitHubRepos();
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
   const filterCounts = useMemo(() => getFilterCounts(repos), [repos]);
 
@@ -262,7 +262,8 @@ const SenseiProjects = memo(function SenseiProjects() {
             </button>
           ) : null}
         </div>
-        {loadError ? <p className={styles["empty-state-hint"]}>{loadError}</p> : null}
+        {loadNotice ? <p className={styles["empty-state-hint"]}>{loadNotice}</p> : null}
+        {loadError ? <p className={styles["empty-state-hint"]} role="alert">{loadError}</p> : null}
         {source === "cache" && cacheLabel ? (
           <p className={styles["empty-state-hint"]}>Cache last updated: {cacheLabel}</p>
         ) : null}

@@ -265,7 +265,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" dir="ltr">
       <head />
       <body className={BODY_CLASS}>
-        <a className="skip-link" href="#Home">
+        <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
         {TURNSTILE_SITE_KEY ? (
@@ -282,7 +282,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   var scopePrefix = path === "/Portfolio" || path.startsWith("/Portfolio/") ? "/Portfolio" : "";
   var swUrl = scopePrefix + "/sw.js";
 
-  navigator.serviceWorker.register(swUrl).catch(function(){});
+  navigator.serviceWorker.register(swUrl).catch(function(error){
+    console.warn("Service worker registration failed:", error);
+  });
 })();`}
         </Script>
         <ToastHost />
