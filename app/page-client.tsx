@@ -11,8 +11,6 @@ import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
 import AboutSection from "@/app/components/about/sensei-about";
-import TrustSection from "@/app/components/trust/trust-section";
-import ServicesSection from "@/app/components/services/sensei-services-projects";
 import ExperienceSection from "@/app/components/experience/experience-section";
 import ProjectsSection from "@/app/components/projects/sensei-projects";
 import CaseStudiesSection from "@/app/components/case-studies/sensei-case-studies";
@@ -74,19 +72,15 @@ const MainClient = memo(function MainClient() {
         <AppBar />
         <HomeSection />
         <AboutSection />
-        <TrustSection />
         <ExperienceSection />
-        <ErrorBoundary title="Projects section">
-          <ProjectsSection />
-        </ErrorBoundary>
         <ErrorBoundary title="Case studies section">
           <CaseStudiesSection />
         </ErrorBoundary>
+        <ErrorBoundary title="Projects section">
+          <ProjectsSection />
+        </ErrorBoundary>
         <ErrorBoundary title="FAQ section">
           <FAQSection />
-        </ErrorBoundary>
-        <ErrorBoundary title="Services section">
-          <ServicesSection />
         </ErrorBoundary>
         <ErrorBoundary title="Contact section">
           <ContactSection />

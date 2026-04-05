@@ -10,12 +10,10 @@ import { useState, useEffect, useCallback } from "react";
 import {
   faHome, 
   faAddressCard,
-  faUserSecret, 
   faBook, 
   faCertificate,
   faClipboardCheck,
   faFolder, 
-  faHandshake,
   faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -23,11 +21,9 @@ import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 const SECTION_ICONS: Record<string, IconProp> = {
   Home:       faHome,
   About:      faAddressCard,
-  Trust:      faHandshake,
   Experience: faBook,
-  Projects:   faFolder,
   CaseStudies: faClipboardCheck,
-  Services:   faUserSecret,
+  Projects:   faFolder,
   Contact:    faEnvelope,
   Certifications: faCertificate,
 };

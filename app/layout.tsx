@@ -11,7 +11,7 @@ import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
 import ToastHost from "@/app/core/components/ToastHost";
-import { faqItems, knowledgeEducationItems, serviceCatalog } from "@/app/core/data";
+import { faqItems, knowledgeEducationItems } from "@/app/core/data";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     template: "%s | Ahmed Emad Nasr",
   },
   description:
-    "Ahmed Emad Nasr's cybersecurity portfolio for SOC analysis, incident response, threat hunting, SIEM/EDR implementation, digital forensics, and security training.",
+    "Ahmed Emad Nasr's cybersecurity portfolio for incident response, threat hunting, digital forensics, security training, projects, and contact.",
   keywords: [
     "Ahmed Emad Nasr",
     "SOC Analyst",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
     description:
-      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
+      "Incident response, threat hunting, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
     type: "website",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     locale: "en_US",
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
     description:
-      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training services.",
+      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
     creator: "@0x3omda",
     site: "@0x3omda",
     images: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
@@ -186,7 +186,7 @@ const structuredData = {
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
       name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
       description:
-        "A portfolio homepage highlighting cybersecurity services, professional experience, certifications, projects, and contact options.",
+        "A portfolio homepage highlighting cybersecurity work, professional experience, certifications, projects, and contact options.",
       isPartOf: {
         "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
       },
@@ -198,33 +198,6 @@ const structuredData = {
         "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
       },
       inLanguage: "en",
-    },
-    {
-      "@type": "CollectionPage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#services",
-      name: "Services",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/#Services",
-      about: {
-        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
-      },
-      hasPart: serviceCatalog.map((service) => ({
-        "@type": "Service",
-        "@id": `https://ahmed-emad-nasr.github.io/Portfolio/services/${service.slug}#service`,
-        name: service.title,
-        url: `https://ahmed-emad-nasr.github.io/Portfolio/services/${service.slug}`,
-        description: service.description,
-        serviceType: service.title,
-        provider: {
-          "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
-        },
-        offers: {
-          "@type": "Offer",
-          price: service.from.replace("$", ""),
-          priceCurrency: "USD",
-          availability: "https://schema.org/InStock",
-          url: `https://ahmed-emad-nasr.github.io/Portfolio/services/${service.slug}`,
-        },
-      })),
     },
     {
       "@type": "FAQPage",

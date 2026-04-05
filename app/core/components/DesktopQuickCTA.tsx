@@ -4,7 +4,6 @@ import { memo, useState } from "react";
 import styles from "./desktop-quick-cta.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { recordFunnelEvent } from "@/app/core/utils/engagement";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -19,7 +18,6 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
     }
 
     setIsCallLocked(true);
-    recordFunnelEvent("service_cta_click");
     window.setTimeout(() => setIsCallLocked(false), 1000);
   };
 

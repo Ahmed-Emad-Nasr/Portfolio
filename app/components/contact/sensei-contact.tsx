@@ -18,7 +18,7 @@ import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
 import { isActionAllowed, recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
 import { showToast } from "@/app/core/utils/toast";
-import { contactBudgetOptions, contactServiceOptions, contactTimelineOptions, serviceResponseSla } from "@/app/core/data";
+import { contactBudgetOptions, contactProjectOptions, contactTimelineOptions, projectResponseSla } from "@/app/core/data";
 
 const TurnstileWidget = dynamic(() => import("@/app/core/components/TurnstileWidget"), {
   ssr: false,
@@ -51,8 +51,8 @@ const validateFieldValue = (field: string, value: string): string | null => {
     return null;
   }
 
-  if (field === "requested_service") {
-    if (trimmed.length === 0) return "Please select a service";
+  if (field === "project_scope") {
+    if (trimmed.length === 0) return "Please select a project scope";
     return null;
   }
 
@@ -72,7 +72,7 @@ const SenseiContact = memo(function SenseiContact() {
   const [submitError, setSubmitError] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [didTrackFormStart, setDidTrackFormStart] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedProjectScope, setSelectedProjectScope] = useState("");
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string|null>>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
@@ -92,7 +92,7 @@ const SenseiContact = memo(function SenseiContact() {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       subject: String(formData.get("subject") ?? ""),
-      requested_service: String(formData.get("requested_service") ?? ""),
+      project_scope: String(formData.get("project_scope") ?? ""),
       budget_range: String(formData.get("budget_range") ?? ""),
       project_timeline: String(formData.get("project_timeline") ?? ""),
       message: String(formData.get("message") ?? ""),
@@ -133,7 +133,7 @@ const SenseiContact = memo(function SenseiContact() {
         name: '[name="name"]',
         email: '[name="email"]',
         subject: '[name="subject"]',
-        requested_service: '[name="requested_service"]',
+        project_scope: '[name="project_scope"]',
         message: '[name="message"]',
       };
 
@@ -181,7 +181,7 @@ const SenseiContact = memo(function SenseiContact() {
       const subject = formData.get("subject");
       const message = formData.get("message");
       const website = formData.get("website");
-      const requestedService = formData.get("requested_service");
+      const projectScope = formData.get("project_scope");
       const budgetRange = formData.get("budget_range");
       const projectTimeline = formData.get("project_timeline");
 
@@ -200,12 +200,12 @@ const SenseiContact = memo(function SenseiContact() {
         return;
       }
 
-      if (!name || !email || !subject || !message || !requestedService) {
+      if (!name || !email || !subject || !message || !projectScope) {
         const errors: Record<string, string> = {};
         if (!name) errors.name = "Name is required";
         if (!email) errors.email = "Email is required";
         if (!subject) errors.subject = "Subject is required";
-        if (!requestedService) errors.requested_service = "Please select a service";
+        if (!projectScope) errors.project_scope = "Please select a project scope";
         if (!message) errors.message = "Message is required";
         showToast({ type: "error", message: "Please fill in all required fields." });
         setValidationErrors(errors);
@@ -262,7 +262,7 @@ const SenseiContact = memo(function SenseiContact() {
             `Name: ${name}`,
             `Email: ${email}`,
             `Subject: ${subject}`,
-            `Requested service: ${requestedService}`,
+            `Project scope: ${projectScope}`,
             `Budget range: ${budgetRange ? String(budgetRange) : "Not provided"}`,
             `Timeline: ${projectTimeline ? String(projectTimeline) : "Not provided"}`,
             `Time (UTC): ${new Date().toISOString()}`,
@@ -320,7 +320,7 @@ const SenseiContact = memo(function SenseiContact() {
       if (!rawDraft) return;
 
       const parsed = JSON.parse(rawDraft) as Record<string, string>;
-      const supportedFields = ["name", "email", "subject", "requested_service", "budget_range", "project_timeline", "message"];
+      const supportedFields = ["name", "email", "subject", "project_scope", "budget_range", "project_timeline", "message"];
 
       supportedFields.forEach((field) => {
         const value = parsed[field];
@@ -331,8 +331,8 @@ const SenseiContact = memo(function SenseiContact() {
         element.value = value;
       });
 
-      if (typeof parsed.requested_service === "string") {
-        setSelectedService(parsed.requested_service);
+      if (typeof parsed.project_scope === "string") {
+        setSelectedProjectScope(parsed.project_scope);
       }
     } catch {
       // Ignore malformed drafts.
@@ -361,7 +361,7 @@ const SenseiContact = memo(function SenseiContact() {
     };
   }, [isFormDirty, isSuccess]);
 
-  const quickQuoteMessage = `Hi Ahmed, I need a quick quote for ${selectedService || "a cybersecurity project"}.`;
+  const quickQuoteMessage = `Hi Ahmed, I need a quick quote for ${selectedProjectScope || "a cybersecurity project"}.`;
   const quickQuoteHref = `https://wa.me/201018166445?text=${encodeURIComponent(quickQuoteMessage)}`;
   const activeFieldErrors = Object.entries(fieldErrors).filter(([, message]) => Boolean(message)) as Array<
     [string, string]
@@ -381,8 +381,8 @@ const SenseiContact = memo(function SenseiContact() {
     };
   }, []);
 
-  const dynamicSla = selectedService && serviceResponseSla[selectedService]
-    ? serviceResponseSla[selectedService]
+  const dynamicSla = selectedProjectScope && projectResponseSla[selectedProjectScope]
+    ? projectResponseSla[selectedProjectScope]
     : "Typical response time: within 24 hours.";
 
   return (
@@ -485,28 +485,28 @@ const SenseiContact = memo(function SenseiContact() {
               </div>
               {fieldErrors.subject ? <span id="subject-error" className={styles["field-error"]}>{fieldErrors.subject}</span> : null}
               <div className={styles["input-group"]}>
-                <label htmlFor="requested_service" className={styles["sr-only"]}>Requested service</label>
+                <label htmlFor="project_scope" className={styles["sr-only"]}>Project scope</label>
                 <select
-                  id="requested_service"
-                  name="requested_service"
+                  id="project_scope"
+                  name="project_scope"
                   required
                   className={styles["input-field"]}
                   defaultValue=""
                   onChange={(event) => {
-                    setSelectedService(event.target.value);
-                    handleFieldInput("requested_service", event.target.value);
+                    setSelectedProjectScope(event.target.value);
+                    handleFieldInput("project_scope", event.target.value);
                   }}
-                  onBlur={(event) => markTouchedAndValidate("requested_service", event.target.value)}
-                  aria-invalid={!!fieldErrors.requested_service}
-                  aria-describedby={fieldErrors.requested_service ? "requested-service-error" : undefined}
+                  onBlur={(event) => markTouchedAndValidate("project_scope", event.target.value)}
+                  aria-invalid={!!fieldErrors.project_scope}
+                  aria-describedby={fieldErrors.project_scope ? "project-scope-error" : undefined}
                 >
-                  <option value="" disabled>Select service needed</option>
-                  {contactServiceOptions.map((option) => (
+                  <option value="" disabled>Select project scope</option>
+                  {contactProjectOptions.map((option) => (
                     <option key={option} value={option}>{option}</option>
                   ))}
                 </select>
               </div>
-              {fieldErrors.requested_service ? <span id="requested-service-error" className={styles["field-error"]}>{fieldErrors.requested_service}</span> : null}
+              {fieldErrors.project_scope ? <span id="project-scope-error" className={styles["field-error"]}>{fieldErrors.project_scope}</span> : null}
               <details className={styles["optional-fields"]} aria-label="Optional project details">
                 <summary>Add optional project details</summary>
                 <div className={styles["triple-grid"]}>

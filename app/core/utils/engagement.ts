@@ -4,8 +4,6 @@ export type FunnelEventName =
   | "site_visit"
   | "cv_preview"
   | "cv_download"
-  | "service_detail_view"
-  | "service_cta_click"
   | "contact_form_started"
   | "contact_form_abandon"
   | "contact_submit_attempt"
@@ -16,7 +14,6 @@ export type FunnelEventName =
   | "section_view_experience"
   | "section_view_projects"
   | "section_view_case_studies"
-  | "section_view_services"
   | "section_view_contact"
   | "section_view_faq"
   | "section_view_certifications";

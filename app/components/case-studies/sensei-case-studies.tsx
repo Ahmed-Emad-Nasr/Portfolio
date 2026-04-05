@@ -27,6 +27,25 @@ const resolveEvidenceHref = (href: string): string => {
 const SenseiCaseStudies = memo(function SenseiCaseStudies() {
   const [activeEvidenceFilter, setActiveEvidenceFilter] = useState<EvidenceFilter>("All");
 
+  const featuredStory = caseStudyHighlights[0];
+  const articleStories = caseStudyHighlights.slice(1);
+
+  const storyMetrics = useMemo(() => {
+    const totalProjects = caseStudyHighlights.length;
+    const totalEvidence = caseEvidenceLibrary.length;
+    const totalWords = caseStudyHighlights.reduce((count, item) => {
+      return count + `${item.title} ${item.problem} ${item.action} ${item.result}`.split(/\s+/).length;
+    }, 0);
+
+    return [
+      { label: "Stories", value: String(totalProjects) },
+      { label: "Evidence files", value: String(totalEvidence) },
+      { label: "Field note size", value: `${Math.max(3, Math.round(totalWords / 55))} min read` },
+    ];
+  }, []);
+
+  const featuredKeywords = [featuredStory.domain, "Field Notes", "Operational change"];
+
   const filteredEvidence = useMemo(() => {
     if (activeEvidenceFilter === "All") return caseEvidenceLibrary;
 
@@ -40,32 +59,95 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
 
   return (
     <section className={styles.section} id="CaseStudies">
+      <div className={styles.ambientGlow} aria-hidden="true" />
+      <div className={styles.ambientGlowAlt} aria-hidden="true" />
       <div className={styles.container}>
         <div className={styles.headerSection}>
           <SectionHeader japaneseText="事例" englishText="Case Studies" titleClassName={styles.title} />
-          <p className={styles.lead}>Real work snapshots with practical outcomes across SOC, DFIR, and training.</p>
+          <p className={styles.lead}>A blog-style field journal of investigations, tuning work, and training outcomes with evidence attached.</p>
+          <div className={styles.storyMetrics} aria-label="Case study summary metrics">
+            {storyMetrics.map((metric) => (
+              <div key={metric.label} className={styles.metricPill}>
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className={styles.grid}>
-          {caseStudyHighlights.map((item, index) => (
-            <MotionInView
-              key={item.title}
-              transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.15) }}
-            >
-              <article className={styles.card}>
-                <span className={styles.domain}>{item.domain}</span>
-                <h3>{item.title}</h3>
-                <p><strong>Problem:</strong> {item.problem}</p>
-                <p><strong>Action:</strong> {item.action}</p>
-                <p><strong>Result:</strong> {item.result}</p>
-              </article>
-            </MotionInView>
-          ))}
+        <div className={styles.blogLayout}>
+          <MotionInView transition={{ duration: 0.18 }}>
+            <article className={styles.featuredCard}>
+              <div className={styles.featuredTop}>
+                <span className={styles.featuredLabel}>Featured story</span>
+                <span className={styles.featuredMeta}>~4 min read</span>
+              </div>
+              <div className={styles.featuredHero}>
+                <div>
+                  <span className={styles.domain}>{featuredStory.domain}</span>
+                  <h3>{featuredStory.title}</h3>
+                  <p className={styles.featuredIntro}>{featuredStory.problem}</p>
+                </div>
+                <div className={styles.featuredKeywords} aria-label="Story keywords">
+                  {featuredKeywords.map((keyword) => (
+                    <span key={keyword} className={styles.keywordChip}>{keyword}</span>
+                  ))}
+                </div>
+              </div>
+              <div className={styles.featuredGrid}>
+                <div>
+                  <span className={styles.storyLabel}>Problem</span>
+                  <p>{featuredStory.problem}</p>
+                </div>
+                <div>
+                  <span className={styles.storyLabel}>Action</span>
+                  <p>{featuredStory.action}</p>
+                </div>
+                <div>
+                  <span className={styles.storyLabel}>Result</span>
+                  <p>{featuredStory.result}</p>
+                </div>
+              </div>
+            </article>
+          </MotionInView>
+
+          <div className={styles.archiveWrap}>
+            <div className={styles.archiveHeader}>
+              <h3>Latest case notes</h3>
+              <p>Short-form posts written like field updates, not portfolio fillers.</p>
+            </div>
+            <div className={styles.grid}>
+              {articleStories.map((item, index) => (
+                <MotionInView
+                  key={item.title}
+                  transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.12) }}
+                >
+                  <article className={styles.card}>
+                    <div className={styles.cardMetaRow}>
+                      <span className={styles.domain}>{item.domain}</span>
+                      <span className={styles.readTime}>3 min read</span>
+                    </div>
+                    <h3>{item.title}</h3>
+                    <p className={styles.previewText}>{item.problem}</p>
+                    <div className={styles.articleBody}>
+                      <p><strong>Action:</strong> {item.action}</p>
+                      <p><strong>Result:</strong> {item.result}</p>
+                    </div>
+                  </article>
+                </MotionInView>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className={styles.evidenceBlock}>
-          <h3 className={styles.evidenceTitle}>Evidence Library</h3>
-          <p className={styles.evidenceLead}>Uploaded case files from LetsDefend and simulation assignments.</p>
+          <div className={styles.evidenceHeader}>
+            <div>
+              <span className={styles.evidenceKicker}>Archive</span>
+              <h3 className={styles.evidenceTitle}>Evidence Library</h3>
+            </div>
+            <p className={styles.evidenceLead}>Supporting files and write-ups from LetsDefend and simulation assignments.</p>
+          </div>
           <div className={styles.evidenceFilters} role="group" aria-label="Evidence category filters">
             {EVIDENCE_FILTERS.map((filterItem) => (
               <button

@@ -101,12 +101,12 @@ export const knowledgeEducationItems = [
     tag: "HCIA-Cloud Computing V5.0",
     subTag: "Huawei ICT Academy",
     subTagHyperlink: "https://www.huawei.com/minisite/ict-academy/en/",
-    desc: "Built cloud network setups and configured services, applying cloud security principles. • Deployed and secured 5+ cloud-based services, reducing misconfiguration risks by 20%.",
+    desc: "Built cloud network setups and configured infrastructure, applying cloud security principles. • Deployed and secured 5+ cloud environments, reducing misconfiguration risks by 20%.",
     isRight: false,
     startDate: "2024-08-01",
     endDate: "2024-09-01",
     showDate: true,
-    skills: ["Cloud Security", "Cloud Networking", "Service Hardening"],
+    skills: ["Cloud Security", "Cloud Networking", "Platform Hardening"],
     certificateUrl: "https://www.huawei.com/minisite/ict-academy/en/",
   },
   {
@@ -226,141 +226,10 @@ export const trustTestimonials = [
   },
 ] as const;
 
-export const serviceCatalog = [
-  {
-    slug: "soc-analysis",
-    icon: "fa-solid fa-shield-halved",
-    title: "Security Operations Center (SOC) Analysis",
-    description:
-      "Advanced alert triage, threat detection, and security event analysis. Utilize Wazuh, ELK Stack, and Splunk for real-time monitoring. Implement MITRE ATT&CK framework for threat classification and improve detection accuracy.",
-    outcome: "Prioritized alert report and investigation notes within 24h",
-    from: "$300",
-    estimatedDays: "2-4 business days",
-    relatedServices: ["siem-edr-implementation", "incident-response"],
-    deliverables: [
-      "Alert triage workbook with severity ranking",
-      "Detection quality review and false-positive hotspots",
-      "Recommended tuning actions for top noisy rules",
-    ],
-  },
-  {
-    slug: "incident-response",
-    icon: "fa-solid fa-fire",
-    title: "Incident Response (IR) & Handling",
-    description:
-      "End-to-end incident response lifecycle management. Perform threat hunting, containment, eradication, and recovery. Execute incident response playbooks using best practices and frameworks.",
-    outcome: "Actionable response plan and incident timeline",
-    from: "$450",
-    estimatedDays: "3-6 business days",
-    relatedServices: ["soc-analysis", "threat-hunting"],
-    deliverables: [
-      "Incident timeline and attack narrative",
-      "Containment and eradication checklist",
-      "Post-incident lessons learned and hardening plan",
-    ],
-  },
-  {
-    slug: "threat-hunting",
-    icon: "fa-solid fa-magnifying-glass",
-    title: "Threat Hunting & Detection Engineering",
-    description:
-      "Proactive threat hunting using YARA rules, Suricata IDS/IPS, and behavioral analysis. Create custom detection signatures, reduce false positive alerts, and strengthen security posture.",
-    outcome: "Custom detection rules and tuning package",
-    from: "$400",
-    estimatedDays: "3-5 business days",
-    relatedServices: ["soc-analysis", "malware-analysis"],
-    deliverables: [
-      "Hypothesis-driven hunting report",
-      "Detection logic pack (queries, signatures, conditions)",
-      "Validation notes with expected telemetry",
-    ],
-  },
-  {
-    slug: "siem-edr-implementation",
-    icon: "fa-solid fa-database",
-    title: "SIEM & EDR Implementation",
-    description:
-      "Deploy and configure enterprise-grade SIEM solutions including ELK Stack and Splunk. Implement EDR tools like Wazuh for endpoint detection and response capabilities.",
-    outcome: "Monitored pipeline with validated detections",
-    from: "$600",
-    estimatedDays: "5-10 business days",
-    relatedServices: ["soc-analysis", "threat-hunting"],
-    deliverables: [
-      "SIEM/EDR deployment checklist and architecture notes",
-      "Core detection rules for high-priority threats",
-      "Operational handover guide for daily monitoring",
-    ],
-  },
-  {
-    slug: "log-analysis-forensics",
-    icon: "fa-solid fa-file-lines",
-    title: "Log Analysis & Digital Forensics",
-    description:
-      "Comprehensive log analysis, IOC extraction, and digital forensics investigations. Perform memory forensics, malware behavioral analysis, and evidence collection for incident investigations.",
-    outcome: "Forensic findings with IOC package",
-    from: "$500",
-    estimatedDays: "4-7 business days",
-    relatedServices: ["incident-response", "malware-analysis"],
-    deliverables: [
-      "Evidence timeline and IOC extraction sheet",
-      "Root cause analysis summary",
-      "Preservation-ready investigation report",
-    ],
-  },
-  {
-    slug: "vapt",
-    icon: "fa-solid fa-triangle-exclamation",
-    title: "Vulnerability Assessment & Penetration Testing",
-    description:
-      "Identify security weaknesses through systematic vulnerability assessments. Conduct authorized penetration testing, create detailed reports, and recommend remediation strategies.",
-    outcome: "Remediation roadmap with severity ranking",
-    from: "$700",
-    estimatedDays: "5-9 business days",
-    relatedServices: ["log-analysis-forensics", "incident-response"],
-    deliverables: [
-      "Executive risk summary",
-      "Technical findings with proof of concept",
-      "Prioritized remediation plan by business impact",
-    ],
-  },
-  {
-    slug: "training-awareness",
-    icon: "fa-solid fa-person-chalkboard",
-    title: "Cybersecurity Training & Awareness",
-    description:
-      "Deliver comprehensive cybersecurity training programs to technical and non-technical audiences. Build security awareness, improve incident response skills, and foster security culture.",
-    outcome: "Workshop deck, labs, and attendance report",
-    from: "$250",
-    estimatedDays: "1-3 business days",
-    relatedServices: ["soc-analysis", "threat-hunting"],
-    deliverables: [
-      "Customized learning path and session plan",
-      "Hands-on labs and challenge exercises",
-      "Participation feedback and improvement recommendations",
-    ],
-  },
-  {
-    slug: "malware-analysis",
-    icon: "fa-solid fa-virus",
-    title: "Malware Analysis & Prevention",
-    description:
-      "Perform static and dynamic malware analysis in isolated environments. Extract indicators of compromise (IOCs), develop detection signatures, and implement prevention strategies using YARA rules.",
-    outcome: "Malware behavior report and detection artifacts",
-    from: "$450",
-    estimatedDays: "3-6 business days",
-    relatedServices: ["log-analysis-forensics", "threat-hunting"],
-    deliverables: [
-      "Behavior profile and persistence map",
-      "IOC bundle for SIEM/EDR ingestion",
-      "Prevention controls and signature recommendations",
-    ],
-  },
-] as const;
-
-export const serviceResponseSla: Record<string, string> = {
+export const projectResponseSla: Record<string, string> = {
   "SOC monitoring support": "Replies in 2-6 hours during Cairo business hours.",
   "Incident response assistance": "Urgent triage reply in 1-3 hours.",
-  "Threat hunting engagement": "Replies in 4-8 hours with scope checklist.",
+  "Threat hunting engagement": "Replies in 4-8 hours with a scope checklist.",
   "Security training workshop": "Replies within 24 hours with session options.",
   "General consultation": "Replies within 24 hours.",
 };
@@ -384,7 +253,7 @@ export const projectBullets: Record<string, string[]> = {
   ],
 };
 
-export const contactServiceOptions = [
+export const contactProjectOptions = [
   "SOC monitoring support",
   "Incident response assistance",
   "Threat hunting engagement",
@@ -409,12 +278,12 @@ export const contactTimelineOptions = [
 
 export const faqItems = [
   {
-    category: "Services",
-    q: "How quickly can a SOC or IR engagement start?",
+    category: "Engagement",
+    q: "How quickly can a project start?",
     a: "Most scopes can start within 24-48 hours after confirming access, goals, and communication flow.",
   },
   {
-    category: "Services",
+    category: "Engagement",
     q: "Do you work with existing SIEM/EDR deployments?",
     a: "Yes. I can tune and optimize existing Wazuh, ELK, and Splunk setups without requiring a full rebuild.",
   },
@@ -426,7 +295,7 @@ export const faqItems = [
   {
     category: "Pricing",
     q: "How is pricing structured?",
-    a: "Each service has a starting price, and final scope is based on complexity, timeline, and expected deliverables.",
+    a: "Each project has a starting price, and final scope is based on complexity, timeline, and expected deliverables.",
   },
   {
     category: "Process",
@@ -484,6 +353,20 @@ export const caseStudyHighlights = [
 ] as const;
 
 export const caseEvidenceLibrary = [
+  {
+    id: "soc-env-pdf",
+    title: "SOC Environment Report",
+    platform: "Lab Build",
+    type: "PDF Report",
+    href: "Assets/Cases/SOC Enviroment.pdf",
+  },
+  {
+    id: "vt-integration-pdf",
+    title: "VirusTotal Integration Report",
+    platform: "Lab Build",
+    type: "PDF Report",
+    href: "Assets/Cases/Virus Total Integration.pdf",
+  },
   {
     id: "soc127-pdf",
     title: "SOC127 Incident Report",
