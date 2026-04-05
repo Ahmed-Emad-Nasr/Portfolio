@@ -2,7 +2,7 @@
 
 import { memo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faPhoneVolume, faFilePdf, faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import styles from "./mobile-quick-actions.module.css";
 
 function scrollToTop() {
@@ -43,6 +43,14 @@ const MobileQuickActions = memo(function MobileQuickActions() {
       >
         <FontAwesomeIcon icon={faFilePdf} />
         Open CV
+      </a>
+      <a
+        href="/blog"
+        className={`${styles.btn} ${styles.tertiary}`}
+        aria-label="Open blog page"
+      >
+        <FontAwesomeIcon icon={faBookOpen} />
+        Blog
       </a>
       <button
         type="button"

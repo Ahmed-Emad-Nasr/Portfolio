@@ -3,7 +3,7 @@
 import { memo, useState } from "react";
 import styles from "./desktop-quick-cta.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faPhoneVolume, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faPhoneVolume, faFilePdf, faBookOpen } from "@fortawesome/free-solid-svg-icons";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -41,6 +41,14 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         <FontAwesomeIcon icon={faArrowUp} />
         Top
       </button>
+      <a
+        href="/blog"
+        className={`${styles.btn} ${styles.tertiary}`}
+        aria-label="Open blog page"
+      >
+        <FontAwesomeIcon icon={faBookOpen} />
+        Blog
+      </a>
       <a
         href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
         target="_blank"
