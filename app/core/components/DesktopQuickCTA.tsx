@@ -35,7 +35,6 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
       </a>
       <button
         type="button"
-        className={`${styles.btn} ${styles.tertiary}`}
         onClick={scrollToTop}
       >
         <FontAwesomeIcon icon={faArrowUp} />
@@ -50,7 +49,7 @@ const DesktopQuickCTA = memo(function DesktopQuickCTA() {
         Blog
       </a>
       <a
-        href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
+        href="Assets/cv/AhmedEmadNasr_CV.pdf"
         target="_blank"
         rel="noopener noreferrer"
         className={`${styles.btn} ${styles.secondary}`}

@@ -47,7 +47,7 @@ export default function ThankYouPage() {
           <Link href="/" className={`${styles.btn} ${styles.primary}`}>
             Back To Home
           </Link>
-          <Link href="/Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf" className={`${styles.btn} ${styles.secondary}`}>
+          <Link href="/Assets/cv/AhmedEmadNasr_CV.pdf" className={`${styles.btn} ${styles.secondary}`}>
             Download CV
           </Link>
         </div>

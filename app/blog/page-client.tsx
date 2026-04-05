@@ -27,7 +27,7 @@ const cvResource: PdfResource = {
   title: "Ahmed Emad SOC Analyst CV",
   platform: "Professional Profile",
   type: "PDF CV",
-  href: "Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf",
+  href: "Assets/cv/AhmedEmadNasr_CV.pdf",
 };
 
 const blogPdfResources: PdfResource[] = [cvResource, ...caseEvidenceLibrary];

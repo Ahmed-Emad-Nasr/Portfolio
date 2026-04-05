@@ -197,8 +197,8 @@ const SenseiHome = memo(function SenseiHome() {
               <span className={styles.liveTag}><span className={styles.livePing} aria-hidden="true" /> Live</span> Hire Me <FontAwesomeIcon icon={faUserSecret} />
             </a>
             <a
-              href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
-              download="AhmedEmad_CV.pdf"
+              href="Assets/cv/AhmedEmadNasr_CV.pdf"
+              download="AhmedEmadNasr_CV.pdf"
               className={cvBtnClass}
               aria-label="Download CV"
             >

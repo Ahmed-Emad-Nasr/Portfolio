@@ -35,7 +35,7 @@ const MobileQuickActions = memo(function MobileQuickActions() {
         Book Call
       </a>
       <a
-        href="Assets/cv/AhmedEmad_SOCAnalyst_CV.pdf"
+        href="Assets/cv/AhmedEmadNasr_CV.pdf"
         className={`${styles.btn} ${styles.secondary}`}
         target="_blank"
         rel="noopener noreferrer"
