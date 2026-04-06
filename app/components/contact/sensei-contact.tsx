@@ -80,9 +80,9 @@ const SenseiContact = memo(function SenseiContact() {
   
   const formRef = useRef<HTMLFormElement | null>(null);
   const errorSummaryRef = useRef<HTMLDivElement | null>(null);
-  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const messageTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abandonmentTrackedRef = useRef(false);
-  const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const syncDraftFromForm = useCallback(() => {
     if (!formRef.current) return;

@@ -1,6 +1,6 @@
 "use client";
 
-export type FunnelEventName =
+type FunnelEventName =
   | "site_visit"
   | "cv_preview"
   | "cv_download"

@@ -20,7 +20,7 @@ After deploy, verify these URLs return 200:
 - `/sitemap.xml`
 
 You can print all required URLs quickly with:
-- `npm run postdeploy-check`
+- open `/robots.txt` and `/sitemap.xml` directly after deployment.
 
 ## 5) SEO Crawlability Quick Check
 - Open `/robots.txt` and confirm it points to the deployed sitemap URL.

@@ -2,7 +2,7 @@
 
 export type ToastType = "success" | "error" | "info";
 
-export type ToastPayload = {
+type ToastPayload = {
   message: string;
   type?: ToastType;
   durationMs?: number;

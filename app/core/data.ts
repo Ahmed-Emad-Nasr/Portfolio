@@ -7,21 +7,20 @@
 
 export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
 export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";
-export const YOUTUBE_CHANNEL_ID = "UCb9u196eayC3vO9hDqr2ruA";
 
-export type BlogYoutubeVideo = {
+type BlogYoutubeVideo = {
   videoId: string;
   title: string;
   publishedAt: string;
 };
 
-export type FeaturedYoutubeVideo = {
+type FeaturedYoutubeVideo = {
   videoId: string;
   title: string;
   sourceUrl: string;
 };
 
-export type BlogYoutubePlaylist = {
+type BlogYoutubePlaylist = {
   playlistId: string;
   title: string;
   sourceUrl: string;

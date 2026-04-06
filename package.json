@@ -14,7 +14,6 @@
     "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
     "audit": "npm audit --omit=dev",
     "verify": "npm run lint && npm run type-check && npm run build",
-    "postdeploy-check": "node ./scripts/postdeploy-check.mjs",
     "images:compress:lossless": "node ./scripts/compress-images-lossless.mjs",
     "images:compress:lossless:dry": "node ./scripts/compress-images-lossless.mjs --dry-run",
     "images:watch": "node ./scripts/compress-images-lossless.mjs --watch",

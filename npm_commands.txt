@@ -15,7 +15,6 @@ npm run audit           # فحص الثغرات الأمنية
 
 # فحص شامل
 npm run verify          # يشغل: lint + type-check + build
-npm run postdeploy-check # فحص روابط الموقع بعد الـ deploy
 
 # ضغط الصور (Lossless)
 npm run images:compress:lossless:dry # تجربة الضغط بدون كتابة ملفات
