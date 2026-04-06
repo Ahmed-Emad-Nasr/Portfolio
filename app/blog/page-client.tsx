@@ -60,6 +60,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "soc338-pdf": buildScreenshotRange("SOC338", 83, 90),
   "soc342-pdf": buildScreenshotRange("SOC342", 91, 99),
   "unload-malware-report": buildScreenshotRange("Unload_Malware", 201, 211),
+  "bruteforce-room-report": buildScreenshotRange("BruteForce_Room", 228, 244),
   "email-analysis-room-report": [
     "Assets/Cases/Email_Analysis_Room/1.png",
     "Assets/Cases/Email_Analysis_Room/2.png",

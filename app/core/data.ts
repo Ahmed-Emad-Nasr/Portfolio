@@ -433,6 +433,16 @@ export const caseStudyHighlights = [
     result:
       "Improved phishing triage consistency and reduced investigation back-and-forth by using a clear evidence-based playbook.",
   },
+  {
+    title: "BruteForce Room Investigation",
+    domain: "SOC Analysis",
+    problem:
+      "Authentication alerts indicated repeated login attempts, but source patterns and impact scope were not yet clear.",
+    action:
+      "Correlated failed authentication events, validated brute-force indicators, and documented escalation steps with timeline evidence.",
+    result:
+      "Improved brute-force triage speed and reporting quality with a repeatable investigation workflow.",
+  },
 ] as const;
 
 export const caseEvidenceLibrary = [
@@ -554,6 +564,13 @@ export const caseEvidenceLibrary = [
     platform: "Blue Team Simulation",
     type: "PDF Report",
     href: "Assets/Cases/Email_Analysis_Room/AhmedEmad_EmailAnalysis_Room.pdf",
+  },
+  {
+    id: "bruteforce-room-report",
+    title: "BruteForce Room Report",
+    platform: "Blue Team Simulation",
+    type: "PDF Report",
+    href: "Assets/Cases/BruteForce_Room/AhmedEmad_BruteForce_Room.pdf",
   },
 ] as const;
 
