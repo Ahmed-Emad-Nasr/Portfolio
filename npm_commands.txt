@@ -22,5 +22,10 @@ npm run images:compress:lossless:dry # تجربة الضغط بدون كتابة
 npm run images:compress:lossless     # ضغط الصور فعليًا بدون فقدان جودة
 npm run images:watch                 # مراقبة مجلد الصور وضغط أي صورة جديدة/معدلة تلقائياً
 
+# ضغط ملفات PDF
+npm run pdfs:compress:dry            # تجربة ضغط الـ PDF بدون كتابة ملفات
+npm run pdfs:compress                # ضغط ملفات PDF داخل public
+npm run pdfs:watch                   # مراقبة ملفات PDF وضغط أي ملف جديد/معدل تلقائياً
+
 # تثبيت المتعلقات
 npm install             # تثبيت جميع الـ packages

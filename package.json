@@ -17,7 +17,10 @@
     "postdeploy-check": "node ./scripts/postdeploy-check.mjs",
     "images:compress:lossless": "node ./scripts/compress-images-lossless.mjs",
     "images:compress:lossless:dry": "node ./scripts/compress-images-lossless.mjs --dry-run",
-    "images:watch": "node ./scripts/compress-images-lossless.mjs --watch"
+    "images:watch": "node ./scripts/compress-images-lossless.mjs --watch",
+    "pdfs:compress": "node ./scripts/compress-pdfs.mjs",
+    "pdfs:compress:dry": "node ./scripts/compress-pdfs.mjs --dry-run",
+    "pdfs:watch": "node ./scripts/compress-pdfs.mjs --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
@@ -44,6 +47,7 @@
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-jpegtran": "^8.0.0",
     "imagemin-optipng": "^8.0.0",
+    "pdf-lib": "^1.17.1",
     "prettier": "^3.0.0",
     "sharp": "^0.34.5",
     "svgo": "^4.0.1",
