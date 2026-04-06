@@ -1,5 +1,5 @@
 # تطوير
-npm run dev              # تشغيل الموقع في وضع التطوير (localhost:3000)
+npm run dev              # تشغيل الموقع + مراقبة الصور وضغطها تلقائياً عند الإضافة/التعديل
 npm start               # تشغيل الموقع بعد البناء
 
 # البناء والفحص
@@ -16,6 +16,11 @@ npm run audit           # فحص الثغرات الأمنية
 # فحص شامل
 npm run verify          # يشغل: lint + type-check + build
 npm run postdeploy-check # فحص روابط الموقع بعد الـ deploy
+
+# ضغط الصور (Lossless)
+npm run images:compress:lossless:dry # تجربة الضغط بدون كتابة ملفات
+npm run images:compress:lossless     # ضغط الصور فعليًا بدون فقدان جودة
+npm run images:watch                 # مراقبة مجلد الصور وضغط أي صورة جديدة/معدلة تلقائياً
 
 # تثبيت المتعلقات
 npm install             # تثبيت جميع الـ packages

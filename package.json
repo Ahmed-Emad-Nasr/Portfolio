@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently -k -n web,images -c cyan,green \"next dev\" \"node ./scripts/compress-images-lossless.mjs --watch\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -14,7 +14,10 @@
     "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
     "audit": "npm audit --omit=dev",
     "verify": "npm run lint && npm run type-check && npm run build",
-    "postdeploy-check": "node ./scripts/postdeploy-check.mjs"
+    "postdeploy-check": "node ./scripts/postdeploy-check.mjs",
+    "images:compress:lossless": "node ./scripts/compress-images-lossless.mjs",
+    "images:compress:lossless:dry": "node ./scripts/compress-images-lossless.mjs --dry-run",
+    "images:watch": "node ./scripts/compress-images-lossless.mjs --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
@@ -32,9 +35,18 @@
     "@types/node": "25.5.2",
     "@types/react": "19.2.2",
     "@types/react-dom": "^19.2.3",
+    "chokidar": "^4.0.3",
+    "concurrently": "^9.2.1",
     "eslint": "9.39.4",
     "eslint-config-next": "16.1.6",
+    "fast-glob": "^3.3.3",
+    "imagemin": "^9.0.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-jpegtran": "^8.0.0",
+    "imagemin-optipng": "^8.0.0",
     "prettier": "^3.0.0",
+    "sharp": "^0.34.5",
+    "svgo": "^4.0.1",
     "typescript": "5.9.3"
   }
 }
