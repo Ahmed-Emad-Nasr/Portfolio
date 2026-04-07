@@ -21,8 +21,17 @@ import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import ErrorBoundary from "@/app/core/components/ErrorBoundary";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
-const AnimatedBackground = dynamic(() => import("@/app/components/animated_background/animated_background"), { ssr: false });
-const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), { ssr: false });
+const loadAnimatedBackground = () => import("@/app/components/animated_background/animated_background");
+const loadArtGallerySection = () => import("@/app/components/art_gallery/sensei-art");
+const loadSkillsShowcase = () => import("@/app/components/skills/skills-showcase");
+const loadCertificationsShowcase = () => import("@/app/components/certifications/certifications-showcase");
+const loadStatsTestimonials = () => import("@/app/components/stats/stats-testimonials");
+
+const AnimatedBackground = dynamic(loadAnimatedBackground, { ssr: false });
+const ArtGallerySection = dynamic(loadArtGallerySection, { ssr: false });
+const SkillsShowcase = dynamic(loadSkillsShowcase, { ssr: false });
+const CertificationsShowcase = dynamic(loadCertificationsShowcase, { ssr: false });
+const StatsTestimonials = dynamic(loadStatsTestimonials, { ssr: false });
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -30,27 +39,53 @@ const MainClient = memo(function MainClient() {
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    // Unlock UI at DOM readiness instead of waiting for all assets.
     let didMarkReady = false;
+    const PRELOAD_TIMEOUT_MS = 2500;
+    const MIN_LOADER_MS = 450;
 
     const markAppReady = () => {
       if (didMarkReady) return;
       didMarkReady = true;
       setIsAppReady(true);
-      document.removeEventListener("DOMContentLoaded", markAppReady);
     };
 
-    // If DOM is already parsed, unlock immediately after the current paint.
-    if (document.readyState !== "loading") {
-      window.requestAnimationFrame(markAppReady);
-      return () => {};
-    }
+    const waitForDomReady =
+      document.readyState !== "loading"
+        ? Promise.resolve()
+        : new Promise<void>((resolve) => {
+            document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+          });
 
-    // Otherwise wait only for DOMContentLoaded (faster than full window load).
-    document.addEventListener("DOMContentLoaded", markAppReady, { once: true });
+    const preloadDynamicSections = Promise.allSettled([
+      loadAnimatedBackground(),
+      loadArtGallerySection(),
+      loadSkillsShowcase(),
+      loadCertificationsShowcase(),
+      loadStatsTestimonials(),
+    ]);
+
+    const boundedPreload = Promise.race([
+      preloadDynamicSections,
+      new Promise<void>((resolve) => {
+        window.setTimeout(resolve, PRELOAD_TIMEOUT_MS);
+      }),
+    ]);
+
+    const minLoaderDelay = new Promise<void>((resolve) => {
+      window.setTimeout(resolve, MIN_LOADER_MS);
+    });
+
+    const bootstrap = async () => {
+      await waitForDomReady;
+      await boundedPreload;
+      await minLoaderDelay;
+      window.requestAnimationFrame(markAppReady);
+    };
+
+    bootstrap();
 
     return () => {
-      document.removeEventListener("DOMContentLoaded", markAppReady);
+      didMarkReady = true;
     };
   }, []);
 
@@ -71,7 +106,16 @@ const MainClient = memo(function MainClient() {
         <AppBar />
         <HomeSection />
         <AboutSection />
-        <ExperienceSection />
+          <ErrorBoundary title="Skills showcase section">
+            <SkillsShowcase />
+          </ErrorBoundary>
+          <ErrorBoundary title="Certifications showcase section">
+            <CertificationsShowcase />
+          </ErrorBoundary>
+          <ErrorBoundary title="Stats & testimonials section">
+            <StatsTestimonials />
+          </ErrorBoundary>
+          <ExperienceSection />
         <ErrorBoundary title="Case studies section">
           <CaseStudiesSection />
         </ErrorBoundary>

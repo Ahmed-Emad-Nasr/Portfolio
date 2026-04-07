@@ -1215,3 +1215,271 @@
   }
 }
 
+/* New Enhanced Filters Styles */
+.sortButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.52rem;
+  margin-top: 0.7rem;
+}
+
+.sortButton {
+  min-height: 36px;
+  border-radius: 11px;
+  padding: 0.5rem 0.88rem;
+  font-size: 1.16rem;
+  color: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease);
+}
+
+.sortButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--accent-color-rgb), 0.42);
+}
+
+.activeSort {
+  color: #0d1418;
+  border-color: rgba(var(--accent-color-rgb), 0.85);
+  background: linear-gradient(110deg, var(--accent-color), rgba(var(--accent-color-rgb), 0.8));
+}
+
+.clearFiltersBtn {
+  grid-column: 1 / -1;
+  min-height: 40px;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  font-size: 1.16rem;
+  color: #ffffff;
+  border: 1px solid rgba(255, 100, 100, 0.5);
+  background: rgba(255, 100, 100, 0.15);
+  cursor: pointer;
+  transition: all var(--motion-normal) var(--motion-ease);
+}
+
+.clearFiltersBtn:hover {
+  border-color: rgba(255, 100, 100, 0.8);
+  background: rgba(255, 100, 100, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Card Metadata Styles */
+.cardDescription {
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.18rem;
+  line-height: 1.4;
+}
+
+.cardPlatform {
+  margin-top: 0.52rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 1.08rem;
+}
+
+.caseMetadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.52rem;
+  margin-top: 0.75rem;
+}
+
+.difficulty-easy {
+  border-color: rgba(76, 175, 80, 0.6);
+  background: rgba(76, 175, 80, 0.15);
+  color: #a5d6a7;
+}
+
+.difficulty-medium {
+  border-color: rgba(255, 193, 7, 0.6);
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffd54f;
+}
+
+.difficulty-hard {
+  border-color: rgba(244, 67, 54, 0.6);
+  background: rgba(244, 67, 54, 0.15);
+  color: #ef9a9a;
+}
+
+/* Tags and Tools Styles */
+.tagsList,
+.tagsListInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.52rem;
+  margin-top: 0.75rem;
+}
+
+.tagButton,
+.tagButtonSmall {
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.5);
+  background: rgba(var(--main-color-rgb), 0.1);
+  color: rgba(var(--main-color-rgb), 0.9);
+  font-size: 1.08rem;
+  cursor: pointer;
+  transition: all var(--motion-fast) var(--motion-ease);
+}
+
+.tagButton:hover,
+.tagButtonSmall:hover {
+  border-color: rgba(var(--main-color-rgb), 0.8);
+  background: rgba(var(--main-color-rgb), 0.2);
+  transform: translateY(-1px);
+}
+
+.tagButtonSmall {
+  font-size: 0.95rem;
+  padding: 0.28rem 0.6rem;
+}
+
+.moreTagsBadge {
+  padding: 0.32rem 0.52rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.toolsList {
+  margin-top: 0.75rem;
+}
+
+.toolsLabel {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.toolsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.52rem;
+}
+
+.toolButton,
+.toolButtonSmall {
+  padding: 0.4rem 0.88rem;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.4);
+  background: rgba(var(--accent-color-rgb), 0.12);
+  color: rgba(var(--accent-color-rgb), 0.9);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--motion-fast) var(--motion-ease);
+}
+
+.toolButton:hover,
+.toolButtonSmall:hover {
+  border-color: rgba(var(--accent-color-rgb), 0.7);
+  background: rgba(var(--accent-color-rgb), 0.22);
+  transform: translateY(-1px);
+}
+
+.toolButtonSmall {
+  font-size: 0.95rem;
+  padding: 0.32rem 0.72rem;
+}
+
+.toolsListCompact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+}
+
+.moreToolsBadge {
+  padding: 0.32rem 0.52rem;
+  border-radius: 6px;
+  background: rgba(var(--accent-color-rgb), 0.15);
+  color: rgba(var(--accent-color-rgb), 0.8);
+  font-size: 0.95rem;
+}
+
+/* Video Card Content */
+.videoCardContent {
+  padding: 0.85rem;
+}
+
+.videoCardContent h3 {
+  font-size: 1.3rem;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.videoDate {
+  margin-top: 0.4rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 1.05rem;
+}
+
+/* Playlist Content Styles */
+.playlistContent {
+  padding: 0.85rem;
+  flex: 1;
+}
+
+.playlistContent h3 {
+  font-size: 1.3rem;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.playlistDescription {
+  margin-top: 0.4rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.playlistTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.playlistTag {
+  padding: 0.24rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(var(--main-color-rgb), 0.15);
+  color: rgba(var(--main-color-rgb), 0.85);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.playlistVideoCount {
+  margin-top: 0.4rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+}
+
+.playlistAction {
+  padding: 0.6rem 0.85rem;
+  margin: 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.5);
+  background: rgba(var(--main-color-rgb), 0.15);
+  color: rgba(var(--main-color-rgb), 0.95);
+  font-size: 1.08rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  transition: all var(--motion-normal) var(--motion-ease);
+}
+
+.playlistAction:hover {
+  border-color: rgba(var(--main-color-rgb), 0.8);
+  background: rgba(var(--main-color-rgb), 0.25);
+  transform: translateY(-1px);
+}
+

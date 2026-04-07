@@ -11,19 +11,66 @@ export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";
 type BlogYoutubeVideo = {
   videoId: string;
   title: string;
+  description?: string;
   publishedAt: string;
+  tags?: readonly string[];
 };
 
 type FeaturedYoutubeVideo = {
   videoId: string;
   title: string;
+  description?: string;
   sourceUrl: string;
 };
 
 type BlogYoutubePlaylist = {
   playlistId: string;
   title: string;
+  description?: string;
   sourceUrl: string;
+  tags?: readonly string[];
+  videoCount?: number;
+};
+
+// ─── New Enhanced Types ───────────────────────────────────────────────────────
+export type SkillCategory = "SIEM & Monitoring" | "Incident Response" | "Threat Detection" | "Automation & Programming" | "Cloud & Infrastructure";
+
+ export type Skill = {
+  name: string;
+  category: SkillCategory;
+  proficiency: "Beginner" | "Intermediate" | "Advanced" | "Expert";
+  icon?: string;
+  relatedTools?: readonly string[];
+  yearsExperience?: number;
+};
+
+export type Certification = {
+  title: string;
+  issuer: string;
+  scoreOrAchievement?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  icon?: string;
+  url?: string;
+  category: "Security" | "Cloud" | "Networking" | "Development" | "Training";
+  difficulty: "Beginner" | "Intermediate" | "Advanced";
+};
+
+export type Stat = {
+  value: string;
+  label: string;
+  icon?: string;
+  description?: string;
+  category?: "Impact" | "Performance" | "Achievement" | "Engagement";
+  trend?: "up" | "down" | "stable";
+};
+
+export type Testimonial = {
+  quote: string;
+  role: string;
+  context: string;
+  impact?: string;
+  image?: string;
 };
 
 export const homeSummaryParagraph =
@@ -36,53 +83,72 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "UNlJszq1Xso",
     title: "Session Online 1 Part 1",
+    description: "First online session covering foundational security concepts and live demonstrations.",
     publishedAt: "2025-12-02",
+    tags: ["Training", "Live Session", "Security Fundamentals"],
   },
   {
     videoId: "pWkodhNwQy8",
     title: "StegCracker شرح بسيط",
+    description: "Simple explanation of StegCracker tool for steganography analysis.",
     publishedAt: "2025-12-02",
+    tags: ["Steganography", "Tools", "Tutorial"],
   },
   {
     videoId: "dsK-w6G5zdw",
     title: "Session Online 1 Part 2",
+    description: "Continuation of the first online session with advanced topics.",
     publishedAt: "2025-12-02",
+    tags: ["Training", "Live Session", "Advanced Topics"],
   },
   {
     videoId: "tNH1cBceYwY",
     title: "Session 2 Online",
+    description: "Second comprehensive online training session.",
     publishedAt: "2025-12-02",
+    tags: ["Training", "Live Session"],
   },
   {
     videoId: "256UCPWbSqM",
     title: "StegHide شرح بسيط",
+    description: "Tutorial on StegHide tool for digital steganography.",
     publishedAt: "2025-12-02",
+    tags: ["Steganography", "Tools", "Tutorial"],
   },
   {
     videoId: "GwPbuYulV1U",
     title: "Configuring and Testing Wazuh With Sysmon",
+    description: "Complete guide to integrating Wazuh SIEM with Sysmon for enhanced threat detection.",
     publishedAt: "2025-11-28",
+    tags: ["Wazuh", "SIEM", "Sysmon", "Configuration", "Detection"],
   },
 ];
 
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
   videoId: "orw_kiHZvhU",
   title: "Featured Video",
+  description: "Watch our featured security tutorial and learn key techniques.",
   sourceUrl: "https://youtu.be/orw_kiHZvhU?si=0D4Ri-NSCzCB-Bg_",
 };
 
 export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
   {
     playlistId: "PLO1VSSKnwZUgbiE0ev1TUr5wPI9kxxbgL",
-    title: "Wazuh.",
+    title: "Wazuh",
+    description: "Complete Wazuh SIEM setup, configuration, and operation tutorials for SOC environments.",
     sourceUrl:
       "https://youtube.com/playlist?list=PLO1VSSKnwZUgbiE0ev1TUr5wPI9kxxbgL&si=nVzc9L5Kmxhlc1Rc",
+    tags: ["SIEM", "Wazuh", "Security", "Configuration"],
+    videoCount: 12,
   },
   {
     playlistId: "PLO1VSSKnwZUgdrITjagQD0mikt6Xk64yX",
     title: "Wazuh Threat Emulation",
+    description: "Threat emulation and attack simulation using Wazuh for advanced security testing.",
     sourceUrl:
       "https://youtube.com/playlist?list=PLO1VSSKnwZUgdrITjagQD0mikt6Xk64yX&si=ANb4u1blPp4gyc5F",
+    tags: ["Threat Emulation", "Wazuh", "Testing", "Red Team"],
+    videoCount: 8,
   },
 ];
 
@@ -299,6 +365,139 @@ export const trustTestimonials = [
   },
 ] as const;
 
+// ─── Enhanced Skills Catalog ──────────────────────────────────────────────────
+export const enhancedSkills: readonly Skill[] = [
+  // SIEM & Monitoring
+  { name: "Wazuh", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  { name: "ELK Stack", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  { name: "Splunk", category: "SIEM & Monitoring", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
+  { name: "Suricata", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  { name: "Sysmon", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  
+  // Incident Response
+  { name: "MITRE ATT&CK", category: "Incident Response", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  { name: "Alert Triage", category: "Incident Response", proficiency: "Expert", icon: "fa-shield-check", yearsExperience: 2 },
+  { name: "Incident Handling", category: "Incident Response", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  
+  // Threat Detection
+  { name: "YARA", category: "Threat Detection", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
+  { name: "IOC Analysis", category: "Threat Detection", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
+  { name: "Malware Analysis", category: "Threat Detection", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
+  { name: "Threat Hunting", category: "Threat Detection", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
+  
+  // Programming & Automation
+  { name: "Python", category: "Automation & Programming", proficiency: "Advanced", icon: "fa-code", yearsExperience: 2 },
+  { name: "PowerShell", category: "Automation & Programming", proficiency: "Advanced", icon: "fa-code", yearsExperience: 2 },
+  { name: "Bash", category: "Automation & Programming", proficiency: "Intermediate", icon: "fa-code", yearsExperience: 2 },
+  { name: "TypeScript", category: "Automation & Programming", proficiency: "Intermediate", icon: "fa-code", yearsExperience: 1 },
+  { name: "JavaScript", category: "Automation & Programming", proficiency: "Intermediate", icon: "fa-code", yearsExperience: 1 },
+  
+  // Cloud & Infrastructure
+  { name: "Cloud Security", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-cloud", yearsExperience: 1 },
+  { name: "Network Security", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-network-wired", yearsExperience: 2 },
+  { name: "pfSense", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-network-wired", yearsExperience: 1 },
+] as const;
+
+// ─── Enhanced Certifications Catalog ──────────────────────────────────────
+export const enhancedCertifications: readonly Certification[] = [
+  {
+    title: "eJPT v2",
+    issuer: "INE (Information Network Environments)",
+    scoreOrAchievement: "95%",
+    category: "Security",
+    difficulty: "Beginner",
+    icon: "fa-certificate",
+    url: "https://www.ine.com/",
+  },
+  {
+    title: "eCIR Preparation",
+    issuer: "INE",
+    category: "Security",
+    difficulty: "Advanced",
+    icon: "fa-certificate",
+    url: "https://www.ine.com/",
+  },
+  {
+    title: "DEPI Information Security Analyst & Forensics Investigator",
+    issuer: "Digital Egypt Pioneers Initiative",
+    category: "Security",
+    difficulty: "Intermediate",
+    icon: "fa-certificate",
+    url: "https://www.depi.gov.eg/",
+  },
+  {
+    title: "SOC Analyst Path L1/L2",
+    issuer: "TryHackMe",
+    category: "Security",
+    difficulty: "Intermediate",
+    icon: "fa-certificate",
+    url: "https://tryhackme.com/",
+  },
+  {
+    title: "CCNA 200-301",
+    issuer: "Cisco",
+    scoreOrAchievement: "98%",
+    category: "Networking",
+    difficulty: "Advanced",
+    icon: "fa-certificate",
+    url: "https://www.cisco.com/",
+  },
+  {
+    title: "HCIA Cloud & Datacom",
+    issuer: "Huawei",
+    category: "Cloud",
+    difficulty: "Intermediate",
+    icon: "fa-certificate",
+    url: "https://www.huawei.com/",
+  },
+  {
+    title: "Cisco Junior Cybersecurity Analyst",
+    issuer: "Cisco",
+    category: "Security",
+    difficulty: "Beginner",
+    icon: "fa-certificate",
+    url: "https://www.cisco.com/",
+  },
+] as const;
+
+// ─── Enhanced Stats ───────────────────────────────────────────────────────
+export const enhancedStats: readonly Stat[] = [
+  { value: "8k+", label: "LinkedIn Followers", category: "Engagement", icon: "fa-users", trend: "up" },
+  { value: "200+", label: "Simulated SOC Alerts Investigated", category: "Impact", icon: "fa-bell", trend: "up" },
+  { value: "35+", label: "Cybersecurity Sessions Delivered", category: "Impact", icon: "fa-chalkboard-user", trend: "up" },
+  { value: "120+", label: "Learners Trained in Security Topics", category: "Engagement", icon: "fa-graduation-cap", trend: "up" },
+  { value: "10+", label: "SOC / DFIR Trainings & Bootcamps", category: "Achievement", icon: "fa-book", trend: "stable" },
+  { value: "15+", label: "Validated Vulnerabilities in Labs", category: "Performance", icon: "fa-bug", trend: "up" },
+  { value: "4.9/5", label: "Average Training Feedback Score", category: "Performance", icon: "fa-star", trend: "stable" },
+  { value: "Top 5/360", label: "National University CTF Ranking", category: "Achievement", icon: "fa-trophy", trend: "stable" },
+  { value: "Top 10%", label: "Class Rank (InfoSec & DFIR)", category: "Achievement", icon: "fa-crown", trend: "stable" },
+  { value: "3.7/4.0", label: "Computer Science GPA", category: "Achievement", icon: "fa-graduation-cap", trend: "stable" },
+  { value: "25%", label: "False Positive Reduction", category: "Performance", icon: "fa-arrow-down", trend: "down" },
+  { value: "20%", label: "Investigation Time Improvement", category: "Performance", icon: "fa-hourglass-end", trend: "down" },
+] as const;
+
+// ─── Enhanced Testimonials ────────────────────────────────────────────────
+export const enhancedTestimonials: readonly Testimonial[] = [
+  {
+    quote: "Ahmed helped us reduce noisy detections and made our SOC triage flow much clearer. Response quality improved significantly.",
+    role: "Blue Team Lead",
+    context: "SOC Alert Tuning Sprint",
+    impact: "25% reduction in false positives",
+  },
+  {
+    quote: "Sessions were practical and structured. Our team improved lab outcomes in a short time with measurable skills improvement.",
+    role: "Training Coordinator",
+    context: "Security Training Program",
+    impact: "40% improvement in lab scores",
+  },
+  {
+    quote: "Strong investigation mindset with clear reporting and actionable recommendations. Excellent for incident response support.",
+    role: "Incident Response Mentor",
+    context: "DFIR Mentorship",
+    impact: "20% faster investigations",
+  },
+] as const;
+
 export const projectResponseSla: Record<string, string> = {
   "SOC monitoring support": "Replies in 2-6 hours during Cairo business hours.",
   "Incident response assistance": "Urgent triage reply in 1-3 hours.",
@@ -449,128 +648,287 @@ export const caseEvidenceLibrary = [
   {
     id: "soc-env-pdf",
     title: "SOC Environment Report",
+    description: "Complete SOC stack configuration with SIEM, EDR, and network monitoring setup.",
     platform: "Lab Build",
     type: "PDF Report",
+    category: "SOC",
+    difficulty: "Medium",
     href: "Assets/Cases/SOC Enviroment.pdf",
+    tags: ["SIEM", "Configuration", "Blue Team"],
+    tools: ["Wazuh", "Suricata", "pfSense"],
+    skillsGained: ["SOC Architecture", "SIEM Setup"],
+    readTime: 15,
+    date: "2025-12-01",
   },
   {
     id: "vt-integration-pdf",
     title: "VirusTotal Integration Report",
+    description: "Integration of VirusTotal API with SIEM for malware intelligence and enrichment.",
     platform: "Lab Build",
     type: "PDF Report",
+    category: "Threat Intelligence",
+    difficulty: "Medium",
     href: "Assets/Cases/Virus Total Integration.pdf",
+    tags: ["Threat Intel", "Automation", "API"],
+    tools: ["VirusTotal", "API Integration"],
+    skillsGained: ["Threat Enrichment", "Integration"],
+    readTime: 12,
+    date: "2025-12-01",
   },
   {
     id: "soc127-pdf",
     title: "SOC127 Incident Report",
+    description: "Incident response case study covering alert triage, threat analysis, and containment.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Incident Response",
+    difficulty: "Medium",
     href: "Assets/Cases/SOC127/AhmedEmad_SOC127.pdf",
+    tags: ["Alert Triage", "Investigation", "Containment"],
+    tools: ["SIEM", "Web Server"],
+    skillsGained: ["Alert Analysis", "Incident Handling"],
+    readTime: 18,
+    date: "2025-11-15",
   },
   {
     id: "soc205-pdf",
     title: "SOC205 Incident Report",
+    description: "Advanced threat detection and investigation of suspicious network activity patterns.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Incident Response",
+    difficulty: "Medium",
     href: "Assets/Cases/SOC205/AhmedEmad_SOC205.pdf",
+    tags: ["Threat Detection", "Network Analysis", "Investigation"],
+    tools: ["SIEM", "Network Monitoring"],
+    skillsGained: ["Threat Hunting", "Network Forensics"],
+    readTime: 20,
+    date: "2025-11-10",
   },
   {
     id: "soc257-pdf",
     title: "SOC257 Incident Report",
+    description: "Malware distribution incident investigation with IoC extraction and analysis.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Malware Analysis",
+    difficulty: "Hard",
     href: "Assets/Cases/SOC257/AhmedEmad_SOC257.pdf",
+    tags: ["Malware", "IoC", "Distribution"],
+    tools: ["Malware Analysis", "SIEM"],
+    skillsGained: ["Malware Investigation", "IoC Analysis"],
+    readTime: 25,
+    date: "2025-11-05",
   },
   {
     id: "soc274-pdf",
     title: "SOC274 Incident Report",
+    description: "Lateral movement detection and containment strategies in compromised environments.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Incident Response",
+    difficulty: "Hard",
     href: "Assets/Cases/SOC274/AhmedEmad_SOC274.pdf",
+    tags: ["Lateral Movement", "Containment", "Defense"],
+    tools: ["EDR", "SIEM"],
+    skillsGained: ["Attack Pattern Detection", "Containment"],
+    readTime: 22,
+    date: "2025-10-28",
   },
   {
     id: "soc282-pdf",
     title: "SOC282 Incident Report",
+    description: "Data exfiltration detection and prevention with DLP strategy implementation.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Data Security",
+    difficulty: "Hard",
     href: "Assets/Cases/SOC282/AhmedEmad_SOC282.pdf",
+    tags: ["Exfiltration", "Data Protection", "DLP"],
+    tools: ["DLP", "SIEM", "Network Monitoring"],
+    skillsGained: ["Data Loss Prevention", "Exfiltration Detection"],
+    readTime: 24,
+    date: "2025-10-22",
   },
   {
     id: "soc326-report",
     title: "SOC326 Incident Response Report",
+    description: "Complete incident response lifecycle from detection to containment and recovery.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Incident Response",
+    difficulty: "Hard",
     href: "Assets/Cases/SOC326/AhmedEmad_SOC326.pdf",
+    tags: ["IR Lifecycle", "Recovery", "Post-Incident"],
+    tools: ["SIEM", "Forensics", "EDR"],
+    skillsGained: ["Full IR Process", "Recovery Planning"],
+    readTime: 28,
+    date: "2025-10-15",
   },
   {
     id: "soc336-report",
     title: "SOC336 Incident Response Report",
+    description: "Advanced persistence threat investigation and eradication strategies.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Incident Response",
+    difficulty: "Hard",
     href: "Assets/Cases/SOC336/AhmedEmad_SOC336.pdf",
+    tags: ["APT", "Persistence", "Eradication"],
+    tools: ["SIEM", "Forensics", "Threat Intel"],
+    skillsGained: ["APT Investigation", "Persistence Techniques"],
+    readTime: 30,
+    date: "2025-10-08",
   },
   {
     id: "soc338-pdf",
     title: "SOC338 Incident Report",
+    description: "Web application attack investigation and exploitation analysis.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Web Security",
+    difficulty: "Medium",
     href: "Assets/Cases/SOC338/AhmedEmad_SOC338.pdf",
+    tags: ["Web Attack", "Application", "Exploitation"],
+    tools: ["Web Analysis", "Payload Analysis"],
+    skillsGained: ["Web Security", "Attack Analysis"],
+    readTime: 19,
+    date: "2025-10-01",
   },
   {
     id: "soc342-pdf",
     title: "SOC342 Incident Report",
+    description: "Privilege escalation attack chain investigation and prevention.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
+    category: "Incident Response",
+    difficulty: "Hard",
     href: "Assets/Cases/SOC342/AhmedEmad_SOC342.pdf",
+    tags: ["Privilege Escalation", "Attack Chain", "Defense"],
+    tools: ["EDR", "SIEM"],
+    skillsGained: ["Privilege Escalation Detection", "Defense Bypass"],
+    readTime: 26,
+    date: "2025-09-25",
   },
   {
     id: "ass1-awareness",
     title: "Cybersecurity Awareness Best Practices",
+    description: "Training guide on security awareness programs and user education fundamentals.",
     platform: "Security Training",
     type: "PDF Guide",
+    category: "Training",
+    difficulty: "Easy",
     href: "Assets/Cases/Ass_1/AhmedEmad_Cybersecurity_Awareness_Best_Practices.pdf",
+    tags: ["Awareness", "Training", "Best Practices"],
+    tools: ["Training Materials"],
+    skillsGained: ["User Education", "Security Culture"],
+    readTime: 10,
+    date: "2025-09-20",
   },
   {
     id: "ass2-assessment",
     title: "Assessment Write-up",
+    description: "Security assessment and vulnerability evaluation report with recommendations.",
     platform: "Security Simulation",
     type: "PDF Report",
+    category: "Assessment",
+    difficulty: "Medium",
     href: "Assets/Cases/Ass_2/Ahmed_Emad_Eldeen_P5432.pdf",
+    tags: ["Assessment", "Vulnerability", "Evaluation"],
+    tools: ["Assessment Framework"],
+    skillsGained: ["Security Assessment", "Risk Evaluation"],
+    readTime: 16,
+    date: "2025-09-15",
   },
   {
     id: "ass3-exploit",
     title: "Exploit Analysis Assignment",
+    description: "Deep analysis of exploit techniques and vulnerability exploitation methods.",
     platform: "Security Simulation",
     type: "PDF Report",
+    category: "Exploitation",
+    difficulty: "Hard",
     href: "Assets/Cases/Ass_3/Ahmed_Emad_Eldeen_P5432-exploit.pdf",
+    tags: ["Exploit", "Vulnerability", "Techniques"],
+    tools: ["Exploitation Tools"],
+    skillsGained: ["Exploit Analysis", "Vulnerability Understanding"],
+    readTime: 23,
+    date: "2025-09-10",
   },
   {
     id: "ass6-mitre",
     title: "MITRE Mapping Assignment",
+    description: "MITRE ATT&CK framework mapping for attack technique classification and analysis.",
     platform: "Blue Team Simulation",
     type: "PDF Report",
+    category: "Threat Analysis",
+    difficulty: "Medium",
     href: "Assets/Cases/ass_6/AhmedEmad_MITRE_Report.pdf",
+    tags: ["MITRE", "ATT&CK", "Framework"],
+    tools: ["MITRE ATT&CK"],
+    skillsGained: ["MITRE Mapping", "Threat Classification"],
+    readTime: 17,
+    date: "2025-09-05",
   },
   {
     id: "unload-malware-report",
     title: "Unload Malware Analysis Report",
+    description: "Comprehensive malware analysis including behavioral analysis and IoC extraction.",
     platform: "Blue Team Simulation",
     type: "PDF Report",
+    category: "Malware Analysis",
+    difficulty: "Hard",
     href: "Assets/Cases/Unload_Malware/AhmedEmad_Unload_Malware_Report.pdf",
+    tags: ["Malware", "Analysis", "Behavioral"],
+    tools: ["Malware Lab", "Static Analysis", "Dynamic Analysis"],
+    skillsGained: ["Malware Analysis", "Behavioral Understanding"],
+    readTime: 27,
+    date: "2025-08-28",
+  },
+  {
+    id: "malware2-report",
+    title: "Malware 2 Analysis Report",
+    description: "Hands-on malware investigation covering static and dynamic analysis with IOC extraction and behavior mapping.",
+    platform: "Blue Team Simulation",
+    type: "PDF Report",
+    category: "Malware Analysis",
+    difficulty: "Hard",
+    href: "Assets/Cases/Malware2/AhmedEmad_Malware2.pdf",
+    tags: ["Malware", "Static Analysis", "Dynamic Analysis"],
+    tools: ["Malware Lab", "Threat Intel", "Forensics"],
+    skillsGained: ["IOC Extraction", "Malware Behavior Analysis"],
+    readTime: 22,
+    date: "2025-08-24",
   },
   {
     id: "email-analysis-room-report",
     title: "Email Analysis Room Report",
+    description: "Email threat analysis including phishing detection, link analysis, and attachment inspection.",
     platform: "Blue Team Simulation",
     type: "PDF Report",
+    category: "Email Security",
+    difficulty: "Medium",
     href: "Assets/Cases/Email_Analysis_Room/AhmedEmad_EmailAnalysis_Room.pdf",
+    tags: ["Email", "Phishing", "Threat Detection"],
+    tools: ["Email Analysis", "Link Analysis"],
+    skillsGained: ["Email Threat Detection", "Phishing Analysis"],
+    readTime: 14,
+    date: "2025-08-20",
   },
   {
     id: "bruteforce-room-report",
     title: "BruteForce Room Report",
+    description: "Analysis of brute force attack patterns, detection, and mitigation strategies.",
     platform: "Blue Team Simulation",
     type: "PDF Report",
+    category: "Access Security",
+    difficulty: "Easy",
     href: "Assets/Cases/BruteForce_Room/AhmedEmad_BruteForce_Room.pdf",
+    tags: ["Brute Force", "Authentication", "Defense"],
+    tools: ["Log Analysis", "SIEM"],
+    skillsGained: ["Brute Force Detection", "Access Protection"],
+    readTime: 12,
+    date: "2025-08-15",
   },
 ] as const;
 

@@ -24,9 +24,17 @@ const AnimatedBackground = dynamic(
 type PdfResource = {
   id: string;
   title: string;
+  description?: string;
   platform: string;
   type: string;
+  category?: string;
+  difficulty?: string;
   href: string;
+  tags?: readonly string[];
+  tools?: readonly string[];
+  skillsGained?: readonly string[];
+  readTime?: number;
+  date?: string;
 };
 
 type GalleryState = {
@@ -73,6 +81,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "soc338-pdf": buildScreenshotRange("SOC338", 83, 90),
   "soc342-pdf": buildScreenshotRange("SOC342", 91, 99),
   "unload-malware-report": buildScreenshotRange("Unload_Malware", 201, 211),
+  "malware2-report": buildScreenshotRange("Malware2", 245, 256),
   "bruteforce-room-report": buildScreenshotRange("BruteForce_Room", 228, 244),
   "email-analysis-room-report": [
     "Assets/Cases/Email_Analysis_Room/1.png",
@@ -116,6 +125,10 @@ const matchesSearch = (value: string, query: string): boolean =>
 export default function BlogPageClient() {
   const [query, setQuery] = useState("");
   const [pdfFilter, setPdfFilter] = useState("All");
+  const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [selectedTools, setSelectedTools] = useState<Set<string>>(new Set());
+  const [sortBy, setSortBy] = useState<"recent" | "popularity" | "difficulty">("recent");
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
   const galleryDialogRef = useRef<HTMLDivElement | null>(null);
@@ -126,26 +139,67 @@ export default function BlogPageClient() {
     return ["All", ...uniqueTypes];
   }, []);
 
+  const difficultyOptions = useMemo(() => {
+    const difficulties = Array.from(new Set(blogPdfResources.map((item) => item.difficulty).filter((d): d is string => Boolean(d))));
+    return difficulties;
+  }, []);
+
+  const categoryOptions = useMemo(() => {
+    const categories = Array.from(new Set(blogPdfResources.map((item) => item.category).filter((c): c is string => Boolean(c))));
+    return categories;
+  }, []);
+
+  const toolsOptions = useMemo(() => {
+    const allTools = new Set<string>();
+    blogPdfResources.forEach((item) => {
+      item.tools?.forEach((tool) => allTools.add(tool));
+    });
+    return Array.from(allTools).sort();
+  }, []);
+
   const filteredPdfs = useMemo(() => {
     return blogPdfResources.filter((item) => {
       const typeMatches = pdfFilter === "All" || item.type === pdfFilter;
+      const difficultyMatches = !difficultyFilter || item.difficulty === difficultyFilter;
+      const categoryMatches = !categoryFilter || item.category === categoryFilter;
+      const toolsMatch = selectedTools.size === 0 || (item.tools && item.tools.some((tool) => selectedTools.has(tool)));
       const textMatches =
         matchesSearch(item.title, query) ||
+        matchesSearch(item.description || "", query) ||
         matchesSearch(item.platform, query) ||
-        matchesSearch(item.type, query);
+        matchesSearch(item.type, query) ||
+        (item.tags && item.tags.some((tag) => matchesSearch(tag, query)));
 
-      return typeMatches && textMatches;
+      return typeMatches && difficultyMatches && categoryMatches && toolsMatch && textMatches;
     });
-  }, [pdfFilter, query]);
+  }, [pdfFilter, difficultyFilter, categoryFilter, selectedTools, query]);
 
   const sortedPdfs = useMemo(() => {
-    return [...filteredPdfs].sort((a, b) => {
+    const sorted = [...filteredPdfs].sort((a, b) => {
       const aHasScreenshots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
       const bHasScreenshots = (caseScreenshotsByEvidenceId[b.id] ?? []).length > 0;
-      if (aHasScreenshots === bHasScreenshots) return 0;
-      return aHasScreenshots ? -1 : 1;
+      
+      // Quick sort: cases with screenshots first
+      if (aHasScreenshots !== bHasScreenshots) {
+        return aHasScreenshots ? -1 : 1;
+      }
+
+      // Then apply user's sort preference
+      switch (sortBy) {
+        case "recent":
+          return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
+        case "difficulty":
+          const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 };
+          return (difficultyOrder[b.difficulty as keyof typeof difficultyOrder] || 0) -
+                 (difficultyOrder[a.difficulty as keyof typeof difficultyOrder] || 0);
+        case "popularity":
+          return (bHasScreenshots ? 1 : 0) - (aHasScreenshots ? 1 : 0);
+        default:
+          return 0;
+      }
     });
-  }, [filteredPdfs]);
+    return sorted;
+  }, [filteredPdfs, sortBy]);
 
   const leadCase = useMemo(
     () =>
@@ -263,6 +317,28 @@ export default function BlogPageClient() {
   const activateEmbed = (key: string) => {
     setActiveEmbeds((current) => ({ ...current, [key]: true }));
   };
+
+  const toggleToolFilter = (tool: string) => {
+    setSelectedTools((current) => {
+      const next = new Set(current);
+      if (next.has(tool)) {
+        next.delete(tool);
+      } else {
+        next.add(tool);
+      }
+      return next;
+    });
+  };
+
+  const clearAllFilters = () => {
+    setPdfFilter("All");
+    setDifficultyFilter(null);
+    setCategoryFilter(null);
+    setSelectedTools(new Set());
+    setQuery("");
+  };
+
+  const hasActiveFilters = query || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All";
 
   const handleGalleryTouchStart = (event: React.TouchEvent<HTMLElement>) => {
     touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
@@ -393,13 +469,13 @@ export default function BlogPageClient() {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by title, type, or topic..."
+            placeholder="Search by title, description, topic, or tags..."
             className={styles.searchInput}
           />
         </div>
 
         <div className={styles.filterWrap}>
-          <p className={styles.filterTitle}>PDF Filter</p>
+          <p className={styles.filterTitle}>PDF Type</p>
           <div className={styles.filterButtons} role="tablist" aria-label="PDF type filters">
             {pdfTypeFilters.map((type) => {
               const isActive = type === pdfFilter;
@@ -417,6 +493,113 @@ export default function BlogPageClient() {
             })}
           </div>
         </div>
+
+        <div className={styles.filterWrap}>
+          <p className={styles.filterTitle}>Difficulty</p>
+          <div className={styles.filterButtons} role="group" aria-label="Difficulty filters">
+            <button
+              type="button"
+              className={!difficultyFilter ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
+              onClick={() => setDifficultyFilter(null)}
+              aria-pressed={!difficultyFilter}
+            >
+              All Levels
+            </button>
+            {difficultyOptions.map((difficulty) => {
+              const isActive = difficulty === difficultyFilter;
+              return (
+                <button
+                  key={difficulty}
+                  type="button"
+                  className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
+                  onClick={() => setDifficultyFilter(difficulty)}
+                  aria-pressed={isActive}
+                >
+                  {difficulty}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className={styles.filterWrap}>
+          <p className={styles.filterTitle}>Category</p>
+          <div className={styles.filterButtons} role="group" aria-label="Category filters">
+            <button
+              type="button"
+              className={!categoryFilter ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
+              onClick={() => setCategoryFilter(null)}
+              aria-pressed={!categoryFilter}
+            >
+              All Categories
+            </button>
+            {categoryOptions.map((category) => {
+              const isActive = category === categoryFilter;
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
+                  onClick={() => setCategoryFilter(category)}
+                  aria-pressed={isActive}
+                >
+                  {category}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {toolsOptions.length > 0 && (
+          <div className={styles.filterWrap}>
+            <p className={styles.filterTitle}>Tools ({selectedTools.size})</p>
+            <div className={styles.filterButtons} role="group" aria-label="Tools filters">
+              {toolsOptions.map((tool) => {
+                const isActive = selectedTools.has(tool);
+                return (
+                  <button
+                    key={tool}
+                    type="button"
+                    className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
+                    onClick={() => toggleToolFilter(tool)}
+                    aria-pressed={isActive}
+                    title={`Filter by ${tool}`}
+                  >
+                    {tool}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className={styles.filterWrap}>
+          <p className={styles.filterTitle}>Sort By</p>
+          <div className={styles.sortButtons}>
+            <button
+              type="button"
+              className={sortBy === "recent" ? `${styles.sortButton} ${styles.activeSort}` : styles.sortButton}
+              onClick={() => setSortBy("recent")}
+              aria-pressed={sortBy === "recent"}
+            >
+              Most Recent
+            </button>
+            <button
+              type="button"
+              className={sortBy === "difficulty" ? `${styles.sortButton} ${styles.activeSort}` : styles.sortButton}
+              onClick={() => setSortBy("difficulty")}
+              aria-pressed={sortBy === "difficulty"}
+            >
+              Difficulty
+            </button>
+          </div>
+        </div>
+
+        {hasActiveFilters && (
+          <button type="button" onClick={clearAllFilters} className={styles.clearFiltersBtn}>
+            Clear All Filters
+          </button>
+        )}
 
         <div className={styles.resultMeta} aria-live="polite">
           <span>{filteredPdfs.length} PDF</span>
@@ -436,10 +619,53 @@ export default function BlogPageClient() {
             <div className={styles.caseSpotlightBody}>
               <p className={styles.caseSpotlightTag}>Case Spotlight</p>
               <h3>{leadCase.title}</h3>
-              <p>
-                Featured first for quick navigation. Open the report or download
-                it directly.
-              </p>
+              <p>{leadCase.description || "Featured first for quick navigation."}</p>
+              
+              <div className={styles.caseMetadata}>
+                {leadCase.difficulty && (
+                  <span className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}>
+                    {leadCase.difficulty}
+                  </span>
+                )}
+                {leadCase.category && <span className={styles.badge}>{leadCase.category}</span>}
+                {leadCase.readTime && <span className={styles.badge}>{leadCase.readTime} min read</span>}
+              </div>
+
+              {leadCase.tags && leadCase.tags.length > 0 && (
+                <div className={styles.tagsList}>
+                  {leadCase.tags.slice(0, 4).map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      className={styles.tagButton}
+                      onClick={() => setQuery(tag)}
+                      title={`Search for ${tag}`}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {leadCase.tools && leadCase.tools.length > 0 && (
+                <div className={styles.toolsList}>
+                  <p className={styles.toolsLabel}>Tools:</p>
+                  <div className={styles.toolsGrid}>
+                    {leadCase.tools.map((tool) => (
+                      <button
+                        key={tool}
+                        type="button"
+                        className={styles.toolButton}
+                        onClick={() => toggleToolFilter(tool)}
+                        title={`Filter by ${tool}`}
+                      >
+                        {tool}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className={styles.cardActions}>
                 <a
                   href={normalizePublicHref(leadCase.href)}
@@ -510,8 +736,54 @@ export default function BlogPageClient() {
                     <span className={styles.shotCount}>{screenshots.length} screenshots</span>
                   ) : null}
                 </div>
+                
                 <h3>{item.title}</h3>
-                <p>{item.platform}</p>
+                {item.description && <p className={styles.cardDescription}>{item.description}</p>}
+                <p className={styles.cardPlatform}>{item.platform}</p>
+
+                <div className={styles.caseMetadata}>
+                  {item.difficulty && (
+                    <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>
+                      {item.difficulty}
+                    </span>
+                  )}
+                  {item.category && <span className={styles.badge}>{item.category}</span>}
+                  {item.readTime && <span className={styles.badge}>{item.readTime} min</span>}
+                </div>
+
+                {item.tags && item.tags.length > 0 && (
+                  <div className={styles.tagsListInline}>
+                    {item.tags.slice(0, 3).map((tag) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        className={styles.tagButtonSmall}
+                        onClick={() => setQuery(tag)}
+                        title={`Search for ${tag}`}
+                      >
+                        #{tag}
+                      </button>
+                    ))}
+                    {item.tags.length > 3 && <span className={styles.moreTagsBadge}>+{item.tags.length - 3}</span>}
+                  </div>
+                )}
+
+                {item.tools && item.tools.length > 0 && (
+                  <div className={styles.toolsListCompact}>
+                    {item.tools.slice(0, 2).map((tool) => (
+                      <button
+                        key={tool}
+                        type="button"
+                        className={styles.toolButtonSmall}
+                        onClick={() => toggleToolFilter(tool)}
+                        title={`Filter by ${tool}`}
+                      >
+                        {tool}
+                      </button>
+                    ))}
+                    {item.tools.length > 2 && <span className={styles.moreToolsBadge}>+{item.tools.length - 2}</span>}
+                  </div>
+                )}
 
                 {primaryScreenshot ? (
                   <div className={styles.screenshotArea}>
@@ -662,8 +934,19 @@ export default function BlogPageClient() {
                   </button>
                 )}
               </div>
-              <h3>{playlist.title}</h3>
-              <a href={playlist.sourceUrl} target="_blank" rel="noreferrer">
+              <div className={styles.playlistContent}>
+                <h3>{playlist.title}</h3>
+                {playlist.description && <p className={styles.playlistDescription}>{playlist.description}</p>}
+                {playlist.tags && playlist.tags.length > 0 && (
+                  <div className={styles.playlistTags}>
+                    {playlist.tags.slice(0, 2).map((tag) => (
+                      <span key={tag} className={styles.playlistTag}>{tag}</span>
+                    ))}
+                  </div>
+                )}
+                {playlist.videoCount && <p className={styles.playlistVideoCount}>{playlist.videoCount} videos</p>}
+              </div>
+              <a href={playlist.sourceUrl} target="_blank" rel="noreferrer" className={styles.playlistAction}>
                 Open Playlist
               </a>
             </article>
@@ -710,8 +993,10 @@ export default function BlogPageClient() {
                   </button>
                 )}
               </div>
-              <h3>{video.title}</h3>
-              <p>{formatDate(video.publishedAt)}</p>
+              <div className={styles.videoCardContent}>
+                <h3>{video.title}</h3>
+                <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>
+              </div>
             </article>
           ))}
         </div>

@@ -13,13 +13,11 @@ import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
 import { faUserSecret, faFilePdf, faBriefcase} from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
-import { homeSummaryParagraph } from "@/app/core/data";
+import { enhancedSkills, enhancedStats, homeSummaryParagraph } from "@/app/core/data";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
-const HERO_PROOF_POINTS = ["200+ Alerts Investigated", "35+ Security Sessions", "Reply within 24h"] as const;
-
 const pickVariant = <T extends string>(a: T, b: T): T => (Math.random() < 0.5 ? a : b);
 
 const SenseiHome = memo(function SenseiHome() {
@@ -76,6 +74,28 @@ const SenseiHome = memo(function SenseiHome() {
 
     return { label: "Available (Async)", hint: "Usually replies within 24h (Cairo time)", toneClass: styles.dotAsync };
   }, [clock]);
+
+  const heroProofPoints = useMemo(() => {
+    const preferred = [
+      "Simulated SOC Alerts Investigated",
+      "Cybersecurity Sessions Delivered",
+      "Average Training Feedback Score",
+    ];
+
+    const picked = preferred
+      .map((label) => enhancedStats.find((item) => item.label === label))
+      .filter((item): item is NonNullable<typeof item> => Boolean(item))
+      .map((item) => `${item.value} ${item.label}`);
+
+    return picked.length > 0 ? picked : ["200+ Alerts Investigated", "35+ Security Sessions", "Reply within 24h"];
+  }, []);
+
+  const featuredSkills = useMemo(() => {
+    return enhancedSkills
+      .filter((skill) => skill.proficiency === "Expert" || skill.proficiency === "Advanced")
+      .slice(0, 5)
+      .map((skill) => skill.name);
+  }, []);
 
   useEffect(() => {
     try {
@@ -161,7 +181,7 @@ const SenseiHome = memo(function SenseiHome() {
               width={350}
               height={350}
               sizes="(max-width: 968px) 80vw, 350px"
-              quality={82}
+              quality={95}
               priority
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";
@@ -180,8 +200,13 @@ const SenseiHome = memo(function SenseiHome() {
           <h2 className={styles.typingText}><span className={styles.typingHighlight} /></h2>
           <p>{homeSummaryParagraph}</p>
           <div className={styles.proofRow} aria-label="Key proof points">
-            {HERO_PROOF_POINTS.map((point) => (
+            {heroProofPoints.map((point) => (
               <span key={point} className={styles.proofPill}>{point}</span>
+            ))}
+          </div>
+          <div className={styles.proofRow} aria-label="Featured expertise">
+            {featuredSkills.map((skill) => (
+              <span key={skill} className={styles.proofPill}>{skill}</span>
             ))}
           </div>
           <div className={styles.socialIcon}>

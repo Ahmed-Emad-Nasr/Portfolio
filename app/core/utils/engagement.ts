@@ -18,7 +18,10 @@ type FunnelEventName =
   | "section_view_projects"
   | "section_view_case_studies"
   | "section_view_contact"
-  | "section_view_certifications";
+  | "section_view_certifications"
+  | "cta_contact_click"
+  | "cta_blog_click"
+  | "cta_whatsapp_click";
 
 type NotificationPayload = {
   subject: string;

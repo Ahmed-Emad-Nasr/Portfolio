@@ -1,10 +1,18 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import styles from "./sensei-about.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import trustStyles from "@/app/components/trust/trust-section.module.css";
-import { aboutMeCards, aboutSummaryParagraph, trustAchievements, trustCertifications, trustMetrics, trustTestimonials, trustTooling } from "@/app/core/data";
+import {
+  aboutMeCards,
+  aboutSummaryParagraph,
+  enhancedCertifications,
+  enhancedSkills,
+  enhancedStats,
+  enhancedTestimonials,
+  trustAchievements,
+} from "@/app/core/data";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
 
@@ -24,6 +32,10 @@ const METRIC_CONTEXT: Record<string, string> = {
 };
 
 const SenseiAbout = memo(function SenseiAbout() {
+  const featuredStats = useMemo(() => enhancedStats.slice(0, 8), []);
+  const featuredTools = useMemo(() => enhancedSkills.slice(0, 10).map((skill) => skill.name), []);
+  const featuredCertifications = useMemo(() => enhancedCertifications.slice(0, 6).map((cert) => cert.title), []);
+
   return (
     <section className={styles["about-section"]} id="About">
       <div className={styles.container}>
@@ -62,7 +74,7 @@ const SenseiAbout = memo(function SenseiAbout() {
           </div>
 
           <div className={trustStyles["metrics-grid"]}>
-            {trustMetrics.map((item, index) => (
+            {featuredStats.map((item, index) => (
               <MotionInView
                 key={`${item.label}-${index}`}
                 transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.08) }}
@@ -79,7 +91,7 @@ const SenseiAbout = memo(function SenseiAbout() {
             <div className={trustStyles.toolsCard}>
               <h3>Trusted Stack</h3>
               <div className={trustStyles.toolsList}>
-                {trustTooling.map((tool, index) => (
+                {featuredTools.map((tool, index) => (
                   <span key={`${tool}-${index}`} className={trustStyles.toolTag}>{tool}</span>
                 ))}
               </div>
@@ -107,7 +119,7 @@ const SenseiAbout = memo(function SenseiAbout() {
                   </a>
                 </div>
                 <div className={trustStyles.certList}>
-                  {trustCertifications.map((cert, index) => (
+                  {featuredCertifications.map((cert, index) => (
                     <span key={`${cert}-${index}`} className={trustStyles.certTag}>{cert}</span>
                   ))}
                 </div>
@@ -116,7 +128,7 @@ const SenseiAbout = memo(function SenseiAbout() {
           </div>
 
           <div className={trustStyles.testimonialsGrid}>
-            {trustTestimonials.map((item, index) => (
+            {enhancedTestimonials.map((item, index) => (
               <MotionInView
                 key={`${item.role}-${index}`}
                 transition={{ duration: 0.14, delay: Math.min(index * 0.03, 0.1) }}
