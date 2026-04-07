@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import styles from "./page.module.css";
 import {
   blogFeaturedYoutubeVideo,
@@ -13,6 +14,12 @@ import {
 } from "@/app/core/data";
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
+import { recordFunnelEvent } from "@/app/core/utils/engagement";
+
+const AnimatedBackground = dynamic(
+  () => import("@/app/components/animated_background/animated_background"),
+  { ssr: false }
+);
 
 type PdfResource = {
   id: string;
@@ -20,6 +27,12 @@ type PdfResource = {
   platform: string;
   type: string;
   href: string;
+};
+
+type GalleryState = {
+  title: string;
+  screenshots: string[];
+  index: number;
 };
 
 const cvResource: PdfResource = {
@@ -103,6 +116,10 @@ const matchesSearch = (value: string, query: string): boolean =>
 export default function BlogPageClient() {
   const [query, setQuery] = useState("");
   const [pdfFilter, setPdfFilter] = useState("All");
+  const [gallery, setGallery] = useState<GalleryState | null>(null);
+  const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
+  const galleryDialogRef = useRef<HTMLDivElement | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
 
   const pdfTypeFilters = useMemo(() => {
     const uniqueTypes = Array.from(new Set(blogPdfResources.map((item) => item.type)));
@@ -121,6 +138,28 @@ export default function BlogPageClient() {
     });
   }, [pdfFilter, query]);
 
+  const sortedPdfs = useMemo(() => {
+    return [...filteredPdfs].sort((a, b) => {
+      const aHasScreenshots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
+      const bHasScreenshots = (caseScreenshotsByEvidenceId[b.id] ?? []).length > 0;
+      if (aHasScreenshots === bHasScreenshots) return 0;
+      return aHasScreenshots ? -1 : 1;
+    });
+  }, [filteredPdfs]);
+
+  const leadCase = useMemo(
+    () =>
+      sortedPdfs.find(
+        (item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0
+      ) ?? null,
+    [sortedPdfs]
+  );
+
+  const visiblePdfCards = useMemo(() => {
+    if (!leadCase) return sortedPdfs;
+    return sortedPdfs.filter((item) => item.id !== leadCase.id);
+  }, [sortedPdfs, leadCase]);
+
   const featuredVideo = blogFeaturedYoutubeVideo;
 
   const filteredVideos = useMemo(() => {
@@ -137,8 +176,123 @@ export default function BlogPageClient() {
     );
   }, [query]);
 
+  const casesWithScreenshotsCount = useMemo(() => {
+    return caseEvidenceLibrary.filter(
+      (item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0
+    ).length;
+  }, []);
+
+  const totalScreenshotAssets = useMemo(() => {
+    return Object.values(caseScreenshotsByEvidenceId).reduce(
+      (sum, shots) => sum + shots.length,
+      0
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!gallery) return;
+
+    const previousActiveElement = document.activeElement as HTMLElement | null;
+    const dialog = galleryDialogRef.current;
+    const focusables = dialog?.querySelectorAll<HTMLElement>(
+      'button, a[href], [tabindex]:not([tabindex="-1"])'
+    );
+    focusables?.[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setGallery(null);
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        recordFunnelEvent("gallery_navigate");
+        goGallery(1);
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        recordFunnelEvent("gallery_navigate");
+        goGallery(-1);
+        return;
+      }
+
+      if (event.key !== "Tab" || !focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousActiveElement?.focus();
+    };
+  }, [gallery]);
+
+  const openGallery = (title: string, screenshots: string[], index = 0) => {
+    if (!screenshots.length) return;
+    recordFunnelEvent("gallery_open");
+    setGallery({
+      title,
+      screenshots,
+      index: Math.min(Math.max(index, 0), screenshots.length - 1),
+    });
+  };
+
+  const goGallery = (delta: number) => {
+    setGallery((current) => {
+      if (!current) return null;
+      const nextIndex =
+        (current.index + delta + current.screenshots.length) %
+        current.screenshots.length;
+      return { ...current, index: nextIndex };
+    });
+  };
+
+  const activateEmbed = (key: string) => {
+    setActiveEmbeds((current) => ({ ...current, [key]: true }));
+  };
+
+  const handleGalleryTouchStart = (event: React.TouchEvent<HTMLElement>) => {
+    touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+  };
+
+  const handleGalleryTouchEnd = (event: React.TouchEvent<HTMLElement>) => {
+    if (touchStartXRef.current === null) return;
+    const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
+    const deltaX = endX - touchStartXRef.current;
+    touchStartXRef.current = null;
+
+    if (Math.abs(deltaX) < 40) return;
+
+    recordFunnelEvent("gallery_navigate");
+    if (deltaX < 0) {
+      goGallery(1);
+    } else {
+      goGallery(-1);
+    }
+  };
+
+  const currentGalleryShot =
+    gallery && gallery.screenshots.length
+      ? gallery.screenshots[gallery.index]
+      : null;
+
   return (
     <main id="main-content" className={styles.page}>
+      <AnimatedBackground />
+
       <section className={styles.hero}>
         <span className={styles.heroGlow} aria-hidden="true" />
         <p className={styles.kicker}>Knowledge Hub</p>
@@ -147,35 +301,85 @@ export default function BlogPageClient() {
           A single place for my PDF reports, assignments, and security videos.
           Use search and filters to find what you want quickly.
         </p>
-        <div className={styles.metrics}>
-          <article>
-            <strong>{blogPdfResources.length}</strong>
-            <span>PDF Resources</span>
+        <div className={styles.heroGrid}>
+          <div className={styles.heroMainContent}>
+            <div className={styles.metrics}>
+              <article>
+                <strong>{blogPdfResources.length}</strong>
+                <span>PDF Resources</span>
+              </article>
+              <article>
+                <strong>{blogYoutubeVideos.length + 1}</strong>
+                <span>Total Videos</span>
+              </article>
+              <article>
+                <strong>24/7</strong>
+                <span>On-Demand Access</span>
+              </article>
+            </div>
+            <div className={styles.heroActions}>
+              <a href="#blog-pdfs-title" className={styles.primaryAction}>
+                Explore Cases First
+              </a>
+              <Link
+                href="/"
+                className={`${styles.secondaryAction} ${styles.backAction}`}
+              >
+                Back To Portfolio
+              </Link>
+            </div>
+
+            <nav className={styles.quickLinks} aria-label="Quick section shortcuts">
+              <a href="#blog-pdfs-title" className={styles.quickLink}>
+                PDF Cases
+              </a>
+              <a href="#blog-playlists-title" className={styles.quickLink}>
+                Playlists
+              </a>
+              <a href="#blog-videos-title" className={styles.quickLink}>
+                Videos
+              </a>
+              <a href="#youtube-hub-title" className={styles.quickLink}>
+                YouTube Hub
+              </a>
+            </nav>
+          </div>
+
+          <article className={`${styles.featuredCard} ${styles.heroFeaturedCard}`}>
+            <div className={styles.featuredFrame}>
+              {activeEmbeds["featured-video"] ? (
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${featuredVideo.videoId}`}
+                  title={featuredVideo.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              ) : (
+                <button
+                  type="button"
+                  className={styles.embedPreview}
+                  onClick={() => activateEmbed("featured-video")}
+                  aria-label={`Play ${featuredVideo.title}`}
+                >
+                  <img
+                    src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
+                    alt={featuredVideo.title}
+                    loading="lazy"
+                  />
+                  <span className={styles.embedPlayButton}>Play</span>
+                </button>
+              )}
+            </div>
+            <div className={styles.featuredContent}>
+              <p className={styles.featuredTag}>Featured Video</p>
+              <h3>{featuredVideo.title}</h3>
+              <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
+                Watch on YouTube
+              </a>
+            </div>
           </article>
-          <article>
-            <strong>{blogYoutubeVideos.length + 1}</strong>
-            <span>Total Videos</span>
-          </article>
-          <article>
-            <strong>24/7</strong>
-            <span>On-Demand Access</span>
-          </article>
-        </div>
-        <div className={styles.heroActions}>
-          <a
-            href={YOUTUBE_CHANNEL_URL}
-            target="_blank"
-            rel="noreferrer"
-            className={`${styles.primaryAction} ${styles.channelAction}`}
-          >
-            Open YouTube Channel
-          </a>
-          <Link
-            href="/"
-            className={`${styles.secondaryAction} ${styles.backAction}`}
-          >
-            Back To Portfolio
-          </Link>
         </div>
       </section>
 
@@ -213,68 +417,12 @@ export default function BlogPageClient() {
             })}
           </div>
         </div>
-      </section>
 
-      <section className={styles.featuredBlock} aria-labelledby="featured-video-title">
-        <div className={styles.blockHeading}>
-          <h2 id="featured-video-title">Featured Video</h2>
-          <p>Your selected highlighted video.</p>
+        <div className={styles.resultMeta} aria-live="polite">
+          <span>{filteredPdfs.length} PDF</span>
+          <span>{filteredPlaylists.length} Playlist</span>
+          <span>{filteredVideos.length} Video</span>
         </div>
-
-        <article className={styles.featuredCard}>
-          <div className={styles.featuredFrame}>
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${featuredVideo.videoId}`}
-              title={featuredVideo.title}
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
-          <div className={styles.featuredContent}>
-            <p className={styles.featuredTag}>Featured</p>
-            <h3>{featuredVideo.title}</h3>
-            <p>
-              This is pinned as the main featured content for your blog.
-            </p>
-            <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
-              Watch on YouTube
-            </a>
-          </div>
-        </article>
-      </section>
-
-      <section className={styles.block} aria-labelledby="blog-playlists-title">
-        <div className={styles.blockHeading}>
-          <h2 id="blog-playlists-title">YouTube Playlists</h2>
-          <p>{filteredPlaylists.length} playlist(s) found.</p>
-        </div>
-
-        <div className={styles.playlistGrid}>
-          {filteredPlaylists.map((playlist) => (
-            <article key={playlist.playlistId} className={styles.playlistCard}>
-              <div className={styles.playlistFrame}>
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/videoseries?list=${playlist.playlistId}`}
-                  title={playlist.title}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              </div>
-              <h3>{playlist.title}</h3>
-              <a href={playlist.sourceUrl} target="_blank" rel="noreferrer">
-                Open Playlist
-              </a>
-            </article>
-          ))}
-        </div>
-
-        {filteredPlaylists.length === 0 ? (
-          <p className={styles.emptyState}>No playlist results match your current search.</p>
-        ) : null}
       </section>
 
       <section className={styles.block} aria-labelledby="blog-pdfs-title">
@@ -283,8 +431,67 @@ export default function BlogPageClient() {
           <p>{filteredPdfs.length} result(s) found.</p>
         </div>
 
+        {leadCase ? (
+          <article className={styles.caseSpotlight}>
+            <div className={styles.caseSpotlightBody}>
+              <p className={styles.caseSpotlightTag}>Case Spotlight</p>
+              <h3>{leadCase.title}</h3>
+              <p>
+                Featured first for quick navigation. Open the report or download
+                it directly.
+              </p>
+              <div className={styles.cardActions}>
+                <a
+                  href={normalizePublicHref(leadCase.href)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.viewAction}
+                  onClick={() => recordFunnelEvent("pdf_view_click")}
+                >
+                  View PDF
+                </a>
+                <a
+                  href={normalizePublicHref(leadCase.href)}
+                  download
+                  className={styles.downloadAction}
+                >
+                  Download
+                </a>
+                <button
+                  type="button"
+                  onClick={() =>
+                    openGallery(
+                      leadCase.title,
+                      caseScreenshotsByEvidenceId[leadCase.id] ?? [],
+                      0
+                    )
+                  }
+                  className={`${styles.galleryOpenAction} ${styles.viewAction}`}
+                >
+                  View All Screenshots
+                </button>
+              </div>
+            </div>
+            <a
+              href={normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.caseSpotlightMedia}
+              aria-label={`Open spotlight screenshot for ${leadCase.title}`}
+            >
+              <Image
+                src={normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])}
+                alt={`${leadCase.title} spotlight screenshot`}
+                fill
+                sizes="(max-width: 991px) 100vw, 38vw"
+                loading="lazy"
+              />
+            </a>
+          </article>
+        ) : null}
+
         <div className={styles.pdfGrid}>
-          {filteredPdfs.map((item) => {
+          {visiblePdfCards.map((item) => {
             const href = normalizePublicHref(item.href);
             const screenshots = caseScreenshotsByEvidenceId[item.id] ?? [];
             const hasScreenshots = screenshots.length > 0;
@@ -358,12 +565,22 @@ export default function BlogPageClient() {
                     target="_blank"
                     rel="noreferrer"
                     className={styles.viewAction}
+                    onClick={() => recordFunnelEvent("pdf_view_click")}
                   >
                     View PDF
                   </a>
                   <a href={href} download className={styles.downloadAction}>
                     Download
                   </a>
+                  {hasScreenshots ? (
+                    <button
+                      type="button"
+                      onClick={() => openGallery(item.title, screenshots, 0)}
+                      className={`${styles.galleryOpenAction} ${styles.viewAction}`}
+                    >
+                      View All Screenshots
+                    </button>
+                  ) : null}
                 </div>
               </article>
             );
@@ -372,6 +589,89 @@ export default function BlogPageClient() {
 
         {filteredPdfs.length === 0 ? (
           <p className={styles.emptyState}>No PDF results match your current search/filter.</p>
+        ) : null}
+      </section>
+
+      <section className={styles.insightStrip} aria-label="Case library highlights">
+        <article className={styles.insightCard}>
+          <strong>{caseEvidenceLibrary.length}</strong>
+          <span>Total Cases</span>
+        </article>
+        <article className={styles.insightCard}>
+          <strong>{casesWithScreenshotsCount}</strong>
+          <span>Cases With Screenshots</span>
+        </article>
+        <article className={styles.insightCard}>
+          <strong>{totalScreenshotAssets}</strong>
+          <span>Screenshot Assets</span>
+        </article>
+      </section>
+
+      <section className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
+        <div className={styles.blockHeading}>
+          <h2 id="youtube-hub-title">YouTube Hub</h2>
+          <p>
+            All channel content is grouped here at the end: featured, playlists,
+            and latest videos.
+          </p>
+        </div>
+        <div className={styles.youtubeHubActions}>
+          <a
+            href={YOUTUBE_CHANNEL_URL}
+            target="_blank"
+            rel="noreferrer"
+            className={`${styles.primaryAction} ${styles.channelAction}`}
+          >
+            Open YouTube Channel
+          </a>
+        </div>
+      </section>
+
+      <section className={styles.block} aria-labelledby="blog-playlists-title">
+        <div className={styles.blockHeading}>
+          <h2 id="blog-playlists-title">YouTube Playlists</h2>
+          <p>{filteredPlaylists.length} playlist(s) found.</p>
+        </div>
+
+        <div className={styles.playlistGrid}>
+          {filteredPlaylists.map((playlist) => (
+            <article key={playlist.playlistId} className={styles.playlistCard}>
+              <div className={styles.playlistFrame}>
+                {activeEmbeds[`playlist-${playlist.playlistId}`] ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/videoseries?list=${playlist.playlistId}`}
+                    title={playlist.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.embedPreview}
+                    onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
+                    aria-label={`Play ${playlist.title}`}
+                  >
+                    <img
+                      src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
+                      alt={playlist.title}
+                      loading="lazy"
+                    />
+                    <span className={styles.embedPlayButton}>Play Playlist</span>
+                  </button>
+                )}
+              </div>
+              <h3>{playlist.title}</h3>
+              <a href={playlist.sourceUrl} target="_blank" rel="noreferrer">
+                Open Playlist
+              </a>
+            </article>
+          ))}
+        </div>
+
+        {filteredPlaylists.length === 0 ? (
+          <p className={styles.emptyState}>No playlist results match your current search.</p>
         ) : null}
       </section>
 
@@ -385,14 +685,30 @@ export default function BlogPageClient() {
           {filteredVideos.map((video) => (
             <article key={video.videoId} className={styles.videoCard}>
               <div className={styles.videoFrame}>
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
-                  title={video.title}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
+                {activeEmbeds[`video-${video.videoId}`] ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
+                    title={video.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.embedPreview}
+                    onClick={() => activateEmbed(`video-${video.videoId}`)}
+                    aria-label={`Play ${video.title}`}
+                  >
+                    <img
+                      src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+                      alt={video.title}
+                      loading="lazy"
+                    />
+                    <span className={styles.embedPlayButton}>Play Video</span>
+                  </button>
+                )}
               </div>
               <h3>{video.title}</h3>
               <p>{formatDate(video.publishedAt)}</p>
@@ -404,6 +720,105 @@ export default function BlogPageClient() {
           <p className={styles.emptyState}>No video results match your current search.</p>
         ) : null}
       </section>
+
+      {gallery && currentGalleryShot ? (
+        <div
+          className={styles.galleryOverlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${gallery.title} screenshots gallery`}
+          onClick={() => setGallery(null)}
+        >
+          <div
+            ref={galleryDialogRef}
+            className={styles.galleryDialog}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.galleryHeader}>
+              <h3 className={styles.galleryTitle}>{gallery.title}</h3>
+              <p className={styles.galleryCounter}>
+                Screenshot {gallery.index + 1} of {gallery.screenshots.length}
+              </p>
+              <button
+                type="button"
+                className={styles.galleryClose}
+                onClick={() => setGallery(null)}
+                aria-label="Close screenshots gallery"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className={styles.galleryStage}>
+              <button
+                type="button"
+                className={styles.galleryNav}
+                onClick={() => {
+                  recordFunnelEvent("gallery_navigate");
+                  goGallery(-1);
+                }}
+                aria-label="Previous screenshot"
+              >
+                Prev
+              </button>
+
+              <a
+                href={normalizePublicHref(currentGalleryShot)}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.galleryImageWrap}
+                aria-label="Open current screenshot in new tab"
+                onTouchStart={handleGalleryTouchStart}
+                onTouchEnd={handleGalleryTouchEnd}
+              >
+                <Image
+                  src={normalizePublicHref(currentGalleryShot)}
+                  alt={`${gallery.title} screenshot ${gallery.index + 1}`}
+                  fill
+                  sizes="(max-width: 991px) 95vw, 78vw"
+                  loading="lazy"
+                />
+              </a>
+
+              <button
+                type="button"
+                className={styles.galleryNav}
+                onClick={() => {
+                  recordFunnelEvent("gallery_navigate");
+                  goGallery(1);
+                }}
+                aria-label="Next screenshot"
+              >
+                Next
+              </button>
+            </div>
+
+            <div className={styles.galleryThumbs}>
+              {gallery.screenshots.map((shot, index) => {
+                const isActive = index === gallery.index;
+                return (
+                  <button
+                    key={`${gallery.title}-${shot}`}
+                    type="button"
+                    className={
+                      isActive
+                        ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}`
+                        : styles.galleryThumbButton
+                    }
+                    onClick={() => {
+                      recordFunnelEvent("gallery_navigate");
+                      setGallery({ ...gallery, index });
+                    }}
+                    aria-label={`Open screenshot ${index + 1}`}
+                  >
+                    {index + 1}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <DesktopQuickCTA />
       <MobileQuickActions />

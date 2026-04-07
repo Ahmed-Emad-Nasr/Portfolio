@@ -90,8 +90,8 @@ export const useAnimatedBackground = (
       const center   = size / 2;
       ctx.filter     = "blur(30px)";
       const gradient = ctx.createRadialGradient(center, center, 0, center, center, MAX_RADIUS);
-      gradient.addColorStop(0, "rgba(253, 242, 225, 0.8)");
-      gradient.addColorStop(1, "rgba(253, 242, 225, 0)");
+      gradient.addColorStop(0, "rgba(111, 234, 178, 0.82)");
+      gradient.addColorStop(1, "rgba(111, 234, 178, 0)");
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(center, center, MAX_RADIUS, 0, TWO_PI);
@@ -156,7 +156,7 @@ export const useAnimatedBackground = (
     }
 
     const radiusRange = MAX_RADIUS - MIN_RADIUS;
-    const bubbleCount = Math.floor((w * h) / 95000);
+    const bubbleCount = Math.floor((w * h) / 110000);
 
     bubblesRef.current = Array.from({ length: bubbleCount }, () => {
       const radius = Math.random() * radiusRange + MIN_RADIUS;
