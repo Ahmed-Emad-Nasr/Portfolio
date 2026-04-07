@@ -131,7 +131,7 @@ const SkillsShowcase = memo(function SkillsShowcase() {
             {filteredSkills.map((skill) => (
               <div key={skill.name} className={styles.skillCard}>
                 <div className={styles.skillHead}>
-                  <h4>{skill.name}</h4>
+                  <h3>{skill.name}</h3>
                   <span
                     className={styles.proficiencyBadge}
                     style={{ borderColor: getProficiencyColor(skill.proficiency), color: getProficiencyColor(skill.proficiency) }}
