@@ -83,7 +83,7 @@
 .heroGrid {
   margin-top: 1.45rem;
   display: grid;
-  grid-template-columns: minmax(320px, 1.1fr) minmax(320px, 0.95fr);
+  grid-template-columns: minmax(320px, 0.95fr) minmax(420px, 1.25fr);
   gap: 1rem;
   align-items: start;
 }
@@ -94,6 +94,7 @@
 
 .heroFeaturedCard {
   margin: 0;
+  grid-template-columns: minmax(360px, 1.45fr) minmax(300px, 1fr);
 }
 
 .metrics {
@@ -545,9 +546,10 @@
 
 .featuredContent h3 {
   margin-top: 0.9rem;
-  font-size: clamp(2rem, 2.7vw, 2.8rem);
+  font-size: clamp(1.9rem, 2.2vw, 2.6rem);
   color: var(--blog-text);
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .featuredContent p {
