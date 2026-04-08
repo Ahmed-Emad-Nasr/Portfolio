@@ -1096,14 +1096,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .page::before,
-  .page::after,
-  .heroGlow {
-    animation: none !important;
-  }
-}
-
 @media (max-width: 991px) {
   .page {
     padding: 11.1rem 5% 5.2rem;

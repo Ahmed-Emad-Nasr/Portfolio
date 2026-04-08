@@ -120,27 +120,6 @@ body::after {
   mask-image: radial-gradient(circle at center, black 48%, transparent 92%);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  body {
-    background: linear-gradient(155deg, #030405 0%, #090b10 42%, #040506 100%);
-  }
-
-  body::before {
-    filter: blur(10px);
-    opacity: 0.55;
-  }
-
-  body::after {
-    opacity: 0.08;
-    background-size: 72px 72px;
-    mask-image: none;
-  }
-
-  section::before {
-    background: radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.02), transparent 38%);
-  }
-}
-
 @media (max-width: 640px) {
   body::before {
     filter: blur(11px);
@@ -377,12 +356,3 @@ main section:nth-of-type(2n)::after {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
