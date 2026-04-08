@@ -186,7 +186,7 @@ const structuredData = {
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
       name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
       description:
-        "A portfolio homepage highlighting cybersecurity work, professional experience, certifications, projects, and contact options.",
+        "A portfolio homepage highlighting cybersecurity work, professional experience, projects, and contact options.",
       isPartOf: {
         "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
       },

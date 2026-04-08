@@ -10,14 +10,13 @@ import MainClient from "./page-client";
 export const metadata: Metadata = {
   title: "SOC Analyst Portfolio | Incident Response, Threat Hunting, DFIR",
   description:
-    "Ahmed Emad Nasr portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, certifications, and real security case reports.",
+    "Ahmed Emad Nasr portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, and real security case reports.",
   keywords: [
     "SOC portfolio",
     "incident response portfolio",
     "threat hunting projects",
     "malware analysis reports",
     "DFIR analyst",
-    "cybersecurity certifications",
   ],
   alternates: {
     canonical: "/",
@@ -41,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ahmed Emad Nasr | SOC & IR Portfolio",
     description:
-      "Explore SOC investigations, DFIR workflows, malware analysis cases, and cybersecurity certifications.",
+      "Explore SOC investigations, DFIR workflows, and malware analysis cases.",
     images: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
 };

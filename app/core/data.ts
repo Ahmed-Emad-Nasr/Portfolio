@@ -44,18 +44,6 @@ export type SkillCategory = "SIEM & Monitoring" | "Incident Response" | "Threat 
   yearsExperience?: number;
 };
 
-export type Certification = {
-  title: string;
-  issuer: string;
-  scoreOrAchievement?: string;
-  issueDate?: string;
-  expiryDate?: string;
-  icon?: string;
-  url?: string;
-  category: "Security" | "Cloud" | "Networking" | "Development" | "Training";
-  difficulty: "Beginner" | "Intermediate" | "Advanced";
-};
-
 export type Stat = {
   value: string;
   label: string;
@@ -65,19 +53,8 @@ export type Stat = {
   trend?: "up" | "down" | "stable";
 };
 
-export type Testimonial = {
-  quote: string;
-  role: string;
-  context: string;
-  impact?: string;
-  image?: string;
-};
-
 export const homeSummaryParagraph =
   "Computer Science student and SOC/IR analyst with 10+ trainings and 200+ simulated alerts. Strong in SIEM/EDR investigations, alert triage, IOC analysis, and incident response.";
-
-export const aboutSummaryParagraph =
-  "SOC and Incident Response analyst with hands-on experience from 10+ trainings and 200+ simulated alerts. Focused on SIEM/EDR investigations, alert triage, IOC analysis, and faster incident handling.";
 
 export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
@@ -262,109 +239,6 @@ export const knowledgeEducationItems = [
   },
 ];
 
-export const aboutMeCards = [
-  {
-    icon: "fa-solid fa-earth-americas",
-    title: "Languages",
-    description:
-      "Arabic: Native • English: Professional Working Proficiency (C1)",
-  },
-  {
-    icon: "fa-solid fa-network-wired",
-    title: "Core Skills",
-    description:
-      "SIEM & EDR: Wazuh, ELK Stack, Splunk, Sysmon, Suricata, pfSense • Incident Response & Threat Detection: Alert Triage, IOC Analysis, Threat Hunting, Detection Engineering, Malware Analysis • Programming & Automation: Python, Bash, PowerShell, C++, JavaScript, TypeScript",
-  },
-  {
-    icon: "fa-solid fa-graduation-cap",
-    title: "Education",
-    description:
-      "Bachelor of Computer Science - Benha University (Oct 2022 - Jul 2026) • Major: Information Security and Digital Forensics • GPA: 3.7/4.0",
-  },
-  {
-    icon: "fa-solid fa-certificate",
-    title: "Certifications",
-    description:
-      "eCIR Preparation (INE) • eJPT v2 (INE) • Information Security Analyst & Forensics Investigator (DEPI) • TryHackMe SOC Analyst Path L1/L2 • Cisco Junior Cybersecurity Analyst • HCIA Cloud & Datacom • CCNA 200-301",
-  },
-  {
-    icon: "fa-solid fa-trophy",
-    title: "Achievements",
-    description:
-      "Scored 95% in eJPT v2 • Best Cybersecurity Technical Award at GDG (1st among 200 participants) • Ranked 44th out of 400 in ITI/CyberTalents CTF • Top 5 out of 360 teams in National University CTF • Scored 98% in CCNA • Ranked in top 10% of Information Security & Digital Forensics class",
-  },
-  {
-    icon: "fa-solid fa-user-shield",
-    title: "Work Preferences",
-    description:
-      "Based in Cairo, Egypt • Open to relocation and remote collaborations • Available for project-based engagements and long-term opportunities • Preferred communication: Email, LinkedIn, and WhatsApp",
-  }
-];
-
-export const trustMetrics = [
-  { value: "8k+", label: "LinkedIn Followers" },
-  { value: "200+", label: "Simulated SOC Alerts Investigated" },
-  { value: "35+", label: "Cybersecurity Sessions Delivered" },
-  { value: "120+", label: "Learners Trained in Security Topics" },
-  { value: "10+", label: "SOC / DFIR Trainings & Bootcamps" },
-  { value: "15+", label: "Validated Vulnerabilities in Labs" },
-  { value: "4.9/5", label: "Average Training Feedback Score" },
-  { value: "Top 5/360", label: "National University CTF Ranking" },
-  { value: "Top 10%", label: "Class Rank (InfoSec & DFIR)" },
-  { value: "3.7/4.0", label: "Computer Science GPA" },
-  { value: "95%", label: "eJPT v2 Score" },
-  { value: "98%", label: "CCNA 200-301 Score" },
-];
-
-export const trustTooling = [
-  "Wazuh",
-  "ELK Stack",
-  "Splunk",
-  "Suricata",
-  "MITRE ATT&CK",
-  "YARA",
-  "TryHackMe",
-  "VirusTotal",
-  "Python",
-  "PowerShell",
-];
-
-export const trustAchievements = [
-  "Best Cybersecurity Technical Award at GDG (1st among 200 participants)",
-  "Ranked 44th out of 400 in ITI + CyberTalents CTF",
-  "Top 5 out of 360 teams in National University CTF (Egypt)",
-  "Delivered 35+ cybersecurity sessions to 120+ learners with 40% lab score improvement",
-  "Ranked in the top 10% of Information Security and Digital Forensics class",
-];
-
-export const trustCertifications = [
-  "eCIR Preparation",
-  "eJPT v2",
-  "SOC Analyst Path L1/L2",
-  "DEPI Information Security Analyst & Forensics Investigator",
-  "Cisco Junior Cybersecurity Analyst",
-  "HCIA Cloud & Datacom",
-  "CCNA 200-301",
-];
-
-export const trustTestimonials = [
-  {
-    quote: "Ahmed helped us reduce noisy detections and made our SOC triage flow much clearer.",
-    role: "Blue Team Lead",
-    context: "SOC Alert Tuning Sprint",
-  },
-  {
-    quote: "Sessions were practical and structured. Our team improved lab outcomes in a short time.",
-    role: "Training Coordinator",
-    context: "Security Training Program",
-  },
-  {
-    quote: "Strong investigation mindset with clear reporting and actionable recommendations.",
-    role: "Incident Response Mentor",
-    context: "DFIR Mentorship",
-  },
-] as const;
-
 // ─── Enhanced Skills Catalog ──────────────────────────────────────────────────
 export const enhancedSkills: readonly Skill[] = [
   // SIEM & Monitoring
@@ -398,68 +272,6 @@ export const enhancedSkills: readonly Skill[] = [
   { name: "pfSense", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-network-wired", yearsExperience: 1 },
 ] as const;
 
-// ─── Enhanced Certifications Catalog ──────────────────────────────────────
-export const enhancedCertifications: readonly Certification[] = [
-  {
-    title: "eJPT v2",
-    issuer: "INE (Information Network Environments)",
-    scoreOrAchievement: "95%",
-    category: "Security",
-    difficulty: "Beginner",
-    icon: "fa-certificate",
-    url: "https://www.ine.com/",
-  },
-  {
-    title: "eCIR Preparation",
-    issuer: "INE",
-    category: "Security",
-    difficulty: "Advanced",
-    icon: "fa-certificate",
-    url: "https://www.ine.com/",
-  },
-  {
-    title: "DEPI Information Security Analyst & Forensics Investigator",
-    issuer: "Digital Egypt Pioneers Initiative",
-    category: "Security",
-    difficulty: "Intermediate",
-    icon: "fa-certificate",
-    url: "https://www.depi.gov.eg/",
-  },
-  {
-    title: "SOC Analyst Path L1/L2",
-    issuer: "TryHackMe",
-    category: "Security",
-    difficulty: "Intermediate",
-    icon: "fa-certificate",
-    url: "https://tryhackme.com/",
-  },
-  {
-    title: "CCNA 200-301",
-    issuer: "Cisco",
-    scoreOrAchievement: "98%",
-    category: "Networking",
-    difficulty: "Advanced",
-    icon: "fa-certificate",
-    url: "https://www.cisco.com/",
-  },
-  {
-    title: "HCIA Cloud & Datacom",
-    issuer: "Huawei",
-    category: "Cloud",
-    difficulty: "Intermediate",
-    icon: "fa-certificate",
-    url: "https://www.huawei.com/",
-  },
-  {
-    title: "Cisco Junior Cybersecurity Analyst",
-    issuer: "Cisco",
-    category: "Security",
-    difficulty: "Beginner",
-    icon: "fa-certificate",
-    url: "https://www.cisco.com/",
-  },
-] as const;
-
 // ─── Enhanced Stats ───────────────────────────────────────────────────────
 export const enhancedStats: readonly Stat[] = [
   { value: "8k+", label: "LinkedIn Followers", category: "Engagement", icon: "fa-users", trend: "up" },
@@ -474,28 +286,6 @@ export const enhancedStats: readonly Stat[] = [
   { value: "3.7/4.0", label: "Computer Science GPA", category: "Achievement", icon: "fa-graduation-cap", trend: "stable" },
   { value: "25%", label: "False Positive Reduction", category: "Performance", icon: "fa-arrow-down", trend: "down" },
   { value: "20%", label: "Investigation Time Improvement", category: "Performance", icon: "fa-hourglass-end", trend: "down" },
-] as const;
-
-// ─── Enhanced Testimonials ────────────────────────────────────────────────
-export const enhancedTestimonials: readonly Testimonial[] = [
-  {
-    quote: "Ahmed helped us reduce noisy detections and made our SOC triage flow much clearer. Response quality improved significantly.",
-    role: "Blue Team Lead",
-    context: "SOC Alert Tuning Sprint",
-    impact: "25% reduction in false positives",
-  },
-  {
-    quote: "Sessions were practical and structured. Our team improved lab outcomes in a short time with measurable skills improvement.",
-    role: "Training Coordinator",
-    context: "Security Training Program",
-    impact: "40% improvement in lab scores",
-  },
-  {
-    quote: "Strong investigation mindset with clear reporting and actionable recommendations. Excellent for incident response support.",
-    role: "Incident Response Mentor",
-    context: "DFIR Mentorship",
-    impact: "20% faster investigations",
-  },
 ] as const;
 
 export const projectResponseSla: Record<string, string> = {

@@ -10,7 +10,6 @@ import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
-import AboutSection from "@/app/components/about/sensei-about";
 import ExperienceSection from "@/app/components/experience/experience-section";
 import ProjectsSection from "@/app/components/projects/sensei-projects";
 import CaseStudiesSection from "@/app/components/case-studies/sensei-case-studies";
@@ -23,15 +22,9 @@ import ErrorBoundary from "@/app/core/components/ErrorBoundary";
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 const loadAnimatedBackground = () => import("@/app/components/animated_background/animated_background");
 const loadArtGallerySection = () => import("@/app/components/art_gallery/sensei-art");
-const loadSkillsShowcase = () => import("@/app/components/skills/skills-showcase");
-const loadCertificationsShowcase = () => import("@/app/components/certifications/certifications-showcase");
-const loadStatsTestimonials = () => import("@/app/components/stats/stats-testimonials");
 
 const AnimatedBackground = dynamic(loadAnimatedBackground, { ssr: false });
 const ArtGallerySection = dynamic(loadArtGallerySection, { ssr: false });
-const SkillsShowcase = dynamic(loadSkillsShowcase);
-const CertificationsShowcase = dynamic(loadCertificationsShowcase);
-const StatsTestimonials = dynamic(loadStatsTestimonials);
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -63,7 +56,6 @@ const MainClient = memo(function MainClient() {
       await waitForDomReady;
       await minLoaderDelay;
       loadAnimatedBackground();
-      loadSkillsShowcase();
       window.requestAnimationFrame(markAppReady);
     };
 
@@ -90,17 +82,7 @@ const MainClient = memo(function MainClient() {
         <AnimatedBackground />
         <AppBar />
         <HomeSection />
-        <AboutSection />
-          <ErrorBoundary title="Skills showcase section">
-            <SkillsShowcase />
-          </ErrorBoundary>
-          <ErrorBoundary title="Certifications showcase section">
-            <CertificationsShowcase />
-          </ErrorBoundary>
-          <ErrorBoundary title="Stats & testimonials section">
-            <StatsTestimonials />
-          </ErrorBoundary>
-          <ExperienceSection />
+        <ExperienceSection />
         <ErrorBoundary title="Case studies section">
           <CaseStudiesSection />
         </ErrorBoundary>
