@@ -96,6 +96,8 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/Email_Analysis_Room/9.png",
     "Assets/Cases/Email_Analysis_Room/10.png",
   ],
+  "set-tool-writeup-pdf": buildScreenshotRange("SET TOOL Writeup", 32, 46, [36, 39]),
+  "set-tool-writeup-docx": buildScreenshotRange("SET TOOL Writeup", 32, 46, [36, 39]),
 };
 
 const normalizePublicHref = (href: string): string => {
