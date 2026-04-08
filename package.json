@@ -17,6 +17,8 @@
     "images:compress:lossless": "node ./scripts/compress-images-lossless.mjs",
     "images:compress:lossless:dry": "node ./scripts/compress-images-lossless.mjs --dry-run",
     "images:watch": "node ./scripts/compress-images-lossless.mjs --watch",
+    "images:responsive": "node ./scripts/generate-responsive-images.mjs",
+    "images:responsive:dry": "node ./scripts/generate-responsive-images.mjs --dry-run",
     "pdfs:compress": "node ./scripts/compress-pdfs.mjs",
     "pdfs:compress:dry": "node ./scripts/compress-pdfs.mjs --dry-run",
     "pdfs:watch": "node ./scripts/compress-pdfs.mjs --watch"

@@ -91,9 +91,10 @@
 }
 
 .filterBtn.active {
-  border-color: rgba(var(--main-color-rgb), 0.85);
-  background: linear-gradient(110deg, var(--main-color), var(--accent-color));
-  color: #ffffff;
+  border-color: rgba(var(--main-color-rgb), 1);
+  background: linear-gradient(110deg, rgba(var(--main-color-rgb), 0.92), rgba(var(--accent-color-rgb), 0.9));
+  color: #07120d;
+  box-shadow: 0 10px 24px rgba(var(--main-color-rgb), 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 
 .skillsGrid {
@@ -109,7 +110,7 @@
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
   transition: all var(--motion-normal) var(--motion-ease);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(7px);
 }
 
 .skillCard:hover {
@@ -259,14 +260,24 @@
   color: #fff;
 }
 
+@media (max-width: 1024px) {
+  .skillsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .section {
     padding: 2.2rem 4%;
   }
 
   .skillsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1rem;
+  }
+
+  .skillCard {
+    backdrop-filter: none;
   }
 
   .filterWrap {
@@ -285,5 +296,11 @@
 
   .ctaRow {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .skillsGrid {
+    grid-template-columns: 1fr;
   }
 }

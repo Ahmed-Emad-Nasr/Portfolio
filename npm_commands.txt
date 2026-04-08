@@ -20,6 +20,8 @@ npm run verify          # يشغل: lint + type-check + build
 npm run images:compress:lossless:dry # تجربة الضغط بدون كتابة ملفات
 npm run images:compress:lossless     # ضغط الصور فعليًا بدون فقدان جودة
 npm run images:watch                 # مراقبة مجلد الصور وضغط أي صورة جديدة/معدلة تلقائياً
+npm run images:responsive:dry        # تجربة توليد نسخ responsive بصيغ WebP/AVIF ومقاسات متعددة
+npm run images:responsive            # توليد نسخ responsive داخل public/Assets/_responsive
 
 # ضغط ملفات PDF
 npm run pdfs:compress:dry            # تجربة ضغط الـ PDF بدون كتابة ملفات

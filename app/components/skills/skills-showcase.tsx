@@ -7,6 +7,7 @@
  */
 
 import { memo, useMemo, useState } from "react";
+import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faShield, faCode, faCloud, faBell } from "@fortawesome/free-solid-svg-icons";
 import styles from "./skills-showcase.module.css";
@@ -181,13 +182,13 @@ const SkillsShowcase = memo(function SkillsShowcase() {
             >
               Discuss Your Security Scope
             </a>
-            <a
+            <Link
               href="/Portfolio/blog"
               className={`${styles.ctaBtn} ${styles.ctaSecondary}`}
               onClick={() => recordFunnelEvent("cta_blog_click")}
             >
               See Full Case Writeups
-            </a>
+            </Link>
           </div>
 
           {filteredSkills.length === 0 && <p className={styles.emptyState}>No skills found in this category.</p>}

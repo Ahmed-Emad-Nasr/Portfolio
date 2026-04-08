@@ -29,9 +29,9 @@ const loadStatsTestimonials = () => import("@/app/components/stats/stats-testimo
 
 const AnimatedBackground = dynamic(loadAnimatedBackground, { ssr: false });
 const ArtGallerySection = dynamic(loadArtGallerySection, { ssr: false });
-const SkillsShowcase = dynamic(loadSkillsShowcase, { ssr: false });
-const CertificationsShowcase = dynamic(loadCertificationsShowcase, { ssr: false });
-const StatsTestimonials = dynamic(loadStatsTestimonials, { ssr: false });
+const SkillsShowcase = dynamic(loadSkillsShowcase);
+const CertificationsShowcase = dynamic(loadCertificationsShowcase);
+const StatsTestimonials = dynamic(loadStatsTestimonials);
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -40,8 +40,7 @@ const MainClient = memo(function MainClient() {
 
   useEffect(() => {
     let didMarkReady = false;
-    const PRELOAD_TIMEOUT_MS = 2500;
-    const MIN_LOADER_MS = 450;
+    const MIN_LOADER_MS = 120;
 
     const markAppReady = () => {
       if (didMarkReady) return;
@@ -56,29 +55,15 @@ const MainClient = memo(function MainClient() {
             document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
           });
 
-    const preloadDynamicSections = Promise.allSettled([
-      loadAnimatedBackground(),
-      loadArtGallerySection(),
-      loadSkillsShowcase(),
-      loadCertificationsShowcase(),
-      loadStatsTestimonials(),
-    ]);
-
-    const boundedPreload = Promise.race([
-      preloadDynamicSections,
-      new Promise<void>((resolve) => {
-        window.setTimeout(resolve, PRELOAD_TIMEOUT_MS);
-      }),
-    ]);
-
     const minLoaderDelay = new Promise<void>((resolve) => {
       window.setTimeout(resolve, MIN_LOADER_MS);
     });
 
     const bootstrap = async () => {
       await waitForDomReady;
-      await boundedPreload;
       await minLoaderDelay;
+      loadAnimatedBackground();
+      loadSkillsShowcase();
       window.requestAnimationFrame(markAppReady);
     };
 

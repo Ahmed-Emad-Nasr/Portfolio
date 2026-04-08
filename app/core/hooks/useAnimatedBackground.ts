@@ -15,6 +15,7 @@ import type { RefObject } from "react";
 interface Bubble {
   x: number; y: number; radius: number; vx: number; vy: number;
   originalRadius: number; phase: number; pulseSpeed: number;
+  driftPhase: number; driftSpeed: number; driftStrength: number;
 }
 
 interface MousePosition { x: number; y: number; active: boolean; }
@@ -29,7 +30,7 @@ const MIN_RADIUS                = 60;
 const BUBBLE_EXPANSION_FACTOR   = 0.45;
 const MAX_SPEED_LIMIT           = 2.4; // تم تقليل السرعة القصوى (كانت 5)
 const MAX_SPEED_LIMIT_SQ        = MAX_SPEED_LIMIT * MAX_SPEED_LIMIT;              
-const TARGET_FRAME_TIME         = 1000 / 60;
+const TARGET_FRAME_TIME         = 1000 / 45;
 const TARGET_FRAME_TIME_MOBILE  = 1000 / 30;
 const MOBILE_MAX_BUBBLES        = 3;
 const TWO_PI                    = Math.PI * 2;
@@ -169,6 +170,9 @@ export const useAnimatedBackground = (
         vy: (Math.random() - 0.5) * 1.1,
         phase: Math.random() * TWO_PI,
         pulseSpeed: 0.004 + Math.random() * 0.006, // Lite mode: slower pulse
+        driftPhase: Math.random() * TWO_PI,
+        driftSpeed: 0.0009 + Math.random() * 0.0016,
+        driftStrength: 0.11 + Math.random() * 0.09,
       };
     });
   }, [canvasRef]);
@@ -259,15 +263,18 @@ export const useAnimatedBackground = (
           const dist      = Math.sqrt(distSq);           
           const influence = 1 - dist * INV_MOUSE_RADIUS; 
           newRadius = pulsingRadius * (1 + influence * BUBBLE_EXPANSION_FACTOR);
-          const invDist = 1 / dist;                      
-          b.vx -= dx * invDist * MOUSE_INFLUENCE_STRENGTH * influence;
-          b.vy -= dy * invDist * MOUSE_INFLUENCE_STRENGTH * influence;
+          if (dist > 0.0001) {
+            const invDist = 1 / dist;
+            b.vx -= dx * invDist * MOUSE_INFLUENCE_STRENGTH * influence;
+            b.vy -= dy * invDist * MOUSE_INFLUENCE_STRENGTH * influence;
+          }
         }
       }
 
-      // تم تقليل عشوائية الانحراف عشان الحركة تكون أنعم (كانت 1.2)
-      b.vx += (Math.random() - 0.5) * 0.18 * dt;
-      b.vy += (Math.random() - 0.5) * 0.18 * dt;
+      // Deterministic drift keeps movement smooth and reduces CPU spikes.
+      b.driftPhase += b.driftSpeed * elapsed;
+      b.vx += Math.cos(b.driftPhase) * b.driftStrength * dt;
+      b.vy += Math.sin(b.driftPhase * 0.92) * b.driftStrength * dt;
       
       const speedSq = b.vx * b.vx + b.vy * b.vy;
       if (speedSq > MAX_SPEED_LIMIT_SQ) {
