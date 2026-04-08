@@ -74,8 +74,8 @@
 
 @keyframes cursor { to { border-left: 2px solid var(--main-color); } }
 @keyframes words {
-  0%, 20% { content: "SOC Analyst"; } 21%, 40% { content: "Cybersecurity Analyst"; }
-  41%, 61% { content: "Incident Responder"; } 62%, 80% { content: "Security Analyst"; }
+  0%, 20% { content: "SOC Analyst"; } 21%, 40% { content: "Incident Responder"; }
+  41%, 61% { content: "Noob Malware Analyst"; } 62%, 80% { content: "Security Analyst"; }
   81%, 100% { content: "Cybersecurity Instructor"; }
 }
 @keyframes typing {
