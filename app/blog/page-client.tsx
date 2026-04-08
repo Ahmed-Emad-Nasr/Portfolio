@@ -83,6 +83,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "unload-malware-report": buildScreenshotRange("Unload_Malware", 201, 211),
   "malware2-report": buildScreenshotRange("Malware2", 245, 256),
   "bruteforce-room-report": buildScreenshotRange("BruteForce_Room", 228, 244),
+  "malicious-web-traffic-room-report": buildScreenshotRange("MaliciousWebTraffic_Room", 268, 282),
   "email-analysis-room-report": [
     "Assets/Cases/Email_Analysis_Room/1.png",
     "Assets/Cases/Email_Analysis_Room/2.png",

@@ -930,6 +930,21 @@ export const caseEvidenceLibrary = [
     readTime: 12,
     date: "2025-08-15",
   },
+  {
+    id: "malicious-web-traffic-room-report",
+    title: "Malicious Web Traffic Room Report",
+    description: "Investigation of malicious web traffic patterns with log correlation, IOC identification, and response recommendations.",
+    platform: "Blue Team Simulation",
+    type: "PDF Report",
+    category: "Web Security",
+    difficulty: "Medium",
+    href: "Assets/Cases/MaliciousWebTraffic_Room/AhmedEmad_MaliciousWebTraffic.pdf",
+    tags: ["Web Traffic", "Threat Detection", "IOC"],
+    tools: ["Web Log Analysis", "SIEM"],
+    skillsGained: ["Web Threat Analysis", "Traffic Investigation"],
+    readTime: 16,
+    date: "2025-08-12",
+  },
 ] as const;
 
 export const staticProjectFallback = [
