@@ -82,6 +82,19 @@
   }
 }
 
+/* Ensure keyframes run even with prefers-reduced-motion */
+@supports (--css: variables) {
+  @media (prefers-reduced-motion: reduce) {
+    .glowOrb {
+      animation: orbFloat 14s ease-in-out infinite !important;
+    }
+    
+    .scanlines {
+      animation: scanDrift 9s linear infinite !important;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .scanlines {
     display: none;

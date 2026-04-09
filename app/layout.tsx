@@ -268,6 +268,31 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   }
 })();`}
         </Script>
+        <Script id="chunk-error-handler" strategy="beforeInteractive">
+          {`(function(){
+  if (typeof window === "undefined") return;
+  
+  window.__NEXT_DATA__ = window.__NEXT_DATA__ || {};
+  
+  // Prevent appendChild errors from malformed chunks
+  var originalAppend = Element.prototype.appendChild;
+  Element.prototype.appendChild = function(node) {
+    try {
+      if (node && typeof node === "object" && node.nodeType === Node.TEXT_NODE) {
+        var text = node.textContent || "";
+        if (text.trim().startsWith("<")) {
+          console.warn("Blocked invalid chunk content from being appended");
+          return node;
+        }
+      }
+      return originalAppend.call(this, node);
+    } catch (error) {
+      console.error("appendChild error:", error);
+      return node;
+    }
+  };
+})();`}
+        </Script>
         <Script id="sw-register" strategy="afterInteractive">
           {`(function(){
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
@@ -275,13 +300,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   var path = window.location.pathname;
   var scopePrefix = path === "/Portfolio" || path.startsWith("/Portfolio/") ? "/Portfolio" : "";
   var swUrl = scopePrefix + "/sw.js";
-        <footer className="site-footer" aria-label="Site footer">
-          <div className="site-footer__inner">
-            <span>Ahmed Emad Nasr Portfolio</span>
-            <span>SOC • IR • DFIR</span>
-            <a href="#main-content">Back to top</a>
-          </div>
-        </footer>
 
   navigator.serviceWorker.register(swUrl).catch(function(error){
     console.warn("Service worker registration failed:", error);
@@ -294,6 +312,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         {children}
+        <footer className="site-footer" aria-label="Site footer">
+          <div className="site-footer__inner">
+            <span>Ahmed Emad Nasr Portfolio</span>
+            <span>SOC • IR • DFIR</span>
+            <a href="#main-content">Back to top</a>
+          </div>
+        </footer>
       </body>
     </html>
   );

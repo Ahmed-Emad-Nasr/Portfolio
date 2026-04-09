@@ -260,7 +260,7 @@ html[data-portfolio-mode="magazine"] button {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    animation-duration: 6000ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
@@ -268,6 +268,35 @@ html[data-portfolio-mode="magazine"] button {
 
   html {
     scroll-behavior: auto;
+  }
+  
+  /* Keep keyframes running but slowed down dramatically */
+  .glowOrb,
+  .scanlines {
+    animation: none !important;
+  }
+}
+
+/* Force keyframes to always run */
+@supports (animation-play-state: running) {
+  @media (prefers-reduced-motion: reduce) {
+    [class*="Pulse"],
+    [class*="Float"],
+    [class*="Drift"],
+    [class*="Fade"],
+    [class*="Fade"] {
+      animation-play-state: running !important;
+      animation-duration: 8s !important;
+    }
+    
+    /* Background animations remain always active */
+    .glowOrb {
+      animation: orbFloat 14s ease-in-out infinite !important;
+    }
+    
+    .scanlines {
+      animation: scanDrift 9s linear infinite !important;
+    }
   }
 }
 

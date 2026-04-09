@@ -24,8 +24,15 @@ import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 const loadAnimatedBackground = () => import("@/app/components/animated_background/animated_background");
 const loadArtGallerySection = () => import("@/app/components/art_gallery/sensei-art");
 
-const AnimatedBackground = dynamic(loadAnimatedBackground, { ssr: false });
-const ArtGallerySection = dynamic(loadArtGallerySection, { ssr: false });
+const AnimatedBackground = dynamic(loadAnimatedBackground, { 
+  ssr: false,
+  loading: () => null,
+});
+
+const ArtGallerySection = dynamic(loadArtGallerySection, { 
+  ssr: false,
+  loading: () => null,
+});
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
