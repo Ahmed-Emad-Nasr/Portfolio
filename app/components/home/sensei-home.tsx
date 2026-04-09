@@ -16,6 +16,7 @@ import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { enhancedSkills, enhancedStats, homeSummaryParagraph } from "@/app/core/data";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
+const BTN_PROJECTS_CLASS = `${styles.btn} ${styles.btnProjects}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
 const pickVariant = <T extends string>(a: T, b: T): T => (Math.random() < 0.5 ? a : b);
@@ -95,6 +96,19 @@ const SenseiHome = memo(function SenseiHome() {
       .filter((skill) => skill.proficiency === "Expert" || skill.proficiency === "Advanced")
       .slice(0, 5)
       .map((skill) => skill.name);
+  }, []);
+
+  const trustStats = useMemo(() => {
+    const preferred = [
+      "Simulated SOC Alerts Investigated",
+      "Cybersecurity Sessions Delivered",
+      "Average Training Feedback Score",
+    ];
+
+    return preferred
+      .map((label) => enhancedStats.find((item) => item.label === label))
+      .filter((item): item is NonNullable<typeof item> => Boolean(item))
+      .slice(0, 3);
   }, []);
 
   useEffect(() => {
@@ -192,6 +206,7 @@ const SenseiHome = memo(function SenseiHome() {
 
         <div className={styles.homeContent}>
           <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
+          <p className={styles.valueLine}>SOC Analyst focused on incident response, threat hunting, and DFIR outcomes.</p>
           <div className={styles.availabilityStatus}>
             <span className={`${styles.statusDot} ${availability.toneClass}`}></span>
             <span>{availability.label}</span>
@@ -209,6 +224,14 @@ const SenseiHome = memo(function SenseiHome() {
               <span key={skill} className={styles.proofPill}>{skill}</span>
             ))}
           </div>
+          <div className={styles.trustStrip} aria-label="Trust proof highlights">
+            {trustStats.map((item) => (
+              <article key={item.label} className={styles.trustCard}>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
+              </article>
+            ))}
+          </div>
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
             <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat"><FontAwesomeIcon icon={faWhatsapp} /></a>
@@ -219,7 +242,7 @@ const SenseiHome = memo(function SenseiHome() {
               className={BTN_1_CLASS}
               onClick={handleHireMeClick}
             >
-              <span className={styles.liveTag}><span className={styles.livePing} aria-hidden="true" /> Live</span> Hire Me <FontAwesomeIcon icon={faUserSecret} />
+              Hire Me <FontAwesomeIcon icon={faUserSecret} />
             </a>
             <a
               href="Assets/cv/AhmedEmadNasr_CV.pdf"
@@ -231,7 +254,7 @@ const SenseiHome = memo(function SenseiHome() {
             </a>
             <a
               href="#Projects"
-              className={BTN_1_CLASS}
+              className={BTN_PROJECTS_CLASS}
             >
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>

@@ -6,7 +6,7 @@
  * Purpose: Render sticky navigation header and mobile menu behavior
  */
 
-import { useCallback, useMemo, memo, useEffect, type MouseEvent } from "react";
+import { useCallback, useMemo, memo, useEffect, useState, type MouseEvent } from "react";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -18,6 +18,7 @@ const ACTIVE_CLASS   = styles.active;
 const BLOG_PATH = "/Portfolio/blog";
 
 const SenseiHeader = memo(function SenseiHeader() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const {
     isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen,
@@ -41,6 +42,16 @@ const SenseiHeader = memo(function SenseiHeader() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 18);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const scrollToSection = useCallback((section: string): void => {
     const target = document.getElementById(section);
@@ -138,7 +149,7 @@ const SenseiHeader = memo(function SenseiHeader() {
   const navbarClass = isMenuOpen ? `${NAVBAR_BASE} ${ACTIVE_CLASS}` : NAVBAR_BASE;
 
   return (
-    <header className={styles.header} data-site-header="true">
+    <header className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header} data-site-header="true">
       <a
         href="#Home"
         className={styles.logo}

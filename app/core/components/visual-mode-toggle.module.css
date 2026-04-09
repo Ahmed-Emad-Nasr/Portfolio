@@ -1,0 +1,69 @@
+.toggle {
+  position: fixed;
+  top: 1.6rem;
+  right: 1.7rem;
+  z-index: 1200;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(6, 10, 16, 0.76);
+  backdrop-filter: blur(7px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.toggleButton {
+  min-height: 30px;
+  padding: 0.35rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease);
+}
+
+.toggleButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--main-color-rgb), 0.52);
+}
+
+.active {
+  color: #0d1418;
+  border-color: rgba(var(--main-color-rgb), 0.88);
+  background: linear-gradient(112deg, var(--main-color), #a6ecff);
+}
+
+:global(html[data-portfolio-mode="magazine"]) .active {
+  color: #1f1408;
+  border-color: rgba(255, 207, 136, 0.84);
+  background: linear-gradient(112deg, #ffc06e, #ffe2ad);
+}
+
+@media (max-width: 994px) {
+  .toggle {
+    top: 1.4rem;
+    right: 5.8rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .toggle {
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    justify-content: center;
+  }
+
+  .toggleButton {
+    flex: 1;
+    max-width: 220px;
+  }
+}

@@ -46,19 +46,19 @@
 .content {
   background:
     radial-gradient(circle at 88% 12%, rgba(var(--accent-color-rgb), 0.14), transparent 34%),
-    linear-gradient(180deg, rgba(14, 18, 24, 0.92), rgba(8, 10, 13, 0.82));
-  padding: 3rem; border-radius: 25px; border: 1px solid rgba(var(--main-color-rgb), 0.16);
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    var(--surface-card-bg);
+  padding: 2.8rem; border-radius: var(--radius-card); border: 1px solid var(--surface-card-border);
+  transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
   backface-visibility: hidden; will-change: box-shadow, border-color, background-color, transform;
   position: relative; text-align: left;
   overflow: hidden;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .content:hover {
   background: rgba(10, 13, 18, 0.92); backdrop-filter: blur(15px);
-  border-color: rgba(var(--accent-color-rgb), 0.5); box-shadow: 0 18px 34px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(var(--accent-color-rgb), 0.14);
-  transform: translateY(-4px);
+  border-color: rgba(var(--accent-color-rgb), 0.5); box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(var(--accent-color-rgb), 0.14);
+  transform: translateY(-3px);
 }
 
 .tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: rgba(205, 250, 230, 0.84); transition: color 0.35s ease; }
@@ -67,7 +67,7 @@
 .linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity 0.35s ease, color 0.35s ease; }
 .tag h3:hover { cursor: pointer; text-decoration: underline; text-decoration-color: var(--main-color); }
 .tag h3:hover .linkIcon { opacity: 1; color: var(--main-color); }
-.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: disc; color: rgba(233, 241, 250, 0.88); font-size: 1.5rem; line-height: 1.7; font-weight: 500; transition: color 0.35s ease; }
+.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: disc; color: var(--text-muted); font-size: 1.5rem; line-height: 1.78; font-weight: 500; transition: color 0.35s ease; }
 .desc-list li { margin-bottom: 0.6rem; }
 .desc-list li:last-child { margin-bottom: 0; }
 

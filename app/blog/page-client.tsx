@@ -15,6 +15,7 @@ import {
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
+import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 
 const AnimatedBackground = dynamic(
   () => import("@/app/components/animated_background/animated_background"),
@@ -371,6 +372,7 @@ export default function BlogPageClient() {
   return (
     <main id="main-content" className={styles.page}>
       <AnimatedBackground />
+      <VisualModeToggle />
 
       <section className={styles.hero}>
         <span className={styles.heroGlow} aria-hidden="true" />
@@ -422,6 +424,7 @@ export default function BlogPageClient() {
                 YouTube Hub
               </a>
             </nav>
+
           </div>
 
           <article className={`${styles.featuredCard} ${styles.heroFeaturedCard}`}>
@@ -442,9 +445,11 @@ export default function BlogPageClient() {
                   onClick={() => activateEmbed("featured-video")}
                   aria-label={`Play ${featuredVideo.title}`}
                 >
-                  <img
+                  <Image
                     src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
                     alt={featuredVideo.title}
+                    fill
+                    sizes="(max-width: 991px) 100vw, 50vw"
                     loading="lazy"
                   />
                   <span className={styles.embedPlayButton}>Play</span>
@@ -928,9 +933,11 @@ export default function BlogPageClient() {
                     onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
                     aria-label={`Play ${playlist.title}`}
                   >
-                    <img
+                    <Image
                       src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
                       alt={playlist.title}
+                      fill
+                      sizes="(max-width: 991px) 100vw, 40vw"
                       loading="lazy"
                     />
                     <span className={styles.embedPlayButton}>Play Playlist</span>
@@ -987,9 +994,11 @@ export default function BlogPageClient() {
                     onClick={() => activateEmbed(`video-${video.videoId}`)}
                     aria-label={`Play ${video.title}`}
                   >
-                    <img
+                    <Image
                       src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
                       alt={video.title}
+                      fill
+                      sizes="(max-width: 991px) 100vw, 40vw"
                       loading="lazy"
                     />
                     <span className={styles.embedPlayButton}>Play Video</span>
@@ -1107,6 +1116,24 @@ export default function BlogPageClient() {
           </div>
         </div>
       ) : null}
+
+      <section className={styles.blogClosing} aria-labelledby="blog-closing-title">
+        <div>
+          <span className={styles.blogClosingKicker}>Final note</span>
+          <h2 id="blog-closing-title">If you want the full story, start with the PDF archive and continue with the videos.</h2>
+          <p>
+            The blog is structured like a field notebook: short entry points, deeper evidence, and a direct path back to the portfolio.
+          </p>
+        </div>
+        <div className={styles.blogClosingActions}>
+          <Link href="/" className={styles.secondaryAction}>
+            Back to Portfolio
+          </Link>
+          <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noreferrer" className={styles.primaryAction}>
+            Open YouTube Channel
+          </a>
+        </div>
+      </section>
 
       <DesktopQuickCTA />
       <MobileQuickActions />

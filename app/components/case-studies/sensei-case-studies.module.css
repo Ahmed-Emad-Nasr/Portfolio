@@ -118,9 +118,9 @@
 .lead {
   max-width: 72rem;
   margin: 1.15rem auto 0;
-  color: rgba(240, 247, 255, 0.9);
+  color: var(--text-muted);
   font-size: 1.58rem;
-  line-height: 1.85;
+  line-height: 1.78;
   font-weight: 600;
 }
 
@@ -132,16 +132,16 @@
 
 .featuredCard,
 .evidenceBlock {
-  border: 1px solid rgba(var(--main-color-rgb), 0.14);
+  border: 1px solid var(--surface-card-border);
   background:
     radial-gradient(circle at top right, rgba(var(--accent-color-rgb), 0.12), transparent 30%),
-    linear-gradient(180deg, rgba(14, 18, 24, 0.94), rgba(8, 10, 13, 0.84));
-  border-radius: 26px;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(var(--accent-color-rgb), 0.05);
+    var(--surface-card-bg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card), 0 0 0 1px rgba(var(--accent-color-rgb), 0.05);
 }
 
 .featuredCard {
-  padding: 2.4rem;
+  padding: 2.2rem;
   backdrop-filter: blur(14px);
 }
 
@@ -195,8 +195,8 @@
 .featuredIntro {
   margin: 0;
   font-size: 1.5rem;
-  line-height: 1.8;
-  color: rgba(233, 241, 250, 0.86);
+  line-height: 1.76;
+  color: var(--text-muted);
 }
 
 .featuredKeywords {
@@ -227,7 +227,7 @@
 }
 
 .featuredGrid > div {
-  border-radius: 18px;
+  border-radius: var(--radius-card-sm);
   border: 1px solid rgba(var(--main-color-rgb), 0.12);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
@@ -281,7 +281,7 @@
 
 .evidenceBlock {
   margin-top: 2.6rem;
-  padding: 2rem;
+  padding: 1.85rem;
   position: relative;
 }
 

@@ -8,7 +8,7 @@ import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Overlock } from "next/font/google";
+import { Overlock, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import ToastHost from "@/app/core/components/ToastHost";
 import { faqItems, knowledgeEducationItems } from "@/app/core/data";
@@ -111,8 +111,15 @@ const overlock = Overlock({
   display: "swap",
 });
 
+const spaceGrotesk = Space_Grotesk({
+  weight: ["500", "700"],
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
 // Derived once — the class string never changes between renders.
-const BODY_CLASS = `bg-black text-white ${overlock.variable}`;
+const BODY_CLASS = `bg-black text-white ${overlock.variable} ${spaceGrotesk.variable}`;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const structuredData = {
   "@context": "https://schema.org",
@@ -247,6 +254,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             strategy="afterInteractive"
           />
         ) : null}
+        <Script id="visual-mode-init" strategy="beforeInteractive">
+          {`(function(){
+  try {
+    var mode = localStorage.getItem("portfolio_blog_visual_mode_v1");
+    if (mode === "dashboard" || mode === "magazine") {
+      document.documentElement.setAttribute("data-portfolio-mode", mode);
+    } else {
+      document.documentElement.setAttribute("data-portfolio-mode", "dashboard");
+    }
+  } catch (error) {
+    document.documentElement.setAttribute("data-portfolio-mode", "dashboard");
+  }
+})();`}
+        </Script>
         <Script id="sw-register" strategy="afterInteractive">
           {`(function(){
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
@@ -254,6 +275,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   var path = window.location.pathname;
   var scopePrefix = path === "/Portfolio" || path.startsWith("/Portfolio/") ? "/Portfolio" : "";
   var swUrl = scopePrefix + "/sw.js";
+        <footer className="site-footer" aria-label="Site footer">
+          <div className="site-footer__inner">
+            <span>Ahmed Emad Nasr Portfolio</span>
+            <span>SOC • IR • DFIR</span>
+            <a href="#main-content">Back to top</a>
+          </div>
+        </footer>
 
   navigator.serviceWorker.register(swUrl).catch(function(error){
     console.warn("Service worker registration failed:", error);

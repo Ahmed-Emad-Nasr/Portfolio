@@ -5,15 +5,23 @@
 
 /*--------- 1. Reset & Global ---------*/
 :root {
-  --bg-color: #000000;
-  --second-bg-color: #000000;
+  --bg-color: #05080d;
+  --second-bg-color: #0a1018;
   --text-color: #ffffff;
-  --main-color: #6feab2;
-  --main-color-rgb: 111, 234, 178;
-  --accent-color: #9df5d0;
-  --accent-color-rgb: 157, 245, 208;
+  --main-color: #5be4be;
+  --main-color-rgb: 91, 228, 190;
+  --accent-color: #8ed8ff;
+  --accent-color-rgb: 142, 216, 255;
   --surface-1: rgba(255, 255, 255, 0.035);
   --surface-2: rgba(255, 255, 255, 0.055);
+  --surface-card-bg: linear-gradient(180deg, rgba(14, 18, 24, 0.92), rgba(8, 10, 13, 0.84));
+  --surface-card-border: rgba(var(--main-color-rgb), 0.18);
+  --text-muted: rgba(235, 243, 252, 0.82);
+  --radius-card: 22px;
+  --radius-card-sm: 16px;
+  --radius-pill: 999px;
+  --shadow-card: 0 14px 30px rgba(0, 0, 0, 0.38);
+  --shadow-card-hover: 0 20px 36px rgba(0, 0, 0, 0.48);
   --motion-fast: 180ms;
   --motion-normal: 260ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -21,6 +29,32 @@
   --card-blur: 10px;
   
   color-scheme: dark; 
+}
+
+html[data-portfolio-mode="dashboard"] {
+  --bg-color: #05080d;
+  --second-bg-color: #0a1018;
+  --text-color: #ffffff;
+  --main-color: #5be4be;
+  --main-color-rgb: 91, 228, 190;
+  --accent-color: #8ed8ff;
+  --accent-color-rgb: 142, 216, 255;
+  --surface-card-bg: linear-gradient(180deg, rgba(14, 18, 24, 0.92), rgba(8, 10, 13, 0.84));
+  --surface-card-border: rgba(var(--main-color-rgb), 0.18);
+  --text-muted: rgba(235, 243, 252, 0.82);
+}
+
+html[data-portfolio-mode="magazine"] {
+  --bg-color: #140d08;
+  --second-bg-color: #1b130d;
+  --text-color: #fff7eb;
+  --main-color: #ffc06e;
+  --main-color-rgb: 255, 192, 110;
+  --accent-color: #ffe2ad;
+  --accent-color-rgb: 255, 226, 173;
+  --surface-card-bg: linear-gradient(180deg, rgba(32, 22, 14, 0.92), rgba(17, 12, 10, 0.84));
+  --surface-card-border: rgba(var(--main-color-rgb), 0.24);
+  --text-muted: rgba(255, 239, 219, 0.84);
 }
 
 * {
@@ -88,13 +122,46 @@ body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
   background:
-    radial-gradient(circle at 12% 8%, rgba(var(--accent-color-rgb), 0.11), transparent 30%),
-    radial-gradient(circle at 88% 12%, rgba(var(--main-color-rgb), 0.08), transparent 32%),
-    linear-gradient(155deg, #030405 0%, #090b10 38%, #040506 100%);
+    radial-gradient(circle at 12% 8%, rgba(var(--accent-color-rgb), 0.16), transparent 32%),
+    radial-gradient(circle at 88% 12%, rgba(var(--main-color-rgb), 0.12), transparent 34%),
+    linear-gradient(152deg, #04070b 0%, #0a1018 42%, #070b12 100%);
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
+}
+
+a,
+button,
+input,
+textarea,
+select,
+summary {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity, filter;
+  transition-duration: var(--motion-normal);
+  transition-timing-function: var(--motion-ease);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+.sectionTitle,
+.displayTitle {
+  font-family: var(--font-heading, var(--font-overlock, sans-serif));
+  letter-spacing: 0.01em;
+  line-height: 1.12;
+}
+
+p,
+li {
+  color: var(--text-muted);
 }
 
 body::before,
@@ -108,13 +175,13 @@ body::after {
 
 body::before {
   background:
-    radial-gradient(circle at 20% 80%, rgba(var(--accent-color-rgb), 0.08), transparent 38%),
-    radial-gradient(circle at 80% 74%, rgba(var(--main-color-rgb), 0.08), transparent 34%);
+    radial-gradient(circle at 20% 80%, rgba(var(--accent-color-rgb), 0.1), transparent 40%),
+    radial-gradient(circle at 80% 74%, rgba(var(--main-color-rgb), 0.1), transparent 36%);
   filter: blur(16px);
 }
 
 body::after {
-  opacity: 0.2;
+  opacity: 0.18;
   background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
   background-size: 42px 42px;
   mask-image: radial-gradient(circle at center, black 48%, transparent 92%);
@@ -135,6 +202,32 @@ body::after {
 
 main {
   position: relative;
+}
+
+html[data-portfolio-mode="magazine"] body {
+  background:
+    radial-gradient(circle at 14% 10%, rgba(255, 191, 112, 0.22), transparent 34%),
+    radial-gradient(circle at 84% 14%, rgba(255, 226, 156, 0.16), transparent 36%),
+    linear-gradient(152deg, #130d08 0%, #1a120d 42%, #120c08 100%);
+}
+
+html[data-portfolio-mode="magazine"] section::after {
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 191, 112, 0.76), transparent),
+    linear-gradient(90deg, transparent, rgba(255, 226, 156, 0.45), transparent);
+}
+
+html[data-portfolio-mode="dashboard"] section,
+html[data-portfolio-mode="magazine"] section,
+html[data-portfolio-mode="dashboard"] section::before,
+html[data-portfolio-mode="magazine"] section::before,
+html[data-portfolio-mode="dashboard"] section::after,
+html[data-portfolio-mode="magazine"] section::after,
+html[data-portfolio-mode="dashboard"] a,
+html[data-portfolio-mode="magazine"] a,
+html[data-portfolio-mode="dashboard"] button,
+html[data-portfolio-mode="magazine"] button {
+  transition: background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
 }
 
 @media (prefers-contrast: more) {
@@ -160,6 +253,21 @@ main {
   textarea:focus-visible,
   select:focus-visible {
     box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }
 
@@ -210,8 +318,37 @@ main {
 /*--------- 4. General Section Style ---------*/
 section {
   min-height: auto;
-  padding: 6.5rem 6% 5.5rem;
+  padding: 7.1rem 6% 5.9rem;
   position: relative;
+}
+
+.site-footer {
+  padding: 0 6% 3.2rem;
+  margin-top: clamp(3rem, 5vw, 5rem);
+}
+
+.site-footer__inner {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--main-color-rgb), 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+}
+
+.site-footer__inner a {
+  color: var(--main-color);
+  font-weight: 700;
+}
+
+.site-footer__inner a:hover {
+  color: var(--accent-color);
 }
 
 section > * {
@@ -220,7 +357,7 @@ section > * {
 }
 
 main section + section {
-  margin-top: clamp(12rem, 15vw, 20rem);
+  margin-top: clamp(10rem, 13vw, 17rem);
 }
 
 section::before {
@@ -229,13 +366,13 @@ section::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.035), transparent 40%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.015), transparent 45%);
+    radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.045), transparent 41%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.018), transparent 45%);
   z-index: 0;
 }
 
 main section:nth-of-type(2n)::before {
-  background: radial-gradient(circle at 80% 12%, rgba(var(--accent-color-rgb), 0.04), transparent 36%);
+  background: radial-gradient(circle at 80% 12%, rgba(var(--accent-color-rgb), 0.05), transparent 37%);
 }
 
 main section:nth-of-type(3n)::before {
@@ -251,10 +388,10 @@ section::after {
   height: 4px;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.72), transparent),
-    linear-gradient(90deg, transparent, rgba(var(--accent-color-rgb), 0.35), transparent);
+    linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.7), transparent),
+    linear-gradient(90deg, transparent, rgba(var(--accent-color-rgb), 0.45), transparent);
   opacity: 1;
-  box-shadow: 0 0 22px rgba(var(--main-color-rgb), 0.3);
+  box-shadow: 0 0 24px rgba(var(--main-color-rgb), 0.28);
   z-index: 0;
 }
 
@@ -290,6 +427,15 @@ main section:nth-of-type(2n)::after {
   .skip-link {
     font-size: 1.3rem;
     padding: 0.8rem 1rem;
+  }
+
+  .site-footer {
+    padding: 0 5% 2.4rem;
+  }
+
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

@@ -18,6 +18,7 @@ import LoadingScreen from "@/app/components/loader/sensei_loader";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import ErrorBoundary from "@/app/core/components/ErrorBoundary";
+import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 const loadAnimatedBackground = () => import("@/app/components/animated_background/animated_background");
@@ -80,6 +81,7 @@ const MainClient = memo(function MainClient() {
         }}
       >
         <AnimatedBackground />
+        <VisualModeToggle />
         <AppBar />
         <HomeSection />
         <ExperienceSection />
