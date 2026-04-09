@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "./page.module.css";
+import LoadingScreen from "@/app/components/loader/sensei_loader";
 import {
   blogFeaturedYoutubeVideo,
   blogYoutubePlaylists,
@@ -135,6 +136,7 @@ export default function BlogPageClient() {
   const [sortBy, setSortBy] = useState<"recent" | "popularity" | "difficulty">("recent");
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
+  const [isPageReady, setIsPageReady] = useState(false);
   const galleryDialogRef = useRef<HTMLDivElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
 
@@ -369,12 +371,54 @@ export default function BlogPageClient() {
       ? gallery.screenshots[gallery.index]
       : null;
 
-  return (
-    <main id="main-content" className={styles.page}>
-      <AnimatedBackground />
-      <VisualModeToggle />
+  useEffect(() => {
+    let isMounted = true;
+    const MIN_READY_DELAY_MS = 120;
 
-      <section className={styles.hero}>
+    const waitForWindowLoad =
+      document.readyState === "complete"
+        ? Promise.resolve()
+        : new Promise<void>((resolve) => {
+            window.addEventListener("load", () => resolve(), { once: true });
+          });
+
+    const minDelay = new Promise<void>((resolve) => {
+      window.setTimeout(resolve, MIN_READY_DELAY_MS);
+    });
+
+    const bootstrap = async () => {
+      await waitForWindowLoad;
+      await minDelay;
+
+      if (!isMounted) return;
+      window.requestAnimationFrame(() => {
+        if (isMounted) setIsPageReady(true);
+      });
+    };
+
+    bootstrap();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  return (
+    <main id="main-content" className={styles.page} style={{ position: "relative" }}>
+      <LoadingScreen isLoading={!isPageReady} />
+
+      <div
+        style={{
+          opacity: isPageReady ? 1 : 0,
+          pointerEvents: isPageReady ? "auto" : "none",
+          minHeight: isPageReady ? "auto" : "100vh",
+          overflow: isPageReady ? "visible" : "hidden",
+        }}
+      >
+        <AnimatedBackground />
+        <VisualModeToggle />
+
+        <section className={styles.hero}>
         <span className={styles.heroGlow} aria-hidden="true" />
         <p className={styles.kicker}>Knowledge Hub</p>
         <h1>Blog, Reports, and Technical Videos</h1>
@@ -1137,6 +1181,7 @@ export default function BlogPageClient() {
 
       <DesktopQuickCTA />
       <MobileQuickActions />
+      </div>
     </main>
   );
 }

@@ -157,7 +157,7 @@ export const useAnimatedBackground = (
     }
 
     const radiusRange = MAX_RADIUS - MIN_RADIUS;
-    const bubbleCount = Math.floor((w * h) / 165000);
+    const bubbleCount = Math.floor((w * h) / 170000);
 
     bubblesRef.current = Array.from({ length: bubbleCount }, () => {
       const radius = Math.random() * radiusRange + MIN_RADIUS;
