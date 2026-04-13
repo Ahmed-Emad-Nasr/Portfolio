@@ -24,7 +24,7 @@ const resolveEvidenceHref = (href: string): string => {
   return `${scopePrefix}/${href}`;
 };
 
-const SenseiCaseStudies = memo(function SenseiCaseStudies() {
+const SenseiCaseStudies = memo(function WriteupsSection() {
   const [activeEvidenceFilter, setActiveEvidenceFilter] = useState<EvidenceFilter>("All");
 
   const featuredStory = caseStudyHighlights[0];
@@ -57,12 +57,12 @@ const SenseiCaseStudies = memo(function SenseiCaseStudies() {
   }, [activeEvidenceFilter]);
 
   return (
-    <section className={styles.section} id="CaseStudies">
+    <section className={styles.section} id="Writeups">
       <div className={styles.ambientGlow} aria-hidden="true" />
       <div className={styles.ambientGlowAlt} aria-hidden="true" />
       <div className={styles.container}>
         <div className={styles.headerSection}>
-          <SectionHeader japaneseText="事例" englishText="Case Studies" titleClassName={styles.title} />
+          <SectionHeader japaneseText="事例" englishText="Writeups" titleClassName={styles.title} />
           <p className={styles.lead}>A blog-style field journal of investigations, tuning work, and training outcomes with evidence attached.</p>
           <div className={styles.storyMetrics} aria-label="Case study summary metrics">
             {storyMetrics.map((metric) => (

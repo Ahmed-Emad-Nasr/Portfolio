@@ -12,7 +12,7 @@ import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
 import ExperienceSection from "@/app/components/experience/experience-section";
 import ProjectsSection from "@/app/components/projects/sensei-projects";
-import CaseStudiesSection from "@/app/components/case-studies/sensei-case-studies";
+import WriteupsSection from "@/app/components/case-studies/sensei-case-studies";
 import ContactSection from "@/app/components/contact/sensei-contact";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
@@ -92,8 +92,8 @@ const MainClient = memo(function MainClient() {
         <AppBar />
         <HomeSection />
         <ExperienceSection />
-        <ErrorBoundary title="Case studies section">
-          <CaseStudiesSection />
+        <ErrorBoundary title="Writeups section">
+          <WriteupsSection />
         </ErrorBoundary>
         <ErrorBoundary title="Projects section">
           <ProjectsSection />

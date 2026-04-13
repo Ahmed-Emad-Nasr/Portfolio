@@ -46,7 +46,7 @@ const casesStructuredData = {
     datePublished: (caseEvidenceLibrary[index] as any)?.date || "2025-01-01",
     keywords: (caseEvidenceLibrary[index] as any)?.tags?.join(", ") || "cybersecurity, incident response",
   })),
-  keywords: "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, case studies, security reports",
+  keywords: "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, security reports",
 };
 
 const breadcrumbSchema = {

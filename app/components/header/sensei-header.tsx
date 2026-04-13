@@ -110,8 +110,8 @@ const SenseiHeader = memo(function SenseiHeader() {
   }, [setIsMenuOpen]);
 
   const navLinks = useMemo(
-    () => [
-      ...Object.entries(sectionIcons).map(([section, icon]) => {
+    () =>
+      Object.entries(sectionIcons).map(([section, icon]) => {
         const navLabel = section.replace(/([a-z])([A-Z])/g, "$1 $2");
 
         return (
@@ -127,22 +127,7 @@ const SenseiHeader = memo(function SenseiHeader() {
           </a>
         );
       }),
-      <a
-        key="Blog"
-        href={BLOG_PATH}
-        className={isBlogRoute ? ACTIVE_CLASS : undefined}
-        onClick={() => {
-          if (window.innerWidth <= 994) {
-            setIsMenuOpen(false);
-          }
-        }}
-        aria-label="Open blog page"
-        aria-current={isBlogRoute ? "page" : undefined}
-      >
-        <span className={styles.navText}>Blog</span>
-      </a>,
-    ],
-    [sectionIcons, activeSection, handleNavLinkClick, isBlogRoute, setIsMenuOpen]
+    [sectionIcons, activeSection, handleNavLinkClick]
   );
 
   const menuIconClass = isMenuOpen ? `${MENU_ICON_BASE} ${ACTIVE_CLASS}` : MENU_ICON_BASE;
@@ -158,7 +143,21 @@ const SenseiHeader = memo(function SenseiHeader() {
       >
         アハメドズ
       </a>
-      
+      <a
+        href={BLOG_PATH}
+        className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
+        style={{ marginLeft: '0.5rem' }}
+        aria-label="Open blog page"
+        aria-current={isBlogRoute ? "page" : undefined}
+        tabIndex={0}
+        onClick={() => {
+          if (window.innerWidth <= 994) {
+            setIsMenuOpen(false);
+          }
+        }}
+      >
+        <span className={styles.navText}>Blog</span>
+      </a>
       <button
         type="button"
         className={menuIconClass}
@@ -171,7 +170,6 @@ const SenseiHeader = memo(function SenseiHeader() {
         <span aria-hidden="true" />
         <span aria-hidden="true" />
       </button>
-
       <nav
         id="main-navigation"
         className={navbarClass}
