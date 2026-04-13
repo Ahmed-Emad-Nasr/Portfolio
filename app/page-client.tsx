@@ -21,13 +21,7 @@ import ErrorBoundary from "@/app/core/components/ErrorBoundary";
 import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
-const loadAnimatedBackground = () => import("@/app/components/animated_background/animated_background");
 const loadArtGallerySection = () => import("@/app/components/art_gallery/sensei-art");
-
-const AnimatedBackground = dynamic(loadAnimatedBackground, { 
-  ssr: false,
-  loading: () => null,
-});
 
 const ArtGallerySection = dynamic(loadArtGallerySection, { 
   ssr: false,
@@ -63,7 +57,6 @@ const MainClient = memo(function MainClient() {
     const bootstrap = async () => {
       await waitForDomReady;
       await minLoaderDelay;
-      loadAnimatedBackground();
       window.requestAnimationFrame(markAppReady);
     };
 
@@ -87,7 +80,6 @@ const MainClient = memo(function MainClient() {
           overflow: isAppReady ? "visible" : "hidden",
         }}
       >
-        <AnimatedBackground />
         <VisualModeToggle />
         <AppBar />
         <HomeSection />

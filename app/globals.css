@@ -143,21 +143,40 @@ summary {
   transition-timing-function: var(--motion-ease);
 }
 
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
+
+body {
+  font-family: var(--font-overlock, sans-serif);
+  color: var(--text-color);
+  background: #000 !important;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
 }
 
-h1,
-h2,
-h3,
-h4,
-.sectionTitle,
-.displayTitle {
-  font-family: var(--font-heading, var(--font-overlock, sans-serif));
-  letter-spacing: 0.01em;
-  line-height: 1.12;
+button {
+  background: var(--main-color, #5be4be);
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 1.6em;
+  font-weight: 600;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
+button:disabled {
+  background: #222;
+  color: #888;
+  cursor: not-allowed;
+}
+button:hover:not(:disabled), button:focus-visible:not(:disabled) {
+  background: var(--accent-color, #8ed8ff);
+  color: #000;
+  box-shadow: 0 2px 12px 0 rgba(var(--main-color-rgb, 91,228,190), 0.18);
+}
+
 
 p,
 li {

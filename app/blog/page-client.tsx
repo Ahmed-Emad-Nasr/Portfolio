@@ -18,10 +18,6 @@ import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 import { recordFunnelEvent } from "@/app/core/utils/engagement";
 import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 
-const AnimatedBackground = dynamic(
-  () => import("@/app/components/animated_background/animated_background"),
-  { ssr: false }
-);
 
 type PdfResource = {
   id: string;
@@ -424,7 +420,6 @@ export default function BlogPageClient() {
           overflow: isPageReady ? "visible" : "hidden",
         }}
       >
-        <AnimatedBackground />
         <VisualModeToggle />
 
         <section className={styles.hero}>
