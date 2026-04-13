@@ -705,7 +705,9 @@
 }
 
 .pdfGrid {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.2rem 2.5rem;
+  align-items: stretch;
 }
 
 .videoGrid {
@@ -715,8 +717,8 @@
 .pdfCard,
 .playlistCard,
 .videoCard {
-  padding: 1.12rem;
-  border-radius: 16px;
+  padding: 1.5rem 1.3rem;
+  border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background:
     radial-gradient(circle at 12% 8%, rgba(var(--main-color-rgb), 0.12), transparent 40%),
@@ -725,6 +727,10 @@
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.34);
   animation: fadeLift 460ms var(--motion-ease) both;
   transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .pdfCard:nth-child(2),
