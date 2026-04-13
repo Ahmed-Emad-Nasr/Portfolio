@@ -53,7 +53,11 @@ const cvResource: PdfResource = {
   href: "Assets/cv/AhmedEmadNasr_CV.pdf",
 };
 
-const blogPdfResources: PdfResource[] = [cvResource, ...caseEvidenceLibrary];
+// Ensure WannaCry is always first in the writeups
+const wannacryId = "malware-analysis-wannacry";
+const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);
+const otherCases = caseEvidenceLibrary.filter((item) => item.id !== wannacryId);
+const blogPdfResources: PdfResource[] = wannacryCase ? [cvResource, wannacryCase, ...otherCases] : [cvResource, ...caseEvidenceLibrary];
 
 const buildScreenshotRange = (
   folder: string,
@@ -67,6 +71,15 @@ const buildScreenshotRange = (
 };
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+      "malware-analysis-wannacry": [
+        // 1.png to 38.png
+        ...Array.from({length: 38}, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i+1}.png`),
+        // Screenshot (343).png to Screenshot (366).png
+        ...Array.from({length: 24}, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343+i}).png`),
+      ],
+    "wifi-cracking-walkthrough": [
+      "Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
+    ],
   "ass6-mitre": [
     "Assets/Cases/ass_6/1.png",
     "Assets/Cases/ass_6/2.png",
@@ -207,13 +220,9 @@ export default function BlogPageClient() {
     return sorted;
   }, [filteredPdfs, sortBy]);
 
-  const leadCase = useMemo(
-    () =>
-      sortedPdfs.find(
-        (item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0
-      ) ?? null,
-    [sortedPdfs]
-  );
+  // Always spotlight WannaCry
+  const wannacryId = "malware-analysis-wannacry";
+  const leadCase = blogPdfResources.find((item) => item.id === wannacryId) ?? null;
 
   const visiblePdfCards = useMemo(() => {
     if (!leadCase) return sortedPdfs;
@@ -511,155 +520,6 @@ export default function BlogPageClient() {
         </div>
       </section>
 
-      <section className={styles.toolbar} aria-label="Blog filters and search">
-        <div className={styles.searchWrap}>
-          <label htmlFor="blog-search" className={styles.searchLabel}>
-            Search in PDFs and Videos
-          </label>
-          <input
-            id="blog-search"
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by title, description, topic, or tags..."
-            className={styles.searchInput}
-          />
-        </div>
-
-        <div className={styles.filterWrap}>
-          <p className={styles.filterTitle}>PDF Type</p>
-          <div className={styles.filterButtons} role="tablist" aria-label="PDF type filters">
-            {pdfTypeFilters.map((type) => {
-              const isActive = type === pdfFilter;
-              return (
-                <button
-                  key={type}
-                  type="button"
-                  className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
-                  onClick={() => setPdfFilter(type)}
-                  aria-pressed={isActive}
-                >
-                  {type}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className={styles.filterWrap}>
-          <p className={styles.filterTitle}>Difficulty</p>
-          <div className={styles.filterButtons} role="group" aria-label="Difficulty filters">
-            <button
-              type="button"
-              className={!difficultyFilter ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
-              onClick={() => setDifficultyFilter(null)}
-              aria-pressed={!difficultyFilter}
-            >
-              All Levels
-            </button>
-            {difficultyOptions.map((difficulty) => {
-              const isActive = difficulty === difficultyFilter;
-              return (
-                <button
-                  key={difficulty}
-                  type="button"
-                  className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
-                  onClick={() => setDifficultyFilter(difficulty)}
-                  aria-pressed={isActive}
-                >
-                  {difficulty}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className={styles.filterWrap}>
-          <p className={styles.filterTitle}>Category</p>
-          <div className={styles.filterButtons} role="group" aria-label="Category filters">
-            <button
-              type="button"
-              className={!categoryFilter ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
-              onClick={() => setCategoryFilter(null)}
-              aria-pressed={!categoryFilter}
-            >
-              All Categories
-            </button>
-            {categoryOptions.map((category) => {
-              const isActive = category === categoryFilter;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
-                  onClick={() => setCategoryFilter(category)}
-                  aria-pressed={isActive}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {toolsOptions.length > 0 && (
-          <div className={styles.filterWrap}>
-            <p className={styles.filterTitle}>Tools ({selectedTools.size})</p>
-            <div className={styles.filterButtons} role="group" aria-label="Tools filters">
-              {toolsOptions.map((tool) => {
-                const isActive = selectedTools.has(tool);
-                return (
-                  <button
-                    key={tool}
-                    type="button"
-                    className={isActive ? `${styles.filterButton} ${styles.activeFilter}` : styles.filterButton}
-                    onClick={() => toggleToolFilter(tool)}
-                    aria-pressed={isActive}
-                    title={`Filter by ${tool}`}
-                  >
-                    {tool}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <div className={styles.filterWrap}>
-          <p className={styles.filterTitle}>Sort By</p>
-          <div className={styles.sortButtons}>
-            <button
-              type="button"
-              className={sortBy === "recent" ? `${styles.sortButton} ${styles.activeSort}` : styles.sortButton}
-              onClick={() => setSortBy("recent")}
-              aria-pressed={sortBy === "recent"}
-            >
-              Most Recent
-            </button>
-            <button
-              type="button"
-              className={sortBy === "difficulty" ? `${styles.sortButton} ${styles.activeSort}` : styles.sortButton}
-              onClick={() => setSortBy("difficulty")}
-              aria-pressed={sortBy === "difficulty"}
-            >
-              Difficulty
-            </button>
-          </div>
-        </div>
-
-        {hasActiveFilters && (
-          <button type="button" onClick={clearAllFilters} className={styles.clearFiltersBtn}>
-            Clear All Filters
-          </button>
-        )}
-
-        <div className={styles.resultMeta} aria-live="polite">
-          <span>{filteredPdfs.length} PDF</span>
-          <span>{filteredPlaylists.length} Playlist</span>
-          <span>{filteredVideos.length} Video</span>
-        </div>
-      </section>
-
       <section className={styles.block} aria-labelledby="blog-pdfs-title">
         <div className={styles.blockHeading}>
           <h2 id="blog-pdfs-title">PDF Library</h2>
@@ -769,18 +629,34 @@ export default function BlogPageClient() {
         ) : null}
 
         <div className={styles.pdfGrid}>
-          {visiblePdfCards.map((item) => {
+          {visiblePdfCards.map((item, idx) => {
             const href = normalizePublicHref(item.href);
             const screenshots = caseScreenshotsByEvidenceId[item.id] ?? [];
             const hasScreenshots = screenshots.length > 0;
-            const primaryScreenshot = screenshots[0];
-            const secondaryScreenshots = screenshots.slice(1, 5);
-            const extraScreenshotsCount = Math.max(0, screenshots.length - 5);
+            // Only show up to 2 screenshots per card for performance
+
+            // Helper to get thumbnail path for a screenshot
+            const getThumbnail = (imgPath: string) => {
+              if (!imgPath) return imgPath;
+              // e.g. Assets/Cases/BruteForce_Room/Screenshot (228).png => Assets/Cases/thumbnails/BruteForce_Room__Screenshot (228).webp
+              const rel = imgPath.replace(/^Assets\/Cases\//, "").replace(/[\\/]/g, "__").replace(/\.(png|jpg|jpeg)$/i, ".webp");
+              return `Assets/Cases/thumbnails/${rel}`;
+            };
+
+            const cardScreenshots = screenshots.slice(0, 2);
+            const extraScreenshotsCount = Math.max(0, screenshots.length - 2);
+            const primaryScreenshot = cardScreenshots[0];
+            const secondaryScreenshot = cardScreenshots[1];
 
             return (
               <article
                 key={item.id}
-                className={hasScreenshots ? `${styles.pdfCard} ${styles.caseCardLarge}` : styles.pdfCard}
+                className={[
+                  styles.pdfCard,
+                  hasScreenshots ? styles.caseCardLarge : "",
+                  styles.fadeInUp
+                ].join(" ")}
+                style={{ animationDelay: `${0.08 * idx + 0.1}s` }}
               >
                 <div className={styles.caseCardHead}>
                   <p className={styles.badge}>{item.type}</p>
@@ -788,19 +664,28 @@ export default function BlogPageClient() {
                     <span className={styles.shotCount}>{screenshots.length} screenshots</span>
                   ) : null}
                 </div>
-                
-                <h3>{item.title}</h3>
+
+                <h3
+                  className={styles.cardTitle}
+                  tabIndex={0}
+                  aria-label={item.title}
+                  onFocus={e => e.currentTarget.classList.add(styles.cardTitle)}
+                  onBlur={e => e.currentTarget.classList.remove(styles.cardTitle)}
+                >
+                  {item.title}
+                  <span className={styles.cardTooltip}>{item.description || "No description available."}</span>
+                </h3>
                 {item.description && <p className={styles.cardDescription}>{item.description}</p>}
                 <p className={styles.cardPlatform}>{item.platform}</p>
 
                 <div className={styles.caseMetadata}>
                   {item.difficulty && (
-                    <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>
-                      {item.difficulty}
-                    </span>
+                    <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>{item.difficulty}</span>
                   )}
                   {item.category && <span className={styles.badge}>{item.category}</span>}
                   {item.readTime && <span className={styles.badge}>{item.readTime} min</span>}
+
+
                 </div>
 
                 {item.tags && item.tags.length > 0 && (
@@ -847,34 +732,39 @@ export default function BlogPageClient() {
                       aria-label={`Open main screenshot for ${item.title}`}
                     >
                       <Image
-                        src={normalizePublicHref(primaryScreenshot)}
+                        src={normalizePublicHref(getThumbnail(primaryScreenshot))}
                         alt={`${item.title} main screenshot`}
                         fill
                         sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                         loading="lazy"
+                        onError={(e) => {
+                          // fallback to original if thumbnail missing
+                          (e.target as HTMLImageElement).src = normalizePublicHref(primaryScreenshot);
+                        }}
                       />
                     </a>
 
-                    {secondaryScreenshots.length > 0 ? (
+                    {secondaryScreenshot ? (
                       <div className={styles.shotGrid}>
-                        {secondaryScreenshots.map((shot, index) => (
-                          <a
-                            key={`${item.id}-shot-${shot}`}
-                            href={normalizePublicHref(shot)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={styles.shotThumb}
-                            aria-label={`Open screenshot ${index + 2} for ${item.title}`}
-                          >
-                            <Image
-                              src={normalizePublicHref(shot)}
-                              alt={`${item.title} screenshot ${index + 2}`}
-                              fill
-                              sizes="(max-width: 560px) 45vw, 18vw"
-                              loading="lazy"
-                            />
-                          </a>
-                        ))}
+                        <a
+                          key={`${item.id}-shot-${secondaryScreenshot}`}
+                          href={normalizePublicHref(secondaryScreenshot)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={styles.shotThumb}
+                          aria-label={`Open screenshot 2 for ${item.title}`}
+                        >
+                          <Image
+                            src={normalizePublicHref(getThumbnail(secondaryScreenshot))}
+                            alt={`${item.title} screenshot 2`}
+                            fill
+                            sizes="(max-width: 560px) 45vw, 18vw"
+                            loading="lazy"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = normalizePublicHref(secondaryScreenshot);
+                            }}
+                          />
+                        </a>
                         {extraScreenshotsCount > 0 ? (
                           <span className={styles.moreShotsBadge}>+{extraScreenshotsCount}</span>
                         ) : null}
@@ -1185,3 +1075,24 @@ export default function BlogPageClient() {
     </main>
   );
 }
+
+// Back to Top Button component (must be outside BlogPageClient)
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button
+      className={styles.backToTop}
+      aria-label="Back to top"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+    >
+      ↑
+    </button>
+  );
+}
+

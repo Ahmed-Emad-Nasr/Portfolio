@@ -74,7 +74,6 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "dsK-w6G5zdw",
     title: "Session Online 1 Part 2",
-    description: "Continuation of the first online session with advanced topics.",
     publishedAt: "2025-12-02",
     tags: ["Training", "Live Session", "Advanced Topics"],
   },
@@ -435,6 +434,30 @@ export const caseStudyHighlights = [
 ] as const;
 
 export const caseEvidenceLibrary = [
+    // WannaCry always first (featured)
+    {
+      id: "malware-analysis-wannacry",
+      title: "WannaCry Ransomware Analysis & Response",
+      description: "In-depth analysis and incident response for WannaCry ransomware infection, including detection, containment, and recovery steps.",
+      platform: "Lab Simulation",
+      type: "DOCX & PDF Report",
+      category: "Malware Analysis",
+      difficulty: "Hard",
+      href: "Assets/Cases/Malware Analysis and Prevention Strategy/AhmedEmad_WannaCry.pdf",
+      tags: ["WannaCry", "Ransomware", "Malware", "Incident Response"],
+      tools: ["YARA", "SIEM", "Static Analysis", "Dynamic Analysis"],
+      skillsGained: ["Malware Analysis", "Ransomware Response", "IOC Extraction"],
+      readTime: 24,
+      date: "2026-03-01",
+      screenshots: [
+        // 1.png to 38.png
+        ...Array.from({length: 38}, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i+1}.png`),
+        // Screenshot (343).png to Screenshot (366).png
+        ...Array.from({length: 24}, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343+i}).png`),
+      ],
+      image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
+    },
+
   {
     id: "soc-env-pdf",
     title: "SOC Environment Report",
@@ -764,6 +787,25 @@ export const caseEvidenceLibrary = [
     skillsGained: ["Social Engineering Analysis", "Attack Simulation"],
     readTime: 14,
     date: "2025-08-10",
+  },
+  {
+    id: "wifi-cracking-walkthrough",
+    title: "Wifi Cracking Walkthrough",
+    description: "Step-by-step WiFi security assessment and cracking using real-world tools and techniques.",
+    platform: "Security Simulation",
+    type: "PDF Report",
+    category: "Wireless Security",
+    difficulty: "Medium",
+    href: "Assets/Cases/Wifi Cracking/AhmedEmad_WifiCracker.pdf",
+    tags: ["WiFi", "Cracking", "Security", "Assessment"],
+    tools: ["Aircrack-ng", "Handshake Capture", "Wordlist Attack"],
+    skillsGained: ["WiFi Security Assessment", "Password Cracking"],
+    readTime: 18,
+    date: "2026-03-21",
+      screenshots: [
+        "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
+      ],
+      image: "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
   },
 ] as const;
 

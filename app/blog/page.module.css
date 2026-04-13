@@ -1,4 +1,134 @@
-﻿.page {
+﻿.fadeInUp {
+  opacity: 0;
+  transform: translateY(32px);
+  animation: fadeInUp 0.7s var(--motion-ease) forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pdfGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.pdfCard {
+  background: linear-gradient(160deg, #181e2a 80%, #1a2336 100%);
+  border: 1.5px solid rgba(var(--main-color-rgb), 0.13);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+  will-change: transform, box-shadow;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdfCard:hover {
+  box-shadow: 0 16px 48px rgba(var(--main-color-rgb), 0.22);
+  border-color: rgba(var(--main-color-rgb), 0.22);
+  transform: translateY(-4px) scale(1.012);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.32em 0.9em;
+  border-radius: 999px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  margin-right: 0.4em;
+  margin-bottom: 0.2em;
+  background: linear-gradient(90deg, #ffe082 60%, #ffd54f 100%);
+  color: #2d2300;
+  box-shadow: 0 2px 8px rgba(255, 215, 79, 0.13);
+  border: 1px solid #ffe082;
+  letter-spacing: 0.04em;
+  transition: background 0.3s, color 0.3s;
+}
+
+.badge.difficulty-easy {
+  background: linear-gradient(90deg, #b2ff59 60%, #76ff03 100%);
+  color: #0d2a0d;
+  border-color: #b2ff59;
+}
+.badge.difficulty-medium {
+  background: linear-gradient(90deg, #ffd740 60%, #ffab00 100%);
+  color: #3a2600;
+  border-color: #ffd740;
+}
+.badge.difficulty-hard {
+  background: linear-gradient(90deg, #ff5252 60%, #ff1744 100%);
+  color: #fff;
+  border-color: #ff5252;
+}
+
+.cardTitle {
+  position: relative;
+  cursor: pointer;
+}
+.cardTitle:hover .cardTooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-8px) scale(1.04);
+}
+.cardTooltip {
+  position: absolute;
+  left: 50%;
+  top: -2.2rem;
+  transform: translateX(-50%) scale(0.98);
+  background: #232b3a;
+  color: #fff;
+  padding: 0.5em 1.1em;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s, transform 0.22s;
+  z-index: 10;
+  white-space: pre-line;
+}
+
+.backToTop {
+  position: fixed;
+  right: 2.2rem;
+  bottom: 2.2rem;
+  z-index: 100;
+  background: linear-gradient(120deg, #ffe082, #ffd54f);
+  color: #2d2300;
+  border: none;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  box-shadow: 0 6px 24px rgba(255, 215, 79, 0.18);
+  font-size: 2.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+  transition: opacity 0.22s, background 0.22s;
+}
+.backToTop:hover {
+  opacity: 1;
+  background: linear-gradient(120deg, #ffd54f, #ffe082);
+}
+
+.galleryDialog {
+  transition: opacity 0.32s cubic-bezier(.4,0,.2,1), transform 0.32s cubic-bezier(.4,0,.2,1);
+  opacity: 1;
+  transform: scale(1);
+}
+.galleryDialog[aria-hidden="true"] {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+.page {
   --blog-line: rgba(255, 255, 255, 0.16);
   --blog-text: #f2f6ff;
   --blog-muted: rgba(233, 239, 255, 0.74);

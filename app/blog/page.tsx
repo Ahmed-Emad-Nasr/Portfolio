@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import BlogPageClient from "./page-client";
 import { caseEvidenceLibrary } from "@/app/core/data";
+import Head from "next/head";
 
 const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
 
@@ -114,14 +115,21 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(casesStructuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <Head>
+        {/* Dynamic meta tags for each case */}
+        {pdfResources.map((item, idx) => (
+          <meta key={item.id} name="description" content={typeof (item as any).description === "string" ? (item as any).description : item.title} />
+        ))}
+        {/* Structured data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(casesStructuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      </Head>
       <BlogPageClient />
     </>
   );
