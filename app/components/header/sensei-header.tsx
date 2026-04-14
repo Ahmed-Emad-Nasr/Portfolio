@@ -145,16 +145,6 @@ const SenseiHeader = memo(function SenseiHeader() {
         transition={{ duration: 0.32, ease: "easeOut" }}
       >
         <motion.a
-          href="#Home"
-          className={styles.logo}
-          onClick={handleLogoClick}
-          aria-label="Go to Home section"
-          whileHover={{ scale: 1.07, textShadow: "0 0 16px #22c55e" }}
-          transition={{ type: "spring", stiffness: 400, damping: 22 }}
-        >
-          アハメドズ
-        </motion.a>
-        <motion.a
           href={BLOG_PATH}
           className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
           style={{ marginLeft: '0.5rem' }}
@@ -201,22 +191,7 @@ const SenseiHeader = memo(function SenseiHeader() {
             >
               <FontAwesomeIcon icon={icon} aria-hidden="true" />
               <span className={styles.navText}>{section.replace(/([a-z])([A-Z])/g, "$1 $2")}</span>
-              {activeSection === section && (
-                <motion.span
-                  layoutId="activeNavUnderline"
-                  style={{
-                    position: "absolute",
-                    left: 12,
-                    right: 12,
-                    bottom: 6,
-                    height: 3,
-                    borderRadius: 999,
-                    background: "linear-gradient(90deg,#22c55e 0%,#3b82f6 100%)",
-                    boxShadow: "0 0 10px #22c55e99",
-                  }}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                />
-              )}
+              {/* تم حذف الخط السفلي المتحرك */}
             </motion.a>
           ))}
         </nav>

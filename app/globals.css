@@ -23,8 +23,8 @@
   --radius-card: 22px;
   --radius-card-sm: 16px;
   --radius-pill: 999px;
-  --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.10), 0 2px 24px rgba(59, 130, 246, 0.10);
-  --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.18), 0 4px 32px rgba(59, 130, 246, 0.18);
+  --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.05), 0 2px 24px rgba(59, 130, 246, 0.05);
+  --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.10), 0 4px 32px rgba(59, 130, 246, 0.10);
   --motion-fast: 180ms;
   --motion-normal: 260ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -34,6 +34,8 @@
 }
 
 html[data-portfolio-mode="dashboard"] {
+    --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.05), 0 2px 24px rgba(59, 130, 246, 0.05);
+    --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.10), 0 4px 32px rgba(59, 130, 246, 0.10);
   --bg-color: #05080d;
   --second-bg-color: #0a1018;
   --text-color: #ffffff;
@@ -47,6 +49,8 @@ html[data-portfolio-mode="dashboard"] {
 }
 
 html[data-portfolio-mode="magazine"] {
+    --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.05), 0 2px 24px rgba(59, 130, 246, 0.05);
+    --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.10), 0 4px 32px rgba(59, 130, 246, 0.10);
   --bg-color: #140d08;
   --second-bg-color: #1b130d;
   --text-color: #fff7eb;
