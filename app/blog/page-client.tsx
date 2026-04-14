@@ -17,9 +17,6 @@ import {
 } from "@/app/core/data";
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
-// Engagement tracking removed
-import VisualModeToggle from "@/app/core/components/VisualModeToggle";
-
 
 type PdfResource = {
   id: string;
@@ -422,7 +419,7 @@ export default function BlogPageClient() {
           overflow: isPageReady ? "visible" : "hidden",
         }}
       >
-        <VisualModeToggle />
+
 
         <section className={styles.hero}>
         <span className={styles.heroGlow} aria-hidden="true" />

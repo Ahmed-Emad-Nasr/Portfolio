@@ -18,7 +18,6 @@ import LoadingScreen from "@/app/components/loader/sensei_loader";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import ErrorBoundary from "@/app/core/components/ErrorBoundary";
-import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 const loadArtGallerySection = () => import("@/app/components/art_gallery/sensei-art");
@@ -78,9 +77,7 @@ const MainClient = memo(function MainClient() {
           pointerEvents: isAppReady ? "auto" : "none",
           height: isAppReady ? "auto" : "100vh", 
           overflow: isAppReady ? "visible" : "hidden",
-        }}
-      >
-        <VisualModeToggle />
+        }} >
         <AppBar />
         <HomeSection />
         <ExperienceSection />
