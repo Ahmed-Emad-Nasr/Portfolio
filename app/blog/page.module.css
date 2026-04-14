@@ -17,11 +17,7 @@
   gap: 1.5rem;
   margin-top: 2rem;
 }
-
-.pdfCard {
-  background: linear-gradient(160deg, #181e2a 80%, #1a2336 100%);
-  border: 1.5px solid rgba(var(--main-color-rgb), 0.13);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+ .pdfCard {
   transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
   will-change: transform, box-shadow;
   position: relative;

@@ -19,13 +19,12 @@
   content: "";
   position: absolute;
   width: 4px;
-  background: linear-gradient(180deg, rgba(var(--main-color-rgb), 0.2), rgba(var(--accent-color-rgb), 0.42), rgba(var(--main-color-rgb), 0.2));
   top: 0;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 1rem;
-  box-shadow: 0 0 18px rgba(var(--accent-color-rgb), 0.16);
+  /* background and box-shadow removed for no glass line */
 }
 
 .timeline-container { padding: 2rem 4rem; position: relative; width: 50%; z-index: 2; }

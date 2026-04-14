@@ -27,8 +27,9 @@
   cursor: pointer;
 }
 
+
 .galleryImg {
-  width: 100%; height: auto; object-fit: cover; display: block; border-radius: 1rem; border: 2px solid transparent; 
+  width: 100%; height: auto; object-fit: cover; display: block; border-radius: 1rem;
   cursor: pointer;
   transition: border-color 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
 }

@@ -22,12 +22,7 @@
   min-height: 95vh;
   padding: 1.6rem 1.1rem;
   border-radius: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background:
-    radial-gradient(circle at 8% 18%, rgba(var(--main-color-rgb), 0.15), transparent 34%),
-    radial-gradient(circle at 86% 70%, rgba(var(--accent-color-rgb), 0.14), transparent 34%),
-    linear-gradient(156deg, rgba(10, 14, 21, 0.9), rgba(5, 8, 12, 0.92));
-  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.32);
+  /* border, background, and box-shadow removed for no glass/border effect */
   --parallax-x: 0px;
   --parallax-y: 0px;
 }
