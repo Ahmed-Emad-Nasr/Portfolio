@@ -17,7 +17,7 @@ import {
 } from "@/app/core/data";
 import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import MobileQuickActions from "@/app/core/components/MobileQuickActions";
-import { recordFunnelEvent } from "@/app/core/utils/engagement";
+// Engagement tracking removed
 import VisualModeToggle from "@/app/core/components/VisualModeToggle";
 
 
@@ -275,14 +275,14 @@ export default function BlogPageClient() {
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        recordFunnelEvent("gallery_navigate");
+        // Engagement tracking removed
         goGallery(1);
         return;
       }
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        recordFunnelEvent("gallery_navigate");
+        // Engagement tracking removed
         goGallery(-1);
         return;
       }
@@ -309,7 +309,7 @@ export default function BlogPageClient() {
 
   const openGallery = (title: string, screenshots: string[], index = 0) => {
     if (!screenshots.length) return;
-    recordFunnelEvent("gallery_open");
+    // Engagement tracking removed
     setGallery({
       title,
       screenshots,
@@ -365,7 +365,7 @@ export default function BlogPageClient() {
 
     if (Math.abs(deltaX) < 40) return;
 
-    recordFunnelEvent("gallery_navigate");
+    // Engagement tracking removed
     if (deltaX < 0) {
       goGallery(1);
     } else {
@@ -584,7 +584,7 @@ export default function BlogPageClient() {
                   target="_blank"
                   rel="noreferrer"
                   className={styles.viewAction}
-                  onClick={() => recordFunnelEvent("pdf_view_click")}
+                  // Engagement tracking removed
                 >
                   View PDF
                 </a>
@@ -779,7 +779,7 @@ export default function BlogPageClient() {
                     target="_blank"
                     rel="noreferrer"
                     className={styles.viewAction}
-                    onClick={() => recordFunnelEvent("pdf_view_click")}
+                    // Engagement tracking removed
                   >
                     View PDF
                   </a>
@@ -997,7 +997,6 @@ export default function BlogPageClient() {
                 type="button"
                 className={styles.galleryNav}
                 onClick={() => {
-                  recordFunnelEvent("gallery_navigate");
                   goGallery(-1);
                 }}
                 aria-label="Previous screenshot"
@@ -1027,7 +1026,6 @@ export default function BlogPageClient() {
                 type="button"
                 className={styles.galleryNav}
                 onClick={() => {
-                  recordFunnelEvent("gallery_navigate");
                   goGallery(1);
                 }}
                 aria-label="Next screenshot"
@@ -1049,7 +1047,6 @@ export default function BlogPageClient() {
                         : styles.galleryThumbButton
                     }
                     onClick={() => {
-                      recordFunnelEvent("gallery_navigate");
                       setGallery({ ...gallery, index });
                     }}
                     aria-label={`Open screenshot ${index + 1}`}

@@ -17,7 +17,7 @@ import styles from "./sensei-contact.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import MotionInView from "@/app/core/components/MotionInView";
-import { isActionAllowed, recordFunnelEvent, sendNotificationEmail } from "@/app/core/utils/engagement";
+// Engagement tracking removed
 import { showToast } from "@/app/core/utils/toast";
 import { contactBudgetOptions, contactProjectOptions, contactTimelineOptions, projectResponseSla } from "@/app/core/data";
 
@@ -72,7 +72,7 @@ function SenseiContact() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const [didTrackFormStart, setDidTrackFormStart] = useState(false);
+  // Engagement tracking removed
   const [selectedProjectScope, setSelectedProjectScope] = useState("");
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string|null>>({});
@@ -82,7 +82,7 @@ function SenseiContact() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const errorSummaryRef = useRef<HTMLDivElement | null>(null);
   const messageTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const abandonmentTrackedRef = useRef(false);
+  // Engagement tracking removed
   const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const syncDraftFromForm = useCallback(() => {
@@ -193,13 +193,7 @@ function SenseiContact() {
         return;
       }
 
-      if (!isActionAllowed("contact_submit", 30_000)) {
-        showToast({ type: "error", message: "You sent a message recently. Please wait 30 seconds and try again." });
-        setSubmitError(true);
-        messageTimeoutRef.current = setTimeout(() => setSubmitError(false), 5000);
-        setIsSubmitting(false);
-        return;
-      }
+      // Engagement tracking removed
 
       if (!name || !email || !subject || !message || !projectScope) {
         const errors: Record<string, string> = {};
@@ -235,7 +229,7 @@ function SenseiContact() {
         return;
       }
 
-      recordFunnelEvent("contact_submit_attempt");
+      // Engagement tracking removed
 
       if (!FORMSPREE_ENDPOINT) {
         throw new Error("Contact endpoint is not configured");
@@ -254,23 +248,6 @@ function SenseiContact() {
 
       const result = await response.json();
       if (result.ok) {
-        recordFunnelEvent("contact_submit_success");
-        void sendNotificationEmail({
-          subject: "Portfolio alert: contact form success",
-          cooldownKey: "contact_success_notify",
-          cooldownMs: 8_000,
-          lines: [
-            `Name: ${name}`,
-            `Email: ${email}`,
-            `Subject: ${subject}`,
-            `Project scope: ${projectScope}`,
-            `Budget range: ${budgetRange ? String(budgetRange) : "Not provided"}`,
-            `Timeline: ${projectTimeline ? String(projectTimeline) : "Not provided"}`,
-            `Time (UTC): ${new Date().toISOString()}`,
-            `Page: ${typeof window !== "undefined" ? window.location.href : "unknown"}`,
-          ],
-        });
-        abandonmentTrackedRef.current = true;
         setIsFormDirty(false);
         try {
           localStorage.removeItem(CONTACT_DRAFT_KEY);
@@ -340,27 +317,7 @@ function SenseiContact() {
     }
   }, []);
 
-  useEffect(() => {
-    const handlePotentialAbandon = () => {
-      if (!isFormDirty || abandonmentTrackedRef.current || isSuccess) return;
-      abandonmentTrackedRef.current = true;
-      recordFunnelEvent("contact_form_abandon");
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        handlePotentialAbandon();
-      }
-    };
-
-    window.addEventListener("beforeunload", handlePotentialAbandon);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener("beforeunload", handlePotentialAbandon);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [isFormDirty, isSuccess]);
+  // Engagement tracking removed
 
   const quickQuoteMessage = `Hi Ahmed, I need a quick quote for ${selectedProjectScope || "a cybersecurity project"}.`;
   const quickQuoteHref = `https://wa.me/201018166445?text=${encodeURIComponent(quickQuoteMessage)}`;
@@ -471,10 +428,7 @@ function SenseiContact() {
               <div className={`${styles["input-group"]} ${fieldErrors.name ? styles["input-error"] : ""}`}>
                 <label htmlFor="contact-name" className={styles["sr-only"]}>Your name</label>
                 <input id="contact-name" type="text" name="name" placeholder="Your Name" required className={styles["input-field"]} onFocus={() => {
-                if (!didTrackFormStart) {
-                  recordFunnelEvent("contact_form_started");
-                  setDidTrackFormStart(true);
-                }
+                // Engagement tracking removed
               }} onBlur={(event) => markTouchedAndValidate("name", event.target.value)} onChange={(event) => handleFieldInput("name", event.target.value)} autoComplete="name" minLength={2} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? "name-error" : undefined} />
               </div>
               {fieldErrors.name ? <span id="name-error" className={styles["field-error"]}>{fieldErrors.name}</span> : null}
