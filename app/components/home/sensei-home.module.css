@@ -1,3 +1,18 @@
+/* Remove glass background, border, shadow, and blur for Home section only (must use :global for section) */
+:global(section.noBg) {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Hide after line and before for Home section only */
+:global(section.noLine)::after,
+:global(section.noLine)::before {
+  display: none !important;
+  content: none !important;
+}
 /*
  * File: sensei-home.module.css
  * Author: Ahmed Emad Nasr

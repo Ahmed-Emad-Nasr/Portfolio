@@ -13,7 +13,6 @@ import {
   faCertificate,
   faClipboardCheck,
   faFolder, 
-  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 
@@ -22,7 +21,6 @@ const SECTION_ICONS: Record<string, IconProp> = {
   Experience: faBook,
   Writeups: faClipboardCheck,
   Projects:   faFolder,
-  Contact:    faEnvelope,
   Certifications: faCertificate,
 };
 

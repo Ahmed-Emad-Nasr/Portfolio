@@ -8,7 +8,7 @@ import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Overlock, Space_Grotesk } from "next/font/google";
+import { Overlock} from "next/font/google";
 import Script from "next/script";
 import ToastHost from "@/app/core/components/ToastHost";
 import { faqItems, knowledgeEducationItems } from "@/app/core/data";
@@ -111,15 +111,8 @@ const overlock = Overlock({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  weight: ["500", "700"],
-  subsets: ["latin"],
-  variable: "--font-heading",
-  display: "swap",
-});
-
 // Derived once — the class string never changes between renders.
-const BODY_CLASS = `bg-black text-white ${overlock.variable} ${spaceGrotesk.variable}`;
+const BODY_CLASS = `bg-black text-white ${overlock.variable}`;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const structuredData = {
   "@context": "https://schema.org",

@@ -180,7 +180,7 @@ const SenseiHome = memo(function SenseiHome() {
 
   return (
     <section
-      className={styles.home}
+      className={`${styles.home} noLine noBg`}
       id="Home"
     >
       <div ref={containerRef} className={styles.container} onMouseMove={handlePointerMove} onMouseLeave={resetParallax}>
