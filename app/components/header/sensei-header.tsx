@@ -7,6 +7,7 @@
  */
 
 import { useCallback, useMemo, memo, useEffect, useState, type MouseEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -134,51 +135,94 @@ const SenseiHeader = memo(function SenseiHeader() {
   const navbarClass = isMenuOpen ? `${NAVBAR_BASE} ${ACTIVE_CLASS}` : NAVBAR_BASE;
 
   return (
-    <header className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header} data-site-header="true">
-      <a
-        href="#Home"
-        className={styles.logo}
-        onClick={handleLogoClick}
-        aria-label="Go to Home section"
+    <AnimatePresence>
+      <motion.header
+        className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header}
+        data-site-header="true"
+        initial={{ y: -32, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -32, opacity: 0 }}
+        transition={{ duration: 0.32, ease: "easeOut" }}
       >
-        アハメドズ
-      </a>
-      <a
-        href={BLOG_PATH}
-        className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
-        style={{ marginLeft: '0.5rem' }}
-        aria-label="Open blog page"
-        aria-current={isBlogRoute ? "page" : undefined}
-        tabIndex={0}
-        onClick={() => {
-          if (window.innerWidth <= 994) {
-            setIsMenuOpen(false);
-          }
-        }}
-      >
-        <span className={styles.navText}>Blog</span>
-      </a>
-      <button
-        type="button"
-        className={menuIconClass}
-        onClick={toggleMenu}
-        aria-expanded={isMenuOpen}
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        aria-controls="main-navigation"
-      >
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-      </button>
-      <nav
-        id="main-navigation"
-        className={navbarClass}
-        aria-label="Main navigation"
-      >
-        {navLinks}
-      </nav>
-      {isMenuOpen ? <button type="button" className={styles.backdrop} aria-label="Close navigation menu" onClick={handleBackdropClick} /> : null}
-    </header>
+        <motion.a
+          href="#Home"
+          className={styles.logo}
+          onClick={handleLogoClick}
+          aria-label="Go to Home section"
+          whileHover={{ scale: 1.07, textShadow: "0 0 16px #22c55e" }}
+          transition={{ type: "spring", stiffness: 400, damping: 22 }}
+        >
+          アハメドズ
+        </motion.a>
+        <motion.a
+          href={BLOG_PATH}
+          className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
+          style={{ marginLeft: '0.5rem' }}
+          aria-label="Open blog page"
+          aria-current={isBlogRoute ? "page" : undefined}
+          tabIndex={0}
+          onClick={() => {
+            if (window.innerWidth <= 994) {
+              setIsMenuOpen(false);
+            }
+          }}
+          whileHover={{ scale: 1.06, backgroundColor: "#22c55e", color: "#0f172a" }}
+          transition={{ type: "spring", stiffness: 400, damping: 22 }}
+        >
+          <span className={styles.navText}>Blog</span>
+        </motion.a>
+        <button
+          type="button"
+          className={menuIconClass}
+          onClick={toggleMenu}
+          aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-controls="main-navigation"
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+        <nav
+          id="main-navigation"
+          className={navbarClass}
+          aria-label="Main navigation"
+        >
+          {Object.entries(sectionIcons).map(([section, icon]) => (
+            <motion.a
+              key={section}
+              href={`#${section}`}
+              className={activeSection === section ? ACTIVE_CLASS : undefined}
+              onClick={(event) => handleNavLinkClick(section, event)}
+              aria-current={activeSection === section ? "page" : undefined}
+              whileHover={{ scale: 1.08, backgroundColor: "rgba(34,197,94,0.09)" }}
+              transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              style={{ position: "relative" }}
+            >
+              <FontAwesomeIcon icon={icon} aria-hidden="true" />
+              <span className={styles.navText}>{section.replace(/([a-z])([A-Z])/g, "$1 $2")}</span>
+              {activeSection === section && (
+                <motion.span
+                  layoutId="activeNavUnderline"
+                  style={{
+                    position: "absolute",
+                    left: 12,
+                    right: 12,
+                    bottom: 6,
+                    height: 3,
+                    borderRadius: 999,
+                    background: "linear-gradient(90deg,#22c55e 0%,#3b82f6 100%)",
+                    boxShadow: "0 0 10px #22c55e99",
+                  }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
+            </motion.a>
+          ))}
+        </nav>
+        {isMenuOpen ? <button type="button" className={styles.backdrop} aria-label="Close navigation menu" onClick={handleBackdropClick} /> : null}
+      </motion.header>
+    </AnimatePresence>
   );
 });
 

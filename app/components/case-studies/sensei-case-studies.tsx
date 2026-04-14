@@ -1,6 +1,7 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
 import styles from "./sensei-case-studies.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
@@ -24,7 +25,7 @@ const resolveEvidenceHref = (href: string): string => {
   return `${scopePrefix}/${href}`;
 };
 
-const SenseiCaseStudies = memo(function WriteupsSection() {
+function SenseiCaseStudies() {
   const [activeEvidenceFilter, setActiveEvidenceFilter] = useState<EvidenceFilter>("All");
 
   const featuredStory = caseStudyHighlights[0];
@@ -57,7 +58,10 @@ const SenseiCaseStudies = memo(function WriteupsSection() {
   }, [activeEvidenceFilter]);
 
   return (
-    <section className={styles.section} id="Writeups">
+    <section
+      className={styles.section}
+      id="Writeups"
+    >
       <div className={styles.ambientGlow} aria-hidden="true" />
       <div className={styles.ambientGlowAlt} aria-hidden="true" />
       <div className={styles.container}>
@@ -156,6 +160,5 @@ const SenseiCaseStudies = memo(function WriteupsSection() {
       </div>
     </section>
   );
-});
-
+}
 export default SenseiCaseStudies;

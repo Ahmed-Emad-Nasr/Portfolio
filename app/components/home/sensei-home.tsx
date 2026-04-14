@@ -7,6 +7,7 @@
  */
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
+
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
@@ -178,7 +179,10 @@ const SenseiHome = memo(function SenseiHome() {
   const cvBtnLabel = cvVariant === "A" ? "Download CV" : "Get My CV";
 
   return (
-    <section className={styles.home} id="Home">
+    <section
+      className={styles.home}
+      id="Home"
+    >
       <div ref={containerRef} className={styles.container} onMouseMove={handlePointerMove} onMouseLeave={resetParallax}>
         <div className={styles.homeImg}>
           <button

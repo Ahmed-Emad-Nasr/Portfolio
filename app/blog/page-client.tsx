@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { fadeUp } from "@/app/core/motion";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -515,7 +517,10 @@ export default function BlogPageClient() {
         </div>
       </section>
 
-      <section className={styles.block} aria-labelledby="blog-pdfs-title">
+      <section
+        className={styles.block}
+        aria-labelledby="blog-pdfs-title"
+      >
         <div className={styles.blockHeading}>
           <h2 id="blog-pdfs-title">PDF Library</h2>
           <p>{filteredPdfs.length} result(s) found.</p>
@@ -801,7 +806,10 @@ export default function BlogPageClient() {
         ) : null}
       </section>
 
-      <section className={styles.insightStrip} aria-label="Case library highlights">
+      <section
+        className={styles.insightStrip}
+        aria-label="Case library highlights"
+      >
         <article className={styles.insightCard}>
           <strong>{caseEvidenceLibrary.length}</strong>
           <span>Total Cases</span>
@@ -816,7 +824,10 @@ export default function BlogPageClient() {
         </article>
       </section>
 
-      <section className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
+      <section
+        className={styles.youtubeHub}
+        aria-labelledby="youtube-hub-title"
+      >
         <div className={styles.blockHeading}>
           <h2 id="youtube-hub-title">YouTube Hub</h2>
           <p>
@@ -836,7 +847,10 @@ export default function BlogPageClient() {
         </div>
       </section>
 
-      <section className={styles.block} aria-labelledby="blog-playlists-title">
+      <section
+        className={styles.block}
+        aria-labelledby="blog-playlists-title"
+      >
         <div className={styles.blockHeading}>
           <h2 id="blog-playlists-title">YouTube Playlists</h2>
           <p>{filteredPlaylists.length} playlist(s) found.</p>
@@ -897,7 +911,10 @@ export default function BlogPageClient() {
         ) : null}
       </section>
 
-      <section className={styles.block} aria-labelledby="blog-videos-title">
+      <section
+        className={styles.block}
+        aria-labelledby="blog-videos-title"
+      >
         <div className={styles.blockHeading}>
           <h2 id="blog-videos-title">YouTube Videos</h2>
           <p>{filteredVideos.length} result(s) found.</p>
@@ -1046,7 +1063,10 @@ export default function BlogPageClient() {
         </div>
       ) : null}
 
-      <section className={styles.blogClosing} aria-labelledby="blog-closing-title">
+      <section
+        className={styles.blogClosing}
+        aria-labelledby="blog-closing-title"
+      >
         <div>
           <span className={styles.blogClosingKicker}>Final note</span>
           <h2 id="blog-closing-title">If you want the full story, start with the PDF archive and continue with the videos.</h2>

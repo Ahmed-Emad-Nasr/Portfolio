@@ -6,7 +6,8 @@
  * Purpose: Render contact section and handle form submission state/feedback
  */
 
-import { memo, useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -65,7 +66,7 @@ const validateFieldValue = (field: string, value: string): string | null => {
   return null;
 };
 
-const SenseiContact = memo(function SenseiContact() {
+function SenseiContact() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -386,7 +387,10 @@ const SenseiContact = memo(function SenseiContact() {
     : "Typical response time: within 24 hours.";
 
   return (
-    <section className={styles["contact-section"]} id="Contact">
+    <section
+      className={styles["contact-section"]}
+      id="Contact"
+    >
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="連絡先" englishText="Contact Me" titleClassName={styles.title} />
@@ -579,6 +583,5 @@ const SenseiContact = memo(function SenseiContact() {
       </div>
     </section>
   );
-});
-
+}
 export default SenseiContact;

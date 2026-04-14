@@ -7,6 +7,7 @@
  */
 
 import { memo, useMemo } from "react";
+
 import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { calculateExperience } from "@/app/core/utils/experienceUtils";
@@ -92,7 +93,10 @@ TimelineItem.displayName = "TimelineItem";
 
 function ExperienceSection() {
   return (
-    <section className={styles["section-education"]} id="Experience">
+    <section
+      className={styles["section-education"]}
+      id="Experience"
+    >
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="経験" englishText="Experience" titleClassName={styles.title} />

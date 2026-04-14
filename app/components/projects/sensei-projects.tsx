@@ -7,6 +7,7 @@
  */
 
 import { memo, useMemo, useState } from "react";
+
 import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare, faCirclePlay, faCode } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
@@ -224,7 +225,10 @@ const SenseiProjects = memo(function SenseiProjects() {
     : `${filteredRepos.length} project${filteredRepos.length === 1 ? "" : "s"} shown`;
 
   return (
-    <section className={styles["section-projects"]} id="Projects">
+    <section
+      className={styles["section-projects"]}
+      id="Projects"
+    >
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />

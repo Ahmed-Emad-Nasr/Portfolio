@@ -5,30 +5,29 @@
 
 /*--------- 1. Reset & Global ---------*/
 :root {
-  --bg-color: #05080d;
-  --second-bg-color: #0a1018;
-  --text-color: #ffffff;
-  --main-color: #5be4be;
-  --main-color-rgb: 91, 228, 190;
-  --accent-color: #8ed8ff;
-  --accent-color-rgb: 142, 216, 255;
-  --surface-1: rgba(255, 255, 255, 0.035);
-  --surface-2: rgba(255, 255, 255, 0.055);
-  --surface-card-bg: linear-gradient(180deg, rgba(14, 18, 24, 0.92), rgba(8, 10, 13, 0.84));
-  --surface-card-border: rgba(var(--main-color-rgb), 0.18);
-  --text-muted: rgba(235, 243, 252, 0.82);
+  --bg-color: #000000; /* pure black */
+  --second-bg-color: #000000;
+  --text-color: #eaf7ee;
+  --main-color: #22c55e; /* green cyber */
+  --main-color-rgb: 34, 197, 94;
+  --accent-color: #3b82f6; /* blue tech */
+  --accent-color-rgb: 59, 130, 246;
+  --surface-1: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.09);
+  --surface-card-bg: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.10) 100%);
+  --surface-card-border: rgba(var(--accent-color-rgb), 0.18);
+  --text-muted: rgba(180, 220, 200, 0.82);
   --radius-card: 22px;
   --radius-card-sm: 16px;
   --radius-pill: 999px;
-  --shadow-card: 0 14px 30px rgba(0, 0, 0, 0.38);
-  --shadow-card-hover: 0 20px 36px rgba(0, 0, 0, 0.48);
+  --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.10), 0 2px 24px rgba(59, 130, 246, 0.10);
+  --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.18), 0 4px 32px rgba(59, 130, 246, 0.18);
   --motion-fast: 180ms;
   --motion-normal: 260ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ui-blur: 10px;
-  --card-blur: 10px;
-  
-  color-scheme: dark; 
+  --ui-blur: 16px;
+  --card-blur: 18px;
+  color-scheme: dark;
 }
 
 html[data-portfolio-mode="dashboard"] {
@@ -122,9 +121,9 @@ body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
   background:
-    radial-gradient(circle at 12% 8%, rgba(var(--accent-color-rgb), 0.16), transparent 32%),
-    radial-gradient(circle at 88% 12%, rgba(var(--main-color-rgb), 0.12), transparent 34%),
-    linear-gradient(152deg, #04070b 0%, #0a1018 42%, #070b12 100%);
+    linear-gradient(120deg, #0f172a 0%, #16203a 100%),
+    radial-gradient(circle at 10% 10%, rgba(34, 197, 94, 0.10) 0%, transparent 60%),
+    radial-gradient(circle at 90% 20%, rgba(59, 130, 246, 0.10) 0%, transparent 60%);
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -194,15 +193,16 @@ body::after {
 
 body::before {
   background:
-    radial-gradient(circle at 20% 80%, rgba(var(--accent-color-rgb), 0.1), transparent 40%),
-    radial-gradient(circle at 80% 74%, rgba(var(--main-color-rgb), 0.1), transparent 36%);
-  filter: blur(16px);
+    linear-gradient(120deg, rgba(34, 197, 94, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%),
+    radial-gradient(ellipse at 60% 80%, rgba(59, 130, 246, 0.13) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 20%, rgba(34, 197, 94, 0.13) 0%, transparent 60%);
+  filter: blur(24px);
 }
 
 body::after {
-  opacity: 0.18;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-  background-size: 42px 42px;
+  opacity: 0.22;
+  background-image: linear-gradient(rgba(59, 130, 246, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 197, 94, 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
   mask-image: radial-gradient(circle at center, black 48%, transparent 92%);
 }
 
@@ -275,26 +275,8 @@ html[data-portfolio-mode="magazine"] button {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 6000ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+/* Force all keyframe animations to always run, even if prefers-reduced-motion is enabled */
 
-  html {
-    scroll-behavior: auto;
-  }
-  
-  /* Keep keyframes running but slowed down dramatically */
-  .glowOrb,
-  .scanlines {
-    animation: none !important;
-  }
-}
 
 /* Force keyframes to always run */
 @supports (animation-play-state: running) {
@@ -362,13 +344,39 @@ html[data-portfolio-mode="magazine"] button {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(var(--main-color-rgb), 0.8);
 }
-
+section{
 /*--------- 4. General Section Style ---------*/
-section {
   min-height: auto;
   padding: 7.1rem 6% 5.9rem;
   position: relative;
+  background: var(--surface-card-bg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  border: 1.5px solid var(--surface-card-border);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  overflow: hidden;
 }
+
+section.glass {
+  background: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.13) 100%);
+  border: 1.5px solid rgba(34, 197, 94, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.37), 0 2px 24px rgba(59, 130, 246, 0.13);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+/* Glassmorphism card utility */
+.glass-card {
+  background: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.13) 100%);
+  border-radius: var(--radius-card);
+  border: 1.5px solid rgba(34, 197, 94, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.37), 0 2px 24px rgba(59, 130, 246, 0.13);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  overflow: hidden;
+}
+
 
 .site-footer {
   padding: 0 6% 3.2rem;
