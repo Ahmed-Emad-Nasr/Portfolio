@@ -61,11 +61,15 @@
 }
 
 .homeImg img {
-  width: 100%; height: auto; border-radius: 20px; box-shadow: 0 16px 26px rgba(var(--main-color-rgb), 0.2);
-  transition: transform var(--motion-normal) var(--motion-ease), filter var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
-  cursor: pointer; will-change: transform, filter;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: none;
+  transition: transform var(--motion-normal) var(--motion-ease), filter var(--motion-normal) var(--motion-ease);
+  cursor: pointer;
+  will-change: transform, filter;
 }
-.homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1.012); filter: saturate(1.05); box-shadow: 0 22px 32px rgba(var(--main-color-rgb), 0.24); }
+.homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1.012); filter: saturate(1.05); box-shadow: none; }
 .imageButton:focus-visible img {
   outline: 3px solid rgba(var(--main-color-rgb), 0.75);
   outline-offset: 4px;

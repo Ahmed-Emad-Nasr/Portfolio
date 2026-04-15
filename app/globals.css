@@ -23,8 +23,8 @@
   --radius-card: 22px;
   --radius-card-sm: 16px;
   --radius-pill: 999px;
-  --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.05), 0 2px 24px rgba(59, 130, 246, 0.05);
-  --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.10), 0 4px 32px rgba(59, 130, 246, 0.10);
+  --shadow-card: none;
+  --shadow-card-hover: none;
   --motion-fast: 180ms;
   --motion-normal: 260ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -34,8 +34,8 @@
 }
 
 html[data-portfolio-mode="dashboard"] {
-    --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.05), 0 2px 24px rgba(59, 130, 246, 0.05);
-    --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.10), 0 4px 32px rgba(59, 130, 246, 0.10);
+    --shadow-card: none;
+    --shadow-card-hover: none;
   --bg-color: #05080d;
   --second-bg-color: #0a1018;
   --text-color: #ffffff;
@@ -49,8 +49,8 @@ html[data-portfolio-mode="dashboard"] {
 }
 
 html[data-portfolio-mode="magazine"] {
-    --shadow-card: 0 14px 30px rgba(34, 197, 94, 0.05), 0 2px 24px rgba(59, 130, 246, 0.05);
-    --shadow-card-hover: 0 20px 36px rgba(34, 197, 94, 0.10), 0 4px 32px rgba(59, 130, 246, 0.10);
+    --shadow-card: none;
+    --shadow-card-hover: none;
   --bg-color: #140d08;
   --second-bg-color: #1b130d;
   --text-color: #fff7eb;
@@ -87,7 +87,7 @@ html[data-portfolio-mode="magazine"] {
   color: var(--bg-color);
   font-size: 1.4rem;
   font-weight: 800;
-  box-shadow: 0 10px 24px rgba(var(--main-color-rgb), 0.28);
+  box-shadow: none;
   transition: top 0.18s ease, transform 0.18s ease;
 }
 
@@ -104,7 +104,7 @@ textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--main-color);
   outline-offset: 3px;
-  box-shadow: 0 0 0 3px rgba(var(--main-color-rgb), 0.35);
+  box-shadow: none;
   border-radius: 0.6rem;
 }
 
@@ -112,7 +112,7 @@ select:focus-visible {
 ::selection {
   background-color: rgba(var(--main-color-rgb), 0.3);
   color: var(--main-color);
-  text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.5);
+  text-shadow: none;
 }
 
 html {
@@ -178,7 +178,7 @@ button:disabled {
 button:hover:not(:disabled), button:focus-visible:not(:disabled) {
   background: var(--accent-color, #8ed8ff);
   color: #000;
-  box-shadow: 0 2px 12px 0 rgba(var(--main-color-rgb, 91,228,190), 0.18);
+  box-shadow: none;
 }
 
 
@@ -262,7 +262,7 @@ html[data-portfolio-mode="magazine"] button {
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.75);
+    box-shadow: none;
   }
 }
 
@@ -348,7 +348,7 @@ section{
 section.glass {
   background: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.13) 100%);
   border: 1.5px solid rgba(34, 197, 94, 0.18);
-  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.37), 0 2px 24px rgba(59, 130, 246, 0.13);
+  box-shadow: none;
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
@@ -358,7 +358,7 @@ section.glass {
   background: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.13) 100%);
   border-radius: var(--radius-card);
   border: 1.5px solid rgba(34, 197, 94, 0.18);
-  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.37), 0 2px 24px rgba(59, 130, 246, 0.13);
+  box-shadow: none;
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   overflow: hidden;

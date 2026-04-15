@@ -24,7 +24,7 @@
   font-size: 1.02rem;
   font-weight: 700;
   border: 1px solid transparent;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: none;
   cursor: pointer;
   transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, background 0.22s ease;
   will-change: transform, box-shadow;
@@ -34,7 +34,7 @@
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+  box-shadow: none;
 }
 
 .btn:active {
@@ -76,7 +76,7 @@
 .btn:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 2px;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45), 0 0 0 3px rgba(255, 255, 255, 0.2);
+  box-shadow: none;
 }
 
 .primary:focus-visible {
@@ -85,11 +85,9 @@
 
 @keyframes quickCtaPulse {
   0%,
+  50%,
   100% {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
-  }
-  50% {
-    box-shadow: 0 16px 30px rgba(96, 224, 168, 0.34);
+    box-shadow: none;
   }
 }
 

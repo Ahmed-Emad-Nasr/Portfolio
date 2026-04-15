@@ -40,12 +40,12 @@
 .primary {
   color: #032016;
   background: linear-gradient(140deg, #8ef7cb, #63dca8);
-  box-shadow: 0 6px 14px rgba(96, 224, 168, 0.26);
+  box-shadow: none;
   animation: quickCtaPulse 2.6s ease-in-out infinite;
 }
 
 .primary:active {
-  box-shadow: 0 2px 6px rgba(96, 224, 168, 0.3);
+  box-shadow: none;
 }
 
 .secondary {
@@ -73,6 +73,7 @@
 .btn:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 1px;
+  box-shadow: none;
 }
 
 .primary:focus-visible {
@@ -81,11 +82,9 @@
 
 @keyframes quickCtaPulse {
   0%,
+  50%,
   100% {
-    box-shadow: 0 6px 14px rgba(96, 224, 168, 0.26);
-  }
-  50% {
-    box-shadow: 0 8px 20px rgba(96, 224, 168, 0.42);
+    box-shadow: none;
   }
 }
 

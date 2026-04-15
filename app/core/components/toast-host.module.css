@@ -14,7 +14,7 @@
   background: rgba(7, 15, 28, 0.92);
   color: #edf6ff;
   padding: 0.75rem 0.85rem;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.36);
+  box-shadow: none;
   font-size: 1.02rem;
   line-height: 1.45;
 }

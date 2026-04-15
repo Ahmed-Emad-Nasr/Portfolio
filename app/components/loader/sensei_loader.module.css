@@ -63,7 +63,7 @@
   background: linear-gradient(90deg, rgba(var(--main-color-rgb), 0.18), rgba(var(--main-color-rgb), 0.9), rgba(var(--main-color-rgb), 0.18));
   background-size: 200% 100%;
   animation: shimmer 1.2s linear infinite;
-  box-shadow: 0 0 14px rgba(var(--main-color-rgb), 0.18);
+  box-shadow: none;
 }
 
 @keyframes shimmer {

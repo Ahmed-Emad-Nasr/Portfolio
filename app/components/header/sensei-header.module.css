@@ -24,10 +24,7 @@
   gap: 0.75rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.22);
-  box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.46),
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 24px rgba(var(--main-color-rgb), 0.12);
+  box-shadow: none;
   will-change: transform;
   overflow: hidden;
   transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
@@ -35,10 +32,7 @@
 
 .scrolled {
   transform: translateX(-50%) scale(0.95);
-  box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.44),
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 16px rgba(var(--main-color-rgb), 0.09);
+  box-shadow: none;
 }
 
 .header::before {
@@ -72,7 +66,7 @@
 .logo:hover {
   color: var(--main-color);
   transform: translateY(-2px);
-  text-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.5);
+  text-shadow: none;
   filter: brightness(1.05);
 }
 
@@ -111,7 +105,7 @@
   color: color-mix(in srgb, var(--main-color) 86%, white 14%);
   background: rgba(255,255,255,0.04);
   border: 2px dashed rgba(var(--main-color-rgb), 0.66);
-  box-shadow: 0 6px 24px 0 rgba(34,197,94,0.09), 0 1.5px 8px 0 rgba(59,130,246,0.07);
+  box-shadow: none;
   transition:
     transform var(--motion-fast) var(--motion-ease),
     box-shadow var(--motion-normal) var(--motion-ease),
