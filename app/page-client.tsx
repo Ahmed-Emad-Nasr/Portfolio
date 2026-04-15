@@ -10,21 +10,33 @@ import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
-import ExperienceSection from "@/app/components/experience/experience-section";
-import ProjectsSection from "@/app/components/projects/sensei-projects";
-import WriteupsSection from "@/app/components/case-studies/sensei-case-studies"
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import MobileQuickActions from "@/app/core/components/MobileQuickActions";
-import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
 import ErrorBoundary from "@/app/core/components/ErrorBoundary";
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
-const loadArtGallerySection = () => import("@/app/components/art_gallery/sensei-art");
 
-const ArtGallerySection = dynamic(loadArtGallerySection, { 
+// Fallback بسيط للحفاظ على المساحة لحد ما الكومبوننت يحمل
+const SectionSkeleton = () => <div style={{ minHeight: '50vh' }} />;
+
+const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), {
+  loading: () => <SectionSkeleton />
+});
+
+const WriteupsSection = dynamic(() => import("@/app/components/case-studies/sensei-case-studies"), {
+  loading: () => <SectionSkeleton />
+});
+
+const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), {
+  loading: () => <SectionSkeleton />
+});
+
+const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), { 
   ssr: false,
   loading: () => null,
 });
+
+const DesktopQuickCTA = dynamic(() => import("@/app/core/components/DesktopQuickCTA"));
+const MobileQuickActions = dynamic(() => import("@/app/core/components/MobileQuickActions"));
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -67,7 +79,6 @@ const MainClient = memo(function MainClient() {
 
   return (
     <main id="main-content" style={{ position: "relative" }}>
-      {/* تمرير حالة التحميل للـ Loader بدلاً من إخفائه فجأة */}
       <LoadingScreen isLoading={!isAppReady} />
 
       <div
@@ -80,9 +91,11 @@ const MainClient = memo(function MainClient() {
         <AppBar />
         <HomeSection />
         <ExperienceSection />
+        
         <ErrorBoundary title="Writeups section">
           <WriteupsSection />
         </ErrorBoundary>
+        
         <ErrorBoundary title="Projects section">
           <ProjectsSection />
         </ErrorBoundary>
