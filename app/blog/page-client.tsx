@@ -8,6 +8,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "./page.module.css";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import AnimatedBackground from "@/app/components/animated_background/animated_background";
 import {
   blogFeaturedYoutubeVideo,
   blogYoutubePlaylists,
@@ -409,6 +410,7 @@ export default function BlogPageClient() {
 
   return (
     <main id="main-content" className={styles.page} style={{ position: "relative" }}>
+      <AnimatedBackground />
       <LoadingScreen isLoading={!isPageReady} />
 
       <div

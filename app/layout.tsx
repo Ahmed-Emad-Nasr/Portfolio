@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 import { Overlock} from "next/font/google";
 import Script from "next/script";
 import ToastHost from "@/app/core/components/ToastHost";
+import AnimatedBackground from "@/app/components/animated_background/animated_background";
 import { faqItems, knowledgeEducationItems } from "@/app/core/data";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -238,6 +239,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" dir="ltr">
       <head />
       <body className={BODY_CLASS}>
+        <AnimatedBackground />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>

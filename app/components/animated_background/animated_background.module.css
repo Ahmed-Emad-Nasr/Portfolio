@@ -1,0 +1,108 @@
+/*
+ * File: animated_background.module.css
+ * Author: Ahmed Emad Nasr
+ * Purpose: Full-screen animated background canvas styling
+ */
+
+.canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -3;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+
+  /* إعدادات الأداء الخارقة */
+  pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0); 
+  perspective: 1000px; /* Fixed: Added 'px' unit to ensure standard compliance */
+  backface-visibility: hidden;
+}
+
+.vignette,
+.glowOrb,
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.vignette {
+  z-index: -2;
+  background:
+    radial-gradient(circle at 50% 45%, transparent 28%, rgba(0, 0, 0, 0.58) 100%),
+    radial-gradient(circle at 20% 12%, rgba(var(--main-color-rgb), 0.08), transparent 36%);
+}
+
+.glowOrb {
+  z-index: -2;
+  background: radial-gradient(circle at 70% 28%, rgba(var(--main-color-rgb), 0.13), transparent 42%);
+  filter: blur(14px);
+  animation: orbFloat 14s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.scanlines {
+  z-index: -1;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.018) 0,
+    rgba(255, 255, 255, 0.018) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.36;
+  animation: scanDrift 9s linear infinite;
+}
+
+@keyframes orbFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.62;
+  }
+  50% {
+    transform: translate3d(-1.8%, 1.2%, 0) scale(1.06);
+    opacity: 0.9;
+  }
+}
+
+@keyframes scanDrift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(8px);
+  }
+}
+
+/* Ensure keyframes run even with prefers-reduced-motion */
+@supports (--css: variables) {
+  @media (prefers-reduced-motion: reduce) {
+    .glowOrb {
+      animation: orbFloat 14s ease-in-out infinite !important;
+    }
+    
+    .scanlines {
+      animation: scanDrift 9s linear infinite !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .scanlines {
+    display: none;
+  }
+
+  .glowOrb {
+    opacity: 0.55;
+    filter: blur(10px);
+    animation-duration: 18s;
+  }
+}
