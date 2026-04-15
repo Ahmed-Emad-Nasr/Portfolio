@@ -1,68 +1,51 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS
+ * @description Global CSS - Premium Cyber & SOC Theme
  **/
 
-/*--------- 1. Reset & Global ---------*/
+/*--------- 1. Reset & Global Variables ---------*/
 :root {
-  --bg-color: #000000; /* pure black */
-  --second-bg-color: #000000;
-  html, body {
-    background: #000 !important;
-  }
-  --text-color: #eaf7ee;
-  --main-color: #22c55e; /* green cyber */
-  --main-color-rgb: 34, 197, 94;
-  --accent-color: #3b82f6; /* blue tech */
-  --accent-color-rgb: 59, 130, 246;
-  --surface-1: rgba(255, 255, 255, 0.06);
-  --surface-2: rgba(255, 255, 255, 0.09);
-  --surface-card-bg: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.10) 100%);
-  --surface-card-border: rgba(var(--accent-color-rgb), 0.18);
-  --text-muted: rgba(180, 220, 200, 0.82);
-  --radius-card: 22px;
-  --radius-card-sm: 16px;
+  /* Core SOC Theme Colors */
+  --bg-color: #050b14; /* Deep terminal background */
+  --second-bg-color: #07101d;
+  --text-color: #e0f8ff;
+  --text-muted: #8aa8c0;
+  
+  /* Cyber Accents */
+  --main-color: #00f0ff; /* Cyber Cyan */
+  --main-color-rgb: 0, 240, 255;
+  --accent-color: #0a4d8c; /* Deep technical blue */
+  --accent-color-rgb: 10, 77, 140;
+  
+  /* Surfaces & Glassmorphism */
+  --surface-1: rgba(255, 255, 255, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --surface-card-bg: linear-gradient(135deg, rgba(5, 11, 20, 0.85) 0%, rgba(0, 240, 255, 0.05) 100%);
+  --surface-card-border: rgba(var(--main-color-rgb), 0.2);
+  
+  /* Geometry */
+  --radius-card: 20px;
+  --radius-card-sm: 12px;
   --radius-pill: 999px;
-  --shadow-card: none;
-  --shadow-card-hover: none;
-  --motion-fast: 180ms;
-  --motion-normal: 260ms;
-  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ui-blur: 16px;
-  --card-blur: 18px;
+  
+  /* Shadows & Glows */
+  --shadow-card: 0 4px 24px -6px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 15px rgba(var(--main-color-rgb), 0.15);
+  --shadow-glow-hover: 0 0 25px rgba(var(--main-color-rgb), 0.3);
+  
+  /* Optimized Motion Curves */
+  --motion-fast: 150ms;
+  --motion-normal: 300ms;
+  --motion-ease: cubic-bezier(0.25, 1, 0.5, 1); /* Smoother deceleration */
+  
+  /* Blurs */
+  --ui-blur: 12px;
+  --card-blur: 16px;
+  
   color-scheme: dark;
 }
 
-html[data-portfolio-mode="dashboard"] {
-    --shadow-card: none;
-    --shadow-card-hover: none;
-  --bg-color: #05080d;
-  --second-bg-color: #0a1018;
-  --text-color: #ffffff;
-  --main-color: #5be4be;
-  --main-color-rgb: 91, 228, 190;
-  --accent-color: #8ed8ff;
-  --accent-color-rgb: 142, 216, 255;
-  --surface-card-bg: linear-gradient(180deg, rgba(14, 18, 24, 0.92), rgba(8, 10, 13, 0.84));
-  --surface-card-border: rgba(var(--main-color-rgb), 0.18);
-  --text-muted: rgba(235, 243, 252, 0.82);
-}
-
-html[data-portfolio-mode="magazine"] {
-    --shadow-card: none;
-    --shadow-card-hover: none;
-  --bg-color: #140d08;
-  --second-bg-color: #1b130d;
-  --text-color: #fff7eb;
-  --main-color: #ffc06e;
-  --main-color-rgb: 255, 192, 110;
-  --accent-color: #ffe2ad;
-  --accent-color-rgb: 255, 226, 173;
-  --surface-card-bg: linear-gradient(180deg, rgba(32, 22, 14, 0.92), rgba(17, 12, 10, 0.84));
-  --surface-card-border: rgba(var(--main-color-rgb), 0.24);
-  --text-muted: rgba(255, 239, 219, 0.84);
-}
-
+/*--------- 2. Base Setup ---------*/
 * {
   margin: 0;
   padding: 0;
@@ -76,226 +59,146 @@ html[data-portfolio-mode="magazine"] {
   outline: none;
 }
 
+html {
+  font-size: 62.5%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding-top: 11rem;
+  background-color: var(--bg-color);
+}
+
+body {
+  font-family: var(--font-overlock, sans-serif);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
+}
+
+/* --- Cinematic Text Selection --- */
+::selection {
+  background-color: rgba(var(--main-color-rgb), 0.25);
+  color: var(--text-color);
+  text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.6);
+}
+
+/*--------- 3. Interactive Elements ---------*/
+a, button, input, textarea, select, summary {
+  transition: all var(--motion-normal) var(--motion-ease);
+}
+
+button {
+  background: rgba(var(--main-color-rgb), 0.1);
+  color: var(--main-color);
+  border: 1px solid var(--surface-card-border);
+  border-radius: var(--radius-card-sm);
+  padding: 0.8em 1.8em;
+  font-weight: 600;
+  font-size: 1.1em;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover:not(:disabled) {
+  background: rgba(var(--main-color-rgb), 0.2);
+  color: #fff;
+  border-color: var(--main-color);
+  box-shadow: var(--shadow-glow-hover);
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+button:disabled {
+  background: var(--surface-1);
+  color: var(--text-muted);
+  border-color: transparent;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 3px;
+  border-radius: var(--radius-card-sm);
+}
+
+/*--------- 4. Accessibility & Skip Links ---------*/
 .skip-link {
   position: absolute;
   left: 1rem;
   top: -4rem;
   z-index: 2000;
   padding: 0.9rem 1.2rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--main-color);
-  color: var(--bg-color);
+  color: #000;
   font-size: 1.4rem;
   font-weight: 800;
-  box-shadow: none;
-  transition: top 0.18s ease, transform 0.18s ease;
+  transition: top var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
-.skip-link:focus,
 .skip-link:focus-visible {
   top: 1rem;
   transform: translateY(0);
 }
 
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--main-color);
-  outline-offset: 3px;
-  box-shadow: none;
-  border-radius: 0.6rem;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* --- Cinematic Text Selection --- */
-::selection {
-  background-color: rgba(var(--main-color-rgb), 0.3);
-  color: var(--main-color);
-  text-shadow: none;
-}
-
-html {
-  font-size: 62.5%;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  scroll-padding-top: 11rem;
-  scroll-padding-left: 0;
-  scroll-padding-right: 0;
-}
-
-
-body {
-  font-family: var(--font-overlock, sans-serif);
-  color: var(--text-color);
-  background: #000 !important;
-  overflow-x: hidden;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
-}
-
-a,
-button,
-input,
-textarea,
-select,
-summary {
-  transition-property: color, background-color, border-color, box-shadow, transform, opacity, filter;
-  transition-duration: var(--motion-normal);
-  transition-timing-function: var(--motion-ease);
-}
-
-
-body {
-  font-family: var(--font-overlock, sans-serif);
-  color: var(--text-color);
-  background: #000 !important;
-  overflow-x: hidden;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
-}
-
-button {
-  background: var(--main-color, #5be4be);
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  padding: 0.7em 1.6em;
-  font-weight: 600;
-  font-size: 1.1em;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-}
-button:disabled {
-  background: #222;
-  color: #888;
-  cursor: not-allowed;
-}
-button:hover:not(:disabled), button:focus-visible:not(:disabled) {
-  background: var(--accent-color, #8ed8ff);
-  color: #000;
-  box-shadow: none;
-}
-
-
-p,
-li {
+/*--------- 5. Typography & Layout ---------*/
+p, li {
   color: var(--text-muted);
-}
-
-
-body::before,
-body::after {
-  content: none !important;
-  background: none !important;
-  background-image: none !important;
-  filter: none !important;
-  mask-image: none !important;
-}
-
-@media (max-width: 640px) {
-  body::before {
-    filter: blur(11px);
-    opacity: 0.62;
-  }
-
-  body::after {
-    opacity: 0.12;
-    background-size: 58px 58px;
-    mask-image: radial-gradient(circle at center, black 38%, transparent 88%);
-  }
+  line-height: 1.6;
 }
 
 main {
   position: relative;
 }
 
-html[data-portfolio-mode="magazine"] body {
-  background:
-    radial-gradient(circle at 14% 10%, rgba(255, 191, 112, 0.22), transparent 34%),
-    radial-gradient(circle at 84% 14%, rgba(255, 226, 156, 0.16), transparent 36%),
-    linear-gradient(152deg, #130d08 0%, #1a120d 42%, #120c08 100%);
+/*--------- 6. Sections & Glassmorphism ---------*/
+section {
+  padding: 7.1rem 6% 5.9rem;
+  position: relative;
+  border-radius: var(--radius-card);
+  margin-bottom: clamp(6rem, 10vw, 12rem);
+  z-index: 1;
 }
 
-html[data-portfolio-mode="magazine"] section::after {
-  background:
-    linear-gradient(90deg, transparent, rgba(255, 191, 112, 0.76), transparent),
-    linear-gradient(90deg, transparent, rgba(255, 226, 156, 0.45), transparent);
+section.glass, .glass-card {
+  background: var(--surface-card-bg);
+  border: 1px solid var(--surface-card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--card-blur)) saturate(120%);
+  -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
+  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
 }
 
-html[data-portfolio-mode="dashboard"] section,
-html[data-portfolio-mode="magazine"] section,
-html[data-portfolio-mode="dashboard"] section::before,
-html[data-portfolio-mode="magazine"] section::before,
-html[data-portfolio-mode="dashboard"] section::after,
-html[data-portfolio-mode="magazine"] section::after,
-html[data-portfolio-mode="dashboard"] a,
-html[data-portfolio-mode="magazine"] a,
-html[data-portfolio-mode="dashboard"] button,
-html[data-portfolio-mode="magazine"] button {
-  transition: background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
+.glass-card:hover {
+  border-color: rgba(var(--main-color-rgb), 0.4);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-3px);
 }
 
-@media (prefers-contrast: more) {
-  :root {
-    --main-color: #ffffff;
-    --main-color-rgb: 255, 255, 255;
-    --accent-color: #ffffff;
-    --accent-color-rgb: 255, 255, 255;
-  }
-
-  body {
-    background: #000000;
-  }
-
-  section::before,
-  section::after {
-    opacity: 0.95;
-  }
-
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
-    box-shadow: none;
-  }
-}
-
-/* Force all keyframe animations to always run, even if prefers-reduced-motion is enabled */
-
-
-/* Force keyframes to always run */
-@supports (animation-play-state: running) {
-  @media (prefers-reduced-motion: reduce) {
-    [class*="Pulse"],
-    [class*="Float"],
-    [class*="Drift"],
-    [class*="Fade"],
-    [class*="Fade"] {
-      animation-play-state: running !important;
-      animation-duration: 8s !important;
-    }
-    
-    /* Background animations remain always active */
-    .glowOrb {
-      animation: orbFloat 14s ease-in-out infinite !important;
-    }
-    
-    .scanlines {
-      animation: scanDrift 9s linear infinite !important;
-    }
-  }
-}
-
+/*--------- 7. Animations ---------*/
 @keyframes sectionFadeUp {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -303,71 +206,34 @@ html[data-portfolio-mode="magazine"] button {
   }
 }
 
-@keyframes softGlow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 rgba(var(--main-color-rgb), 0);
-  }
-  50% {
-    box-shadow: 0 0 22px rgba(var(--main-color-rgb), 0.18);
-  }
+@keyframes cyberPulse {
+  0%, 100% { opacity: 0.8; box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.2); }
+  50% { opacity: 1; box-shadow: 0 0 25px rgba(var(--main-color-rgb), 0.5); }
 }
 
-/*--------- 2. Language Specific Styles ---------*/
-:lang(ja) {
-  font-family: var(--font-yuji-syuku, serif);
-}
-
-/*--------- 3. Custom Scrollbar ---------*/
+/*--------- 8. Custom Scrollbar ---------*/
 ::-webkit-scrollbar {
   width: 0.8rem;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--bg-color);
+  border-left: 1px solid var(--surface-1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--main-color);
-  border-radius: 0.4rem;
+  background: rgba(var(--main-color-rgb), 0.4);
+  border-radius: var(--radius-pill);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(var(--main-color-rgb), 0.8);
 }
-section{
-  /*--------- 4. General Section Style ---------*/
-  min-height: auto;
-  padding: 7.1rem 6% 5.9rem;
-  position: relative;
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  /* glass background, border, shadow, blur removed site-wide */
-}
 
-section.glass {
-  background: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.13) 100%);
-  border: 1.5px solid rgba(34, 197, 94, 0.18);
-  box-shadow: none;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-}
-
-/* Glassmorphism card utility */
-.glass-card {
-  background: linear-gradient(120deg, rgba(15, 23, 42, 0.82) 60%, rgba(59, 130, 246, 0.13) 100%);
-  border-radius: var(--radius-card);
-  border: 1.5px solid rgba(34, 197, 94, 0.18);
-  box-shadow: none;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  overflow: hidden;
-}
-
-
+/*--------- 9. Footer ---------*/
 .site-footer {
   padding: 0 6% 3.2rem;
-  margin-top: clamp(3rem, 5vw, 5rem);
+  margin-top: auto;
 }
 
 .site-footer__inner {
@@ -377,10 +243,12 @@ section.glass {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 1.2rem;
+  padding: 1.5rem 2rem;
   border-radius: var(--radius-card);
-  border: 1px solid rgba(var(--main-color-rgb), 0.12);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--surface-card-border);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(var(--ui-blur));
+  -webkit-backdrop-filter: blur(var(--ui-blur));
   color: var(--text-muted);
   font-size: 1.2rem;
 }
@@ -391,120 +259,70 @@ section.glass {
 }
 
 .site-footer__inner a:hover {
-  color: var(--accent-color);
+  color: #fff;
+  text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.8);
 }
 
-section > * {
-  position: relative;
-  z-index: 1;
-}
-
-main section + section {
-  margin-top: clamp(10rem, 13vw, 17rem);
-}
-
-
-
-@media (max-width: 768px) {
-  section {
-    padding: 5.5rem 5% 4.5rem;
-  }
-
-  main section + section {
-    margin-top: clamp(8rem, 12vw, 11rem);
-  }
-
-  section::before {
-    background: radial-gradient(circle at 20% 12%, rgba(var(--main-color-rgb), 0.018), transparent 36%);
-  }
-
-  main section:nth-of-type(2n)::before,
-  main section:nth-of-type(3n)::before {
-    background: radial-gradient(circle at 80% 12%, rgba(var(--main-color-rgb), 0.014), transparent 34%);
-  }
-
-  section::after {
-    left: 5%;
-    right: 5%;
-    height: 3px;
-    opacity: 0.85;
-  }
-
-  .skip-link {
-    font-size: 1.3rem;
-    padding: 0.8rem 1rem;
-  }
-
-  .site-footer {
-    padding: 0 5% 2.4rem;
-  }
-
-  .site-footer__inner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-/*--------- 5. Force Icon Animations (Vendor Override) ---------*/
-.fa-beat {
-  animation-name: fa-beat !important;
-}
-
-.fa-bounce {
-  animation-name: fa-bounce !important;
-}
-
-.fa-fade {
-  animation-name: fa-fade !important;
-}
-
-.fa-beat-fade {
-  animation-name: fa-beat-fade !important;
-}
-
-.fa-flip {
-  animation-name: fa-flip !important;
-}
-
-.fa-shake {
-  animation-name: fa-shake !important;
-}
-
-.fa-spin,
-.fa-pulse,
-.fa-spin-pulse {
-  animation-name: fa-spin !important;
-}
-
-/*--------- 6. Mobile Overrides (Global Fallback) ---------*/
+/*--------- 10. Responsive Breakpoints ---------*/
 @media (max-width: 991px) {
   section {
-    min-height: auto;
-    padding: 3rem 1.35rem 3.5rem;
+    padding: 4rem 4% 4rem;
+    margin-bottom: clamp(5rem, 8vw, 8rem);
   }
-
-  main section + section {
-    margin-top: clamp(6rem, 10vw, 9rem);
-  }
-
-  body {
-    padding-bottom: 8rem;
-  }
-  section::after {
-    left: 1.5rem;
-    right: 1.5rem;
-    height: 3px;
-    opacity: 0.8;
-  }
-  
 }
 
-@media (hover: none), (pointer: coarse) {
+@media (max-width: 768px) {
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  /* Optimize performance for touch devices */
+  .glass-card:hover {
+    transform: none;
+  }
   :root {
-    --motion-fast: 140ms;
-    --motion-normal: 200ms;
-    --ui-blur: 6px;
-    --card-blur: 6px;
+    --card-blur: 8px; /* Less demanding blur on mobile */
+  }
+  /*--------- 11. Cyber Background Animations ---------*/
+
+
+
+/* --- Keyframes --- */
+@keyframes scanDrift {
+  0% { 
+    background-position: 0 0; 
+  }
+  100% { 
+    background-position: 0 100vh; 
   }
 }
 
+@keyframes orbFloat {
+  0% { 
+    transform: translate(0, 0) scale(1); 
+  }
+  33% { 
+    transform: translate(3vw, -5vh) scale(1.1); 
+  }
+  66% { 
+    transform: translate(-4vw, 4vh) scale(0.9); 
+  }
+  100% { 
+    transform: translate(0, 0) scale(1); 
+  }
+}
+
+/* السماح للأنيميشن دي إنها تشتغل حتى لو المستخدم مقلل الحركة (حسب طلبك القديم) */
+@supports (animation-play-state: running) {
+  @media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+      animation-duration: 20s !important; /* بنبطأها بس مش بنقفلها */
+    }
+  }
+}
+}

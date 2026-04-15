@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import ErrorBoundary from "@/app/core/components/ErrorBoundary";
+
 
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 
@@ -92,13 +92,9 @@ const MainClient = memo(function MainClient() {
         <HomeSection />
         <ExperienceSection />
         
-        <ErrorBoundary title="Writeups section">
-          <WriteupsSection />
-        </ErrorBoundary>
+        <WriteupsSection />
         
-        <ErrorBoundary title="Projects section">
-          <ProjectsSection />
-        </ErrorBoundary>
+        <ProjectsSection />
 
         <ArtGallerySection />
         <DesktopQuickCTA />

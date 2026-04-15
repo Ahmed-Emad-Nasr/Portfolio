@@ -10,7 +10,6 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock} from "next/font/google";
 import Script from "next/script";
-import ToastHost from "@/app/core/components/ToastHost";
 import AnimatedBackground from "@/app/components/animated_background/animated_background";
 import { faqItems, knowledgeEducationItems } from "@/app/core/data";
 
@@ -301,7 +300,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   });
 })();`}
         </Script>
-        <ToastHost />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
