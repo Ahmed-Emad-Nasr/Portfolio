@@ -12,7 +12,6 @@ import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
-
 // ─── Dynamic imports ──────────────────────────────────────────────────────────
 
 // Fallback بسيط للحفاظ على المساحة لحد ما الكومبوننت يحمل

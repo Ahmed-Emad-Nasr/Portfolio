@@ -10,7 +10,6 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock} from "next/font/google";
 import Script from "next/script";
-import AnimatedBackground from "@/app/components/animated_background/animated_background";
 import { faqItems, knowledgeEducationItems } from "@/app/core/data";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -235,10 +234,10 @@ const structuredData = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
+    
     <html lang="en" dir="ltr">
       <head />
       <body className={BODY_CLASS}>
-        <AnimatedBackground />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
@@ -248,58 +247,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             strategy="afterInteractive"
           />
         ) : null}
-        <Script id="visual-mode-init" strategy="beforeInteractive">
-          {`(function(){
-  try {
-    var mode = localStorage.getItem("portfolio_blog_visual_mode_v1");
-    if (mode === "dashboard" || mode === "magazine") {
-      document.documentElement.setAttribute("data-portfolio-mode", mode);
-    } else {
-      document.documentElement.setAttribute("data-portfolio-mode", "dashboard");
-    }
-  } catch (error) {
-    document.documentElement.setAttribute("data-portfolio-mode", "dashboard");
-  }
-})();`}
-        </Script>
-        <Script id="chunk-error-handler" strategy="beforeInteractive">
-          {`(function(){
-  if (typeof window === "undefined") return;
-  
-  window.__NEXT_DATA__ = window.__NEXT_DATA__ || {};
-  
-  // Prevent appendChild errors from malformed chunks
-  var originalAppend = Element.prototype.appendChild;
-  Element.prototype.appendChild = function(node) {
-    try {
-      if (node && typeof node === "object" && node.nodeType === Node.TEXT_NODE) {
-        var text = node.textContent || "";
-        if (text.trim().startsWith("<")) {
-          console.warn("Blocked invalid chunk content from being appended");
-          return node;
-        }
-      }
-      return originalAppend.call(this, node);
-    } catch (error) {
-      console.error("appendChild error:", error);
-      return node;
-    }
-  };
-})();`}
-        </Script>
-        <Script id="sw-register" strategy="afterInteractive">
-          {`(function(){
-  if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
-
-  var path = window.location.pathname;
-  var scopePrefix = path === "/Portfolio" || path.startsWith("/Portfolio/") ? "/Portfolio" : "";
-  var swUrl = scopePrefix + "/sw.js";
-
-  navigator.serviceWorker.register(swUrl).catch(function(error){
-    console.warn("Service worker registration failed:", error);
-  });
-})();`}
-        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
