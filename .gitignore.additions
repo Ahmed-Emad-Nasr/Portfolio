@@ -1,0 +1,32 @@
+# Ignore VSCode settings
+.vscode/
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+
+# Ignore log files
+*.log
+
+# Ignore build output
+/dist/
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore npm package lock
+package-lock.json
+yarn.lock
+
+# Ignore public generated assets
+/public/Assets/art-gallery/Images/image_display/
+/public/Assets/art-gallery/Images/image_display_thumb/
+/public/Assets/art-gallery/Images/logo/
+/public/Assets/Cases/thumbnails/
+/public/Assets/loading/
+
+# Ignore scripts output (if any)
+/scripts/*.log

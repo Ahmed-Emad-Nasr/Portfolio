@@ -7,6 +7,9 @@
 .yarn/install-state.gz
 .next/
 
+# VSCode settings
+.vscode/
+
 # testing
 /coverage
 
@@ -17,9 +20,16 @@
 # production
 /build
 
+# build output
+/dist/
+
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+
+# log files
+*.log
 
 # debug
 npm-debug.log*
@@ -27,7 +37,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env
+.env*
 
 # vercel
 .vercel
@@ -35,3 +46,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# npm/yarn lock files
+package-lock.json
+yarn.lock
+
+# public generated assets
+/public/Assets/art-gallery/Images/image_display/
+/public/Assets/art-gallery/Images/image_display_thumb/
+/public/Assets/art-gallery/Images/logo/
+/public/Assets/Cases/thumbnails/
+/public/Assets/loading/
+
+# scripts output (if any)
+/scripts/*.log
