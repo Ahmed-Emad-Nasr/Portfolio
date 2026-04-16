@@ -9,22 +9,24 @@
 
 .bubble {
   position: absolute;
-  bottom: -80px;
+  /* كل فقاعة تبدأ من نقطة عشوائية */
   background: radial-gradient(circle, var(--bubble-main, #e53935) 0%, #e5393522 70%, transparent 100%);
   border-radius: 50%;
   filter: blur(3.2px) brightness(1.1);
   box-shadow: 0 0 32px 8px var(--bubble-main, #e53935), 0 0 64px 16px #e5393522;
-  animation: bubbleUpVar linear infinite;
+  animation: bubbleRandomMove linear infinite;
   transition: background 0.3s;
 }
 
-@keyframes bubbleUpVar {
+
+@keyframes bubbleRandomMove {
   0% {
-    transform: translateY(0) translateX(0) scale(1);
+    /* تبدأ من مكانها */
+    transform: scale(1);
   }
   100% {
-    /* تتحرك لأعلى مع انحراف X عشوائي */
-    transform: translateY(-110vh) translateX(var(--bubble-x, 0vw)) scale(1.13);
+    /* تتحرك في اتجاه عشوائي */
+    transform: translate(var(--bubble-x, 0vw), var(--bubble-y, 0vh)) scale(1.13);
   }
 }
 

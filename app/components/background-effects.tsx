@@ -74,28 +74,35 @@ export default function BackgroundEffects() {
   }, [animationsActive, startMeteorAnimations, pauseMeteorAnimations, clearAllMeteorTimeouts]);
 
   // --- فقاعات: أول دورة بدون delay ---
-  const bubbleParams = useRef<{angle:number,translateX:number,startLeft:number,size:number,duration:number,delay:number,opacity:number}[]>([]);
+  const bubbleParams = useRef<{
+    angle: number;
+    translateX: number;
+    translateY: number;
+    startTop: number;
+    startLeft: number;
+    size: number;
+    duration: number;
+    delay: number;
+    opacity: number;
+  }[]>([]);
   if (bubbleParams.current.length !== NUM_BUBBLES) {
     bubbleParams.current = Array.from({ length: NUM_BUBBLES }).map(() => {
-      const angle = random(-30, 30);
-      const translateX = Math.tan((angle * Math.PI) / 180) * 100;
-      const startLeft = random(0, 100);
+      // نقطة بداية عشوائية حول منتصف الشاشة
+      const startTop = random(5, 90); // vh
+      const startLeft = random(5, 90); // vw
+      const angle = random(0, 360);
+      const distance = random(40, 70);
+      const translateX = Math.cos((angle * Math.PI) / 180) * distance;
+      const translateY = Math.sin((angle * Math.PI) / 180) * distance;
       const size = random(44, 96);
       const duration = random(12, 28);
-      const delay = random(0, 14);
+      const delay = random(0, 0.5);
       const opacity = random(0.10, 0.22);
-      return { angle, translateX, startLeft, size, duration, delay, opacity };
+      return { angle, translateX, translateY, startTop, startLeft, size, duration, delay, opacity };
     });
   }
 
-  // عند أول تحميل: animationDelay = 0، بعدين يرجع delay الطبيعي
-  const [bubblesLoaded, setBubblesLoaded] = React.useState(false);
-  // عند فقدان التركيز: أوقف الأنيميشنز (CSS)
-  useEffect(() => {
-    if (!animationsActive) return;
-    const timeout = setTimeout(() => setBubblesLoaded(true), 100);
-    return () => clearTimeout(timeout);
-  }, [animationsActive]);
+  // لم يعد هناك حاجة لتأخير الحركة عند أول تحميل
 
   // --- مراقبة تركيز الصفحة ---
   useEffect(() => {
@@ -128,14 +135,19 @@ export default function BackgroundEffects() {
           key={`bubble-${i}`}
           className={styles.bubble}
           style={{
+            top: `${params.startTop}vh`,
             left: `${params.startLeft}vw`,
             width: `${params.size}px`,
             height: `${params.size}px`,
             opacity: animationsActive ? params.opacity : 0,
             animationPlayState: animationsActive ? 'running' : 'paused',
-            animationDelay: bubblesLoaded ? `${params.delay}s` : `0s`,
+            animationDelay: `${params.delay}s`,
             animationDuration: `${params.duration}s`,
+            // @ts-ignore
             '--bubble-x': `${params.translateX}vw`,
+            // @ts-ignore
+            '--bubble-y': `${params.translateY}vh`,
+            // @ts-ignore
             '--bubble-main': 'var(--main-red, #e53935)',
           } as React.CSSProperties}
         />
