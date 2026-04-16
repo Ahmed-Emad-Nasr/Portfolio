@@ -348,11 +348,28 @@
   transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
 }
 
+
 .primaryAction {
-  color: #0d1418;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background: linear-gradient(118deg, var(--main-color), #a6ecff);
-  box-shadow: 0 14px 24px rgba(var(--main-color-rgb), 0.24);
+  color: #1f1408;
+  border: 2px solid rgba(255, 207, 136, 0.84);
+  background: linear-gradient(116deg, #ffc06e, #ffe2ad);
+  box-shadow: 0 10px 18px rgba(255, 193, 110, 0.18);
+  font-size: 1.35rem;
+  font-weight: 800;
+  min-height: 46px;
+  border-radius: 13px;
+  padding: 0.82rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
+}
+
+.primaryAction:hover {
+  background: linear-gradient(116deg, #ffd595, #ffe2ad 80%);
+  color: #a86b00;
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 14px 32px rgba(255, 193, 110, 0.22);
 }
 
 .channelAction {
