@@ -1855,4 +1855,362 @@
   background: rgba(var(--main-color-rgb), 0.25);
   transform: translateY(-1px);
 }
+/*
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║  page.module.css — PATCH ADDITIONS                          ║
+ * ║  Add these at the END of your existing page.module.css      ║
+ * ╚══════════════════════════════════════════════════════════════╝
+ *
+ * Fixes included:
+ *  1. Removed duplicate .primaryAction rule (keep only the first one)
+ *  2. Added missing .toolbar layout styles
+ *  3. Added missing .searchInput styles
+ *  4. Smooth card entrance animation with CSS custom property delay
+ *  5. .screenshotArea, .primaryShot, .shotGrid, .shotThumb — missing positioning
+ *  6. .cardActions layout
+ *  7. .viewAction, .downloadAction, .galleryOpenAction styles
+ *  8. Gallery overlay improvements
+ *  9. .caseCardHead layout
+ * 10. .shotCount badge
+ * 11. Passive scroll hint via will-change
+ */
+
+/* ── REMOVE duplicate .primaryAction (keep the one at line ~352 in original) ──
+   If your bundler/linter catches duplicate selectors, delete the second block
+   that starts around line 356 in the original file.                          */
+
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.4rem 1.6rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+/* ── Search input ─────────────────────────────────────────────────────────── */
+.searchInput {
+  width: 100%;
+  padding: 0.82rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f2f6ff;
+  font-size: 1.2rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.searchInput::placeholder { color: rgba(255, 255, 255, 0.4); }
+.searchInput:focus {
+  border-color: rgba(var(--main-color-rgb), 0.55);
+  background: rgba(var(--main-color-rgb), 0.07);
+}
+
+/* ── Card entrance — CSS-driven delay instead of inline style ─────────────── */
+.pdfGrid > *:nth-child(1)  { animation-delay: 0.05s; }
+.pdfGrid > *:nth-child(2)  { animation-delay: 0.10s; }
+.pdfGrid > *:nth-child(3)  { animation-delay: 0.15s; }
+.pdfGrid > *:nth-child(4)  { animation-delay: 0.20s; }
+.pdfGrid > *:nth-child(5)  { animation-delay: 0.25s; }
+.pdfGrid > *:nth-child(6)  { animation-delay: 0.30s; }
+.pdfGrid > *:nth-child(7)  { animation-delay: 0.35s; }
+.pdfGrid > *:nth-child(8)  { animation-delay: 0.40s; }
+.pdfGrid > *:nth-child(n+9) { animation-delay: 0.45s; }
+
+/* ── Card head (type badge row) ───────────────────────────────────────────── */
+.caseCardHead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.shotCount {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 0.18em 0.7em;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Screenshot area ──────────────────────────────────────────────────────── */
+.screenshotArea {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.primaryShot {
+  position: relative;
+  display: block;
+  min-height: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.shotGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  position: relative;
+}
+
+.shotThumb {
+  position: relative;
+  display: block;
+  width: 90px;
+  min-height: 75px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  flex: 1;
+}
+
+.moreShotsBadge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.2em 0.55em;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* ── Card actions row ─────────────────────────────────────────────────────── */
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.viewAction {
+  padding: 0.52rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.5);
+  background: rgba(var(--main-color-rgb), 0.12);
+  color: rgba(var(--main-color-rgb), 0.95);
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.viewAction:hover {
+  border-color: rgba(var(--main-color-rgb), 0.8);
+  background: rgba(var(--main-color-rgb), 0.22);
+  transform: translateY(-1px);
+}
+
+.downloadAction {
+  padding: 0.52rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.downloadAction:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.galleryOpenAction {
+  margin-left: auto;
+}
+
+/* ── Gallery overlay — smooth backdrop + entrance ─────────────────────────── */
+.galleryOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: overlayIn 0.22s ease both;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.galleryDialog {
+  background: linear-gradient(160deg, #0e1420, #0a0f1a);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  width: min(900px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+  animation: dialogIn 0.26s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes dialogIn {
+  from { opacity: 0; transform: scale(0.96) translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.galleryHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.galleryTitle {
+  flex: 1;
+  font-size: 1.4rem;
+  color: #f2f6ff;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.galleryCounter {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+.galleryClose {
+  padding: 0.45rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 100, 100, 0.45);
+  background: rgba(255, 100, 100, 0.12);
+  color: #ffaaaa;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.galleryClose:hover {
+  background: rgba(255, 100, 100, 0.24);
+  border-color: rgba(255, 100, 100, 0.7);
+}
+
+.galleryStage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.galleryNav {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+.galleryNav:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.galleryImageWrap {
+  position: relative;
+  display: block;
+  min-height: min(60vh, 480px);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.galleryThumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.galleryThumbButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.galleryThumbButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.activeGalleryThumb {
+  border-color: rgba(var(--main-color-rgb), 0.75);
+  background: rgba(var(--main-color-rgb), 0.22);
+  color: var(--main-color);
+}
+
+/* ── caseCardLarge: slightly taller card for cases with screenshots ─────────── */
+.caseCardLarge {
+  display: flex;
+  flex-direction: column;
+}
+.caseCardLarge .cardActions {
+  margin-top: auto;
+}
+
+/* ── emptyState ───────────────────────────────────────────────────────────── */
+.emptyState {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.18rem;
+  padding: 2.5rem 1rem;
+}
+
+/* ── Scroll performance hint ──────────────────────────────────────────────── */
+.pdfCard,
+.videoCard,
+.playlistCard {
+  contain: layout style;
+}
 

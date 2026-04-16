@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import styles from "./page.module.css";
 
 interface BlogCardProps {
   id: string;
@@ -16,92 +19,207 @@ interface BlogCardProps {
   date?: string;
   screenshots: string[];
   onOpenGallery: () => void;
+  onTagClick?: (tag: string) => void;
+  onToolClick?: (tool: string) => void;
+  getThumbnail: (imgPath: string) => string;
+  normalizeHref: (href: string) => string;
 }
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(
-  ({ id, title, description, platform, type, category, difficulty, href, tags, tools, readTime, date, screenshots, onOpenGallery }) => {
-    const getThumbnail = (imgPath: string) => {
-      if (!imgPath) return imgPath;
-      const rel = imgPath.replace(/^Assets\/Cases\//, "").replace(/[\\/]/g, "__").replace(/\.(png|jpg|jpeg)$/i, ".webp");
-      return `Assets/Cases/thumbnails/${rel}`;
-    };
-    const cardScreenshots = screenshots.slice(0, 2);
-    const extraScreenshotsCount = Math.max(0, screenshots.length - 2);
-    const primaryScreenshot = cardScreenshots[0];
-    const secondaryScreenshot = cardScreenshots[1];
+  ({
+    id,
+    title,
+    description,
+    platform,
+    type,
+    category,
+    difficulty,
+    href,
+    tags,
+    tools,
+    readTime,
+    screenshots,
+    onOpenGallery,
+    onTagClick,
+    onToolClick,
+    getThumbnail,
+    normalizeHref,
+  }) => {
+    const hasScreenshots = screenshots.length > 0;
+    const primaryScreenshot = screenshots[0];
+    const secondaryScreenshot = screenshots[1];
+    const extraCount = Math.max(0, screenshots.length - 2);
+    const difficultyKey = difficulty?.toLowerCase() as "easy" | "medium" | "hard" | undefined;
+
     return (
-      <article>
-        <div>
-          <p>{type}</p>
-          {screenshots.length > 0 && <span>{screenshots.length} screenshots</span>}
+      <article
+        className={[
+          styles.pdfCard,
+          hasScreenshots ? styles.caseCardLarge : "",
+          styles.fadeInUp,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {/* Card head: type badge + screenshot count */}
+        <div className={styles.caseCardHead}>
+          <p className={styles.badge}>{type}</p>
+          {hasScreenshots && (
+            <span className={styles.shotCount}>{screenshots.length} screenshots</span>
+          )}
         </div>
-        <h3>{title}</h3>
-        {description && <p>{description}</p>}
-        <p>{platform}</p>
-        <div>
-          {difficulty && <span>{difficulty}</span>}
-          {category && <span>{category}</span>}
-          {readTime && <span>{readTime} min</span>}
+
+        {/* Title with tooltip */}
+        <h3 className={styles.cardTitle} tabIndex={0} aria-label={title}>
+          {title}
+          {description && (
+            <span className={styles.cardTooltip}>{description}</span>
+          )}
+        </h3>
+
+        {/* Description */}
+        {description && (
+          <p className={styles.cardDescription}>{description}</p>
+        )}
+
+        {/* Platform */}
+        <p className={styles.cardPlatform}>{platform}</p>
+
+        {/* Metadata badges */}
+        <div className={styles.caseMetadata}>
+          {difficultyKey && (
+            <span
+              className={`${styles.badge} ${styles[`difficulty-${difficultyKey}`]}`}
+            >
+              {difficulty}
+            </span>
+          )}
+          {category && <span className={styles.badge}>{category}</span>}
+          {readTime && <span className={styles.badge}>{readTime} min</span>}
         </div>
+
+        {/* Tags */}
         {tags && tags.length > 0 && (
-          <div>
+          <div className={styles.tagsListInline}>
             {tags.slice(0, 3).map((tag) => (
-              <button key={tag} type="button" title={`Search for ${tag}`}>#{tag}</button>
+              <button
+                key={tag}
+                type="button"
+                className={styles.tagButtonSmall}
+                onClick={() => onTagClick?.(tag)}
+                title={`Search for ${tag}`}
+              >
+                #{tag}
+              </button>
             ))}
-            {tags.length > 3 && <span>+{tags.length - 3}</span>}
+            {tags.length > 3 && (
+              <span className={styles.moreTagsBadge}>+{tags.length - 3}</span>
+            )}
           </div>
         )}
+
+        {/* Tools */}
         {tools && tools.length > 0 && (
-          <div>
+          <div className={styles.toolsListCompact}>
             {tools.slice(0, 2).map((tool) => (
-              <button key={tool} type="button" title={`Filter by ${tool}`}>{tool}</button>
+              <button
+                key={tool}
+                type="button"
+                className={styles.toolButtonSmall}
+                onClick={() => onToolClick?.(tool)}
+                title={`Filter by ${tool}`}
+              >
+                {tool}
+              </button>
             ))}
-            {tools.length > 2 && <span>+{tools.length - 2}</span>}
+            {tools.length > 2 && (
+              <span className={styles.moreToolsBadge}>+{tools.length - 2}</span>
+            )}
           </div>
         )}
+
+        {/* Screenshots */}
         {primaryScreenshot && (
-          <div>
-            <a href={primaryScreenshot} target="_blank" rel="noreferrer" aria-label={`Open main screenshot for ${title}`}>
+          <div className={styles.screenshotArea}>
+            <a
+              href={normalizeHref(primaryScreenshot)}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.primaryShot}
+              aria-label={`Open main screenshot for ${title}`}
+            >
               <Image
-                src={getThumbnail(primaryScreenshot)}
+                src={normalizeHref(getThumbnail(primaryScreenshot))}
                 alt={`${title} main screenshot`}
                 fill
                 sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                 loading="lazy"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = primaryScreenshot;
+                  (e.target as HTMLImageElement).src = normalizeHref(primaryScreenshot);
                 }}
               />
             </a>
+
             {secondaryScreenshot && (
-              <div>
-                <a href={secondaryScreenshot} target="_blank" rel="noreferrer" aria-label={`Open screenshot 2 for ${title}`}>
+              <div className={styles.shotGrid}>
+                <a
+                  href={normalizeHref(secondaryScreenshot)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.shotThumb}
+                  aria-label={`Open screenshot 2 for ${title}`}
+                >
                   <Image
-                    src={getThumbnail(secondaryScreenshot)}
+                    src={normalizeHref(getThumbnail(secondaryScreenshot))}
                     alt={`${title} screenshot 2`}
                     fill
                     sizes="(max-width: 560px) 45vw, 18vw"
                     loading="lazy"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = secondaryScreenshot;
+                      (e.target as HTMLImageElement).src = normalizeHref(secondaryScreenshot);
                     }}
                   />
                 </a>
-                {extraScreenshotsCount > 0 && <span>+{extraScreenshotsCount}</span>}
+                {extraCount > 0 && (
+                  <span className={styles.moreShotsBadge}>+{extraCount}</span>
+                )}
               </div>
             )}
           </div>
         )}
-        <div>
-          <a href={href} target="_blank" rel="noreferrer">View PDF</a>
-          <a href={href} download>Download</a>
-          {screenshots.length > 0 && (
-            <button type="button" onClick={onOpenGallery}>View All Screenshots</button>
+
+        {/* Actions */}
+        <div className={styles.cardActions}>
+          <a
+            href={normalizeHref(href)}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.viewAction}
+          >
+            View PDF
+          </a>
+          <a
+            href={normalizeHref(href)}
+            download
+            className={styles.downloadAction}
+          >
+            Download
+          </a>
+          {hasScreenshots && (
+            <button
+              type="button"
+              onClick={onOpenGallery}
+              className={`${styles.galleryOpenAction} ${styles.viewAction}`}
+            >
+              View All Screenshots
+            </button>
           )}
         </div>
       </article>
     );
   }
 );
+
+BlogCard.displayName = "BlogCard";
 
 export default BlogCard;

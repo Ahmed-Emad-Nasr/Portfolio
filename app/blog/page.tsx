@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import BlogPageClient from "./page-client";
 import { caseEvidenceLibrary } from "@/app/core/data";
-import Head from "next/head";
 
 const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
 
@@ -21,11 +20,16 @@ const pdfResources = [
   ...caseEvidenceLibrary,
 ];
 
+// ✅ FIX: In Next.js App Router, structured data goes in generateMetadata or
+// as a <script> inside the page component — NOT via next/head (that's Pages Router only).
+// We inject JSON-LD via a <script> tag directly in the JSX below instead.
+
 const casesStructuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   name: "Cybersecurity Blog - SOC Incident Reports, DFIR Writeups & Threat Analysis",
-  description: "Comprehensive collection of SOC incident response reports, cybersecurity writeups, and threat analysis cases with screenshots and documentation",
+  description:
+    "Comprehensive collection of SOC incident response reports, cybersecurity writeups, and threat analysis cases with screenshots and documentation",
   url: `${SITE_BASE_URL}/blog`,
   publisher: {
     "@type": "Person",
@@ -36,18 +40,20 @@ const casesStructuredData = {
     "@type": "DigitalDocument",
     "@id": `${SITE_BASE_URL}/blog#pdf-${index + 1}`,
     name: item.title,
-    description: (caseEvidenceLibrary[index] as any)?.description || item.title,
+    description:
+      (caseEvidenceLibrary[index] as any)?.description || item.title,
     genre: item.type,
     contentUrl: toAbsoluteAssetUrl(item.href),
     encodingFormat: "application/pdf",
-    author: {
-      "@type": "Person",
-      name: "Ahmed Emad Nasr",
-    },
-    datePublished: (caseEvidenceLibrary[index] as any)?.date || "2025-01-01",
-    keywords: (caseEvidenceLibrary[index] as any)?.tags?.join(", ") || "cybersecurity, incident response",
+    author: { "@type": "Person", name: "Ahmed Emad Nasr" },
+    datePublished:
+      (caseEvidenceLibrary[index] as any)?.date || "2025-01-01",
+    keywords:
+      (caseEvidenceLibrary[index] as any)?.tags?.join(", ") ||
+      "cybersecurity, incident response",
   })),
-  keywords: "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, security reports",
+  keywords:
+    "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, security reports",
 };
 
 const breadcrumbSchema = {
@@ -82,9 +88,7 @@ export const metadata: Metadata = {
     "security documentation",
     "LetsDefend simulations",
   ],
-  alternates: {
-    canonical: "/blog",
-  },
+  alternates: { canonical: "/blog" },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -115,21 +119,19 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <>
-      <Head>
-        {/* Dynamic meta tags for each case */}
-        {pdfResources.map((item, idx) => (
-          <meta key={item.id} name="description" content={typeof (item as any).description === "string" ? (item as any).description : item.title} />
-        ))}
-        {/* Structured data for SEO */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(casesStructuredData) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        />
-      </Head>
+      {/* ✅ App Router way: inject JSON-LD structured data directly */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(casesStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       <BlogPageClient />
     </>
   );
