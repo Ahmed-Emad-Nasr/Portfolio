@@ -54,8 +54,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  color: inherit;
+  background: rgba(20, 20, 20, 0.85); /* خلفية داكنة جدًا */
+  color: #fff; /* نص أبيض واضح */
   font-size: 1.1rem;
   font-weight: 800;
 }
@@ -63,7 +63,7 @@
 .filter-btn:hover {
   transform: translateY(-1px);
   border-color: rgba(var(--main-color-rgb), 0.5);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.14); /* زيادة وضوح الخلفية عند التحويم */
   box-shadow: none;
 }
 
@@ -78,13 +78,14 @@
 
 .filter-btn.active {
   background: var(--main-color);
-  color: var(--bg-color);
+  color: #fff; /* نص أبيض فوق الأحمر الأساسي */
   border-color: var(--main-color);
   box-shadow: none;
 }
 
 .filter-btn.active .filter-count {
-  background: rgba(0, 0, 0, 0.12);
+  background: #fff; /* خلفية بيضاء واضحة */
+  color: #222; /* نص داكن فوق الأبيض */
 }
 
 .section-summary {
