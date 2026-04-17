@@ -256,7 +256,7 @@ const SenseiHome = memo(function SenseiHome() {
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>
             <a
-              href="mailto:ahmedemadnasr@gmail.com"
+              href="mailto:ahmed.em.nasr@gmail.com"
               className={`${styles.btn} ${styles.btnEmail}`}
               aria-label="Email Me"
               style={{ marginLeft: 8 }}
