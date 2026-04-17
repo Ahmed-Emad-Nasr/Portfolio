@@ -14,7 +14,7 @@ import "yet-another-react-lightbox/styles.css";
 import styles from "./sensei-art.module.css";
 import MotionInView from "@/app/core/components/MotionInView";
 
-const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
+const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false, loading: () => <div>Loading gallery...</div> });
 
 interface GalleryImage { src: string; thumb: string; }
 interface CertificationMeta { title: string; issuer: string; date: string; verifyUrl: string; }

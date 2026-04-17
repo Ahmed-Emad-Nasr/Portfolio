@@ -51,6 +51,10 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const extraCount = Math.max(0, screenshots.length - 2);
     const difficultyKey = difficulty?.toLowerCase() as "easy" | "medium" | "hard" | undefined;
 
+    // Memoize handlers for tags/tools
+    const handleTagClick = React.useCallback((tag: string) => onTagClick?.(tag), [onTagClick]);
+    const handleToolClick = React.useCallback((tool: string) => onToolClick?.(tool), [onToolClick]);
+
     return (
       <article
         className={[
@@ -106,7 +110,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                 key={tag}
                 type="button"
                 className={styles.tagButtonSmall}
-                onClick={() => onTagClick?.(tag)}
+                onClick={() => handleTagClick(tag)}
                 title={`Search for ${tag}`}
               >
                 #{tag}
@@ -126,7 +130,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                 key={tool}
                 type="button"
                 className={styles.toolButtonSmall}
-                onClick={() => onToolClick?.(tool)}
+                onClick={() => handleToolClick(tool)}
                 title={`Filter by ${tool}`}
               >
                 {tool}

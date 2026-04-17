@@ -19,6 +19,18 @@ const ACTIVE_CLASS   = styles.active;
 const BLOG_PATH = "/Portfolio/blog";
 
 const SenseiHeader = memo(function SenseiHeader() {
+    // Prefetch important routes
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const prefetchLinks = ["/Portfolio", "/Portfolio/blog"];
+        prefetchLinks.forEach((href) => {
+          const link = document.createElement("link");
+          link.rel = "prefetch";
+          link.href = href;
+          document.head.appendChild(link);
+        });
+      }
+    }, []);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const {
