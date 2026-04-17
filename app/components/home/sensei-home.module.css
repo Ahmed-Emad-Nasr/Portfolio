@@ -1,3 +1,22 @@
+.btnEmail {
+  background: linear-gradient(135deg, #7b2ff2 0%, #1a1a2e 100%);
+  color: #fff;
+  border: 2px solid #7b2ff2;
+  box-shadow: 0 8px 24px rgba(123, 47, 242, 0.18), 0 2px 8px rgba(26, 26, 46, 0.18);
+  transition: background 0.22s, color 0.22s, border 0.22s, transform 0.18s, box-shadow 0.22s;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.btnEmail:hover {
+  background: linear-gradient(135deg, #1a1a2e 0%, #7b2ff2 100%);
+  color: #fff;
+  border-color: #fff;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(123, 47, 242, 0.28), 0 4px 16px rgba(26, 26, 46, 0.22);
+}
+.btnEmail:active {
+  transform: scale(0.98);
+}
 /* Remove glass background, border, shadow, and blur for Home section only (must use :global for section) */
 :global(section.noBg) {
   background: none !important;

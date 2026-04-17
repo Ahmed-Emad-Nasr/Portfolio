@@ -11,7 +11,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
-import { faUserSecret, faFilePdf, faBriefcase} from "@fortawesome/free-solid-svg-icons";
+import { faUserSecret, faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { enhancedSkills, enhancedStats, homeSummaryParagraph } from "@/app/core/data";
@@ -242,13 +242,6 @@ const SenseiHome = memo(function SenseiHome() {
           </div>
           <div className={styles.homeButton}>
             <a
-              href="#Contact"
-              className={BTN_1_CLASS}
-              onClick={handleHireMeClick}
-            >
-              Hire Me <FontAwesomeIcon icon={faUserSecret} />
-            </a>
-            <a
               href="Assets/cv/AhmedEmadNasr_CV.pdf"
               download="AhmedEmadNasr_CV.pdf"
               className={cvBtnClass}
@@ -261,6 +254,14 @@ const SenseiHome = memo(function SenseiHome() {
               className={BTN_PROJECTS_CLASS}
             >
               View Projects <FontAwesomeIcon icon={faBriefcase} />
+            </a>
+            <a
+              href="mailto:ahmedemadnasr@gmail.com"
+              className={`${styles.btn} ${styles.btnEmail}`}
+              aria-label="Email Me"
+              style={{ marginLeft: 8 }}
+            >
+              Email Me <FontAwesomeIcon icon={faEnvelope} />
             </a>
           </div>
           <p className={styles.ctaHint}>Best next step: share your goal and receive a tailored response within 24 hours.</p>
