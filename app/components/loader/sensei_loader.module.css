@@ -1,7 +1,7 @@
 /*
  * File: sensei_loader.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Loader overlay styles and fade-out behavior
+ * Purpose: Loader overlay styles
  */
 
 .loader {
@@ -14,8 +14,7 @@
   background: radial-gradient(circle at center, rgba(var(--main-color-rgb), 0.08), transparent 42%), #000;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.22s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, visibility;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .loader.fadeOut {
@@ -23,54 +22,7 @@
   visibility: hidden;
 }
 
-.loaderContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-}
-
 .spinner {
   width: 250px;
   height: 250px;
-}
-
-.loadingCopy {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.55rem;
-  color: var(--text-color);
-  text-align: center;
-}
-
-.loadingLabel {
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.loadingHint {
-  font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.loadingBar {
-  width: min(22rem, 70vw);
-  height: 0.45rem;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(var(--main-color-rgb), 0.18), rgba(var(--main-color-rgb), 0.9), rgba(var(--main-color-rgb), 0.18));
-  background-size: 200% 100%;
-  animation: shimmer 1.2s linear infinite;
-  box-shadow: none;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
 }

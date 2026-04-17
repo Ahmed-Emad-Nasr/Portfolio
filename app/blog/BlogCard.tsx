@@ -51,7 +51,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const extraCount = Math.max(0, screenshots.length - 2);
     const difficultyKey = difficulty?.toLowerCase() as "easy" | "medium" | "hard" | undefined;
 
-    // Memoize handlers for tags/tools
     const handleTagClick = React.useCallback((tag: string) => onTagClick?.(tag), [onTagClick]);
     const handleToolClick = React.useCallback((tool: string) => onToolClick?.(tool), [onToolClick]);
 
@@ -60,12 +59,11 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
         className={[
           styles.pdfCard,
           hasScreenshots ? styles.caseCardLarge : "",
-          styles.fadeInUp,
+          /* تم إزالة styles.fadeInUp لتحسين الأداء */
         ]
           .filter(Boolean)
           .join(" ")}
       >
-        {/* Card head: type badge + screenshot count */}
         <div className={styles.caseCardHead}>
           <p className={styles.badge}>{type}</p>
           {hasScreenshots && (
@@ -73,7 +71,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           )}
         </div>
 
-        {/* Title with tooltip */}
         <h3 className={styles.cardTitle} tabIndex={0} aria-label={title}>
           {title}
           {description && (
@@ -81,15 +78,12 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           )}
         </h3>
 
-        {/* Description */}
         {description && (
           <p className={styles.cardDescription}>{description}</p>
         )}
 
-        {/* Platform */}
         <p className={styles.cardPlatform}>{platform}</p>
 
-        {/* Metadata badges */}
         <div className={styles.caseMetadata}>
           {difficultyKey && (
             <span
@@ -102,7 +96,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           {readTime && <span className={styles.badge}>{readTime} min</span>}
         </div>
 
-        {/* Tags */}
         {tags && tags.length > 0 && (
           <div className={styles.tagsListInline}>
             {tags.slice(0, 3).map((tag) => (
@@ -122,7 +115,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           </div>
         )}
 
-        {/* Tools */}
         {tools && tools.length > 0 && (
           <div className={styles.toolsListCompact}>
             {tools.slice(0, 2).map((tool) => (
@@ -142,7 +134,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           </div>
         )}
 
-        {/* Screenshots */}
         {primaryScreenshot && (
           <div className={styles.screenshotArea}>
             <a
@@ -192,7 +183,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           </div>
         )}
 
-        {/* Actions */}
         <div className={styles.cardActions}>
           <a
             href={normalizeHref(href)}

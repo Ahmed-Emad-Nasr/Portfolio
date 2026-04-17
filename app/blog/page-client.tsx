@@ -1,8 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { fadeUp } from "@/app/core/motion";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";

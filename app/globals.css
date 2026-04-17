@@ -1,20 +1,21 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme
+ * @description Global CSS - Premium Cyber & SOC Theme (Optimized)
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
---bg-color: #0d0d0d; /* Charcoal black */
+  --bg-color: #0d0d0d;
   --second-bg-color: #141414;
   --text-color: #f2f2f2;
   --text-muted: #9e9e9e;
-  --main-color: #ff3333; /* Alert Red */
+  --main-color: #ff3333;
   --main-color-rgb: 255, 51, 51;
-  --accent-color: #ff9900; /* Warning Orange */
+  --accent-color: #ff9900;
   --accent-color-rgb: 255, 153, 0;
   --surface-card-bg: linear-gradient(120deg, rgba(20, 20, 20, 0.85) 60%, rgba(255, 51, 51, 0.05) 100%);
   --surface-card-border: rgba(var(--main-color-rgb), 0.15);
+  
   /* Geometry */
   --radius-card: 20px;
   --radius-card-sm: 12px;
@@ -28,7 +29,7 @@
   /* Optimized Motion Curves */
   --motion-fast: 150ms;
   --motion-normal: 300ms;
-  --motion-ease: cubic-bezier(0.25, 1, 0.5, 1); /* Smoother deceleration */
+  --motion-ease: cubic-bezier(0.25, 1, 0.5, 1);
   
   /* Blurs */
   --ui-blur: 12px;
@@ -67,7 +68,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
 }
 
 /* --- Cinematic Text Selection --- */
@@ -78,8 +78,9 @@ body {
 }
 
 /*--------- 3. Interactive Elements ---------*/
+/* استبدال transition: all بخصائص محددة لتحسين الأداء */
 a, button, input, textarea, select, summary {
-  transition: all var(--motion-normal) var(--motion-ease);
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
 }
 
 button {
@@ -134,7 +135,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   color: #000;
   font-size: 1.4rem;
   font-weight: 800;
-  transition: top var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+  transition: top var(--motion-fast) ease, transform var(--motion-fast) ease;
 }
 
 .skip-link:focus-visible {
@@ -186,24 +187,7 @@ section.glass, .glass-card {
   transform: translateY(-3px);
 }
 
-/*--------- 7. Animations ---------*/
-@keyframes sectionFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes cyberPulse {
-  0%, 100% { opacity: 0.8; box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.2); }
-  50% { opacity: 1; box-shadow: 0 0 25px rgba(var(--main-color-rgb), 0.5); }
-}
-
-/*--------- 8. Custom Scrollbar ---------*/
+/*--------- 7. Custom Scrollbar ---------*/
 ::-webkit-scrollbar {
   width: 0.8rem;
 }
@@ -222,7 +206,7 @@ section.glass, .glass-card {
   background: rgba(var(--main-color-rgb), 0.8);
 }
 
-/*--------- 9. Footer ---------*/
+/*--------- 8. Footer ---------*/
 .site-footer {
   padding: 0 6% 3.2rem;
   margin-top: auto;
@@ -248,6 +232,7 @@ section.glass, .glass-card {
 .site-footer__inner a {
   color: var(--main-color);
   font-weight: 700;
+  transition: color var(--motion-fast) ease, text-shadow var(--motion-fast) ease;
 }
 
 .site-footer__inner a:hover {
@@ -255,7 +240,7 @@ section.glass, .glass-card {
   text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.8);
 }
 
-/*--------- 10. Responsive Breakpoints ---------*/
+/*--------- 9. Responsive Breakpoints ---------*/
 @media (max-width: 991px) {
   section {
     padding: 4rem 4% 4rem;
@@ -279,75 +264,4 @@ section.glass, .glass-card {
   :root {
     --card-blur: 8px; /* Less demanding blur on mobile */
   }
-  /*--------- 11. Cyber Background Animations ---------*/
-
-/* 1. CRT Scanlines Effect (خطوط الشاشة) */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  /* بيعمل خطوط شفافة جداً بلون الـ Main Color */
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0) 50%,
-    rgba(var(--main-color-rgb), 0.04) 50%,
-    rgba(var(--main-color-rgb), 0.04)
-  );
-  background-size: 100% 4px;
-  z-index: 9999; /* بيكون فوق كل حاجة بس مابياثرش عالكليك */
-  pointer-events: none;
-  animation: scanDrift 8s linear infinite;
-}
-
-/* 2. Cyber Glow Orb (الإضاءة العائمة في الخلفية) */
-body::after {
-  content: "";
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200vw;
-  height: 200vh;
-  background: radial-gradient(circle at 50% 50%, rgba(var(--main-color-rgb), 0.07), transparent 60%);
-  z-index: -1; /* تحت كل العناصر */
-  pointer-events: none;
-  animation: orbFloat 15s ease-in-out infinite alternate;
-}
-/* --- Keyframes --- */
-@keyframes scanDrift {
-  0% { 
-    background-position: 0 0; 
-  }
-  100% { 
-    background-position: 0 100vh; 
-  }
-}
-
-@keyframes orbFloat {
-  0% { 
-    transform: translate(0, 0) scale(1); 
-  }
-  33% { 
-    transform: translate(3vw, -5vh) scale(1.1); 
-  }
-  66% { 
-    transform: translate(-4vw, 4vh) scale(0.9); 
-  }
-  100% { 
-    transform: translate(0, 0) scale(1); 
-  }
-}
-
-/* السماح للأنيميشن دي إنها تشتغل حتى لو المستخدم مقلل الحركة (حسب طلبك القديم) */
-@supports (animation-play-state: running) {
-  @media (prefers-reduced-motion: reduce) {
-    body::before,
-    body::after {
-      animation-duration: 20s !important; /* بنبطأها بس مش بنقفلها */
-    }
-  }
-}
 }

@@ -1,7 +1,7 @@
 /*
  * File: sensei-header.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Header/navbar styles (desktop and mobile menu)
+ * Purpose: Header/navbar styles (Optimized for performance)
  */
 
 .header {
@@ -24,15 +24,12 @@
   gap: 0.75rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.22);
-  box-shadow: none;
-  will-change: transform;
-  overflow: hidden;
-  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
+  /* Simplified transition - removed will-change for performance */
+  transition: transform 0.3s ease;
 }
 
 .scrolled {
-  transform: translateX(-50%) scale(0.95);
-  box-shadow: none;
+  transform: translateX(-50%) scale(0.95) !important;
 }
 
 .header::before {
@@ -47,35 +44,6 @@
   pointer-events: none;
 }
 
-
-.logo {
-  font-size: 1.85rem;
-  font-family: "Yuji Syuku", serif;
-  color: var(--main-color);
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  cursor: pointer;
-  white-space: nowrap;
-  user-select: none;
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.22s ease, filter 0.22s ease;
-  will-change: transform;
-  padding: 0.2rem 0.35rem;
-  border-radius: 0.7rem;
-}
-
-.logo:hover {
-  color: var(--main-color);
-  transform: translateY(-2px);
-  text-shadow: none;
-  filter: brightness(1.05);
-}
-
-.logo:focus-visible {
-  outline: 2px solid var(--main-color);
-  outline-offset: 3px;
-  border-radius: 0.6rem;
-}
-
 .navbar {
   display: flex;
   align-items: center;
@@ -88,6 +56,7 @@
 }
 
 .blogLink {
+  margin-left: 0.5rem;
   flex-shrink: 0;
   white-space: nowrap;
   z-index: 1003;
@@ -100,18 +69,12 @@
   border-radius: 1.6rem;
   font-size: 1.38rem;
   letter-spacing: 0.04em;
-  text-transform: none;
   font-weight: 800;
   color: color-mix(in srgb, var(--main-color) 86%, white 14%);
   background: rgba(255,255,255,0.04);
   border: 2px dashed rgba(var(--main-color-rgb), 0.66);
-  box-shadow: none;
-  transition:
-    transform var(--motion-fast) var(--motion-ease),
-    box-shadow var(--motion-normal) var(--motion-ease),
-    background-color var(--motion-normal) var(--motion-ease),
-    border-color var(--motion-normal) var(--motion-ease),
-    color var(--motion-normal) var(--motion-ease);
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
   cursor: pointer;
   outline: none;
 }
@@ -125,17 +88,13 @@
   }
 }
 
-.blogLink:hover, .blogLink:focus-visible {
-  transform: translateY(-2px) scale(1.04);
-  color: #fff;
-  background: var(--main-color);
-  border-color: var(--main-color);
-  box-shadow: 0 16px 32px 0 rgba(var(--main-color-rgb),0.13), 0 2px 12px 0 rgba(59,130,246,0.10);
+.blogLink:hover, .blogLink:focus-visible, .blogLink.active {
+  /* Replaced Framer Motion hover effect with CSS */
+  transform: scale(1.06);
+  background-color: var(--main-color);
+  color: var(--bg-color); /* assuming this matches your #0f172a intent */
+  border-style: solid;
 }
-
-
-
-
 
 .navbar a {
   font-size: 1.35rem;
@@ -149,20 +108,17 @@
   align-items: center;
   gap: 0.5rem;
   text-transform: capitalize;
-  position: relative;
+  text-decoration: none;
   background: transparent;
-  transition:
-    background-color var(--motion-normal) var(--motion-ease),
-    color var(--motion-normal) var(--motion-ease),
-    box-shadow var(--motion-normal) var(--motion-ease),
-    transform var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-normal) var(--motion-ease);
-  will-change: transform, box-shadow;
-  border: 1px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-
-
+.navbar a:hover, .navbar a.active {
+  /* Replaced Framer Motion hover effect with CSS */
+  transform: scale(1.08);
+  background-color: rgba(var(--main-color-rgb), 0.09);
+  color: var(--main-color);
+}
 
 .MenuIcon {
   display: none;
@@ -178,8 +134,7 @@
   min-width: 48px;
   min-height: 48px;
   border-radius: 14px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-  transition: transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  transition: background-color 0.2s ease;
 }
 
 .MenuIcon span {
@@ -187,15 +142,8 @@
   height: 3px;
   background: var(--main-color);
   border-radius: 10px;
-  transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
+  transition: transform 0.3s ease, opacity 0.3s ease;
   transform-origin: center;
-}
-
-.MenuIcon:hover {
-  background: rgba(var(--main-color-rgb), 0.08);
-  border-color: rgba(var(--main-color-rgb), 0.35);
-  box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.12), 0 8px 18px rgba(0, 0, 0, 0.2);
-  transform: translateY(-1px);
 }
 
 .MenuIcon.active span:nth-child(1) {
@@ -219,17 +167,13 @@
     width: min(760px, calc(100% - 1.4rem));
     padding: 0.78rem 1rem;
     border-radius: 22px;
-    overflow: visible;
     background:
       linear-gradient(180deg, rgba(18, 22, 28, 0.92), rgba(7, 10, 14, 0.88)),
       radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.12), transparent 40%);
   }
 
-  .logo { font-size: 1.9rem; }
-
   .blogLink {
     order: 1;
-    position: relative;
     margin-left: auto;
     margin-right: 0.45rem;
     padding: 0.62rem 0.92rem;
@@ -237,7 +181,7 @@
     min-height: 40px;
   }
 
-  .MenuIcon { display: flex; }
+  .MenuIcon { display: flex; order: 2; }
 
   .navbar {
     position: absolute;
@@ -253,17 +197,13 @@
     padding: 1.2rem 0.85rem;
     border-radius: 22px;
     border: 1px solid rgba(var(--main-color-rgb), 0.26);
-    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.64), 0 0 12px rgba(var(--main-color-rgb), 0.08);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.64);
     
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translate3d(0, -10px, 0) scale(0.98);
-    will-change: opacity, transform;
-    transition:
-      opacity var(--motion-normal) var(--motion-ease),
-      transform var(--motion-normal) var(--motion-ease),
-      visibility 0s linear var(--motion-normal);
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
     display: flex;
   }
 
@@ -271,11 +211,8 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translate3d(0, 0, 0) scale(1);
-    transition:
-      opacity var(--motion-normal) var(--motion-ease),
-      transform var(--motion-normal) var(--motion-ease),
-      visibility 0s linear 0s;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0s;
   }
 
   .backdrop {
@@ -301,22 +238,11 @@
     border-color: rgba(255, 255, 255, 0.05);
   }
 
-  .navbar a::after {
-    display: none;
-  }
-
   .navbar a:hover,
   .navbar a.active {
     background: linear-gradient(180deg, rgba(var(--main-color-rgb), 0.94), rgba(var(--main-color-rgb), 0.82));
     color: var(--bg-color);
-    border-color: rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 18px rgba(var(--main-color-rgb), 0.26);
-  }
-
-  .MenuIcon {
-    min-width: 52px;
-    min-height: 52px;
-    order: 2;
+    transform: scale(1.02); /* Less aggressive scale on mobile */
   }
 }
 
@@ -329,15 +255,9 @@
     gap: 0.75rem;
   }
 
-  .logo {
-    font-size: 1.7rem;
-    letter-spacing: 1px;
-  }
-
   .blogLink {
     margin-right: 0.3rem;
     font-size: 1.02rem;
-    letter-spacing: 0.03em;
     padding: 0.58rem 0.8rem;
   }
 
@@ -351,6 +271,4 @@
     font-size: 1.5rem;
     padding: 0.65rem 0.9rem;
   }
-
 }
-

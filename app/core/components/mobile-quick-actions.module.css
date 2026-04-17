@@ -29,8 +29,8 @@
   font-size: 0.92rem;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, background 0.22s ease;
-  will-change: transform, box-shadow;
+  /* Simplified transition and removed will-change */
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .btn:active {
@@ -40,12 +40,7 @@
 .primary {
   color: #032016;
   background: linear-gradient(140deg, #8ef7cb, #63dca8);
-  box-shadow: none;
-  animation: quickCtaPulse 2.6s ease-in-out infinite;
-}
-
-.primary:active {
-  box-shadow: none;
+  /* Removed the useless infinite pulse animation */
 }
 
 .secondary {
@@ -73,19 +68,10 @@
 .btn:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 1px;
-  box-shadow: none;
 }
 
 .primary:focus-visible {
   outline-color: #032016;
-}
-
-@keyframes quickCtaPulse {
-  0%,
-  50%,
-  100% {
-    box-shadow: none;
-  }
 }
 
 @media (max-width: 768px) {
