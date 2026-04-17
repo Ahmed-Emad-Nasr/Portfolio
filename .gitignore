@@ -60,3 +60,5 @@ yarn.lock
 
 # scripts output (if any)
 /scripts/*.log
+*.swp
+*.tmp
