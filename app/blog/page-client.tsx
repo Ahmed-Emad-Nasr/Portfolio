@@ -97,6 +97,20 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "email-analysis-room-report": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Email_Analysis_Room/${i + 1}.png`),
   "set-tool-writeup-pdf": buildScreenshotRange("SET TOOL Writeup", 32, 46, [36, 39]),
   "set-tool-writeup-docx": buildScreenshotRange("SET TOOL Writeup", 32, 46, [36, 39]),
+  "usb-forensics-report": [
+    "Assets/Cases/Usb Forencics/Screenshot (3).png",
+    "Assets/Cases/Usb Forencics/Screenshot (4).png",
+    "Assets/Cases/Usb Forencics/Screenshot (5).png",
+    "Assets/Cases/Usb Forencics/Screenshot (6).png",
+    "Assets/Cases/Usb Forencics/Screenshot (7).png",
+    "Assets/Cases/Usb Forencics/Screenshot (8).png",
+    "Assets/Cases/Usb Forencics/Screenshot (9).png",
+    "Assets/Cases/Usb Forencics/Screenshot (10).png",
+    "Assets/Cases/Usb Forencics/Screenshot (11).png",
+    "Assets/Cases/Usb Forencics/Screenshot (13).png",
+    "Assets/Cases/Usb Forencics/Screenshot (14).png",
+    "Assets/Cases/Usb Forencics/Screenshot (15).png",
+  ],
 };
 
 // ─── Pure helpers (stable references, safe to use in useCallback deps) ───────
