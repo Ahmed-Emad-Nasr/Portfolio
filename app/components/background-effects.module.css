@@ -1,60 +1,55 @@
-@media (max-width: 767px), (pointer: coarse) {
-  .bubble, .meteor {
-    animation: none !important;
-    opacity: 0 !important;
-    background: none !important;
-  }
-}
+/*
+ * File: background-effects.module.css
+ * Purpose: High-performance background glow effects.
+ */
+
 .bgEffects {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  /* إضافة توهج خفيف جداً في مركز الشاشة */
+  background: radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.5) 0%, transparent 100%);
 }
 
-
-.bubble {
+/* استخدام radial-gradient بدلاً من filter: blur و box-shadow 
+  يعطي نفس النعومة ولكن باستهلاك موارد شبه معدوم 
+*/
+.glowOrb {
   position: absolute;
-  /* كل فقاعة تبدأ من نقطة عشوائية */
-  background: radial-gradient(circle, var(--bubble-main, #e53935) 0%, #e5393522 70%, transparent 100%);
   border-radius: 50%;
-  filter: blur(3.2px) brightness(1.1);
-  box-shadow: 0 0 32px 8px var(--bubble-main, #e53935), 0 0 64px 16px #e5393522;
-  animation: bubbleRandomMove linear infinite;
-  transition: background 0.3s;
 }
 
-
-@keyframes bubbleRandomMove {
-  0% {
-    /* تبدأ من مكانها */
-    transform: scale(1);
-  }
-  100% {
-    /* تتحرك في اتجاه عشوائي */
-    transform: translate(var(--bubble-x, 0vw), var(--bubble-y, 0vh)) scale(1.13);
-  }
+/* توهج أحمر كبير أعلى اليسار */
+.orb1 {
+  top: -15%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  min-width: 400px;
+  min-height: 400px;
+  background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07) 0%, transparent 70%);
 }
 
-@keyframes bubbleUp {
-  0% {
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    transform: translateY(-110vh) scale(1.1);
-  }
+/* توهج برتقالي (Accent) أسفل اليمين */
+.orb2 {
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  min-width: 500px;
+  min-height: 500px;
+  background: radial-gradient(circle, rgba(var(--accent-color-rgb), 0.05) 0%, transparent 70%);
 }
 
-.meteor {
-  position: absolute;
-  width: 96px;
-  height: 2.5px;
-  background: linear-gradient(90deg, #fff 0%, #00eaffcc 60%, #fff0 100%);
-  border-radius: 2.5px;
-  opacity: 0.22;
-  box-shadow: 0 0 16px 2px #00eaff66, 0 0 32px 8px #fff2;
-  pointer-events: none;
-  transition: all 1.2s linear;
-  filter: blur(0.5px) brightness(1.3);
+/* توهج أحمر هادئ جداً في المنتصف للعمق */
+.orb3 {
+  top: 30%;
+  left: 20%;
+  width: 70vw;
+  height: 70vw;
+  min-width: 600px;
+  min-height: 600px;
+  background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.03) 0%, transparent 70%);
 }
