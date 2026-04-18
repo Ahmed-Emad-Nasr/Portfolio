@@ -4,6 +4,7 @@
  * File: MotionInView.tsx
  * Author: Ahmed Emad Nasr
  * Purpose: Reusable in-view motion wrapper with configurable viewport behavior
+ * Optimized: Cinematic motion curves, actual scroll-triggered reveals, GPU-accelerated.
  */
 
 import React, { memo } from "react";
@@ -14,58 +15,46 @@ type MotionInViewProps = MotionProps & {
   className?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const MAX_REVEAL_DURATION = 0.28;
-const MAX_REVEAL_DELAY = 0.12;
-
-const softenTransition = (
-  transition: MotionProps["transition"] | undefined,
-): MotionProps["transition"] | undefined => {
-  if (!transition || typeof transition !== "object" || Array.isArray(transition)) {
-    return transition;
-  }
-
-  const nextTransition = { ...transition } as Record<string, unknown>;
-
-  if (typeof nextTransition.duration === "number") {
-    nextTransition.duration = Math.min(nextTransition.duration, MAX_REVEAL_DURATION);
-  }
-
-  if (typeof nextTransition.delay === "number") {
-    nextTransition.delay = Math.min(nextTransition.delay, MAX_REVEAL_DELAY);
-  }
-
-  return nextTransition as MotionProps["transition"];
-};
+// 1. تحديد نوع المصفوفة بـ 4 أرقام بالضبط لحل مشكلة الـ TypeScript Build
+const CINEMATIC_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const DEFAULT_DURATION = 0.6;
 
 const MotionInView = memo<MotionInViewProps>(({
   children,
   className,
+  initial,
+  whileInView,
+  viewport,
+  transition,
+  variants,
+  style,
   ...rest
 }) => {
-  const {
-    transition,
-    style,
-    initial: _initial,
-    whileInView: _whileInView,
-    animate: _animate,
-    exit: _exit,
-    variants: _variants,
-    ...motionRest
-  } = rest;
-  const resolvedTransition = softenTransition(transition as MotionProps["transition"]) ?? {
-    duration: 0.24,
-    ease: [0.22, 1, 0.36, 1],
+  // 2. دمج الأنيميشن المخصص مع الـ Cinematic Defaults بذكاء
+  const resolvedTransition: MotionProps["transition"] = {
+    duration: DEFAULT_DURATION,
+    ease: CINEMATIC_EASE,
+    ...(typeof transition === "object" ? transition : {}),
   };
 
+  // 3. حركة افتراضية (Fade Up) ناعمة جداً في حال لم يتم تمرير خصائص
+  const defaultInitial = { opacity: 0, y: 15 };
+  const defaultWhileInView = { opacity: 1, y: 0 };
+
   return (
-    // Use mount fade so late-loaded sections still animate reliably.
     <motion.div
       className={className}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      // تفعيل خصائص الـ Variants لو موجودة، غير كده نستخدم الديفولت
+      initial={variants ? initial : (initial ?? defaultInitial)}
+      // استخدام whileInView الحقيقية عشان العنصر يظهر بس لما اليوزر يوصّله
+      whileInView={variants ? whileInView : (whileInView ?? defaultWhileInView)}
+      // margin: "-40px" معناه إن العنصر يبدأ حركة لما يظهر منه 40 بيكسل على الشاشة
+      viewport={viewport ?? { once: true, margin: "-40px" }}
       transition={resolvedTransition}
-      style={{ ...(style as React.CSSProperties), willChange: "opacity" }}
-      {...motionRest}
+      variants={variants}
+      // تفعيل كارت الشاشة للحركة والشفافية
+      style={{ ...style, willChange: "opacity, transform" }}
+      {...rest}
     >
       {children}
     </motion.div>

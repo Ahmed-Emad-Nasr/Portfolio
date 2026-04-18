@@ -35,10 +35,13 @@
   --shadow-glow: 0 0 15px rgba(var(--main-color-rgb), 0.15);
   --shadow-glow-hover: 0 0 25px rgba(var(--main-color-rgb), 0.3);
   
-  /* Optimized Motion Curves */
-  --motion-fast: 150ms;
-  --motion-normal: 300ms;
-  --motion-ease: cubic-bezier(0.25, 1, 0.5, 1);
+/* Cinematic Motion Curves */
+  --motion-fast: 250ms;   /* للمسات السريعة زي الألوان والـ Borders */
+  --motion-normal: 600ms; /* للحركات الأساسية زي الـ Hover والـ Transform */
+  --motion-slow: 900ms;   /* ممكن تستخدمه للأنيميشنز الكبيرة لو حبيت */
+  
+  /* منحنى سينمائي ناعم: بيبدأ بثقة ويبطئ جداً في النهاية للاستقرار */
+  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
   
   /* Blurs */
   --ui-blur: 12px;
@@ -259,4 +262,5 @@ section.glass, .glass-card {
   :root {
     --card-blur: 8px;
   }
+
 }

@@ -9,7 +9,7 @@ import BackgroundEffects from "@/app/components/background-effects";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Overlock} from "next/font/google";
+import { Overlock } from "next/font/google";
 import Script from "next/script";
 import { faqItems, knowledgeEducationItems } from "@/app/core/data";
 

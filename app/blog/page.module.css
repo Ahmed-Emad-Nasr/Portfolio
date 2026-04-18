@@ -6,7 +6,7 @@
 }
 
 .pdfCard {
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: box-shadow var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
   position: relative;
   overflow: hidden;
 }
@@ -30,7 +30,7 @@
   box-shadow: 0 2px 8px rgba(255, 215, 79, 0.13);
   border: 1px solid #ffe082;
   letter-spacing: 0.04em;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease);
 }
 
 .badge.difficulty-easy {
@@ -71,7 +71,7 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.18);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
   z-index: 10;
   white-space: pre-line;
 }
@@ -94,7 +94,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0.85;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  transition: opacity var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
 }
 .backToTop:hover {
   opacity: 1;
@@ -102,7 +102,7 @@
 }
 
 .galleryDialog {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
   opacity: 1;
   transform: scale(1);
 }
@@ -279,7 +279,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease);
 }
 
 .modeButton:hover {
@@ -303,7 +303,7 @@
   font-size: 1.14rem;
   display: inline-flex;
   align-items: center;
-  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease);
 }
 
 .quickLink:hover {

@@ -22,7 +22,7 @@
   color: #fff;
   border: 2px solid #7b2ff2;
   box-shadow: 0 8px 24px rgba(123, 47, 242, 0.18), 0 2px 8px rgba(26, 26, 46, 0.18);
-  transition: background 0.22s, color 0.22s, border 0.22s, transform 0.18s, box-shadow 0.22s;
+  transition: background var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease), border var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
   font-weight: 800;
   letter-spacing: 0.04em;
 }

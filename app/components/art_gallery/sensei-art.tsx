@@ -21,11 +21,11 @@ interface CertificationMeta { title: string; issuer: string; date: string; verif
 interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; meta: CertificationMeta; }
 interface GallerySkeletonProps { index: number; }
 
-const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const sectionHeaderVariants = {
   hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.16, ease: EASE_OUT } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
 };
 
 const galleryVariants = {
@@ -44,7 +44,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.14, ease: EASE_OUT },
+    transition: { duration: 0.6, ease: EASE_OUT },
   },
 };
 
@@ -162,7 +162,7 @@ const SenseiArt = memo(function SenseiArt() {
         {shouldRenderGallery ? (
           <MotionInView
             className={styles["art-gallery-content"]}
-            transition={{ duration: 0.14 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <motion.div className={styles.Gallery} variants={galleryVariants}>
               {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />)}
