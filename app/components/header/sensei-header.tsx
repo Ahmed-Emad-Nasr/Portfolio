@@ -6,7 +6,8 @@
  * Purpose: Render sticky navigation header and mobile menu behavior (Optimized)
  */
 
-import { useCallback, useMemo, memo, useEffect, useState, type MouseEvent } from "react";
+import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
+import Link from "next/link"; // إضافة Link من Next.js
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -15,22 +16,9 @@ import { usePathname } from "next/navigation";
 const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
-const BLOG_PATH = "/Portfolio/blog";
+const BLOG_PATH      = "/Portfolio/blog";
 
 const SenseiHeader = memo(function SenseiHeader() {
-  // Prefetch important routes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const prefetchLinks = ["/Portfolio", "/Portfolio/blog"];
-      prefetchLinks.forEach((href) => {
-        const link = document.createElement("link");
-        link.rel = "prefetch";
-        link.href = href;
-        document.head.appendChild(link);
-      });
-    }
-  }, []);
-
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const {
@@ -43,6 +31,7 @@ const SenseiHeader = memo(function SenseiHeader() {
     pathname === BLOG_PATH ||
     pathname.startsWith(`${BLOG_PATH}/`);
 
+  // إدارة الـ Scroll عند فتح القائمة في الموبايل
   useEffect(() => {
     if (window.innerWidth > 994) {
       document.body.style.overflow = "";
@@ -54,6 +43,7 @@ const SenseiHeader = memo(function SenseiHeader() {
     };
   }, [isMenuOpen]);
 
+  // إدارة تأثير الـ Header عند النزول بالصفحة
   useEffect(() => {
     const onScroll = () => {
       setIsScrolled(window.scrollY > 18);
@@ -96,6 +86,7 @@ const SenseiHeader = memo(function SenseiHeader() {
     [scrollToSection, setActiveSection, setIsMenuOpen]
   );
 
+  // إغلاق القائمة عند الضغط على Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMenuOpen) {
@@ -118,7 +109,8 @@ const SenseiHeader = memo(function SenseiHeader() {
       className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header}
       data-site-header="true"
     >
-      <a
+      {/* استخدام Next Link بدلاً من <a> للحصول على Prefetch و Routing سريع مجاناً */}
+      <Link
         href={BLOG_PATH}
         className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
         aria-label="Open blog page"
@@ -131,7 +123,7 @@ const SenseiHeader = memo(function SenseiHeader() {
         }}
       >
         <span className={styles.navText}>Blog</span>
-      </a>
+      </Link>
 
       <button
         type="button"

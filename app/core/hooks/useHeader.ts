@@ -19,7 +19,6 @@ import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 const SECTION_ICONS: Record<string, IconProp> = {
   Home:       faHome,
   Experience: faBook,
-  Writeups: faClipboardCheck,
   Projects:   faFolder,
   Certifications: faCertificate,
 };

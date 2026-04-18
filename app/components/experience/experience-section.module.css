@@ -24,7 +24,6 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 1rem;
-  /* background and box-shadow removed for no glass line */
 }
 
 .timeline-container { padding: 2rem 4rem; position: relative; width: 50%; z-index: 2; }
@@ -48,7 +47,8 @@
     var(--surface-card-bg);
   padding: 2.8rem; border-radius: var(--radius-card); border: 1px solid var(--surface-card-border);
   transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
-  backface-visibility: hidden; will-change: box-shadow, border-color, background-color, transform;
+  backface-visibility: hidden;
+  /* تم إزالة will-change لتوفير استهلاك الذاكرة وتحسين الأداء العام */
   position: relative; text-align: left;
   overflow: hidden;
   box-shadow: none;

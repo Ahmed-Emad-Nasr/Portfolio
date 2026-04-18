@@ -21,9 +21,6 @@ const ExperienceSection = dynamic(() => import("@/app/components/experience/expe
   loading: () => <SectionSkeleton />
 });
 
-const WriteupsSection = dynamic(() => import("@/app/components/case-studies/sensei-case-studies"), {
-  loading: () => <SectionSkeleton />
-});
 
 const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), {
   loading: () => <SectionSkeleton />
@@ -91,7 +88,6 @@ const MainClient = memo(function MainClient() {
         <HomeSection />
         <ExperienceSection />
         
-        <WriteupsSection />
         
         <ProjectsSection />
 

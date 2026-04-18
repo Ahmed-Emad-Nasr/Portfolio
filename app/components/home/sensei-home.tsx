@@ -7,11 +7,10 @@
  */
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
-
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
-import { faUserSecret, faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { enhancedSkills, enhancedStats, homeSummaryParagraph } from "@/app/core/data";
@@ -22,36 +21,13 @@ const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
 const pickVariant = <T extends string>(a: T, b: T): T => (Math.random() < 0.5 ? a : b);
 
-const SenseiHome = memo(function SenseiHome() {
-  const { handleImageClick } = useRandomMedia();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pointerRef = useRef({ x: 0, y: 0 });
-  const parallaxRafRef = useRef<number | null>(null);
-  const parallaxEnabledRef = useRef(false);
-  const [cvVariant, setCvVariant] = useState<CVVariant>("A");
+// فصل مكون الـ Availability لتحسين الأداء ومنع الـ Re-render المتكرر للـ Hero بالكامل
+const AvailabilityWidget = memo(function AvailabilityWidget() {
   const [clock, setClock] = useState(() => new Date());
 
   useEffect(() => {
     const intervalId = window.setInterval(() => setClock(new Date()), 60_000);
     return () => window.clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-    const applyCapability = () => {
-      parallaxEnabledRef.current = mediaQuery.matches;
-    };
-
-    applyCapability();
-    mediaQuery.addEventListener("change", applyCapability);
-
-    return () => {
-      mediaQuery.removeEventListener("change", applyCapability);
-      if (parallaxRafRef.current !== null) {
-        window.cancelAnimationFrame(parallaxRafRef.current);
-      }
-    };
   }, []);
 
   const availability = useMemo(() => {
@@ -76,6 +52,41 @@ const SenseiHome = memo(function SenseiHome() {
 
     return { label: "Available (Async)", hint: "Usually replies within 24h (Cairo time)", toneClass: styles.dotAsync };
   }, [clock]);
+
+  return (
+    <div className={styles.availabilityStatus}>
+      <span className={`${styles.statusDot} ${availability.toneClass}`}></span>
+      <span>{availability.label}</span>
+      <small className={styles.availabilityMeta}>{availability.hint}</small>
+    </div>
+  );
+});
+
+const SenseiHome = memo(function SenseiHome() {
+  const { handleImageClick } = useRandomMedia();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const parallaxRafRef = useRef<number | null>(null);
+  const parallaxEnabledRef = useRef(false);
+  const [cvVariant, setCvVariant] = useState<CVVariant>("A");
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    const applyCapability = () => {
+      parallaxEnabledRef.current = mediaQuery.matches;
+    };
+
+    applyCapability();
+    mediaQuery.addEventListener("change", applyCapability);
+
+    return () => {
+      mediaQuery.removeEventListener("change", applyCapability);
+      if (parallaxRafRef.current !== null) {
+        window.cancelAnimationFrame(parallaxRafRef.current);
+      }
+    };
+  }, []);
 
   const heroProofPoints = useMemo(() => {
     const preferred = [
@@ -160,29 +171,11 @@ const SenseiHome = memo(function SenseiHome() {
     element.style.setProperty("--parallax-y", "0px");
   };
 
-  const handleHireMeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    const contactSection = document.getElementById("Contact");
-    if (!contactSection) {
-      window.location.hash = "Contact";
-      return;
-    }
-
-    const header = document.querySelector("header");
-    const headerHeight = header?.getBoundingClientRect().height ?? 72;
-    const top = contactSection.getBoundingClientRect().top + window.scrollY - (headerHeight + 14);
-    window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
-  };
-
   const cvBtnClass = `${styles.btn} ${styles.cvBtn} ${cvVariant === "B" ? styles.cvBtnAlt : ""}`;
   const cvBtnLabel = cvVariant === "A" ? "Download CV" : "Get My CV";
 
   return (
-    <section
-      className={`${styles.home} noLine noBg`}
-      id="Home"
-    >
+    <section className={`${styles.home} noLine noBg`} id="Home">
       <div ref={containerRef} className={styles.container} onMouseMove={handlePointerMove} onMouseLeave={resetParallax}>
         <div className={styles.homeImg}>
           <button
@@ -202,30 +195,43 @@ const SenseiHome = memo(function SenseiHome() {
               quality={95}
               priority
               onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";
+                (e.currentTarget as HTMLImageElement).src =
+                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";
               }}
             />
           </button>
         </div>
 
         <div className={styles.homeContent}>
-          <h1><span className={styles.highlight}>Ahmed Emad Nasr</span></h1>
+          <h1>
+            <span className={styles.highlight}>Ahmed Emad Nasr</span>
+          </h1>
           <p className={styles.valueLine}>SOC Analyst focused on incident response, threat hunting, and DFIR outcomes.</p>
-          <div className={styles.availabilityStatus}>
-            <span className={`${styles.statusDot} ${availability.toneClass}`}></span>
-            <span>{availability.label}</span>
-            <small className={styles.availabilityMeta}>{availability.hint}</small>
-          </div>
-          <h2 className={styles.typingText}><span className={styles.typingHighlight} /></h2>
+          
+          <AvailabilityWidget />
+
+          <h2 className={styles.typingText}>
+            {/* دعم إمكانية الوصول: نص مخفي يُقرأ بواسطة Screen Readers */}
+            <span className={styles.srOnly}>
+              Roles: SOC Analyst, Incident Response Analyst, Malware Analyst, DFIR Engineer, Cybersecurity Instructor
+            </span>
+            {/* الأنيميشن البصري تم إخفاؤه عن الـ Screen Readers لمنع التكرار */}
+            <span className={styles.typingHighlight} aria-hidden="true" />
+          </h2>
+          
           <p>{homeSummaryParagraph}</p>
           <div className={styles.proofRow} aria-label="Key proof points">
             {heroProofPoints.map((point) => (
-              <span key={point} className={styles.proofPill}>{point}</span>
+              <span key={point} className={styles.proofPill}>
+                {point}
+              </span>
             ))}
           </div>
           <div className={styles.proofRow} aria-label="Featured expertise">
             {featuredSkills.map((skill) => (
-              <span key={skill} className={styles.proofPill}>{skill}</span>
+              <span key={skill} className={styles.proofPill}>
+                {skill}
+              </span>
             ))}
           </div>
           <div className={styles.trustStrip} aria-label="Trust proof highlights">
@@ -237,30 +243,21 @@ const SenseiHome = memo(function SenseiHome() {
             ))}
           </div>
           <div className={styles.socialIcon}>
-            <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile"><FontAwesomeIcon icon={faLinkedin} /></a>
-            <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat"><FontAwesomeIcon icon={faWhatsapp} /></a>
+            <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile">
+              <FontAwesomeIcon icon={faLinkedin} />
+            </a>
+            <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat">
+              <FontAwesomeIcon icon={faWhatsapp} />
+            </a>
           </div>
           <div className={styles.homeButton}>
-            <a
-              href="Assets/cv/AhmedEmadNasr_CV.pdf"
-              download="AhmedEmadNasr_CV.pdf"
-              className={cvBtnClass}
-              aria-label="Download CV"
-            >
+            <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download="AhmedEmadNasr_CV.pdf" className={cvBtnClass} aria-label="Download CV">
               {cvBtnLabel} <FontAwesomeIcon icon={faFilePdf} />
             </a>
-            <a
-              href="#Projects"
-              className={BTN_PROJECTS_CLASS}
-            >
+            <a href="#Projects" className={BTN_PROJECTS_CLASS}>
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>
-            <a
-              href="mailto:ahmed.em.nasr@gmail.com"
-              className={`${styles.btn} ${styles.btnEmail}`}
-              aria-label="Email Me"
-              style={{ marginLeft: 8 }}
-            >
+            <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`} aria-label="Email Me" style={{ marginLeft: 8 }}>
               Email Me <FontAwesomeIcon icon={faEnvelope} />
             </a>
           </div>

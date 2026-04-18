@@ -5,15 +5,24 @@
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
-  --bg-color: #0d0d0d;
-  --second-bg-color: #141414;
-  --text-color: #f2f2f2;
-  --text-muted: #9e9e9e;
-  --main-color: #ff3333;
-  --main-color-rgb: 255, 51, 51;
-  --accent-color: #ff9900;
-  --accent-color-rgb: 255, 153, 0;
-  --surface-card-bg: linear-gradient(120deg, rgba(20, 20, 20, 0.85) 60%, rgba(255, 51, 51, 0.05) 100%);
+  /* Deep Cyber Blue-Black Backgrounds */
+  --bg-color: #030a12;
+  --second-bg-color: #081221;
+  
+  /* Text */
+  --text-color: #e2f1ff; /* Light blueish-white */
+  --text-muted: #8ba4b8; /* Slate/blue-grey */
+  
+  /* Main Color: Cyber Cyan/Teal */
+  --main-color: #00e5ff;
+  --main-color-rgb: 0, 229, 255;
+  
+  /* Accent Color: Hacker/Neon Green */
+  --accent-color: #00ff88;
+  --accent-color-rgb: 0, 255, 136;
+
+  /* Surfaces & Borders (Dynamically uses main color) */
+  --surface-card-bg: linear-gradient(120deg, rgba(8, 18, 33, 0.85) 60%, rgba(var(--main-color-rgb), 0.08) 100%);
   --surface-card-border: rgba(var(--main-color-rgb), 0.15);
   
   /* Geometry */
@@ -72,13 +81,12 @@ body {
 
 /* --- Cinematic Text Selection --- */
 ::selection {
-  background-color: rgba(var(--main-color-rgb), 0.25);
+  background-color: rgba(var(--accent-color-rgb), 0.25);
   color: var(--text-color);
-  text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.6);
+  text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.6);
 }
 
 /*--------- 3. Interactive Elements ---------*/
-/* استبدال transition: all بخصائص محددة لتحسين الأداء */
 a, button, input, textarea, select, summary {
   transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
 }
@@ -110,7 +118,7 @@ button:active:not(:disabled) {
 }
 
 button:disabled {
-  background: var(--surface-1);
+  background: rgba(255,255,255,0.05);
   color: var(--text-muted);
   border-color: transparent;
   cursor: not-allowed;
@@ -118,7 +126,7 @@ button:disabled {
 }
 
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--main-color);
+  outline: 2px solid var(--accent-color); /* استخدام الأخضر للـ Focus بيدي شكل مميز */
   outline-offset: 3px;
   border-radius: var(--radius-card-sm);
 }
@@ -185,16 +193,16 @@ section.glass, .glass-card {
 
 ::-webkit-scrollbar-track {
   background: var(--bg-color);
-  border-left: 1px solid var(--surface-1);
+  border-left: 1px solid rgba(255,255,255,0.02);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(var(--main-color-rgb), 0.4);
+  background: rgba(var(--main-color-rgb), 0.3);
   border-radius: var(--radius-pill);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(var(--main-color-rgb), 0.8);
+  background: rgba(var(--main-color-rgb), 0.7);
 }
 
 /*--------- 8. Footer ---------*/
@@ -227,8 +235,8 @@ section.glass, .glass-card {
 }
 
 .site-footer__inner a:hover {
-  color: #fff;
-  text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.8);
+  color: var(--accent-color); /* عند تمرير الماوس يقلب أخضر */
+  text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.6);
 }
 
 /*--------- 9. Responsive Breakpoints ---------*/
@@ -248,8 +256,7 @@ section.glass, .glass-card {
 }
 
 @media (hover: none) and (pointer: coarse) {
-  /* Optimize performance for touch devices without forcing animations to stop */
   :root {
-    --card-blur: 8px; /* Less demanding blur on mobile */
+    --card-blur: 8px;
   }
 }

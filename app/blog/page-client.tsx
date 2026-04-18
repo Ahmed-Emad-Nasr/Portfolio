@@ -40,7 +40,7 @@ type GalleryState = {
   index: number;
 };
 
-// ─── Constants (module-level, never re-created) ───────────────────────────────
+// ─── Constants (module-level) ───────────────────────────────
 
 const cvResource: PdfResource = {
   id: "soc-analyst-cv",
@@ -93,8 +93,6 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "bruteforce-room-report": buildScreenshotRange("BruteForce_Room", 228, 244),
   "malicious-web-traffic-room-report": buildScreenshotRange("MaliciousWebTraffic_Room", 268, 282),
   "email-analysis-room-report": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Email_Analysis_Room/${i + 1}.png`),
-  "set-tool-writeup-pdf": buildScreenshotRange("SET TOOL Writeup", 32, 46, [36, 39]),
-  "set-tool-writeup-docx": buildScreenshotRange("SET TOOL Writeup", 32, 46, [36, 39]),
   "usb-forensics-report": [
     "Assets/Cases/Usb Forencics/Screenshot (3).png",
     "Assets/Cases/Usb Forencics/Screenshot (4).png",
@@ -122,16 +120,14 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   ],
 };
 
-// ─── Pure helpers (stable references, safe to use in useCallback deps) ───────
+// ─── Pure helpers (No window checks to prevent Hydration errors) ───────
 
 const normalizePublicHref = (href: string): string => {
-  if (typeof window === "undefined") return href;
   if (/^https?:\/\//i.test(href)) return href;
-  const path = window.location.pathname;
-  const scopePrefix =
-    path.startsWith("/Portfolio/") || path === "/Portfolio" ? "/Portfolio" : "";
+  // Use a predictable path for both SSR and CSR
+  const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
   const normalized = href.startsWith("/") ? href : `/${href}`;
-  return encodeURI(`${scopePrefix}${normalized}`);
+  return `${basePath}${normalized}`.replace(/\/\//g, "/"); // Safe format
 };
 
 const getThumbnail = (imgPath: string): string => {
@@ -168,6 +164,7 @@ export default function BlogPageClient() {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
   const [isPageReady, setIsPageReady] = useState(false);
+  
   const galleryDialogRef = useRef<HTMLDivElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
 
@@ -193,12 +190,6 @@ export default function BlogPageClient() {
       ),
     []
   );
-
-  const toolsOptions = useMemo(() => {
-    const all = new Set<string>();
-    blogPdfResources.forEach((item) => item.tools?.forEach((t) => all.add(t)));
-    return Array.from(all).sort();
-  }, []);
 
   // ── Filtered + sorted PDFs ──────────────────────────────────────────────────
 
@@ -632,7 +623,7 @@ export default function BlogPageClient() {
             </article>
           )}
 
-          {/* PDF cards grid — now using extracted BlogCard component */}
+          {/* PDF cards grid */}
           <div className={styles.pdfGrid}>
             {visiblePdfCards.map((item, idx) => (
               <BlogCard

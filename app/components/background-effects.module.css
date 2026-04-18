@@ -1,6 +1,6 @@
 /*
  * File: background-effects.module.css
- * Purpose: High-performance background glow effects.
+ * Purpose: High-performance background glow and particle effects.
  */
 
 .bgEffects {
@@ -9,19 +9,17 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  /* إضافة توهج خفيف جداً في مركز الشاشة */
-  background: radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.5) 0%, transparent 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.4) 0%, transparent 100%);
 }
 
-/* استخدام radial-gradient بدلاً من filter: blur و box-shadow 
-  يعطي نفس النعومة ولكن باستهلاك موارد شبه معدوم 
-*/
+/* =========================================
+   1. Static Glow Orbs (الخلفيات المضيئة)
+   ========================================= */
 .glowOrb {
   position: absolute;
   border-radius: 50%;
 }
 
-/* توهج أحمر كبير أعلى اليسار */
 .orb1 {
   top: -15%;
   left: -10%;
@@ -32,7 +30,6 @@
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07) 0%, transparent 70%);
 }
 
-/* توهج برتقالي (Accent) أسفل اليمين */
 .orb2 {
   bottom: -20%;
   right: -10%;
@@ -43,7 +40,6 @@
   background: radial-gradient(circle, rgba(var(--accent-color-rgb), 0.05) 0%, transparent 70%);
 }
 
-/* توهج أحمر هادئ جداً في المنتصف للعمق */
 .orb3 {
   top: 30%;
   left: 20%;
@@ -52,4 +48,84 @@
   min-width: 600px;
   min-height: 600px;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.03) 0%, transparent 70%);
+}
+
+/* =========================================
+   2. Cyber Bubbles (جزيئات الداتا الصاعدة)
+   ========================================= */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: rgba(var(--accent-color-rgb), 0.3);
+  box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.2);
+  opacity: 0;
+  animation: floatUp linear infinite;
+  /* GPU Acceleration */
+  transform: translateZ(0); 
+}
+
+@keyframes floatUp {
+  0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translate3d(0, -110vh, 0) scale(1.2); opacity: 0; }
+}
+
+/* توزيع عشوائي للفقاعات (أحجام، أماكن، وسرعات مختلفة) */
+.bubble1 { left: 10%; width: 8px; height: 8px; animation-duration: 12s; animation-delay: 0s; background: rgba(var(--main-color-rgb), 0.4); }
+.bubble2 { left: 25%; width: 12px; height: 12px; animation-duration: 18s; animation-delay: 4s; }
+.bubble3 { left: 45%; width: 6px; height: 6px; animation-duration: 14s; animation-delay: 2s; }
+.bubble4 { left: 60%; width: 15px; height: 15px; animation-duration: 22s; animation-delay: 7s; background: rgba(var(--main-color-rgb), 0.3); }
+.bubble5 { left: 75%; width: 9px; height: 9px; animation-duration: 16s; animation-delay: 1s; }
+.bubble6 { left: 85%; width: 7px; height: 7px; animation-duration: 19s; animation-delay: 5s; }
+.bubble7 { left: 35%; width: 10px; height: 10px; animation-duration: 20s; animation-delay: 8s; background: rgba(var(--main-color-rgb), 0.5); }
+.bubble8 { left: 95%; width: 14px; height: 14px; animation-duration: 15s; animation-delay: 3s; }
+
+/* =========================================
+   3. Cyber Meteorites (النيازك / أشعة السايبر)
+   ========================================= */
+.meteors {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(45deg); /* نخليها تنزل بزاوية */
+}
+
+.meteor {
+  position: absolute;
+  top: -100px;
+  width: 2px; /* خط رفيع */
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 1), transparent);
+  opacity: 0;
+  animation: shootingStar linear infinite;
+  transform: translateZ(0); /* GPU Acceleration */
+}
+
+@keyframes shootingStar {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  5% { opacity: 0.8; }
+  15% { transform: translate3d(0, 120vh, 0); opacity: 0; }
+  100% { transform: translate3d(0, 120vh, 0); opacity: 0; } /* فترة توقف طويلة بين كل نيزك والتاني */
+}
+
+/* توزيع عشوائي للنيازك */
+.meteor1 { left: 20%; animation-duration: 8s; animation-delay: 0s; }
+.meteor2 { left: 40%; animation-duration: 12s; animation-delay: 3s; background: linear-gradient(to bottom, rgba(var(--accent-color-rgb), 0.8), transparent); }
+.meteor3 { left: 60%; animation-duration: 9s; animation-delay: 5s; }
+.meteor4 { left: 80%; animation-duration: 14s; animation-delay: 1s; }
+.meteor5 { left: 90%; animation-duration: 10s; animation-delay: 7s; background: linear-gradient(to bottom, rgba(var(--accent-color-rgb), 0.8), transparent); }
+
+/* إيقاف التأثيرات للأجهزة الضعيفة أو الموبايلات لتوفير البطارية */
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
+  .particles, .meteors {
+    display: none;
+  }
 }

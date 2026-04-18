@@ -895,6 +895,8 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.03);
+  /* إضافة Aspect Ratio عشان الصفحة ماتنطش وقت تحميل الصورة */
+  aspect-ratio: 16 / 9; 
 }
 
 .primaryShot {
@@ -1499,7 +1501,8 @@
   border: 1px solid rgba(255, 100, 100, 0.5);
   background: rgba(255, 100, 100, 0.15);
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* التعديل هنا: */
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .clearFiltersBtn:hover {
@@ -1565,7 +1568,8 @@
   color: rgba(var(--main-color-rgb), 0.9);
   font-size: 1.08rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* التعديل هنا: */
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .tagButton:hover,
@@ -1615,7 +1619,8 @@
   color: rgba(var(--accent-color-rgb), 0.9);
   font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* التعديل هنا: */
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .toolButton:hover,
@@ -1717,7 +1722,8 @@
   text-align: center;
   display: inline-block;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* التعديل هنا: */
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .playlistAction:hover {

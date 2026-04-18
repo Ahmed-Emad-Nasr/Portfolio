@@ -7,7 +7,6 @@
  */
 
 import { memo, useMemo, useState } from "react";
-
 import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare, faCirclePlay, faCode } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
@@ -127,7 +126,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
       <div className={styles["part-2"]}>
         <ul className={styles["description-list"]}>
           {descriptionBullets.map((item, index) => (
-            <li key={`${repo.id}-${index}`}>{item}</li>
+            <li key={`${repo.id}-desc-${index}`}>{item}</li>
           ))}
         </ul>
 
@@ -142,7 +141,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
 
         {repo.topics.length > 0 && (
           <div className={styles["topics-container"]}>
-            {repo.topics.slice(0, 4).map((topic, i) => <span key={i} className={styles["topic-tag"]}>{topic}</span>)}
+            {repo.topics.slice(0, 4).map((topic, i) => <span key={`topic-${i}`} className={styles["topic-tag"]}>{topic}</span>)}
             {repo.topics.length > 4 && <span className={styles["topic-tag"]}>+{repo.topics.length - 4}</span>}
           </div>
         )}
@@ -171,34 +170,34 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   );
 }, (prev, next) => prev.repo.id === next.repo.id);
 
+ProjectItem.displayName = "ProjectItem";
 
-  const ProjectSkeleton = memo<ProjectSkeletonProps>(({ index }) => (
-    <div className={styles["single-project"]} aria-hidden="true">
-      <div className={styles["part-1"]}>
-        <span className={styles["skeleton-icon"]} />
-        <span className={`${styles["skeleton-line"]} ${styles["skeleton-title"]}`} />
+const ProjectSkeleton = memo<ProjectSkeletonProps>(({ index }) => (
+  <div className={styles["single-project"]} aria-hidden="true">
+    <div className={styles["part-1"]}>
+      <span className={styles["skeleton-icon"]} />
+      <span className={`${styles["skeleton-line"]} ${styles["skeleton-title"]}`} />
+    </div>
+    <div className={styles["part-2"]}>
+      <div className={styles["skeleton-stack"]}>
+        <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
+        <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
+        <span className={`${styles["skeleton-line"]} ${styles["skeleton-text-short"]}`} />
       </div>
-      <div className={styles["part-2"]}>
-        <div className={styles["skeleton-stack"]}>
-          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
-          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
-          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text-short"]}`} />
-        </div>
-        <div className={styles["skeleton-badges"]}>
-          <span className={styles["skeleton-pill"]} />
-          <span className={styles["skeleton-pill"]} />
-          <span className={styles["skeleton-pill"]} />
-        </div>
-        <div className={styles["skeleton-actions"]}>
-          <span className={styles["skeleton-button"]} />
-          <span className={styles["skeleton-button"]} />
-        </div>
+      <div className={styles["skeleton-badges"]}>
+        <span className={styles["skeleton-pill"]} />
+        <span className={styles["skeleton-pill"]} />
+        <span className={styles["skeleton-pill"]} />
+      </div>
+      <div className={styles["skeleton-actions"]}>
+        <span className={styles["skeleton-button"]} />
+        <span className={styles["skeleton-button"]} />
       </div>
     </div>
-  ));
+  </div>
+));
 
-  ProjectSkeleton.displayName = "ProjectSkeleton";
-ProjectItem.displayName = "ProjectItem";
+ProjectSkeleton.displayName = "ProjectSkeleton";
 
 const SenseiProjects = memo(function SenseiProjects() {
   const { repos, isLoading, source, loadNotice, loadError, cacheUpdatedAt, refresh } = useGitHubRepos();
@@ -225,15 +224,13 @@ const SenseiProjects = memo(function SenseiProjects() {
     : `${filteredRepos.length} project${filteredRepos.length === 1 ? "" : "s"} shown`;
 
   return (
-    <section
-      className={styles["section-projects"]}
-      id="Projects"
-    >
+    <section className={styles["section-projects"]} id="Projects">
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
           <p className={styles.sectionLead}>GitHub-backed work, grouped by security focus so the right examples are easier to scan.</p>
         </div>
+        
         <div className={styles["projects-filter"]} role="group" aria-label="Project category filters">
           {FILTERS.map((filterItem) => (
             <button
@@ -248,13 +245,13 @@ const SenseiProjects = memo(function SenseiProjects() {
             </button>
           ))}
         </div>
+
         <div className={styles["section-summary"]} aria-live="polite">
-          <span>{summaryText}</span>
-          <span>
-            Focused on SOC, DFIR, and automation work.
+          <p>
+            {summaryText} • Focused on SOC, DFIR, and automation work.
             {source === "cache" ? " Showing cached repositories." : ""}
             {source === "static" ? " Showing curated fallback projects." : ""}
-          </span>
+          </p>
           {!isLoading ? (
             <button
               type="button"
@@ -266,11 +263,13 @@ const SenseiProjects = memo(function SenseiProjects() {
             </button>
           ) : null}
         </div>
+
         {loadNotice ? <p className={styles["empty-state-hint"]}>{loadNotice}</p> : null}
         {loadError ? <p className={styles["empty-state-hint"]} role="alert">{loadError}</p> : null}
         {source === "cache" && cacheLabel ? (
           <p className={styles["empty-state-hint"]}>Cache last updated: {cacheLabel}</p>
         ) : null}
+
         <div className={styles["grid-container"]}>
           {isLoading ? (
             Array.from({ length: 6 }, (_, index) => (

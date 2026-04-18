@@ -1,3 +1,22 @@
+/*
+ * File: sensei-home.module.css
+ * Author: Ahmed Emad Nasr
+ * Purpose: Home section styles (hero, actions, and responsive rules)
+ */
+
+/* إضافة كلاس لدعم إمكانية الوصول */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .btnEmail {
   background: linear-gradient(135deg, #7b2ff2 0%, #1a1a2e 100%);
   color: #fff;
@@ -17,11 +36,7 @@
 .btnEmail:active {
   transform: scale(0.98);
 }
-/*
- * File: sensei-home.module.css
- * Author: Ahmed Emad Nasr
- * Purpose: Home section styles (hero, actions, and responsive rules)
- */
+
 .home {
   display: flex;
   flex-direction: column;
@@ -41,7 +56,6 @@
   min-height: 95vh;
   padding: 1.6rem 1.1rem;
   border-radius: 26px;
-  /* border, background, and box-shadow removed for no glass/border effect */
   --parallax-x: 0px;
   --parallax-y: 0px;
 }

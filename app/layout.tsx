@@ -112,7 +112,7 @@ const overlock = Overlock({
 });
 
 // Derived once — the class string never changes between renders.
-const BODY_CLASS = `bg-black text-white ${overlock.variable}`;
+const BODY_CLASS = `${overlock.variable}`;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const structuredData = {
   "@context": "https://schema.org",
