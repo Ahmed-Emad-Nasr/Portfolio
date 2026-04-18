@@ -434,6 +434,25 @@ export const caseStudyHighlights = [
 ] as const;
 
 export const caseEvidenceLibrary = [
+      {
+        id: "hidden-backdoor-report",
+        title: "Hidden Backdoor Case Study",
+        description: "Detection and analysis of a hidden backdoor in a simulated environment, including investigation steps and mitigation.",
+        platform: "Blue Team Simulation",
+        type: "DOCX & PDF Report",
+        category: "Malware Analysis",
+        difficulty: "Hard",
+        href: "Assets/Cases/Hidden Backdoor/AhmedEmad_HiddenBackdoor.pdf",
+        tags: ["Backdoor", "Persistence", "Malware", "Detection"],
+        tools: ["Forensics", "SIEM", "Malware Analysis"],
+        skillsGained: ["Backdoor Detection", "Persistence Analysis", "Incident Response"],
+        readTime: 20,
+        date: "2026-04-18",
+        screenshots: [
+          ...Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).png`),
+        ],
+        image: "Assets/Cases/Hidden Backdoor/Screenshot (50).png",
+      },
     // WannaCry always first (featured)
     {
       id: "malware-analysis-wannacry",
