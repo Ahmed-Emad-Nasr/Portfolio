@@ -143,15 +143,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   transform: translateY(0);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 /*--------- 5. Typography & Layout ---------*/
 p, li {
   color: var(--text-muted);
@@ -257,10 +248,7 @@ section.glass, .glass-card {
 }
 
 @media (hover: none) and (pointer: coarse) {
-  /* Optimize performance for touch devices */
-  .glass-card:hover {
-    transform: none;
-  }
+  /* Optimize performance for touch devices without forcing animations to stop */
   :root {
     --card-blur: 8px; /* Less demanding blur on mobile */
   }
