@@ -31,8 +31,6 @@ const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sen
   loading: () => null,
 });
 
-const DesktopQuickCTA = dynamic(() => import("@/app/core/components/DesktopQuickCTA"));
-const MobileQuickActions = dynamic(() => import("@/app/core/components/MobileQuickActions"));
 
 // ─── MainClient ───────────────────────────────────────────────────────────────
 
@@ -87,13 +85,8 @@ const MainClient = memo(function MainClient() {
         <AppBar />
         <HomeSection />
         <ExperienceSection />
-        
-        
         <ProjectsSection />
-
         <ArtGallerySection />
-        <DesktopQuickCTA />
-        <MobileQuickActions />
       </div>
     </main>
   );

@@ -12,8 +12,6 @@ import {
   caseEvidenceLibrary,
   YOUTUBE_CHANNEL_URL,
 } from "@/app/core/data";
-import DesktopQuickCTA from "@/app/core/components/DesktopQuickCTA";
-import MobileQuickActions from "@/app/core/components/MobileQuickActions";
 import BlogCard from "./BlogCard";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -876,8 +874,6 @@ export default function BlogPageClient() {
           </div>
         </section>
 
-        <DesktopQuickCTA />
-        <MobileQuickActions />
       </div>
 
       <BackToTop />
