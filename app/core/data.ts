@@ -837,6 +837,33 @@ export const caseEvidenceLibrary = [
     ],
     image: "Assets/Cases/Usb Forencics/Screenshot (3).png",
   },
+  {
+    id: "ettercap-case",
+    title: "EtterCap Case Study",
+    description: "Network sniffing and MITM attack simulation using EtterCap, with analysis and defense recommendations.",
+    platform: "Lab Simulation",
+    type: "DOCX & PDF Report",
+    category: "Network Security",
+    difficulty: "Easy",
+    href: "Assets/Cases/EtterCap/AhmedEmad_EtterCap.pdf",
+    tags: ["EtterCap", "MITM", "Sniffing", "Network"],
+    tools: ["EtterCap", "Network Analysis"],
+    skillsGained: ["MITM Simulation", "Network Sniffing", "Defense Techniques"],
+    readTime: 10,
+    date: "2026-04-18",
+    screenshots: [
+      "Assets/Cases/EtterCap/Screenshot (27).png",
+      "Assets/Cases/EtterCap/Screenshot (28).png",
+      "Assets/Cases/EtterCap/Screenshot (29).png",
+      "Assets/Cases/EtterCap/Screenshot (31).png",
+      "Assets/Cases/EtterCap/Screenshot (32).png",
+      "Assets/Cases/EtterCap/Screenshot (33).png",
+      "Assets/Cases/EtterCap/Screenshot (34).png",
+      "Assets/Cases/EtterCap/Screenshot (35).png",
+      "Assets/Cases/EtterCap/Screenshot (36).png",
+    ],
+    image: "Assets/Cases/EtterCap/Screenshot (27).png",
+  },
 ] as const;
 
 export const staticProjectFallback = [

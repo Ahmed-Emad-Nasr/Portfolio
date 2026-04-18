@@ -109,6 +109,17 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/Usb Forencics/Screenshot (14).png",
     "Assets/Cases/Usb Forencics/Screenshot (15).png",
   ],
+  "ettercap-case": [
+    "Assets/Cases/EtterCap/Screenshot (27).png",
+    "Assets/Cases/EtterCap/Screenshot (28).png",
+    "Assets/Cases/EtterCap/Screenshot (29).png",
+    "Assets/Cases/EtterCap/Screenshot (31).png",
+    "Assets/Cases/EtterCap/Screenshot (32).png",
+    "Assets/Cases/EtterCap/Screenshot (33).png",
+    "Assets/Cases/EtterCap/Screenshot (34).png",
+    "Assets/Cases/EtterCap/Screenshot (35).png",
+    "Assets/Cases/EtterCap/Screenshot (36).png",
+  ],
 };
 
 // ─── Pure helpers (stable references, safe to use in useCallback deps) ───────
