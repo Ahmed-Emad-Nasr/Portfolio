@@ -853,7 +853,7 @@ export const caseEvidenceLibrary = [
     ],
     image: "Assets/Cases/EtterCap/Screenshot (27).png",
   },
-  ,{
+  {
     id: "lockbit-ransomware-forensics",
     title: "LockBit Ransomware Forensics",
     description: "Forensic investigation and incident response for a LockBit ransomware attack, including evidence collection, analysis, and recovery steps.",
