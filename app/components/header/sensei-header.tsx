@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
-const BLOG_PATH      = "/Portfolio/blog";
+const BLOG_PATH      = "/blog";
 
 const SenseiHeader = memo(function SenseiHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
