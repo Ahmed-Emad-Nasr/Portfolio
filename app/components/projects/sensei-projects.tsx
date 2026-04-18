@@ -279,7 +279,7 @@ const SenseiProjects = memo(function SenseiProjects() {
             filteredRepos.map((repo, index) => (
               <MotionInView
                 key={repo.id}
-                transition={{ duration: 0.14, delay: Math.min(index * 0.025, 0.1) }}
+                transition={{ duration: 1.2, delay: Math.min(index * 0.08, 0.4) }}
               >
                 <ProjectItem repo={repo} />
               </MotionInView>

@@ -322,7 +322,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
 }
 
 .primaryAction {
@@ -350,7 +350,7 @@
   inset: 0;
   transform: translateX(-135%);
   background: linear-gradient(110deg, transparent 24%, rgba(255, 255, 255, 0.62), transparent 78%);
-  transition: transform 0.7s ease;
+  transition: transform var(--motion-normal) var(--motion-ease);
 }
 
 .channelAction:hover::before {
@@ -659,7 +659,7 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(0.86) brightness(0.84);
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform var(--motion-normal) var(--motion-ease), filter var(--motion-normal) var(--motion-ease);
 }
 
 .embedPreview:hover img {

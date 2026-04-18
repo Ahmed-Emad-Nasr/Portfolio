@@ -52,7 +52,7 @@ const TimelineItem = memo<TimelineItemProps>(({
   return (
     <MotionInView
       className={containerClass}
-      transition={{ duration: 0.14 }}
+      transition={{ duration: 1.2 }}
       role="listitem" // دعم إمكانية الوصول
     >
       <div className={styles.content}>

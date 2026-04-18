@@ -378,7 +378,7 @@ export default function BlogPageClient() {
           pointerEvents: isPageReady ? "auto" : "none",
           minHeight: isPageReady ? "auto" : "100vh",
           overflow: isPageReady ? "visible" : "hidden",
-          transition: "opacity 0.3s ease",
+          transition: "opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         {/* ── Hero ─────────────────────────────────────────────────────────── */}

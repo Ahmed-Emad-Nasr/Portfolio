@@ -36,12 +36,14 @@
   --shadow-glow-hover: 0 0 25px rgba(var(--main-color-rgb), 0.3);
   
 /* Cinematic Motion Curves */
-  --motion-fast: 250ms;   /* للمسات السريعة زي الألوان والـ Borders */
-  --motion-normal: 600ms; /* للحركات الأساسية زي الـ Hover والـ Transform */
-  --motion-slow: 900ms;   /* ممكن تستخدمه للأنيميشنز الكبيرة لو حبيت */
-  
+
+  /* سرعات سينمائية أبطأ */
+  --motion-fast: 700ms;   /* للمسات السريعة زي الألوان والـ Borders */
+  --motion-normal: 1500ms; /* للحركات الأساسية زي الـ Hover والـ Transform */
+  --motion-slow: 2200ms;   /* للأنيميشنز الكبيرة */
+
   /* منحنى سينمائي ناعم: بيبدأ بثقة ويبطئ جداً في النهاية للاستقرار */
-  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
   
   /* Blurs */
   --ui-blur: 12px;

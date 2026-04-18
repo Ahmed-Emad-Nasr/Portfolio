@@ -17,7 +17,7 @@ type MotionInViewProps = MotionProps & {
 
 // 1. تحديد نوع المصفوفة بـ 4 أرقام بالضبط لحل مشكلة الـ TypeScript Build
 const CINEMATIC_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const DEFAULT_DURATION = 0.6;
+const DEFAULT_DURATION = 1.2;
 
 const MotionInView = memo<MotionInViewProps>(({
   children,
