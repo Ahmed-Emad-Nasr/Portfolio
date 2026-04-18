@@ -1,6 +1,5 @@
 /*
  * File: background-effects.module.css
- * Purpose: High-performance background glow and particle effects.
  */
 
 .bgEffects {
@@ -13,7 +12,7 @@
 }
 
 /* =========================================
-   1. Static Glow Orbs (الخلفيات المضيئة)
+   1. Static Glow Orbs
    ========================================= */
 .glowOrb {
   position: absolute;
@@ -21,37 +20,22 @@
 }
 
 .orb1 {
-  top: -15%;
-  left: -10%;
-  width: 50vw;
-  height: 50vw;
-  min-width: 400px;
-  min-height: 400px;
+  top: -15%; left: -10%; width: 50vw; height: 50vw; min-width: 400px; min-height: 400px;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07) 0%, transparent 70%);
 }
 
 .orb2 {
-  bottom: -20%;
-  right: -10%;
-  width: 60vw;
-  height: 60vw;
-  min-width: 500px;
-  min-height: 500px;
+  bottom: -20%; right: -10%; width: 60vw; height: 60vw; min-width: 500px; min-height: 500px;
   background: radial-gradient(circle, rgba(var(--accent-color-rgb), 0.05) 0%, transparent 70%);
 }
 
 .orb3 {
-  top: 30%;
-  left: 20%;
-  width: 70vw;
-  height: 70vw;
-  min-width: 600px;
-  min-height: 600px;
+  top: 30%; left: 20%; width: 70vw; height: 70vw; min-width: 600px; min-height: 600px;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.03) 0%, transparent 70%);
 }
 
 /* =========================================
-   2. Cyber Bubbles (جزيئات الداتا الصاعدة)
+   2. Cyber Bubbles
    ========================================= */
 .particles {
   position: absolute;
@@ -66,66 +50,49 @@
   background: rgba(var(--accent-color-rgb), 0.3);
   box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.2);
   opacity: 0;
-  animation: floatUp linear infinite;
-  /* GPU Acceleration */
-  transform: translateZ(0); 
+  transform: translateZ(0);
+  will-change: transform, opacity; /* تحسين أداء الـ GPU */
 }
 
-@keyframes floatUp {
-  0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
-  10% { opacity: 0.8; }
-  90% { opacity: 0.8; }
-  100% { transform: translate3d(0, -110vh, 0) scale(1.2); opacity: 0; }
-}
-
-/* توزيع عشوائي للفقاعات (أحجام، أماكن، وسرعات مختلفة) */
-.bubble1 { left: 10%; width: 8px; height: 8px; animation-duration: 12s; animation-delay: 0s; background: rgba(var(--main-color-rgb), 0.4); }
-.bubble2 { left: 25%; width: 12px; height: 12px; animation-duration: 18s; animation-delay: 4s; }
-.bubble3 { left: 45%; width: 6px; height: 6px; animation-duration: 14s; animation-delay: 2s; }
-.bubble4 { left: 60%; width: 15px; height: 15px; animation-duration: 22s; animation-delay: 7s; background: rgba(var(--main-color-rgb), 0.3); }
-.bubble5 { left: 75%; width: 9px; height: 9px; animation-duration: 16s; animation-delay: 1s; }
-.bubble6 { left: 85%; width: 7px; height: 7px; animation-duration: 19s; animation-delay: 5s; }
-.bubble7 { left: 35%; width: 10px; height: 10px; animation-duration: 20s; animation-delay: 8s; background: rgba(var(--main-color-rgb), 0.5); }
-.bubble8 { left: 95%; width: 14px; height: 14px; animation-duration: 15s; animation-delay: 3s; }
+/* التنسيقات الثابتة (بدون الأنيميشن) */
+.bubble1 { left: 10%; width: 8px; height: 8px; background: rgba(var(--main-color-rgb), 0.4); }
+.bubble2 { left: 25%; width: 12px; height: 12px; }
+.bubble3 { left: 45%; width: 6px; height: 6px; }
+.bubble4 { left: 60%; width: 15px; height: 15px; background: rgba(var(--main-color-rgb), 0.3); }
+.bubble5 { left: 75%; width: 9px; height: 9px; }
+.bubble6 { left: 85%; width: 7px; height: 7px; }
+.bubble7 { left: 35%; width: 10px; height: 10px; background: rgba(var(--main-color-rgb), 0.5); }
+.bubble8 { left: 95%; width: 14px; height: 14px; }
 
 /* =========================================
-   3. Cyber Meteorites (النيازك / أشعة السايبر)
+   3. Cyber Meteorites
    ========================================= */
 .meteors {
   position: absolute;
   width: 100%;
   height: 100%;
-  transform: rotate(45deg); /* نخليها تنزل بزاوية */
+  transform: rotate(45deg);
 }
 
 .meteor {
   position: absolute;
   top: -100px;
-  width: 2px; /* خط رفيع */
+  width: 2px;
   height: 120px;
   background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 1), transparent);
   opacity: 0;
-  animation: shootingStar linear infinite;
-  transform: translateZ(0); /* GPU Acceleration */
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
-@keyframes shootingStar {
-  0% { transform: translate3d(0, 0, 0); opacity: 0; }
-  5% { opacity: 0.8; }
-  15% { transform: translate3d(0, 120vh, 0); opacity: 0; }
-  100% { transform: translate3d(0, 120vh, 0); opacity: 0; } /* فترة توقف طويلة بين كل نيزك والتاني */
-}
+/* التنسيقات الثابتة (بدون الأنيميشن) */
+.meteor1 { left: 20%; }
+.meteor2 { left: 40%; background: linear-gradient(to bottom, rgba(var(--accent-color-rgb), 0.8), transparent); }
+.meteor3 { left: 60%; }
+.meteor4 { left: 80%; }
+.meteor5 { left: 90%; background: linear-gradient(to bottom, rgba(var(--accent-color-rgb), 0.8), transparent); }
 
-/* توزيع عشوائي للنيازك */
-.meteor1 { left: 20%; animation-duration: 8s; animation-delay: 0s; }
-.meteor2 { left: 40%; animation-duration: 12s; animation-delay: 3s; background: linear-gradient(to bottom, rgba(var(--accent-color-rgb), 0.8), transparent); }
-.meteor3 { left: 60%; animation-duration: 9s; animation-delay: 5s; }
-.meteor4 { left: 80%; animation-duration: 14s; animation-delay: 1s; }
-.meteor5 { left: 90%; animation-duration: 10s; animation-delay: 7s; background: linear-gradient(to bottom, rgba(var(--accent-color-rgb), 0.8), transparent); }
-
-/* إيقاف التأثيرات للأجهزة الضعيفة أو الموبايلات لتوفير البطارية */
+/* إيقاف التأثيرات للأجهزة الضعيفة */
 @media (prefers-reduced-motion: reduce), (max-width: 768px) {
-  .particles, .meteors {
-    display: none;
-  }
+  .particles, .meteors { display: none; }
 }
