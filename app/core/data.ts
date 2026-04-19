@@ -872,6 +872,26 @@ export const caseEvidenceLibrary = [
     ],
     image: "Assets/Cases/LockBit/Screenshot (85).png",
   }
+    ,
+    {
+      id: "imagestegano",
+      title: "Image Steganography Case Study",
+      description: "Analysis and detection of steganography in images, including extraction techniques and forensic investigation.",
+      platform: "Blue Team Simulation",
+      type: "DOCX & PDF Report",
+      category: "Forensics",
+      difficulty: "Hard",
+      href: "Assets/Cases/ImageStegano/AhmedEmad_ImageStegano.pdf",
+      tags: ["Steganography", "Forensics", "Image Analysis"],
+      tools: ["StegCracker", "Forensics Toolkit"],
+      skillsGained: ["Steganography Detection", "Image Forensics"],
+      readTime: 18,
+      date: "2026-04-19",
+      screenshots: [
+        ...Array.from({ length: 13 }, (_, i) => `Assets/Cases/ImageStegano/Screenshot (${104 + i + (i >= 3 ? 1 : 0)}).png`),
+      ],
+      image: "Assets/Cases/ImageStegano/Screenshot (104).png",
+    }
 ] as const;
 
 export const staticProjectFallback = [

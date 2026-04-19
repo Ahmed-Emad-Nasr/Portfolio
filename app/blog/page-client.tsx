@@ -67,6 +67,23 @@ const buildScreenshotRange = (
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
       "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
+      "imagestegano": [
+        "Assets/Cases/ImageStegano/Screenshot (104).png",
+        "Assets/Cases/ImageStegano/Screenshot (105).png",
+        "Assets/Cases/ImageStegano/Screenshot (106).png",
+        "Assets/Cases/ImageStegano/Screenshot (108).png",
+        "Assets/Cases/ImageStegano/Screenshot (109).png",
+        "Assets/Cases/ImageStegano/Screenshot (110).png",
+        "Assets/Cases/ImageStegano/Screenshot (112).png",
+        "Assets/Cases/ImageStegano/Screenshot (113).png",
+        "Assets/Cases/ImageStegano/Screenshot (114).png",
+        "Assets/Cases/ImageStegano/Screenshot (115).png",
+        "Assets/Cases/ImageStegano/Screenshot (116).png",
+        "Assets/Cases/ImageStegano/Screenshot (117).png",
+        "Assets/Cases/ImageStegano/Screenshot (118).png",
+        "Assets/Cases/ImageStegano/Screenshot (119).png",
+        "Assets/Cases/ImageStegano/Screenshot (120).png"
+      ],
     "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).png`),
   "malware-analysis-wannacry": [
     ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.png`),
