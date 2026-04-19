@@ -3,11 +3,11 @@
 /*
  * File: sensei-header.tsx
  * Author: Ahmed Emad Nasr
- * Purpose: Render sticky navigation header and mobile menu behavior (Optimized)
+ * Purpose: Render sticky navigation header and mobile menu behavior (No Animations)
  */
 
 import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
-import Link from "next/link"; // إضافة Link من Next.js
+import Link from "next/link";
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
@@ -31,7 +31,6 @@ const SenseiHeader = memo(function SenseiHeader() {
     pathname === BLOG_PATH ||
     pathname.startsWith(`${BLOG_PATH}/`);
 
-  // إدارة الـ Scroll عند فتح القائمة في الموبايل
   useEffect(() => {
     if (window.innerWidth > 994) {
       document.body.style.overflow = "";
@@ -43,7 +42,6 @@ const SenseiHeader = memo(function SenseiHeader() {
     };
   }, [isMenuOpen]);
 
-  // إدارة تأثير الـ Header عند النزول بالصفحة
   useEffect(() => {
     const onScroll = () => {
       setIsScrolled(window.scrollY > 18);
@@ -64,7 +62,8 @@ const SenseiHeader = memo(function SenseiHeader() {
       const offset = headerHeight + (Number.isFinite(computedTop) ? computedTop : 0) + 10;
       const targetTop = window.scrollY + target.getBoundingClientRect().top - offset;
 
-      window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+      // تم تغيير behavior من smooth إلى auto لإلغاء حركة النزول البطيئة
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
     }
   }, []);
 
@@ -86,7 +85,6 @@ const SenseiHeader = memo(function SenseiHeader() {
     [scrollToSection, setActiveSection, setIsMenuOpen]
   );
 
-  // إغلاق القائمة عند الضغط على Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMenuOpen) {
@@ -109,7 +107,6 @@ const SenseiHeader = memo(function SenseiHeader() {
       className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header}
       data-site-header="true"
     >
-      {/* استخدام Next Link بدلاً من <a> للحصول على Prefetch و Routing سريع مجاناً */}
       <Link
         href={BLOG_PATH}
         className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}

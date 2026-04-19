@@ -1,7 +1,7 @@
 /*
  * File: sensei-header.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Header/navbar styles (Optimized for performance)
+ * Purpose: Header/navbar styles (Optimized for performance - No Animations)
  */
 
 .header {
@@ -24,7 +24,6 @@
   gap: 0.75rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.22);
-  transition: transform 0.3s ease;
 }
 
 .scrolled {
@@ -73,7 +72,6 @@
   background: rgba(255,255,255,0.04);
   border: 2px dashed rgba(var(--main-color-rgb), 0.66);
   text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
   cursor: pointer;
   outline: none;
 }
@@ -88,10 +86,8 @@
 }
 
 .blogLink:hover, .blogLink:focus-visible, .blogLink.active {
-  /* Replaced Framer Motion hover effect with CSS */
-  transform: scale(1.06);
   background-color: var(--main-color);
-  color: var(--bg-color); /* assuming this matches your #0f172a intent */
+  color: var(--bg-color);
   border-style: solid;
 }
 
@@ -109,12 +105,9 @@
   text-transform: capitalize;
   text-decoration: none;
   background: transparent;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .navbar a:hover, .navbar a.active {
-  /* Replaced Framer Motion hover effect with CSS */
-  transform: scale(1.08);
   background-color: rgba(var(--main-color-rgb), 0.09);
   color: var(--main-color);
 }
@@ -133,7 +126,6 @@
   min-width: 48px;
   min-height: 48px;
   border-radius: 14px;
-  transition: background-color 0.2s ease;
 }
 
 .MenuIcon span {
@@ -141,7 +133,6 @@
   height: 3px;
   background: var(--main-color);
   border-radius: 10px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
   transform-origin: center;
 }
 
@@ -201,8 +192,6 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
     display: flex;
   }
 
@@ -210,8 +199,6 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0s;
   }
 
   .backdrop {
@@ -241,7 +228,6 @@
   .navbar a.active {
     background: linear-gradient(180deg, rgba(var(--main-color-rgb), 0.94), rgba(var(--main-color-rgb), 0.82));
     color: var(--bg-color);
-    transform: scale(1.02); /* Less aggressive scale on mobile */
   }
 }
 

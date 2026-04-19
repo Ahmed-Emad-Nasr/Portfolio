@@ -86,7 +86,7 @@ const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
       >
         <Image
           src={thumbSrc}
-          alt={`${meta.title} certification by ${meta.issuer}`}
+          alt={`${meta.title} certification`}
           width={350}
           height={350}
           sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
@@ -96,13 +96,7 @@ const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
           onError={() => setThumbSrc("Assets/art-gallery/Images/logo/My_Logo.webp")}
         />
       </button>
-      <div className={styles.metaBlock}>
-        <strong>{meta.title}</strong>
-        <span>{meta.issuer} • {meta.date}</span>
-        <a href={meta.verifyUrl} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()}>
-          Verify
-        </a>
-      </div>
+      {/* تم حذف الميتاداتا أسفل الشهادة */}
     </motion.div>
   );
 });
