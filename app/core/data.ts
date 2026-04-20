@@ -453,6 +453,27 @@ export const caseEvidenceLibrary = [
         ],
         image: "Assets/Cases/Hidden Backdoor/Screenshot (50).png",
       },
+      // Depi r4 Project
+      {
+        id: "depi-r4-project",
+        title: "Depi R4 Project",
+        description: "Malware analysis and prevention strategy project for DEPI R4, including detection, analysis, and reporting.",
+        platform: "DEPI R4",
+        type: "DOCX & PDF Report",
+        category: "Malware Analysis",
+        difficulty: "Medium",
+        href: "Assets/Cases/Depi R4 Project/AhmedEmad_MalwareAnalysis_And_Prevention_Strategy.pdf",
+        tags: ["Malware", "Prevention", "Analysis", "DEPI"],
+        tools: ["Malware Analysis", "Prevention", "Reporting"],
+        skillsGained: ["Malware Analysis", "Prevention Strategy", "Reporting"],
+        readTime: 18,
+        date: "2026-04-20",
+        screenshots: [
+          "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
+          "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
+        ],
+        image: "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
+      },
     // WannaCry always first (featured)
     {
       id: "malware-analysis-wannacry",
