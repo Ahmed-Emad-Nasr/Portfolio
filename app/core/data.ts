@@ -434,6 +434,39 @@ export const caseStudyHighlights = [
 ] as const;
 
 export const caseEvidenceLibrary = [
+            {
+              id: "soc-env-depi-r3-project",
+              title: "SOC Enviroment DEPI R3 Project",
+              description: "SOC environment build and configuration for DEPI R3, including SIEM, FIM, and custom dashboards.",
+              platform: "DEPI R3",
+              type: "PDF Report",
+              category: "SOC",
+              difficulty: "Hard",
+              href: "Assets/Cases/SOC Enviroment DEPI R3 Project/SOC Enviroment.pdf",
+              tags: ["SOC", "SIEM", "FIM", "Dashboard", "DEPI"],
+              tools: ["Wazuh", "SIEM", "FIM", "Dashboard"],
+              skillsGained: ["SOC Build", "SIEM Configuration", "FIM", "Dashboarding"],
+              readTime: 16,
+              date: "2026-04-20",
+              screenshots: [
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/1.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/2.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/3.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/4.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/5.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/6.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/7.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/8.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/9.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/create txt file to see if fim is working.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard1.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard2.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/edit ossec on win.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/enable fim to folder ahmed.png",
+                "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png"
+              ],
+              image: "Assets/Cases/SOC Enviroment DEPI R3 Project/1.png",
+            },
       {
         id: "hidden-backdoor-report",
         title: "Hidden Backdoor Case Study",
@@ -461,7 +494,7 @@ export const caseEvidenceLibrary = [
         platform: "DEPI R4",
         type: "DOCX & PDF Report",
         category: "Malware Analysis",
-        difficulty: "Medium",
+        difficulty: "Hard",
         href: "Assets/Cases/Depi R4 Project/AhmedEmad_MalwareAnalysis_And_Prevention_Strategy.pdf",
         tags: ["Malware", "Prevention", "Analysis", "DEPI"],
         tools: ["Malware Analysis", "Prevention", "Reporting"],

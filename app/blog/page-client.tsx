@@ -66,6 +66,23 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).png`);
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+          "soc-env-depi-r3-project": [
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/1.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/2.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/3.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/4.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/5.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/6.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/7.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/8.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/9.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/create txt file to see if fim is working.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard1.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard2.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/edit ossec on win.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/enable fim to folder ahmed.png",
+            "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png"
+          ],
         "depi-r4-project": [
           "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
           "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
