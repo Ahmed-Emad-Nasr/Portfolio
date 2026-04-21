@@ -710,10 +710,24 @@ export const caseEvidenceLibrary = [
       skillsGained: ["Stealer Analysis", "Malware Investigation", "Incident Response"],
       readTime: 19,
       date: "2026-04-21",
-      screenshots: [
-        ...Array.from({ length: 15 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${1 + i}).png`),
-      ],
-      image: "Assets/Cases/Serpent Stealer/Screenshot (1).png",
+        screenshots: [
+          "Assets/Cases/Serpent Stealer/Screenshot (1).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (2).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (3).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (4).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (5).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (6).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (7).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (8).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (9).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (10).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (11).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (12).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (13).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (14).png",
+          "Assets/Cases/Serpent Stealer/Screenshot (15).png"
+        ],
+        image: "Assets/Cases/Serpent Stealer/Screenshot (1).png",
     },
   {
     id: "ass1-awareness",
