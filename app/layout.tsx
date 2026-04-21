@@ -242,10 +242,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
-        {/* Custom Cursor */}
-        {typeof window !== "undefined" && require("@/app/components/custom-cursor").default ? (
-          require("@/app/components/custom-cursor").default()
-        ) : null}
         {TURNSTILE_SITE_KEY ? (
           <Script
             src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
