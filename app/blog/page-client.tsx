@@ -88,23 +88,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
           "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
         ],
       "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
-        "serpent-stealer": [
-          "Assets/Cases/Serpent Stealer/Screenshot (1).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (2).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (3).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (4).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (5).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (6).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (7).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (8).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (9).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (10).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (11).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (12).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (13).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (14).png",
-          "Assets/Cases/Serpent Stealer/Screenshot (15).png"
-        ],
+        "serpent-stealer": Array.from({ length: 15 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${i + 1}).png`),
       "imagestegano": [
         "Assets/Cases/ImageStegano/Screenshot (104).png",
         "Assets/Cases/ImageStegano/Screenshot (105).png",

@@ -704,7 +704,7 @@ export const caseEvidenceLibrary = [
       type: "DOCX & PDF Report",
       category: "Malware Analysis",
       difficulty: "Hard",
-      href: "Assets/Cases/Serpent Stealer/AhmedEmad_SerpentStealer.pdf",
+      href: "Assets/Cases/Serpent Stealer/AhmedEmad_Serpent stealer.pdf",
       tags: ["Serpent Stealer", "Malware", "Stealer", "Forensics"],
       tools: ["Forensics Toolkit", "Malware Analysis"],
       skillsGained: ["Stealer Analysis", "Malware Investigation", "Incident Response"],
