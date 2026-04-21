@@ -27,7 +27,7 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
 
   return (
     <div
-      className={`${styles.loader} ${!isLoading ? styles.fadeOut : ""}`}
+      className={styles.loader}
       id="page-loader"
       aria-hidden="true"
     >

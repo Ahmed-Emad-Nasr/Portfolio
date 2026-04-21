@@ -23,30 +23,7 @@ interface GallerySkeletonProps { index: number; }
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const sectionHeaderVariants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: EASE_OUT } },
-};
 
-const galleryVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.02,
-      delayChildren: 0.02,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 6 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: EASE_OUT },
-  },
-};
 
 const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.png`,
@@ -77,7 +54,7 @@ const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
   const handleClick = useCallback(() => setOpen(index), [setOpen, index]);
 
   return (
-    <motion.div className={styles.art_pic} variants={itemVariants}>
+    <div className={styles.art_pic}>
       <button
         type="button"
         className={styles.imageButton}
@@ -97,7 +74,7 @@ const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
         />
       </button>
       {/* تم حذف الميتاداتا أسفل الشهادة */}
-    </motion.div>
+    </div>
   );
 });
 
@@ -143,7 +120,7 @@ const SenseiArt = memo(function SenseiArt() {
   return (
     <section ref={sectionRef} className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
-        <MotionInView className={styles["header-section"]} variants={sectionHeaderVariants}>
+        <MotionInView className={styles["header-section"]}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
         </MotionInView>
         {!shouldRenderGallery ? (
@@ -154,13 +131,10 @@ const SenseiArt = memo(function SenseiArt() {
           </div>
         ) : null}
         {shouldRenderGallery ? (
-          <MotionInView
-            className={styles["art-gallery-content"]}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <motion.div className={styles.Gallery} variants={galleryVariants}>
+          <MotionInView className={styles["art-gallery-content"]}>
+            <div className={styles.Gallery}>
               {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />)}
-            </motion.div>
+            </div>
           </MotionInView>
         ) : null}
       </div>

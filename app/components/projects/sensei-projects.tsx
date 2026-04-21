@@ -277,10 +277,7 @@ const SenseiProjects = memo(function SenseiProjects() {
             ))
           ) : filteredRepos.length > 0 ? (
             filteredRepos.map((repo, index) => (
-              <MotionInView
-                key={repo.id}
-                transition={{ duration: 1.2, delay: Math.min(index * 0.08, 0.4) }}
-              >
+              <MotionInView key={repo.id}>
                 <ProjectItem repo={repo} />
               </MotionInView>
             ))

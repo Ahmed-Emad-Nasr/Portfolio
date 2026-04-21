@@ -72,7 +72,7 @@
 }
 
 .homeContent {
-  animation: sectionFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  /* animation: sectionFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); */
   transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
   transition: transform var(--motion-normal) var(--motion-ease);
   max-width: 720px;

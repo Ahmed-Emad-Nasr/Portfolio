@@ -30,34 +30,11 @@ const MotionInView = memo<MotionInViewProps>(({
   style,
   ...rest
 }) => {
-  // 2. دمج الأنيميشن المخصص مع الـ Cinematic Defaults بذكاء
-  const resolvedTransition: MotionProps["transition"] = {
-    duration: DEFAULT_DURATION,
-    ease: CINEMATIC_EASE,
-    ...(typeof transition === "object" ? transition : {}),
-  };
-
-  // 3. حركة افتراضية (Fade Up) ناعمة جداً في حال لم يتم تمرير خصائص
-  const defaultInitial = { opacity: 0, y: 15 };
-  const defaultWhileInView = { opacity: 1, y: 0 };
-
+  // تعطيل كل الأنيميشن: عرض العنصر مباشرة بدون أي حركة أو تغيير
   return (
-    <motion.div
-      className={className}
-      // تفعيل خصائص الـ Variants لو موجودة، غير كده نستخدم الديفولت
-      initial={variants ? initial : (initial ?? defaultInitial)}
-      // استخدام whileInView الحقيقية عشان العنصر يظهر بس لما اليوزر يوصّله
-      whileInView={variants ? whileInView : (whileInView ?? defaultWhileInView)}
-      // margin: "-40px" معناه إن العنصر يبدأ حركة لما يظهر منه 40 بيكسل على الشاشة
-      viewport={viewport ?? { once: true, margin: "-40px" }}
-      transition={resolvedTransition}
-      variants={variants}
-      // تفعيل كارت الشاشة للحركة والشفافية
-      style={{ ...style, willChange: "opacity, transform" }}
-      {...rest}
-    >
+    <div className={className} style={style} {...rest}>
       {children}
-    </motion.div>
+    </div>
   );
 });
 
