@@ -38,12 +38,12 @@
 /* Cinematic Motion Curves */
 
   /* سرعات سينمائية أبطأ */
-  --motion-fast: 700ms;   /* للمسات السريعة زي الألوان والـ Borders */
-  --motion-normal: 1500ms; /* للحركات الأساسية زي الـ Hover والـ Transform */
-  --motion-slow: 2200ms;   /* للأنيميشنز الكبيرة */
+    --motion-fast: 120ms;   /* للمسات السريعة زي الألوان والـ Borders */
+    --motion-normal: 180ms; /* للحركات الأساسية زي الـ Hover والـ Transform */
+    --motion-slow: 320ms;   /* للأنيميشنز الكبيرة */
 
   /* منحنى سينمائي ناعم: بيبدأ بثقة ويبطئ جداً في النهاية للاستقرار */
-  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
   
   /* Blurs */
   --ui-blur: 12px;

@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useRef, useState, memo } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion"; // تم تعطيله لتخفيف الباندل
 import "yet-another-react-lightbox/styles.css";
 import styles from "./sensei-art.module.css";
 import MotionInView from "@/app/core/components/MotionInView";

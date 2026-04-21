@@ -1,0 +1,30 @@
+/*
+ * Custom Cursor Styles
+ * Author: Ahmed Emad Nasr
+ */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--main-color);
+  background: rgba(0,229,255,0.08);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: background 0.18s, border-color 0.18s, transform 0.08s;
+  mix-blend-mode: lighten;
+}
+
+.cursor--active {
+  background: rgba(0,229,255,0.18);
+  border-color: var(--accent-color);
+  transform: scale(1.25) translate(-50%, -50%);
+}
+
+@media (max-width: 900px) {
+  .cursor { display: none; }
+}
