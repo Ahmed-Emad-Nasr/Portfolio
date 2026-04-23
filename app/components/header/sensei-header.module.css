@@ -1,7 +1,7 @@
 /*
  * File: sensei-header.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Header/navbar styles (Optimized for performance - No Animations)
+ * Purpose: Header/navbar styles (Optimized - Cybersecurity HUD Theme)
  */
 
 .header {
@@ -11,46 +11,37 @@
   transform: translateX(-50%) !important;
   width: fit-content;
   max-width: calc(100% - 3.4rem);
-  padding: 0.78rem 0.95rem;
-  background:
-    linear-gradient(180deg, rgba(20, 24, 31, 0.72), rgba(7, 10, 15, 0.58)),
-    radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.12), transparent 35%),
-    radial-gradient(circle at top right, rgba(var(--accent-color-rgb), 0.12), transparent 28%);
-  backdrop-filter: blur(16px) saturate(135%);
-  border-radius: 999px;
+  padding: 0.6rem 0.8rem;
+  /* خلفية داكنة عالية التباين تناسب بيئة الـ SOC */
+  background: rgba(9, 13, 19, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 12px; /* حواف أكثر حدة لطابع تقني صارم */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.75rem;
   z-index: 1000;
-  border: 1px solid rgba(var(--main-color-rgb), 0.22);
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .scrolled {
-  transform: translateX(-50%) scale(0.95) !important;
-}
-
-.header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(var(--main-color-rgb), 0.26), rgba(255, 255, 255, 0.08));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
+  transform: translateX(-50%) scale(0.97) !important;
+  background: rgba(5, 8, 12, 0.95);
+  border-color: rgba(var(--main-color-rgb), 0.6);
+  /* توهج خفيف عند النزول بالصفحة (Threat Detected Vibe) */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 15px rgba(var(--main-color-rgb), 0.15);
 }
 
 .navbar {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.4rem;
   margin-left: 0;
-  padding: 0.18rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.25rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .blogLink {
@@ -58,58 +49,82 @@
   flex-shrink: 0;
   white-space: nowrap;
   z-index: 1003;
-  min-height: 48px;
+  min-height: 44px;
   min-width: 120px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 2.2rem;
-  border-radius: 1.6rem;
-  font-size: 1.38rem;
-  letter-spacing: 0.04em;
-  font-weight: 800;
-  color: color-mix(in srgb, var(--main-color) 86%, white 14%);
-  background: rgba(255,255,255,0.04);
-  border: 2px dashed rgba(var(--main-color-rgb), 0.66);
+  padding: 0.7rem 1.8rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--main-color);
+  background: rgba(var(--main-color-rgb), 0.05);
+  border: 1px solid rgba(var(--main-color-rgb), 0.4);
   text-decoration: none;
   cursor: pointer;
   outline: none;
+  font-family: monospace; /* طابع الـ Terminal */
+}
+
+/* إضافة رمز سطر الأوامر لزر البلوج */
+.blogLink::before {
+  content: ">_";
+  margin-right: 0.6rem;
+  font-weight: 900;
+  opacity: 0.8;
 }
 
 @media (max-width: 600px) {
   .blogLink {
     min-width: 90px;
-    padding: 0.7rem 1.2rem;
-    font-size: 1.13rem;
-    border-radius: 1.1rem;
+    padding: 0.6rem 1rem;
+    font-size: 1.05rem;
   }
 }
 
 .blogLink:hover, .blogLink:focus-visible, .blogLink.active {
-  background-color: var(--main-color);
-  color: var(--bg-color);
-  border-style: solid;
+  background-color: rgba(var(--main-color-rgb), 0.15);
+  border-color: var(--main-color);
+  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.2);
+  color: #fff;
 }
 
 .navbar a {
-  font-size: 1.35rem;
-  color: var(--text-color);
-  padding: 0.62rem 0.82rem 0.74rem;
-  border-radius: 40px;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
   min-height: 40px;
   font-weight: 600;
-  letter-spacing: 0.45px;
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  text-transform: capitalize;
+  gap: 0.6rem;
+  text-transform: uppercase; /* يبرز الطابع التقني الصارم */
   text-decoration: none;
   background: transparent;
+  border: 1px solid transparent;
 }
 
+/* تأثير الـ Brackets عند التفاعل مع الروابط */
 .navbar a:hover, .navbar a.active {
-  background-color: rgba(var(--main-color-rgb), 0.09);
+  background-color: rgba(var(--main-color-rgb), 0.08);
   color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.3);
+}
+
+.navbar a.active::before {
+  content: "[";
+  color: var(--main-color);
+  opacity: 0.7;
+}
+
+.navbar a.active::after {
+  content: "]";
+  color: var(--main-color);
+  opacity: 0.7;
 }
 
 .MenuIcon {
@@ -117,27 +132,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(var(--main-color-rgb), 0.18);
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
   cursor: pointer;
   z-index: 1001;
-  padding: 0.8rem;
-  min-width: 48px;
-  min-height: 48px;
-  border-radius: 14px;
+  padding: 0.6rem;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 6px;
 }
 
 .MenuIcon span {
-  width: 30px;
-  height: 3px;
+  width: 26px;
+  height: 2px; /* خطوط أرفع لمظهر حاد */
   background: var(--main-color);
-  border-radius: 10px;
+  border-radius: 0;
   transform-origin: center;
 }
 
 .MenuIcon.active span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);
 }
 
 .MenuIcon.active span:nth-child(2) {
@@ -145,7 +160,7 @@
 }
 
 .MenuIcon.active span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .backdrop {
@@ -155,19 +170,16 @@
 @media (max-width: 994px) {
   .header {
     width: min(760px, calc(100% - 1.4rem));
-    padding: 0.78rem 1rem;
-    border-radius: 22px;
-    background:
-      linear-gradient(180deg, rgba(18, 22, 28, 0.92), rgba(7, 10, 14, 0.88)),
-      radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.12), transparent 40%);
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    background: rgba(9, 13, 19, 0.95);
   }
 
   .blogLink {
     order: 1;
     margin-left: auto;
     margin-right: 0.45rem;
-    padding: 0.62rem 0.92rem;
-    font-size: 1.15rem;
+    padding: 0.5rem 0.8rem;
     min-height: 40px;
   }
 
@@ -179,15 +191,13 @@
     right: 0;
     z-index: 1002;
     width: 100%;
-    background:
-      linear-gradient(180deg, rgba(14, 18, 24, 0.96), rgba(8, 10, 14, 0.94)),
-      radial-gradient(circle at top left, rgba(var(--main-color-rgb), 0.08), transparent 35%);
+    background: rgba(7, 10, 15, 0.98);
     backdrop-filter: blur(var(--ui-blur)); 
     flex-direction: column;
-    padding: 1.2rem 0.85rem;
-    border-radius: 22px;
-    border: 1px solid rgba(var(--main-color-rgb), 0.26);
-    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.64);
+    padding: 1rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid rgba(var(--main-color-rgb), 0.4);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
     
     opacity: 0;
     visibility: hidden;
@@ -206,8 +216,8 @@
     position: fixed;
     inset: 0;
     z-index: 999;
-    background: rgba(0, 0, 0, 0.42);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     border: 0;
     padding: 0;
     margin: 0;
@@ -215,19 +225,26 @@
   }
 
   .navbar a {
-    font-size: 1.7rem;
-    width: 92%;
-    justify-content: center;
-    margin: 0.35rem 0;
+    font-size: 1.4rem;
+    width: 100%;
+    justify-content: flex-start; /* محاذاة لليسار في الموبايل لسهولة القراءة كقائمة أوامر */
+    padding-left: 1.5rem;
+    margin: 0.2rem 0;
     min-height: 48px;
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+    border-color: transparent;
   }
 
   .navbar a:hover,
   .navbar a.active {
-    background: linear-gradient(180deg, rgba(var(--main-color-rgb), 0.94), rgba(var(--main-color-rgb), 0.82));
-    color: var(--bg-color);
+    background: rgba(var(--main-color-rgb), 0.1);
+    color: var(--main-color);
+    border-left: 3px solid var(--main-color); /* مؤشر جانبي بدلاً من الخلفية الكاملة */
+    border-radius: 0 6px 6px 0;
+  }
+  
+  .navbar a.active::before, .navbar a.active::after {
+    display: none; /* إخفاء الأقواس في الموبايل للحفاظ على المساحة */
   }
 }
 
@@ -235,25 +252,17 @@
   .header {
     width: calc(100% - 1rem);
     top: 0.7rem;
-    padding: 0.6rem 0.8rem;
-    border-radius: 18px;
-    gap: 0.75rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
   }
 
   .blogLink {
-    margin-right: 0.3rem;
-    font-size: 1.02rem;
-    padding: 0.58rem 0.8rem;
-  }
-
-  .MenuIcon span {
-    width: 24px;
-    height: 2.5px;
+    font-size: 1rem;
+    padding: 0.5rem 0.7rem;
   }
 
   .navbar a {
-    width: 100%;
-    font-size: 1.5rem;
-    padding: 0.65rem 0.9rem;
+    font-size: 1.25rem;
+    padding: 0.6rem 1.2rem;
   }
 }

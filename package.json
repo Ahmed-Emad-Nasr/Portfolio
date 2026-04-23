@@ -5,36 +5,36 @@
     "type": "module",
     "scripts": {
         "dev": "next dev",
-      "build": "next build",
-      "start": "next start",
-      "lint": "eslint .",
-      "type-check": "tsc --noEmit",
-      "format": "prettier --write \"app\" \"scripts\" \"*.{json,md,mjs}\"",
-      "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
-      "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
-      "audit": "npm audit --omit=dev",
-      "verify": "npm run lint && npm run type-check && npm run build"
+        "build": "next build",
+        "start": "next start",
+        "lint": "eslint .",
+        "type-check": "tsc --noEmit",
+        "format": "prettier --write \"app\" \"scripts\" \"*.{json,md,mjs}\"",
+        "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
+        "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
+        "audit": "npm audit --omit=dev",
+        "verify": "npm run lint && npm run type-check && npm run build"
     },
     "dependencies": {
-      "@fortawesome/fontawesome-free": "^7.2.0",
-      "@fortawesome/fontawesome-svg-core": "7.2.0",
-      "@fortawesome/free-brands-svg-icons": "7.2.0",
-      "@fortawesome/free-solid-svg-icons": "7.2.0",
-      "@fortawesome/react-fontawesome": "3.2.0",
-      "framer-motion": "^12.38.0",
-      "next": "16.2.1",
-      "react": "19.2.4",
-      "react-dom": "19.2.4",
-      "yet-another-react-lightbox": "3.21.8"
+        "@fortawesome/fontawesome-free": "^7.2.0",
+        "@fortawesome/fontawesome-svg-core": "7.2.0",
+        "@fortawesome/free-brands-svg-icons": "7.2.0",
+        "@fortawesome/free-solid-svg-icons": "7.2.0",
+        "@fortawesome/react-fontawesome": "3.2.0",
+        "framer-motion": "^12.38.0",
+        "next": "^16.2.4",
+        "react": "19.2.4",
+        "react-dom": "19.2.4",
+        "yet-another-react-lightbox": "3.21.8"
     },
     "devDependencies": {
-      "@types/node": "25.5.2",
-      "@types/react": "19.2.2",
-      "@types/react-dom": "^19.2.3",
-      "concurrently": "^9.2.1",
-      "eslint": "9.39.4",
-      "eslint-config-next": "16.1.6",
-      "prettier": "^3.0.0",
-      "typescript": "5.9.3"
+        "@types/node": "25.5.2",
+        "@types/react": "19.2.2",
+        "@types/react-dom": "^19.2.3",
+        "concurrently": "^9.2.1",
+        "eslint": "9.39.4",
+        "eslint-config-next": "16.1.6",
+        "prettier": "^3.0.0",
+        "typescript": "5.9.3"
     }
-  }
+}
