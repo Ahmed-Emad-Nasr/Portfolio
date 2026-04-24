@@ -480,11 +480,10 @@
 .toolsLabel { color: rgba(255, 255, 255, 0.5); font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: monospace;}
 
 /* =========================================
-   7. MEDIA, SCREENSHOTS & CRT EFFECT
+   7. MEDIA, SCREENSHOTS & HOVER EFFECTS
    ========================================= */
 .screenshotArea { margin-top: 1.5rem; display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 0.8rem; }
 
-/* 🔴 التعديل هنا: ضفنا aspect-ratio: 16 / 9; لكل الفريمات عشان الفيديوهات تاخد حجمها الطبيعي */
 .primaryShot, .shotThumb, .caseSpotlightMedia, .featuredFrame, .playlistFrame, .videoFrame {
   position: relative; border-radius: 4px; overflow: hidden; border: 1px solid rgba(var(--main-color-rgb), 0.3);
   background: #020408; cursor: pointer;
@@ -493,25 +492,21 @@
 
 .shotGrid { position: relative; display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
 
-/* CRT Scanline Overlay for Images */
+/* إزالة الـ CRT Effect نهائياً لتوضيح الصور */
 .primaryShot::after, .shotThumb::after, .caseSpotlightMedia::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.2) 2px, rgba(0, 0, 0, 0.2) 4px);
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
+  display: none; 
 }
 
 .primaryShot img, .shotThumb img, .caseSpotlightMedia img {
-  width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%) contrast(1.2) brightness(0.8); transition: all 0.4s ease;
+  width: 100%; height: 100%; object-fit: cover; 
+  filter: grayscale(15%) contrast(1.1); /* فلتر خفيف جداً يدي طابع الدارك */
+  transition: all 0.4s ease;
 }
 
-/* Hover Reveal - Decrypting Image */
-.primaryShot:hover::after, .shotThumb:hover::after, .caseSpotlightMedia:hover::after { opacity: 0.2; }
+/* توضيح الصورة وتكبيرها عند الوقوف عليها بالماوس */
 .primaryShot:hover img, .shotThumb:hover img, .caseSpotlightMedia:hover img { 
-  transform: scale(1.05); filter: grayscale(0%) contrast(1.1) brightness(1.1); 
+  transform: scale(1.03); 
+  filter: grayscale(0%) contrast(1.1) brightness(1.1); 
 }
 
 .moreShotsBadge {
@@ -521,7 +516,7 @@
 
 /* Embed Previews */
 .embedPreview { position: relative; width: 100%; height: 100%; border: 0; background: transparent; cursor: pointer; display: block; overflow: hidden; }
-.embedPreview img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.5) brightness(0.5); transition: all 0.4s ease; }
+.embedPreview img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.8) brightness(0.7); transition: all 0.4s ease; }
 .embedPreview:hover img { transform: scale(1.05); filter: saturate(1) brightness(0.9); }
 .embedPlayButton {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
@@ -532,46 +527,6 @@
 .embedPreview:hover .embedPlayButton { background: var(--accent-color); color: #000; }
 
 .featuredFrame iframe, .playlistFrame iframe, .videoFrame iframe { width: 100%; height: 100%; border: none; display: block; }
-
-/* CRT Scanline Overlay for Images */
-.primaryShot::after, .shotThumb::after, .caseSpotlightMedia::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.2) 2px, rgba(0, 0, 0, 0.2) 4px);
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
-
-.primaryShot img, .shotThumb img, .caseSpotlightMedia img {
-  width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%) contrast(1.2) brightness(0.8); transition: all 0.4s ease;
-}
-
-/* Hover Reveal - Decrypting Image */
-.primaryShot:hover::after, .shotThumb:hover::after, .caseSpotlightMedia:hover::after { opacity: 0.2; }
-.primaryShot:hover img, .shotThumb:hover img, .caseSpotlightMedia:hover img { 
-  transform: scale(1.05); filter: grayscale(0%) contrast(1.1) brightness(1.1); 
-}
-
-.moreShotsBadge {
-  position: absolute; right: 0.5rem; bottom: 0.5rem; border-radius: 3px; font-size: 1.2rem; font-family: monospace; font-weight: bold;
-  padding: 0.3rem 0.6rem; border: 1px solid var(--main-color); background: rgba(0, 0, 0, 0.9); color: var(--main-color); z-index: 5;
-}
-
-/* Embed Previews */
-.embedPreview { position: relative; width: 100%; height: 100%; border: 0; background: transparent; cursor: pointer; display: block; overflow: hidden; }
-.embedPreview img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.5) brightness(0.5); transition: all 0.4s ease; }
-.embedPreview:hover img { transform: scale(1.05); filter: saturate(1) brightness(0.9); }
-.embedPlayButton {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  padding: 0.6rem 1.2rem; border-radius: 4px; border: 1px solid var(--accent-color);
-  background: rgba(5, 8, 14, 0.9); color: var(--accent-color); font-family: monospace; font-size: 1.3rem; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 20px rgba(var(--accent-color-rgb), 0.5);
-  transition: all 0.3s ease; z-index: 5;
-}
-.embedPreview:hover .embedPlayButton { background: var(--accent-color); color: #000; }
-
-.featuredFrame iframe, .playlistFrame iframe, .videoFrame iframe { width: 100%; height: 100%; border: none;}
 
 /* =========================================
    8. GALLERY OVERLAY (LIGHTBOX)

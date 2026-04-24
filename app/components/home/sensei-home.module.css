@@ -1,7 +1,7 @@
 /*
  * File: sensei-home.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Home section styles (hero, actions, and responsive rules) with Cyber Animations
+ * Purpose: Home section styles (Original Style with Image Scan Only)
  */
 
 /* إضافة كلاس لدعم إمكانية الوصول */
@@ -44,30 +44,6 @@
   align-items: center;
   min-height: 100vh;
   padding: 2.2rem;
-  position: relative;
-  overflow: hidden; /* ضروري عشان شبكة الـ Grid متعملش Scroll */
-}
-
-/* --- Animated Cyber Grid Background --- */
-.home::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: 
-    linear-gradient(rgba(var(--main-color-rgb), 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--main-color-rgb), 0.02) 1px, transparent 1px);
-  background-size: 40px 40px;
-  z-index: -1;
-  animation: backgroundMove 30s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes backgroundMove {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(40px); }
 }
 
 .container {
@@ -93,9 +69,10 @@
   border: 0;
   background: transparent;
   cursor: pointer;
+  /* إضافة التعديل هنا لتفعيل الـ Scan */
   position: relative;
+  overflow: hidden;
   border-radius: 20px;
-  overflow: hidden; /* ضروري عشان الـ Scanline ميطلعش بره الصورة */
 }
 
 /* --- Cyber Scanline Effect --- */
@@ -152,25 +129,6 @@
   letter-spacing: 0.015em;
 }
 
-/* --- Subtle Glitch Effect --- */
-.highlight { 
-  color: var(--main-color); 
-  display: inline-block;
-  position: relative;
-}
-
-.highlight:hover {
-  animation: textGlitch 0.3s linear infinite;
-}
-
-@keyframes textGlitch {
-  0% { text-shadow: 2px 0 rgba(255,0,60,0.7), -2px 0 rgba(0,240,255,0.7); transform: translate(0); }
-  25% { text-shadow: -2px 0 rgba(255,0,60,0.7), 2px 0 rgba(0,240,255,0.7); transform: translate(-1px, 1px); }
-  50% { text-shadow: 2px 0 rgba(255,0,60,0.7), -2px 0 rgba(0,240,255,0.7); transform: translate(1px, -1px); }
-  75% { text-shadow: -2px 0 rgba(255,0,60,0.7), 2px 0 rgba(0,240,255,0.7); transform: translate(-1px, -1px); }
-  100% { text-shadow: 2px 0 rgba(255,0,60,0.7), -2px 0 rgba(0,240,255,0.7); transform: translate(0); }
-}
-
 .valueLine {
   margin: 0.75rem 0 1rem;
   max-width: 62rem;
@@ -187,6 +145,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.highlight { color: var(--main-color); }
 
 .availabilityStatus {
   display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.6rem 1.5rem;
@@ -262,39 +221,12 @@
   gap: 0.7rem;
 }
 
-/* --- SOC Alert Pulse Effect --- */
 .trustCard {
   padding: 0.78rem 0.88rem;
   border-radius: var(--radius-card-sm);
   border: 1px solid rgba(var(--main-color-rgb), 0.22);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-  position: relative;
-  overflow: hidden;
-  transition: border-color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
-}
-
-.trustCard:hover {
-  border-color: rgba(var(--main-color-rgb), 0.8);
-  transform: translateY(-3px);
-}
-
-.trustCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
-  transform: skewX(-20deg);
-  animation: cardSweep 6s infinite;
-}
-
-@keyframes cardSweep {
-  0% { left: -150%; }
-  20% { left: 200%; } 
-  100% { left: 200%; }
 }
 
 .trustCard strong {
@@ -302,8 +234,6 @@
   font-size: 1.62rem;
   color: #ffffff;
   line-height: 1.1;
-  position: relative;
-  z-index: 1;
 }
 
 .trustCard span {
@@ -312,8 +242,6 @@
   font-size: 1.08rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.35;
-  position: relative;
-  z-index: 1;
 }
 
 .proofPill {
