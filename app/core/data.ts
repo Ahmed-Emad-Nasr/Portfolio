@@ -530,7 +530,27 @@ export const caseEvidenceLibrary = [
       ],
       image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
     },
-
+ {
+    id: "aws-athena-healthcare",
+    title: "AWS Healthcare Data Pipeline",
+    description: "Serverless data ingestion and querying setup for healthcare data using Amazon S3 and Amazon Athena.",
+    platform: "AWS Lab",
+    type: "Write-up",
+    category: "Cloud Infrastructure",
+    difficulty: "Easy",
+    // يفضل تعمل فولدر باسم الـ Case وتحط جواه الـ PDF والصور عشان التنظيم
+    href: "Assets/Cases/Amazon S3 and Amazon Athena/Amazon S3 and Amazon Athena.pdf", 
+    tags: ["AWS", "Data Pipeline", "Cloud Security"],
+    tools: ["Amazon S3", "Amazon Athena", "SQL"],
+    skillsGained: ["Cloud Storage Management", "Data Cataloging", "Serverless Querying"],
+    readTime: 10,
+    date: "2026-04-23",
+    // ضفتلك الجزء الخاص بالصور عشان يطابق باقي الـ cases
+    screenshots: [
+      "Assets/Cases/Amazon S3 and Amazon Athena/16.png", 
+    ],
+    image: "Assets/Cases/Amazon S3 and Amazon Athena/16.png",
+  },
   {
     id: "soc-env-pdf",
     title: "SOC Environment Report",

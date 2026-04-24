@@ -66,6 +66,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).png`);
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "aws-athena-healthcare": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Amazon S3 and Amazon Athena/${i + 1}.png`),
           "soc-env-depi-r3-project": [
             "Assets/Cases/SOC Enviroment DEPI R3 Project/1.png",
             "Assets/Cases/SOC Enviroment DEPI R3 Project/2.png",
