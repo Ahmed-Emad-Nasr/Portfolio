@@ -23,7 +23,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
   transition: all 0.4s var(--motion-ease);
-  overflow: hidden;
+  /* تم إزالة overflow: hidden للسماح للمنيو بالظهور */
 }
 
 /* Cyber Scanline Overlay */
@@ -36,6 +36,9 @@
   transform: skewX(-20deg);
   animation: hudScan 4s infinite linear;
   pointer-events: none;
+  /* إضافة التعديلات التالية لقص الأنيميشن بدلاً من overflow: hidden */
+  border-radius: inherit;
+  clip-path: inset(0 round 12px);
 }
 
 @keyframes hudScan {
@@ -183,7 +186,18 @@
 .MenuIcon.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .MenuIcon.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-.backdrop { display: none; }
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
 
 @media (max-width: 994px) {
   .header {
@@ -234,15 +248,6 @@
 
   .backdrop {
     display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    border: 0;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
   }
 
   .navbar a {

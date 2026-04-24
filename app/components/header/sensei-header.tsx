@@ -102,57 +102,60 @@ const SenseiHeader = memo(function SenseiHeader() {
   const navbarClass = isMenuOpen ? `${NAVBAR_BASE} ${ACTIVE_CLASS}` : NAVBAR_BASE;
 
   return (
-    <header
-      className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header}
-      data-site-header="true"
-    >
-      <Link
-        href={BLOG_PATH}
-        className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
-        aria-label="Open blog page"
-        aria-current={isBlogRoute ? "page" : undefined}
-        tabIndex={0}
-        onClick={() => {
-          if (window.innerWidth <= 994) {
-            setIsMenuOpen(false);
-          }
-        }}
+    <>
+      <header
+        className={isScrolled ? `${styles.header} ${styles.scrolled}` : styles.header}
+        data-site-header="true"
       >
-        <span className={styles.navText}>Blog</span>
-      </Link>
+        <Link
+          href={BLOG_PATH}
+          className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
+          aria-label="Open blog page"
+          aria-current={isBlogRoute ? "page" : undefined}
+          tabIndex={0}
+          onClick={() => {
+            if (window.innerWidth <= 994) {
+              setIsMenuOpen(false);
+            }
+          }}
+        >
+          <span className={styles.navText}>Blog</span>
+        </Link>
 
-      <button
-        type="button"
-        className={menuIconClass}
-        onClick={toggleMenu}
-        aria-expanded={isMenuOpen}
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        aria-controls="main-navigation"
-      >
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-      </button>
+        <button
+          type="button"
+          className={menuIconClass}
+          onClick={toggleMenu}
+          aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-controls="main-navigation"
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
 
-      <nav
-        id="main-navigation"
-        className={navbarClass}
-        aria-label="Main navigation"
-      >
-        {Object.entries(sectionIcons).map(([section, icon]) => (
-          <a
-            key={section}
-            href={`#${section}`}
-            className={activeSection === section ? ACTIVE_CLASS : undefined}
-            onClick={(event) => handleNavLinkClick(section, event)}
-            aria-current={activeSection === section ? "page" : undefined}
-          >
-            <FontAwesomeIcon icon={icon} aria-hidden="true" />
-            <span className={styles.navText}>{section.replace(/([a-z])([A-Z])/g, "$1 $2")}</span>
-          </a>
-        ))}
-      </nav>
+        <nav
+          id="main-navigation"
+          className={navbarClass}
+          aria-label="Main navigation"
+        >
+          {Object.entries(sectionIcons).map(([section, icon]) => (
+            <a
+              key={section}
+              href={`#${section}`}
+              className={activeSection === section ? ACTIVE_CLASS : undefined}
+              onClick={(event) => handleNavLinkClick(section, event)}
+              aria-current={activeSection === section ? "page" : undefined}
+            >
+              <FontAwesomeIcon icon={icon} aria-hidden="true" />
+              <span className={styles.navText}>{section.replace(/([a-z])([A-Z])/g, "$1 $2")}</span>
+            </a>
+          ))}
+        </nav>
+      </header>
 
+      {/* Backdrop moved outside header to avoid transform containment issues */}
       {isMenuOpen ? (
         <button 
           type="button" 
@@ -161,7 +164,7 @@ const SenseiHeader = memo(function SenseiHeader() {
           onClick={handleBackdropClick} 
         />
       ) : null}
-    </header>
+    </>
   );
 });
 
