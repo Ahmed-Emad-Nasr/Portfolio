@@ -77,7 +77,9 @@ html {
 body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
-  background-color: var(--bg-color);
+  /* إضاءة دائرية خفيفة جداً في الخلفية بتدي عمق زي شاشات الـ SOC */
+  background: radial-gradient(circle at top center, var(--second-bg-color) 0%, var(--bg-color) 100%);
+  background-attachment: fixed;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -108,6 +110,19 @@ button {
   box-shadow: var(--shadow-glow);
   position: relative;
   overflow: hidden;
+  z-index: 1;
+}
+
+/* تأثير شعاع بيعدي جوا الزرار */
+button::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: left var(--motion-slow) var(--motion-ease);
+  z-index: -1;
 }
 
 button:hover:not(:disabled) {
@@ -116,6 +131,10 @@ button:hover:not(:disabled) {
   border-color: var(--main-color);
   box-shadow: var(--shadow-glow-hover);
   transform: translateY(-2px);
+}
+
+button:hover:not(:disabled)::before {
+  left: 200%;
 }
 
 button:active:not(:disabled) {
@@ -183,12 +202,32 @@ section.glass, .glass-card {
   backdrop-filter: blur(var(--card-blur)) saturate(120%);
   -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
   transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
+  position: relative;
+  overflow: hidden;
 }
 
 .glass-card:hover {
   border-color: rgba(var(--main-color-rgb), 0.4);
   box-shadow: var(--shadow-glow);
   transform: translateY(-3px);
+}
+
+/* خط بيانات بيجري فوق الكارت */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--main-color));
+  animation: dataStream 6s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes dataStream {
+  0% { left: -100%; }
+  50%, 100% { left: 200%; }
 }
 
 /*--------- 7. Custom Scrollbar ---------*/
@@ -264,5 +303,54 @@ section.glass, .glass-card {
   :root {
     --card-blur: 8px;
   }
+}
 
+/*--------- 10. Global Cyber Utilities (New) ---------*/
+
+/* 1. كلاس تأثير الجليتش لأي نص مهم (استخدمه على العناوين) */
+.cyber-glitch {
+  position: relative;
+  display: inline-block;
+  color: var(--text-color);
+}
+
+.cyber-glitch:hover {
+  animation: globalGlitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: var(--main-color);
+}
+
+@keyframes globalGlitch {
+  0% { text-shadow: 2px 0 var(--accent-color), -2px 0 #ff003c; transform: translate(0); }
+  25% { text-shadow: -2px 0 var(--accent-color), 2px 0 #ff003c; transform: translate(-1px, 1px); }
+  50% { text-shadow: 2px 0 var(--accent-color), -2px 0 #ff003c; transform: translate(1px, -1px); }
+  75% { text-shadow: -2px 0 var(--accent-color), 2px 0 #ff003c; transform: translate(-1px, -1px); }
+  100% { text-shadow: 2px 0 var(--accent-color), -2px 0 #ff003c; transform: translate(0); }
+}
+
+/* 2. كلاس لخلفية شبكية خفيفة جداً لأي سكشن */
+.cyber-grid-bg {
+  position: relative;
+}
+
+.cyber-grid-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(var(--main-color-rgb), 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--main-color-rgb), 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 3. كلاس لأي حاجة بتعمل Pulse زي الـ Alerts */
+.cyber-alert-pulse {
+  animation: cyberPulse 2s infinite;
+}
+
+@keyframes cyberPulse {
+  0% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(var(--accent-color-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0); }
 }

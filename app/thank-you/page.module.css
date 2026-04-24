@@ -1,21 +1,26 @@
+/*
+ * File: page.module.css (General Shared Styles)
+ * Theme: SOC Analyst / Terminal
+ */
+
 .wrap {
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 2rem;
   background:
-    radial-gradient(circle at 15% 12%, rgba(255, 120, 85, 0.18), transparent 36%),
-    radial-gradient(circle at 80% 20%, rgba(0, 214, 170, 0.16), transparent 40%),
-    linear-gradient(180deg, #070d15 0%, #0c1421 100%);
+    radial-gradient(circle at 15% 12%, rgba(var(--main-color-rgb), 0.1), transparent 36%),
+    radial-gradient(circle at 80% 20%, rgba(var(--accent-color-rgb), 0.08), transparent 40%),
+    linear-gradient(180deg, #03060a 0%, #080c14 100%);
 }
 
 .card {
   width: min(100%, 680px);
-  border: 1px solid rgba(152, 205, 190, 0.32);
-  border-radius: 18px;
-  background: rgba(8, 18, 31, 0.85);
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
-  padding: 2.2rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  border-radius: 8px;
+  background: rgba(8, 12, 18, 0.85);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(var(--main-color-rgb), 0.05);
+  padding: 2.5rem;
   text-align: center;
 }
 
@@ -25,56 +30,76 @@
   justify-content: center;
   width: 60px;
   height: 60px;
-  border-radius: 999px;
-  border: 1px solid rgba(87, 240, 171, 0.44);
-  background: rgba(87, 240, 171, 0.14);
-  color: #76f3b6;
+  border-radius: 4px; /* Sharp corners */
+  border: 1px dashed rgba(var(--accent-color-rgb), 0.5);
+  background: rgba(var(--accent-color-rgb), 0.1);
+  color: var(--accent-color);
   font-size: 1.9rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .title {
   margin: 0;
+  font-family: monospace;
   font-size: clamp(1.8rem, 3vw, 2.5rem);
-  color: #f5fbff;
+  color: #fff;
+  text-transform: uppercase;
 }
 
 .text {
-  margin: 0.9rem auto 0;
+  margin: 1.2rem auto 0;
   max-width: 580px;
-  color: rgba(215, 230, 246, 0.82);
-  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2rem;
+  font-family: monospace;
   line-height: 1.6;
 }
 
 .actions {
-  margin-top: 1.8rem;
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
-  gap: 0.85rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 .btn {
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 1.2rem;
   font-weight: 700;
-  padding: 0.75rem 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.8rem 1.4rem;
   border: 1px solid transparent;
-  transition: transform var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease);
+  transition: all 0.3s ease;
 }
 
 .primary {
-  background: #6feab2;
-  color: #021c14;
+  background: rgba(var(--main-color-rgb), 0.15);
+  color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.4);
 }
 
 .secondary {
   background: transparent;
-  color: #d9e9ff;
-  border-color: rgba(148, 182, 219, 0.5);
+  color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn:hover {
   transform: translateY(-2px);
+}
+
+.primary:hover {
+  background: var(--main-color);
+  color: #000;
+  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.4);
+}
+
+.secondary:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
 }

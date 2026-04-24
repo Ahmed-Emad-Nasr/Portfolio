@@ -1,7 +1,7 @@
 /*
  * File: sensei-art.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Art gallery grid and responsive image layout styles
+ * Purpose: Art gallery grid and responsive image layout styles (Cybersecurity / SOC Theme)
  */
 
 .art-gallery-section { min-height: 100vh; padding: 8rem 0 6rem; margin: 0; margin-top: clamp(26rem, 45vh, 60rem); position: relative; z-index: 1; }
@@ -11,10 +11,62 @@
 .title { position: relative; margin-bottom: 40px; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: none; display: inline-block; padding-bottom: 2rem; }
 .title::before, .title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px; }
 .title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
-.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: none; }
+.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.5); }
 
-.Gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-.art_pic { display: block; width: 100%; position: relative; border-radius: 1rem; overflow: hidden; }
+.Gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+/* --- Cyber Card Frame --- */
+.art_pic { 
+  display: block; 
+  width: 100%; 
+  position: relative; 
+  border-radius: 8px; /* زوايا حادة لشكل الـ Terminal */
+  background: rgba(10, 15, 25, 0.6);
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  padding: 0.6rem; /* فريم حوالين الصورة */
+  transition: all var(--motion-normal) var(--motion-ease);
+}
+
+.art_pic:hover {
+  border-color: var(--main-color);
+  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3), inset 0 0 10px rgba(var(--main-color-rgb), 0.1);
+  transform: translateY(-5px);
+}
+
+/* Targeting HUD (زوايا التنشين زي الرادار) */
+.art_pic::before, .art_pic::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  transition: all var(--motion-normal) var(--motion-ease);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.art_pic::before {
+  top: 0; left: 0;
+  border-top-color: var(--main-color);
+  border-left-color: var(--main-color);
+  border-radius: 8px 0 0 0;
+  opacity: 0;
+  transform: translate(10px, 10px);
+}
+
+.art_pic::after {
+  bottom: 0; right: 0;
+  border-bottom-color: var(--main-color);
+  border-right-color: var(--main-color);
+  border-radius: 0 0 8px 0;
+  opacity: 0;
+  transform: translate(-10px, -10px);
+}
+
+.art_pic:hover::before, .art_pic:hover::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
 
 .imageButton {
   display: block;
@@ -25,13 +77,71 @@
   background: transparent;
   text-align: inherit;
   cursor: pointer;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
+/* Terminal Overlay Text */
+.imageButton::before {
+  content: "[ VIEW_RECORD ]";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--main-color);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.imageButton:hover::before {
+  opacity: 1;
+}
+
+/* Scanner Line Effect */
+.imageButton::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: rgba(var(--main-color-rgb), 0.6);
+  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 1);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.imageButton:hover::after {
+  opacity: 1;
+  animation: cyberScan 2s linear infinite;
+}
+
+@keyframes cyberScan {
+  0% { top: -5%; }
+  50% { top: 105%; }
+  100% { top: -5%; }
+}
 
 .galleryImg {
-  width: 100%; height: auto; object-fit: cover; display: block; border-radius: 1rem;
+  width: 100%; height: auto; object-fit: cover; display: block; border-radius: 4px;
   cursor: pointer;
-  transition: border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), filter var(--motion-normal) var(--motion-ease);
+  filter: grayscale(15%) contrast(1.1); /* شكل داتا بيز قديم شوية */
+  transition: filter var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+}
+
+.art_pic:hover .galleryImg {
+  filter: grayscale(0%) contrast(1.15) brightness(1.1); /* الألوان ترجع قوية مع الـ Hover */
+  transform: scale(1.03);
 }
 
 .imageButton:focus-visible .galleryImg {
@@ -39,22 +149,35 @@
   box-shadow: 0 0 0 3px rgba(var(--main-color-rgb), 0.28), 0 14px 28px rgba(0, 0, 0, 0.45);
 }
 
+/* --- Encrypted Skeletons --- */
 .skeletonItem {
-  border-radius: 1rem;
+  border-radius: 8px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(var(--main-color-rgb), 0.15);
+  background: rgba(10, 15, 25, 0.6);
+  border: 1px dashed rgba(var(--main-color-rgb), 0.2);
+  padding: 0.6rem;
 }
 
 .skeletonThumb {
   aspect-ratio: 1 / 1;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonThumb::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
+  animation: radarSweep 1.5s infinite linear;
+}
+
+@keyframes radarSweep {
+  100% { transform: translateX(100%); }
 }
 
 .skeletonCaption {
-  padding: 1rem;
+  padding: 1rem 0 0;
   display: grid;
   gap: 0.7rem;
 }
@@ -62,75 +185,16 @@
 .skeletonLine,
 .skeletonLineShort {
   display: block;
-  height: 1rem;
-  border-radius: 999px;
+  height: 0.8rem;
+  border-radius: 2px;
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: none;
 }
 
-.skeletonLineShort {
-  width: 70%;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.art_pic:hover .galleryImg {
-  border-color: rgba(var(--main-color-rgb), 0.6);
-  box-shadow: none;
-  filter: brightness(1.05);
-}
-
-.metaBlock {
-  margin-top: 0.7rem;
-  padding: 0.75rem 0.85rem;
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  border-radius: 0.85rem;
-  background: rgba(8, 12, 18, 0.72);
-  display: grid;
-  gap: 0.36rem;
-}
-
-.metaBlock strong {
-  font-size: 1.25rem;
-  color: rgba(240, 247, 255, 0.96);
-  line-height: 1.35;
-}
-
-.metaBlock span {
-  font-size: 1.08rem;
-  color: rgba(225, 235, 246, 0.78);
-}
-
-.metaBlock a {
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 0.2rem 0.62rem;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.28);
-  background: rgba(var(--main-color-rgb), 0.1);
-  color: rgba(234, 245, 255, 0.95);
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.metaBlock a:hover {
-  color: var(--main-color);
-  border-color: rgba(var(--main-color-rgb), 0.52);
-  background: rgba(var(--main-color-rgb), 0.18);
-}
+.skeletonLineShort { width: 70%; }
 
 /* === Media Queries & Mobile Overrides === */
 @media (max-width: 1199px) { 
-  .Gallery { grid-template-columns: repeat(3, 1fr); } 
+  .Gallery { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
   .art-gallery-content { padding: 0 3rem 5%; } 
 }
 
@@ -142,6 +206,7 @@
 
 @media (max-width: 767px) { 
   .art-gallery-section { margin-top: clamp(18rem, 36vh, 40rem); }
-  .Gallery { grid-template-columns: 1fr; gap: 25px; } 
+  .Gallery { grid-template-columns: 1fr; gap: 20px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 
+  .imageButton::before { font-size: 1rem; padding: 0.4rem 0.8rem; }
 }

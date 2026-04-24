@@ -423,12 +423,13 @@ export default function BlogPageClient() {
         }}
       >
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
+{/* ── Hero ─────────────────────────────────────────────────────────── */}
         <section className={styles.hero}>
           <span className={styles.heroGlow} aria-hidden="true" />
-          <p className={styles.kicker}>Knowledge Hub</p>
-          <h1>Blog, Reports, and Technical Videos</h1>
+          <p className={styles.kicker}>Ahmed_Emad</p>
+          <h1>Security Blog & Technical Reports</h1>
           <p>
-            A single place for my PDF reports, assignments, and security videos.
+            A single place for my SOC incident reports, DFIR writeups, and technical videos.
             Use search and filters to find what you want quickly.
           </p>
           <div className={styles.heroGrid}>

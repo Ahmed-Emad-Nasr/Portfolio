@@ -3,7 +3,7 @@
 /*
  * File: sensei-header.tsx
  * Author: Ahmed Emad Nasr
- * Purpose: Render sticky navigation header and mobile menu behavior (No Animations)
+ * Purpose: Render sticky navigation header and mobile menu behavior (Cybersecurity HUD Theme)
  */
 
 import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
@@ -62,7 +62,6 @@ const SenseiHeader = memo(function SenseiHeader() {
       const offset = headerHeight + (Number.isFinite(computedTop) ? computedTop : 0) + 10;
       const targetTop = window.scrollY + target.getBoundingClientRect().top - offset;
 
-      // تم تغيير behavior من smooth إلى auto لإلغاء حركة النزول البطيئة
       window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
     }
   }, []);

@@ -1,7 +1,7 @@
 /*
  * File: experience-section.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Experience timeline styles (cards, timeline markers, and responsive rules)
+ * Purpose: Experience timeline styles (Cybersecurity / SOC Theme)
  */
 
 .section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; }
@@ -10,10 +10,11 @@
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: none; display: inline-block; padding-bottom: 2rem; }
 .title::before, .title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px; }
 .title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
-.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: none; }
+.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.5); }
 
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
 
+/* --- 1. Data Stream Timeline --- */
 .time-line { position: relative; max-width: 1200px; margin: 0 auto; padding: 2rem 0; }
 .time-line::after {
   content: "";
@@ -24,105 +25,170 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 1rem;
+  /* تأثير الداتا اللي بتنزل */
+  background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 0.1) 0%, rgba(var(--main-color-rgb), 0.8) 50%, rgba(var(--main-color-rgb), 0.1) 100%);
+  background-size: 100% 200%;
+  animation: dataStreamTimeline 4s linear infinite;
+  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.3);
+}
+
+@keyframes dataStreamTimeline {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
 }
 
 .timeline-container { padding: 2rem 4rem; position: relative; width: 50%; z-index: 2; }
 .timeline-container.left { left: 0; }
 .timeline-container.right { left: 50%; }
 
+/* --- 2. Radar Pulse Nodes --- */
 .timeline-container::after {
   content: ""; position: absolute; width: 24px; height: 24px;
   background: radial-gradient(circle at 35% 35%, rgba(var(--accent-color-rgb), 0.9), rgba(7, 26, 19, 0.95));
   border: 4px solid rgba(var(--accent-color-rgb), 0.92); border-radius: 50%; top: 5rem; z-index: 3;
-  box-shadow: none;
-  transition: background var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
+  /* نبض الرادار */
+  animation: radarPulse 2.5s infinite;
+  transition: background var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
+
+@keyframes radarPulse {
+  0% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.5); }
+  70% { box-shadow: 0 0 0 15px rgba(var(--accent-color-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0); }
+}
+
 .timeline-container.left::after { right: -12px; }
 .timeline-container.right::after { left: -12px; }
-.timeline-container:hover::after { background: var(--main-color); box-shadow: none; }
+.timeline-container:hover::after { 
+  background: var(--main-color); 
+  border-color: var(--main-color);
+  transform: scale(1.2);
+  animation: none;
+  box-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.8);
+}
 
+/* --- 3. Cyber Card Content --- */
 .content {
   background:
-    radial-gradient(circle at 88% 12%, rgba(var(--accent-color-rgb), 0.14), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(var(--accent-color-rgb), 0.08), transparent 40%),
     var(--surface-card-bg);
   padding: 2.8rem; border-radius: var(--radius-card); border: 1px solid var(--surface-card-border);
   transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
   backface-visibility: hidden;
-  /* تم إزالة will-change لتوفير استهلاك الذاكرة وتحسين الأداء العام */
   position: relative; text-align: left;
   overflow: hidden;
-  box-shadow: none;
+}
+
+/* تأثير الـ Scanline الخفيف جوا الكارت لما تعمل Hover */
+.content::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--main-color));
+  transition: left 0s; /* Reset instantly */
+}
+
+.content:hover::after {
+  left: 200%;
+  transition: left 1s ease-in-out;
 }
 
 .content:hover {
-  background: rgba(10, 13, 18, 0.92); backdrop-filter: blur(15px);
-  border-color: rgba(var(--accent-color-rgb), 0.5); box-shadow: none;
-  transform: translateY(-3px);
+  background: rgba(10, 13, 18, 0.95); backdrop-filter: blur(15px);
+  border-color: rgba(var(--main-color-rgb), 0.5); 
+  box-shadow: 0 8px 32px rgba(var(--main-color-rgb), 0.15);
+  transform: translateY(-5px);
 }
 
 .tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: rgba(205, 250, 230, 0.84); transition: color var(--motion-normal) var(--motion-ease); }
-.titleIcon { font-size: 1.8rem; opacity: 0.9; transition: color var(--motion-normal) var(--motion-ease); }
+.titleIcon { font-size: 1.8rem; opacity: 0.9; transition: color var(--motion-normal) var(--motion-ease), text-shadow var(--motion-normal) var(--motion-ease); }
 .tag h3 { margin: 0; font-size: 1.6rem; font-weight: 700; color: rgba(233, 241, 250, 0.9); transition: color 0.35s ease; display: inline-flex; align-items: center; gap: 0.8rem; }
 .linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity 0.35s ease, color 0.35s ease; }
-.tag h3:hover { cursor: pointer; text-decoration: underline; text-decoration-color: var(--main-color); }
+.tag h3:hover { cursor: pointer; text-decoration: underline; text-decoration-color: var(--main-color); text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.4); }
 .tag h3:hover .linkIcon { opacity: 1; color: var(--main-color); }
-.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: disc; color: var(--text-muted); font-size: 1.5rem; line-height: 1.78; font-weight: 500; transition: color var(--motion-normal) var(--motion-ease); }
+
+.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; /* المربع بيدي شكل Terminal أكتر */ color: var(--text-muted); font-size: 1.5rem; line-height: 1.78; font-weight: 500; transition: color var(--motion-normal) var(--motion-ease); }
 .desc-list li { margin-bottom: 0.6rem; }
+.desc-list li::marker { color: rgba(var(--main-color-rgb), 0.5); }
 .desc-list li:last-child { margin-bottom: 0; }
 
+/* --- 4. Terminal Skill Badges --- */
 .skillTags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 1.2rem;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
 }
 
 .skillTag {
   display: inline-flex;
   align-items: center;
-  padding: 0.38rem 0.82rem;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--accent-color-rgb), 0.32);
-  background: rgba(var(--accent-color-rgb), 0.14);
-  color: rgba(220, 255, 240, 0.95);
-  font-size: 1.2rem;
-  font-weight: 700;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px; /* زوايا حادة شوية عشان تبان Tech أكتر */
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  background: rgba(10, 15, 25, 0.6);
+  color: rgba(var(--main-color-rgb), 0.9);
+  font-size: 1.15rem;
+  font-family: monospace; /* خط المبرمجين */
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all var(--motion-fast) var(--motion-ease);
 }
 
-.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(var(--main-color-rgb), 0.12); transition: border-color var(--motion-normal) var(--motion-ease); gap: 0.8rem; }
+.skillTag::before {
+  content: ">_ ";
+  opacity: 0.5;
+  margin-right: 4px;
+}
+
+.skillTag:hover {
+  background: rgba(var(--main-color-rgb), 0.15);
+  border-color: var(--main-color);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.4);
+  transform: translateY(-2px);
+}
+
+.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed rgba(var(--main-color-rgb), 0.2); transition: border-color var(--motion-normal) var(--motion-ease); gap: 0.8rem; }
 .experience-time, .date-range { display: flex; align-items: center; gap: 0.7rem; }
 .experience-time { font-size: 1.4rem; font-weight: 700; color: var(--main-color); transition: color var(--motion-normal) var(--motion-ease), text-shadow var(--motion-normal) var(--motion-ease); }
-.date-range { font-size: 1.2rem; color: rgba(233, 241, 250, 0.76); font-weight: 600; transition: color var(--motion-normal) var(--motion-ease); }
+.date-range { font-size: 1.2rem; color: rgba(233, 241, 250, 0.76); font-weight: 600; font-family: monospace; transition: color var(--motion-normal) var(--motion-ease); }
 
 .proofLink {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   min-height: 36px;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--accent-color-rgb), 0.38);
-  color: rgba(222, 255, 242, 0.95);
-  background: rgba(var(--accent-color-rgb), 0.12);
+  padding: 0.45rem 1.2rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--accent-color-rgb), 0.4);
+  color: var(--accent-color);
+  background: rgba(var(--accent-color-rgb), 0.08);
   font-size: 1.2rem;
   font-weight: 700;
-  transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+  transition: all 0.22s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .proofLink:hover {
-  background: rgba(var(--accent-color-rgb), 0.94);
-  border-color: rgba(var(--accent-color-rgb), 0.8);
-  color: #04251a;
-  transform: translateY(-1px);
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.4);
 }
 
-.content:hover .tag h2 { color: rgba(222, 255, 242, 0.96); text-shadow: 0 0 18px rgba(var(--accent-color-rgb), 0.36); }
-.content:hover .titleIcon { color: rgba(var(--accent-color-rgb), 0.96); }
-.content:hover .tag h3 { color: rgba(255, 255, 255, 0.92); }
-.content:hover .desc-list { color: rgba(255, 255, 255, 0.84); }
-.content:hover .date-details { border-top-color: rgba(var(--accent-color-rgb), 0.34); }
-.content:hover .experience-time { color: rgba(var(--accent-color-rgb), 0.95); text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.35); }
-.content:hover .date-range { color: rgba(255, 255, 255, 0.6); }
+/* Hover States for Content */
+.content:hover .tag h2 { color: #fff; text-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.5); }
+.content:hover .titleIcon { color: var(--main-color); text-shadow: 0 0 15px var(--main-color); }
+.content:hover .tag h3 { color: rgba(255, 255, 255, 0.95); }
+.content:hover .desc-list { color: rgba(255, 255, 255, 0.88); }
+.content:hover .desc-list li::marker { color: var(--main-color); }
+.content:hover .date-details { border-top-color: rgba(var(--main-color-rgb), 0.5); }
+.content:hover .experience-time { color: var(--accent-color); text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.4); }
+.content:hover .date-range { color: rgba(255, 255, 255, 0.8); }
 
 /* === Media Queries & Mobile Overrides === */
 @media (max-width: 991px) { 
@@ -151,7 +217,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(125deg, rgba(255, 255, 255, 0.08), transparent 45%);
+  background: linear-gradient(125deg, rgba(var(--main-color-rgb), 0.05), transparent 45%);
   opacity: 0;
   transition: opacity 0.35s ease;
   pointer-events: none;

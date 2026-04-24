@@ -1,7 +1,7 @@
 /*
  * File: sensei_loader.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Loader overlay styles
+ * Purpose: Loader overlay styles (Cybersecurity Boot-up Theme)
  */
 
 .loader {
@@ -11,15 +11,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at center, rgba(var(--main-color-rgb), 0.08), transparent 42%), #000;
+  /* خلفية سوداء مع شبكة خفيفة كأنها شاشة تيرمينال */
+  background: #03080e;
+  background-image: 
+    linear-gradient(rgba(var(--main-color-rgb), 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--main-color-rgb), 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
 }
 
-
+.loader.fadeOut {
+  opacity: 0;
+  visibility: hidden;
+}
 
 .spinner {
   width: 250px;
   height: 250px;
+  /* إضافة توهج للوجو أو الـ GIF */
+  filter: drop-shadow(0 0 20px rgba(var(--main-color-rgb), 0.4));
+  animation: bootPulse 2s infinite ease-in-out;
+}
+
+@keyframes bootPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(var(--main-color-rgb), 0.2)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(var(--main-color-rgb), 0.6)); }
 }

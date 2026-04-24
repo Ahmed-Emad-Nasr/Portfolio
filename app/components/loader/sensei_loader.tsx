@@ -3,7 +3,7 @@
 /*
  * File: sensei_loader.tsx
  * Author: Ahmed Emad Nasr
- * Purpose: Render startup loader with only a GIF
+ * Purpose: Render startup loader with only a GIF (Cybersecurity Boot-up Theme)
  */
 
 import { useState, useEffect } from "react";
@@ -14,11 +14,12 @@ import loadingGif from "@/public/Assets/loading/loading.gif";
 
 function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null {
   const [render, setRender] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
     if (!isLoading) {
-      // Keep a short delay to preserve fade-out smoothness
-      const timer = setTimeout(() => setRender(false), 450);
+      setFadeOut(true); // تشغيل حركة الـ Fade-out الأول
+      const timer = setTimeout(() => setRender(false), 500); // 500ms عشان ياخد وقته يختفي بنعومة
       return () => clearTimeout(timer);
     }
   }, [isLoading]);
@@ -27,13 +28,13 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
 
   return (
     <div
-      className={styles.loader}
+      className={`${styles.loader} ${fadeOut ? styles.fadeOut : ""}`}
       id="page-loader"
       aria-hidden="true"
     >
       <Image
         src={loadingGif.src}
-        alt="Loading..."
+        alt="System Booting..."
         width={250}
         height={250}
         sizes="250px"
