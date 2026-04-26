@@ -530,6 +530,25 @@ export const caseEvidenceLibrary = [
       ],
       image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
     },
+    {
+    id: "aws-guardduty-setup",
+    title: "Amazon GuardDuty Threat Detection",
+    description: "Enabled Amazon GuardDuty, generated sample findings, and analyzed high-severity threat detections including unauthorized S3 access.",
+    platform: "AWS Lab",
+    type: "Write-up",
+    category: "Cloud Security",
+    difficulty: "Hard",
+    href: "Assets/Cases/Amazon GuardDuty/Amazon_GuardDuty.pdf", // اتأكد إنك تعمل ملف PDF وتسميه كده
+    tags: ["AWS", "GuardDuty", "Threat Detection", "Security Monitoring"],
+    tools: ["Amazon GuardDuty", "AWS Console"],
+    skillsGained: ["Continuous Monitoring", "Alert Triage", "Cloud Threat Detection"],
+    readTime: 8,
+    date: "2026-04-24",
+    screenshots: [
+      "Assets/Cases/AWS-GaurdDuty/1.png", 
+    ],
+    image: "Assets/Cases/AWS-GaurdDuty/1.png",
+  },
 {
     id: "aws-kms-security",
     title: "AWS Cryptographic Key Management (KMS)",
