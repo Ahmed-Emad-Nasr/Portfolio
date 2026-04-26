@@ -18,7 +18,7 @@ interface BlogCardProps {
   readTime?: number;
   date?: string;
   screenshots: string[];
-  onOpenGallery: () => void;
+  onOpenGallery: (title: string, screenshots: string[], index?: number) => void;
   onTagClick?: (tag: string) => void;
   onToolClick?: (tool: string) => void;
   getThumbnail: (imgPath: string) => string;
@@ -59,7 +59,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
         className={[
           styles.pdfCard,
           hasScreenshots ? styles.caseCardLarge : "",
-          /* تم إزالة styles.fadeInUp لتحسين الأداء */
         ]
           .filter(Boolean)
           .join(" ")}
@@ -71,7 +70,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           )}
         </div>
 
-        <h3 className={styles.cardTitle} tabIndex={0} aria-label={title}>
+        {/* تمت إزالة tabIndex و aria-label للحفاظ على معايير الـ Accessibility */}
+        <h3 className={styles.cardTitle}>
           {title}
           {description && (
             <span className={styles.cardTooltip}>{description}</span>
@@ -150,7 +150,11 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                 sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                 loading="lazy"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = normalizeHref(primaryScreenshot);
+                  const target = e.target as HTMLImageElement;
+                  if (!target.dataset.failed) {
+                    target.dataset.failed = "true";
+                    target.src = normalizeHref(primaryScreenshot);
+                  }
                 }}
               />
             </a>
@@ -171,7 +175,11 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                     sizes="(max-width: 560px) 45vw, 18vw"
                     loading="lazy"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = normalizeHref(secondaryScreenshot);
+                      const target = e.target as HTMLImageElement;
+                      if (!target.dataset.failed) {
+                        target.dataset.failed = "true";
+                        target.src = normalizeHref(secondaryScreenshot);
+                      }
                     }}
                   />
                 </a>
@@ -202,7 +210,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
           {hasScreenshots && (
             <button
               type="button"
-              onClick={onOpenGallery}
+              onClick={() => onOpenGallery(title, screenshots, 0)}
               className={`${styles.galleryOpenAction} ${styles.viewAction}`}
             >
               View All Screenshots
