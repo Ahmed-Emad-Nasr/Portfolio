@@ -126,6 +126,14 @@ export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
     tags: ["Threat Emulation", "Wazuh", "Testing", "Red Team"],
     videoCount: 8,
   },
+  {
+    playlistId: "PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd",
+    title: "Malware Analysis", // ⚠️ اكتب اسم البلاي ليست بتاعتك
+    description: "A complete walkthrough of my malware analysis project. This series covers the step-by-step methodology, safe environment setup, and the practical use of industry-standard tools for both static and dynamic analysis.", // ⚠️ اكتب وصف قصير
+    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd",
+    tags: ["SOC", "DFIR", "Cybersecurity"], // ⚠️ تقدر تعدل الكلمات المفتاحية
+    videoCount: 5 // ⚠️ اكتب عدد الفيديوهات التقريبي
+  },
 ];
 
 export const knowledgeEducationItems = [

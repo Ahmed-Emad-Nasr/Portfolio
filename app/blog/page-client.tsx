@@ -14,6 +14,9 @@ import {
 } from "@/app/core/data";
 import BlogCard from "./BlogCard";
 
+// ⚠️ عدل المسار ده على حسب مكان ملف sensei-home.tsx في مشروعك
+import HomeSection from "@/app/components/blog_home/sensei-home";
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type PdfResource = {
@@ -69,47 +72,47 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "aws-guardduty-setup": Array.from({ length: 9 }, (_, i) => `Assets/Cases/AWS-GaurdDuty/${i + 1}.png`),
   "aws-athena-healthcare": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Amazon S3 and Amazon Athena/${i + 1}.png`),
   "aws-kms-security": Array.from({ length: 25 }, (_, i) => `Assets/Cases/AWS KMS/${i + 1}.png`),
-          "soc-env-depi-r3-project": [
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/1.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/2.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/3.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/4.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/5.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/6.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/7.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/8.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/9.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/create txt file to see if fim is working.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard1.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard2.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/edit ossec on win.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/enable fim to folder ahmed.png",
-            "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png"
-          ],
-        "depi-r4-project": [
-          "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
-          "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
-        ],
-      "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
-        "serpent-stealer": Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).png`),
-      "imagestegano": [
-        "Assets/Cases/ImageStegano/Screenshot (104).png",
-        "Assets/Cases/ImageStegano/Screenshot (105).png",
-        "Assets/Cases/ImageStegano/Screenshot (106).png",
-        "Assets/Cases/ImageStegano/Screenshot (108).png",
-        "Assets/Cases/ImageStegano/Screenshot (109).png",
-        "Assets/Cases/ImageStegano/Screenshot (110).png",
-        "Assets/Cases/ImageStegano/Screenshot (112).png",
-        "Assets/Cases/ImageStegano/Screenshot (113).png",
-        "Assets/Cases/ImageStegano/Screenshot (114).png",
-        "Assets/Cases/ImageStegano/Screenshot (115).png",
-        "Assets/Cases/ImageStegano/Screenshot (116).png",
-        "Assets/Cases/ImageStegano/Screenshot (117).png",
-        "Assets/Cases/ImageStegano/Screenshot (118).png",
-        "Assets/Cases/ImageStegano/Screenshot (119).png",
-        "Assets/Cases/ImageStegano/Screenshot (120).png"
-      ],
-    "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).png`),
+  "soc-env-depi-r3-project": [
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/1.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/2.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/3.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/4.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/5.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/6.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/7.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/8.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/9.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/create txt file to see if fim is working.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard1.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard2.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/edit ossec on win.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/enable fim to folder ahmed.png",
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png"
+  ],
+  "depi-r4-project": [
+    "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
+    "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
+  ],
+  "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
+  "serpent-stealer": Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).png`),
+  "imagestegano": [
+    "Assets/Cases/ImageStegano/Screenshot (104).png",
+    "Assets/Cases/ImageStegano/Screenshot (105).png",
+    "Assets/Cases/ImageStegano/Screenshot (106).png",
+    "Assets/Cases/ImageStegano/Screenshot (108).png",
+    "Assets/Cases/ImageStegano/Screenshot (109).png",
+    "Assets/Cases/ImageStegano/Screenshot (110).png",
+    "Assets/Cases/ImageStegano/Screenshot (112).png",
+    "Assets/Cases/ImageStegano/Screenshot (113).png",
+    "Assets/Cases/ImageStegano/Screenshot (114).png",
+    "Assets/Cases/ImageStegano/Screenshot (115).png",
+    "Assets/Cases/ImageStegano/Screenshot (116).png",
+    "Assets/Cases/ImageStegano/Screenshot (117).png",
+    "Assets/Cases/ImageStegano/Screenshot (118).png",
+    "Assets/Cases/ImageStegano/Screenshot (119).png",
+    "Assets/Cases/ImageStegano/Screenshot (120).png"
+  ],
+  "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).png`),
   "malware-analysis-wannacry": [
     ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.png`),
     ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).png`),
@@ -162,14 +165,13 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   ],
 };
 
-// ─── Pure helpers (No window checks to prevent Hydration errors) ───────
+// ─── Pure helpers ───────
 
 const normalizePublicHref = (href: string): string => {
   if (/^https?:\/\//i.test(href)) return href;
-  // Use a predictable path for both SSR and CSR
   const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
   const normalized = href.startsWith("/") ? href : `/${href}`;
-  return `${basePath}${normalized}`.replace(/\/\//g, "/"); // Safe format
+  return `${basePath}${normalized}`.replace(/\/\//g, "/"); 
 };
 
 const getThumbnail = (imgPath: string): string => {
@@ -425,11 +427,14 @@ export default function BlogPageClient() {
           transition: "opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
-{/* ── Hero ─────────────────────────────────────────────────────────── */}
+
+        {/* ── Home Hero Section (Added Here) ───────────────────────────── */}
+        <HomeSection />
+
+        {/* ── Original Blog Hero ────────────────────────────────────────── */}
         <section className={styles.hero}>
           <span className={styles.heroGlow} aria-hidden="true" />
-          <p className={styles.kicker}>Ahmed_Emad</p>
+          <p className={styles.kicker}>Ahmed Emad Nasr</p>
           <h1>Security Blog & Technical Reports</h1>
           <p>
             A single place for my SOC incident reports, DFIR writeups, and technical videos.
@@ -443,7 +448,7 @@ export default function BlogPageClient() {
                   <span>PDF Resources</span>
                 </article>
                 <article>
-                  <strong>{blogYoutubeVideos.length + 1}</strong>
+                  <strong>36</strong>
                   <span>Total Videos</span>
                 </article>
                 <article>
