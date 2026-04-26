@@ -90,7 +90,6 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png"
   ],
   "depi-r4-project": [
-    "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
     "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
   ],
   "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
