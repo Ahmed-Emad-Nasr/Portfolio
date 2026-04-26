@@ -43,14 +43,14 @@ const AvailabilityWidget = memo(function AvailabilityWidget() {
     const isWeekend = weekday === "Fri" || weekday === "Sat";
 
     if (isWeekend) {
-      return { label: "Limited Availability", hint: "Weekend response window (Cairo time)", toneClass: styles.dotLimited };
+      return { label: "Limited Availability", hint: "Weekend response window", toneClass: styles.dotLimited };
     }
 
     if (hourValue >= 10 && hourValue < 20) {
-      return { label: "Available for Opportunities", hint: "Typically replies today (Cairo time)", toneClass: styles.dotAvailable };
+      return { label: "Available for Opportunities", hint: "Typically replies today", toneClass: styles.dotAvailable };
     }
 
-    return { label: "Available (Async)", hint: "Usually replies within 24h (Cairo time)", toneClass: styles.dotAsync };
+    return { label: "Available (Async)", hint: "Usually replies within 24h", toneClass: styles.dotAsync };
   }, [clock]);
 
   return (
