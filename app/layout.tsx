@@ -5,7 +5,6 @@
  */
 
 import "./globals.css";
-import BackgroundEffects from "@/app/components/background-effects";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
@@ -238,7 +237,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" dir="ltr">
       <head />
       <body className={BODY_CLASS}>
-        <BackgroundEffects />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>

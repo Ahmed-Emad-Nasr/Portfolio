@@ -5,9 +5,9 @@
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
-  /* Deep Cyber Blue-Black Backgrounds */
-  --bg-color: #030a12;
-  --second-bg-color: #081221;
+/* Pure Black Backgrounds */
+  --bg-color: #000000;
+  --second-bg-color: #000000;
   
   /* Text */
   --text-color: #e2f1ff; /* Light blueish-white */
