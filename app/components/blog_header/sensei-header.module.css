@@ -1,0 +1,113 @@
+/*
+ * File: sensei-header.module.css
+ * Author: Ahmed Emad Nasr
+ * Purpose: Header/navbar styles (Optimized - Cybersecurity HUD Theme)
+ */
+
+.header {
+  position: fixed;
+  top: 1.15rem;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: fit-content;
+  /* كبرنا الـ padding عشان الهيدر يفضل حجمه كبير ومالي مكانه */
+  padding: 1.2rem 4rem; 
+  background: rgba(9, 13, 19, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition: all 0.4s var(--motion-ease);
+}
+
+/* Cyber Scanline Overlay */
+.header::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -150%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
+  transform: skewX(-20deg);
+  animation: hudScan 4s infinite linear;
+  pointer-events: none;
+  border-radius: inherit;
+  clip-path: inset(0 round 12px);
+}
+
+@keyframes hudScan {
+  0% { left: -150%; }
+  50% { left: 200%; }
+  100% { left: 200%; }
+}
+
+.scrolled {
+  transform: translateX(-50%) scale(0.97) !important;
+  background: rgba(5, 8, 12, 0.95);
+  border-color: rgba(var(--main-color-rgb), 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--main-color-rgb), 0.2);
+}
+
+.title {
+  white-space: nowrap;
+  z-index: 1003;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* تكبير حجم الخط ليكون بارز وواضح */
+  font-size: 1.6rem; 
+  letter-spacing: 0.1em;
+  font-weight: 800;
+  color: var(--main-color);
+  text-decoration: none;
+  outline: none;
+  font-family: monospace;
+  transition: all var(--motion-fast) var(--motion-ease);
+}
+
+.title::before {
+  content: ">_";
+  margin-right: 0.8rem;
+  font-weight: 900;
+  opacity: 0.8;
+}
+
+.title:hover, .title:focus-visible {
+  color: #fff;
+  text-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.8);
+}
+
+/* التجاوب مع الشاشات المتوسطة والصغيرة */
+@media (max-width: 994px) {
+  .header {
+    padding: 1rem 2.5rem;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 0.8rem 1.8rem;
+  }
+  .title {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .header {
+    width: calc(100% - 1.5rem);
+    top: 0.7rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+  }
+
+  .title { 
+    font-size: 1.15rem; 
+  }
+}

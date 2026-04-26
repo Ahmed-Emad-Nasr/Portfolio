@@ -58,7 +58,6 @@
   border-radius: 26px;
   --parallax-x: 0px;
   --parallax-y: 0px;
-  margin-top: -10rem
 }
 .homeImg { flex: 0 0 auto; max-width: 480px; width: 100%; }
 

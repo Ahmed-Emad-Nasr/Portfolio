@@ -11,6 +11,7 @@ import {
   caseEvidenceLibrary,
   YOUTUBE_CHANNEL_URL,
 } from "@/app/core/data";
+import AppBar from "@/app/components/blog_header/sensei-header";
 import BlogCard from "./BlogCard";
 
 // ⚠️ عدل المسار ده على حسب مكان ملف sensei-home.tsx في مشروعك
@@ -402,6 +403,7 @@ export default function BlogPageClient() {
     <main id="main-content" className={styles.page} style={{ position: "relative" }}>
       
       {/* ── Home Hero Section (Added Here) ───────────────────────────── */}
+      <AppBar/>
       <HomeSection />
 
       {/* ── Original Blog Hero ────────────────────────────────────────── */}

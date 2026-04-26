@@ -206,7 +206,7 @@ const SenseiHome = memo(function SenseiHome() {
           <h1>
             <span className={styles.highlight}>Ahmed Emad Nasr</span>
           </h1>
-          <p className={styles.valueLine}>I DON'T JUST DETECT THREATS. I INVESTIGATE, I ANALYZE, I PROTECT.</p>
+          <p className={styles.valueLine}>SOC Analyst focused on incident response, threat hunting, and DFIR outcomes.</p>
           
           <AvailabilityWidget />
 
@@ -219,6 +219,29 @@ const SenseiHome = memo(function SenseiHome() {
             <span className={styles.typingHighlight} aria-hidden="true" />
           </h2>
           
+          <p>{homeSummaryParagraph}</p>
+          <div className={styles.proofRow} aria-label="Key proof points">
+            {heroProofPoints.map((point) => (
+              <span key={point} className={styles.proofPill}>
+                {point}
+              </span>
+            ))}
+          </div>
+          <div className={styles.proofRow} aria-label="Featured expertise">
+            {featuredSkills.map((skill) => (
+              <span key={skill} className={styles.proofPill}>
+                {skill}
+              </span>
+            ))}
+          </div>
+          <div className={styles.trustStrip} aria-label="Trust proof highlights">
+            {trustStats.map((item) => (
+              <article key={item.label} className={styles.trustCard}>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
+              </article>
+            ))}
+          </div>
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile">
               <FontAwesomeIcon icon={faLinkedin} />
@@ -235,6 +258,7 @@ const SenseiHome = memo(function SenseiHome() {
               Email Me <FontAwesomeIcon icon={faEnvelope} />
             </a>
           </div>
+          <p className={styles.ctaHint}>Best next step: share your goal and receive a tailored response within 24 hours.</p>
         </div>
       </div>
     </section>
