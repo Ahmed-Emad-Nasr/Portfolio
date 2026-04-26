@@ -510,10 +510,9 @@ export const caseEvidenceLibrary = [
         readTime: 18,
         date: "2026-04-20",
         screenshots: [
-          "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
           "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
         ],
-        image: "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_2puztk2puztk2puz.png",
+        image: "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png",
       },
     // WannaCry always first (featured)
     {
