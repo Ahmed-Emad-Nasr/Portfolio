@@ -14,7 +14,7 @@
   --blog-bg-dark: rgba(5, 8, 14, 0.95);
   --blog-bg-light: rgba(10, 15, 25, 0.8);
   
-  padding: 13rem 6% 6.4rem;
+  padding: 0rem 6% 6.4rem;
   position: relative;
   overflow: visible;
   font-family: var(--font-overlock), monospace, sans-serif;

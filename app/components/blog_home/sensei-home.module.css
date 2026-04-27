@@ -43,7 +43,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 2.2rem;
+  padding: 0rem;
 }
 
 .container {
@@ -54,7 +54,7 @@
   max-width: 1240px;
   width: 100%;
   min-height: 95vh;
-  padding: 1.6rem 1.1rem;
+  padding: 0rem 1.1rem;
   border-radius: 26px;
   --parallax-x: 0px;
   --parallax-y: 0px;
@@ -500,7 +500,7 @@
   }
 
   .homeImg {
-    margin-top: 7rem;
+    margin-top: 0rem;
     width: 100%;
     height: auto;
     max-width: 420px;
@@ -585,7 +585,7 @@
 
   .homeImg {
     max-width: 310px;
-    margin-top: 4rem;
+    margin-top: 0rem;
   }
 }
 
