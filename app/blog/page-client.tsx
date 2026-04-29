@@ -69,6 +69,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).png`);
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "data-exfiltration-investigation": Array.from({ length: 38 }, (_, i) => `Assets/Cases/Data Exfiltiration Investigation/${i + 1}.png`),
   "aws-guardduty-setup": Array.from({ length: 9 }, (_, i) => `Assets/Cases/AWS-GaurdDuty/${i + 1}.png`),
   "aws-athena-healthcare": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Amazon S3 and Amazon Athena/${i + 1}.png`),
   "aws-kms-security": Array.from({ length: 25 }, (_, i) => `Assets/Cases/AWS KMS/${i + 1}.png`),

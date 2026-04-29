@@ -538,6 +538,25 @@ export const caseEvidenceLibrary = [
       image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
     },
     {
+    id: "data-exfiltration-investigation",
+    title: "Unauthorized Data Exfiltration & Credential Compromise",
+    description: "Memory forensics investigation using Volatility Framework to confirm data exfiltration via USB, NTLM credential dumping, and SSH backdoor persistence.",
+    platform: "Memory Forensics Lab",
+    type: "Report",
+    category: "DFIR",
+    difficulty: "Hard",
+    href: "Assets/Cases/Data Exfiltiration Investigation/AhmedEmad_DataExfiltration.pdf", // اتأكد إن اسم الـ PDF مطابق للي عندك
+    tags: ["Memory Forensics", "Volatility", "Data Exfiltration", "Credential Dumping", "DFIR"],
+    tools: ["Volatility Framework", "FTK Imager", "John the Ripper"],
+    skillsGained: ["Memory Analysis", "Timeline Reconstruction", "Threat Hunting", "Forensic Reporting"],
+    readTime: 15,
+    date: "2026-04-28",
+    screenshots: [
+      "Assets/Cases/Data Exfiltiration Investigation/1.png",
+    ],
+    image: "Assets/Cases/Data Exfiltiration Investigation/1.png",
+  },
+    {
     id: "aws-guardduty-setup",
     title: "Amazon GuardDuty Threat Detection",
     description: "Enabled Amazon GuardDuty, generated sample findings, and analyzed high-severity threat detections including unauthorized S3 access.",
