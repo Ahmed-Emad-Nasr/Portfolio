@@ -3,21 +3,22 @@
 
 
 export const fadeUp = {
-  initial: { opacity: 0, y: 12 },
+  initial: { opacity: 1, y: 0 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: 12 },
-  transition: { duration: 0.14 },
+  exit: { opacity: 1, y: 0 },
+  transition: { duration: 0 },
 };
 
 export const fadeIn = {
-  initial: { opacity: 0 },
+  initial: { opacity: 1 },
   animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.22 },
+  exit: { opacity: 1 },
+  transition: { duration: 0 },
 };
 
 export const fastSpring = {
   type: "spring",
   stiffness: 420,
   damping: 32,
+  duration: 0,
 };

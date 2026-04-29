@@ -52,13 +52,10 @@
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.08), transparent 70%);
   filter: blur(30px);
   pointer-events: none;
-  animation: pulseGlow 6s ease-in-out infinite alternate;
+  animation: none;
 }
 
-@keyframes pulseGlow {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(1.1); opacity: 1; }
-}
+
 
 .kicker {
   display: inline-flex;
@@ -116,7 +113,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(10, 15, 25, 0.6);
   text-align: center;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   overflow: hidden;
 }
@@ -127,7 +124,7 @@
   top: 0; left: 0; width: 100%; height: 2px;
   background: var(--main-color);
   transform: scaleX(0);
-  transition: transform 0.3s ease;
+  transition: none;
 }
 
 .metrics article:hover {
@@ -179,7 +176,7 @@
   background: rgba(10, 15, 25, 0.8) !important;
   color: var(--main-color) !important;
   border: 1px solid rgba(var(--main-color-rgb), 0.4) !important;
-  transition: all 0.3s ease !important;
+  transition: none !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -250,7 +247,7 @@
   font-family: monospace;
   font-size: 1.4rem;
   padding: 0.8rem 1.2rem;
-  transition: all 0.3s ease;
+  transition: none;
 }
 
 .searchInput:focus-visible {
@@ -275,7 +272,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: none;
   text-transform: uppercase;
 }
 
@@ -345,7 +342,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.85); /* Very Dark */
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: none;
   min-height: 360px;
   display: flex;
   flex-direction: column;
@@ -612,7 +609,7 @@
   position: fixed; right: 2.5rem; bottom: 2.5rem; z-index: 100;
   background: rgba(5, 8, 14, 0.9); color: var(--main-color); border: 1px solid var(--main-color);
   border-radius: 4px; width: 50px; height: 50px; font-size: 2rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-family: monospace;
+  display: flex; align-items: center; justify-content: center; transition: none; font-family: monospace;
   box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 .backToTop:hover { background: var(--main-color); color: #000; box-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.6); transform: translateY(-5px); }

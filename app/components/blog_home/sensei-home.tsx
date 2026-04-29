@@ -143,32 +143,12 @@ const SenseiHome = memo(function SenseiHome() {
     pointerRef.current = { x: event.clientX, y: event.clientY };
     if (parallaxRafRef.current !== null) return;
 
-    parallaxRafRef.current = window.requestAnimationFrame(() => {
-      const target = containerRef.current;
-      if (!target) {
-        parallaxRafRef.current = null;
-        return;
-      }
-
-      const rect = target.getBoundingClientRect();
-      const x = (pointerRef.current.x - rect.left) / rect.width;
-      const y = (pointerRef.current.y - rect.top) / rect.height;
-
-      target.style.setProperty("--parallax-x", `${(x - 0.5) * 10}px`);
-      target.style.setProperty("--parallax-y", `${(y - 0.5) * 10}px`);
-      parallaxRafRef.current = null;
-    });
+    // تم تعطيل حركة البارالاكس نهائياً
+    parallaxRafRef.current = null;
   };
 
   const resetParallax = () => {
-    const element = containerRef.current;
-    if (!element) return;
-    if (parallaxRafRef.current !== null) {
-      window.cancelAnimationFrame(parallaxRafRef.current);
-      parallaxRafRef.current = null;
-    }
-    element.style.setProperty("--parallax-x", "0px");
-    element.style.setProperty("--parallax-y", "0px");
+    // تم تعطيل إعادة تعيين البارالاكس
   };
 
   const cvBtnClass = `${styles.btn} ${styles.cvBtn} ${cvVariant === "B" ? styles.cvBtnAlt : ""}`;
