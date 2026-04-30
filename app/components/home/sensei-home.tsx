@@ -192,8 +192,10 @@ const SenseiHome = memo(function SenseiHome() {
               width={350}
               height={350}
               sizes="(max-width: 968px) 80vw, 350px"
-              quality={95}
+              quality={70}
               priority
+              placeholder="blur"
+              blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src =
                   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";

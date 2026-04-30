@@ -17,12 +17,14 @@ import LoadingScreen from "@/app/components/loader/sensei_loader";
 // Fallback بسيط للحفاظ على المساحة لحد ما الكومبوننت يحمل
 const SectionSkeleton = () => <div style={{ minHeight: '50vh' }} />;
 
+
 const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), {
+  ssr: false,
   loading: () => <SectionSkeleton />
 });
 
-
 const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), {
+  ssr: false,
   loading: () => <SectionSkeleton />
 });
 

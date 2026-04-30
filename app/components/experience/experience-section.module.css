@@ -95,10 +95,9 @@
 }
 
 .content:hover {
-  background: rgba(10, 13, 18, 0.95); backdrop-filter: blur(15px);
+  background: rgba(10, 13, 18, 0.95);
   border-color: rgba(var(--main-color-rgb), 0.5); 
-  box-shadow: 0 8px 32px rgba(var(--main-color-rgb), 0.15);
-  transform: translateY(-5px);
+  /* Removed heavy box-shadow and translateY for performance */
 }
 
 .tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: rgba(205, 250, 230, 0.84); transition: color var(--motion-normal) var(--motion-ease); }

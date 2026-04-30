@@ -641,6 +641,9 @@ export default function BlogPageClient() {
                   fill
                   sizes="(max-width: 991px) 100vw, 38vw"
                   loading="lazy"
+                  quality={30}
+                  placeholder="blur"
+                  blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
                 />
               </a>
             )}
@@ -854,6 +857,9 @@ export default function BlogPageClient() {
                   fill
                   sizes="(max-width: 991px) 95vw, 78vw"
                   loading="lazy"
+                  quality={60}
+                  placeholder="blur"
+                  blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
                 />
               </a>
               <button type="button" className={styles.galleryNav} onClick={() => goGallery(1)} aria-label="Next screenshot">

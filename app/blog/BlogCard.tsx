@@ -149,6 +149,9 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                 fill
                 sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                 loading="lazy"
+                quality={30}
+                placeholder="blur"
+                blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   if (!target.dataset.failed) {
@@ -174,6 +177,9 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                     fill
                     sizes="(max-width: 560px) 45vw, 18vw"
                     loading="lazy"
+                    quality={30}
+                    placeholder="blur"
+                    blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       if (!target.dataset.failed) {
