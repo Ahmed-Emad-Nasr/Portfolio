@@ -186,7 +186,7 @@ const SenseiHome = memo(function SenseiHome() {
           <h1>
             <span className={styles.highlight}>Ahmed Emad Nasr</span>
           </h1>
-          <p className={styles.valueLine}>SOC Analyst focused on incident response, threat hunting, and DFIR outcomes.</p>
+          
           
           <AvailabilityWidget />
 
@@ -238,7 +238,7 @@ const SenseiHome = memo(function SenseiHome() {
               Email Me <FontAwesomeIcon icon={faEnvelope} />
             </a>
           </div>
-          <p className={styles.ctaHint}>Best next step: share your goal and receive a tailored response within 24 hours.</p>
+        
         </div>
       </div>
     </section>
