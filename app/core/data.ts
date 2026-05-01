@@ -537,6 +537,27 @@ export const caseEvidenceLibrary = [
       ],
       image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
     },
+
+    {
+    id: "autopsy",
+    title: "Autopsy ",
+    description: "Complete digital forensic data recovery operation using Autopsy 4.23.0 to extract deleted files, analyze unallocated space, and generate formal evidence reports.",
+    platform: "Digital Forensics Lab",
+    type: "Report",
+    category: "Forensics",
+    difficulty: "Medium",
+    href: "Assets/Cases/Autopsy/AhmedEmad_Autopsy.pdf", 
+    tags: ["Autopsy", "Data Recovery", "Digital Forensics", "Unallocated Space"],
+    tools: ["Autopsy 4.23.0", "Data Recovery Tools"],
+    skillsGained: ["Evidence Recovery", "Artifact Analysis", "Troubleshooting", "Forensic Reporting"],
+    readTime: 12,
+    date: "2026-05-01", // تاريخ التقرير
+    screenshots: [
+      "Assets/Cases/Autopsy/1.png",
+    ],
+    image: "Assets/Cases/Autopsy/1.png",
+  },
+  
     {
     id: "data-exfiltration-investigation",
     title: "Unauthorized Data Exfiltration & Credential Compromise",
