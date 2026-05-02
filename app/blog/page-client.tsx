@@ -52,7 +52,7 @@ type ChannelVideo = {
 
 const cvResource: PdfResource = {
   id: "soc-analyst-cv",
-  title: "Ahmed Emad SOC Analyst CV",
+  title: "Ahmed Emad Nasr SOC Analyst CV",
   platform: "Professional Profile",
   type: "PDF CV",
   href: "Assets/cv/AhmedEmadNasr_CV.pdf",
@@ -186,8 +186,6 @@ const getThumbnail = (imgPath: string): string => {
   if (!imgPath) return imgPath;
   const relativeCasePath = imgPath.replace(/^Assets\/Cases\//, "");
 
-  // These case folders currently do not have generated thumbnail assets.
-  // Returning the original image path avoids repeated 404 requests in production.
   if (
     relativeCasePath.startsWith("Autopsy/") ||
     relativeCasePath.startsWith("Data Exfiltiration Investigation/")
@@ -202,22 +200,29 @@ const getThumbnail = (imgPath: string): string => {
   return `Assets/Cases/thumbnails/${rel}`;
 };
 
+// 1. Date Caching Setup
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
+const dateCache = new Map<string, string>();
+
 const formatDate = (value: string): string => {
+  if (dateCache.has(value)) return dateCache.get(value)!;
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
-  });
+  
+  const formatted = dateFormatter.format(parsed);
+  dateCache.set(value, formatted);
+  return formatted;
 };
 
-// Simple case-insensitive match
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
 
-// Stable empty array ref — keeps React.memo working correctly
 const EMPTY_SCREENSHOTS: string[] = [];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -225,7 +230,7 @@ const EMPTY_SCREENSHOTS: string[] = [];
 export default function BlogPageClient() {
   // ── Filter state ──────────────────────────────────────────────────────────
   const [rawQuery, setRawQuery] = useState("");
-  const [query, setQuery] = useState("");           // debounced
+  const [query, setQuery] = useState("");
   const [pdfFilter, setPdfFilter] = useState("All");
   const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -240,14 +245,12 @@ export default function BlogPageClient() {
   // ── Embeds (lazy iframes) ────────────────────────────────────────────────
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
 
-  // ── Debounce search input (300 ms) ────────────────────────────────────────
-  // Reduces filter re-computation on every keystroke
   useEffect(() => {
     const t = setTimeout(() => setQuery(rawQuery), 300);
     return () => clearTimeout(t);
   }, [rawQuery]);
 
-  // ── Filter options (stable, derived once) ────────────────────────────────
+  // ── Filter options ────────────────────────────────────────────────────────
 
   const pdfTypeFilters = useMemo(() => {
     const uniqueTypes = Array.from(new Set(blogPdfResources.map((item) => item.type)));
@@ -334,6 +337,7 @@ export default function BlogPageClient() {
 
   const featuredVideo = blogFeaturedYoutubeVideo;
 
+  // 2. Fixed filteredChannelVideos dependencies
   const filteredChannelVideos = useMemo<ChannelVideo[]>(() => {
     const merged: ChannelVideo[] = [
       {
@@ -356,14 +360,14 @@ export default function BlogPageClient() {
       seen.add(video.videoId);
       return true;
     });
-  }, [featuredVideo.description, featuredVideo.sourceUrl, featuredVideo.title, featuredVideo.videoId, query]);
+  }, [query]);
 
   const filteredPlaylists = useMemo(
     () => blogYoutubePlaylists.filter((p) => matchesSearch(p.title, query)),
     [query]
   );
 
-  // ── Stats (computed once, stable) ────────────────────────────────────────
+  // ── Stats ────────────────────────────────────────────────────────────────
 
   const casesWithScreenshotsCount = useMemo(
     () =>
@@ -396,7 +400,6 @@ export default function BlogPageClient() {
     });
   }, []);
 
-  // Keyboard & focus trap for gallery
   useEffect(() => {
     if (!gallery) return;
     const prev = document.activeElement as HTMLElement | null;
@@ -464,20 +467,28 @@ export default function BlogPageClient() {
   const hasActiveFilters =
     rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All";
 
+  // 3. Pre-calculated Normalized hrefs for gallery and spotlight
   const currentGalleryShot =
     gallery && gallery.screenshots.length ? gallery.screenshots[gallery.index] : null;
+  const currentGalleryShotNormalized = currentGalleryShot ? normalizePublicHref(currentGalleryShot) : null;
+
+  const leadCaseSpotlightImage = leadCase && caseScreenshotsByEvidenceId[leadCase.id]?.[0]
+    ? normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])
+    : null;
 
   const caseOrder = useMemo(() => blogPdfResources.filter((item) => item.id !== cvResource.id), []);
   const leadCaseIndex = caseOrder.findIndex((item) => item.id === leadCase?.id);
   const previousCase = leadCaseIndex > 0 ? caseOrder[leadCaseIndex - 1] : null;
   const nextCase = leadCaseIndex >= 0 && leadCaseIndex < caseOrder.length - 1 ? caseOrder[leadCaseIndex + 1] : null;
+  
+  // 4. Fixed relatedCases dependencies
   const relatedCases = useMemo(() => {
     if (!leadCase) return [];
 
     const leadTags = new Set(leadCase.tags ?? []);
 
-    return caseOrder
-      .filter((item) => item.id !== leadCase.id)
+    return blogPdfResources
+      .filter((item) => item.id !== leadCase.id && item.id !== cvResource.id)
       .map((item) => {
         let score = 0;
 
@@ -497,7 +508,7 @@ export default function BlogPageClient() {
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
       .map(({ item }) => item);
-  }, [caseOrder, leadCase]);
+  }, [leadCase]);
 
   // ─── Render ──────────────────────────────────────────────────────────────
 
@@ -805,16 +816,16 @@ export default function BlogPageClient() {
               </div>
             </div>
 
-            {caseScreenshotsByEvidenceId[leadCase.id]?.[0] && (
+            {leadCaseSpotlightImage && (
               <a
-                href={normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])}
+                href={leadCaseSpotlightImage}
                 target="_blank"
                 rel="noreferrer"
                 className={styles.caseSpotlightMedia}
                 aria-label={`Open spotlight screenshot for ${leadCase.title}`}
               >
                 <Image
-                  src={normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])}
+                  src={leadCaseSpotlightImage}
                   alt={`${leadCase.title} spotlight screenshot`}
                   fill
                   sizes="(max-width: 991px) 100vw, 38vw"
@@ -1039,7 +1050,7 @@ export default function BlogPageClient() {
       </section>
 
       {/* ── Gallery overlay ───────────────────────────────────────────────── */}
-      {gallery && currentGalleryShot && (
+      {gallery && currentGalleryShotNormalized && (
         <div
           className={styles.galleryOverlay}
           role="dialog"
@@ -1077,7 +1088,7 @@ export default function BlogPageClient() {
                 ←
               </button>
               <a
-                href={normalizePublicHref(currentGalleryShot)}
+                href={currentGalleryShotNormalized}
                 target="_blank"
                 rel="noreferrer"
                 className={styles.galleryImageWrap}
@@ -1086,7 +1097,7 @@ export default function BlogPageClient() {
                 onTouchEnd={handleGalleryTouchEnd}
               >
                 <Image
-                  src={normalizePublicHref(currentGalleryShot)}
+                  src={currentGalleryShotNormalized}
                   alt={`${gallery.title} screenshot ${gallery.index + 1}`}
                   fill
                   sizes="(max-width: 991px) 95vw, 78vw"
@@ -1161,11 +1172,23 @@ export default function BlogPageClient() {
 
 // ─── Back to Top ──────────────────────────────────────────────────────────────
 
+// 5. Throttled scroll listener using requestAnimationFrame
 function BackToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
+    let ticking = false;
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setVisible(window.scrollY > 400);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

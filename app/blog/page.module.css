@@ -30,6 +30,8 @@
     radial-gradient(circle at 80% 10%, rgba(var(--accent-color-rgb), 0.06), transparent 26%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.02));
   opacity: 0.85;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .hero,
@@ -93,6 +95,7 @@
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07), transparent 70%);
   pointer-events: none;
   animation: heroGlowFloat 12s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes heroGlowFloat {
@@ -163,7 +166,9 @@
   padding: 1.4rem;
   border-radius: 6px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  background: rgba(10, 15, 25, 0.6);
+  transition: transform var(--motion-normal) var(--motion-ease), 
+              border-color var(--motion-normal) var(--motion-ease), 
+              background-color var(--motion-normal) var(--motion-ease);
   text-align: center;
   transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
@@ -1286,4 +1291,18 @@
   .blogClosing { flex-direction: column; align-items: flex-start; padding: 1.8rem 1.2rem; }
   .blogClosingActions,
   .blogClosingActions a { width: 100%; }
+}
+
+/* =========================================
+   ACCESSIBILITY (REDUCED MOTION)
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  :global(*),
+  :global(*::before),
+  :global(*::after) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
