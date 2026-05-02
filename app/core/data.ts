@@ -112,6 +112,13 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     publishedAt: "2025-07-02", // يفضل تغيير ده لتاريخ نشر الفيديو الفعلي
     tags: ["Wazuh", "Troubleshooting", "ossec.conf", "Permissions", "Tutorial"],
   },
+  {
+    videoId: "4-_XHZa2lVc",
+    title: "Trying AWS KMS",
+    description: "Exploring and setting up AWS Key Management Service (KMS) for secure key storage and encryption.", // ⚠️ تقدر تعدل الوصف ده
+    publishedAt: "2026-05-02", // ⚠️ يفضل تغيير ده لتاريخ نشر الفيديو الفعلي
+    tags: ["AWS", "KMS", "Cloud Security", "Encryption", "Tutorial"], // ⚠️ تقدر تعدل الكلمات المفتاحية
+  },
 ];
 
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
