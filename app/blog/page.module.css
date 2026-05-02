@@ -435,6 +435,14 @@
   transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
+@media (max-width: 992px) {
+  .pdfCard {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+    gap: 1.2rem;
+  }
+}
+
 .caseCardTextOnly {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -1263,34 +1271,117 @@
   .toolbar { grid-template-columns: 1fr; }
   .caseCardLarge { grid-column: span 1; }
   .shotGrid { grid-template-columns: 1fr 1fr; }
+  .pdfCard { grid-template-columns: 1fr; min-height: auto; }
+}
+
+@media (max-width: 768px) {
+  .page { padding: 9rem 1rem 4rem; }
+  .toolbar { grid-template-columns: 1fr; }
+  .pdfGrid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .playlistGrid,
+  .videoGrid { grid-template-columns: 1fr; gap: 1.2rem; }
 }
 
 @media (max-width: 600px) {
-  .page { padding: 9rem 1rem 4rem; }
-  .hero { padding: 1.8rem 1.2rem; }
-  .hero h1 { font-size: 2.6rem; }
+  .page { padding: 8rem 0.75rem 3rem; }
+  .hero { padding: 1.5rem 1rem; }
+  .hero h1 { font-size: 2rem; line-height: 1.2; }
+  .hero p { font-size: 1rem; }
+  .kicker { font-size: 0.95rem; padding: 0.3rem 0.9rem; }
+  .breadcrumbNav { font-size: 0.9rem; gap: 0.5rem; margin-bottom: 1rem; }
+  .breadcrumbSeparator { display: none; }
+  .heroGlow { right: -15%; top: -25%; width: 300px; height: 300px; }
   .heroActions { flex-direction: column; gap: 0.8rem; }
-  .heroGrid { grid-template-columns: 1fr; }
-  .modeSwitch { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .heroGrid { grid-template-columns: 1fr; gap: 1rem; }
+  .metrics { grid-template-columns: 1fr; gap: 0.8rem; }
+  .metrics strong { font-size: 2rem; }
+  .metrics span { font-size: 0.9rem; }
+  .modeSwitch { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
   .modeButton,
   .quickLink,
   .primaryAction,
-  .secondaryAction { justify-content: center; width: 100%; }
+  .secondaryAction { justify-content: center; width: 100%; font-size: 1rem; min-height: 38px; padding: 0.5rem 1rem; }
+  .toolbar { padding: 1rem 0.75rem; grid-template-columns: 1fr; gap: 0.8rem; }
+  .searchInput { font-size: 1.1rem; min-height: 40px; padding: 0.6rem 1rem; }
+  .sortButtons,
+  .filterButtons { gap: 0.4rem; }
+  .sortButton,
+  .modeButton,
+  .filterButton { font-size: 0.95rem; min-height: 32px; padding: 0.35rem 0.85rem; }
+  .blockHeading h2 { font-size: 1.8rem; }
+  .blockHeading p { font-size: 1.1rem; }
   .pdfGrid,
   .playlistGrid,
-  .videoGrid,
-  .screenshotArea,
-  .metrics,
-  .insightStrip,
-  .galleryHeader,
-  .galleryStage { grid-template-columns: 1fr; gap: 1.2rem; }
-  .primaryShot { min-height: 180px; }
-  .shotGrid { grid-template-columns: 1fr 1fr; }
-  .shotThumb { min-height: 90px; }
-  .galleryImageWrap { min-height: 38vh; }
-  .blogClosing { flex-direction: column; align-items: flex-start; padding: 1.8rem 1.2rem; }
+  .videoGrid { grid-template-columns: 1fr; gap: 1rem; }
+  .pdfCard { padding: 1.2rem; }
+  .caseCardHead { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .badge { font-size: 0.9rem; padding: 0.25em 0.6em; }
+  .cardTitle { font-size: 1.5rem; }
+  .cardDescription,
+  .cardPlatform { font-size: 1.1rem; }
+  .caseMetadata { gap: 0.3rem; margin-top: 0.6rem; }
+  .tagsListInline,
+  .toolsListCompact { gap: 0.4rem; margin-top: 0.6rem; }
+  .tagButtonSmall,
+  .toolButtonSmall { font-size: 0.95rem; padding: 0.3rem 0.6rem; }
+  .cardActions { gap: 0.5rem; margin-top: 1rem; flex-direction: column; }
+  .cardActions a,
+  .cardActions button { width: 100%; justify-content: center; }
+  .viewAction,
+  .downloadAction,
+  .galleryOpenAction { min-width: 0; }
+  .screenshotArea { grid-template-columns: 1fr; gap: 0.5rem; }
+  .primaryShot { min-height: 150px; aspect-ratio: 16 / 9; }
+  .shotGrid { grid-template-columns: 1fr; gap: 0.5rem; }
+  .shotThumb { min-height: 80px; }
+  .insightStrip { grid-template-columns: 1fr; gap: 1rem; }
+  .insightCard { padding: 1.2rem; }
+  .insightCard strong { font-size: 2rem; }
+  .insightCard span { font-size: 1rem; }
+  .youtubeHubGrid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .youtubeHub { padding: 1.2rem; }
+  .youtubeHubSummary { font-size: 1rem; }
+  .youtubeHubActions { gap: 0.6rem; }
+  .playlistAction { width: 100%; min-width: 0; justify-content: center; }
+  .caseNavigator { grid-template-columns: 1fr; gap: 0.8rem; }
+  .caseNavCard { padding: 1rem; }
+  .caseNavCard h3 { font-size: 1.3rem; }
+  .caseNavCard p { font-size: 1rem; }
+  .relatedCasesGrid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .relatedCaseCard { padding: 1rem; }
+  .relatedCaseCard h3 { font-size: 1.3rem; }
+  .relatedCaseCard p { font-size: 1rem; }
+  .galleryOverlay { padding: 1rem; }
+  .galleryDialog { width: 100%; max-height: 95vh; }
+  .galleryHeader { padding: 0.8rem 1rem; gap: 0.6rem; }
+  .galleryTitle { font-size: 1.3rem; }
+  .galleryCounter { font-size: 1rem; }
+  .galleryStage { grid-template-columns: 1fr; gap: 0.5rem; padding: 0.8rem; }
+  .galleryNav { min-width: 40px; min-height: 40px; font-size: 1.1rem; }
+  .galleryImageWrap { min-height: 35vh; }
+  .galleryThumbs { gap: 0.4rem; padding: 0.6rem; }
+  .galleryThumbButton { min-width: 32px; min-height: 32px; font-size: 1rem; }
+  .blogClosing { flex-direction: column; align-items: flex-start; padding: 1.5rem 1rem; gap: 1.2rem; }
+  .blogClosingKicker { font-size: 1rem; }
+  .blogClosing h2 { margin-top: 0.8rem; font-size: 1.6rem; }
+  .blogClosing p { font-size: 1.1rem; max-width: 100%; }
   .blogClosingActions,
   .blogClosingActions a { width: 100%; }
+  .backToTop { right: 1rem; bottom: 1rem; width: 42px; height: 42px; font-size: 1.5rem; }
+}
+
+@media (max-width: 360px) {
+  .page { padding: 7rem 0.5rem 2rem; }
+  .hero { padding: 1.2rem 0.8rem; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero p { font-size: 0.95rem; }
+  .kicker { font-size: 0.85rem; padding: 0.25rem 0.7rem; }
+  .primaryAction::before,
+  .primaryAction::after { display: none; }
+  .cardTitle { font-size: 1.3rem; }
+  .caseMetadata { flex-direction: column; gap: 0.25rem; }
+  .shotGrid { grid-template-columns: 1fr; }
+  .primaryShot { min-height: 120px; }
 }
 
 /* =========================================

@@ -462,6 +462,45 @@
   border-color: rgba(255, 207, 136, 0.86);
 }
 
+/* Respect prefers-reduced-motion - Disable ALL animations */
+@media (prefers-reduced-motion: reduce) {
+  .imageButton::after {
+    animation: none !important;
+  }
+
+  .dotAvailable,
+  .dotLimited,
+  .dotAsync {
+    animation: none !important;
+  }
+
+  .typingText {
+    animation: none !important;
+  }
+
+  .typingHighlight::before {
+    animation: none !important;
+  }
+
+  .typingHighlight::after {
+    animation: none !important;
+  }
+
+  .cvBtn:hover svg {
+    animation: none !important;
+  }
+
+  .pdfCardImg {
+    animation: none !important;
+  }
+
+  :global(*) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @media (hover: none), (pointer: coarse) {
   .homeContent {
     transform: none;
