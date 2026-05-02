@@ -8,7 +8,7 @@
  */
 
 import React, { memo } from "react";
-import { motion, MotionProps, useReducedMotion } from "framer-motion";
+import { motion, MotionProps } from "framer-motion";
 import { fastSpring, revealVariants } from "@/app/core/motion";
 
 type MotionInViewProps = MotionProps & {
@@ -31,16 +31,6 @@ const MotionInView = memo<MotionInViewProps>(({
   style,
   ...rest
 }) => {
-  const prefersReducedMotion = useReducedMotion();
-
-  if (prefersReducedMotion) {
-    return (
-      <div className={className} style={style} {...rest}>
-        {children}
-      </div>
-    );
-  }
-
   return (
     <motion.div
       className={className}
