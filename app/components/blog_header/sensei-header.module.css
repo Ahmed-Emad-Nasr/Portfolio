@@ -10,14 +10,15 @@
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: fit-content;
-  /* كبرنا الـ padding عشان الهيدر يفضل حجمه كبير ومالي مكانه */
-  padding: 1.2rem 4rem; 
+  max-width: calc(100% - 3.4rem);
+  padding: 0.6rem 0.8rem;
   background: rgba(9, 13, 19, 0.85);
   backdrop-filter: blur(16px) saturate(180%);
   border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.75rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
@@ -51,31 +52,73 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--main-color-rgb), 0.2);
 }
 
-.title {
+.brand {
+  flex-shrink: 0;
   white-space: nowrap;
   z-index: 1003;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* تكبير حجم الخط ليكون بارز وواضح */
-  font-size: 1.6rem; 
-  letter-spacing: 0.1em;
-  font-weight: 800;
+  min-height: 44px;
+  min-width: 120px;
+  padding: 0.7rem 1.8rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
   color: var(--main-color);
+  background: rgba(var(--main-color-rgb), 0.05);
+  border: 1px solid rgba(var(--main-color-rgb), 0.4);
   text-decoration: none;
+  cursor: default;
   outline: none;
   font-family: monospace;
   transition: all var(--motion-fast) var(--motion-ease);
 }
 
-.title::before {
+.brand::before {
   content: ">_";
-  margin-right: 0.8rem;
+  margin-right: 0.6rem;
   font-weight: 900;
   opacity: 0.8;
 }
 
-.title:hover, .title:focus-visible {
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all var(--motion-fast) var(--motion-ease);
+}
+
+.navLink:hover,
+.navLink:focus-visible {
+  background-color: rgba(var(--main-color-rgb), 0.08);
+  color: var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.3);
+  transform: translateY(-1px);
+}
+
+.brand:hover, .brand:focus-visible {
   color: #fff;
   text-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.8);
 }
@@ -83,19 +126,34 @@
 /* التجاوب مع الشاشات المتوسطة والصغيرة */
 @media (max-width: 994px) {
   .header {
-    padding: 1rem 2.5rem;
+    width: min(760px, calc(100% - 1.4rem));
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    background: rgba(9, 13, 19, 0.95);
   }
-  .title {
-    font-size: 1.4rem;
+  .brand {
+    padding: 0.5rem 0.8rem;
+    font-size: 1.05rem;
   }
 }
 
 @media (max-width: 600px) {
   .header {
-    padding: 0.8rem 1.8rem;
+    width: min(calc(100% - 1.4rem), 760px);
   }
-  .title {
-    font-size: 1.25rem;
+  .brand {
+    min-width: 90px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .nav {
+    gap: 0.25rem;
+  }
+
+  .navLink {
+    font-size: 1.05rem;
+    padding: 0.45rem 0.75rem;
   }
 }
 
@@ -103,11 +161,16 @@
   .header {
     width: calc(100% - 1.5rem);
     top: 0.7rem;
-    padding: 0.8rem 1.2rem;
+    padding: 0.8rem 0.8rem;
     border-radius: 8px;
   }
 
-  .title { 
-    font-size: 1.15rem; 
+  .brand { 
+    font-size: 0.9rem;
+    min-height: 40px;
+  }
+
+  .navLink {
+    font-size: 0.95rem;
   }
 }
