@@ -53,6 +53,35 @@
   position: relative;
 }
 
+.breadcrumbNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: monospace;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.breadcrumbLink {
+  color: var(--main-color);
+}
+
+.breadcrumbLink:hover {
+  color: #fff;
+}
+
+.breadcrumbSeparator {
+  opacity: 0.45;
+}
+
+.breadcrumbCurrent {
+  color: rgba(255, 255, 255, 0.82);
+}
+
 /* Subtle static glow — no animation */
 .heroGlow {
   position: absolute;
@@ -440,6 +469,130 @@
 }
 
 .caseCardLarge { grid-column: span 2; }
+
+.caseNavigator {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 2.6rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.caseNavCard {
+  padding: 1.35rem;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  background: rgba(6, 9, 15, 0.92);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+
+.caseNavCenter {
+  border-color: rgba(var(--accent-color-rgb), 0.32);
+  background: rgba(10, 15, 25, 0.94);
+}
+
+.caseNavLabel {
+  display: inline-flex;
+  margin-bottom: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  background: rgba(var(--main-color-rgb), 0.08);
+  color: var(--main-color);
+  font-family: monospace;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.caseNavCard h3 {
+  color: #fff;
+  font-family: monospace;
+  font-size: 1.6rem;
+  line-height: 1.4;
+}
+
+.caseNavCard p {
+  margin-top: 0.65rem;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: monospace;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.caseNavCard a {
+  display: inline-flex;
+  margin-top: 1rem;
+  color: var(--accent-color);
+  font-family: monospace;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
+.relatedCasesStrip {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 2rem auto 0;
+  padding: 1.4rem;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
+  background: rgba(5, 8, 14, 0.9);
+}
+
+.relatedCasesGrid {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.relatedCaseCard {
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
+  background: rgba(6, 9, 15, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.relatedCaseCard h3 {
+  color: #fff;
+  font-family: monospace;
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+
+.relatedCaseCard p {
+  color: rgba(255, 255, 255, 0.62);
+  font-family: monospace;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+.relatedCaseLabel {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.28rem 0.65rem;
+  border-radius: 4px;
+  background: rgba(var(--accent-color-rgb), 0.1);
+  color: var(--accent-color);
+  font-family: monospace;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.relatedCaseCard a {
+  display: inline-flex;
+  margin-top: auto;
+  color: var(--main-color);
+  font-family: monospace;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
 
 .pdfCardBody {
   display: flex;

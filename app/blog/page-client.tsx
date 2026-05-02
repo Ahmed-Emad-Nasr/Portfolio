@@ -431,6 +431,38 @@ export default function BlogPageClient() {
   const currentGalleryShot =
     gallery && gallery.screenshots.length ? gallery.screenshots[gallery.index] : null;
 
+  const caseOrder = useMemo(() => blogPdfResources.filter((item) => item.id !== cvResource.id), []);
+  const leadCaseIndex = caseOrder.findIndex((item) => item.id === leadCase?.id);
+  const previousCase = leadCaseIndex > 0 ? caseOrder[leadCaseIndex - 1] : null;
+  const nextCase = leadCaseIndex >= 0 && leadCaseIndex < caseOrder.length - 1 ? caseOrder[leadCaseIndex + 1] : null;
+  const relatedCases = useMemo(() => {
+    if (!leadCase) return [];
+
+    const leadTags = new Set(leadCase.tags ?? []);
+
+    return caseOrder
+      .filter((item) => item.id !== leadCase.id)
+      .map((item) => {
+        let score = 0;
+
+        if (leadCase.category && item.category && item.category === leadCase.category) {
+          score += 3;
+        }
+
+        if (leadCase.difficulty && item.difficulty && item.difficulty === leadCase.difficulty) {
+          score += 1;
+        }
+
+        score += (item.tags ?? []).filter((tag) => leadTags.has(tag)).length * 2;
+
+        return { item, score };
+      })
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map(({ item }) => item);
+  }, [caseOrder, leadCase]);
+
   // ─── Render ──────────────────────────────────────────────────────────────
 
   return (
@@ -441,6 +473,13 @@ export default function BlogPageClient() {
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
         <MotionInView className={styles.heroInner}>
+          <nav className={styles.breadcrumbNav} aria-label="Breadcrumb">
+            <Link href="/" className={styles.breadcrumbLink}>Portfolio</Link>
+            <span aria-hidden="true" className={styles.breadcrumbSeparator}>/</span>
+            <Link href="/blog" className={styles.breadcrumbLink}>Blog</Link>
+            <span aria-hidden="true" className={styles.breadcrumbSeparator}>/</span>
+            <span className={styles.breadcrumbCurrent}>{leadCase?.title ?? "Cases"}</span>
+          </nav>
           <span className={styles.heroGlow} aria-hidden="true" />
           <p className={styles.kicker}>Ahmed Emad Nasr</p>
           <h1>Security Blog & Technical Reports</h1>
@@ -525,6 +564,49 @@ export default function BlogPageClient() {
       </section>
 
       {/* ── PDF Library ──────────────────────────────────────────────────── */}
+      {leadCase && (
+        <MotionInView className={styles.caseNavigator} aria-label="Case navigation">
+          <article className={styles.caseNavCard}>
+            <span className={styles.caseNavLabel}>Previous case</span>
+            {previousCase ? (
+              <>
+                <h3>{previousCase.title}</h3>
+                <p>{previousCase.category ?? previousCase.platform}</p>
+                <a href={normalizePublicHref(previousCase.href)} target="_blank" rel="noreferrer">
+                  Open PDF
+                </a>
+              </>
+            ) : (
+              <p>Start with the featured case.</p>
+            )}
+          </article>
+
+          <article className={`${styles.caseNavCard} ${styles.caseNavCenter}`}>
+            <span className={styles.caseNavLabel}>Current case</span>
+            <h3>{leadCase.title}</h3>
+            <p>{leadCase.description}</p>
+            <a href={normalizePublicHref(leadCase.href)} target="_blank" rel="noreferrer">
+              Open Featured PDF
+            </a>
+          </article>
+
+          <article className={styles.caseNavCard}>
+            <span className={styles.caseNavLabel}>Next case</span>
+            {nextCase ? (
+              <>
+                <h3>{nextCase.title}</h3>
+                <p>{nextCase.category ?? nextCase.platform}</p>
+                <a href={normalizePublicHref(nextCase.href)} target="_blank" rel="noreferrer">
+                  Open PDF
+                </a>
+              </>
+            ) : (
+              <p>More cases are available below.</p>
+            )}
+          </article>
+        </MotionInView>
+      )}
+
       <section className={styles.block} aria-labelledby="blog-pdfs-title">
         <MotionInView className={styles.blockHeading}>
           <h2 id="blog-pdfs-title">PDF Library</h2>
@@ -708,6 +790,35 @@ export default function BlogPageClient() {
                 />
               </a>
             )}
+          </MotionInView>
+        )}
+
+        {relatedCases.length > 0 && (
+          <MotionInView className={styles.relatedCasesStrip} aria-label="Related cases">
+            <div className={styles.blockHeading}>
+              <h2>Related Cases</h2>
+              <p>Cases with a similar category, difficulty, or keyword set.</p>
+            </div>
+            <div className={styles.relatedCasesGrid}>
+              {relatedCases.map((item) => (
+                <article key={item.id} className={styles.relatedCaseCard}>
+                  <p className={styles.relatedCaseLabel}>{item.category ?? item.type}</p>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <div className={styles.caseMetadata}>
+                    {item.difficulty && (
+                      <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>
+                        {item.difficulty}
+                      </span>
+                    )}
+                    {item.readTime && <span className={styles.badge}>{item.readTime} min read</span>}
+                  </div>
+                  <a href={normalizePublicHref(item.href)} target="_blank" rel="noreferrer">
+                    Open PDF
+                  </a>
+                </article>
+              ))}
+            </div>
           </MotionInView>
         )}
 
