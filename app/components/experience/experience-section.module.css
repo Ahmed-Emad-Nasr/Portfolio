@@ -14,6 +14,12 @@
 
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
 
+@media (min-width: 992px) {
+  .container {
+    max-width: none;
+  }
+}
+
 /* --- 1. Data Stream Timeline --- */
 .time-line { position: relative; max-width: 1200px; margin: 0 auto; padding: 2rem 0; }
 .time-line::after {

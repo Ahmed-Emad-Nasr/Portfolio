@@ -35,10 +35,10 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
       <Image
         src={loadingGif.src}
         alt="System Booting..."
-        width={250}
-        height={250}
+        width={300}
+        height={300}
         sizes="250px"
-        quality={70}
+        quality={30}
         priority
         className={styles.spinner}
       />

@@ -24,6 +24,12 @@
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 3rem; }
 
+@media (min-width: 992px) {
+  .container {
+    max-width: none;
+  }
+}
+
 /* --- Terminal Style Filters --- */
 .projects-filter {
   display: flex;

@@ -5,6 +5,7 @@
  */
 
 .art-gallery-section { min-height: 100vh; padding: 8rem 0 6rem; margin: 0; margin-top: clamp(26rem, 45vh, 60rem); position: relative; z-index: 1; }
+.container { width: 100%; max-width: none; margin: 0 auto; }
 .art-gallery-content { padding: 0 5rem 5%; }
 .header-section { margin-top: 0; text-align: center; }
 

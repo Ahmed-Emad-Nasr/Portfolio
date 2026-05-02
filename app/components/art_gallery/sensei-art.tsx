@@ -68,7 +68,7 @@ const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
           height={350}
           sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
           loading="lazy"
-          quality={30}
+          quality={20}
           placeholder="blur"
           blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
           className={styles.galleryImg}

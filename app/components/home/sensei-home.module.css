@@ -61,6 +61,12 @@
 }
 .homeImg { flex: 0 0 auto; max-width: 480px; width: 100%; }
 
+@media (min-width: 992px) {
+  .container {
+    max-width: none;
+  }
+}
+
 .imageButton {
   display: block;
   width: 100%;

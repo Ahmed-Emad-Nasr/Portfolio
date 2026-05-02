@@ -13,11 +13,9 @@ import {
 } from "@/app/core/data";
 import AppBar from "@/app/components/blog_header/sensei-header";
 import BlogCard from "./BlogCard";
-
-// ⚠️ عدل المسار ده على حسب مكان ملف sensei-home.tsx في مشروعك
 import HomeSection from "@/app/components/blog_home/sensei-home";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 type PdfResource = {
   id: string;
@@ -41,7 +39,7 @@ type GalleryState = {
   index: number;
 };
 
-// ─── Constants (module-level) ───────────────────────────────
+// ─── Module-level constants ───────────────────────────────────────────────────
 
 const cvResource: PdfResource = {
   id: "soc-analyst-cv",
@@ -69,7 +67,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).png`);
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
-  "autopsy": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.png`),
+  autopsy: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.png`),
   "data-exfiltration-investigation": Array.from({ length: 37 }, (_, i) => `Assets/Cases/Data Exfiltiration Investigation/${i + 1}.png`),
   "aws-guardduty-setup": Array.from({ length: 9 }, (_, i) => `Assets/Cases/AWS-GaurdDuty/${i + 1}.png`),
   "aws-athena-healthcare": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Amazon S3 and Amazon Athena/${i + 1}.png`),
@@ -89,14 +87,14 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard2.png",
     "Assets/Cases/SOC Enviroment DEPI R3 Project/edit ossec on win.png",
     "Assets/Cases/SOC Enviroment DEPI R3 Project/enable fim to folder ahmed.png",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png"
+    "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png",
   ],
   "depi-r4-project": [
-    "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
+    "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png",
   ],
   "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
   "serpent-stealer": Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).png`),
-  "imagestegano": [
+  imagestegano: [
     "Assets/Cases/ImageStegano/Screenshot (104).png",
     "Assets/Cases/ImageStegano/Screenshot (105).png",
     "Assets/Cases/ImageStegano/Screenshot (106).png",
@@ -111,7 +109,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/ImageStegano/Screenshot (117).png",
     "Assets/Cases/ImageStegano/Screenshot (118).png",
     "Assets/Cases/ImageStegano/Screenshot (119).png",
-    "Assets/Cases/ImageStegano/Screenshot (120).png"
+    "Assets/Cases/ImageStegano/Screenshot (120).png",
   ],
   "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).png`),
   "malware-analysis-wannacry": [
@@ -166,13 +164,13 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   ],
 };
 
-// ─── Pure helpers ───────
+// ─── Pure helpers ─────────────────────────────────────────────────────────────
 
 const normalizePublicHref = (href: string): string => {
   if (/^https?:\/\//i.test(href)) return href;
   const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
   const normalized = href.startsWith("/") ? href : `/${href}`;
-  return `${basePath}${normalized}`.replace(/\/\//g, "/"); 
+  return `${basePath}${normalized}`.replace(/\/\//g, "/");
 };
 
 const getThumbnail = (imgPath: string): string => {
@@ -194,28 +192,41 @@ const formatDate = (value: string): string => {
   });
 };
 
+// Simple case-insensitive match
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
 
-// مرجع ثابت للمصفوفات الفارغة للحفاظ على React.memo
+// Stable empty array ref — keeps React.memo working correctly
 const EMPTY_SCREENSHOTS: string[] = [];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function BlogPageClient() {
-  const [query, setQuery] = useState("");
+  // ── Filter state ──────────────────────────────────────────────────────────
+  const [rawQuery, setRawQuery] = useState("");
+  const [query, setQuery] = useState("");           // debounced
   const [pdfFilter, setPdfFilter] = useState("All");
   const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [selectedTools, setSelectedTools] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<"recent" | "popularity" | "difficulty">("recent");
+
+  // ── Gallery state ─────────────────────────────────────────────────────────
   const [gallery, setGallery] = useState<GalleryState | null>(null);
-  const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
-  
   const galleryDialogRef = useRef<HTMLDivElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
 
-  // ── Derived filter options ──────────────────────────────────────────────────
+  // ── Embeds (lazy iframes) ────────────────────────────────────────────────
+  const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
+
+  // ── Debounce search input (300 ms) ────────────────────────────────────────
+  // Reduces filter re-computation on every keystroke
+  useEffect(() => {
+    const t = setTimeout(() => setQuery(rawQuery), 300);
+    return () => clearTimeout(t);
+  }, [rawQuery]);
+
+  // ── Filter options (stable, derived once) ────────────────────────────────
 
   const pdfTypeFilters = useMemo(() => {
     const uniqueTypes = Array.from(new Set(blogPdfResources.map((item) => item.type)));
@@ -225,7 +236,11 @@ export default function BlogPageClient() {
   const difficultyOptions = useMemo(
     () =>
       Array.from(
-        new Set(blogPdfResources.map((item) => item.difficulty).filter((d): d is string => Boolean(d)))
+        new Set(
+          blogPdfResources
+            .map((item) => item.difficulty)
+            .filter((d): d is string => Boolean(d))
+        )
       ),
     []
   );
@@ -233,31 +248,37 @@ export default function BlogPageClient() {
   const categoryOptions = useMemo(
     () =>
       Array.from(
-        new Set(blogPdfResources.map((item) => item.category).filter((c): c is string => Boolean(c)))
+        new Set(
+          blogPdfResources
+            .map((item) => item.category)
+            .filter((c): c is string => Boolean(c))
+        )
       ),
     []
   );
 
-  // ── Filtered + sorted PDFs ──────────────────────────────────────────────────
+  // ── Filtered + sorted PDFs ────────────────────────────────────────────────
 
   const filteredPdfs = useMemo(() => {
+    const q = query.toLowerCase();
     return blogPdfResources.filter((item) => {
       if (pdfFilter !== "All" && item.type !== pdfFilter) return false;
       if (difficultyFilter && item.difficulty !== difficultyFilter) return false;
       if (categoryFilter && item.category !== categoryFilter) return false;
       if (selectedTools.size > 0 && !item.tools?.some((t) => selectedTools.has(t))) return false;
+      if (!q) return true;
       return (
-        matchesSearch(item.title, query) ||
-        matchesSearch(item.description || "", query) ||
-        matchesSearch(item.platform, query) ||
-        matchesSearch(item.type, query) ||
-        (item.tags?.some((tag) => matchesSearch(tag, query)) ?? false)
+        item.title.toLowerCase().includes(q) ||
+        (item.description?.toLowerCase().includes(q) ?? false) ||
+        item.platform.toLowerCase().includes(q) ||
+        item.type.toLowerCase().includes(q) ||
+        (item.tags?.some((tag) => tag.toLowerCase().includes(q)) ?? false)
       );
     });
   }, [pdfFilter, difficultyFilter, categoryFilter, selectedTools, query]);
 
   const sortedPdfs = useMemo(() => {
-    const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 };
+    const difficultyOrder: Record<string, number> = { Easy: 1, Medium: 2, Hard: 3 };
     return [...filteredPdfs].sort((a, b) => {
       const aShots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
       const bShots = (caseScreenshotsByEvidenceId[b.id] ?? []).length > 0;
@@ -267,8 +288,8 @@ export default function BlogPageClient() {
           return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
         case "difficulty":
           return (
-            (difficultyOrder[b.difficulty as keyof typeof difficultyOrder] || 0) -
-            (difficultyOrder[a.difficulty as keyof typeof difficultyOrder] || 0)
+            (difficultyOrder[b.difficulty ?? ""] || 0) -
+            (difficultyOrder[a.difficulty ?? ""] || 0)
           );
         case "popularity":
           return (bShots ? 1 : 0) - (aShots ? 1 : 0);
@@ -288,7 +309,7 @@ export default function BlogPageClient() {
     [sortedPdfs, leadCase]
   );
 
-  // ── Video / playlist filter ────────────────────────────────────────────────
+  // ── Video / playlist filter ───────────────────────────────────────────────
 
   const featuredVideo = blogFeaturedYoutubeVideo;
 
@@ -305,10 +326,12 @@ export default function BlogPageClient() {
     [query]
   );
 
-  // ── Stats ──────────────────────────────────────────────────────────────────
+  // ── Stats (computed once, stable) ────────────────────────────────────────
 
   const casesWithScreenshotsCount = useMemo(
-    () => caseEvidenceLibrary.filter((item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0).length,
+    () =>
+      caseEvidenceLibrary.filter((item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0)
+        .length,
     []
   );
 
@@ -317,7 +340,7 @@ export default function BlogPageClient() {
     []
   );
 
-  // ── Gallery ────────────────────────────────────────────────────────────────
+  // ── Gallery handlers ──────────────────────────────────────────────────────
 
   const goGallery = useCallback((delta: number) => {
     setGallery((cur) => {
@@ -329,14 +352,21 @@ export default function BlogPageClient() {
 
   const openGallery = useCallback((title: string, screenshots: string[], index = 0) => {
     if (!screenshots.length) return;
-    setGallery({ title, screenshots, index: Math.min(Math.max(index, 0), screenshots.length - 1) });
+    setGallery({
+      title,
+      screenshots,
+      index: Math.min(Math.max(index, 0), screenshots.length - 1),
+    });
   }, []);
 
+  // Keyboard & focus trap for gallery
   useEffect(() => {
     if (!gallery) return;
     const prev = document.activeElement as HTMLElement | null;
     const dialog = galleryDialogRef.current;
-    const focusables = dialog?.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])');
+    const focusables = dialog?.querySelectorAll<HTMLElement>(
+      'button, a[href], [tabindex]:not([tabindex="-1"])'
+    );
     focusables?.[0]?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -354,7 +384,7 @@ export default function BlogPageClient() {
     return () => { window.removeEventListener("keydown", handleKeyDown); prev?.focus(); };
   }, [gallery, goGallery]);
 
-  // ── Other handlers ─────────────────────────────────────────────────────────
+  // ── Other handlers ────────────────────────────────────────────────────────
 
   const activateEmbed = useCallback(
     (key: string) => setActiveEmbeds((cur) => ({ ...cur, [key]: true })),
@@ -374,6 +404,7 @@ export default function BlogPageClient() {
     setDifficultyFilter(null);
     setCategoryFilter(null);
     setSelectedTools(new Set());
+    setRawQuery("");
     setQuery("");
   }, []);
 
@@ -394,29 +425,28 @@ export default function BlogPageClient() {
   );
 
   const hasActiveFilters =
-    query || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All";
+    rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All";
 
   const currentGalleryShot =
     gallery && gallery.screenshots.length ? gallery.screenshots[gallery.index] : null;
 
-  // ─── Render ──────────────────────────────────────────────────────────────────
+  // ─── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <main id="main-content" className={styles.page} style={{ position: "relative" }}>
-      
-      {/* ── Home Hero Section (Added Here) ───────────────────────────── */}
-      <AppBar/>
+    <main id="main-content" className={styles.page}>
+      <AppBar />
       <HomeSection />
 
-      {/* ── Original Blog Hero ────────────────────────────────────────── */}
+      {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
         <span className={styles.heroGlow} aria-hidden="true" />
         <p className={styles.kicker}>Ahmed Emad Nasr</p>
         <h1>Security Blog & Technical Reports</h1>
         <p>
           A single place for my SOC incident reports, DFIR writeups, and technical videos.
-          Use search and filters to find what you want quickly.
+          Use search and filters to find what you need quickly.
         </p>
+
         <div className={styles.heroGrid}>
           <div className={styles.heroMainContent}>
             <div className={styles.metrics}>
@@ -430,17 +460,19 @@ export default function BlogPageClient() {
               </article>
               <article>
                 <strong>24/7</strong>
-                <span>On-Demand Access</span>
+                <span>On-Demand</span>
               </article>
             </div>
+
             <div className={styles.heroActions}>
               <a href="#blog-pdfs-title" className={styles.primaryAction}>
-                Explore Cases First
+                Explore Cases
               </a>
               <Link href="/" className={`${styles.secondaryAction} ${styles.backAction}`}>
                 Back To Portfolio
               </Link>
             </div>
+
             <nav className={styles.quickLinks} aria-label="Quick section shortcuts">
               <a href="#blog-pdfs-title" className={styles.quickLink}>PDF Cases</a>
               <a href="#blog-playlists-title" className={styles.quickLink}>Playlists</a>
@@ -474,7 +506,7 @@ export default function BlogPageClient() {
                     sizes="(max-width: 991px) 100vw, 50vw"
                     loading="lazy"
                   />
-                  <span className={styles.embedPlayButton}>Play</span>
+                  <span className={styles.embedPlayButton}>▶ Play</span>
                 </button>
               )}
             </div>
@@ -482,7 +514,7 @@ export default function BlogPageClient() {
               <p className={styles.featuredTag}>Featured Video</p>
               <h3>{featuredVideo.title}</h3>
               <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
-                Watch on YouTube
+                Watch on YouTube ↗
               </a>
             </div>
           </article>
@@ -502,12 +534,11 @@ export default function BlogPageClient() {
             type="search"
             className={styles.searchInput}
             placeholder="Search cases, tags, tools…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={rawQuery}
+            onChange={(e) => setRawQuery(e.target.value)}
             aria-label="Search PDF resources"
           />
 
-          {/* Type filter */}
           <div className={styles.modeSwitch} role="group" aria-label="Filter by type">
             {pdfTypeFilters.map((filter) => (
               <button
@@ -521,7 +552,6 @@ export default function BlogPageClient() {
             ))}
           </div>
 
-          {/* Difficulty filter */}
           {difficultyOptions.length > 0 && (
             <div className={styles.sortButtons} role="group" aria-label="Filter by difficulty">
               {difficultyOptions.map((d) => (
@@ -537,7 +567,6 @@ export default function BlogPageClient() {
             </div>
           )}
 
-          {/* Category filter */}
           {categoryOptions.length > 0 && (
             <div className={styles.sortButtons} role="group" aria-label="Filter by category">
               {categoryOptions.map((c) => (
@@ -553,7 +582,6 @@ export default function BlogPageClient() {
             </div>
           )}
 
-          {/* Sort */}
           <div className={styles.sortButtons} role="group" aria-label="Sort order">
             {(["recent", "difficulty", "popularity"] as const).map((s) => (
               <button
@@ -567,7 +595,6 @@ export default function BlogPageClient() {
             ))}
           </div>
 
-          {/* Clear filters */}
           {hasActiveFilters && (
             <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>
               ✕ Clear Filters
@@ -584,17 +611,26 @@ export default function BlogPageClient() {
               <p>{leadCase.description || "Featured first for quick navigation."}</p>
               <div className={styles.caseMetadata}>
                 {leadCase.difficulty && (
-                  <span className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}>
+                  <span
+                    className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}
+                  >
                     {leadCase.difficulty}
                   </span>
                 )}
                 {leadCase.category && <span className={styles.badge}>{leadCase.category}</span>}
-                {leadCase.readTime && <span className={styles.badge}>{leadCase.readTime} min read</span>}
+                {leadCase.readTime && (
+                  <span className={styles.badge}>{leadCase.readTime} min read</span>
+                )}
               </div>
               {leadCase.tags && leadCase.tags.length > 0 && (
                 <div className={styles.tagsList}>
                   {leadCase.tags.slice(0, 4).map((tag) => (
-                    <button key={tag} type="button" className={styles.tagButton} onClick={() => setQuery(tag)}>
+                    <button
+                      key={tag}
+                      type="button"
+                      className={styles.tagButton}
+                      onClick={() => setRawQuery(tag)}
+                    >
                       #{tag}
                     </button>
                   ))}
@@ -605,7 +641,12 @@ export default function BlogPageClient() {
                   <p className={styles.toolsLabel}>Tools:</p>
                   <div className={styles.toolsGrid}>
                     {leadCase.tools.map((tool) => (
-                      <button key={tool} type="button" className={styles.toolButton} onClick={() => toggleToolFilter(tool)}>
+                      <button
+                        key={tool}
+                        type="button"
+                        className={styles.toolButton}
+                        onClick={() => toggleToolFilter(tool)}
+                      >
                         {tool}
                       </button>
                     ))}
@@ -613,21 +654,37 @@ export default function BlogPageClient() {
                 </div>
               )}
               <div className={styles.cardActions}>
-                <a href={normalizePublicHref(leadCase.href)} target="_blank" rel="noreferrer" className={styles.viewAction}>
+                <a
+                  href={normalizePublicHref(leadCase.href)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.viewAction}
+                >
                   View PDF
                 </a>
-                <a href={normalizePublicHref(leadCase.href)} download className={styles.downloadAction}>
+                <a
+                  href={normalizePublicHref(leadCase.href)}
+                  download
+                  className={styles.downloadAction}
+                >
                   Download
                 </a>
                 <button
                   type="button"
-                  onClick={() => openGallery(leadCase.title, caseScreenshotsByEvidenceId[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
+                  onClick={() =>
+                    openGallery(
+                      leadCase.title,
+                      caseScreenshotsByEvidenceId[leadCase.id] ?? EMPTY_SCREENSHOTS,
+                      0
+                    )
+                  }
                   className={`${styles.galleryOpenAction} ${styles.viewAction}`}
                 >
                   View All Screenshots
                 </button>
               </div>
             </div>
+
             {caseScreenshotsByEvidenceId[leadCase.id]?.[0] && (
               <a
                 href={normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])}
@@ -642,7 +699,7 @@ export default function BlogPageClient() {
                   fill
                   sizes="(max-width: 991px) 100vw, 38vw"
                   loading="lazy"
-                  quality={30}
+                  quality={10}
                   placeholder="blur"
                   blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
                 />
@@ -659,7 +716,7 @@ export default function BlogPageClient() {
               {...item}
               screenshots={caseScreenshotsByEvidenceId[item.id] ?? EMPTY_SCREENSHOTS}
               onOpenGallery={openGallery}
-              onTagClick={setQuery}
+              onTagClick={setRawQuery}
               onToolClick={toggleToolFilter}
               getThumbnail={getThumbnail}
               normalizeHref={normalizePublicHref}
@@ -680,7 +737,7 @@ export default function BlogPageClient() {
         </article>
         <article className={styles.insightCard}>
           <strong>{casesWithScreenshotsCount}</strong>
-          <span>Cases With Screenshots</span>
+          <span>With Screenshots</span>
         </article>
         <article className={styles.insightCard}>
           <strong>{totalScreenshotAssets}</strong>
@@ -695,7 +752,12 @@ export default function BlogPageClient() {
           <p>All channel content grouped here: featured, playlists, and latest videos.</p>
         </div>
         <div className={styles.youtubeHubActions}>
-          <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noreferrer" className={`${styles.primaryAction} ${styles.channelAction}`}>
+          <a
+            href={YOUTUBE_CHANNEL_URL}
+            target="_blank"
+            rel="noreferrer"
+            className={`${styles.primaryAction} ${styles.channelAction}`}
+          >
             Open YouTube Channel
           </a>
         </div>
@@ -734,13 +796,15 @@ export default function BlogPageClient() {
                       sizes="(max-width: 991px) 100vw, 40vw"
                       loading="lazy"
                     />
-                    <span className={styles.embedPlayButton}>Play Playlist</span>
+                    <span className={styles.embedPlayButton}>▶ Play Playlist</span>
                   </button>
                 )}
               </div>
               <div className={styles.playlistContent}>
                 <h3>{playlist.title}</h3>
-                {playlist.description && <p className={styles.playlistDescription}>{playlist.description}</p>}
+                {playlist.description && (
+                  <p className={styles.playlistDescription}>{playlist.description}</p>
+                )}
                 {playlist.tags && playlist.tags.length > 0 && (
                   <div className={styles.playlistTags}>
                     {playlist.tags.slice(0, 2).map((tag) => (
@@ -748,9 +812,16 @@ export default function BlogPageClient() {
                     ))}
                   </div>
                 )}
-                {playlist.videoCount && <p className={styles.playlistVideoCount}>{playlist.videoCount} videos</p>}
+                {playlist.videoCount && (
+                  <p className={styles.playlistVideoCount}>{playlist.videoCount} videos</p>
+                )}
               </div>
-              <a href={playlist.sourceUrl} target="_blank" rel="noreferrer" className={styles.playlistAction}>
+              <a
+                href={playlist.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.playlistAction}
+              >
                 Open Playlist
               </a>
             </article>
@@ -794,7 +865,7 @@ export default function BlogPageClient() {
                       sizes="(max-width: 991px) 100vw, 40vw"
                       loading="lazy"
                     />
-                    <span className={styles.embedPlayButton}>Play Video</span>
+                    <span className={styles.embedPlayButton}>▶ Play Video</span>
                   </button>
                 )}
               </div>
@@ -835,13 +906,18 @@ export default function BlogPageClient() {
                 onClick={() => setGallery(null)}
                 aria-label="Close screenshots gallery"
               >
-                Close
+                ✕ Close
               </button>
             </div>
 
             <div className={styles.galleryStage}>
-              <button type="button" className={styles.galleryNav} onClick={() => goGallery(-1)} aria-label="Previous screenshot">
-                Prev
+              <button
+                type="button"
+                className={styles.galleryNav}
+                onClick={() => goGallery(-1)}
+                aria-label="Previous screenshot"
+              >
+                ←
               </button>
               <a
                 href={normalizePublicHref(currentGalleryShot)}
@@ -858,13 +934,18 @@ export default function BlogPageClient() {
                   fill
                   sizes="(max-width: 991px) 95vw, 78vw"
                   loading="lazy"
-                  quality={60}
+                  quality={75}
                   placeholder="blur"
                   blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
                 />
               </a>
-              <button type="button" className={styles.galleryNav} onClick={() => goGallery(1)} aria-label="Next screenshot">
-                Next
+              <button
+                type="button"
+                className={styles.galleryNav}
+                onClick={() => goGallery(1)}
+                aria-label="Next screenshot"
+              >
+                →
               </button>
             </div>
 
@@ -873,7 +954,11 @@ export default function BlogPageClient() {
                 <button
                   key={`${gallery.title}-${shot}`}
                   type="button"
-                  className={index === gallery.index ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}` : styles.galleryThumbButton}
+                  className={
+                    index === gallery.index
+                      ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}`
+                      : styles.galleryThumbButton
+                  }
                   onClick={() => setGallery({ ...gallery, index })}
                   aria-label={`Open screenshot ${index + 1}`}
                 >
@@ -893,15 +978,20 @@ export default function BlogPageClient() {
             If you want the full story, start with the PDF archive and continue with the videos.
           </h2>
           <p>
-            The blog is structured like a field notebook: short entry points, deeper evidence, and a direct path back
-            to the portfolio.
+            The blog is structured like a field notebook: short entry points, deeper evidence, and a
+            direct path back to the portfolio.
           </p>
         </div>
         <div className={styles.blogClosingActions}>
           <Link href="/" className={styles.secondaryAction}>
             Back to Portfolio
           </Link>
-          <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noreferrer" className={styles.primaryAction}>
+          <a
+            href={YOUTUBE_CHANNEL_URL}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.primaryAction}
+          >
             Open YouTube Channel
           </a>
         </div>
