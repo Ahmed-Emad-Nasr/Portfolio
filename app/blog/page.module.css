@@ -389,7 +389,7 @@
 .blogClosing h2,
 .playlistContent h3,
 .videoCardContent h3,
-.featuredContent h3,
+.featuredContent h2,
 .caseSpotlightBody h3 {
   text-wrap: balance;
 }
@@ -432,6 +432,15 @@
 
 .caseCardTextOnly {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Video and playlist cards are single-column media cards, not split two-column PDF cards. */
+.playlistCard,
+.videoCard {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .pdfCard:hover,
@@ -854,11 +863,19 @@
   overflow: hidden;
 }
 
+.embedPreviewImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .embedPreview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.75) brightness(0.7);
+  filter: saturate(0.85) brightness(0.82);
 }
 
 .embedPreview:hover img {
@@ -1085,6 +1102,20 @@
 
 .youtubeHubActions { margin-top: 1.2rem; display: flex; flex-wrap: wrap; gap: 1rem; }
 
+.youtubeHubSummary {
+  margin-top: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: monospace;
+  font-size: 1.15rem;
+}
+
+.youtubeHubGrid {
+  margin-top: 1.8rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
 .blogClosing {
   position: relative;
   z-index: 1;
@@ -1179,10 +1210,24 @@
 .videoCardContent h3 { color: #fff; font-family: monospace; font-size: 1.5rem; line-height: 1.4; }
 
 .featuredContent { padding-top: 0.8rem; }
-.featuredContent h3 { color: #fff; font-family: monospace; font-size: 1.7rem; }
+.featuredContent h2 { color: #fff; font-family: monospace; font-size: 1.7rem; }
 .featuredContent a { color: var(--accent-color); font-family: monospace; font-size: 1.2rem; }
 
 .channelAction { margin-top: 0; }
+
+.playlistAction {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.playlistFrame,
+.videoFrame {
+  width: 100%;
+}
+
+.youtubeHubGrid .playlistAction {
+  min-width: 0;
+}
 
 .cardActions {
   display: flex;

@@ -40,6 +40,14 @@ type GalleryState = {
   index: number;
 };
 
+type ChannelVideo = {
+  videoId: string;
+  title: string;
+  description?: string;
+  publishedAt?: string;
+  sourceUrl: string;
+};
+
 // ─── Module-level constants ───────────────────────────────────────────────────
 
 const cvResource: PdfResource = {
@@ -176,6 +184,17 @@ const normalizePublicHref = (href: string): string => {
 
 const getThumbnail = (imgPath: string): string => {
   if (!imgPath) return imgPath;
+  const relativeCasePath = imgPath.replace(/^Assets\/Cases\//, "");
+
+  // These case folders currently do not have generated thumbnail assets.
+  // Returning the original image path avoids repeated 404 requests in production.
+  if (
+    relativeCasePath.startsWith("Autopsy/") ||
+    relativeCasePath.startsWith("Data Exfiltiration Investigation/")
+  ) {
+    return imgPath;
+  }
+
   const rel = imgPath
     .replace(/^Assets\/Cases\//, "")
     .replace(/[\\/]/g, "__")
@@ -190,6 +209,7 @@ const formatDate = (value: string): string => {
     year: "numeric",
     month: "short",
     day: "numeric",
+    timeZone: "UTC",
   });
 };
 
@@ -314,13 +334,29 @@ export default function BlogPageClient() {
 
   const featuredVideo = blogFeaturedYoutubeVideo;
 
-  const filteredVideos = useMemo(
-    () =>
-      blogYoutubeVideos.filter(
-        (v) => v.videoId !== featuredVideo.videoId && matchesSearch(v.title, query)
-      ),
-    [featuredVideo.videoId, query]
-  );
+  const filteredChannelVideos = useMemo<ChannelVideo[]>(() => {
+    const merged: ChannelVideo[] = [
+      {
+        videoId: featuredVideo.videoId,
+        title: featuredVideo.title,
+        description: featuredVideo.description,
+        sourceUrl: featuredVideo.sourceUrl,
+      },
+      ...blogYoutubeVideos
+        .filter((video) => matchesSearch(video.title, query))
+        .map((video) => ({
+          ...video,
+          sourceUrl: `https://youtu.be/${video.videoId}`,
+        })),
+    ];
+
+    const seen = new Set<string>();
+    return merged.filter((video) => {
+      if (seen.has(video.videoId)) return false;
+      seen.add(video.videoId);
+      return true;
+    });
+  }, [featuredVideo.description, featuredVideo.sourceUrl, featuredVideo.title, featuredVideo.videoId, query]);
 
   const filteredPlaylists = useMemo(
     () => blogYoutubePlaylists.filter((p) => matchesSearch(p.title, query)),
@@ -517,8 +553,7 @@ export default function BlogPageClient() {
               <nav className={styles.quickLinks} aria-label="Quick section shortcuts">
                 <a href="#blog-pdfs-title" className={styles.quickLink}>PDF Cases</a>
                 <a href="#blog-playlists-title" className={styles.quickLink}>Playlists</a>
-                <a href="#blog-videos-title" className={styles.quickLink}>Videos</a>
-                <a href="#youtube-hub-title" className={styles.quickLink}>YouTube Hub</a>
+                <a href="#youtube-hub-title" className={styles.quickLink}>Channel Videos</a>
               </nav>
             </div>
 
@@ -540,12 +575,12 @@ export default function BlogPageClient() {
                     onClick={() => activateEmbed("featured-video")}
                     aria-label={`Play ${featuredVideo.title}`}
                   >
-                    <Image
+                    <img
                       src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
                       alt={featuredVideo.title}
-                      fill
-                      sizes="(max-width: 991px) 100vw, 50vw"
+                      className={styles.embedPreviewImage}
                       loading="lazy"
+                      decoding="async"
                     />
                     <span className={styles.embedPlayButton}>▶ Play</span>
                   </button>
@@ -553,7 +588,7 @@ export default function BlogPageClient() {
               </div>
               <div className={styles.featuredContent}>
                 <p className={styles.featuredTag}>Featured Video</p>
-                <h3>{featuredVideo.title}</h3>
+                <h2>{featuredVideo.title}</h2>
                 <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
                   Watch on YouTube ↗
                 </a>
@@ -864,8 +899,9 @@ export default function BlogPageClient() {
       <MotionInView className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
         <div className={styles.blockHeading}>
           <h2 id="youtube-hub-title">YouTube Hub</h2>
-          <p>All channel content grouped here: featured, playlists, and latest videos.</p>
+          <p>All channel videos appear here in one place, including the featured video.</p>
         </div>
+        <p className={styles.youtubeHubSummary}>{filteredChannelVideos.length} video(s) available.</p>
         <div className={styles.youtubeHubActions}>
           <a
             href={YOUTUBE_CHANNEL_URL}
@@ -876,6 +912,59 @@ export default function BlogPageClient() {
             Open YouTube Channel
           </a>
         </div>
+
+        <div className={styles.youtubeHubGrid}>
+          {filteredChannelVideos.map((video) => (
+            <MotionInView key={`hub-video-${video.videoId}`}>
+              <article className={styles.videoCard}>
+                <div className={styles.videoFrame}>
+                  {activeEmbeds[`video-${video.videoId}`] ? (
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
+                      title={video.title}
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      className={styles.embedPreview}
+                      onClick={() => activateEmbed(`video-${video.videoId}`)}
+                      aria-label={`Play ${video.title}`}
+                    >
+                      <img
+                        src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+                        alt={video.title}
+                        className={styles.embedPreviewImage}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span className={styles.embedPlayButton}>▶ Play Video</span>
+                    </button>
+                  )}
+                </div>
+                <div className={styles.videoCardContent}>
+                  <h3>{video.title}</h3>
+                  {video.publishedAt && <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>}
+                </div>
+                <a
+                  href={video.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.playlistAction}
+                >
+                  Watch on YouTube
+                </a>
+              </article>
+            </MotionInView>
+          ))}
+        </div>
+
+        {filteredChannelVideos.length === 0 && (
+          <p className={styles.emptyState}>No channel videos match your current search.</p>
+        )}
       </MotionInView>
 
       {/* ── Playlists ─────────────────────────────────────────────────────── */}
@@ -905,12 +994,12 @@ export default function BlogPageClient() {
                       onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
                       aria-label={`Play ${playlist.title}`}
                     >
-                      <Image
+                      <img
                         src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
                         alt={playlist.title}
-                        fill
-                        sizes="(max-width: 991px) 100vw, 40vw"
+                        className={styles.embedPreviewImage}
                         loading="lazy"
+                        decoding="async"
                       />
                       <span className={styles.embedPlayButton}>▶ Play Playlist</span>
                     </button>
@@ -946,57 +1035,6 @@ export default function BlogPageClient() {
         </div>
         {filteredPlaylists.length === 0 && (
           <p className={styles.emptyState}>No playlist results match your current search.</p>
-        )}
-      </section>
-
-      {/* ── Videos ────────────────────────────────────────────────────────── */}
-      <section className={styles.block} aria-labelledby="blog-videos-title">
-        <MotionInView className={styles.blockHeading}>
-          <h2 id="blog-videos-title">YouTube Videos</h2>
-          <p>{filteredVideos.length} result(s) found.</p>
-        </MotionInView>
-        <div className={styles.videoGrid}>
-          {filteredVideos.map((video) => (
-            <MotionInView key={video.videoId}>
-              <article className={styles.videoCard}>
-                <div className={styles.videoFrame}>
-                  {activeEmbeds[`video-${video.videoId}`] ? (
-                    <iframe
-                      src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
-                      title={video.title}
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <button
-                      type="button"
-                      className={styles.embedPreview}
-                      onClick={() => activateEmbed(`video-${video.videoId}`)}
-                      aria-label={`Play ${video.title}`}
-                    >
-                      <Image
-                        src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
-                        alt={video.title}
-                        fill
-                        sizes="(max-width: 991px) 100vw, 40vw"
-                        loading="lazy"
-                      />
-                      <span className={styles.embedPlayButton}>▶ Play Video</span>
-                    </button>
-                  )}
-                </div>
-                <div className={styles.videoCardContent}>
-                  <h3>{video.title}</h3>
-                  <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>
-                </div>
-              </article>
-            </MotionInView>
-          ))}
-        </div>
-        {filteredVideos.length === 0 && (
-          <p className={styles.emptyState}>No video results match your current search.</p>
         )}
       </section>
 
