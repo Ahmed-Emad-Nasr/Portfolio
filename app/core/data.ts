@@ -98,6 +98,20 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     publishedAt: "2025-11-28",
     tags: ["Wazuh", "SIEM", "Sysmon", "Configuration", "Detection"],
   },
+  {
+    videoId: "ZoRWT-OJvxY",
+    title: "Understanding Malware Types",
+    description: "An overview of different malware types and their characteristics.",
+    publishedAt: "2025-05-02",
+    tags: ["Malware", "Security Fundamentals", "Training"],
+  },
+  {
+    videoId: "J8MNgB-5rMo",
+    title: "Fix Cant Access ossec conf Permission Problem",
+    description: "A quick tutorial on resolving permission issues when accessing the ossec.conf file in Wazuh.",
+    publishedAt: "2025-07-02", // يفضل تغيير ده لتاريخ نشر الفيديو الفعلي
+    tags: ["Wazuh", "Troubleshooting", "ossec.conf", "Permissions", "Tutorial"],
+  },
 ];
 
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
@@ -133,6 +147,14 @@ export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
     sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd",
     tags: ["SOC", "DFIR", "Cybersecurity"], // ⚠️ تقدر تعدل الكلمات المفتاحية
     videoCount: 5 // ⚠️ اكتب عدد الفيديوهات التقريبي
+  },
+  {
+    playlistId: "PLO1VSSKnwZUiZqg_WafsnYr7lTb4e3bTv",
+    title: "GDG",
+    description: "Sessions, workshops, and technical training from GDG (Google Developer Groups) events.", // ⚠️ تقدر تعدل الوصف ده
+    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUiZqg_WafsnYr7lTb4e3bTv&si=YFhAEQIFGe5ZdsId",
+    tags: ["GDG", "Workshops", "Training", "Live Session"], // ⚠️ تقدر تعدل الكلمات المفتاحية
+    videoCount: 10, // ⚠️ اكتب عدد الفيديوهات الفعلي الموجود في البلاي ليست
   },
 ];
 
