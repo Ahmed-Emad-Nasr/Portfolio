@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
+import MotionInView from "@/app/core/components/MotionInView";
 import {
   blogFeaturedYoutubeVideo,
   blogYoutubePlaylists,
@@ -439,97 +440,99 @@ export default function BlogPageClient() {
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
-        <span className={styles.heroGlow} aria-hidden="true" />
-        <p className={styles.kicker}>Ahmed Emad Nasr</p>
-        <h1>Security Blog & Technical Reports</h1>
-        <p>
-          A single place for my SOC incident reports, DFIR writeups, and technical videos.
-          Use search and filters to find what you need quickly.
-        </p>
+        <MotionInView className={styles.heroInner}>
+          <span className={styles.heroGlow} aria-hidden="true" />
+          <p className={styles.kicker}>Ahmed Emad Nasr</p>
+          <h1>Security Blog & Technical Reports</h1>
+          <p>
+            A single place for my SOC incident reports, DFIR writeups, and technical videos.
+            Use search and filters to find what you need quickly.
+          </p>
 
-        <div className={styles.heroGrid}>
-          <div className={styles.heroMainContent}>
-            <div className={styles.metrics}>
-              <article>
-                <strong>{blogPdfResources.length}</strong>
-                <span>PDF Resources</span>
-              </article>
-              <article>
-                <strong>36</strong>
-                <span>Total Videos</span>
-              </article>
-              <article>
-                <strong>24/7</strong>
-                <span>On-Demand</span>
-              </article>
+          <div className={styles.heroGrid}>
+            <div className={styles.heroMainContent}>
+              <div className={styles.metrics}>
+                <article>
+                  <strong>{blogPdfResources.length}</strong>
+                  <span>PDF Resources</span>
+                </article>
+                <article>
+                  <strong>36</strong>
+                  <span>Total Videos</span>
+                </article>
+                <article>
+                  <strong>24/7</strong>
+                  <span>On-Demand</span>
+                </article>
+              </div>
+
+              <div className={styles.heroActions}>
+                <a href="#blog-pdfs-title" className={styles.primaryAction}>
+                  Explore Cases
+                </a>
+                <Link href="/" className={`${styles.secondaryAction} ${styles.backAction}`}>
+                  Back To Portfolio
+                </Link>
+              </div>
+
+              <nav className={styles.quickLinks} aria-label="Quick section shortcuts">
+                <a href="#blog-pdfs-title" className={styles.quickLink}>PDF Cases</a>
+                <a href="#blog-playlists-title" className={styles.quickLink}>Playlists</a>
+                <a href="#blog-videos-title" className={styles.quickLink}>Videos</a>
+                <a href="#youtube-hub-title" className={styles.quickLink}>YouTube Hub</a>
+              </nav>
             </div>
 
-            <div className={styles.heroActions}>
-              <a href="#blog-pdfs-title" className={styles.primaryAction}>
-                Explore Cases
-              </a>
-              <Link href="/" className={`${styles.secondaryAction} ${styles.backAction}`}>
-                Back To Portfolio
-              </Link>
-            </div>
-
-            <nav className={styles.quickLinks} aria-label="Quick section shortcuts">
-              <a href="#blog-pdfs-title" className={styles.quickLink}>PDF Cases</a>
-              <a href="#blog-playlists-title" className={styles.quickLink}>Playlists</a>
-              <a href="#blog-videos-title" className={styles.quickLink}>Videos</a>
-              <a href="#youtube-hub-title" className={styles.quickLink}>YouTube Hub</a>
-            </nav>
-          </div>
-
-          <article className={`${styles.featuredCard} ${styles.heroFeaturedCard}`}>
-            <div className={styles.featuredFrame}>
-              {activeEmbeds["featured-video"] ? (
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${featuredVideo.videoId}`}
-                  title={featuredVideo.title}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              ) : (
-                <button
-                  type="button"
-                  className={styles.embedPreview}
-                  onClick={() => activateEmbed("featured-video")}
-                  aria-label={`Play ${featuredVideo.title}`}
-                >
-                  <Image
-                    src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
-                    alt={featuredVideo.title}
-                    fill
-                    sizes="(max-width: 991px) 100vw, 50vw"
+            <article className={`${styles.featuredCard} ${styles.heroFeaturedCard}`}>
+              <div className={styles.featuredFrame}>
+                {activeEmbeds["featured-video"] ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${featuredVideo.videoId}`}
+                    title={featuredVideo.title}
                     loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
                   />
-                  <span className={styles.embedPlayButton}>▶ Play</span>
-                </button>
-              )}
-            </div>
-            <div className={styles.featuredContent}>
-              <p className={styles.featuredTag}>Featured Video</p>
-              <h3>{featuredVideo.title}</h3>
-              <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
-                Watch on YouTube ↗
-              </a>
-            </div>
-          </article>
-        </div>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.embedPreview}
+                    onClick={() => activateEmbed("featured-video")}
+                    aria-label={`Play ${featuredVideo.title}`}
+                  >
+                    <Image
+                      src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
+                      alt={featuredVideo.title}
+                      fill
+                      sizes="(max-width: 991px) 100vw, 50vw"
+                      loading="lazy"
+                    />
+                    <span className={styles.embedPlayButton}>▶ Play</span>
+                  </button>
+                )}
+              </div>
+              <div className={styles.featuredContent}>
+                <p className={styles.featuredTag}>Featured Video</p>
+                <h3>{featuredVideo.title}</h3>
+                <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
+                  Watch on YouTube ↗
+                </a>
+              </div>
+            </article>
+          </div>
+        </MotionInView>
       </section>
 
       {/* ── PDF Library ──────────────────────────────────────────────────── */}
       <section className={styles.block} aria-labelledby="blog-pdfs-title">
-        <div className={styles.blockHeading}>
+        <MotionInView className={styles.blockHeading}>
           <h2 id="blog-pdfs-title">PDF Library</h2>
           <p>{filteredPdfs.length} result(s) found.</p>
-        </div>
+        </MotionInView>
 
         {/* Toolbar */}
-        <div className={styles.toolbar}>
+        <MotionInView className={styles.toolbar}>
           <input
             type="search"
             className={styles.searchInput}
@@ -600,11 +603,11 @@ export default function BlogPageClient() {
               ✕ Clear Filters
             </button>
           )}
-        </div>
+        </MotionInView>
 
         {/* WannaCry spotlight */}
         {leadCase && (
-          <article className={styles.caseSpotlight}>
+          <MotionInView className={styles.caseSpotlight}>
             <div className={styles.caseSpotlightBody}>
               <p className={styles.caseSpotlightTag}>Case Spotlight</p>
               <h3>{leadCase.title}</h3>
@@ -705,22 +708,23 @@ export default function BlogPageClient() {
                 />
               </a>
             )}
-          </article>
+          </MotionInView>
         )}
 
         {/* PDF cards grid */}
         <div className={styles.pdfGrid}>
           {visiblePdfCards.map((item) => (
-            <BlogCard
-              key={item.id}
-              {...item}
-              screenshots={caseScreenshotsByEvidenceId[item.id] ?? EMPTY_SCREENSHOTS}
-              onOpenGallery={openGallery}
-              onTagClick={setRawQuery}
-              onToolClick={toggleToolFilter}
-              getThumbnail={getThumbnail}
-              normalizeHref={normalizePublicHref}
-            />
+            <MotionInView key={item.id}>
+              <BlogCard
+                {...item}
+                screenshots={caseScreenshotsByEvidenceId[item.id] ?? EMPTY_SCREENSHOTS}
+                onOpenGallery={openGallery}
+                onTagClick={setRawQuery}
+                onToolClick={toggleToolFilter}
+                getThumbnail={getThumbnail}
+                normalizeHref={normalizePublicHref}
+              />
+            </MotionInView>
           ))}
         </div>
 
@@ -730,7 +734,7 @@ export default function BlogPageClient() {
       </section>
 
       {/* ── Insight strip ─────────────────────────────────────────────────── */}
-      <section className={styles.insightStrip} aria-label="Case library highlights">
+      <MotionInView className={styles.insightStrip} aria-label="Case library highlights">
         <article className={styles.insightCard}>
           <strong>{caseEvidenceLibrary.length}</strong>
           <span>Total Cases</span>
@@ -743,10 +747,10 @@ export default function BlogPageClient() {
           <strong>{totalScreenshotAssets}</strong>
           <span>Screenshot Assets</span>
         </article>
-      </section>
+      </MotionInView>
 
       {/* ── YouTube Hub ───────────────────────────────────────────────────── */}
-      <section className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
+      <MotionInView className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
         <div className={styles.blockHeading}>
           <h2 id="youtube-hub-title">YouTube Hub</h2>
           <p>All channel content grouped here: featured, playlists, and latest videos.</p>
@@ -761,70 +765,72 @@ export default function BlogPageClient() {
             Open YouTube Channel
           </a>
         </div>
-      </section>
+      </MotionInView>
 
       {/* ── Playlists ─────────────────────────────────────────────────────── */}
       <section className={styles.block} aria-labelledby="blog-playlists-title">
-        <div className={styles.blockHeading}>
+        <MotionInView className={styles.blockHeading}>
           <h2 id="blog-playlists-title">YouTube Playlists</h2>
           <p>{filteredPlaylists.length} playlist(s) found.</p>
-        </div>
+        </MotionInView>
         <div className={styles.playlistGrid}>
           {filteredPlaylists.map((playlist) => (
-            <article key={playlist.playlistId} className={styles.playlistCard}>
-              <div className={styles.playlistFrame}>
-                {activeEmbeds[`playlist-${playlist.playlistId}`] ? (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/videoseries?list=${playlist.playlistId}`}
-                    title={playlist.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    className={styles.embedPreview}
-                    onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
-                    aria-label={`Play ${playlist.title}`}
-                  >
-                    <Image
-                      src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
-                      alt={playlist.title}
-                      fill
-                      sizes="(max-width: 991px) 100vw, 40vw"
+            <MotionInView key={playlist.playlistId}>
+              <article className={styles.playlistCard}>
+                <div className={styles.playlistFrame}>
+                  {activeEmbeds[`playlist-${playlist.playlistId}`] ? (
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/videoseries?list=${playlist.playlistId}`}
+                      title={playlist.title}
                       loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
                     />
-                    <span className={styles.embedPlayButton}>▶ Play Playlist</span>
-                  </button>
-                )}
-              </div>
-              <div className={styles.playlistContent}>
-                <h3>{playlist.title}</h3>
-                {playlist.description && (
-                  <p className={styles.playlistDescription}>{playlist.description}</p>
-                )}
-                {playlist.tags && playlist.tags.length > 0 && (
-                  <div className={styles.playlistTags}>
-                    {playlist.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className={styles.playlistTag}>{tag}</span>
-                    ))}
-                  </div>
-                )}
-                {playlist.videoCount && (
-                  <p className={styles.playlistVideoCount}>{playlist.videoCount} videos</p>
-                )}
-              </div>
-              <a
-                href={playlist.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.playlistAction}
-              >
-                Open Playlist
-              </a>
-            </article>
+                  ) : (
+                    <button
+                      type="button"
+                      className={styles.embedPreview}
+                      onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
+                      aria-label={`Play ${playlist.title}`}
+                    >
+                      <Image
+                        src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
+                        alt={playlist.title}
+                        fill
+                        sizes="(max-width: 991px) 100vw, 40vw"
+                        loading="lazy"
+                      />
+                      <span className={styles.embedPlayButton}>▶ Play Playlist</span>
+                    </button>
+                  )}
+                </div>
+                <div className={styles.playlistContent}>
+                  <h3>{playlist.title}</h3>
+                  {playlist.description && (
+                    <p className={styles.playlistDescription}>{playlist.description}</p>
+                  )}
+                  {playlist.tags && playlist.tags.length > 0 && (
+                    <div className={styles.playlistTags}>
+                      {playlist.tags.slice(0, 2).map((tag) => (
+                        <span key={tag} className={styles.playlistTag}>{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                  {playlist.videoCount && (
+                    <p className={styles.playlistVideoCount}>{playlist.videoCount} videos</p>
+                  )}
+                </div>
+                <a
+                  href={playlist.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.playlistAction}
+                >
+                  Open Playlist
+                </a>
+              </article>
+            </MotionInView>
           ))}
         </div>
         {filteredPlaylists.length === 0 && (
@@ -834,46 +840,48 @@ export default function BlogPageClient() {
 
       {/* ── Videos ────────────────────────────────────────────────────────── */}
       <section className={styles.block} aria-labelledby="blog-videos-title">
-        <div className={styles.blockHeading}>
+        <MotionInView className={styles.blockHeading}>
           <h2 id="blog-videos-title">YouTube Videos</h2>
           <p>{filteredVideos.length} result(s) found.</p>
-        </div>
+        </MotionInView>
         <div className={styles.videoGrid}>
           {filteredVideos.map((video) => (
-            <article key={video.videoId} className={styles.videoCard}>
-              <div className={styles.videoFrame}>
-                {activeEmbeds[`video-${video.videoId}`] ? (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
-                    title={video.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    className={styles.embedPreview}
-                    onClick={() => activateEmbed(`video-${video.videoId}`)}
-                    aria-label={`Play ${video.title}`}
-                  >
-                    <Image
-                      src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
-                      alt={video.title}
-                      fill
-                      sizes="(max-width: 991px) 100vw, 40vw"
+            <MotionInView key={video.videoId}>
+              <article className={styles.videoCard}>
+                <div className={styles.videoFrame}>
+                  {activeEmbeds[`video-${video.videoId}`] ? (
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
+                      title={video.title}
                       loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
                     />
-                    <span className={styles.embedPlayButton}>▶ Play Video</span>
-                  </button>
-                )}
-              </div>
-              <div className={styles.videoCardContent}>
-                <h3>{video.title}</h3>
-                <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>
-              </div>
-            </article>
+                  ) : (
+                    <button
+                      type="button"
+                      className={styles.embedPreview}
+                      onClick={() => activateEmbed(`video-${video.videoId}`)}
+                      aria-label={`Play ${video.title}`}
+                    >
+                      <Image
+                        src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+                        alt={video.title}
+                        fill
+                        sizes="(max-width: 991px) 100vw, 40vw"
+                        loading="lazy"
+                      />
+                      <span className={styles.embedPlayButton}>▶ Play Video</span>
+                    </button>
+                  )}
+                </div>
+                <div className={styles.videoCardContent}>
+                  <h3>{video.title}</h3>
+                  <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>
+                </div>
+              </article>
+            </MotionInView>
           ))}
         </div>
         {filteredVideos.length === 0 && (
@@ -971,7 +979,7 @@ export default function BlogPageClient() {
       )}
 
       {/* ── Closing ───────────────────────────────────────────────────────── */}
-      <section className={styles.blogClosing} aria-labelledby="blog-closing-title">
+      <MotionInView className={styles.blogClosing} aria-labelledby="blog-closing-title">
         <div>
           <span className={styles.blogClosingKicker}>Final note</span>
           <h2 id="blog-closing-title">
@@ -995,7 +1003,7 @@ export default function BlogPageClient() {
             Open YouTube Channel
           </a>
         </div>
-      </section>
+      </MotionInView>
 
       <BackToTop />
     </main>

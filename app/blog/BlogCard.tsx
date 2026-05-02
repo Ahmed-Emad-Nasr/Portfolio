@@ -58,84 +58,113 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
       <article
         className={[
           styles.pdfCard,
-          hasScreenshots ? styles.caseCardLarge : "",
+          hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly,
         ]
           .filter(Boolean)
           .join(" ")}
       >
-        <div className={styles.caseCardHead}>
-          <p className={styles.badge}>{type}</p>
-          {hasScreenshots && (
-            <span className={styles.shotCount}>{screenshots.length} screenshots</span>
-          )}
-        </div>
+        <div className={styles.pdfCardBody}>
+          <div className={styles.caseCardHead}>
+            <p className={styles.badge}>{type}</p>
+            {hasScreenshots && (
+              <span className={styles.shotCount}>{screenshots.length} screenshots</span>
+            )}
+          </div>
 
-        {/* تمت إزالة tabIndex و aria-label للحفاظ على معايير الـ Accessibility */}
-        <h3 className={styles.cardTitle}>
-          {title}
+          {/* تمت إزالة tabIndex و aria-label للحفاظ على معايير الـ Accessibility */}
+          <h3 className={styles.cardTitle}>
+            {title}
+            {description && (
+              <span className={styles.cardTooltip}>{description}</span>
+            )}
+          </h3>
+
           {description && (
-            <span className={styles.cardTooltip}>{description}</span>
+            <p className={styles.cardDescription}>{description}</p>
           )}
-        </h3>
 
-        {description && (
-          <p className={styles.cardDescription}>{description}</p>
-        )}
+          <p className={styles.cardPlatform}>{platform}</p>
 
-        <p className={styles.cardPlatform}>{platform}</p>
+          <div className={styles.caseMetadata}>
+            {difficultyKey && (
+              <span
+                className={`${styles.badge} ${styles[`difficulty-${difficultyKey}`]}`}
+              >
+                {difficulty}
+              </span>
+            )}
+            {category && <span className={styles.badge}>{category}</span>}
+            {readTime && <span className={styles.badge}>{readTime} min</span>}
+          </div>
 
-        <div className={styles.caseMetadata}>
-          {difficultyKey && (
-            <span
-              className={`${styles.badge} ${styles[`difficulty-${difficultyKey}`]}`}
+          {tags && tags.length > 0 && (
+            <div className={styles.tagsListInline}>
+              {tags.slice(0, 3).map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={styles.tagButtonSmall}
+                  onClick={() => handleTagClick(tag)}
+                  title={`Search for ${tag}`}
+                >
+                  #{tag}
+                </button>
+              ))}
+              {tags.length > 3 && (
+                <span className={styles.moreTagsBadge}>+{tags.length - 3}</span>
+              )}
+            </div>
+          )}
+
+          {tools && tools.length > 0 && (
+            <div className={styles.toolsListCompact}>
+              {tools.slice(0, 2).map((tool) => (
+                <button
+                  key={tool}
+                  type="button"
+                  className={styles.toolButtonSmall}
+                  onClick={() => handleToolClick(tool)}
+                  title={`Filter by ${tool}`}
+                >
+                  {tool}
+                </button>
+              ))}
+              {tools.length > 2 && (
+                <span className={styles.moreToolsBadge}>+{tools.length - 2}</span>
+              )}
+            </div>
+          )}
+
+          <div className={styles.cardActions}>
+            <a
+              href={normalizeHref(href)}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.viewAction}
             >
-              {difficulty}
-            </span>
-          )}
-          {category && <span className={styles.badge}>{category}</span>}
-          {readTime && <span className={styles.badge}>{readTime} min</span>}
+              View PDF
+            </a>
+            <a
+              href={normalizeHref(href)}
+              download
+              className={styles.downloadAction}
+            >
+              Download
+            </a>
+            {hasScreenshots && (
+              <button
+                type="button"
+                onClick={() => onOpenGallery(title, screenshots, 0)}
+                className={`${styles.galleryOpenAction} ${styles.viewAction}`}
+              >
+                View All Screenshots
+              </button>
+            )}
+          </div>
         </div>
-
-        {tags && tags.length > 0 && (
-          <div className={styles.tagsListInline}>
-            {tags.slice(0, 3).map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className={styles.tagButtonSmall}
-                onClick={() => handleTagClick(tag)}
-                title={`Search for ${tag}`}
-              >
-                #{tag}
-              </button>
-            ))}
-            {tags.length > 3 && (
-              <span className={styles.moreTagsBadge}>+{tags.length - 3}</span>
-            )}
-          </div>
-        )}
-
-        {tools && tools.length > 0 && (
-          <div className={styles.toolsListCompact}>
-            {tools.slice(0, 2).map((tool) => (
-              <button
-                key={tool}
-                type="button"
-                className={styles.toolButtonSmall}
-                onClick={() => handleToolClick(tool)}
-                title={`Filter by ${tool}`}
-              >
-                {tool}
-              </button>
-            ))}
-            {tools.length > 2 && (
-              <span className={styles.moreToolsBadge}>+{tools.length - 2}</span>
-            )}
-          </div>
-        )}
 
         {primaryScreenshot && (
-          <div className={styles.screenshotArea}>
+          <div className={styles.pdfCardMedia}>
             <a
               href={normalizeHref(primaryScreenshot)}
               target="_blank"
@@ -196,33 +225,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
             )}
           </div>
         )}
-
-        <div className={styles.cardActions}>
-          <a
-            href={normalizeHref(href)}
-            target="_blank"
-            rel="noreferrer"
-            className={styles.viewAction}
-          >
-            View PDF
-          </a>
-          <a
-            href={normalizeHref(href)}
-            download
-            className={styles.downloadAction}
-          >
-            Download
-          </a>
-          {hasScreenshots && (
-            <button
-              type="button"
-              onClick={() => onOpenGallery(title, screenshots, 0)}
-              className={`${styles.galleryOpenAction} ${styles.viewAction}`}
-            >
-              View All Screenshots
-            </button>
-          )}
-        </div>
       </article>
     );
   }

@@ -20,6 +20,18 @@
   min-height: 100vh;
 }
 
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.08), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(var(--accent-color-rgb), 0.06), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.02));
+  opacity: 0.85;
+}
+
 .hero,
 .block {
   position: relative;
@@ -30,11 +42,15 @@
 
 .hero {
   padding: clamp(2.5rem, 4vw, 4rem);
-  border-radius: 8px;
-  border: 1px solid var(--blog-line);
-  background: linear-gradient(180deg, var(--blog-bg-dark), rgba(3, 5, 9, 0.98));
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  border-radius: 16px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  background: linear-gradient(180deg, rgba(7, 11, 18, 0.98), rgba(3, 5, 9, 0.99));
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.62);
   overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
 }
 
 /* Subtle static glow — no animation */
@@ -47,6 +63,12 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07), transparent 70%);
   pointer-events: none;
+  animation: heroGlowFloat 12s ease-in-out infinite;
+}
+
+@keyframes heroGlowFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-12px, 10px, 0) scale(1.05); }
 }
 
 .kicker {
@@ -70,6 +92,7 @@
   color: var(--blog-text);
   font-weight: 800;
   margin-bottom: 1.2rem;
+  text-shadow: 0 0 24px rgba(var(--main-color-rgb), 0.08);
 }
 
 .hero p {
@@ -90,6 +113,16 @@
   align-items: start;
 }
 
+.heroMainContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heroFeaturedCard {
+  align-self: stretch;
+}
+
 .metrics {
   margin-top: 2rem;
   display: grid;
@@ -103,11 +136,13 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(10, 15, 25, 0.6);
   text-align: center;
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
 .metrics article:hover {
   background: rgba(var(--main-color-rgb), 0.05);
   border-color: rgba(var(--main-color-rgb), 0.4);
+  transform: translateY(-3px);
 }
 
 .metrics strong {
@@ -164,6 +199,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
 }
 
 .primaryAction:hover,
@@ -316,6 +352,19 @@
   font-family: monospace;
 }
 
+.blockHeading {
+  margin-bottom: 0.4rem;
+}
+
+.blockHeading h2,
+.blogClosing h2,
+.playlistContent h3,
+.videoCardContent h3,
+.featuredContent h3,
+.caseSpotlightBody h3 {
+  text-wrap: balance;
+}
+
 /* =========================================
    5. GRID & CARDS
    ========================================= */
@@ -329,6 +378,10 @@
   align-items: start;
 }
 
+.pdfGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .pdfCard,
 .playlistCard,
 .videoCard,
@@ -340,11 +393,16 @@
   background: rgba(6, 9, 15, 0.9);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
   min-height: 340px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  gap: 1.8rem;
   position: relative;
   overflow: hidden;
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+}
+
+.caseCardTextOnly {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .pdfCard:hover,
@@ -354,6 +412,7 @@
   background: rgba(10, 15, 25, 0.95);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7),
               inset 0 0 12px rgba(var(--main-color-rgb), 0.06);
+  transform: translateY(-4px);
 }
 
 .caseSpotlight {
@@ -370,7 +429,36 @@
   border-color: var(--accent-color);
 }
 
+.caseSpotlight,
+.featuredCard {
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+}
+
+.caseSpotlight:hover,
+.featuredCard:hover {
+  transform: translateY(-3px);
+}
+
 .caseCardLarge { grid-column: span 2; }
+
+.pdfCardBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.pdfCardMedia {
+  min-width: 0;
+}
+
+.caseCardTextOnly .pdfCardMedia {
+  display: none;
+}
+
+.caseCardTextOnly .cardActions {
+  margin-top: 1.4rem;
+}
 
 /* =========================================
    6. BADGES & TAGS
@@ -806,6 +894,13 @@
   background: rgba(10, 15, 25, 0.85);
   text-align: center;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+}
+
+.insightCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--accent-color-rgb), 0.35);
+  background: rgba(10, 15, 25, 0.96);
 }
 
 .insightCard strong {
@@ -886,6 +981,14 @@
 .blogClosingActions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1.2rem; }
 .blogClosingActions a { min-width: 18rem; }
 
+.blogClosingActions a,
+.playlistAction,
+.viewAction,
+.downloadAction,
+.galleryOpenAction {
+  min-width: 15rem;
+}
+
 .backToTop {
   position: fixed;
   right: 2rem;
@@ -964,6 +1067,7 @@
   .hero { padding: 1.8rem 1.2rem; }
   .hero h1 { font-size: 2.6rem; }
   .heroActions { flex-direction: column; gap: 0.8rem; }
+  .heroGrid { grid-template-columns: 1fr; }
   .modeSwitch { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
   .modeButton,
   .quickLink,

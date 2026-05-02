@@ -8,7 +8,8 @@
  */
 
 import React, { memo } from "react";
-import { motion, MotionProps } from "framer-motion";
+import { motion, MotionProps, useReducedMotion } from "framer-motion";
+import { fastSpring, revealVariants } from "@/app/core/motion";
 
 type MotionInViewProps = MotionProps & {
   children: React.ReactNode;
@@ -30,11 +31,29 @@ const MotionInView = memo<MotionInViewProps>(({
   style,
   ...rest
 }) => {
-  // تعطيل كل الأنيميشن: عرض العنصر مباشرة بدون أي حركة أو تغيير
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return (
+      <div className={className} style={style} {...rest}>
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div className={className} style={style} {...rest}>
+    <motion.div
+      className={className}
+      style={style}
+      initial={initial ?? (variants ? undefined : "hidden")}
+      whileInView={whileInView ?? (variants ? undefined : "visible")}
+      viewport={viewport ?? { once: true, amount: 0.22, margin: "0px 0px -12% 0px" }}
+      transition={transition ?? fastSpring}
+      variants={variants ?? revealVariants}
+      {...rest}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 });
 
