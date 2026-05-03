@@ -362,7 +362,7 @@ export default function BlogPageClient() {
       seen.add(video.videoId);
       return true;
     });
-  }, [query]);
+  }, [query, featuredVideo.videoId, featuredVideo.title, featuredVideo.description, featuredVideo.sourceUrl]);
 
   const filteredPlaylists = useMemo(
     () => blogYoutubePlaylists.filter((p) => matchesSearch(p.title, query)),
@@ -588,12 +588,15 @@ export default function BlogPageClient() {
                     onClick={() => activateEmbed("featured-video")}
                     aria-label={`Play ${featuredVideo.title}`}
                   >
-                    <img
+                    <Image
                       src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
                       alt={featuredVideo.title}
                       className={styles.embedPreviewImage}
+                      width={480}
+                      height={270}
                       loading="lazy"
                       decoding="async"
+                      unoptimized
                     />
                     <span className={styles.embedPlayButton}>▶ Play</span>
                   </button>
@@ -947,12 +950,15 @@ export default function BlogPageClient() {
                       onClick={() => activateEmbed(`video-${video.videoId}`)}
                       aria-label={`Play ${video.title}`}
                     >
-                      <img
+                      <Image
                         src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
                         alt={video.title}
                         className={styles.embedPreviewImage}
+                        width={480}
+                        height={270}
                         loading="lazy"
                         decoding="async"
+                        unoptimized
                       />
                       <span className={styles.embedPlayButton}>▶ Play Video</span>
                     </button>
@@ -1007,12 +1013,15 @@ export default function BlogPageClient() {
                       onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
                       aria-label={`Play ${playlist.title}`}
                     >
-                      <img
+                      <Image
                         src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
                         alt={playlist.title}
                         className={styles.embedPreviewImage}
+                        width={480}
+                        height={270}
                         loading="lazy"
                         decoding="async"
+                        unoptimized
                       />
                       <span className={styles.embedPlayButton}>▶ Play Playlist</span>
                     </button>

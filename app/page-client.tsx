@@ -146,13 +146,16 @@ const MainClient = memo(function MainClient() {
     <main id="main-content" style={{ position: "relative" }}>
       <LoadingScreen isLoading={!isAppReady} />
 
+      {/* Keep the header outside the animated content wrapper so it is truly fixed
+         to the viewport and not contained by transforms applied to the page content. */}
+      <AppBar />
+
       {/*
        * Content is always rendered in the DOM (so dynamic imports start immediately),
        * but invisible and non-interactive until isAppReady flips.
        * The opacity transition gives a smooth cinematic fade-in.
        */}
       <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
-        <AppBar />
         <HomeSection />
         <ExperienceSection />
         <ProjectsSection />
