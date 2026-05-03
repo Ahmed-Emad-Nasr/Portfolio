@@ -100,6 +100,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png",
   ],
   "depi-r4-project": [
+    "Assets/Cases/Depi R4 Project/1.jpeg",
     "Assets/Cases/Depi R4 Project/1.png",
   ],
   "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
@@ -126,7 +127,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.png`),
     ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).png`),
   ],
-  "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/1.webp"],
+  "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/1.webp", "Assets/Cases/Wifi Cracking/2.webp",],
   "ass6-mitre": [
     "Assets/Cases/ass_6/1.png",
     "Assets/Cases/ass_6/2.png",

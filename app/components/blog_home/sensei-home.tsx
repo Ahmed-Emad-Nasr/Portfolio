@@ -166,7 +166,7 @@ const SenseiHome = memo(function SenseiHome() {
             title="Open introduction video"
           >
             <Image
-              src="Assets/art-gallery/Images/logo/My_Logo.webp"
+              src="Assets/art-gallery/Images/logo/My_Logo2.webp"
               alt="Ahmed Emad Nasr portrait"
               className={styles.image}
               width={350}

@@ -471,6 +471,27 @@ export const caseStudyHighlights = [
 ] as const;
 
 export const caseEvidenceLibrary = [
+        // Depi r4 Project
+      {
+        id: "depi-r4-project",
+        title: "Depi R4 Project",
+        description: "Malware analysis and prevention strategy project for DEPI R4, including detection, analysis, and reporting.",
+        platform: "DEPI R4",
+        type: "DOCX & PDF Report",
+        category: "Malware Analysis",
+        difficulty: "Hard",
+        href: "Assets/Cases/Depi R4 Project/AhmedEmad_MalwareAnalysis_And_Prevention_Strategy.pdf",
+        tags: ["Malware", "Prevention", "Analysis", "DEPI"],
+        tools: ["Malware Analysis", "Prevention", "Reporting"],
+        skillsGained: ["Malware Analysis", "Prevention Strategy", "Reporting"],
+        readTime: 18,
+        date: "2026-04-20",
+        screenshots: [
+          "Assets/Cases/Depi R4 Project/1.jpeg",
+          "Assets/Cases/Depi R4 Project/1.png",
+        ],
+        image: "Assets/Cases/Depi R4 Project/1.jpeg",
+      },
             {
               id: "soc-env-depi-r3-project",
               title: "SOC Enviroment DEPI R3 Project",
@@ -522,26 +543,6 @@ export const caseEvidenceLibrary = [
           ...Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).png`),
         ],
         image: "Assets/Cases/Hidden Backdoor/Screenshot (50).png",
-      },
-      // Depi r4 Project
-      {
-        id: "depi-r4-project",
-        title: "Depi R4 Project",
-        description: "Malware analysis and prevention strategy project for DEPI R4, including detection, analysis, and reporting.",
-        platform: "DEPI R4",
-        type: "DOCX & PDF Report",
-        category: "Malware Analysis",
-        difficulty: "Hard",
-        href: "Assets/Cases/Depi R4 Project/AhmedEmad_MalwareAnalysis_And_Prevention_Strategy.pdf",
-        tags: ["Malware", "Prevention", "Analysis", "DEPI"],
-        tools: ["Malware Analysis", "Prevention", "Reporting"],
-        skillsGained: ["Malware Analysis", "Prevention Strategy", "Reporting"],
-        readTime: 18,
-        date: "2026-04-20",
-        screenshots: [
-          "Assets/Cases/Depi R4 Project/1.png"
-        ],
-        image: "Assets/Cases/Depi R4 Project/1.png",
       },
     // WannaCry always first (featured)
     {
@@ -953,22 +954,7 @@ export const caseEvidenceLibrary = [
     readTime: 16,
     date: "2025-08-12",
   },
-  {
-    id: "iti-network-project-report",
-    title: "ITI Network Project Report",
-    description: "Network security project report covering infrastructure design, hardening decisions, and monitoring recommendations.",
-    platform: "ITI Project",
-    type: "PDF Report",
-    category: "Network Security",
-    difficulty: "Medium",
-    href: "Assets/Cases/ITI NEtwork Project/RootedAF_Report.pdf",
-    tags: ["Network Security", "Infrastructure", "Monitoring"],
-    tools: ["Network Analysis", "Hardening"],
-    skillsGained: ["Network Defense", "Infrastructure Security"],
-    readTime: 15,
-    date: "2025-08-11",
-  },
-  {
+    {
     id: "wifi-cracking-walkthrough",
     title: "Wifi Cracking Walkthrough",
     description: "Step-by-step WiFi security assessment and cracking using real-world tools and techniques.",
@@ -983,9 +969,25 @@ export const caseEvidenceLibrary = [
     readTime: 18,
     date: "2026-03-21",
       screenshots: [
-        "/Assets/Cases/Wifi Cracking/1.webp",
+        "Assets/Cases/Wifi Cracking/1.webp",
+        
       ],
-      image: "/Assets/Cases/Wifi Cracking/1.webp",
+      image: "Assets/Cases/Wifi Cracking/1.webp",
+  },
+  {
+    id: "iti-network-project-report",
+    title: "ITI Network Project Report",
+    description: "Network security project report covering infrastructure design, hardening decisions, and monitoring recommendations.",
+    platform: "ITI Project",
+    type: "PDF Report",
+    category: "Network Security",
+    difficulty: "Medium",
+    href: "Assets/Cases/ITI NEtwork Project/RootedAF_Report.pdf",
+    tags: ["Network Security", "Infrastructure", "Monitoring"],
+    tools: ["Network Analysis", "Hardening"],
+    skillsGained: ["Network Defense", "Infrastructure Security"],
+    readTime: 15,
+    date: "2025-08-11",
   },
   {
     id: "usb-forensics-report",
