@@ -26,9 +26,9 @@ import { motion, MotionProps, Variants } from "framer-motion";
 const CINEMATIC_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const MOTION_DURATIONS = {
-  short: 0.45,
-  medium: 0.65,
-  long: 0.8,
+  short: 0.55,
+  medium: 0.75,
+  long: 0.95,
 } as const;
 
 const SPRING_FAST = {
@@ -58,33 +58,33 @@ export const motionVariants = {
 
   /** Classic slide-up + fade (most common for sections) */
   "slide-up": {
-    hidden: { opacity: 0, y: 32 },
+    hidden: { opacity: 0, y: 38 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { ...SPRING_FAST, delay: 0.08 },
+      transition: { ...SPRING_GENTLE, delay: 0.12 },
     },
   } satisfies Variants,
 
   /** Slide from left */
   "slide-left": {
-    hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0, transition: { ...SPRING_FAST, delay: 0.08 } },
+    hidden: { opacity: 0, x: -44 },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_GENTLE, delay: 0.12 } },
   } satisfies Variants,
 
   /** Slide from right */
   "slide-right": {
-    hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0, transition: { ...SPRING_FAST, delay: 0.08 } },
+    hidden: { opacity: 0, x: 44 },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_GENTLE, delay: 0.12 } },
   } satisfies Variants,
 
   /** Subtle scale pop — good for cards & images */
   scale: {
-    hidden: { opacity: 0, scale: 0.92 },
+    hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { ...SPRING_GENTLE, delay: 0.08 },
+      transition: { ...SPRING_GENTLE, delay: 0.12 },
     },
   } satisfies Variants,
 
@@ -96,19 +96,19 @@ export const motionVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.14,
-        delayChildren: 0.1,
+        staggerChildren: 0.18,
+        delayChildren: 0.14,
       },
     },
   } satisfies Variants,
 
   /** Stagger child — pair with "stagger" parent */
   "stagger-child": {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { ...SPRING_FAST, delay: 0.08 },
+      transition: { ...SPRING_GENTLE, delay: 0.12 },
     },
   } satisfies Variants,
 } as const;
@@ -122,7 +122,7 @@ export type MotionVariantKey = keyof typeof motionVariants;
 
 const REDUCED_VARIANTS: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.01 } },
+  visible: { opacity: 1, transition: { duration: 0.02 } },
 };
 
 // ---------------------------------------------------------------------------
@@ -196,8 +196,8 @@ const MotionInView = memo<MotionInViewProps>(
         viewport={
           viewport ?? {
             once: true,       // animate only once — no re-triggering on scroll up
-            amount: 0.22,     // calmer reveal timing without feeling stalled
-            margin: "0px 0px -4% 0px",
+            amount: 0.18,     // calmer reveal timing without feeling stalled
+            margin: "0px 0px -8% 0px",
           }
         }
         transition={resolvedTransition}

@@ -539,9 +539,9 @@ export const caseEvidenceLibrary = [
         readTime: 18,
         date: "2026-04-20",
         screenshots: [
-          "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png"
+          "Assets/Cases/Depi R4 Project/1.png"
         ],
-        image: "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png",
+        image: "Assets/Cases/Depi R4 Project/1.png",
       },
     // WannaCry always first (featured)
     {
@@ -983,9 +983,9 @@ export const caseEvidenceLibrary = [
     readTime: 18,
     date: "2026-03-21",
       screenshots: [
-        "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
+        "/Assets/Cases/Wifi Cracking/1.webp",
       ],
-      image: "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
+      image: "/Assets/Cases/Wifi Cracking/1.webp",
   },
   {
     id: "usb-forensics-report",

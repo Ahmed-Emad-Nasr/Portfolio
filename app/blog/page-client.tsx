@@ -100,7 +100,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .png",
   ],
   "depi-r4-project": [
-    "Assets/Cases/Depi R4 Project/Gemini_Generated_Image_sz9r8zsz9r8zsz9r (1).png",
+    "Assets/Cases/Depi R4 Project/1.png",
   ],
   "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).png`),
   "serpent-stealer": Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).png`),
@@ -126,7 +126,7 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
     ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.png`),
     ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).png`),
   ],
-  "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp"],
+  "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/1.webp"],
   "ass6-mitre": [
     "Assets/Cases/ass_6/1.png",
     "Assets/Cases/ass_6/2.png",
@@ -189,7 +189,8 @@ const getThumbnail = (imgPath: string): string => {
 
   if (
     relativeCasePath.startsWith("Autopsy/") ||
-    relativeCasePath.startsWith("Data Exfiltiration Investigation/")
+    relativeCasePath.startsWith("Data Exfiltiration Investigation/") ||
+    relativeCasePath.startsWith("Depi R4 Project/")
   ) {
     return imgPath;
   }
@@ -1195,14 +1196,14 @@ function BackToTop() {
 
       if (rafId || timeoutId !== undefined) return;
 
-      if (elapsed >= 120) {
+      if (elapsed >= 180) {
         rafId = window.requestAnimationFrame(updateVisibility);
         return;
       }
 
       timeoutId = window.setTimeout(() => {
         rafId = window.requestAnimationFrame(updateVisibility);
-      }, 120 - elapsed);
+      }, 180 - elapsed);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });

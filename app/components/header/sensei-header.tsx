@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
 import { usePathname } from "next/navigation";
 
+const SCROLL_SAMPLE_MS = 180;
+
 const MENU_ICON_BASE = styles.MenuIcon;
 const NAVBAR_BASE    = styles.navbar;
 const ACTIVE_CLASS   = styles.active;
@@ -60,14 +62,14 @@ const SenseiHeader = memo(function SenseiHeader() {
 
       if (rafId || timeoutId !== undefined) return;
 
-      if (elapsed >= 120) {
+      if (elapsed >= SCROLL_SAMPLE_MS) {
         rafId = window.requestAnimationFrame(updateScrollState);
         return;
       }
 
       timeoutId = window.setTimeout(() => {
         rafId = window.requestAnimationFrame(updateScrollState);
-      }, 120 - elapsed);
+      }, SCROLL_SAMPLE_MS - elapsed);
     };
 
     onScroll();

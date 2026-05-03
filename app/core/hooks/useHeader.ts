@@ -24,6 +24,7 @@ const SECTION_ICONS: Record<string, IconProp> = {
 };
 
 const SECTIONS = Object.keys(SECTION_ICONS);
+const SCROLL_SAMPLE_MS = 180;
 
 export const useHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -93,14 +94,14 @@ export const useHeader = () => {
         timeoutId = undefined;
       };
 
-      if (elapsed >= 120) {
+      if (elapsed >= SCROLL_SAMPLE_MS) {
         rafId = window.requestAnimationFrame(evaluateSection);
         return;
       }
 
       timeoutId = window.setTimeout(() => {
         rafId = window.requestAnimationFrame(evaluateSection);
-      }, 120 - elapsed);
+      }, SCROLL_SAMPLE_MS - elapsed);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

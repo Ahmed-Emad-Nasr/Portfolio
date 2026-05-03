@@ -9,6 +9,8 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import styles from "./sensei-header.module.css";
 
+const SCROLL_SAMPLE_MS = 180;
+
 const NAV_ITEMS = [
   { label: "Home", targetId: null },
   { label: "Cases", targetId: "blog-pdfs-title" },
@@ -57,14 +59,14 @@ const SenseiHeader = memo(function SenseiHeader() {
 
       if (rafId || timeoutId !== undefined) return;
 
-      if (elapsed >= 120) {
+      if (elapsed >= SCROLL_SAMPLE_MS) {
         rafId = window.requestAnimationFrame(updateScrollState);
         return;
       }
 
       timeoutId = window.setTimeout(() => {
         rafId = window.requestAnimationFrame(updateScrollState);
-      }, 120 - elapsed);
+      }, SCROLL_SAMPLE_MS - elapsed);
     };
 
     onScroll();

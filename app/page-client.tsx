@@ -90,16 +90,18 @@ const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
    * The content renders at its real height immediately, just invisibly.
    */
   opacity: 0,
+  transform: "translate3d(0, 10px, 0)",
   pointerEvents: "none",
   visibility: "hidden",
-  transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+  transition: "opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1)",
 };
 
 const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
   opacity: 1,
+  transform: "translate3d(0, 0, 0)",
   pointerEvents: "auto",
   visibility: "visible",
-  transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+  transition: "opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1)",
 };
 
 // ─── MainClient ──────────────────────────────────────────────────────────────

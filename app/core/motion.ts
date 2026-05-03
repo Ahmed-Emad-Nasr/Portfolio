@@ -4,9 +4,9 @@
 export const cinematicEase = [0.25, 0.1, 0.25, 1] as const;
 
 export const cinematicDurations = {
-  short: 0.45,
-  medium: 0.65,
-  long: 0.8,
+  short: 0.55,
+  medium: 0.75,
+  long: 0.95,
 } as const;
 
 export const revealVariants = {
@@ -46,8 +46,8 @@ export const staggerContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.14,
-      delayChildren: 0.1,
+      staggerChildren: 0.18,
+      delayChildren: 0.14,
     },
   },
 };

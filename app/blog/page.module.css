@@ -94,7 +94,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07), transparent 70%);
   pointer-events: none;
-  animation: heroGlowFloat 12s ease-in-out infinite;
+  animation: heroGlowFloat 16s ease-in-out infinite;
   will-change: transform;
 }
 

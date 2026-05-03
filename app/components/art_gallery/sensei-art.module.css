@@ -83,29 +83,9 @@
   overflow: hidden;
 }
 
-/* Terminal Overlay Text */
+/* Terminal Overlay Text removed per request */
 .imageButton::before {
-  content: "[ VIEW_RECORD ]";
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: var(--main-color);
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--main-color);
-  border-radius: 4px;
-  font-family: monospace;
-  font-weight: bold;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  z-index: 10;
-  opacity: 0;
-  transition: opacity var(--motion-normal) var(--motion-ease);
-  pointer-events: none;
-}
-
-.imageButton:hover::before {
-  opacity: 1;
+  content: none;
 }
 
 /* Scanner Line Effect */
