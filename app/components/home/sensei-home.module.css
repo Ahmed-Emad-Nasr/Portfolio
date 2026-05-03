@@ -462,42 +462,38 @@
   border-color: rgba(255, 207, 136, 0.86);
 }
 
-/* Respect prefers-reduced-motion - Disable ALL animations */
+/* Keep Home keyframes active even when reduced-motion is enabled globally */
 @media (prefers-reduced-motion: reduce) {
   .imageButton::after {
-    animation: none !important;
+    animation: scanline 4s ease-in-out infinite !important;
   }
 
-  .dotAvailable,
-  .dotLimited,
+  .dotAvailable {
+    animation: pulseGreen 2.6s infinite !important;
+  }
+
+  .dotLimited {
+    animation: pulseAmber 2.6s infinite !important;
+  }
+
   .dotAsync {
-    animation: none !important;
+    animation: pulseBlue 2.6s infinite !important;
   }
 
   .typingText {
-    animation: none !important;
+    animation: textDrift 5.5s ease-in-out infinite !important;
   }
 
   .typingHighlight::before {
-    animation: none !important;
+    animation: words 16s infinite !important;
   }
 
   .typingHighlight::after {
-    animation: none !important;
+    animation: cursor 0.9s step-end infinite, typing 16s steps(14) infinite !important;
   }
 
   .cvBtn:hover svg {
-    animation: none !important;
-  }
-
-  .pdfCardImg {
-    animation: none !important;
-  }
-
-  :global(*) {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: pdfPulse 0.9s ease-in-out infinite !important;
   }
 }
 

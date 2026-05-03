@@ -13,7 +13,7 @@ import { faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
-import { enhancedSkills, enhancedStats, homeSummaryParagraph } from "@/app/core/data";
+import { enhancedSkills, enhancedStats } from "@/app/core/data";
 
 const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_PROJECTS_CLASS = `${styles.btn} ${styles.btnProjects}`;
@@ -221,7 +221,6 @@ const SenseiHome = memo(function SenseiHome() {
             <span className={styles.typingHighlight} aria-hidden="true" />
           </h2>
           
-          <p>{homeSummaryParagraph}</p>
           <div className={styles.proofRow} aria-label="Key proof points">
             {heroProofPoints.map((point) => (
               <span key={point} className={styles.proofPill}>

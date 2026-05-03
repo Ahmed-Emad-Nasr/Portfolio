@@ -53,8 +53,7 @@ export type Stat = {
   trend?: "up" | "down" | "stable";
 };
 
-export const homeSummaryParagraph =
-  "Computer Science student and SOC/IR analyst with 10+ trainings and 200+ simulated alerts. Strong in SIEM/EDR investigations, alert triage, IOC analysis, and incident response.";
+
 
 export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
