@@ -172,7 +172,7 @@ const SenseiHome = memo(function SenseiHome() {
               width={350}
               height={350}
               sizes="(max-width: 968px) 80vw, 350px"
-              quality={95}
+              quality={75}
               priority
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src =

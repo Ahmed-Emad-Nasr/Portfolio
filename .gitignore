@@ -54,7 +54,8 @@ yarn.lock
 # public generated assets
 /public/Assets/art-gallery/Images/image_display/
 /public/Assets/art-gallery/Images/image_display_thumb/
-/public/Assets/art-gallery/Images/logo/
+/public/Assets/art-gallery/Images/logo/*
+!/public/Assets/art-gallery/Images/logo/My_Logo2.webp
 /public/Assets/Cases/thumbnails/
 /public/Assets/loading/
 
