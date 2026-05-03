@@ -43,13 +43,40 @@ const SenseiHeader = memo(function SenseiHeader() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    const onScroll = () => {
+    let rafId = 0;
+    let timeoutId: number | undefined;
+    let lastRun = 0;
+
+    const updateScrollState = () => {
       setIsScrolled(window.scrollY > 18);
+      lastRun = window.performance.now();
+      rafId = 0;
+      timeoutId = undefined;
+    };
+
+    const onScroll = () => {
+      const now = window.performance.now();
+      const elapsed = now - lastRun;
+
+      if (rafId || timeoutId !== undefined) return;
+
+      if (elapsed >= 120) {
+        rafId = window.requestAnimationFrame(updateScrollState);
+        return;
+      }
+
+      timeoutId = window.setTimeout(() => {
+        rafId = window.requestAnimationFrame(updateScrollState);
+      }, 120 - elapsed);
     };
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   const scrollToSection = useCallback((section: string): void => {
@@ -62,7 +89,7 @@ const SenseiHeader = memo(function SenseiHeader() {
       const offset = headerHeight + (Number.isFinite(computedTop) ? computedTop : 0) + 10;
       const targetTop = window.scrollY + target.getBoundingClientRect().top - offset;
 
-      window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
     }
   }, []);
 

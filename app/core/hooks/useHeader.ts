@@ -44,52 +44,72 @@ export const useHeader = () => {
       // localStorage is not available (cross-origin iframe, private browsing, etc.)
     }
 
-    let ticking = false;
+    let rafId = 0;
+    let timeoutId: number | undefined;
+    let lastRun = 0;
     let lastSection = "Home";
 
     const handleScroll = (): void => {
-      if (!ticking) {
-        ticking = true;
-        window.requestAnimationFrame(() => {
-          const isMobile = window.innerWidth <= 994;
-          const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
-          const headerRect = headerElement?.getBoundingClientRect();
-          const headerHeight = headerRect?.height ?? (isMobile ? 64 : 76);
-          const headerTop = headerElement ? Number.parseFloat(window.getComputedStyle(headerElement).top || "0") : 0;
-          const topOffset = Number.isFinite(headerTop) ? headerTop : 0;
-          const marker = Math.max(72, Math.round(topOffset + headerHeight + (isMobile ? 8 : 12)));
-          let current = "Home";
-          let smallestDistance = Number.POSITIVE_INFINITY;
+      const now = window.performance.now();
+      const elapsed = now - lastRun;
 
-          for (const section of SECTIONS) {
-            const el = document.getElementById(section);
-            if (!el) continue;
-            const { top } = el.getBoundingClientRect();
-            const distance = Math.abs(top - marker);
+      if (rafId || timeoutId !== undefined) return;
 
-            if (distance < smallestDistance) {
-              smallestDistance = distance;
-              current = section;
-            }
+      const evaluateSection = (): void => {
+        const isMobile = window.innerWidth <= 994;
+        const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
+        const headerRect = headerElement?.getBoundingClientRect();
+        const headerHeight = headerRect?.height ?? (isMobile ? 64 : 76);
+        const headerTop = headerElement ? Number.parseFloat(window.getComputedStyle(headerElement).top || "0") : 0;
+        const topOffset = Number.isFinite(headerTop) ? headerTop : 0;
+        const marker = Math.max(72, Math.round(topOffset + headerHeight + (isMobile ? 8 : 12)));
+        let current = "Home";
+        let smallestDistance = Number.POSITIVE_INFINITY;
+
+        for (const section of SECTIONS) {
+          const el = document.getElementById(section);
+          if (!el) continue;
+          const { top } = el.getBoundingClientRect();
+          const distance = Math.abs(top - marker);
+
+          if (distance < smallestDistance) {
+            smallestDistance = distance;
+            current = section;
           }
-          
-          if (current !== lastSection) {
-            lastSection = current;
-            setActiveSection(current);
-            try {
-              localStorage.setItem("activeSection", current);
-            } catch {
-              // localStorage is not available; silently ignore
-            }
+        }
+
+        if (current !== lastSection) {
+          lastSection = current;
+          setActiveSection(current);
+          try {
+            localStorage.setItem("activeSection", current);
+          } catch {
+            // localStorage is not available; silently ignore
           }
-          ticking = false;
-        });
+        }
+
+        lastRun = window.performance.now();
+        rafId = 0;
+        timeoutId = undefined;
+      };
+
+      if (elapsed >= 120) {
+        rafId = window.requestAnimationFrame(evaluateSection);
+        return;
       }
+
+      timeoutId = window.setTimeout(() => {
+        rafId = window.requestAnimationFrame(evaluateSection);
+      }, 120 - elapsed);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {

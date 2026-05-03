@@ -1,18 +1,28 @@
 // motion.ts
 // Shared motion tokens for the portfolio and blog surfaces.
 
-export const cinematicEase = [0.16, 1, 0.3, 1] as const;
+export const cinematicEase = [0.25, 0.1, 0.25, 1] as const;
+
+export const cinematicDurations = {
+  short: 0.45,
+  medium: 0.65,
+  long: 0.8,
+} as const;
 
 export const revealVariants = {
   hidden: {
     opacity: 0,
-    y: 24,
-    filter: "blur(10px)",
+    y: 32,
+    filter: "blur(12px)",
   },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
+    transition: {
+      duration: cinematicDurations.medium,
+      ease: cinematicEase,
+    },
   },
 };
 
@@ -22,6 +32,10 @@ export const subtleFadeVariants = {
   },
   visible: {
     opacity: 1,
+    transition: {
+      duration: cinematicDurations.short,
+      ease: cinematicEase,
+    },
   },
 };
 
@@ -32,14 +46,14 @@ export const staggerContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.05,
+      staggerChildren: 0.14,
+      delayChildren: 0.1,
     },
   },
 };
 
 export const fastSpring = {
   type: "spring" as const,
-  stiffness: 380,
-  damping: 30,
+  stiffness: 180,
+  damping: 26,
 };

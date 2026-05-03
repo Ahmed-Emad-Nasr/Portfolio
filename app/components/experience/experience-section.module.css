@@ -108,8 +108,8 @@
 
 .tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: rgba(205, 250, 230, 0.84); transition: color var(--motion-normal) var(--motion-ease); }
 .titleIcon { font-size: 1.8rem; opacity: 0.9; transition: color var(--motion-normal) var(--motion-ease), text-shadow var(--motion-normal) var(--motion-ease); }
-.tag h3 { margin: 0; font-size: 1.6rem; font-weight: 700; color: rgba(233, 241, 250, 0.9); transition: color 0.35s ease; display: inline-flex; align-items: center; gap: 0.8rem; }
-.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity 0.35s ease, color 0.35s ease; }
+.tag h3 { margin: 0; font-size: 1.6rem; font-weight: 700; color: rgba(233, 241, 250, 0.9); transition: color var(--motion-normal) var(--motion-ease); display: inline-flex; align-items: center; gap: 0.8rem; }
+.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease); }
 .tag h3:hover { cursor: pointer; text-decoration: underline; text-decoration-color: var(--main-color); text-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.4); }
 .tag h3:hover .linkIcon { opacity: 1; color: var(--main-color); }
 
@@ -138,7 +138,7 @@
   font-family: monospace; /* خط المبرمجين */
   font-weight: 600;
   letter-spacing: 0.05em;
-  transition: all var(--motion-fast) var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .skillTag::before {
@@ -172,7 +172,7 @@
   background: rgba(var(--accent-color-rgb), 0.08);
   font-size: 1.2rem;
   font-weight: 700;
-  transition: all 0.22s ease;
+  transition: all var(--motion-normal) var(--motion-ease);
   position: relative;
   overflow: hidden;
 }
@@ -224,7 +224,7 @@
   inset: 0;
   background: linear-gradient(125deg, rgba(var(--main-color-rgb), 0.05), transparent 45%);
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity var(--motion-normal) var(--motion-ease);
   pointer-events: none;
 }
 

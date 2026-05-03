@@ -73,7 +73,7 @@
   letter-spacing: 1px;
   padding: 0.8rem 1.4rem;
   border: 1px solid transparent;
-  transition: all 0.3s ease;
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .primary {

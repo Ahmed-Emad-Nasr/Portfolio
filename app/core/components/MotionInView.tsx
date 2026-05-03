@@ -13,8 +13,7 @@
  * - `staggerChildren` + `delayChildren` on parent via "stagger" preset
  * - All transforms use GPU-composited properties only (opacity + transform, no layout-triggering props)
  * - `will-change: transform, opacity` injected via style for paint optimization
- * - `margin` tweak: "-8% 0px" triggers slightly earlier for perceived snappiness
- * - `amount` reduced to 0.15 — elements reveal before user reaches them (feels faster)
+ * - `margin` and `amount` tuned for a calmer reveal cadence instead of instant pop-in
  */
 
 import React, { memo, useMemo } from "react";
@@ -24,20 +23,26 @@ import { motion, MotionProps, Variants } from "framer-motion";
 // 1. Easing & spring — defined ONCE at module level (zero GC pressure)
 // ---------------------------------------------------------------------------
 
-const CINEMATIC_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const CINEMATIC_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
+
+const MOTION_DURATIONS = {
+  short: 0.45,
+  medium: 0.65,
+  long: 0.8,
+} as const;
 
 const SPRING_FAST = {
   type: "spring",
-  stiffness: 280,
-  damping: 26,
-  mass: 0.8,
+  stiffness: 170,
+  damping: 24,
+  mass: 1,
 } as const;
 
 const SPRING_GENTLE = {
   type: "spring",
-  stiffness: 160,
-  damping: 22,
-  mass: 1,
+  stiffness: 120,
+  damping: 24,
+  mass: 1.05,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -48,7 +53,7 @@ export const motionVariants = {
   /** Simple opacity reveal — lightest possible */
   fade: {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.6, ease: CINEMATIC_EASE } },
+    visible: { opacity: 1, transition: { duration: MOTION_DURATIONS.medium, ease: CINEMATIC_EASE } },
   } satisfies Variants,
 
   /** Classic slide-up + fade (most common for sections) */
@@ -57,20 +62,20 @@ export const motionVariants = {
     visible: {
       opacity: 1,
       y: 0,
-      transition: SPRING_FAST,
+      transition: { ...SPRING_FAST, delay: 0.08 },
     },
   } satisfies Variants,
 
   /** Slide from left */
   "slide-left": {
     hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0, transition: SPRING_FAST },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_FAST, delay: 0.08 } },
   } satisfies Variants,
 
   /** Slide from right */
   "slide-right": {
     hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0, transition: SPRING_FAST },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_FAST, delay: 0.08 } },
   } satisfies Variants,
 
   /** Subtle scale pop — good for cards & images */
@@ -79,7 +84,7 @@ export const motionVariants = {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: SPRING_GENTLE,
+      transition: { ...SPRING_GENTLE, delay: 0.08 },
     },
   } satisfies Variants,
 
@@ -91,8 +96,8 @@ export const motionVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.05,
+        staggerChildren: 0.14,
+        delayChildren: 0.1,
       },
     },
   } satisfies Variants,
@@ -103,7 +108,7 @@ export const motionVariants = {
     visible: {
       opacity: 1,
       y: 0,
-      transition: SPRING_FAST,
+      transition: { ...SPRING_FAST, delay: 0.08 },
     },
   } satisfies Variants,
 } as const;
@@ -191,8 +196,8 @@ const MotionInView = memo<MotionInViewProps>(
         viewport={
           viewport ?? {
             once: true,       // animate only once — no re-triggering on scroll up
-            amount: 0.15,     // trigger earlier → perceived snappiness
-            margin: "0px 0px -8% 0px", // pull trigger point up slightly
+            amount: 0.22,     // calmer reveal timing without feeling stalled
+            margin: "0px 0px -4% 0px",
           }
         }
         transition={resolvedTransition}

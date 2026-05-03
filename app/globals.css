@@ -7,7 +7,7 @@
  * - backdrop-filter disabled on touch devices via @media (hover: none) — was causing 200ms+ paint cost
  * - dataStream animation: added contain: strict + will-change to isolate paint layer per card
  * - @media (prefers-reduced-motion): disables all animations/transitions globally — accessibility + perf
- * - scroll-behavior: smooth moved inside a media query (was conflicting with reduced-motion)
+ * - scroll-behavior restored on the root html element, with reduced-motion overriding it to auto
  * - glass-card hover: translateY moved to transform-only path (no layout triggers)
  * - cyberPulse & dataStream: paused under reduced-motion
  * - Added contain: layout style on section — prevents section reflows from bubbling
@@ -51,10 +51,10 @@
   --shadow-glow-hover: 0 0 25px rgba(var(--main-color-rgb), 0.3);
 
   /* Cinematic Motion */
-  --motion-fast: 120ms;
-  --motion-normal: 180ms;
-  --motion-slow: 320ms;
-  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fast: 420ms;
+  --motion-normal: 620ms;
+  --motion-slow: 800ms;
+  --motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
 
   /* Blurs */
   --ui-blur: 12px;
@@ -83,14 +83,8 @@ html {
   /* 62.5% → 1rem = 10px exactly (standard, predictable) */
   font-size: 62.5%;
   overflow-x: hidden;
-  /* scroll-behavior only when user hasn't requested reduced motion */
+  scroll-behavior: smooth;
   background-color: var(--bg-color);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
 }
 
 body {
@@ -134,11 +128,11 @@ summary {
    * background-color transitions are added explicitly only where needed.
    */
   transition:
-    color var(--motion-fast) ease,
-    border-color var(--motion-fast) ease,
-    transform var(--motion-fast) ease,
-    box-shadow var(--motion-fast) ease,
-    opacity var(--motion-fast) ease;
+    color var(--motion-normal) var(--motion-ease),
+    border-color var(--motion-normal) var(--motion-ease),
+    transform var(--motion-normal) var(--motion-ease),
+    box-shadow var(--motion-normal) var(--motion-ease),
+    opacity var(--motion-normal) var(--motion-ease);
 }
 
 button {
@@ -226,8 +220,8 @@ textarea:focus-visible {
   font-size: 1.4rem;
   font-weight: 800;
   transition:
-    top var(--motion-fast) ease,
-    transform var(--motion-fast) ease;
+    top var(--motion-normal) var(--motion-ease),
+    transform var(--motion-normal) var(--motion-ease);
 }
 
 .skip-link:focus-visible {
@@ -368,8 +362,8 @@ section.glass,
   color: var(--main-color);
   font-weight: 700;
   transition:
-    color var(--motion-fast) ease,
-    text-shadow var(--motion-fast) ease;
+    color var(--motion-fast) var(--motion-ease),
+    text-shadow var(--motion-fast) var(--motion-ease);
 }
 
 .site-footer__inner a:hover {
@@ -435,6 +429,10 @@ section.glass,
     scroll-behavior: auto !important;
   }
 
+  html {
+    scroll-behavior: auto !important;
+  }
+
   .glass-card::after {
     animation: none;
     display: none;
@@ -455,7 +453,7 @@ section.glass,
 }
 
 .cyber-glitch:hover {
-  animation: globalGlitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  animation: globalGlitch 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) both infinite;
   color: var(--main-color);
 }
 

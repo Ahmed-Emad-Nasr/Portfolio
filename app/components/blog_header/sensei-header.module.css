@@ -22,7 +22,7 @@
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-  transition: all 0.4s var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 /* Cyber Scanline Overlay */
@@ -73,7 +73,7 @@
   cursor: default;
   outline: none;
   font-family: monospace;
-  transition: all var(--motion-fast) var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .brand::before {
@@ -107,7 +107,7 @@
   letter-spacing: 0.5px;
   font-weight: 600;
   text-transform: uppercase;
-  transition: all var(--motion-fast) var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .navLink:hover,
@@ -115,7 +115,7 @@
   background-color: rgba(var(--main-color-rgb), 0.08);
   color: var(--main-color);
   border-color: rgba(var(--main-color-rgb), 0.3);
-  transform: translateY(-1px);
+  transform: translateY(-1px) translateZ(0);
 }
 
 .brand:hover, .brand:focus-visible {

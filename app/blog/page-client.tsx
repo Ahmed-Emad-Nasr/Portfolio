@@ -1173,25 +1173,45 @@ export default function BlogPageClient() {
 
 // ─── Back to Top ──────────────────────────────────────────────────────────────
 
-// 5. Throttled scroll listener using requestAnimationFrame
+// 5. Throttled scroll listener using requestAnimationFrame + a small cadence delay
 function BackToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    let ticking = false;
+    let rafId = 0;
+    let timeoutId: number | undefined;
+    let lastRun = 0;
+
+    const updateVisibility = () => {
+      setVisible(window.scrollY > 400);
+      lastRun = window.performance.now();
+      rafId = 0;
+      timeoutId = undefined;
+    };
 
     const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setVisible(window.scrollY > 400);
-          ticking = false;
-        });
-        ticking = true;
+      const now = window.performance.now();
+      const elapsed = now - lastRun;
+
+      if (rafId || timeoutId !== undefined) return;
+
+      if (elapsed >= 120) {
+        rafId = window.requestAnimationFrame(updateVisibility);
+        return;
       }
+
+      timeoutId = window.setTimeout(() => {
+        rafId = window.requestAnimationFrame(updateVisibility);
+      }, 120 - elapsed);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   if (!visible) return null;

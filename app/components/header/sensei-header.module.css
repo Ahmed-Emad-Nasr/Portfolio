@@ -22,7 +22,7 @@
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-  transition: all 0.4s var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
   /* تم إزالة overflow: hidden للسماح للمنيو بالظهور */
 }
 
@@ -87,7 +87,7 @@
   cursor: pointer;
   outline: none;
   font-family: monospace;
-  transition: all var(--motion-fast) var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .blogLink::before {
@@ -102,7 +102,7 @@
   border-color: var(--main-color);
   box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3);
   color: #fff;
-  transform: translateY(-1px);
+  transform: translateY(-1px) translateZ(0);
 }
 
 @media (max-width: 600px) {
@@ -128,7 +128,7 @@
   text-decoration: none;
   background: transparent;
   border: 1px solid transparent;
-  transition: all var(--motion-fast) var(--motion-ease);
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .navbar a:hover, .navbar a.active {
@@ -165,7 +165,7 @@
   min-width: 44px;
   min-height: 44px;
   border-radius: 6px;
-  transition: all var(--motion-fast) ease;
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .MenuIcon:hover {
@@ -179,7 +179,7 @@
   background: var(--main-color);
   border-radius: 0;
   transform-origin: center;
-  transition: all 0.3s ease;
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .MenuIcon.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -235,7 +235,7 @@
     visibility: hidden;
     pointer-events: none;
     display: flex;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all var(--motion-normal) var(--motion-ease);
     transform: translateY(-10px);
   }
 
