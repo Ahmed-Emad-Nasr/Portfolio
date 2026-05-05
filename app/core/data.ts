@@ -592,6 +592,7 @@ export const caseEvidenceLibrary = [
       "Detecting Defense Evasion", 
       "Privilege Escalation Detection"
     ],
+    image: "Assets/Cases/3omda Custom Detection Rules/1.png",
     readTime: 26,
     date: "2026-05-05",
   },
