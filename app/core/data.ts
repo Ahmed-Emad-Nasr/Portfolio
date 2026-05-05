@@ -566,6 +566,35 @@ export const caseEvidenceLibrary = [
       ],
       image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
     },
+{
+    id: "3omda custom detection rules",
+    title: "My Custom Detection Rules in Wazuh SIEM Solution with 92% Detection Rate",
+    description: "Custom detection rules for identifying suspicious activities in the network.",
+    platform: "SIEM Lab",
+    type: "PDF Report",
+    category: "Threat Detection",
+    difficulty: "Hard",
+    href: "Assets/Cases/3omda Custom Detection Rules/3omda custom detection rules.pdf",
+    tags: [
+      "Wazuh", 
+      "SIEM", 
+      "Threat Detection", 
+      "Custom Rules", 
+      "Blue Team", 
+      "SOC",
+      "Network Security"
+    ],
+    tools: ["Wazuh", "EDR", "SIEM"],
+    skillsGained: [
+      "Wazuh Rule Creation", 
+      "Threat Hunting", 
+      "Log Analysis", 
+      "Detecting Defense Evasion", 
+      "Privilege Escalation Detection"
+    ],
+    readTime: 26,
+    date: "2026-05-05",
+  },
       {
     id: "penetration-testing-life-cycle",
     title: "penetration testing Life Cycle",

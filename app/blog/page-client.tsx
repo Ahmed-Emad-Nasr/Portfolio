@@ -77,6 +77,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).png`);
 
 const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "3omda custom detection rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda Custom Detection Rules/${i + 1}.png`),
   "penetration-testing-life-cycle": Array.from({ length: 4 }, (_, i) => `Assets/Cases/penetration-testing-life-cycle/${i + 1}.png`),
   "autopsy": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.png`),
   "data-exfiltration-investigation": Array.from({ length: 37 }, (_, i) => `Assets/Cases/Data Exfiltiration Investigation/${i + 1}.png`),
