@@ -594,6 +594,8 @@ export const caseEvidenceLibrary = [
     ],
     readTime: 26,
     date: "2026-05-05",
+    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.png`),
+    image: "Assets/Cases/3omda custom detection rules/1.png",
   },
       {
     id: "penetration-testing-life-cycle",
