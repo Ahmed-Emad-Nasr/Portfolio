@@ -574,7 +574,7 @@ export const caseEvidenceLibrary = [
     type: "PDF Report",
     category: "Threat Detection",
     difficulty: "Hard",
-    href: "Assets/Cases/3omda Custom Detection Rules/3omda custom detection rules.pdf",
+    href: "Assets/Cases/3omda custom detection rules/3omda custom detection rules.pdf",
     tags: [
       "Wazuh", 
       "SIEM", 
@@ -592,7 +592,7 @@ export const caseEvidenceLibrary = [
       "Detecting Defense Evasion", 
       "Privilege Escalation Detection"
     ],
-    image: "Assets/Cases/3omda Custom Detection Rules/1.png",
+    image: "Assets/Cases/3omda custom detection rules/1.png",
     readTime: 26,
     date: "2026-05-05",
   },
