@@ -566,7 +566,21 @@ export const caseEvidenceLibrary = [
       ],
       image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.png",
     },
-
+      {
+    id: "penetration-testing-life-cycle",
+    title: "penetration testing Life Cycle",
+    description: "Presentation of a complete penetration testing lifecycle, including planning, execution, and reporting phases.",
+    platform: "Kali Linux Lab",
+    type: "PDF Report",
+    category: "Penetration Testing",
+    difficulty: "Easy",
+    href: "Assets/Cases/penetration-testing-life-cycle/AhmedEmad.pdf",
+    tags: ["Privilege Escalation", "Attack Chain", "Defense"],
+    tools: ["EDR", "SIEM"],
+    skillsGained: ["Privilege Escalation Detection", "Defense Bypass"],
+    readTime: 26,
+    date: "2026-05-05",
+  },
     {
     id: "autopsy",
     title: "Autopsy ",
