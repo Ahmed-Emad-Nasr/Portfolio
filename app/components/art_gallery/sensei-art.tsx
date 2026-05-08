@@ -12,7 +12,6 @@ import dynamic from "next/dynamic";
 // import { motion } from "framer-motion"; // تم تعطيله لتخفيف الباندل
 import "yet-another-react-lightbox/styles.css";
 import styles from "./sensei-art.module.css";
-import MotionInView from "@/app/core/components/MotionInView";
 
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false, loading: () => <div>Loading gallery...</div> });
 
@@ -122,9 +121,9 @@ const SenseiArt = memo(function SenseiArt() {
   return (
     <section ref={sectionRef} className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
-        <MotionInView className={styles["header-section"]}>
+        <div className={styles["header-section"]}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
-        </MotionInView>
+        </div>
         {!shouldRenderGallery ? (
           <div className={styles.Gallery} aria-hidden="true">
             {Array.from({ length: 8 }, (_, index) => (
@@ -133,11 +132,11 @@ const SenseiArt = memo(function SenseiArt() {
           </div>
         ) : null}
         {shouldRenderGallery ? (
-          <MotionInView className={styles["art-gallery-content"]}>
+          <div className={styles["art-gallery-content"]}>
             <div className={styles.Gallery}>
               {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />)}
             </div>
-          </MotionInView>
+          </div>
         ) : null}
       </div>
       {open ? (
