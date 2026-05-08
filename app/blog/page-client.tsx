@@ -15,7 +15,7 @@ import {
 import AppBar from "@/app/components/blog_header/sensei-header";
 import BlogCard from "./BlogCard";
 import HomeSection from "@/app/components/blog_home/sensei-home";
-import ProjectsSection from "@/app/components/projects/sensei-projects";
+
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -913,7 +913,7 @@ export default function BlogPageClient() {
           <span>Screenshot Assets</span>
         </article>
       </MotionInView>
-        <ProjectsSection />
+        
       {/* ── YouTube Hub ───────────────────────────────────────────────────── */}
       <MotionInView className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
         <div className={styles.blockHeading}>

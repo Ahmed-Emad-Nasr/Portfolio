@@ -14,7 +14,6 @@ const SCROLL_SAMPLE_MS = 180;
 const NAV_ITEMS = [
   { label: "Home", targetId: null },
   { label: "Cases", targetId: "blog-pdfs-title" },
-  { label: "Projects", targetId: "Projects" },
   { label: "YouTube Hub", targetId: "youtube-hub-title" },
 ] as const;
 

@@ -118,6 +118,40 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     publishedAt: "2026-05-02", // ⚠️ يفضل تغيير ده لتاريخ نشر الفيديو الفعلي
     tags: ["AWS", "KMS", "Cloud Security", "Encryption", "Tutorial"], // ⚠️ تقدر تعدل الكلمات المفتاحية
   },
+  {
+  videoId: "AUz6clXvwxw",
+  title: "Solving eCIR INE Lab: Analyzing PE Header",
+  description: "Step-by-step walkthrough of solving the eCIR INE lab focused on analyzing PE headers, understanding executable file structure, and identifying key Portable Executable components for malware analysis and digital forensics.",
+  publishedAt: "2026-05-05", // غيّره بتاريخ النشر الفعلي
+  tags: [
+    "eCIR",
+    "INE",
+    "PE Header",
+    "Malware Analysis",
+    "Digital Forensics",
+    "Portable Executable",
+    "Reverse Engineering",
+    "Cyber Security Lab"
+  ],
+},
+{
+  videoId: "Eq_dYmM9y10",
+  title: "Adding New Data Set in Splunk SIEM",
+  description: "A practical walkthrough of adding a new dataset in Splunk SIEM, configuring data ingestion, setting source types, indexing logs, and validating data visibility for security monitoring and analysis. This tutorial demonstrates how to efficiently onboard new log sources into Splunk for improved threat detection and SOC operations.",
+  publishedAt: "2026-05-08", // غيّره بتاريخ النشر الفعلي
+  tags: [
+    "Splunk",
+    "Splunk SIEM",
+    "Dataset",
+    "Data Ingestion",
+    "Log Analysis",
+    "SOC",
+    "Cyber Security",
+    "SIEM",
+    "Security Monitoring",
+    "Splunk Tutorial"
+  ],
+},
 ];
 
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
