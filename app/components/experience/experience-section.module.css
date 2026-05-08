@@ -85,21 +85,6 @@
   overflow: hidden;
 }
 
-/* تأثير الـ Scanline الخفيف جوا الكارت لما تعمل Hover */
-.content::after {
-  content: "";
-  position: absolute;
-  top: 0; left: -100%;
-  width: 50%; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--main-color));
-  transition: left 0s; /* Reset instantly */
-}
-
-.content:hover::after {
-  left: 200%;
-  transition: left 1s ease-in-out;
-}
-
 .content:hover {
   background: rgba(10, 13, 18, 0.95);
   border-color: rgba(var(--main-color-rgb), 0.5); 
