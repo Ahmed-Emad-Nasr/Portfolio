@@ -915,7 +915,7 @@ export default function BlogPageClient() {
       </MotionInView>
         
       {/* ── YouTube Hub ───────────────────────────────────────────────────── */}
-      <MotionInView className={styles.youtubeHub} aria-labelledby="youtube-hub-title">
+      <MotionInView className={styles.youtubeHub} aria-labelledby="youtube-hub-title" initial="visible">
         <div className={styles.blockHeading}>
           <h2 id="youtube-hub-title">YouTube Hub</h2>
           <p>All channel videos appear here in one place, including the featured video.</p>
