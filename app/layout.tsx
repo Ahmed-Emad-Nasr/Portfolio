@@ -5,7 +5,6 @@
  */
 
 import "./globals.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
@@ -235,7 +234,12 @@ const structuredData = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr">
-      <head />
+      <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
+        <link rel="icon" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body className={BODY_CLASS}>
         <a className="skip-link" href="#main-content">
           Skip to main content

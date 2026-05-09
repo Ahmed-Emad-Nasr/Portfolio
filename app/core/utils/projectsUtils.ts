@@ -5,24 +5,41 @@
  */
 
 // ─── Statics ──────────────────────────────────────────────────────────────────
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faCode,
+  faTerminal,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faReact,
+  faJs,
+  faPython,
+  faHtml5,
+  faCss3,
+  faJava,
+  faPhp,
+  faAndroid,
+  faSwift,
+  faWindows,
+} from "@fortawesome/free-brands-svg-icons";
 
-// Object literal hoisted at module level — created once, never recreated per call.
-const ICON_MAP: Readonly<Record<string, string>> = {
-  TypeScript:  "fa-brands fa-react",
-  JavaScript:  "fa-brands fa-js",
-  Python:      "fa-brands fa-python",
-  HTML:        "fa-brands fa-html5",
-  CSS:         "fa-brands fa-css3",
-  Java:        "fa-brands fa-java",
-  PHP:         "fa-brands fa-php",
-  Kotlin:      "fa-brands fa-android",
-  Swift:       "fa-brands fa-swift",
-  PowerShell:  "fa-solid fa-terminal",
-  Shell:       "fa-solid fa-terminal",
-  VisualBasic: "fa-brands fa-windows",
+// Map languages to IconDefinition objects so components can render SVG icons
+const ICON_MAP: Readonly<Record<string, IconDefinition>> = {
+  TypeScript: faReact,
+  JavaScript: faJs,
+  Python: faPython,
+  HTML: faHtml5,
+  CSS: faCss3,
+  Java: faJava,
+  PHP: faPhp,
+  Kotlin: faAndroid,
+  Swift: faSwift,
+  PowerShell: faTerminal,
+  Shell: faTerminal,
+  VisualBasic: faWindows,
 };
 
-const FALLBACK_ICON = "fa-solid fa-code";
+const FALLBACK_ICON = faCode;
 
 // Reuse a single Intl.DateTimeFormat instance instead of constructing a new one
 // on every formatDate call. Intl constructors are expensive.
@@ -34,7 +51,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 
 // ─── Exports ──────────────────────────────────────────────────────────────────
 
-export const getIconForLanguage = (language: string | null): string =>
+export const getIconForLanguage = (language: string | null): IconDefinition =>
   (language && ICON_MAP[language]) || FALLBACK_ICON;
 
 export const formatDate = (dateString: string): string => {

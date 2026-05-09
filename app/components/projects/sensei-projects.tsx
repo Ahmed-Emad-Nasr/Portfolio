@@ -109,7 +109,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   return (
     <article className={styles["single-project"]}>
       <div className={styles["part-1"]}>
-        <i className={getIconForLanguage(repo.language)} aria-hidden="true" />
+        <FontAwesomeIcon icon={getIconForLanguage(repo.language)} aria-hidden="true" />
         <h3>
           <a
             className={styles["title-link"]}
