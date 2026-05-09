@@ -180,7 +180,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                 loading="lazy"
                 quality={30}
                 placeholder="blur"
-                blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   if (!target.dataset.failed) {
@@ -208,7 +208,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                     loading="lazy"
                     quality={30}
                     placeholder="blur"
-                    blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
+                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       if (!target.dataset.failed) {

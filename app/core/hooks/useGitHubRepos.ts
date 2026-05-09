@@ -157,7 +157,9 @@ export const useGitHubRepos = (): {
             setIsLoading(false);
             return; // Success — exit early
           } else {
-            console.warn("GitHub API returned unexpected data format");
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("GitHub API returned unexpected data format");
+            }
             const cached = readCachedRepos();
             if (cached) {
               setCachedState(cached, "GitHub returned empty data. Showing cached repositories.");
@@ -179,7 +181,7 @@ export const useGitHubRepos = (): {
 
           const isLastAttempt = attempt === maxRetries - 1;
           if (isLastAttempt) {
-            if (error instanceof Error) {
+            if (error instanceof Error && process.env.NODE_ENV === 'development') {
               console.error("Failed to fetch repositories after retries:", error.message);
             }
 

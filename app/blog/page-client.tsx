@@ -187,22 +187,9 @@ const normalizePublicHref = (href: string): string => {
 };
 
 const getThumbnail = (imgPath: string): string => {
-  if (!imgPath) return imgPath;
-  const relativeCasePath = imgPath.replace(/^Assets\/Cases\//, "");
-
-  if (
-    relativeCasePath.startsWith("Autopsy/") ||
-    relativeCasePath.startsWith("Data Exfiltiration Investigation/") ||
-    relativeCasePath.startsWith("Depi R4 Project/")
-  ) {
-    return imgPath;
-  }
-
-  const rel = imgPath
-    .replace(/^Assets\/Cases\//, "")
-    .replace(/[\\/]/g, "__")
-    .replace(/\.(png|jpg|jpeg)$/i, ".webp");
-  return `Assets/Cases/thumbnails/${rel}`;
+  // Skip thumbnails entirely — they're not generated, causing 404 errors.
+  // Return original image path to avoid Lighthouse console errors.
+  return imgPath;
 };
 
 // 1. Date Caching Setup
@@ -840,7 +827,7 @@ export default function BlogPageClient() {
                   loading="lazy"
                   quality={10}
                   placeholder="blur"
-                  blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                 />
               </a>
             )}
@@ -1118,7 +1105,7 @@ export default function BlogPageClient() {
                   loading="lazy"
                   quality={75}
                   placeholder="blur"
-                  blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                 />
               </a>
               <button

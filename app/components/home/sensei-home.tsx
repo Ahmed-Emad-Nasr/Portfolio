@@ -195,7 +195,7 @@ const SenseiHome = memo(function SenseiHome() {
               quality={70}
               priority
               placeholder="blur"
-              blurDataURL="/Assets/art-gallery/Images/logo/My_Logo.webp"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src =
                   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350'%3E%3Crect fill='%23333' width='350' height='350'/%3E%3C/svg%3E";
