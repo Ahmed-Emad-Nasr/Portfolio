@@ -14,7 +14,7 @@
 .title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
 .title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.5); }
 
-.Gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.Gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
 /* --- Cyber Card Frame --- */
 .art_pic { 

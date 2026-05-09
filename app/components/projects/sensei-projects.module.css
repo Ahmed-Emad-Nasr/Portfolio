@@ -22,7 +22,33 @@
 .title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.5); }
 
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 3rem; }
+
+.projects-timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.projects-timeline::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1rem;
+  background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 0.1) 0%, rgba(var(--main-color-rgb), 0.8) 50%, rgba(var(--main-color-rgb), 0.1) 100%);
+  background-size: 100% 200%;
+  animation: dataStreamProjects 4s linear infinite;
+  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.3);
+}
+
+@keyframes dataStreamProjects {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
 
 @media (min-width: 992px) {
   .container {
@@ -148,6 +174,39 @@
 .refresh-btn:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
 
 /* --- The Cards --- */
+.project-item {
+  position: relative;
+  width: calc(50% - 2.2rem);
+  z-index: 2;
+}
+
+.project-item.left {
+  left: 0;
+  padding-right: 5.5rem;
+}
+
+.project-item.right {
+  left: calc(50% + 2.2rem);
+  padding-left: 5.5rem;
+}
+
+.project-item::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 5rem;
+  background: radial-gradient(circle at 35% 35%, rgba(var(--accent-color-rgb), 0.9), rgba(7, 26, 19, 0.95));
+  border: 4px solid rgba(var(--accent-color-rgb), 0.92);
+  border-radius: 50%;
+  z-index: 3;
+  animation: radarPulseProject 2.5s infinite;
+  transition: background var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+}
+
+.project-item.left::after { right: calc(-2.2rem - 12px); }
+.project-item.right::after { left: calc(-2.2rem - 12px); }
+
 .single-project {
   background:
     radial-gradient(circle at 86% 12%, rgba(var(--accent-color-rgb), 0.08), transparent 34%),
@@ -176,6 +235,12 @@
 }
 
 .single-project:hover::before { opacity: 1; }
+
+@keyframes radarPulseProject {
+  0% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.5); }
+  70% { box-shadow: 0 0 0 15px rgba(var(--accent-color-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0); }
+}
 
 .single-project:hover {
   background: rgba(10, 13, 18, 0.95); 
@@ -338,14 +403,39 @@
 @media (max-width: 991px) {
   .container { padding: 0 4%; }
   .title { font-size: 3rem; }
-  .grid-container { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+  .projects-timeline { max-width: 100%; }
+  .projects-timeline::after { left: 3rem; }
+  .project-item,
+  .project-item.left,
+  .project-item.right {
+    width: 100%;
+    left: 0;
+    padding-left: 7rem;
+    padding-right: 2rem;
+  }
+  .project-item.left::after,
+  .project-item.right::after { left: 3rem; right: auto; transform: translateX(-50%); }
   .single-project { padding: 2.5rem 2rem; }
 }
 
 @media (max-width: 430px) {
   .container { padding: 0 1.2rem; }
-  .grid-container { grid-template-columns: 1fr; gap: 1.4rem; }
-  .single-project { padding: 2rem 1.4rem; }
+  .projects-timeline::after { left: 1.8rem; }
+  .project-item,
+  .project-item.left,
+  .project-item.right {
+    width: 100%;
+    left: 0;
+    padding: 2rem 1.4rem 2rem 4.8rem;
+  }
+  .project-item.left::after,
+  .project-item.right::after {
+    left: 1.8rem;
+    right: auto;
+    width: 18px;
+    height: 18px;
+    border-width: 3px;
+  }
   .project-actions { flex-direction: column; }
   .action-btn { width: 100%; }
   .meta-info { flex-direction: column; gap: 0.4rem; }

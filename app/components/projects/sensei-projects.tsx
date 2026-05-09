@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MotionInView from "@/app/core/components/MotionInView";
 import { projectBullets } from "@/app/core/data";
 
-type ProjectItemProps = { repo: GitHubRepository };
+type ProjectItemProps = { repo: GitHubRepository; isRight?: boolean };
 type ProjectSkeletonProps = { index: number };
 type ProjectCategory = "All" | "SOC" | "DFIR" | "Automation";
 
@@ -99,7 +99,7 @@ const formatTimeAgo = (timestamp: number): string => {
   return `${diffDays}d ago`;
 };
 
-const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
+const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
   const customBullets = projectBullets[repo.name] ?? projectBullets[normalizeRepoKey(repo.name)];
   const descriptionBullets = customBullets || toBulletItems(repo.description || "No description available for this repository.");
   const liveUrl = repo.homepage && repo.homepage.trim().length > 0 ? repo.homepage : repo.html_url;
@@ -107,7 +107,8 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
   const difficulty = getProjectDifficulty(repo);
 
   return (
-    <article className={styles["single-project"]}>
+    <MotionInView className={`${styles["project-item"]} ${isRight ? styles.right : styles.left}`}>
+      <article className={styles["single-project"]}>
       <div className={styles["part-1"]}>
         <FontAwesomeIcon icon={getIconForLanguage(repo.language)} aria-hidden="true" />
         <h3>
@@ -166,35 +167,38 @@ const ProjectItem = memo<ProjectItemProps>(({ repo }) => {
           </a>
         </div>
       </div>
-    </article>
+      </article>
+    </MotionInView>
   );
 }, (prev, next) => prev.repo.id === next.repo.id);
 
 ProjectItem.displayName = "ProjectItem";
 
 const ProjectSkeleton = memo<ProjectSkeletonProps>(({ index }) => (
-  <div className={styles["single-project"]} aria-hidden="true">
-    <div className={styles["part-1"]}>
-      <span className={styles["skeleton-icon"]} />
-      <span className={`${styles["skeleton-line"]} ${styles["skeleton-title"]}`} />
+  <MotionInView className={`${styles["project-item"]} ${index % 2 !== 0 ? styles.right : styles.left}`}>
+    <div className={styles["single-project"]} aria-hidden="true">
+      <div className={styles["part-1"]}>
+        <span className={styles["skeleton-icon"]} />
+        <span className={`${styles["skeleton-line"]} ${styles["skeleton-title"]}`} />
+      </div>
+      <div className={styles["part-2"]}>
+        <div className={styles["skeleton-stack"]}>
+          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
+          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
+          <span className={`${styles["skeleton-line"]} ${styles["skeleton-text-short"]}`} />
+        </div>
+        <div className={styles["skeleton-badges"]}>
+          <span className={styles["skeleton-pill"]} />
+          <span className={styles["skeleton-pill"]} />
+          <span className={styles["skeleton-pill"]} />
+        </div>
+        <div className={styles["skeleton-actions"]}>
+          <span className={styles["skeleton-button"]} />
+          <span className={styles["skeleton-button"]} />
+        </div>
+      </div>
     </div>
-    <div className={styles["part-2"]}>
-      <div className={styles["skeleton-stack"]}>
-        <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
-        <span className={`${styles["skeleton-line"]} ${styles["skeleton-text"]}`} />
-        <span className={`${styles["skeleton-line"]} ${styles["skeleton-text-short"]}`} />
-      </div>
-      <div className={styles["skeleton-badges"]}>
-        <span className={styles["skeleton-pill"]} />
-        <span className={styles["skeleton-pill"]} />
-        <span className={styles["skeleton-pill"]} />
-      </div>
-      <div className={styles["skeleton-actions"]}>
-        <span className={styles["skeleton-button"]} />
-        <span className={styles["skeleton-button"]} />
-      </div>
-    </div>
-  </div>
+  </MotionInView>
 ));
 
 ProjectSkeleton.displayName = "ProjectSkeleton";
@@ -270,7 +274,7 @@ const SenseiProjects = memo(function SenseiProjects() {
           <p className={styles["empty-state-hint"]}>Cache last updated: {cacheLabel}</p>
         ) : null}
 
-        <div className={styles["grid-container"]}>
+        <div className={styles["projects-timeline"]} role="list" aria-label="Projects Timeline">
           {isLoading ? (
             Array.from({ length: 6 }, (_, index) => (
               <ProjectSkeleton key={`project-skeleton-${index}`} index={index} />
@@ -278,7 +282,7 @@ const SenseiProjects = memo(function SenseiProjects() {
           ) : filteredRepos.length > 0 ? (
             filteredRepos.map((repo, index) => (
               <MotionInView key={repo.id}>
-                <ProjectItem repo={repo} />
+                <ProjectItem repo={repo} isRight={index % 2 !== 0} />
               </MotionInView>
             ))
           ) : (
