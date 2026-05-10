@@ -81,7 +81,7 @@
 
 html {
   /* 62.5% → 1rem = 10px exactly (standard, predictable) */
-  font-size: 62.5%;
+  font-size: 63.5%;
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: clamp(7rem, 10vh, 10rem);
