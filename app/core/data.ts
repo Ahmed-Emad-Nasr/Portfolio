@@ -135,6 +135,22 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   ],
 },
 {
+  videoId: "9LHwl0FpuPM",
+  title: "How To Install and Perform Vulnerability Assessments Using Nessus",
+  description: "Complete hands-on walkthrough for installing and configuring Nessus, setting up vulnerability scans, and performing practical vulnerability assessments. Covers scan configuration, target analysis, interpreting findings, and understanding remediation steps for cybersecurity and vulnerability management.",
+  publishedAt: "2026-05-11", // غيّره بتاريخ النشر الفعلي
+  tags: [
+    "Nessus",
+    "Vulnerability Assessment",
+    "Cyber Security",
+    "Network Security",
+    "Penetration Testing",
+    "Vulnerability Scanning",
+    "Tenable Nessus",
+    "Security Assessment"
+  ],
+},
+{
   videoId: "Eq_dYmM9y10",
   title: "Adding New Data Set in Splunk SIEM",
   description: "A practical walkthrough of adding a new dataset in Splunk SIEM, configuring data ingestion, setting source types, indexing logs, and validating data visibility for security monitoring and analysis. This tutorial demonstrates how to efficiently onboard new log sources into Splunk for improved threat detection and SOC operations.",
