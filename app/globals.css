@@ -22,19 +22,20 @@
   --text-color: #e2f1ff;
   --text-muted: #8ba4b8;
 
-  /* Main Color: Cyber Cyan/Teal */
-  --main-color: #00e5ff;
-  --main-color-rgb: 0, 229, 255;
+  /* Main Color: Cyber Cyan */
+  --main-color: #00d9ff;
+  --main-color-rgb: 0, 217, 255;
 
-  /* Accent Color: Hacker/Neon Green */
-  --accent-color: #00ff88;
-  --accent-color-rgb: 0, 255, 136;
+  /* Accent Color: Ruby Red */
+  --accent-color: #e0115f;
+  --accent-color-rgb: 224, 17, 95;
 
   /* Surfaces & Borders */
   --surface-card-bg: linear-gradient(
     120deg,
     rgba(8, 18, 33, 0.78) 60%,
-    rgba(var(--main-color-rgb), 0.06) 100%
+    rgba(var(--main-color-rgb), 0.05) 78%,
+    rgba(var(--accent-color-rgb), 0.04) 100%
   );
   --surface-card-border: rgba(var(--main-color-rgb), 0.15);
 
@@ -46,7 +47,8 @@
   /* Shadows & Glows */
   --shadow-card: 0 4px 20px -8px rgba(0, 0, 0, 0.42);
   --shadow-glow: 0 0 12px rgba(var(--main-color-rgb), 0.12);
-  --shadow-glow-hover: 0 0 18px rgba(var(--main-color-rgb), 0.22);
+  --shadow-glow-hover: 0 0 18px rgba(var(--main-color-rgb), 0.18),
+    0 0 16px rgba(var(--accent-color-rgb), 0.14);
 
   /* Cinematic Motion */
   --motion-fast: 440ms;
