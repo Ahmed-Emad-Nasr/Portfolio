@@ -22,13 +22,13 @@
   --text-color: #e2f1ff;
   --text-muted: #8ba4b8;
 
-  /* Main Color: Cyber Cyan */
-  --main-color: #00d9ff;
-  --main-color-rgb: 0, 217, 255;
+  /* Main Color: Ruby Red */
+  --main-color: #e0115f;
+  --main-color-rgb: 224, 17, 95;
 
-  /* Accent Color: Ruby Red */
-  --accent-color: #e0115f;
-  --accent-color-rgb: 224, 17, 95;
+  /* Accent Color: Cream */
+  --accent-color: #00d9ff;
+  --accent-color-rgb: 0, 217, 255;
 
   /* Surfaces & Borders */
   --surface-card-bg: linear-gradient(
