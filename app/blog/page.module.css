@@ -29,9 +29,7 @@
     radial-gradient(circle at 20% 20%, rgba(var(--main-color-rgb), 0.08), transparent 28%),
     radial-gradient(circle at 80% 10%, rgba(var(--accent-color-rgb), 0.06), transparent 26%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.02));
-  opacity: 0.85;
-  will-change: transform;
-  transform: translateZ(0);
+  opacity: 0.6;
 }
 
 .hero,
@@ -47,7 +45,7 @@
   border-radius: 16px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: linear-gradient(180deg, rgba(7, 11, 18, 0.98), rgba(3, 5, 9, 0.99));
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.62);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
@@ -94,13 +92,8 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07), transparent 70%);
   pointer-events: none;
-  animation: heroGlowFloat 16s ease-in-out infinite;
-  will-change: transform;
-}
-
-@keyframes heroGlowFloat {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-12px, 10px, 0) scale(1.05); }
+  animation: none;
+  will-change: auto;
 }
 
 .kicker {
@@ -166,17 +159,14 @@
   padding: 1.4rem;
   border-radius: 6px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  transition: transform var(--motion-normal) var(--motion-ease), 
-              border-color var(--motion-normal) var(--motion-ease), 
-              background-color var(--motion-normal) var(--motion-ease);
   text-align: center;
-  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
 }
 
 .metrics article:hover {
   background: rgba(var(--main-color-rgb), 0.05);
   border-color: rgba(var(--main-color-rgb), 0.4);
-  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
 }
 
 .metrics strong {
@@ -461,9 +451,8 @@
 .playlistCard:hover {
   border-color: rgba(var(--main-color-rgb), 0.6);
   background: rgba(10, 15, 25, 0.95);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7),
-              inset 0 0 12px rgba(var(--main-color-rgb), 0.06);
-  transform: translateY(-4px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.56),
+              inset 0 0 10px rgba(var(--main-color-rgb), 0.04);
 }
 
 .caseSpotlight {
@@ -482,12 +471,12 @@
 
 .caseSpotlight,
 .featuredCard {
-  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  transition: border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
 .caseSpotlight:hover,
 .featuredCard:hover {
-  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
 }
 
 .caseCardLarge { grid-column: span 2; }
@@ -1080,13 +1069,13 @@
   background: rgba(10, 15, 25, 0.85);
   text-align: center;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
 }
 
 .insightCard:hover {
-  transform: translateY(-4px);
   border-color: rgba(var(--accent-color-rgb), 0.35);
   background: rgba(10, 15, 25, 0.96);
+  box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.08);
 }
 
 .insightCard strong {
@@ -1256,8 +1245,6 @@
   margin-top: 1.2rem;
 }
 
-.viewAction { }
-.galleryOpenAction { }
 
 .caseSpotlightBody { display: flex; flex-direction: column; }
 .caseSpotlightBody h3 { font-size: 2.2rem; color: #fff; font-family: monospace; margin-top: 0.8rem; }
