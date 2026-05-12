@@ -17,7 +17,7 @@
  */
 
 import React, { memo, useMemo } from "react";
-import { motion, MotionProps, Variants } from "framer-motion";
+import { motion, MotionProps, Variants, useReducedMotion } from "framer-motion";
 
 // ---------------------------------------------------------------------------
 // 1. Easing & spring — defined ONCE at module level (zero GC pressure)
@@ -26,22 +26,22 @@ import { motion, MotionProps, Variants } from "framer-motion";
 const CINEMATIC_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const MOTION_DURATIONS = {
-  short: 0.55,
-  medium: 0.75,
-  long: 0.95,
+  short: 0.32,
+  medium: 0.42,
+  long: 0.55,
 } as const;
 
 const SPRING_FAST = {
   type: "spring",
-  stiffness: 170,
-  damping: 24,
+  stiffness: 240,
+  damping: 28,
   mass: 1,
 } as const;
 
 const SPRING_GENTLE = {
   type: "spring",
-  stiffness: 120,
-  damping: 24,
+  stiffness: 180,
+  damping: 26,
   mass: 1.05,
 } as const;
 
@@ -53,29 +53,29 @@ export const motionVariants = {
   /** Simple opacity reveal — lightest possible */
   fade: {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: MOTION_DURATIONS.medium, ease: CINEMATIC_EASE } },
+    visible: { opacity: 1, transition: { duration: MOTION_DURATIONS.short, ease: CINEMATIC_EASE } },
   } satisfies Variants,
 
   /** Classic slide-up + fade (most common for sections) */
   "slide-up": {
-    hidden: { opacity: 0, y: 38 },
+    hidden: { opacity: 0, y: 28 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { ...SPRING_GENTLE, delay: 0.12 },
+      transition: { ...SPRING_FAST, delay: 0.04 },
     },
   } satisfies Variants,
 
   /** Slide from left */
   "slide-left": {
-    hidden: { opacity: 0, x: -44 },
-    visible: { opacity: 1, x: 0, transition: { ...SPRING_GENTLE, delay: 0.12 } },
+    hidden: { opacity: 0, x: -30 },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_FAST, delay: 0.04 } },
   } satisfies Variants,
 
   /** Slide from right */
   "slide-right": {
-    hidden: { opacity: 0, x: 44 },
-    visible: { opacity: 1, x: 0, transition: { ...SPRING_GENTLE, delay: 0.12 } },
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_FAST, delay: 0.04 } },
   } satisfies Variants,
 
   /** Subtle scale pop — good for cards & images */
@@ -84,7 +84,7 @@ export const motionVariants = {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { ...SPRING_GENTLE, delay: 0.12 },
+      transition: { ...SPRING_FAST, delay: 0.04 },
     },
   } satisfies Variants,
 
@@ -96,19 +96,19 @@ export const motionVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.18,
-        delayChildren: 0.14,
+        staggerChildren: 0.1,
+        delayChildren: 0.04,
       },
     },
   } satisfies Variants,
 
   /** Stagger child — pair with "stagger" parent */
   "stagger-child": {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0, y: 18 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { ...SPRING_GENTLE, delay: 0.12 },
+      transition: { ...SPRING_FAST, delay: 0.04 },
     },
   } satisfies Variants,
 } as const;
@@ -172,6 +172,8 @@ const MotionInView = memo<MotionInViewProps>(
     transition,
     ...rest
   }) => {
+    const prefersReducedMotion = useReducedMotion();
+
     // Merge will-change into style once — avoids inline object creation per render
     const mergedStyle = useMemo<React.CSSProperties>(
       () => ({ willChange: "transform, opacity", ...style }),
@@ -179,7 +181,7 @@ const MotionInView = memo<MotionInViewProps>(
     );
 
     // Resolve which variants to use — custom > shorthand > default
-    const resolvedVariants = variants ?? motionVariants[variant];
+    const resolvedVariants = variants ?? (prefersReducedMotion ? REDUCED_VARIANTS : motionVariants[variant]);
 
     // If user passed a delay, we need to inject it into the "visible" transition
     const resolvedTransition = useMemo(() => {
@@ -196,8 +198,8 @@ const MotionInView = memo<MotionInViewProps>(
         viewport={
           viewport ?? {
             once: true,       // animate only once — no re-triggering on scroll up
-            amount: 0.18,     // calmer reveal timing without feeling stalled
-            margin: "0px 0px -8% 0px",
+            amount: 0.12,     // start a little earlier so it feels snappier
+            margin: "0px 0px -4% 0px",
           }
         }
         transition={resolvedTransition}

@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 // import { motion } from "framer-motion"; // تم تعطيله لتخفيف الباندل
 import "yet-another-react-lightbox/styles.css";
 import styles from "./sensei-art.module.css";
+import MotionInView from "@/app/core/components/MotionInView";
 
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false, loading: () => <div>Loading gallery...</div> });
 
@@ -120,7 +121,7 @@ const SenseiArt = memo(function SenseiArt() {
 
   return (
     <section ref={sectionRef} className={styles["art-gallery-section"]} id="Certifications">
-      <div className={styles.container}>
+      <MotionInView className={styles.container} variant="fade">
         <div className={styles["header-section"]}>
           <h2 className={styles.title}><span lang="ja">認定資格 •</span><span lang="en"> Certifications</span></h2>
         </div>
@@ -138,7 +139,7 @@ const SenseiArt = memo(function SenseiArt() {
             </div>
           </div>
         ) : null}
-      </div>
+      </MotionInView>
       {open ? (
         <Lightbox
           slides={LIGHTBOX_SLIDES}
