@@ -520,7 +520,22 @@ export const caseStudyHighlights = [
 ] as const;
 
 export const caseEvidenceLibrary = [
-        // Depi r4 Project
+       {
+        id: "ecir-registry-forensics",
+        title: "Windows Registry Forensics - eCIR",
+        description: "Comprehensive forensic analysis of Windows Registry hives (SYSTEM, SOFTWARE, SAM, NTUSER.DAT) to investigate employee misconduct and anti-forensics tool usage.",
+        platform: "INE Labs / eCIR",
+        type: "DOCX & PDF Report",
+        category: "Digital Forensics",
+        difficulty: "Hard",
+        href: "Assets/Cases/AhmedEmad_RegistryForencics_eCIR/AhmedEmad_RegistryForencics_eCIR.pdf",
+        tags: ["Registry Forensics", "Incident Response", "eCIR", "Anti-Forensics"],
+        tools: ["Registry Explorer", "DCode", "Reporting"],
+        skillsGained: ["Registry Hive Analysis", "User Activity Profiling", "Forensic Reporting", "Evidence Extraction"],
+        readTime: 15,
+        date: "2026-05-13",
+        image: "Assets/Cases/AhmedEmad_RegistryForencics_eCIR/1.webp",
+      },
       {
         id: "depi-r4-project",
         title: "Depi R4 Project",
@@ -1245,28 +1260,5 @@ export const staticProjectFallback = [
     license: null,
     pdf: "Assets/Cases/Wifi Cracking/AhmedEmad_WifiCracker.pdf",
     image: "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
-  },
-  {
-    id: 90006,
-    name: "Windows Registry Forensics - eCIR",
-    description: "Comprehensive forensic analysis of Windows Registry hives (SYSTEM, SOFTWARE, SAM, NTUSER.DAT) to investigate employee misconduct and anti-forensics tool usage.",
-    language: "PDF",
-    html_url: null,
-    homepage: null,
-    stargazers_count: 0,
-    forks_count: 0,
-    open_issues_count: 0,
-    updated_at: "2026-05-13T07:32:52.000Z",
-    created_at: "2026-05-13T07:32:52.000Z",
-    owner: {
-      login: "Ahmed-Emad-Nasr",
-      avatar_url: "/Assets/Cases/Registry Forensics/cover_image.webp", 
-    },
-    topics: ["registry-forensics", "incident-response", "ecir", "soc", "anti-forensics"],
-    default_branch: "main",
-    watchers_count: 0,
-    license: null,
-    pdf: "Assets/Cases/AhmedEmad_RegistryForencics_eCIR/AhmedEmad_RegistryForencics_eCIR.pdf",
-    image: "/Assets/Cases/AhmedEmad_RegistryForencics_eCIR/1.webp",
   },
 ] as const;
