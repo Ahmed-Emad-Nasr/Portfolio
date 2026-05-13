@@ -34,15 +34,28 @@ const SenseiHeader = memo(function SenseiHeader() {
     pathname.startsWith(`${BLOG_PATH}/`);
 
   useEffect(() => {
-    if (window.innerWidth > 994) {
-      document.body.style.overflow = "";
-      return;
-    }
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    const applyBodyLock = () => {
+      if (window.innerWidth > 994) {
+        setIsMenuOpen(false);
+        document.body.style.overflow = "";
+        return;
+      }
+
+      document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    };
+
+    applyBodyLock();
+
+    const handleResize = () => {
+      applyBodyLock();
+    };
+
+    window.addEventListener("resize", handleResize);
     return () => {
+      window.removeEventListener("resize", handleResize);
       document.body.style.overflow = "";
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, setIsMenuOpen]);
 
   useEffect(() => {
     let rafId = 0;
@@ -141,7 +154,6 @@ const SenseiHeader = memo(function SenseiHeader() {
           className={isBlogRoute ? `${styles.blogLink} ${ACTIVE_CLASS}` : styles.blogLink}
           aria-label="Open blog page"
           aria-current={isBlogRoute ? "page" : undefined}
-          tabIndex={0}
           onClick={() => {
             if (window.innerWidth <= 994) {
               setIsMenuOpen(false);

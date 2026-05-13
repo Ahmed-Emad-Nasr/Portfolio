@@ -5,7 +5,6 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 interface BlogCardProps {
-  id: string;
   title: string;
   description?: string;
   platform: string;
@@ -27,7 +26,6 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(
   ({
-    id,
     title,
     description,
     platform,
@@ -71,7 +69,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
             )}
           </div>
 
-          {/* تمت إزالة tabIndex و aria-label للحفاظ على معايير الـ Accessibility */}
           <h3 className={styles.cardTitle}>
             {title}
             {description && (

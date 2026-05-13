@@ -11,7 +11,6 @@ import {
   faHome, 
   faBook, 
   faCertificate,
-  faClipboardCheck,
   faFolder, 
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";

@@ -18,11 +18,6 @@ const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: fals
 interface GalleryImage { src: string; thumb: string; }
 interface CertificationMeta { title: string; issuer: string; date: string; verifyUrl: string; }
 interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; meta: CertificationMeta; }
-interface GallerySkeletonProps { index: number; }
-
-const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-
 
 const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.png`,
@@ -74,14 +69,13 @@ const ImageItem = memo(({ image, index, setOpen, meta }: ImageItemProps) => {
           onError={() => setThumbSrc("Assets/art-gallery/Images/logo/My_Logo.webp")}
         />
       </button>
-      {/* تم حذف الميتاداتا أسفل الشهادة */}
     </div>
   );
 });
 
 ImageItem.displayName = "ImageItem";
 
-const GallerySkeleton = memo(({ index }: GallerySkeletonProps) => (
+const GallerySkeleton = memo(() => (
   <div className={styles.skeletonItem} aria-hidden="true">
     <div className={styles.skeletonThumb} />
     <div className={styles.skeletonCaption}>
@@ -127,7 +121,7 @@ const SenseiArt = memo(function SenseiArt() {
         {!shouldRenderGallery ? (
           <div className={styles.Gallery} aria-hidden="true">
             {Array.from({ length: 8 }, (_, index) => (
-              <GallerySkeleton key={`gallery-skeleton-${index}`} index={index} />
+              <GallerySkeleton key={`gallery-skeleton-${index}`} />
             ))}
           </div>
         ) : null}

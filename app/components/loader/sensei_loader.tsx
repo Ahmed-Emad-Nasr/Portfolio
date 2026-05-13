@@ -17,9 +17,15 @@ function SenseiLoader({ isLoading }: { isLoading: boolean }): JSX.Element | null
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    if (isLoading) {
+      setRender(true);
+      setFadeOut(false);
+      return;
+    }
+
     if (!isLoading) {
-      setFadeOut(true); // تشغيل حركة الـ Fade-out الأول
-      const timer = setTimeout(() => setRender(false), 500); // 500ms عشان ياخد وقته يختفي بنعومة
+      setFadeOut(true);
+      const timer = window.setTimeout(() => setRender(false), 500);
       return () => clearTimeout(timer);
     }
   }, [isLoading]);

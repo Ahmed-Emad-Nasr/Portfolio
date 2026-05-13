@@ -161,8 +161,34 @@
 }
 
 @media (max-width: 767px) { 
+  .art-gallery-section { min-height: auto; }
   .art-gallery-section { margin-top: clamp(18rem, 36vh, 40rem); }
   .Gallery { grid-template-columns: 1fr; gap: 20px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 
   .imageButton::before { font-size: 1rem; padding: 0.4rem 0.8rem; }
+}
+
+@media (max-width: 430px) {
+  .art-gallery-section {
+    margin-top: clamp(14rem, 30vh, 28rem);
+    padding: 6rem 0 4.5rem;
+  }
+
+  .art-gallery-content {
+    padding: 0 1rem 4%;
+  }
+
+  .title {
+    font-size: 2.6rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .Gallery {
+    gap: 16px;
+  }
+
+  .art_pic,
+  .skeletonItem {
+    padding: 0.5rem;
+  }
 }

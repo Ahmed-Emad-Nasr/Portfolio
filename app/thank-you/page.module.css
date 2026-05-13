@@ -103,3 +103,32 @@
   border-color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.1);
 }
+
+@media (max-width: 480px) {
+  .wrap {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 2rem 1.2rem;
+  }
+
+  .badge {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .text {
+    font-size: 1.12rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

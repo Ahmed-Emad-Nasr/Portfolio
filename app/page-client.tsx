@@ -36,7 +36,7 @@ const SectionSkeleton = () => (
   <div
     role="presentation"
     aria-hidden="true"
-    style={{ minHeight: "50vh", contain: "layout" }}
+    style={SECTION_SKELETON_STYLE}
   />
 );
 
@@ -104,6 +104,15 @@ const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
   transition: "opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1)",
 };
 
+const SECTION_SKELETON_STYLE: React.CSSProperties = {
+  minHeight: "50vh",
+  contain: "layout",
+};
+
+const MAIN_STYLE: React.CSSProperties = {
+  position: "relative",
+};
+
 // ─── MainClient ──────────────────────────────────────────────────────────────
 
 const MainClient = memo(function MainClient() {
@@ -143,7 +152,7 @@ const MainClient = memo(function MainClient() {
   }, []);
 
   return (
-    <main id="main-content" style={{ position: "relative" }}>
+    <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen isLoading={!isAppReady} />
 
       {/* Keep the header outside the animated content wrapper so it is truly fixed

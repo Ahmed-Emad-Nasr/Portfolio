@@ -141,3 +141,19 @@
     width: 100%;
   }
 }
+
+@media (max-width: 430px) {
+  .wrapper {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 2.4rem 1.2rem;
+    border-radius: 1.4rem;
+  }
+
+  .description {
+    font-size: 1.35rem;
+  }
+}

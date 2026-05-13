@@ -234,6 +234,9 @@ export default function BlogPageClient() {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const galleryDialogRef = useRef<HTMLDivElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const [featuredPosterSrc, setFeaturedPosterSrc] = useState(
+    `https://i.ytimg.com/vi/${blogFeaturedYoutubeVideo.videoId}/hqdefault.jpg`
+  );
 
   // ── Embeds (lazy iframes) ────────────────────────────────────────────────
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
@@ -580,7 +583,7 @@ export default function BlogPageClient() {
                     aria-label={`Play ${featuredVideo.title}`}
                   >
                     <Image
-                      src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
+                      src={featuredPosterSrc}
                       alt={featuredVideo.title}
                       className={styles.embedPreviewImage}
                       width={480}
@@ -588,6 +591,19 @@ export default function BlogPageClient() {
                       loading="lazy"
                       decoding="async"
                       unoptimized
+                      onError={() => {
+                        if (featuredPosterSrc.includes("maxresdefault")) {
+                          setFeaturedPosterSrc(`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`);
+                          return;
+                        }
+
+                        if (featuredPosterSrc.includes("hqdefault")) {
+                          setFeaturedPosterSrc(`https://i.ytimg.com/vi/${featuredVideo.videoId}/mqdefault.jpg`);
+                          return;
+                        }
+
+                        setFeaturedPosterSrc("/Assets/art-gallery/Images/logo/My_Logo.webp");
+                      }}
                     />
                     <span className={styles.embedPlayButton}>▶ Play</span>
                   </button>

@@ -281,9 +281,7 @@ const SenseiProjects = memo(function SenseiProjects() {
             ))
           ) : filteredRepos.length > 0 ? (
             filteredRepos.map((repo, index) => (
-              <MotionInView key={repo.id}>
-                <ProjectItem repo={repo} isRight={index % 2 !== 0} />
-              </MotionInView>
+              <ProjectItem key={repo.id} repo={repo} isRight={index % 2 !== 0} />
             ))
           ) : (
             <div className={styles["empty-state"]}>

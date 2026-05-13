@@ -9,7 +9,7 @@
  * - scroll-behavior restored on the root html element, with reduced-motion overriding it to auto
  * - glass-card hover keeps a very small transform so the theme stays light
  * - Added contain: layout style on section — prevents section reflows from bubbling
- * - font-size: 63.5% → 62.5% (makes 1rem = 10px exactly, standard practice)
+ * - font-size: 62.5% (makes 1rem = 10px exactly, standard practice)
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
@@ -81,7 +81,7 @@
 
 html {
   /* 62.5% → 1rem = 10px exactly (standard, predictable) */
-  font-size: 63.5%;
+  font-size: 62.5%;
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: clamp(7rem, 10vh, 10rem);
@@ -228,6 +228,20 @@ section {
    * Gives the browser a clear boundary to optimize painting within.
    */
   contain: layout style;
+}
+
+@media (max-width: 991px) {
+  section {
+    padding: 6rem 4% 4.8rem;
+    margin-bottom: clamp(4rem, 8vw, 8rem);
+  }
+}
+
+@media (max-width: 600px) {
+  section {
+    padding: 5.4rem 1rem 4.2rem;
+    margin-bottom: 5rem;
+  }
 }
 
 section.glass,

@@ -15,7 +15,6 @@ import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { enhancedSkills, enhancedStats } from "@/app/core/data";
 
-const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_PROJECTS_CLASS = `${styles.btn} ${styles.btnProjects}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
@@ -258,7 +257,7 @@ const SenseiHome = memo(function SenseiHome() {
             <a href="#Projects" className={BTN_PROJECTS_CLASS}>
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>
-            <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`} aria-label="Email Me" style={{ marginLeft: 8 }}>
+            <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`} aria-label="Email Me">
               Email Me <FontAwesomeIcon icon={faEnvelope} />
             </a>
           </div>

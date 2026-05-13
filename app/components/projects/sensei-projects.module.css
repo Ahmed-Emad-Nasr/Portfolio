@@ -358,6 +358,170 @@
   position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.04);
 }
 .skeleton-icon { width: 3.5rem; height: 3.5rem; border-radius: 4px; }
+
+@media (max-width: 991px) {
+  .section-projects {
+    min-height: auto;
+    padding: 6rem 0 4.5rem;
+  }
+
+  .header-section {
+    margin-bottom: 3rem;
+  }
+
+  .title {
+    font-size: clamp(2.8rem, 5vw, 3.4rem);
+  }
+
+  .container {
+    padding: 0 4%;
+  }
+
+  .projects-timeline {
+    padding: 1rem 0;
+  }
+
+  .projects-timeline::after {
+    left: 3rem;
+  }
+
+  .project-item {
+    width: 100%;
+    left: 0;
+    padding-left: 5.2rem;
+    padding-right: 0;
+  }
+
+  .project-item.left,
+  .project-item.right {
+    left: 0;
+    padding-left: 5.2rem;
+    padding-right: 0;
+  }
+
+  .project-item.left::after,
+  .project-item.right::after {
+    left: 3rem;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .single-project {
+    padding: 2.2rem 1.8rem;
+  }
+
+  .meta-info {
+    gap: 0.5rem 1rem;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 430px) {
+  .section-projects {
+    padding: 5.4rem 0 4rem;
+  }
+
+  .header-section {
+    margin-bottom: 2.2rem;
+  }
+
+  .title {
+    font-size: 2.6rem;
+  }
+
+  .sectionLead {
+    font-size: 1.35rem;
+    line-height: 1.65;
+  }
+
+  .projects-filter {
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .filter-btn {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 1.15rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .filter-count {
+    min-width: 2rem;
+    height: 2rem;
+  }
+
+  .section-summary {
+    padding: 0.9rem 1rem;
+    font-size: 1.15rem;
+  }
+
+  .projects-timeline::after {
+    left: 1.7rem;
+  }
+
+  .project-item,
+  .project-item.left,
+  .project-item.right {
+    padding-left: 3.8rem;
+  }
+
+  .project-item.left::after,
+  .project-item.right::after {
+    left: 1.7rem;
+    width: 18px;
+    height: 18px;
+    border-width: 3px;
+  }
+
+  .single-project {
+    padding: 1.8rem 1.2rem;
+    border-radius: 1rem;
+  }
+
+  .part-1 {
+    gap: 1rem;
+    padding-bottom: 1.2rem;
+  }
+
+  .part-1 h3 {
+    font-size: 1.75rem;
+  }
+
+  .part-1 i,
+  .part-1 svg {
+    font-size: 2.8rem;
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .description-list {
+    font-size: 1.35rem;
+  }
+
+  .stats-container,
+  .project-actions,
+  .topics-container {
+    gap: 0.7rem;
+  }
+
+  .meta-info,
+  .case-study,
+  .action-btn,
+  .stat-badge,
+  .topic-tag {
+    font-size: 1.1rem;
+  }
+
+  .action-btn {
+    min-height: 42px;
+    padding: 0.7rem 1rem;
+  }
+
+  .empty-state-hint {
+    font-size: 1.15rem;
+  }
+}
 .skeleton-line { display: block; border-radius: 2px; }
 .skeleton-title { width: min(72%, 18rem); height: 2.2rem; }
 .skeleton-stack { display: grid; gap: 0.9rem; margin-top: 0.25rem; }

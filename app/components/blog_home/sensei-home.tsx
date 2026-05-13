@@ -6,7 +6,7 @@
  * Purpose: Render home hero with social links and action buttons
  */
 
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
@@ -15,7 +15,6 @@ import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { enhancedSkills, enhancedStats} from "@/app/core/data";
 
-const BTN_1_CLASS = `${styles.btn} ${styles.btn1}`;
 const BTN_PROJECTS_CLASS = `${styles.btn} ${styles.btnProjects}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
@@ -64,29 +63,7 @@ const AvailabilityWidget = memo(function AvailabilityWidget() {
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pointerRef = useRef({ x: 0, y: 0 });
-  const parallaxRafRef = useRef<number | null>(null);
-  const parallaxEnabledRef = useRef(false);
   const [cvVariant, setCvVariant] = useState<CVVariant>("A");
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-    const applyCapability = () => {
-      parallaxEnabledRef.current = mediaQuery.matches;
-    };
-
-    applyCapability();
-    mediaQuery.addEventListener("change", applyCapability);
-
-    return () => {
-      mediaQuery.removeEventListener("change", applyCapability);
-      if (parallaxRafRef.current !== null) {
-        window.cancelAnimationFrame(parallaxRafRef.current);
-      }
-    };
-  }, []);
 
   const heroProofPoints = useMemo(() => {
     const preferred = [
@@ -134,29 +111,12 @@ const SenseiHome = memo(function SenseiHome() {
     }
   }, []);
 
-  const handlePointerMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!parallaxEnabledRef.current) return;
-
-    const element = containerRef.current;
-    if (!element) return;
-
-    pointerRef.current = { x: event.clientX, y: event.clientY };
-    if (parallaxRafRef.current !== null) return;
-
-    // تم تعطيل حركة البارالاكس نهائياً
-    parallaxRafRef.current = null;
-  };
-
-  const resetParallax = () => {
-    // تم تعطيل إعادة تعيين البارالاكس
-  };
-
   const cvBtnClass = `${styles.btn} ${styles.cvBtn} ${cvVariant === "B" ? styles.cvBtnAlt : ""}`;
   const cvBtnLabel = cvVariant === "A" ? "Download CV" : "Get My CV";
 
   return (
     <section className={`${styles.home} noLine noBg`} id="Home">
-      <div ref={containerRef} className={styles.container} onMouseMove={handlePointerMove} onMouseLeave={resetParallax}>
+      <div className={styles.container}>
         <div className={styles.homeImg}>
           <button
             type="button"
@@ -233,7 +193,7 @@ const SenseiHome = memo(function SenseiHome() {
             <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download="AhmedEmadNasr_CV.pdf" className={cvBtnClass} aria-label="Download CV">
               {cvBtnLabel} <FontAwesomeIcon icon={faFilePdf} />
             </a>
-            <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`} aria-label="Email Me" style={{ marginLeft: 8 }}>
+            <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`} aria-label="Email Me">
               Email Me <FontAwesomeIcon icon={faEnvelope} />
             </a>
           </div>
