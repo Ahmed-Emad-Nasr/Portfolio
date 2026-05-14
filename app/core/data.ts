@@ -324,55 +324,6 @@ export const knowledgeEducationItems = [
   },
 ];
 
-// ─── Enhanced Skills Catalog ──────────────────────────────────────────────────
-export const enhancedSkills: readonly Skill[] = [
-  // SIEM & Monitoring
-  { name: "Wazuh", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  { name: "ELK Stack", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  { name: "Splunk", category: "SIEM & Monitoring", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
-  { name: "Suricata", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  { name: "Sysmon", category: "SIEM & Monitoring", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  
-  // Incident Response
-  { name: "MITRE ATT&CK", category: "Incident Response", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  { name: "Alert Triage", category: "Incident Response", proficiency: "Expert", icon: "fa-shield-check", yearsExperience: 2 },
-  { name: "Incident Handling", category: "Incident Response", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  
-  // Threat Detection
-  { name: "YARA", category: "Threat Detection", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
-  { name: "IOC Analysis", category: "Threat Detection", proficiency: "Advanced", icon: "fa-circle-check", yearsExperience: 2 },
-  { name: "Malware Analysis", category: "Threat Detection", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
-  { name: "Threat Hunting", category: "Threat Detection", proficiency: "Intermediate", icon: "fa-circle-check", yearsExperience: 1 },
-  
-  // Programming & Automation
-  { name: "Python", category: "Automation & Programming", proficiency: "Advanced", icon: "fa-code", yearsExperience: 2 },
-  { name: "PowerShell", category: "Automation & Programming", proficiency: "Advanced", icon: "fa-code", yearsExperience: 2 },
-  { name: "Bash", category: "Automation & Programming", proficiency: "Intermediate", icon: "fa-code", yearsExperience: 2 },
-  { name: "TypeScript", category: "Automation & Programming", proficiency: "Intermediate", icon: "fa-code", yearsExperience: 1 },
-  { name: "JavaScript", category: "Automation & Programming", proficiency: "Intermediate", icon: "fa-code", yearsExperience: 1 },
-  
-  // Cloud & Infrastructure
-  { name: "Cloud Security", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-cloud", yearsExperience: 1 },
-  { name: "Network Security", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-network-wired", yearsExperience: 2 },
-  { name: "pfSense", category: "Cloud & Infrastructure", proficiency: "Intermediate", icon: "fa-network-wired", yearsExperience: 1 },
-] as const;
-
-// ─── Enhanced Stats ───────────────────────────────────────────────────────
-export const enhancedStats: readonly Stat[] = [
-  { value: "8k+", label: "LinkedIn Followers", category: "Engagement", icon: "fa-users", trend: "up" },
-  { value: "200+", label: "Simulated SOC Alerts Investigated", category: "Impact", icon: "fa-bell", trend: "up" },
-  { value: "35+", label: "Cybersecurity Sessions Delivered", category: "Impact", icon: "fa-chalkboard-user", trend: "up" },
-  { value: "120+", label: "Learners Trained in Security Topics", category: "Engagement", icon: "fa-graduation-cap", trend: "up" },
-  { value: "10+", label: "SOC / DFIR Trainings & Bootcamps", category: "Achievement", icon: "fa-book", trend: "stable" },
-  { value: "15+", label: "Validated Vulnerabilities in Labs", category: "Performance", icon: "fa-bug", trend: "up" },
-  { value: "4.9/5", label: "Average Training Feedback Score", category: "Performance", icon: "fa-star", trend: "stable" },
-  { value: "Top 5/360", label: "National University CTF Ranking", category: "Achievement", icon: "fa-trophy", trend: "stable" },
-  { value: "Top 10%", label: "Class Rank (InfoSec & DFIR)", category: "Achievement", icon: "fa-crown", trend: "stable" },
-  { value: "3.7/4.0", label: "Computer Science GPA", category: "Achievement", icon: "fa-graduation-cap", trend: "stable" },
-  { value: "25%", label: "False Positive Reduction", category: "Performance", icon: "fa-arrow-down", trend: "down" },
-  { value: "20%", label: "Investigation Time Improvement", category: "Performance", icon: "fa-hourglass-end", trend: "down" },
-] as const;
-
 export const projectResponseSla: Record<string, string> = {
   "SOC monitoring support": "Replies in 2-6 hours during Cairo business hours.",
   "Incident response assistance": "Urgent triage reply in 1-3 hours.",

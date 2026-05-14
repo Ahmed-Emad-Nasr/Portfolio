@@ -59,7 +59,7 @@
   --parallax-x: 0px;
   --parallax-y: 0px;
 }
-.homeImg { flex: 0 0 auto; max-width: 480px; width: 100%; }
+.homeImg { flex: 0 0 auto; max-width: 520px; width: 100%; }
 
 .imageButton {
   display: block;
@@ -104,7 +104,8 @@
 .homeContent {
   transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
   transition: transform var(--motion-normal) var(--motion-ease);
-  max-width: 720px;
+  /* Allow the content column to expand so paragraphs can use more horizontal space */
+  max-width: 950px;
 }
 
 .homeImg img {
@@ -196,7 +197,8 @@
   margin-bottom: 1.5rem;
   text-align: left;
   line-height: 1.72;
-  max-width: 680px;
+  /* Increase paragraph max width so text spans further across the content column */
+  max-width: 900px;
 }
 
 .ctaHint {
@@ -533,7 +535,8 @@
   }
 
   .homeImg {
-    max-width: 420px;
+    /* larger image on medium screens to better utilize available space */
+    max-width: 450px;
   }
 
   .homeContent {
@@ -692,7 +695,8 @@
     margin-top: 7rem;
     width: 100%;
     height: auto;
-    max-width: 420px;
+    /* allow a slightly wider image on narrow desktops/tablets */
+    max-width: 540px;
   }
 
   .socialIcon,
@@ -773,7 +777,8 @@
   }
 
   .homeImg {
-    max-width: 310px;
+    /* keep mobile image comfortable but a bit larger */
+    max-width: 420px;
     margin-top: 4rem;
   }
 }

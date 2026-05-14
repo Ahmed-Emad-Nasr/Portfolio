@@ -13,7 +13,7 @@ import { faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
-import { enhancedSkills, enhancedStats } from "@/app/core/data";
+
 
 const BTN_PROJECTS_CLASS = `${styles.btn} ${styles.btnProjects}`;
 const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
@@ -92,41 +92,6 @@ const SenseiHome = memo(function SenseiHome() {
     };
   }, []);
 
-  const heroProofPoints = useMemo(() => {
-    const preferred = [
-      "Simulated SOC Alerts Investigated",
-      "Cybersecurity Sessions Delivered",
-      "Average Training Feedback Score",
-    ];
-
-    const picked = preferred
-      .map((label) => enhancedStats.find((item) => item.label === label))
-      .filter((item): item is NonNullable<typeof item> => Boolean(item))
-      .map((item) => `${item.value} ${item.label}`);
-
-    return picked.length > 0 ? picked : ["200+ Alerts Investigated", "35+ Security Sessions", "Reply within 24h"];
-  }, []);
-
-  const featuredSkills = useMemo(() => {
-    return enhancedSkills
-      .filter((skill) => skill.proficiency === "Expert" || skill.proficiency === "Advanced")
-      .slice(0, 5)
-      .map((skill) => skill.name);
-  }, []);
-
-  const trustStats = useMemo(() => {
-    const preferred = [
-      "Simulated SOC Alerts Investigated",
-      "Cybersecurity Sessions Delivered",
-      "Average Training Feedback Score",
-    ];
-
-    return preferred
-      .map((label) => enhancedStats.find((item) => item.label === label))
-      .filter((item): item is NonNullable<typeof item> => Boolean(item))
-      .slice(0, 3);
-  }, []);
-
   useEffect(() => {
     try {
       const storedCV = window.localStorage.getItem(AB_STORAGE_KEY) as CVVariant | null;
@@ -196,7 +161,7 @@ const SenseiHome = memo(function SenseiHome() {
               width={350}
               height={350}
               sizes="(max-width: 968px) 80vw, 350px"
-              quality={70}
+              quality={65}
               priority
               placeholder="blur"
               blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
@@ -224,29 +189,9 @@ const SenseiHome = memo(function SenseiHome() {
             {/* الأنيميشن البصري تم إخفاؤه عن الـ Screen Readers لمنع التكرار */}
             <span className={styles.typingHighlight} aria-hidden="true" />
           </h2>
-          
-          <div className={styles.proofRow} aria-label="Key proof points">
-            {heroProofPoints.map((point) => (
-              <span key={point} className={styles.proofPill}>
-                {point}
-              </span>
-            ))}
-          </div>
-          <div className={styles.proofRow} aria-label="Featured expertise">
-            {featuredSkills.map((skill) => (
-              <span key={skill} className={styles.proofPill}>
-                {skill}
-              </span>
-            ))}
-          </div>
-          <div className={styles.trustStrip} aria-label="Trust proof highlights">
-            {trustStats.map((item) => (
-              <article key={item.label} className={styles.trustCard}>
-                <strong>{item.value}</strong>
-                <span>{item.label}</span>
-              </article>
-            ))}
-          </div>
+          <p>
+            SOC Analyst with hands-on experience across 10+ SOC training programs and 200+ simulated alerts (DEPI, ITI, projects). Skilled in monitoring, detection, SIEM/EDR investigations, alert triage, IOC analysis, and log analysis across the full IR lifecycle.
+          </p>
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile">
               <FontAwesomeIcon icon={faLinkedin} />

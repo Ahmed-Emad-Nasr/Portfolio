@@ -83,9 +83,35 @@
   overflow: hidden;
 }
 
+/* --- Home-like Scanline Effect --- */
+.imageButton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(var(--main-color-rgb), 0.6);
+  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 1);
+  opacity: 0;
+  animation: scanline 4s ease-in-out infinite;
+  pointer-events: none;
+  transition: opacity var(--motion-normal) var(--motion-ease);
+}
+
+.imageButton:hover::after {
+  opacity: 1;
+}
+
 /* Terminal Overlay Text removed per request */
 .imageButton::before {
   content: none;
+}
+
+@keyframes scanline {
+  0% { top: -10%; }
+  50% { top: 105%; }
+  100% { top: -10%; }
 }
 
 .galleryImg {
