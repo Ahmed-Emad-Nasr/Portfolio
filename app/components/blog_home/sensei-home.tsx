@@ -22,14 +22,19 @@ const pickVariant = <T extends string>(a: T, b: T): T => (Math.random() < 0.5 ? 
 
 // فصل مكون الـ Availability لتحسين الأداء ومنع الـ Re-render المتكرر للـ Hero بالكامل
 const AvailabilityWidget = memo(function AvailabilityWidget() {
-  const [clock, setClock] = useState(() => new Date());
+  const [clock, setClock] = useState<Date | null>(null);
 
   useEffect(() => {
+    setClock(new Date());
     const intervalId = window.setInterval(() => setClock(new Date()), 60_000);
     return () => window.clearInterval(intervalId);
   }, []);
 
   const availability = useMemo(() => {
+    if (!clock) {
+      return { label: "Checking availability", hint: "Local time syncing", toneClass: styles.dotAsync };
+    }
+
     const cairoParts = new Intl.DateTimeFormat("en-US", {
       timeZone: "Africa/Cairo",
       weekday: "short",

@@ -274,7 +274,7 @@ const SenseiProjects = memo(function SenseiProjects() {
           <p className={styles["empty-state-hint"]}>Cache last updated: {cacheLabel}</p>
         ) : null}
 
-        <div className={styles["projects-timeline"]} role="list" aria-label="Projects Timeline">
+        <div className={styles["projects-timeline"]} aria-label="Projects Timeline">
           {isLoading ? (
             Array.from({ length: 6 }, (_, index) => (
               <ProjectSkeleton key={`project-skeleton-${index}`} index={index} />
