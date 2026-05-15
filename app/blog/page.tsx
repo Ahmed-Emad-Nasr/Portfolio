@@ -92,14 +92,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "/blog",
+    url: `${SITE_BASE_URL}/blog`,
     title: "Blog - SOC Incident Reports & Cybersecurity Writeups",
     description:
       "Comprehensive SOC incident response reports, DFIR writeups, and threat analysis cases with screenshots.",
     siteName: "Ahmed Emad Nasr - Security Analyst",
     images: [
       {
-        url: "/Assets/art-gallery/logo/logo.png",
+        url: toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png"),
         width: 1200,
         height: 630,
         alt: "Security Analysis Blog",
@@ -112,7 +112,7 @@ export const metadata: Metadata = {
     title: "Blog - SOC Incident Reports & Cybersecurity Writeups",
     description:
       "Explore incident response cases, threat analysis, and security investigations.",
-    images: ["/Assets/art-gallery/logo/logo.png"],
+    images: [toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png")],
   },
 };
 

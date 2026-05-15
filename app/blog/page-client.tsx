@@ -1,20 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import styles from "./page.module.css";
-import MotionInView from "@/app/core/components/MotionInView";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  blogFeaturedYoutubeVideo,
-  blogYoutubePlaylists,
   blogYoutubeVideos,
+  blogYoutubePlaylists,
+  blogFeaturedYoutubeVideo,
   caseEvidenceLibrary,
   YOUTUBE_CHANNEL_URL,
 } from "@/app/core/data";
 import AppBar from "@/app/components/blog_header/sensei-header";
 import BlogCard from "./BlogCard";
 import HomeSection from "@/app/components/blog_home/sensei-home";
+import styles from "./page.module.css";
+import Link from "next/link";
+import MotionInView from "@/app/core/components/MotionInView";
+import Image from "next/image";
 
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -182,15 +182,15 @@ const caseScreenshotsByEvidenceId: Record<string, string[]> = {
 
 const normalizePublicHref = (href: string): string => {
   if (/^https?:\/\//i.test(href)) return href;
-  const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? (process.env.NODE_ENV === "production" ? "/Portfolio" : "");
   const normalized = href.startsWith("/") ? href : `/${href}`;
   return `${basePath}${normalized}`.replace(/\/\//g, "/");
 };
 
 const getThumbnail = (imgPath: string): string => {
-  // Skip thumbnails entirely — they're not generated, causing 404 errors.
-  // Return original image path to avoid Lighthouse console errors.
-  return imgPath;
+  // Heuristic: prefer a -thumb variant next to the original file (e.g. Screenshot (1)-thumb.webp).
+  // The UI has a safe fallback (onError) to the original image if the thumbnail doesn't exist.
+  return imgPath.replace(/(\.webp|\.png|\.jpg|\.jpeg)$/i, "-thumb$1");
 };
 
 // 1. Date Caching Setup
@@ -612,7 +612,7 @@ export default function BlogPageClient() {
               <div className={styles.featuredContent}>
                 <p className={styles.featuredTag}>Featured Video</p>
                 <h2>{featuredVideo.title}</h2>
-                <a href={featuredVideo.sourceUrl} target="_blank" rel="noreferrer">
+                <a href={featuredVideo.sourceUrl} target="_blank" rel="noopener noreferrer">
                   Watch on YouTube ↗
                 </a>
               </div>
@@ -630,7 +630,7 @@ export default function BlogPageClient() {
               <>
                 <h3>{previousCase.title}</h3>
                 <p>{previousCase.category ?? previousCase.platform}</p>
-                <a href={normalizePublicHref(previousCase.href)} target="_blank" rel="noreferrer">
+                <a href={normalizePublicHref(previousCase.href)} target="_blank" rel="noopener noreferrer">
                   Open PDF
                 </a>
               </>
@@ -643,7 +643,7 @@ export default function BlogPageClient() {
             <span className={styles.caseNavLabel}>Current case</span>
             <h3>{leadCase.title}</h3>
             <p>{leadCase.description}</p>
-            <a href={normalizePublicHref(leadCase.href)} target="_blank" rel="noreferrer">
+            <a href={normalizePublicHref(leadCase.href)} target="_blank" rel="noopener noreferrer">
               Open Featured PDF
             </a>
           </article>
@@ -654,7 +654,7 @@ export default function BlogPageClient() {
               <>
                 <h3>{nextCase.title}</h3>
                 <p>{nextCase.category ?? nextCase.platform}</p>
-                <a href={normalizePublicHref(nextCase.href)} target="_blank" rel="noreferrer">
+                <a href={normalizePublicHref(nextCase.href)} target="_blank" rel="noopener noreferrer">
                   Open PDF
                 </a>
               </>
@@ -800,7 +800,7 @@ export default function BlogPageClient() {
                 <a
                   href={normalizePublicHref(leadCase.href)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className={styles.viewAction}
                 >
                   View PDF
@@ -832,7 +832,7 @@ export default function BlogPageClient() {
               <a
                 href={leadCaseSpotlightImage}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className={styles.caseSpotlightMedia}
                 aria-label={`Open spotlight screenshot for ${leadCase.title}`}
               >
@@ -871,7 +871,7 @@ export default function BlogPageClient() {
                     )}
                     {item.readTime && <span className={styles.badge}>{item.readTime} min read</span>}
                   </div>
-                  <a href={normalizePublicHref(item.href)} target="_blank" rel="noreferrer">
+                  <a href={normalizePublicHref(item.href)} target="_blank" rel="noopener noreferrer">
                     Open PDF
                   </a>
                 </article>
@@ -929,7 +929,7 @@ export default function BlogPageClient() {
           <a
             href={YOUTUBE_CHANNEL_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className={`${styles.primaryAction} ${styles.channelAction}`}
           >
             Open YouTube Channel
@@ -978,7 +978,7 @@ export default function BlogPageClient() {
                 <a
                   href={video.sourceUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className={styles.playlistAction}
                 >
                   Watch on YouTube
@@ -1053,7 +1053,7 @@ export default function BlogPageClient() {
                 <a
                   href={playlist.sourceUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className={styles.playlistAction}
                 >
                   Open Playlist
@@ -1108,7 +1108,7 @@ export default function BlogPageClient() {
               <a
                 href={currentGalleryShotNormalized}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className={styles.galleryImageWrap}
                 aria-label="Open current screenshot in new tab"
                 onTouchStart={handleGalleryTouchStart}
@@ -1175,7 +1175,7 @@ export default function BlogPageClient() {
           <a
             href={YOUTUBE_CHANNEL_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className={styles.primaryAction}
           >
             Open YouTube Channel

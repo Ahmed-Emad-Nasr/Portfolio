@@ -46,6 +46,12 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const hasScreenshots = screenshots.length > 0;
     const primaryScreenshot = screenshots[0];
     const secondaryScreenshot = screenshots[1];
+    const [primarySrc, setPrimarySrc] = React.useState<string | null>(
+      primaryScreenshot ? normalizeHref(getThumbnail(primaryScreenshot)) : null
+    );
+    const [secondarySrc, setSecondarySrc] = React.useState<string | null>(
+      secondaryScreenshot ? normalizeHref(getThumbnail(secondaryScreenshot)) : null
+    );
     const extraCount = Math.max(0, screenshots.length - 2);
     const difficultyKey = difficulty?.toLowerCase() as "easy" | "medium" | "hard" | undefined;
 
@@ -136,7 +142,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
             <a
               href={normalizeHref(href)}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={styles.viewAction}
             >
               View PDF
@@ -165,56 +171,52 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
             <a
               href={normalizeHref(primaryScreenshot)}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={styles.primaryShot}
               aria-label={`Open main screenshot for ${title}`}
             >
-              <Image
-                src={normalizeHref(getThumbnail(primaryScreenshot))}
-                alt={`${title} main screenshot`}
-                fill
-                sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
-                loading="lazy"
-                quality={30}
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (!target.dataset.failed) {
-                    target.dataset.failed = "true";
-                    target.src = normalizeHref(primaryScreenshot);
-                  }
-                }}
-              />
+              {primarySrc && (
+                <Image
+                  src={primarySrc}
+                  alt={`${title} main screenshot`}
+                  fill
+                  sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
+                  loading="lazy"
+                  quality={30}
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
+                  onError={() => {
+                    if (primaryScreenshot) setPrimarySrc(normalizeHref(primaryScreenshot));
+                  }}
+                />
+              )}
             </a>
 
             {secondaryScreenshot && (
               <div className={styles.shotGrid}>
-                <a
-                  href={normalizeHref(secondaryScreenshot)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.shotThumb}
-                  aria-label={`Open screenshot 2 for ${title}`}
-                >
-                  <Image
-                    src={normalizeHref(getThumbnail(secondaryScreenshot))}
-                    alt={`${title} screenshot 2`}
-                    fill
-                    sizes="(max-width: 560px) 45vw, 18vw"
-                    loading="lazy"
-                    quality={30}
-                    placeholder="blur"
-                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      if (!target.dataset.failed) {
-                        target.dataset.failed = "true";
-                        target.src = normalizeHref(secondaryScreenshot);
-                      }
-                    }}
-                  />
-                </a>
+                  <a
+                    href={normalizeHref(secondaryScreenshot)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.shotThumb}
+                    aria-label={`Open screenshot 2 for ${title}`}
+                  >
+                    {secondarySrc && (
+                      <Image
+                        src={secondarySrc}
+                        alt={`${title} screenshot 2`}
+                        fill
+                        sizes="(max-width: 560px) 45vw, 18vw"
+                        loading="lazy"
+                        quality={30}
+                        placeholder="blur"
+                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
+                        onError={() => {
+                          if (secondaryScreenshot) setSecondarySrc(normalizeHref(secondaryScreenshot));
+                        }}
+                      />
+                    )}
+                  </a>
                 {extraCount > 0 && (
                   <span className={styles.moreShotsBadge}>+{extraCount}</span>
                 )}
