@@ -19,7 +19,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   border-radius: 8px;
   background: rgba(8, 12, 18, 0.85);
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(var(--main-color-rgb), 0.05);
+  box-shadow: none;
   padding: 2.5rem;
   text-align: center;
 }
@@ -95,7 +95,7 @@
 .primary:hover {
   background: var(--main-color);
   color: #000;
-  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.4);
+  box-shadow: none;
 }
 
 .secondary:hover {

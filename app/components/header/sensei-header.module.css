@@ -21,7 +21,7 @@
   gap: 0.75rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  box-shadow: none;
   transition: all var(--motion-normal) var(--motion-ease);
   /* تم إزالة overflow: hidden للسماح للمنيو بالظهور */
 }
@@ -51,7 +51,7 @@
   transform: translateX(-50%) scale(0.97) !important;
   background: rgba(5, 8, 12, 0.95);
   border-color: rgba(var(--main-color-rgb), 0.6);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--main-color-rgb), 0.2);
+  box-shadow: none;
 }
 
 .navbar {
@@ -100,7 +100,7 @@
 .blogLink:hover, .blogLink:focus-visible, .blogLink.active {
   background-color: rgba(var(--main-color-rgb), 0.15);
   border-color: var(--main-color);
-  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.3);
+  box-shadow: none;
   color: #fff;
   transform: translateY(-1px) translateZ(0);
 }
@@ -170,7 +170,7 @@
 
 .MenuIcon:hover {
   border-color: var(--main-color);
-  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.2);
+  box-shadow: none;
 }
 
 .MenuIcon span {
@@ -229,7 +229,7 @@
     padding: 1rem 0.85rem;
     border-radius: 10px;
     border: 1px solid rgba(var(--main-color-rgb), 0.4);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+    box-shadow: none;
     
     opacity: 0;
     visibility: hidden;

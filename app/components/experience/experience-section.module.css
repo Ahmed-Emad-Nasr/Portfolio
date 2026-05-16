@@ -10,7 +10,7 @@
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: none; display: inline-block; padding-bottom: 2rem; }
 .title::before, .title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px; }
 .title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
-.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.5); }
+.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: none; }
 
 .container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
 
@@ -35,7 +35,7 @@
   background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 0.1) 0%, rgba(var(--main-color-rgb), 0.8) 50%, rgba(var(--main-color-rgb), 0.1) 100%);
   background-size: 100% 200%;
   animation: dataStreamTimeline 4s linear infinite;
-  box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.3);
+  box-shadow: none;
 }
 
 @keyframes dataStreamTimeline {
@@ -70,7 +70,7 @@
   border-color: var(--main-color);
   transform: scale(1.2);
   animation: none;
-  box-shadow: 0 0 20px rgba(var(--main-color-rgb), 0.8);
+  box-shadow: none;
 }
 
 /* --- 3. Cyber Card Content --- */
@@ -136,7 +136,7 @@
   background: rgba(var(--main-color-rgb), 0.15);
   border-color: var(--main-color);
   color: #fff;
-  box-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.4);
+  box-shadow: none;
   transform: translateY(-2px);
 }
 
@@ -167,17 +167,17 @@
   border-color: var(--accent-color);
   color: #000;
   transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.4);
+  box-shadow: none;
 }
 
 /* Hover States for Content */
-.content:hover .tag h2 { color: #fff; text-shadow: 0 0 12px rgba(var(--main-color-rgb), 0.5); }
-.content:hover .titleIcon { color: var(--main-color); text-shadow: 0 0 15px var(--main-color); }
+.content:hover .tag h2 { color: #fff; text-shadow: none; }
+.content:hover .titleIcon { color: var(--main-color); text-shadow: none; }
 .content:hover .tag h3 { color: rgba(255, 255, 255, 0.95); }
 .content:hover .desc-list { color: rgba(255, 255, 255, 0.88); }
 .content:hover .desc-list li::marker { color: var(--main-color); }
 .content:hover .date-details { border-top-color: rgba(var(--main-color-rgb), 0.5); }
-.content:hover .experience-time { color: var(--accent-color); text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.4); }
+.content:hover .experience-time { color: var(--accent-color); text-shadow: none; }
 .content:hover .date-range { color: rgba(255, 255, 255, 0.8); }
 
 /* === Media Queries & Mobile Overrides === */

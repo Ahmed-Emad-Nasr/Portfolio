@@ -45,7 +45,7 @@
   border-radius: 16px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: linear-gradient(180deg, rgba(7, 11, 18, 0.98), rgba(3, 5, 9, 0.99));
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
   overflow: hidden;
 }
 
@@ -117,7 +117,7 @@
   color: var(--blog-text);
   font-weight: 800;
   margin-bottom: 1.2rem;
-  text-shadow: 0 0 24px rgba(var(--main-color-rgb), 0.08);
+  text-shadow: none;
 }
 
 .hero p {
@@ -166,7 +166,7 @@
 .metrics article:hover {
   background: rgba(var(--main-color-rgb), 0.05);
   border-color: rgba(var(--main-color-rgb), 0.4);
-  box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
+  box-shadow: none;
 }
 
 .metrics strong {
@@ -268,7 +268,7 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
 }
 
 @media (min-width: 992px) {
@@ -289,8 +289,7 @@
 
 .searchInput:focus-visible {
   border-color: var(--main-color);
-  box-shadow: inset 0 0 8px rgba(var(--main-color-rgb), 0.15),
-              0 0 12px rgba(var(--main-color-rgb), 0.25);
+  box-shadow: none;
   outline: none;
 }
 
@@ -415,7 +414,7 @@
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.9);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
   min-height: 340px;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
@@ -451,8 +450,7 @@
 .playlistCard:hover {
   border-color: rgba(var(--main-color-rgb), 0.6);
   background: rgba(10, 15, 25, 0.95);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.56),
-              inset 0 0 10px rgba(var(--main-color-rgb), 0.04);
+  box-shadow: none;
 }
 
 .caseSpotlight {
@@ -476,7 +474,7 @@
 
 .caseSpotlight:hover,
 .featuredCard:hover {
-  box-shadow: 0 0 0 1px rgba(var(--main-color-rgb), 0.08);
+  box-shadow: none;
 }
 
 .caseCardLarge { grid-column: span 2; }
@@ -496,7 +494,7 @@
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.92);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  box-shadow: none;
 }
 
 .caseNavCenter {
@@ -694,7 +692,7 @@
   border-radius: 4px;
   font-size: 1.05rem;
   font-family: monospace;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
   opacity: 0;
   pointer-events: none;
   z-index: 10;
@@ -933,7 +931,7 @@
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.4);
   background: #03050a;
-  box-shadow: 0 0 40px rgba(var(--main-color-rgb), 0.15);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1068,14 +1066,14 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.25);
   background: rgba(10, 15, 25, 0.85);
   text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
+  box-shadow: none;
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
 .insightCard:hover {
   border-color: rgba(var(--accent-color-rgb), 0.35);
   background: rgba(10, 15, 25, 0.96);
-  box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.08);
+  box-shadow: none;
 }
 
 .insightCard strong {
@@ -1138,7 +1136,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  box-shadow: none;
 }
 
 .blogClosingKicker {
@@ -1199,7 +1197,7 @@
   align-items: center;
   justify-content: center;
   font-family: monospace;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
 }
 
 .backToTop:hover {

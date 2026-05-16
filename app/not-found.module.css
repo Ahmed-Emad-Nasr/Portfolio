@@ -31,7 +31,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   background: rgba(9, 9, 9, 0.7);
   backdrop-filter: blur(12px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 24px rgba(var(--main-color-rgb), 0.1);
+  box-shadow: none;
   position: relative;
   z-index: 1;
   animation: revealUp 1.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -42,7 +42,7 @@
   line-height: 1;
   font-weight: 900;
   color: var(--main-color);
-  text-shadow: 0 0 22px rgba(var(--main-color-rgb), 0.3);
+  text-shadow: none;
   margin-bottom: 0.8rem;
 }
 
@@ -88,7 +88,7 @@
 
 .primaryBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(var(--main-color-rgb), 0.35);
+  box-shadow: none;
 }
 
 .secondaryBtn {
