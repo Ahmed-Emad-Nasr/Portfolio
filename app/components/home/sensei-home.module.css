@@ -43,18 +43,18 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 2.2rem;
+  padding: 1.5rem;        /* ← تقليل من 2.2rem */
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(2rem, 3.4vw, 4rem);
+  gap: clamp(1.5rem, 2vw, 3rem);  /* ← تقليل */
   max-width: 1240px;
   width: 100%;
   min-height: 95vh;
-  padding: 1.6rem 1.1rem;
+  padding: 1.2rem 0.8rem;          /* ← تقليل */
   border-radius: 26px;
   --parallax-x: 0px;
   --parallax-y: 0px;
@@ -86,7 +86,7 @@
   background: rgba(var(--main-color-rgb), 0.6);
   box-shadow: 0 0 15px rgba(var(--main-color-rgb), 1);
   opacity: 0;
-  animation: scanline 4s ease-in-out infinite;
+  animation: scanline var(--anim-slow) ease-in-out infinite; /* ← تقليل من 4s */
   pointer-events: none;
   transition: opacity var(--motion-normal) var(--motion-ease);
 }
@@ -166,7 +166,7 @@
   color: rgba(255, 255, 255, 0.84);
 }
 
-.typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift 5.5s ease-in-out infinite; }
+.typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift var(--anim-very-slow) ease-in-out infinite; } /* ← تقليل من 5.5s */
 .typingHighlight { position: relative; color: var(--main-color); }
 .typingHighlight::before { content: " "; animation: words 16s infinite; }
 .typingHighlight::after {
@@ -461,15 +461,15 @@
 /* Keep Home keyframes active even when reduced-motion is enabled globally */
 @media (prefers-reduced-motion: reduce) {
   .imageButton::after {
-    animation: scanline 4s ease-in-out infinite !important;
+    animation: scanline var(--anim-slow) ease-in-out infinite !important; /* ← تقليل من 4s */
   }
 
   .dotAvailable {
-    animation: pulseGreen 2.6s infinite !important;
+    animation: pulseGreen var(--anim-medium) infinite !important; /* ← تقليل من 2.6s */
   }
 
   .dotLimited {
-    animation: pulseAmber 2.6s infinite !important;
+    animation: pulseAmber var(--anim-medium) infinite !important;
   }
 
   .dotAsync {

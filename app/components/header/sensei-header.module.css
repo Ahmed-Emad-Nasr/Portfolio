@@ -34,7 +34,7 @@
   width: 50%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
   transform: skewX(-20deg);
-  animation: hudScan 7.2s infinite linear;
+  animation: hudScan var(--anim-slow) infinite linear; /* ← تقليل من 7.2s */
   pointer-events: none;
   /* إضافة التعديلات التالية لقص الأنيميشن بدلاً من overflow: hidden */
   border-radius: inherit;

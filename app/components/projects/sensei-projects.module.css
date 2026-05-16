@@ -41,7 +41,7 @@
   border-radius: 1rem;
   background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 0.1) 0%, rgba(var(--main-color-rgb), 0.8) 50%, rgba(var(--main-color-rgb), 0.1) 100%);
   background-size: 100% 200%;
-  animation: dataStreamProjects 4s linear infinite;
+  animation: dataStreamProjects var(--anim-slow) linear infinite; /* ← تقليل من 4s */
   box-shadow: none;
 }
 
@@ -200,7 +200,7 @@
   border: 4px solid rgba(var(--accent-color-rgb), 0.92);
   border-radius: 50%;
   z-index: 3;
-  animation: radarPulseProject 2.5s infinite;
+  animation: radarPulseProject var(--anim-medium) infinite; /* ← تقليل من 2.5s */
   transition: background var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
@@ -212,8 +212,8 @@
     radial-gradient(circle at 86% 12%, rgba(var(--accent-color-rgb), 0.08), transparent 34%),
     var(--surface-card-bg); 
   border: 1px solid var(--surface-card-border); 
-  border-radius: 12px; /* خفضنا الـ radius لزوايا تيكنيكال أكتر */
-  padding: 2.6rem 2.2rem; 
+  border-radius: 12px;
+  padding: 2.6rem 2.2rem;
   text-align: left;
   transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
   backface-visibility: hidden; 
@@ -274,7 +274,7 @@
   line-height: 1.75;
   margin: 0 0 2rem;
   padding-left: 1.8rem;
-  list-style: square; /* ستايل المربع بتاع الـ Terminal */
+  list-style: square;
   transition: color var(--motion-normal) var(--motion-ease);
 }
 
@@ -535,7 +535,7 @@
 .skeleton-icon::after, .skeleton-line::after, .skeleton-pill::after, .skeleton-button::after {
   content: ""; position: absolute; inset: 0; transform: translateX(-100%);
   background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
-  animation: radarSweep 1.5s infinite linear;
+  animation: radarSweep var(--anim-medium) infinite linear; /* ← تقليل من 1.5s */
 }
 
 @keyframes radarSweep { 100% { transform: translateX(100%); } }

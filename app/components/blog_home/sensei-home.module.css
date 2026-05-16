@@ -43,18 +43,18 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 2.2rem;
+  padding: 1.5rem;        /* ← تقليل من 2.2rem */
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(2rem, 3.4vw, 4rem);
+  gap: clamp(1.5rem, 2vw, 3rem);  /* ← تقليل */
   max-width: 1240px;
   width: 100%;
   min-height: 95vh;
-  padding: 1.6rem 1.1rem;
+  padding: 1.2rem 0.8rem;          /* ← تقليل */
   border-radius: 26px;
   --parallax-x: 0px;
   --parallax-y: 0px;
@@ -259,7 +259,7 @@
   letter-spacing: 0.02em;
 }
 
-.socialIcon { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
+.socialIcon { display: flex; gap: 1rem; margin-bottom: 1.8rem; }
 .socialIcon a {
   display: flex; justify-content: center; align-items: center; width: 4rem; height: 4rem;
   background: rgba(var(--main-color-rgb), 0.06); border: 0.2rem solid rgba(var(--main-color-rgb), 0.75); font-size: 2rem;
@@ -292,7 +292,7 @@
   left: 120%;
 }
 
-.homeButton { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.homeButton { display: flex; gap: 1rem; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; padding: 1rem 2.8rem; border-radius: 1rem;
   font-size: 1.5rem; letter-spacing: 0.08rem; font-weight: 700;

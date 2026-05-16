@@ -21,11 +21,12 @@
   display: block; 
   width: 100%; 
   position: relative; 
-  border-radius: 8px; /* زوايا حادة لشكل الـ Terminal */
+  border-radius: 8px;
   background: rgba(10, 15, 25, 0.6);
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  padding: 0.6rem; /* فريم حوالين الصورة */
+  padding: 0.6rem;
   transition: all var(--motion-normal) var(--motion-ease);
+  animation: galleryFadeIn 0.7s var(--motion-ease) backwards; /* ← fade-in خفيف */
 }
 
 .art_pic:hover {
@@ -94,7 +95,7 @@
   background: rgba(var(--main-color-rgb), 0.6);
   box-shadow: none;
   opacity: 0;
-  animation: scanline 4s ease-in-out infinite;
+  animation: scanline var(--anim-slow) ease-in-out infinite; /* ← تقليل من 4s */
   pointer-events: none;
   transition: opacity var(--motion-normal) var(--motion-ease);
 }
@@ -107,6 +108,29 @@
 .imageButton::before {
   content: none;
 }
+
+/* --- Gallery Entrance Animation --- */
+@keyframes galleryFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Gallery Items Staggered Animation */
+.Gallery > .art_pic:nth-child(1) { animation-delay: 0.1s; }
+.Gallery > .art_pic:nth-child(2) { animation-delay: 0.2s; }
+.Gallery > .art_pic:nth-child(3) { animation-delay: 0.3s; }
+.Gallery > .art_pic:nth-child(4) { animation-delay: 0.4s; }
+.Gallery > .art_pic:nth-child(5) { animation-delay: 0.5s; }
+.Gallery > .art_pic:nth-child(6) { animation-delay: 0.6s; }
+.Gallery > .art_pic:nth-child(7) { animation-delay: 0.7s; }
+.Gallery > .art_pic:nth-child(8) { animation-delay: 0.8s; }
+.Gallery > .art_pic:nth-child(9) { animation-delay: 0.9s; }
 
 @keyframes scanline {
   0% { top: -10%; }
@@ -151,7 +175,7 @@
 .skeletonThumb::after {
   content: ""; position: absolute; inset: 0; transform: translateX(-100%);
   background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
-  animation: radarSweep 1.5s infinite linear;
+  animation: radarSweep var(--anim-medium) infinite linear; /* ← تقليل من 1.5s */
 }
 
 @keyframes radarSweep {

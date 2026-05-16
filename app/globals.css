@@ -50,11 +50,17 @@
   --shadow-glow-hover: 0 0 6px rgba(var(--main-color-rgb), 0.06),
     0 0 4px rgba(var(--accent-color-rgb), 0.04);
 
-  /* Cinematic Motion */
-  --motion-fast: 440ms;
-  --motion-normal: 640ms;
-  --motion-slow: 950ms;
+  /* Cinematic Motion - Optimized for weak devices */
+  --motion-fast: 280ms;       /* ← تقليل من 440ms (36% أسرع) */
+  --motion-normal: 360ms;     /* ← تقليل من 640ms (44% أسرع) */
+  --motion-slow: 540ms;       /* ← تقليل من 950ms (43% أسرع) */
   --motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  
+  /* Animation Durations - للـ keyframes */
+  --anim-fast: 560ms;         /* 0.56 ثانية */
+  --anim-medium: 1.6s;        /* 1.6 ثانية */
+  --anim-slow: 2.4s;          /* 2.4 ثانية */
+  --anim-very-slow: 3.3s;     /* 3.3 ثانية */
 
   /* Blurs */
   --ui-blur: 12px;

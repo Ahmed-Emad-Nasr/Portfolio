@@ -19,7 +19,7 @@
   background-size: 20px 20px;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
+  transition: opacity var(--motion-fast) cubic-bezier(0.16, 1, 0.3, 1), visibility var(--motion-fast) ease; /* ← تقليل من 0.5s */
 }
 
 .loader.fadeOut {

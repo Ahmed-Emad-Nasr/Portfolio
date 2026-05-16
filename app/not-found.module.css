@@ -20,7 +20,7 @@
   pointer-events: none;
   background: radial-gradient(circle at 75% 25%, rgba(var(--main-color-rgb), 0.14), transparent 48%);
   filter: blur(18px);
-  animation: floatGlow 14s ease-in-out infinite;
+  animation: floatGlow var(--anim-very-slow) ease-in-out infinite; /* ← تقليل من 14s */
 }
 
 .card {
@@ -34,7 +34,7 @@
   box-shadow: none;
   position: relative;
   z-index: 1;
-  animation: revealUp 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: revealUp var(--anim-fast) cubic-bezier(0.22, 1, 0.36, 1); /* ← تقليل من 1.5s */
 }
 
 .code {
