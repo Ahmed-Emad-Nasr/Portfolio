@@ -183,8 +183,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                   sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                   loading="lazy"
                   quality={30}
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                   onError={() => {
                     if (primaryScreenshot) setPrimarySrc(normalizeHref(primaryScreenshot));
                   }}
@@ -209,8 +207,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                         sizes="(max-width: 560px) 45vw, 18vw"
                         loading="lazy"
                         quality={30}
-                        placeholder="blur"
-                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                         onError={() => {
                           if (secondaryScreenshot) setSecondarySrc(normalizeHref(secondaryScreenshot));
                         }}

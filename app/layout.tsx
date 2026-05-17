@@ -9,7 +9,8 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import { faqItems, knowledgeEducationItems } from "@/app/core/data";
+import { faqItems } from "@/app/core/data/faq";
+import { knowledgeEducationItems } from "@/app/core/data/experience";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -222,7 +223,7 @@ const structuredData = {
           description: item.desc,
           credentialCategory: item.subTag,
           validFrom: item.startDate,
-          validUntil: item.endDate,
+          validUntil: "endDate" in item ? item.endDate : undefined,
         },
       })),
     },

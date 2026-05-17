@@ -10,7 +10,7 @@ import {
 } from "@/app/core/data";
 import AppBar from "@/app/components/blog_header/sensei-header";
 import BlogCard from "./BlogCard";
-import HomeSection from "@/app/components/blog_home/sensei-home";
+import HomeSection from "@/app/components/home/sensei-home";
 import styles from "./page.module.css";
 import Link from "next/link";
 import MotionInView from "@/app/core/components/MotionInView";
@@ -245,6 +245,16 @@ export default function BlogPageClient() {
     const t = setTimeout(() => setQuery(rawQuery), 300);
     return () => clearTimeout(t);
   }, [rawQuery]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!("serviceWorker" in navigator)) return;
+
+    const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
+    navigator.serviceWorker.register(`${basePath}/sw.js`).catch(() => {
+      // Ignore SW registration failures; app should continue normally.
+    });
+  }, []);
 
   // ── Filter options ────────────────────────────────────────────────────────
 
@@ -843,8 +853,6 @@ export default function BlogPageClient() {
                   sizes="(max-width: 991px) 100vw, 38vw"
                   loading="lazy"
                   quality={10}
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                 />
               </a>
             )}
@@ -883,17 +891,16 @@ export default function BlogPageClient() {
         {/* PDF cards grid */}
         <div className={styles.pdfGrid}>
           {visiblePdfCards.map((item) => (
-            <MotionInView key={item.id}>
-              <BlogCard
-                {...item}
-                screenshots={caseScreenshotsByEvidenceId[item.id] ?? EMPTY_SCREENSHOTS}
-                onOpenGallery={openGallery}
-                onTagClick={setRawQuery}
-                onToolClick={toggleToolFilter}
-                getThumbnail={getThumbnail}
-                normalizeHref={normalizePublicHref}
-              />
-            </MotionInView>
+            <BlogCard
+              key={item.id}
+              {...item}
+              screenshots={caseScreenshotsByEvidenceId[item.id] ?? EMPTY_SCREENSHOTS}
+              onOpenGallery={openGallery}
+              onTagClick={setRawQuery}
+              onToolClick={toggleToolFilter}
+              getThumbnail={getThumbnail}
+              normalizeHref={normalizePublicHref}
+            />
           ))}
         </div>
 
@@ -938,8 +945,7 @@ export default function BlogPageClient() {
 
         <div className={styles.youtubeHubGrid}>
           {filteredChannelVideos.map((video) => (
-            <MotionInView key={`hub-video-${video.videoId}`}>
-              <article className={styles.videoCard}>
+            <article key={`hub-video-${video.videoId}`} className={styles.videoCard}>
                 <div className={styles.videoFrame}>
                   {activeEmbeds[`video-${video.videoId}`] ? (
                     <iframe
@@ -984,7 +990,6 @@ export default function BlogPageClient() {
                   Watch on YouTube
                 </a>
               </article>
-            </MotionInView>
           ))}
         </div>
 
@@ -1001,8 +1006,7 @@ export default function BlogPageClient() {
         </MotionInView>
         <div className={styles.playlistGrid}>
           {filteredPlaylists.map((playlist) => (
-            <MotionInView key={playlist.playlistId}>
-              <article className={styles.playlistCard}>
+            <article key={playlist.playlistId} className={styles.playlistCard}>
                 <div className={styles.playlistFrame}>
                   {activeEmbeds[`playlist-${playlist.playlistId}`] ? (
                     <iframe
@@ -1059,7 +1063,6 @@ export default function BlogPageClient() {
                   Open Playlist
                 </a>
               </article>
-            </MotionInView>
           ))}
         </div>
         {filteredPlaylists.length === 0 && (
@@ -1121,8 +1124,6 @@ export default function BlogPageClient() {
                   sizes="(max-width: 991px) 95vw, 78vw"
                   loading="lazy"
                   quality={75}
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IGZpbGw9IiNlMGUwZTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiLz48L3N2Zz4="
                 />
               </a>
               <button

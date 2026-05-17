@@ -151,6 +151,16 @@ const MainClient = memo(function MainClient() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!("serviceWorker" in navigator)) return;
+
+    const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
+    navigator.serviceWorker.register(`${basePath}/sw.js`).catch(() => {
+      // Ignore SW registration failures; app should continue normally.
+    });
+  }, []);
+
   return (
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen isLoading={!isAppReady} />

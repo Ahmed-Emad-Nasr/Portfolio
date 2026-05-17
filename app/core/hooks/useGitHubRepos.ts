@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { GITHUB_USERNAME, staticProjectFallback } from "@/app/core/data";
+import { GITHUB_USERNAME, staticProjectFallback } from "@/app/core/data/projects";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

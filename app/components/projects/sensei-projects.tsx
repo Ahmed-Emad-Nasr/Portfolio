@@ -15,7 +15,7 @@ import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MotionInView from "@/app/core/components/MotionInView";
-import { projectBullets } from "@/app/core/data";
+import { projectBullets } from "@/app/core/data/projects";
 
 type ProjectItemProps = { repo: GitHubRepository; isRight?: boolean };
 type ProjectSkeletonProps = { index: number };
