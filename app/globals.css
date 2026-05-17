@@ -115,6 +115,14 @@ body {
   isolation: isolate;
 }
 
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Cinematic Text Selection */
 ::selection {
   background-color: rgba(var(--accent-color-rgb), 0.25);
@@ -380,6 +388,62 @@ section.glass,
       rgba(8, 18, 33, 0.96) 60%,
       rgba(var(--main-color-rgb), 0.06) 100%
     );
+  }
+
+  /* Touch devices: minimize expensive shadows and glow effects. */
+  button,
+  .glass-card,
+  section.glass,
+  .site-footer__inner,
+  .cyber-glitch,
+  .cyber-grid-bg::before {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --shadow-card: none;
+    --shadow-glow: none;
+    --shadow-glow-hover: none;
+  }
+
+  button,
+  .glass-card,
+  section.glass,
+  .site-footer__inner,
+  .cyber-glitch,
+  .cyber-grid-bg::before {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  html {
+    font-size: 56.25%;
+  }
+
+  section {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-radius: 16px;
+  }
+}
+
+@media (min-width: 1800px) {
+  html {
+    font-size: 68.75%;
+  }
+
+  section {
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+
+  .site-footer__inner {
+    width: min(1500px, 100%);
   }
 }
 
