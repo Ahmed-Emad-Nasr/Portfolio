@@ -7,6 +7,7 @@
  */
 
 import { memo, useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import styles from "./sensei-header.module.css";
 
 const SCROLL_SAMPLE_MS = 180;
@@ -111,6 +112,9 @@ const SenseiHeader = memo(function SenseiHeader() {
             </button>
           )
         )}
+        <Link href="/" className={styles.navLink} aria-label="Back to portfolio">
+          Back to portfolio
+        </Link>
       </nav>
     </header>
   );
