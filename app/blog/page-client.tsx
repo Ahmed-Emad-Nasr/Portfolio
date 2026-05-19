@@ -5,12 +5,17 @@ import {
   blogYoutubeVideos,
   blogYoutubePlaylists,
   blogFeaturedYoutubeVideo,
-  caseEvidenceLibrary,
   YOUTUBE_CHANNEL_URL,
-} from "@/app/core/data";
+} from "@/app/core/data/youtube";
+import {
+  caseEvidenceLibrary,
+  caseScreenshotsByEvidenceId,
+  EMPTY_SCREENSHOTS,
+} from "@/app/core/data/cases";
 import AppBar from "@/app/components/blog_header/sensei-header";
 import BlogCard from "./BlogCard";
 import HomeSection from "@/app/components/home/sensei-home";
+import BackToTop from "@/app/components/portfolio-back-to-top";
 import styles from "./page.module.css";
 import Link from "next/link";
 import MotionInView from "@/app/core/components/MotionInView";
@@ -66,117 +71,7 @@ const blogPdfResources: PdfResource[] = wannacryCase
   ? [cvResource, wannacryCase, ...otherCases]
   : [cvResource, ...caseEvidenceLibrary];
 
-const buildScreenshotRange = (
-  folder: string,
-  start: number,
-  end: number,
-  excluded: number[] = []
-): string[] =>
-  Array.from({ length: end - start + 1 }, (_, i) => start + i)
-    .filter((n) => !excluded.includes(n))
-    .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
-
-const caseScreenshotsByEvidenceId: Record<string, string[]> = {
-  "ecir-registry-forensics": Array.from({ length: 14 }, (_, i) => `Assets/Cases/AhmedEmad_RegistryForencics_eCIR/${i + 1}.webp`),
-  "3omda custom detection rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
-  "penetration-testing-life-cycle": Array.from({ length: 4 }, (_, i) => `Assets/Cases/penetration-testing-life-cycle/${i + 1}.webp`),
-  "autopsy": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.webp`),
-  "data-exfiltration-investigation": Array.from({ length: 37 }, (_, i) => `Assets/Cases/Data Exfiltiration Investigation/${i + 1}.webp`),
-  "aws-guardduty-setup": Array.from({ length: 9 }, (_, i) => `Assets/Cases/AWS-GaurdDuty/${i + 1}.webp`),
-  "aws-athena-healthcare": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Amazon S3 and Amazon Athena/${i + 1}.webp`),
-  "aws-kms-security": Array.from({ length: 25 }, (_, i) => `Assets/Cases/AWS KMS/${i + 1}.webp`),
-  "soc-env-depi-r3-project": [
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/1.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/2.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/3.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/4.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/5.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/6.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/7.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/8.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/9.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/create txt file to see if fim is working.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard1.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/CustomDashboard2.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/edit ossec on win.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/enable fim to folder ahmed.webp",
-    "Assets/Cases/SOC Enviroment DEPI R3 Project/it works and event appeard .webp",
-  ],
-  "depi-r4-project": [
-    "Assets/Cases/Depi R4 Project/1.jpeg",
-    "Assets/Cases/Depi R4 Project/1.webp",
-  ],
-  "lockbit-ransomware-forensics": Array.from({ length: 18 }, (_, i) => `Assets/Cases/LockBit/Screenshot (${85 + i}).webp`),
-  "serpent-stealer": Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).webp`),
-  imagestegano: [
-    "Assets/Cases/ImageStegano/Screenshot (104).webp",
-    "Assets/Cases/ImageStegano/Screenshot (105).webp",
-    "Assets/Cases/ImageStegano/Screenshot (106).webp",
-    "Assets/Cases/ImageStegano/Screenshot (108).webp",
-    "Assets/Cases/ImageStegano/Screenshot (109).webp",
-    "Assets/Cases/ImageStegano/Screenshot (110).webp",
-    "Assets/Cases/ImageStegano/Screenshot (112).webp",
-    "Assets/Cases/ImageStegano/Screenshot (113).webp",
-    "Assets/Cases/ImageStegano/Screenshot (114).webp",
-    "Assets/Cases/ImageStegano/Screenshot (115).webp",
-    "Assets/Cases/ImageStegano/Screenshot (116).webp",
-    "Assets/Cases/ImageStegano/Screenshot (117).webp",
-    "Assets/Cases/ImageStegano/Screenshot (118).webp",
-    "Assets/Cases/ImageStegano/Screenshot (119).webp",
-    "Assets/Cases/ImageStegano/Screenshot (120).webp",
-  ],
-  "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).webp`),
-  "malware-analysis-wannacry": [
-    ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.webp`),
-    ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).webp`),
-  ],
-  "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/1.webp", "Assets/Cases/Wifi Cracking/2.webp",],
-  "ass6-mitre": [
-    "Assets/Cases/ass_6/1.webp",
-    "Assets/Cases/ass_6/2.webp",
-    "Assets/Cases/ass_6/3.webp",
-    "Assets/Cases/ass_6/4.webp",
-  ],
-  "soc127-pdf": buildScreenshotRange("SOC127", 131, 134),
-  "soc205-pdf": buildScreenshotRange("SOC205", 154, 162),
-  "soc257-pdf": buildScreenshotRange("SOC257", 135, 140),
-  "soc274-pdf": buildScreenshotRange("SOC274", 122, 130),
-  "soc282-pdf": buildScreenshotRange("SOC282", 144, 149),
-  "soc326-report": buildScreenshotRange("SOC326", 100, 121),
-  "soc336-report": buildScreenshotRange("SOC336", 165, 178, [169]),
-  "soc338-pdf": buildScreenshotRange("SOC338", 83, 90),
-  "soc342-pdf": buildScreenshotRange("SOC342", 91, 99),
-  "unload-malware-report": buildScreenshotRange("Unload_Malware", 201, 211),
-  "malware2-report": buildScreenshotRange("Malware2", 245, 256),
-  "bruteforce-room-report": buildScreenshotRange("BruteForce_Room", 228, 244),
-  "malicious-web-traffic-room-report": buildScreenshotRange("MaliciousWebTraffic_Room", 268, 282),
-  "email-analysis-room-report": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Email_Analysis_Room/${i + 1}.webp`),
-  "usb-forensics-report": [
-    "Assets/Cases/Usb Forencics/Screenshot (3).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (4).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (5).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (6).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (7).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (8).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (9).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (10).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (11).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (13).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (14).webp",
-    "Assets/Cases/Usb Forencics/Screenshot (15).webp",
-  ],
-  "ettercap-case": [
-    "Assets/Cases/EtterCap/Screenshot (27).webp",
-    "Assets/Cases/EtterCap/Screenshot (28).webp",
-    "Assets/Cases/EtterCap/Screenshot (29).webp",
-    "Assets/Cases/EtterCap/Screenshot (31).webp",
-    "Assets/Cases/EtterCap/Screenshot (32).webp",
-    "Assets/Cases/EtterCap/Screenshot (33).webp",
-    "Assets/Cases/EtterCap/Screenshot (34).webp",
-    "Assets/Cases/EtterCap/Screenshot (35).webp",
-    "Assets/Cases/EtterCap/Screenshot (36).webp",
-  ],
-};
+ 
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -205,6 +100,7 @@ const dateCache = new Map<string, string>();
 
 const formatDate = (value: string): string => {
   if (dateCache.has(value)) return dateCache.get(value)!;
+
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   
@@ -215,8 +111,6 @@ const formatDate = (value: string): string => {
 
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
-
-const EMPTY_SCREENSHOTS: string[] = [];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -1186,61 +1080,5 @@ export default function BlogPageClient() {
 
       <BackToTop />
     </main>
-  );
-}
-
-// ─── Back to Top ──────────────────────────────────────────────────────────────
-
-// 5. Throttled scroll listener using requestAnimationFrame + a small cadence delay
-function BackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    let rafId = 0;
-    let timeoutId: number | undefined;
-    let lastRun = 0;
-
-    const updateVisibility = () => {
-      setVisible(window.scrollY > 400);
-      lastRun = window.performance.now();
-      rafId = 0;
-      timeoutId = undefined;
-    };
-
-    const onScroll = () => {
-      const now = window.performance.now();
-      const elapsed = now - lastRun;
-
-      if (rafId || timeoutId !== undefined) return;
-
-      if (elapsed >= 180) {
-        rafId = window.requestAnimationFrame(updateVisibility);
-        return;
-      }
-
-      timeoutId = window.setTimeout(() => {
-        rafId = window.requestAnimationFrame(updateVisibility);
-      }, 180 - elapsed);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId) window.cancelAnimationFrame(rafId);
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-    };
-  }, []);
-
-  if (!visible) return null;
-
-  return (
-    <button
-      className={styles.backToTop}
-      aria-label="Back to top"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-    >
-      ↑
-    </button>
   );
 }

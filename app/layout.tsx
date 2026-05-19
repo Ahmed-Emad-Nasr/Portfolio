@@ -9,7 +9,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import { faqItems } from "@/app/core/data/faq";
+import PortfolioBackToTop from "./components/portfolio-back-to-top";
 import { knowledgeEducationItems } from "@/app/core/data/experience";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -199,18 +199,6 @@ const structuredData = {
       inLanguage: "en",
     },
     {
-      "@type": "FAQPage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#faq",
-      mainEntity: faqItems.map((item) => ({
-        "@type": "Question",
-        name: item.q,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: item.a,
-        },
-      })),
-    },
-    {
       "@type": "ItemList",
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#experience-list",
       name: "Education and Experience Timeline",
@@ -256,6 +244,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         {children}
+        <PortfolioBackToTop hideOnBlog />
         <footer className="site-footer" aria-label="Site footer">
           <div className="site-footer__inner">
             <span>Ahmed Emad Nasr Portfolio</span>

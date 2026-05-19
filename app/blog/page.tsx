@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import BlogPageClient from "./page-client";
-import { caseEvidenceLibrary } from "@/app/core/data";
+import { caseEvidenceLibrary } from "@/app/core/data/cases";
 
 const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
 

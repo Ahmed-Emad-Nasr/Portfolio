@@ -9,10 +9,11 @@
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin, faWhatsapp, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
+import { YOUTUBE_CHANNEL_URL } from "@/app/core/data/youtube";
 
 
 const BTN_PROJECTS_CLASS = `${styles.btn} ${styles.btnProjects}`;
@@ -198,6 +199,9 @@ const SenseiHome = memo(function SenseiHome() {
             </a>
             <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat">
               <FontAwesomeIcon icon={faWhatsapp} />
+            </a>
+            <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="YouTube channel">
+              <FontAwesomeIcon icon={faYoutube} />
             </a>
           </div>
           <div className={styles.homeButton}>
