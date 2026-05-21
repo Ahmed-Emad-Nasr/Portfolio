@@ -148,23 +148,7 @@
 }
 .highlight { color: var(--main-color); }
 
-.availabilityStatus {
-  display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.6rem 1.5rem;
-  border: 1px solid rgba(var(--main-color-rgb), 0.65); border-radius: 50px; font-size: 1.4rem;
-  font-weight: 600; color: var(--text-color); margin: 1rem 0 1.5rem 0;
-  background-color: rgba(8, 11, 16, 0.52); box-shadow: none; width: fit-content;
-  flex-wrap: wrap;
-}
-
-.statusDot { width: 10px; height: 10px; border-radius: 50%; }
-.dotAvailable { background-color: #00e676; box-shadow: 0 0 8px #00e676; animation: pulseGreen 2.6s infinite; }
-.dotLimited { background-color: #ffd166; box-shadow: 0 0 8px #ffd166; animation: pulseAmber 2.6s infinite; }
-.dotAsync { background-color: #7ab8ff; box-shadow: 0 0 8px #7ab8ff; animation: pulseBlue 2.6s infinite; }
-
-.availabilityMeta {
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.84);
-}
+/* Availability-related styles removed to avoid dead CSS (widget deleted) */
 
 .typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift var(--anim-very-slow) ease-in-out infinite; } /* ← تقليل من 5.5s */
 .typingHighlight { position: relative; color: var(--main-color); }
@@ -444,7 +428,6 @@
   border-color: rgba(255, 207, 136, 0.78);
 }
 
-:global(html[data-portfolio-mode="magazine"]) .availabilityStatus,
 :global(html[data-portfolio-mode="magazine"]) .proofPill,
 :global(html[data-portfolio-mode="magazine"]) .socialIcon a {
   background-color: rgba(255, 184, 106, 0.12);
@@ -464,17 +447,7 @@
     animation: scanline var(--anim-slow) ease-in-out infinite !important; /* ← تقليل من 4s */
   }
 
-  .dotAvailable {
-    animation: pulseGreen var(--anim-medium) infinite !important; /* ← تقليل من 2.6s */
-  }
-
-  .dotLimited {
-    animation: pulseAmber var(--anim-medium) infinite !important;
-  }
-
-  .dotAsync {
-    animation: pulseBlue 2.6s infinite !important;
-  }
+  /* availability dot animations removed */
 
   .typingText {
     animation: textDrift 5.5s ease-in-out infinite !important;
@@ -504,12 +477,7 @@
   .btnEmail,
   .socialIcon a,
   .trustCard,
-  .dotAvailable,
-  .dotLimited,
-  .dotAsync {
-    box-shadow: none !important;
-    filter: none !important;
-  }
+  /* availability dot overrides removed */
 
   .homeImg img,
   .btn,
@@ -564,10 +532,7 @@
     text-align: center;
   }
 
-  .availabilityStatus {
-    margin-left: auto;
-    margin-right: auto;
-  }
+  /* availabilityStatus removed */
 
   .proofRow,
   .socialIcon,
@@ -608,12 +573,7 @@
     font-size: 1.45rem;
   }
 
-  .availabilityStatus {
-    width: 100%;
-    justify-content: center;
-    font-size: 1.2rem;
-    padding: 0.55rem 1rem;
-  }
+  /* availabilityStatus removed */
 
   .trustStrip {
     grid-template-columns: 1fr;
@@ -729,9 +689,7 @@
     line-height: 1.7;
   }
 
-  .availabilityStatus {
-    margin: 1rem auto 1.5rem auto;
-  }
+  /* availabilityStatus removed */
 
   .valueLine {
     margin-left: auto;
@@ -800,12 +758,5 @@
     font-size: 3.05rem;
   }
 
-  .availabilityStatus {
-    font-size: 1.15rem;
-    padding: 0.5rem 1rem;
-  }
-
-  .availabilityMeta {
-    font-size: 1.02rem;
-  }
+  /* availabilityStatus / availabilityMeta removed */
 }

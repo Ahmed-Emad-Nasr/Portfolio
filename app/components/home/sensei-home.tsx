@@ -6,7 +6,7 @@
  * Purpose: Render home hero with social links and action buttons
  */
 
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp, faYoutube } from "@fortawesome/free-brands-svg-icons";
@@ -21,51 +21,7 @@ const AB_STORAGE_KEY = "portfolio_cv_cta_variant_v1";
 type CVVariant = "A" | "B";
 const pickVariant = <T extends string>(a: T, b: T): T => (Math.random() < 0.5 ? a : b);
 
-// فصل مكون الـ Availability لتحسين الأداء ومنع الـ Re-render المتكرر للـ Hero بالكامل
-const AvailabilityWidget = memo(function AvailabilityWidget() {
-  const [clock, setClock] = useState<Date | null>(null);
-
-  useEffect(() => {
-    setClock(new Date());
-    const intervalId = window.setInterval(() => setClock(new Date()), 60_000);
-    return () => window.clearInterval(intervalId);
-  }, []);
-
-  const availability = useMemo(() => {
-    if (!clock) {
-      return { label: "Checking availability", hint: "Local time syncing", toneClass: styles.dotAsync };
-    }
-
-    const cairoParts = new Intl.DateTimeFormat("en-US", {
-      timeZone: "Africa/Cairo",
-      weekday: "short",
-      hour: "2-digit",
-      hour12: false,
-    }).formatToParts(clock);
-
-    const weekday = cairoParts.find((part) => part.type === "weekday")?.value ?? "Mon";
-    const hourValue = Number(cairoParts.find((part) => part.type === "hour")?.value ?? "12");
-    const isWeekend = weekday === "Fri" || weekday === "Sat";
-
-    if (isWeekend) {
-      return { label: "Limited Availability", hint: "Weekend response window", toneClass: styles.dotLimited };
-    }
-
-    if (hourValue >= 10 && hourValue < 20) {
-      return { label: "Available for Opportunities", hint: "Typically replies today", toneClass: styles.dotAvailable };
-    }
-
-    return { label: "Available (Async)", hint: "Usually replies within 24h", toneClass: styles.dotAsync };
-  }, [clock]);
-
-  return (
-    <div className={styles.availabilityStatus}>
-      <span className={`${styles.statusDot} ${availability.toneClass}`}></span>
-      <span>{availability.label}</span>
-      <small className={styles.availabilityMeta}>{availability.hint}</small>
-    </div>
-  );
-});
+// Availability widget removed — kept home hero lean and free of unused code.
 
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
@@ -180,7 +136,7 @@ const SenseiHome = memo(function SenseiHome() {
           </h1>
           
           
-          <AvailabilityWidget />
+          {/* Availability widget removed */}
 
           <h2 className={styles.typingText}>
             {/* دعم إمكانية الوصول: نص مخفي يُقرأ بواسطة Screen Readers */}
