@@ -26,9 +26,9 @@ import { motion, MotionProps, Variants, useReducedMotion } from "framer-motion";
 const CINEMATIC_EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const MOTION_DURATIONS = {
-  short: 0.32,
-  medium: 0.42,
-  long: 0.55,
+  short: 0.24,
+  medium: 0.32,
+  long: 0.42,
 } as const;
 
 const SPRING_FAST = {

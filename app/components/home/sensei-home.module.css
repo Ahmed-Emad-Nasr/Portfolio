@@ -84,9 +84,10 @@
   width: 100%;
   height: 4px;
   background: rgba(var(--main-color-rgb), 0.6);
-  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 1);
+  box-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.8);
   opacity: 0;
-  animation: scanline var(--anim-slow) ease-in-out infinite; /* ← تقليل من 4s */
+  transform: translateY(-120%);
+  animation: scanline var(--anim-medium) ease-in-out infinite;
   pointer-events: none;
   transition: opacity var(--motion-normal) var(--motion-ease);
 }
@@ -96,9 +97,9 @@
 }
 
 @keyframes scanline {
-  0% { top: -10%; }
-  50% { top: 105%; }
-  100% { top: -10%; }
+  0% { transform: translateY(-120%); }
+  50% { transform: translateY(105%); }
+  100% { transform: translateY(-120%); }
 }
 
 .homeContent {
@@ -150,13 +151,13 @@
 
 /* Availability-related styles removed to avoid dead CSS (widget deleted) */
 
-.typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift var(--anim-very-slow) ease-in-out infinite; } /* ← تقليل من 5.5s */
+.typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift var(--anim-very-slow) ease-in-out infinite; }
 .typingHighlight { position: relative; color: var(--main-color); }
-.typingHighlight::before { content: " "; animation: words 16s infinite; }
+.typingHighlight::before { content: " "; animation: words 10s infinite; }
 .typingHighlight::after {
   content: " "; position: absolute; background-color: black; width: calc(100% + 8px);
   height: 100%; border-left: 3px solid var(--bg-color); right: 0;
-  animation: cursor 0.9s step-end infinite, typing 16s steps(14) infinite;
+  animation: cursor 0.9s step-end infinite, typing 10s steps(14) infinite;
 }
 
 @keyframes cursor { to { border-left: 2px solid var(--main-color); } }

@@ -51,20 +51,20 @@
   --shadow-glow-hover: none;
 
   /* Cinematic Motion - Optimized for weak devices */
-  --motion-fast: 280ms;       /* ← تقليل من 440ms (36% أسرع) */
-  --motion-normal: 360ms;     /* ← تقليل من 640ms (44% أسرع) */
-  --motion-slow: 540ms;       /* ← تقليل من 950ms (43% أسرع) */
+  --motion-fast: 180ms;       /* tuned for snappier feel */
+  --motion-normal: 240ms;     /* tuned for snappier feel */
+  --motion-slow: 360ms;       /* tuned for snappier feel */
   --motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   
   /* Animation Durations - للـ keyframes */
-  --anim-fast: 560ms;         /* 0.56 ثانية */
-  --anim-medium: 1.6s;        /* 1.6 ثانية */
-  --anim-slow: 2.4s;          /* 2.4 ثانية */
-  --anim-very-slow: 3.3s;     /* 3.3 ثانية */
+  --anim-fast: 320ms;         /* shorter keyframe durations */
+  --anim-medium: 800ms;       /* shorter keyframe durations */
+  --anim-slow: 1.2s;          /* shorter keyframe durations */
+  --anim-very-slow: 1.8s;     /* shorter keyframe durations */
 
   /* Blurs */
-  --ui-blur: 12px;
-  --card-blur: 16px;
+  --ui-blur: 6px;   /* reduce blur cost */
+  --card-blur: 8px; /* reduce blur cost */
 
   color-scheme: dark;
 }
@@ -155,7 +155,6 @@ summary {
     color var(--motion-normal) var(--motion-ease),
     border-color var(--motion-normal) var(--motion-ease),
     transform var(--motion-normal) var(--motion-ease),
-    box-shadow var(--motion-normal) var(--motion-ease),
     opacity var(--motion-normal) var(--motion-ease);
 }
 
@@ -173,14 +172,13 @@ button {
   overflow: hidden;
   z-index: 1;
   /* Keep the button visually light and stable */
-  will-change: box-shadow;
+  will-change: transform, opacity;
 }
 
 button:hover:not(:disabled) {
-  background: rgba(var(--main-color-rgb), 0.16);
+  background: rgba(var(--main-color-rgb), 0.14);
   color: #fff;
   border-color: var(--main-color);
-  box-shadow: var(--shadow-glow-hover);
   transform: none;
 }
 
@@ -272,12 +270,11 @@ section.glass,
   background: var(--surface-card-bg);
   border: 1px solid var(--surface-card-border);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(var(--card-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
+  box-shadow: none;
+  backdrop-filter: blur(var(--card-blur)) saturate(110%);
+  -webkit-backdrop-filter: blur(var(--card-blur)) saturate(110%);
   transition:
     transform var(--motion-normal) var(--motion-ease),
-    box-shadow var(--motion-normal) var(--motion-ease),
     border-color var(--motion-normal) var(--motion-ease);
   position: relative;
   overflow: hidden;
@@ -285,8 +282,7 @@ section.glass,
 }
 
 .glass-card:hover {
-  border-color: rgba(var(--main-color-rgb), 0.4);
-  box-shadow: var(--shadow-glow);
+  border-color: rgba(var(--main-color-rgb), 0.32);
   transform: translateY(-1px);
 }
 
@@ -299,7 +295,7 @@ section.glass,
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--main-color));
   animation: none;
-  opacity: 0.7;
+  opacity: 0.6;
   contain: strict;
   pointer-events: none;
 }
@@ -497,29 +493,30 @@ section.glass,
 }
 
 .cyber-glitch:hover {
-  animation: globalGlitch 1.15s cubic-bezier(0.25, 0.1, 0.25, 1) both infinite;
+  /* play a short glitch once for subtlety */
+  animation: globalGlitch 0.9s cubic-bezier(0.25, 0.1, 0.25, 1) both 1;
   color: var(--main-color);
 }
 
 @keyframes globalGlitch {
   0% {
-    text-shadow: 2px 0 var(--accent-color), -2px 0 #ff003c;
+    text-shadow: 1px 0 var(--accent-color), -1px 0 #ff003c;
     transform: translate(0);
   }
   25% {
-    text-shadow: -2px 0 var(--accent-color), 2px 0 #ff003c;
-    transform: translate(-1px, 1px);
+    text-shadow: -1px 0 var(--accent-color), 1px 0 #ff003c;
+    transform: translate(-0.5px, 0.5px);
   }
   50% {
-    text-shadow: 2px 0 var(--accent-color), -2px 0 #ff003c;
-    transform: translate(1px, -1px);
+    text-shadow: 1px 0 var(--accent-color), -1px 0 #ff003c;
+    transform: translate(0.5px, -0.5px);
   }
   75% {
-    text-shadow: -2px 0 var(--accent-color), 2px 0 #ff003c;
-    transform: translate(-1px, -1px);
+    text-shadow: -1px 0 var(--accent-color), 1px 0 #ff003c;
+    transform: translate(-0.5px, -0.5px);
   }
   100% {
-    text-shadow: 2px 0 var(--accent-color), -2px 0 #ff003c;
+    text-shadow: 1px 0 var(--accent-color), -1px 0 #ff003c;
     transform: translate(0);
   }
 }

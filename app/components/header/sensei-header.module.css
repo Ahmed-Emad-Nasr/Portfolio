@@ -30,21 +30,21 @@
 .header::after {
   content: "";
   position: absolute;
-  top: 0; left: -150%;
+  top: 0; left: 0;
   width: 50%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
-  transform: skewX(-20deg);
-  animation: hudScan var(--anim-slow) infinite linear; /* ← تقليل من 7.2s */
+  transform: translateX(-150%) skewX(-20deg);
+  animation: hudScan var(--anim-slow) infinite linear;
   pointer-events: none;
-  /* إضافة التعديلات التالية لقص الأنيميشن بدلاً من overflow: hidden */
   border-radius: inherit;
   clip-path: inset(0 round 12px);
+  will-change: transform;
 }
 
 @keyframes hudScan {
-  0% { left: -150%; }
-  50% { left: 200%; }
-  100% { left: 200%; }
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  50% { transform: translateX(200%) skewX(-20deg); }
+  100% { transform: translateX(200%) skewX(-20deg); }
 }
 
 .scrolled {
