@@ -45,10 +45,10 @@
   --radius-pill: 999px;
 
   /* Shadows & Glows */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 4px rgba(var(--main-color-rgb), 0.04);
-  --shadow-glow-hover: 0 0 6px rgba(var(--main-color-rgb), 0.06),
-    0 0 4px rgba(var(--accent-color-rgb), 0.04);
+  /* Shadows & Glows - disabled for a flat, lightweight dark theme */
+  --shadow-card: none;
+  --shadow-glow: none;
+  --shadow-glow-hover: none;
 
   /* Cinematic Motion - Optimized for weak devices */
   --motion-fast: 280ms;       /* ← تقليل من 440ms (36% أسرع) */
@@ -79,6 +79,15 @@
   text-decoration: none;
   border: none;
   outline-offset: 4px;
+}
+
+/* Global override: remove any remaining visual shadows/filters */
+*,
+*::before,
+*::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
 }
 
 *:focus:not(:focus-visible) {
