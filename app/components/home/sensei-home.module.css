@@ -87,7 +87,7 @@
   box-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.8);
   opacity: 0;
   transform: translateY(-120%);
-  animation: scanline var(--anim-medium) ease-in-out infinite;
+  animation: scanline var(--anim-slow) ease-in-out infinite;
   pointer-events: none;
   transition: opacity var(--motion-normal) var(--motion-ease);
 }
@@ -153,11 +153,11 @@
 
 .typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift var(--anim-very-slow) ease-in-out infinite; }
 .typingHighlight { position: relative; color: var(--main-color); }
-.typingHighlight::before { content: " "; animation: words 10s infinite; }
+.typingHighlight::before { content: " "; animation: words 16s infinite; }
 .typingHighlight::after {
   content: " "; position: absolute; background-color: black; width: calc(100% + 8px);
   height: 100%; border-left: 3px solid var(--bg-color); right: 0;
-  animation: cursor 0.9s step-end infinite, typing 10s steps(14) infinite;
+  animation: cursor 0.9s step-end infinite, typing 16s steps(14) infinite;
 }
 
 @keyframes cursor { to { border-left: 2px solid var(--main-color); } }
