@@ -96,6 +96,7 @@
   box-shadow: none;
   opacity: 0;
   animation: scanline var(--anim-slow) ease-in-out infinite; /* ← تقليل من 4s */
+  z-index: 3;
   pointer-events: none;
   transition: opacity var(--motion-normal) var(--motion-ease);
 }
@@ -144,6 +145,7 @@
   filter: grayscale(15%) contrast(1.1); /* شكل داتا بيز قديم شوية */
   transition: filter var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
+.galleryImg { position: relative; z-index: 1; }
 
 .art_pic:hover .galleryImg {
   filter: grayscale(0%) contrast(1.15) brightness(1.1); /* الألوان ترجع قوية مع الـ Hover */

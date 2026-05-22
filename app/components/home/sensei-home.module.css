@@ -88,6 +88,7 @@
   opacity: 0;
   transform: translateY(-120%);
   animation: scanline var(--anim-slow) ease-in-out infinite;
+  z-index: 3;
   pointer-events: none;
   transition: opacity var(--motion-normal) var(--motion-ease);
 }
@@ -118,6 +119,7 @@
   cursor: pointer;
   will-change: transform, filter;
 }
+.homeImg img { position: relative; z-index: 1; }
 .homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0); filter: saturate(1.05); box-shadow: none; }
 .imageButton:focus-visible img {
   outline: 3px solid rgba(var(--main-color-rgb), 0.75);
