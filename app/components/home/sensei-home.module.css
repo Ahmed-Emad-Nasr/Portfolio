@@ -69,38 +69,9 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  /* إضافة التعديل هنا لتفعيل الـ Scan */
   position: relative;
   overflow: hidden;
   border-radius: 20px;
-}
-
-/* --- Cyber Scanline Effect --- */
-.imageButton::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: rgba(var(--main-color-rgb), 0.6);
-  box-shadow: 0 0 8px rgba(var(--main-color-rgb), 0.8);
-  opacity: 0;
-  transform: translateY(-120%);
-  animation: scanline var(--anim-slow) ease-in-out infinite;
-  z-index: 3;
-  pointer-events: none;
-  transition: opacity var(--motion-normal) var(--motion-ease);
-}
-
-.imageButton:hover::after {
-  opacity: 1;
-}
-
-@keyframes scanline {
-  0% { transform: translateY(-120%); }
-  50% { transform: translateY(105%); }
-  100% { transform: translateY(-120%); }
 }
 
 .homeContent {
@@ -444,12 +415,7 @@
   border-color: rgba(255, 207, 136, 0.86);
 }
 
-/* Keep Home keyframes active even when reduced-motion is enabled globally */
 @media (prefers-reduced-motion: reduce) {
-  .imageButton::after {
-    animation: scanline var(--anim-slow) ease-in-out infinite !important; /* ← تقليل من 4s */
-  }
-
   /* availability dot animations removed */
 
   .typingText {
@@ -475,7 +441,6 @@
     transition: none;
   }
 
-  .imageButton::after,
   .homeImg img,
   .btnEmail,
   .socialIcon a,

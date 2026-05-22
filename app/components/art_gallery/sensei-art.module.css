@@ -84,27 +84,6 @@
   overflow: hidden;
 }
 
-/* --- Home-like Scanline Effect --- */
-.imageButton::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: rgba(var(--main-color-rgb), 0.6);
-  box-shadow: none;
-  opacity: 0;
-  animation: scanline var(--anim-slow) ease-in-out infinite; /* ← تقليل من 4s */
-  z-index: 3;
-  pointer-events: none;
-  transition: opacity var(--motion-normal) var(--motion-ease);
-}
-
-.imageButton:hover::after {
-  opacity: 1;
-}
-
 /* Terminal Overlay Text removed per request */
 .imageButton::before {
   content: none;
@@ -132,12 +111,6 @@
 .Gallery > .art_pic:nth-child(7) { animation-delay: 0.7s; }
 .Gallery > .art_pic:nth-child(8) { animation-delay: 0.8s; }
 .Gallery > .art_pic:nth-child(9) { animation-delay: 0.9s; }
-
-@keyframes scanline {
-  0% { top: -10%; }
-  50% { top: 105%; }
-  100% { top: -10%; }
-}
 
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; border-radius: 4px;
