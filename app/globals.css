@@ -111,11 +111,12 @@ body {
    * Reason: Forces a separate rasterization layer on every scroll tick on mobile.
    * Replaced with a static radial-gradient — visually identical, zero scroll cost.
    */
-  background: radial-gradient(
-    ellipse 120% 60% at 50% 0%,
-    rgba(var(--main-color-rgb), 0.04) 0%,
-    var(--bg-color) 70%
-  );
+  /* Stronger red-black mix background for a richer cyber look */
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(var(--main-color-rgb), 0.10) 0%, rgba(0,0,0,0.85) 45%),
+    linear-gradient(180deg, rgba(8, 0, 0, 0.25) 0%, rgba(0,0,0,1) 70%),
+    var(--bg-color);
+    
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
