@@ -612,6 +612,8 @@
 
 .pdfCardMedia {
   min-width: 0;
+  /* Required: Next.js <Image fill> needs a positioned ancestor */
+  position: relative;
 }
 
 .caseCardTextOnly .pdfCardMedia {
@@ -641,9 +643,13 @@
   letter-spacing: 1px;
 }
 
-.badge.difficulty-easy   { border-color: rgba(0, 255, 136, 0.5);  color: #00ff88; background: rgba(0, 255, 136, 0.05); }
-.badge.difficulty-medium { border-color: rgba(255, 215, 0, 0.5);  color: #ffd700; background: rgba(255, 215, 0, 0.05); }
-.badge.difficulty-hard   { border-color: rgba(255, 0, 60, 0.5);   color: #ff003c; background: rgba(255, 0, 60, 0.05); }
+/* Difficulty colour overrides.
+   These are intentionally standalone classes (not chained to .badge) so that
+   CSS Modules generates a unique scoped name for each. The JS applies both
+   styles.badge and styles['difficulty-easy'] etc. to the same element. */
+.difficulty-easy   { border-color: rgba(0, 255, 136, 0.5) !important;  color: #00ff88 !important; background: rgba(0, 255, 136, 0.05) !important; }
+.difficulty-medium { border-color: rgba(255, 215, 0, 0.5)  !important; color: #ffd700 !important; background: rgba(255, 215, 0, 0.05)  !important; }
+.difficulty-hard   { border-color: rgba(255, 0, 60, 0.5)   !important; color: #ff003c !important; background: rgba(255, 0, 60, 0.05)   !important; }
 
 .caseSpotlightTag,
 .featuredTag {
@@ -753,6 +759,9 @@
   cursor: pointer;
 }
 
+/* Tag/tool button ::before pseudo-elements add the # / >_ prefix visually.
+   Do NOT include the prefix character in the button text content in JSX —
+   it would double up (e.g. "##phishing"). */
 .toolButton::before,
 .toolButtonSmall::before { content: ">_ "; opacity: 0.8; color: var(--accent-color); }
 
@@ -814,7 +823,7 @@
 }
 
 .shotGrid {
-  position: relative;
+  position: relative; /* Required: contains .moreShotsBadge which is position:absolute */
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.6rem;

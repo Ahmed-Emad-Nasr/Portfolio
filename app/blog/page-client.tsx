@@ -223,8 +223,12 @@ export default function BlogPageClient() {
     });
   }, [filteredPdfs, sortBy]);
 
+  // leadCase is derived from a module-level constant — deps array is intentionally empty.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const leadCase = useMemo(
     () => blogPdfResources.find((item) => item.id === wannacryId) ?? null,
+    // blogPdfResources is module-level and never changes at runtime.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -237,22 +241,28 @@ export default function BlogPageClient() {
 
   const featuredVideo = blogFeaturedYoutubeVideo;
 
-  // 2. Fixed filteredChannelVideos dependencies
+  // filteredChannelVideos: featured video is always shown first (even when query is empty),
+  // but is also filtered by query so results are consistent — previously the featured video
+  // would always appear even when it didn't match the search term.
   const filteredChannelVideos = useMemo<ChannelVideo[]>(() => {
-    const merged: ChannelVideo[] = [
-      {
-        videoId: featuredVideo.videoId,
-        title: featuredVideo.title,
-        description: featuredVideo.description,
-        sourceUrl: featuredVideo.sourceUrl,
-      },
-      ...blogYoutubeVideos
-        .filter((video) => matchesSearch(video.title, query))
-        .map((video) => ({
-          ...video,
-          sourceUrl: `https://youtu.be/${video.videoId}`,
-        })),
-    ];
+    const featured: ChannelVideo = {
+      videoId: featuredVideo.videoId,
+      title: featuredVideo.title,
+      description: featuredVideo.description,
+      sourceUrl: featuredVideo.sourceUrl,
+    };
+
+    const others = blogYoutubeVideos
+      .filter((video) => matchesSearch(video.title, query))
+      .map((video) => ({
+        ...video,
+        sourceUrl: `https://youtu.be/${video.videoId}`,
+      }));
+
+    // Always include featured first; apply query filter to it as well so
+    // it doesn't appear as a ghost result that doesn't match the search term.
+    const featuredMatches = !query || matchesSearch(featured.title, query);
+    const merged: ChannelVideo[] = featuredMatches ? [featured, ...others] : others;
 
     const seen = new Set<string>();
     return merged.filter((video) => {
@@ -377,11 +387,15 @@ export default function BlogPageClient() {
     : null;
 
   const caseOrder = useMemo(() => blogPdfResources.filter((item) => item.id !== cvResource.id), []);
-  const leadCaseIndex = caseOrder.findIndex((item) => item.id === leadCase?.id);
-  const previousCase = leadCaseIndex > 0 ? caseOrder[leadCaseIndex - 1] : null;
-  const nextCase = leadCaseIndex >= 0 && leadCaseIndex < caseOrder.length - 1 ? caseOrder[leadCaseIndex + 1] : null;
+  const { leadCaseIndex, previousCase, nextCase } = useMemo(() => {
+    const idx = caseOrder.findIndex((item) => item.id === leadCase?.id);
+    return {
+      leadCaseIndex: idx,
+      previousCase: idx > 0 ? caseOrder[idx - 1] : null,
+      nextCase: idx >= 0 && idx < caseOrder.length - 1 ? caseOrder[idx + 1] : null,
+    };
+  }, [caseOrder, leadCase]);
   
-  // 4. Fixed relatedCases dependencies
   const relatedCases = useMemo(() => {
     if (!leadCase) return [];
 
@@ -919,7 +933,7 @@ export default function BlogPageClient() {
                       aria-label={`Play ${playlist.title}`}
                     >
                       <Image
-                        src={`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`}
+                        src={`https://i.ytimg.com/vi/${playlist.thumbnailVideoId ?? featuredVideo.videoId}/hqdefault.jpg`}
                         alt={playlist.title}
                         className={styles.embedPreviewImage}
                         width={480}

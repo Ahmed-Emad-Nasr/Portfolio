@@ -4,6 +4,9 @@ import React from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 
+// Placeholder shown when both thumbnail and full-size image fail to load
+const IMG_FALLBACK = "/Assets/art-gallery/logo/logo.png";
+
 interface BlogCardProps {
   title: string;
   description?: string;
@@ -36,6 +39,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     tags,
     tools,
     readTime,
+    date,
     screenshots,
     onOpenGallery,
     onTagClick,
@@ -46,17 +50,42 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const hasScreenshots = screenshots.length > 0;
     const primaryScreenshot = screenshots[0];
     const secondaryScreenshot = screenshots[1];
+
+    // Track load state for each image independently:
+    // null  → no image / not yet attempted
+    // string → current src to try
+    // Three-tier fallback: thumbnail → full-size original → placeholder
     const [primarySrc, setPrimarySrc] = React.useState<string | null>(
       primaryScreenshot ? normalizeHref(getThumbnail(primaryScreenshot)) : null
     );
     const [secondarySrc, setSecondarySrc] = React.useState<string | null>(
       secondaryScreenshot ? normalizeHref(getThumbnail(secondaryScreenshot)) : null
     );
+
     const extraCount = Math.max(0, screenshots.length - 2);
     const difficultyKey = difficulty?.toLowerCase() as "easy" | "medium" | "hard" | undefined;
 
     const handleTagClick = React.useCallback((tag: string) => onTagClick?.(tag), [onTagClick]);
     const handleToolClick = React.useCallback((tool: string) => onToolClick?.(tool), [onToolClick]);
+
+    // Three-tier fallback: thumbnail → original → placeholder
+    const handlePrimaryError = React.useCallback(() => {
+      setPrimarySrc((cur) => {
+        if (!cur) return IMG_FALLBACK;
+        const original = primaryScreenshot ? normalizeHref(primaryScreenshot) : null;
+        if (original && cur !== original) return original;
+        return IMG_FALLBACK;
+      });
+    }, [primaryScreenshot, normalizeHref]);
+
+    const handleSecondaryError = React.useCallback(() => {
+      setSecondarySrc((cur) => {
+        if (!cur) return IMG_FALLBACK;
+        const original = secondaryScreenshot ? normalizeHref(secondaryScreenshot) : null;
+        if (original && cur !== original) return original;
+        return IMG_FALLBACK;
+      });
+    }, [secondaryScreenshot, normalizeHref]);
 
     return (
       <article
@@ -98,6 +127,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
             )}
             {category && <span className={styles.badge}>{category}</span>}
             {readTime && <span className={styles.badge}>{readTime} min</span>}
+            {/* Bug fix: date was declared in the interface but never rendered */}
+            {date && <span className={styles.badge}>{date}</span>}
           </div>
 
           {tags && tags.length > 0 && (
@@ -110,7 +141,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                   onClick={() => handleTagClick(tag)}
                   title={`Search for ${tag}`}
                 >
-                  #{tag}
+                  {tag}
                 </button>
               ))}
               {tags.length > 3 && (
@@ -183,36 +214,32 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                   sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                   loading="lazy"
                   quality={30}
-                  onError={() => {
-                    if (primaryScreenshot) setPrimarySrc(normalizeHref(primaryScreenshot));
-                  }}
+                  onError={handlePrimaryError}
                 />
               )}
             </a>
 
             {secondaryScreenshot && (
               <div className={styles.shotGrid}>
-                  <a
-                    href={normalizeHref(secondaryScreenshot)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.shotThumb}
-                    aria-label={`Open screenshot 2 for ${title}`}
-                  >
-                    {secondarySrc && (
-                      <Image
-                        src={secondarySrc}
-                        alt={`${title} screenshot 2`}
-                        fill
-                        sizes="(max-width: 560px) 45vw, 18vw"
-                        loading="lazy"
-                        quality={30}
-                        onError={() => {
-                          if (secondaryScreenshot) setSecondarySrc(normalizeHref(secondaryScreenshot));
-                        }}
-                      />
-                    )}
-                  </a>
+                <a
+                  href={normalizeHref(secondaryScreenshot)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.shotThumb}
+                  aria-label={`Open screenshot 2 for ${title}`}
+                >
+                  {secondarySrc && (
+                    <Image
+                      src={secondarySrc}
+                      alt={`${title} screenshot 2`}
+                      fill
+                      sizes="(max-width: 560px) 45vw, 18vw"
+                      loading="lazy"
+                      quality={30}
+                      onError={handleSecondaryError}
+                    />
+                  )}
+                </a>
                 {extraCount > 0 && (
                   <span className={styles.moreShotsBadge}>+{extraCount}</span>
                 )}

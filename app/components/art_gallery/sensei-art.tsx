@@ -24,18 +24,22 @@ const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
 
-const CERTIFICATION_METADATA: CertificationMeta[] = Array.from({ length: 24 }, (_, index) => ({
-  title: `Certification ${index + 1}`,
+const DEFAULT_CERT: CertificationMeta = {
+  title: "Cybersecurity Certification",
   issuer: "Cybersecurity Program",
   date: "2024-2026",
   verifyUrl: "https://www.linkedin.com/in/ahmed-emad-nasr/",
-}));
+};
 
-CERTIFICATION_METADATA[0] = { title: "eJPT v2", issuer: "INE", date: "2025", verifyUrl: "https://my.ine.com/" };
-CERTIFICATION_METADATA[1] = { title: "CCNA 200-301", issuer: "Cisco", date: "2025", verifyUrl: "https://www.cisco.com/" };
-CERTIFICATION_METADATA[2] = { title: "SOC Analyst Path L1/L2", issuer: "TryHackMe", date: "2025", verifyUrl: "https://tryhackme.com/" };
-CERTIFICATION_METADATA[3] = { title: "DEPI Information Security Analyst", issuer: "DEPI", date: "2025", verifyUrl: "https://www.depi.gov.eg/" };
-CERTIFICATION_METADATA[4] = { title: "HCIA Cloud & Datacom", issuer: "Huawei ICT Academy", date: "2024", verifyUrl: "https://www.huawei.com/minisite/ict-academy/en/" };
+const CERTIFICATION_OVERRIDES: Record<number, CertificationMeta> = {
+  0: { title: "eJPT v2", issuer: "INE", date: "2025", verifyUrl: "https://my.ine.com/" },
+  1: { title: "CCNA 200-301", issuer: "Cisco", date: "2025", verifyUrl: "https://www.cisco.com/" },
+  2: { title: "SOC Analyst Path L1/L2", issuer: "TryHackMe", date: "2025", verifyUrl: "https://tryhackme.com/" },
+  3: { title: "DEPI Information Security Analyst", issuer: "DEPI", date: "2025", verifyUrl: "https://www.depi.gov.eg/" },
+  4: { title: "HCIA Cloud & Datacom", issuer: "Huawei ICT Academy", date: "2024", verifyUrl: "https://www.huawei.com/minisite/ict-academy/en/" },
+};
+
+const CERTIFICATION_METADATA: CertificationMeta[] = Array.from({ length: 24 }, (_, i) => CERTIFICATION_OVERRIDES[i] ?? { ...DEFAULT_CERT, title: `Certification ${i + 1}` });
 
 const LIGHTBOX_SLIDES = GALLERY_IMAGES.map((image, index) => ({
   src: image.src,

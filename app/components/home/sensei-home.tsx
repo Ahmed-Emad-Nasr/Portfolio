@@ -97,7 +97,7 @@ const SenseiHome = memo(function SenseiHome() {
     element.style.setProperty("--parallax-y", "0px");
   };
 
-  const cvBtnClass = `${styles.btn} ${styles.cvBtn} ${cvVariant === "B" ? styles.cvBtnAlt : ""}`;
+  const cvBtnClass = `${styles.btn} ${styles.cvBtn}${cvVariant === "B" ? ` ${styles.cvBtnAlt}` : ""}`;
   const cvBtnLabel = cvVariant === "A" ? "Download CV" : "Get My CV";
 
   return (

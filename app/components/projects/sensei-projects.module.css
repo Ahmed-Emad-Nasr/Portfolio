@@ -50,12 +50,6 @@
   100% { background-position: 0 100%; }
 }
 
-@media (min-width: 992px) {
-  .container {
-    max-width: none;
-  }
-}
-
 /* --- Terminal Style Filters --- */
 .projects-filter {
   display: flex;
@@ -359,62 +353,7 @@
 }
 .skeleton-icon { width: 3.5rem; height: 3.5rem; border-radius: 4px; }
 
-@media (max-width: 991px) {
-  .section-projects {
-    min-height: auto;
-    padding: 6rem 0 4.5rem;
-  }
 
-  .header-section {
-    margin-bottom: 3rem;
-  }
-
-  .title {
-    font-size: clamp(2.8rem, 5vw, 3.4rem);
-  }
-
-  .container {
-    padding: 0 4%;
-  }
-
-  .projects-timeline {
-    padding: 1rem 0;
-  }
-
-  .projects-timeline::after {
-    left: 3rem;
-  }
-
-  .project-item {
-    width: 100%;
-    left: 0;
-    padding-left: 5.2rem;
-    padding-right: 0;
-  }
-
-  .project-item.left,
-  .project-item.right {
-    left: 0;
-    padding-left: 5.2rem;
-    padding-right: 0;
-  }
-
-  .project-item.left::after,
-  .project-item.right::after {
-    left: 3rem;
-    right: auto;
-    transform: translateX(-50%);
-  }
-
-  .single-project {
-    padding: 2.2rem 1.8rem;
-  }
-
-  .meta-info {
-    gap: 0.5rem 1rem;
-    flex-wrap: wrap;
-  }
-}
 
 @media (max-width: 430px) {
   .section-projects {
@@ -560,15 +499,37 @@
 
 .reset-filter-btn:hover {
   transform: translateY(-1px); background: var(--accent-color); color: #000;
-  box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.4);
+  box-shadow: none;
 }
 
 /* --- Responsive Adjustments & Mobile Overrides --- */
 @media (max-width: 991px) {
-  .container { padding: 0 4%; }
-  .title { font-size: 3rem; }
-  .projects-timeline { max-width: 100%; }
-  .projects-timeline::after { left: 3rem; }
+  .section-projects {
+    min-height: auto;
+    padding: 6rem 0 4.5rem;
+  }
+
+  .header-section {
+    margin-bottom: 3rem;
+  }
+
+  .title {
+    font-size: clamp(2.8rem, 5vw, 3.4rem);
+  }
+
+  .container {
+    padding: 0 4%;
+  }
+
+  .projects-timeline {
+    max-width: 100%;
+    padding: 1rem 0;
+  }
+
+  .projects-timeline::after {
+    left: 3rem;
+  }
+
   .project-item,
   .project-item.left,
   .project-item.right {
@@ -577,9 +538,22 @@
     padding-left: 7rem;
     padding-right: 2rem;
   }
+
   .project-item.left::after,
-  .project-item.right::after { left: 3rem; right: auto; transform: translateX(-50%); }
-  .single-project { padding: 2.5rem 2rem; }
+  .project-item.right::after {
+    left: 3rem;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .single-project {
+    padding: 2.2rem 1.8rem;
+  }
+
+  .meta-info {
+    gap: 0.5rem 1rem;
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 430px) {

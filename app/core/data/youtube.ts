@@ -18,6 +18,7 @@ type BlogYoutubePlaylist = {
   title: string;
   description?: string;
   sourceUrl: string;
+  thumbnailVideoId?: string;
   tags?: readonly string[];
   videoCount?: number;
 };

@@ -21,7 +21,7 @@ type TimelineItemProps = {
   subTag?: string;
   subTagHyperlink?: string;
   desc: string;
-  isRight?: boolean; // جعلناها اختيارية لدعم التوزيع التلقائي
+  isRight: boolean;
   startDate: string;
   endDate?: string;
   showDate?: boolean;
