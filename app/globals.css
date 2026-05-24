@@ -81,15 +81,11 @@
   outline-offset: 4px;
 }
 
-/* Global override: remove any remaining visual shadows/filters */
-*,
-*::before,
-*::after {
-  box-shadow: none !important;
-  text-shadow: none !important;
-  filter: none !important;
-}
-
+/* Global override: remove visual shadows where not explicitly set.
+ * NOTE: filter is intentionally NOT overridden globally — it would kill
+ * backdrop-filter (glass cards) and grayscale/contrast effects on images.
+ * text-shadow is NOT overridden globally — it would kill @keyframes glitch animations.
+ * Individual components set box-shadow: none where needed. */
 *:focus:not(:focus-visible) {
   outline: none;
 }
@@ -246,17 +242,12 @@ section {
   margin-bottom: clamp(6rem, 10vw, 12rem);
   z-index: 1;
   /*
-   * contain: layout style → section reflows don't affect siblings or the root.
-   * Gives the browser a clear boundary to optimize painting within.
+   * contain: style → prevents counter/custom-property leaks from section
+   * to siblings. Intentionally NOT using contain:layout — that would make
+   * the section a containing block, which can break fixed/sticky descendants
+   * (e.g. the navbar) and clip parallax overflow.
    */
-  contain: layout style;
-}
-
-@media (max-width: 991px) {
-  section {
-    padding: 6rem 4% 4.8rem;
-    margin-bottom: clamp(4rem, 8vw, 8rem);
-  }
+  contain: style;
 }
 
 @media (max-width: 600px) {
@@ -395,35 +386,6 @@ section.glass,
       rgba(var(--main-color-rgb), 0.06) 100%
     );
   }
-
-  /* Touch devices: minimize expensive shadows and glow effects. */
-  button,
-  .glass-card,
-  section.glass,
-  .site-footer__inner,
-  .cyber-glitch,
-  .cyber-grid-bg::before {
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-}
-
-@media (max-width: 768px) {
-  :root {
-    --shadow-card: none;
-    --shadow-glow: none;
-    --shadow-glow-hover: none;
-  }
-
-  button,
-  .glass-card,
-  section.glass,
-  .site-footer__inner,
-  .cyber-glitch,
-  .cyber-grid-bg::before {
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
 }
 
 @media (max-width: 360px) {
@@ -543,6 +505,11 @@ section.glass,
 
 /* 3. Pulse for alerts */
 .cyber-alert-pulse {
-  animation: none;
-  will-change: auto;
+  animation: cyberAlertPulse 1.4s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes cyberAlertPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
 }
