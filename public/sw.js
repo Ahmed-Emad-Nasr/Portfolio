@@ -6,6 +6,8 @@ const STATIC_EXTENSIONS = /\.(?:css|js|mjs|webp|png|jpg|jpeg|gif|svg|ico|pdf|wof
 
 const isCacheableAsset = (url) => {
   const pathname = url.pathname || "";
+  // Don't cache CV files in the Assets/cv folder so updates are fetched.
+  if (pathname.includes("/Assets/cv/")) return false;
 
   if (STATIC_EXTENSIONS.test(pathname)) return true;
   if (pathname.includes("/Assets/")) return true;
