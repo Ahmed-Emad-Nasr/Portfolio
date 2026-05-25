@@ -19,7 +19,7 @@ interface GalleryImage { src: string; thumb: string; }
 interface CertificationMeta { title: string; issuer: string; date: string; verifyUrl: string; }
 interface ImageItemProps { image: GalleryImage; index: number; setOpen: (index: number) => void; meta: CertificationMeta; }
 
-const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 24 }, (_, k) => ({
+const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 31 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.png`,
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
@@ -39,7 +39,7 @@ const CERTIFICATION_OVERRIDES: Record<number, CertificationMeta> = {
   4: { title: "HCIA Cloud & Datacom", issuer: "Huawei ICT Academy", date: "2024", verifyUrl: "https://www.huawei.com/minisite/ict-academy/en/" },
 };
 
-const CERTIFICATION_METADATA: CertificationMeta[] = Array.from({ length: 24 }, (_, i) => CERTIFICATION_OVERRIDES[i] ?? { ...DEFAULT_CERT, title: `Certification ${i + 1}` });
+const CERTIFICATION_METADATA: CertificationMeta[] = Array.from({ length: 31 }, (_, i) => CERTIFICATION_OVERRIDES[i] ?? { ...DEFAULT_CERT, title: `Certification ${i + 1}` });
 
 const LIGHTBOX_SLIDES = GALLERY_IMAGES.map((image, index) => ({
   src: image.src,
