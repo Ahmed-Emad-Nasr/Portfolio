@@ -96,6 +96,28 @@ const SenseiHeader = memo(function SenseiHeader() {
   }, [isMenuOpen]);
 
   // ── Smooth scroll to section ────────────────────────────────────────────────
+  const playSectionFade = useCallback((target: HTMLElement) => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion || typeof target.animate !== "function") {
+      return;
+    }
+
+    target.animate(
+      [
+        { opacity: 0.35, transform: "translate3d(0, 14px, 0)" },
+        { opacity: 1, transform: "translate3d(0, 0, 0)" },
+      ],
+      {
+        duration: 420,
+        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        fill: "both",
+      }
+    );
+  }, []);
+
   const scrollToSection = useCallback((section: string) => {
     const target = document.getElementById(section);
     if (!target) return;
@@ -106,12 +128,17 @@ const SenseiHeader = memo(function SenseiHeader() {
       : 0;
     const offset = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
     const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
-    window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
-  }, []);
+    window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
+    playSectionFade(target);
+  }, [playSectionFade]);
 
   const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+    window.scrollTo({ top: 0, behavior: "auto" });
+    const homeSection = document.getElementById("Home");
+    if (homeSection) {
+      playSectionFade(homeSection);
+    }
+  }, [playSectionFade]);
 
   const handleNavLinkClick = useCallback(
     (section: string, event?: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>) => {
