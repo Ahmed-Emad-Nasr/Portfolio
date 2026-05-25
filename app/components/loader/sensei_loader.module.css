@@ -1,42 +1,124 @@
-/*
- * File: sensei_loader.module.css
- * Author: Ahmed Emad Nasr
- * Purpose: Loader overlay styles (Cybersecurity Boot-up Theme)
- */
-
 .loader {
   position: fixed;
   inset: 0;
   z-index: 9999;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* خلفية سوداء مع شبكة خفيفة كأنها شاشة تيرمينال */
-  background: #000000;
-  background-image: 
-    linear-gradient(rgba(var(--main-color-rgb), 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--main-color-rgb), 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity var(--motion-fast) cubic-bezier(0.16, 1, 0.3, 1), visibility var(--motion-fast) ease; /* ← تقليل من 0.5s */
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(var(--accent-color-rgb), 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 1));
 }
 
-.loader.fadeOut {
-  opacity: 0;
-  visibility: hidden;
+.neuralGrid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-.spinner {
-  width: min(38vw, 300px);
-  height: auto;
-  object-fit: contain;
-  filter: none;
+.ringWrap {
+  position: relative;
+  width: 12.8rem;
+  height: 12.8rem;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(var(--accent-color-rgb), 0.2);
+  border-top-color: var(--accent-color);
+  border-radius: 999px;
+}
+
+.symbol {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-overlock, sans-serif);
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--accent-color);
+  text-shadow: 0 0 18px rgba(var(--accent-color-rgb), 0.18);
+}
+
+.copy {
+  margin-top: 4.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  text-align: center;
+}
+
+.copyRuleRow {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.copyRule {
+  width: 3.2rem;
+  height: 1px;
+  background: rgba(var(--accent-color-rgb), 0.4);
+}
+
+.copyLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.title {
+  font-family: var(--font-overlock, sans-serif);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.titleAccent {
+  color: var(--accent-color);
+  font-style: italic;
+}
+
+.progressBar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0.4rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-color);
 }
 
 @media (max-width: 480px) {
-  .spinner {
-    width: min(56vw, 220px);
+  .ringWrap {
+    width: 10rem;
+    height: 10rem;
+  }
+
+  .symbol {
+    font-size: 3rem;
+  }
+
+  .copy {
+    margin-top: 3.6rem;
+    padding-inline: 1.6rem;
   }
 }
 

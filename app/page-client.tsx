@@ -163,7 +163,7 @@ const MainClient = memo(function MainClient() {
 
   return (
     <main id="main-content" style={MAIN_STYLE}>
-      <LoadingScreen isLoading={!isAppReady} />
+      <LoadingScreen />
 
       {/* Keep the header outside the animated content wrapper so it is truly fixed
          to the viewport and not contained by transforms applied to the page content. */}

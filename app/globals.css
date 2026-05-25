@@ -94,7 +94,7 @@ html {
   /* 62.5% → 1rem = 10px exactly (standard, predictable) */
   font-size: 62.5%;
   overflow-x: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: clamp(7rem, 10vh, 10rem);
   background-color: var(--bg-color);
 }
@@ -119,6 +119,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* Prevent body reflows from propagating to composited children */
   isolation: isolate;
+}
+
+body[data-custom-cursor="true"],
+body[data-custom-cursor="true"] a,
+body[data-custom-cursor="true"] button,
+body[data-custom-cursor="true"] input,
+body[data-custom-cursor="true"] textarea,
+body[data-custom-cursor="true"] select,
+body[data-custom-cursor="true"] summary {
+  cursor: none;
 }
 
 img,
