@@ -1,5 +1,5 @@
 "use client";
-
+import LoadingScreen from "@/app/components/loader/sensei_loader";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   blogYoutubeVideos,
@@ -428,6 +428,7 @@ export default function BlogPageClient() {
 
   return (
     <main id="main-content" className={styles.page}>
+      <LoadingScreen />
       <AppBar />
       <HomeSection />
 

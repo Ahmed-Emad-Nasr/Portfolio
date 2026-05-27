@@ -24,6 +24,9 @@ import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
 import HomeSection from "@/app/components/home/sensei-home";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import ExperienceSection from "@/app/components/experience/experience-section";
+import ProjectsSection from "@/app/components/projects/sensei-projects";
+import ArtGallerySection from "@/app/components/art_gallery/sensei-art";
 
 // ─── Skeletons ─────────────────────────────────────────────────────────────
 
@@ -38,37 +41,6 @@ const SectionSkeleton = () => (
     aria-hidden="true"
     style={SECTION_SKELETON_STYLE}
   />
-);
-
-// ─── Dynamic imports ────────────────────────────────────────────────────────
-
-const ExperienceSection = dynamic(
-  () => import("@/app/components/experience/experience-section"),
-  {
-    ssr: false,
-    loading: () => <SectionSkeleton />,
-  }
-);
-
-const ProjectsSection = dynamic(
-  () => import("@/app/components/projects/sensei-projects"),
-  {
-    ssr: false,
-    loading: () => <SectionSkeleton />,
-  }
-);
-
-const ArtGallerySection = dynamic(
-  () => import("@/app/components/art_gallery/sensei-art"),
-  {
-    ssr: false,
-    /*
-     * Was: loading: () => null
-     * Problem: null means zero height → content below jumps when it loads (CLS).
-     * Fix: same skeleton to hold the space.
-     */
-    loading: () => <SectionSkeleton />,
-  }
 );
 
 // ─── Styles ──────────────────────────────────────────────────────────────────
