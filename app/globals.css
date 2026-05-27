@@ -81,11 +81,14 @@
   outline-offset: 4px;
 }
 
-/* Global override: remove visual shadows where not explicitly set.
+/* Global override: remove visual shadows across the site.
  * NOTE: filter is intentionally NOT overridden globally — it would kill
- * backdrop-filter (glass cards) and grayscale/contrast effects on images.
- * text-shadow is NOT overridden globally — it would kill @keyframes glitch animations.
- * Individual components set box-shadow: none where needed. */
+ * backdrop-filter (glass cards) and grayscale/contrast effects on images. */
+* {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
 *:focus:not(:focus-visible) {
   outline: none;
 }
@@ -154,7 +157,7 @@ textarea,
 select,
 summary {
   /*
-   * Only transition GPU-composited props (color, opacity, transform, box-shadow).
+  * Only transition GPU-composited props (color, opacity, transform).
    * Removed background-color from the shorthand — it triggers paint, not just composite.
    * background-color transitions are added explicitly only where needed.
    */
@@ -174,7 +177,7 @@ button {
   font-weight: 600;
   font-size: 1.1em;
   cursor: pointer;
-  box-shadow: var(--shadow-glow);
+  box-shadow: none;
   position: relative;
   overflow: hidden;
   z-index: 1;
@@ -466,30 +469,25 @@ section.glass,
 }
 
 .cyber-glitch:hover {
-  /* play a short glitch once for subtlety */
+  /* keep the color shift without any shadow artifacts */
   animation: globalGlitch 0.9s cubic-bezier(0.25, 0.1, 0.25, 1) both 1;
   color: var(--main-color);
 }
 
 @keyframes globalGlitch {
   0% {
-    text-shadow: 1px 0 var(--accent-color), -1px 0 #ff003c;
     transform: translate(0);
   }
   25% {
-    text-shadow: -1px 0 var(--accent-color), 1px 0 #ff003c;
     transform: translate(-0.5px, 0.5px);
   }
   50% {
-    text-shadow: 1px 0 var(--accent-color), -1px 0 #ff003c;
     transform: translate(0.5px, -0.5px);
   }
   75% {
-    text-shadow: -1px 0 var(--accent-color), 1px 0 #ff003c;
     transform: translate(-0.5px, -0.5px);
   }
   100% {
-    text-shadow: 1px 0 var(--accent-color), -1px 0 #ff003c;
     transform: translate(0);
   }
 }

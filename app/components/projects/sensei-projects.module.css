@@ -194,7 +194,7 @@
   border: 4px solid rgba(var(--accent-color-rgb), 0.92);
   border-radius: 50%;
   z-index: 3;
-  animation: radarPulseProject var(--anim-medium) infinite; /* ← تقليل من 2.5s */
+  animation: none;
   transition: background var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
@@ -230,12 +230,6 @@
 
 .single-project:hover::before { opacity: 1; }
 
-@keyframes radarPulseProject {
-  0% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.5); }
-  70% { box-shadow: 0 0 0 15px rgba(var(--accent-color-rgb), 0); }
-  100% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0); }
-}
-
 .single-project:hover {
   background: rgba(10, 13, 18, 0.95); 
   border-color: rgba(var(--main-color-rgb), 0.5); 
@@ -252,8 +246,8 @@
   transform: scale(1.05);
 }
 
-.part-1 h3 { font-size: 2.2rem; color: rgba(255, 255, 255, 0.85); font-weight: 700; letter-spacing: 0.5px; margin: 0; line-height: 1.3; transition: color var(--motion-normal) var(--motion-ease), text-shadow var(--motion-normal) var(--motion-ease); display: flex; justify-content: space-between; width: 100%; align-items: center; }
-.single-project:hover .part-1 h3 { color: #fff; text-shadow: none; }
+.part-1 h3 { font-size: 2.2rem; color: rgba(255, 255, 255, 0.85); font-weight: 700; letter-spacing: 0.5px; margin: 0; line-height: 1.3; transition: color var(--motion-normal) var(--motion-ease); display: flex; justify-content: space-between; width: 100%; align-items: center; }
+.single-project:hover .part-1 h3 { color: #fff; }
 
 .title-link { color: inherit; display: inline-flex; align-items: center; gap: 0.8rem; }
 .title-link:focus-visible { outline: 2px solid var(--main-color); outline-offset: 3px; border-radius: 0.4rem; }
@@ -580,5 +574,5 @@
   .section-summary { font-size: 1.22rem; }
   .filter-btn { width: 100%; justify-content: space-between; }
   .sectionLead { font-size: 1.42rem; line-height: 1.7; }
-  .single-project, .single-project:hover { box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28); }
+  .single-project, .single-project:hover { box-shadow: none; }
 }

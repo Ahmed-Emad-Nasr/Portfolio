@@ -31,7 +31,7 @@
 
 .art_pic:hover {
   border-color: var(--main-color);
-  box-shadow: 0 0 6px rgba(var(--main-color-rgb), 0.15);
+  box-shadow: none;
   transform: translateY(-5px);
 }
 
