@@ -1,6 +1,6 @@
 "use client";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   blogYoutubeVideos,
   blogYoutubePlaylists,
@@ -17,42 +17,14 @@ import BlogCard from "./BlogCard";
 import HomeSection from "@/app/components/home/sensei-home";
 import BackToTop from "@/app/components/portfolio-back-to-top";
 import styles from "./page.module.css";
-import Link from "next/link";
 import MotionInView from "@/app/core/components/MotionInView";
-import Image from "next/image";
-
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-type PdfResource = {
-  id: string;
-  title: string;
-  description?: string;
-  platform: string;
-  type: string;
-  category?: string;
-  difficulty?: string;
-  href: string;
-  tags?: readonly string[];
-  tools?: readonly string[];
-  skillsGained?: readonly string[];
-  readTime?: number;
-  date?: string;
-};
-
-type GalleryState = {
-  title: string;
-  screenshots: string[];
-  index: number;
-};
-
-type ChannelVideo = {
-  videoId: string;
-  title: string;
-  description?: string;
-  publishedAt?: string;
-  sourceUrl: string;
-};
+import { getThumbnail, formatDate, normalizePublicHref } from "./blog-utils";
+import type { PdfResource, GalleryState, ChannelVideo } from "./blog-types";
+import BlogHeroSection from "./components/BlogHeroSection";
+import BlogCaseNavigator from "./components/BlogCaseNavigator";
+import BlogPdfLibrarySection from "./components/BlogPdfLibrarySection";
+import BlogMediaSections from "./components/BlogMediaSections";
+import BlogGalleryModal from "./components/BlogGalleryModal";
 
 // ─── Module-level constants ───────────────────────────────────────────────────
 
@@ -73,42 +45,6 @@ const blogPdfResources: PdfResource[] = wannacryCase
 
  
 
-// ─── Pure helpers ─────────────────────────────────────────────────────────────
-
-const normalizePublicHref = (href: string): string => {
-  if (/^https?:\/\//i.test(href)) return href;
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? (process.env.NODE_ENV === "production" ? "/Portfolio" : "");
-  const normalized = href.startsWith("/") ? href : `/${href}`;
-  return `${basePath}${normalized}`.replace(/\/\//g, "/");
-};
-
-const getThumbnail = (imgPath: string): string => {
-  // Heuristic: prefer a -thumb variant next to the original file (e.g. Screenshot (1)-thumb.webp).
-  // The UI has a safe fallback (onError) to the original image if the thumbnail doesn't exist.
-  return imgPath.replace(/(\.webp|\.png|\.jpg|\.jpeg)$/i, "-thumb$1");
-};
-
-// 1. Date Caching Setup
-const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-});
-
-const dateCache = new Map<string, string>();
-
-const formatDate = (value: string): string => {
-  if (dateCache.has(value)) return dateCache.get(value)!;
-
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return value;
-  
-  const formatted = dateFormatter.format(parsed);
-  dateCache.set(value, formatted);
-  return formatted;
-};
-
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
 
@@ -126,8 +62,6 @@ export default function BlogPageClient() {
 
   // ── Gallery state ─────────────────────────────────────────────────────────
   const [gallery, setGallery] = useState<GalleryState | null>(null);
-  const galleryDialogRef = useRef<HTMLDivElement | null>(null);
-  const touchStartXRef = useRef<number | null>(null);
   const [featuredPosterSrc, setFeaturedPosterSrc] = useState(
     `https://i.ytimg.com/vi/${blogFeaturedYoutubeVideo.videoId}/hqdefault.jpg`
   );
@@ -310,30 +244,6 @@ export default function BlogPageClient() {
     });
   }, []);
 
-  useEffect(() => {
-    if (!gallery) return;
-    const prev = document.activeElement as HTMLElement | null;
-    const dialog = galleryDialogRef.current;
-    const focusables = dialog?.querySelectorAll<HTMLElement>(
-      'button, a[href], [tabindex]:not([tabindex="-1"])'
-    );
-    focusables?.[0]?.focus();
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { e.preventDefault(); setGallery(null); return; }
-      if (e.key === "ArrowRight") { e.preventDefault(); goGallery(1); return; }
-      if (e.key === "ArrowLeft") { e.preventDefault(); goGallery(-1); return; }
-      if (e.key !== "Tab" || !focusables?.length) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => { window.removeEventListener("keydown", handleKeyDown); prev?.focus(); };
-  }, [gallery, goGallery]);
-
   // ── Other handlers ────────────────────────────────────────────────────────
 
   const activateEmbed = useCallback(
@@ -358,24 +268,9 @@ export default function BlogPageClient() {
     setQuery("");
   }, []);
 
-  const handleGalleryTouchStart = useCallback((e: React.TouchEvent<HTMLElement>) => {
-    touchStartXRef.current = e.changedTouches[0]?.clientX ?? null;
-  }, []);
-
-  const handleGalleryTouchEnd = useCallback(
-    (e: React.TouchEvent<HTMLElement>) => {
-      if (touchStartXRef.current === null) return;
-      const endX = e.changedTouches[0]?.clientX ?? touchStartXRef.current;
-      const deltaX = endX - touchStartXRef.current;
-      touchStartXRef.current = null;
-      if (Math.abs(deltaX) < 40) return;
-      goGallery(deltaX < 0 ? 1 : -1);
-    },
-    [goGallery]
+  const hasActiveFilters = Boolean(
+    rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All"
   );
-
-  const hasActiveFilters =
-    rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All";
 
   // 3. Pre-calculated Normalized hrefs for gallery and spotlight
   const currentGalleryShot =
@@ -432,641 +327,70 @@ export default function BlogPageClient() {
       <AppBar />
       <HomeSection />
 
-      {/* ── Hero ────────────────────────────────────────────────────────── */}
-      <section className={styles.hero}>
-        <MotionInView className={styles.heroInner}>
-          <nav className={styles.breadcrumbNav} aria-label="Breadcrumb">
-            <Link href="/" className={styles.breadcrumbLink}>Portfolio</Link>
-            <span aria-hidden="true" className={styles.breadcrumbSeparator}>/</span>
-            <Link href="/blog" className={styles.breadcrumbLink}>Blog</Link>
-            <span aria-hidden="true" className={styles.breadcrumbSeparator}>/</span>
-            <span className={styles.breadcrumbCurrent}>{leadCase?.title ?? "Cases"}</span>
-          </nav>
-          <span className={styles.heroGlow} aria-hidden="true" />
-          <p className={styles.kicker}>Ahmed Emad Nasr</p>
-          <h1>Security Blog & Technical Reports</h1>
-          <p>
-            A single place for my SOC incident reports, DFIR writeups, and technical videos.
-            Use search and filters to find what you need quickly.
-          </p>
+      <BlogHeroSection
+        leadCaseTitle={leadCase?.title ?? null}
+        resourceCount={blogPdfResources.length}
+        featuredVideo={featuredVideo}
+        featuredPosterSrc={featuredPosterSrc}
+        setFeaturedPosterSrc={setFeaturedPosterSrc}
+        activeEmbeds={activeEmbeds}
+        onActivateEmbed={activateEmbed}
+      />
 
-          <div className={styles.heroGrid}>
-            <div className={styles.heroMainContent}>
-              <div className={styles.metrics}>
-                <article>
-                  <strong>{blogPdfResources.length}</strong>
-                  <span>PDF Resources</span>
-                </article>
-                <article>
-                  <strong>36</strong>
-                  <span>Total Videos</span>
-                </article>
-                <article>
-                  <strong>24/7</strong>
-                  <span>On-Demand</span>
-                </article>
-              </div>
+      <BlogCaseNavigator
+        leadCase={leadCase}
+        previousCase={previousCase}
+        nextCase={nextCase}
+        normalizeHref={normalizePublicHref}
+      />
 
-              <div className={styles.heroActions}>
-                <a href="#blog-pdfs-title" className={styles.primaryAction}>
-                  Explore Cases
-                </a>
-                <Link href="/" className={`${styles.secondaryAction} ${styles.backAction}`}>
-                  Back To Portfolio
-                </Link>
-              </div>
+      <BlogPdfLibrarySection
+        filteredCount={filteredPdfs.length}
+        pdfTypeFilters={pdfTypeFilters}
+        pdfFilter={pdfFilter}
+        setPdfFilter={setPdfFilter}
+        difficultyOptions={difficultyOptions}
+        difficultyFilter={difficultyFilter}
+        setDifficultyFilter={setDifficultyFilter}
+        categoryOptions={categoryOptions}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        hasActiveFilters={hasActiveFilters}
+        clearAllFilters={clearAllFilters}
+        leadCase={leadCase}
+        leadCaseSpotlightImage={leadCaseSpotlightImage}
+        relatedCases={relatedCases}
+        visiblePdfCards={visiblePdfCards}
+        screenshotsById={caseScreenshotsByEvidenceId}
+        rawQuery={rawQuery}
+        setRawQuery={setRawQuery}
+        toggleToolFilter={toggleToolFilter}
+        openGallery={openGallery}
+        normalizeHref={normalizePublicHref}
+      />
 
-              <nav className={styles.quickLinks} aria-label="Quick section shortcuts">
-                <a href="#blog-pdfs-title" className={styles.quickLink}>PDF Cases</a>
-                <a href="#blog-playlists-title" className={styles.quickLink}>Playlists</a>
-                <a href="#youtube-hub-title" className={styles.quickLink}>Channel Videos</a>
-              </nav>
-            </div>
+      <BlogMediaSections
+        totalCasesCount={caseEvidenceLibrary.length}
+        casesWithScreenshotsCount={casesWithScreenshotsCount}
+        totalScreenshotAssets={totalScreenshotAssets}
+        filteredChannelVideos={filteredChannelVideos}
+        filteredPlaylists={filteredPlaylists}
+        featuredVideo={featuredVideo}
+        activeEmbeds={activeEmbeds}
+        onActivateEmbed={activateEmbed}
+        formatDate={formatDate}
+        youtubeChannelUrl={YOUTUBE_CHANNEL_URL}
+      />
 
-            <article className={`${styles.featuredCard} ${styles.heroFeaturedCard}`}>
-              <div className={styles.featuredFrame}>
-                {activeEmbeds["featured-video"] ? (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${featuredVideo.videoId}`}
-                    title={featuredVideo.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    className={styles.embedPreview}
-                    onClick={() => activateEmbed("featured-video")}
-                    aria-label={`Play ${featuredVideo.title}`}
-                  >
-                    <Image
-                      src={featuredPosterSrc}
-                      alt={featuredVideo.title}
-                      className={styles.embedPreviewImage}
-                      width={480}
-                      height={270}
-                      loading="lazy"
-                      decoding="async"
-                      unoptimized
-                      onError={() => {
-                        if (featuredPosterSrc.includes("maxresdefault")) {
-                          setFeaturedPosterSrc(`https://i.ytimg.com/vi/${featuredVideo.videoId}/hqdefault.jpg`);
-                          return;
-                        }
+      <BlogGalleryModal
+        gallery={gallery}
+        currentShot={currentGalleryShotNormalized}
+        setGallery={setGallery}
+        goGallery={goGallery}
+      />
 
-                        if (featuredPosterSrc.includes("hqdefault")) {
-                          setFeaturedPosterSrc(`https://i.ytimg.com/vi/${featuredVideo.videoId}/mqdefault.jpg`);
-                          return;
-                        }
-
-                        setFeaturedPosterSrc("/Assets/art-gallery/Images/logo/My_Logo.webp");
-                      }}
-                    />
-                    <span className={styles.embedPlayButton}>▶ Play</span>
-                  </button>
-                )}
-              </div>
-              <div className={styles.featuredContent}>
-                <p className={styles.featuredTag}>Featured Video</p>
-                <h2>{featuredVideo.title}</h2>
-                <a href={featuredVideo.sourceUrl} target="_blank" rel="noopener noreferrer">
-                  Watch on YouTube ↗
-                </a>
-              </div>
-            </article>
-          </div>
-        </MotionInView>
-      </section>
-
-      {/* ── PDF Library ──────────────────────────────────────────────────── */}
-      {leadCase && (
-        <MotionInView className={styles.caseNavigator} aria-label="Case navigation">
-          <article className={styles.caseNavCard}>
-            <span className={styles.caseNavLabel}>Previous case</span>
-            {previousCase ? (
-              <>
-                <h3>{previousCase.title}</h3>
-                <p>{previousCase.category ?? previousCase.platform}</p>
-                <a href={normalizePublicHref(previousCase.href)} target="_blank" rel="noopener noreferrer">
-                  Open PDF
-                </a>
-              </>
-            ) : (
-              <p>Start with the featured case.</p>
-            )}
-          </article>
-
-          <article className={`${styles.caseNavCard} ${styles.caseNavCenter}`}>
-            <span className={styles.caseNavLabel}>Current case</span>
-            <h3>{leadCase.title}</h3>
-            <p>{leadCase.description}</p>
-            <a href={normalizePublicHref(leadCase.href)} target="_blank" rel="noopener noreferrer">
-              Open Featured PDF
-            </a>
-          </article>
-
-          <article className={styles.caseNavCard}>
-            <span className={styles.caseNavLabel}>Next case</span>
-            {nextCase ? (
-              <>
-                <h3>{nextCase.title}</h3>
-                <p>{nextCase.category ?? nextCase.platform}</p>
-                <a href={normalizePublicHref(nextCase.href)} target="_blank" rel="noopener noreferrer">
-                  Open PDF
-                </a>
-              </>
-            ) : (
-              <p>More cases are available below.</p>
-            )}
-          </article>
-        </MotionInView>
-      )}
-
-      <section className={styles.block} aria-labelledby="blog-pdfs-title">
-        <MotionInView className={styles.blockHeading}>
-          <h2 id="blog-pdfs-title">PDF Library</h2>
-          <p>{filteredPdfs.length} result(s) found.</p>
-        </MotionInView>
-
-        {/* Toolbar */}
-        <MotionInView className={styles.toolbar}>
-          <input
-            type="search"
-            className={styles.searchInput}
-            placeholder="Search cases, tags, tools…"
-            value={rawQuery}
-            onChange={(e) => setRawQuery(e.target.value)}
-            aria-label="Search PDF resources"
-          />
-
-          <div className={styles.modeSwitch} role="group" aria-label="Filter by type">
-            {pdfTypeFilters.map((filter) => (
-              <button
-                key={filter}
-                type="button"
-                className={`${styles.modeButton} ${pdfFilter === filter ? styles.modeButtonActive : ""}`}
-                onClick={() => setPdfFilter(filter)}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-
-          {difficultyOptions.length > 0 && (
-            <div className={styles.sortButtons} role="group" aria-label="Filter by difficulty">
-              {difficultyOptions.map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  className={`${styles.sortButton} ${difficultyFilter === d ? styles.activeSort : ""}`}
-                  onClick={() => setDifficultyFilter(difficultyFilter === d ? null : d)}
-                >
-                  {d}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {categoryOptions.length > 0 && (
-            <div className={styles.sortButtons} role="group" aria-label="Filter by category">
-              {categoryOptions.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className={`${styles.sortButton} ${categoryFilter === c ? styles.activeSort : ""}`}
-                  onClick={() => setCategoryFilter(categoryFilter === c ? null : c)}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className={styles.sortButtons} role="group" aria-label="Sort order">
-            {(["recent", "difficulty", "popularity"] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                className={`${styles.sortButton} ${sortBy === s ? styles.activeSort : ""}`}
-                onClick={() => setSortBy(s)}
-              >
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </button>
-            ))}
-          </div>
-
-          {hasActiveFilters && (
-            <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>
-              ✕ Clear Filters
-            </button>
-          )}
-        </MotionInView>
-
-        {/* WannaCry spotlight */}
-        {leadCase && (
-          <MotionInView className={styles.caseSpotlight}>
-            <div className={styles.caseSpotlightBody}>
-              <p className={styles.caseSpotlightTag}>Case Spotlight</p>
-              <h3>{leadCase.title}</h3>
-              <p>{leadCase.description || "Featured first for quick navigation."}</p>
-              <div className={styles.caseMetadata}>
-                {leadCase.difficulty && (
-                  <span
-                    className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}
-                  >
-                    {leadCase.difficulty}
-                  </span>
-                )}
-                {leadCase.category && <span className={styles.badge}>{leadCase.category}</span>}
-                {leadCase.readTime && (
-                  <span className={styles.badge}>{leadCase.readTime} min read</span>
-                )}
-              </div>
-              {leadCase.tags && leadCase.tags.length > 0 && (
-                <div className={styles.tagsList}>
-                  {leadCase.tags.slice(0, 4).map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      className={styles.tagButton}
-                      onClick={() => setRawQuery(tag)}
-                    >
-                      #{tag}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {leadCase.tools && leadCase.tools.length > 0 && (
-                <div className={styles.toolsList}>
-                  <p className={styles.toolsLabel}>Tools:</p>
-                  <div className={styles.toolsGrid}>
-                    {leadCase.tools.map((tool) => (
-                      <button
-                        key={tool}
-                        type="button"
-                        className={styles.toolButton}
-                        onClick={() => toggleToolFilter(tool)}
-                      >
-                        {tool}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className={styles.cardActions}>
-                <a
-                  href={normalizePublicHref(leadCase.href)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.viewAction}
-                >
-                  View PDF
-                </a>
-                <a
-                  href={normalizePublicHref(leadCase.href)}
-                  download
-                  className={styles.downloadAction}
-                >
-                  Download
-                </a>
-                <button
-                  type="button"
-                  onClick={() =>
-                    openGallery(
-                      leadCase.title,
-                      caseScreenshotsByEvidenceId[leadCase.id] ?? EMPTY_SCREENSHOTS,
-                      0
-                    )
-                  }
-                  className={`${styles.galleryOpenAction} ${styles.viewAction}`}
-                >
-                  View All Screenshots
-                </button>
-              </div>
-            </div>
-
-            {leadCaseSpotlightImage && (
-              <a
-                href={leadCaseSpotlightImage}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.caseSpotlightMedia}
-                aria-label={`Open spotlight screenshot for ${leadCase.title}`}
-              >
-                <Image
-                  src={leadCaseSpotlightImage}
-                  alt={`${leadCase.title} spotlight screenshot`}
-                  fill
-                  sizes="(max-width: 991px) 100vw, 38vw"
-                  loading="lazy"
-                  quality={10}
-                />
-              </a>
-            )}
-          </MotionInView>
-        )}
-
-        {relatedCases.length > 0 && (
-          <MotionInView className={styles.relatedCasesStrip} aria-label="Related cases">
-            <div className={styles.blockHeading}>
-              <h2>Related Cases</h2>
-              <p>Cases with a similar category, difficulty, or keyword set.</p>
-            </div>
-            <div className={styles.relatedCasesGrid}>
-              {relatedCases.map((item) => (
-                <article key={item.id} className={styles.relatedCaseCard}>
-                  <p className={styles.relatedCaseLabel}>{item.category ?? item.type}</p>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                  <div className={styles.caseMetadata}>
-                    {item.difficulty && (
-                      <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>
-                        {item.difficulty}
-                      </span>
-                    )}
-                    {item.readTime && <span className={styles.badge}>{item.readTime} min read</span>}
-                  </div>
-                  <a href={normalizePublicHref(item.href)} target="_blank" rel="noopener noreferrer">
-                    Open PDF
-                  </a>
-                </article>
-              ))}
-            </div>
-          </MotionInView>
-        )}
-
-        {/* PDF cards grid */}
-        <div className={styles.pdfGrid}>
-          {visiblePdfCards.map((item) => (
-            <BlogCard
-              key={item.id}
-              {...item}
-              screenshots={caseScreenshotsByEvidenceId[item.id] ?? EMPTY_SCREENSHOTS}
-              onOpenGallery={openGallery}
-              onTagClick={setRawQuery}
-              onToolClick={toggleToolFilter}
-              getThumbnail={getThumbnail}
-              normalizeHref={normalizePublicHref}
-            />
-          ))}
-        </div>
-
-        {filteredPdfs.length === 0 && (
-          <p className={styles.emptyState}>No PDF results match your current search/filter.</p>
-        )}
-      </section>
-
-      {/* ── Insight strip ─────────────────────────────────────────────────── */}
-      <MotionInView className={styles.insightStrip} aria-label="Case library highlights">
-        <article className={styles.insightCard}>
-          <strong>{caseEvidenceLibrary.length}</strong>
-          <span>Total Cases</span>
-        </article>
-        <article className={styles.insightCard}>
-          <strong>{casesWithScreenshotsCount}</strong>
-          <span>With Screenshots</span>
-        </article>
-        <article className={styles.insightCard}>
-          <strong>{totalScreenshotAssets}</strong>
-          <span>Screenshot Assets</span>
-        </article>
-      </MotionInView>
-        
-      {/* ── YouTube Hub ───────────────────────────────────────────────────── */}
-      <MotionInView className={styles.youtubeHub} aria-labelledby="youtube-hub-title" initial="visible">
-        <div className={styles.blockHeading}>
-          <h2 id="youtube-hub-title">YouTube Hub</h2>
-          <p>All channel videos appear here in one place, including the featured video.</p>
-        </div>
-        <p className={styles.youtubeHubSummary}>{filteredChannelVideos.length} video(s) available.</p>
-        <div className={styles.youtubeHubActions}>
-          <a
-            href={YOUTUBE_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${styles.primaryAction} ${styles.channelAction}`}
-          >
-            Open YouTube Channel
-          </a>
-        </div>
-
-        <div className={styles.youtubeHubGrid}>
-          {filteredChannelVideos.map((video) => (
-            <article key={`hub-video-${video.videoId}`} className={styles.videoCard}>
-                <div className={styles.videoFrame}>
-                  {activeEmbeds[`video-${video.videoId}`] ? (
-                    <iframe
-                      src={`https://www.youtube-nocookie.com/embed/${video.videoId}`}
-                      title={video.title}
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <button
-                      type="button"
-                      className={styles.embedPreview}
-                      onClick={() => activateEmbed(`video-${video.videoId}`)}
-                      aria-label={`Play ${video.title}`}
-                    >
-                      <Image
-                        src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
-                        alt={video.title}
-                        className={styles.embedPreviewImage}
-                        width={480}
-                        height={270}
-                        loading="lazy"
-                        decoding="async"
-                        unoptimized
-                      />
-                      <span className={styles.embedPlayButton}>▶ Play Video</span>
-                    </button>
-                  )}
-                </div>
-                <div className={styles.videoCardContent}>
-                  <h3>{video.title}</h3>
-                  {video.publishedAt && <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>}
-                </div>
-                <a
-                  href={video.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.playlistAction}
-                >
-                  Watch on YouTube
-                </a>
-              </article>
-          ))}
-        </div>
-
-        {filteredChannelVideos.length === 0 && (
-          <p className={styles.emptyState}>No channel videos match your current search.</p>
-        )}
-      </MotionInView>
-
-      {/* ── Playlists ─────────────────────────────────────────────────────── */}
-      <section className={styles.block} aria-labelledby="blog-playlists-title">
-        <MotionInView className={styles.blockHeading}>
-          <h2 id="blog-playlists-title">YouTube Playlists</h2>
-          <p>{filteredPlaylists.length} playlist(s) found.</p>
-        </MotionInView>
-        <div className={styles.playlistGrid}>
-          {filteredPlaylists.map((playlist) => (
-            <article key={playlist.playlistId} className={styles.playlistCard}>
-                <div className={styles.playlistFrame}>
-                  {activeEmbeds[`playlist-${playlist.playlistId}`] ? (
-                    <iframe
-                      src={`https://www.youtube-nocookie.com/embed/videoseries?list=${playlist.playlistId}`}
-                      title={playlist.title}
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <button
-                      type="button"
-                      className={styles.embedPreview}
-                      onClick={() => activateEmbed(`playlist-${playlist.playlistId}`)}
-                      aria-label={`Play ${playlist.title}`}
-                    >
-                      <Image
-                        src={`https://i.ytimg.com/vi/${playlist.thumbnailVideoId ?? featuredVideo.videoId}/hqdefault.jpg`}
-                        alt={playlist.title}
-                        className={styles.embedPreviewImage}
-                        width={480}
-                        height={270}
-                        loading="lazy"
-                        decoding="async"
-                        unoptimized
-                      />
-                      <span className={styles.embedPlayButton}>▶ Play Playlist</span>
-                    </button>
-                  )}
-                </div>
-                <div className={styles.playlistContent}>
-                  <h3>{playlist.title}</h3>
-                  {playlist.description && (
-                    <p className={styles.playlistDescription}>{playlist.description}</p>
-                  )}
-                  {playlist.tags && playlist.tags.length > 0 && (
-                    <div className={styles.playlistTags}>
-                      {playlist.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className={styles.playlistTag}>{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                  {playlist.videoCount && (
-                    <p className={styles.playlistVideoCount}>{playlist.videoCount} videos</p>
-                  )}
-                </div>
-                <a
-                  href={playlist.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.playlistAction}
-                >
-                  Open Playlist
-                </a>
-              </article>
-          ))}
-        </div>
-        {filteredPlaylists.length === 0 && (
-          <p className={styles.emptyState}>No playlist results match your current search.</p>
-        )}
-      </section>
-
-      {/* ── Gallery overlay ───────────────────────────────────────────────── */}
-      {gallery && currentGalleryShotNormalized && (
-        <div
-          className={styles.galleryOverlay}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${gallery.title} screenshots gallery`}
-          onClick={() => setGallery(null)}
-        >
-          <div
-            ref={galleryDialogRef}
-            className={styles.galleryDialog}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={styles.galleryHeader}>
-              <h3 className={styles.galleryTitle}>{gallery.title}</h3>
-              <p className={styles.galleryCounter}>
-                Screenshot {gallery.index + 1} of {gallery.screenshots.length}
-              </p>
-              <button
-                type="button"
-                className={styles.galleryClose}
-                onClick={() => setGallery(null)}
-                aria-label="Close screenshots gallery"
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            <div className={styles.galleryStage}>
-              <button
-                type="button"
-                className={styles.galleryNav}
-                onClick={() => goGallery(-1)}
-                aria-label="Previous screenshot"
-              >
-                ←
-              </button>
-              <a
-                href={currentGalleryShotNormalized}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.galleryImageWrap}
-                aria-label="Open current screenshot in new tab"
-                onTouchStart={handleGalleryTouchStart}
-                onTouchEnd={handleGalleryTouchEnd}
-              >
-                <Image
-                  src={currentGalleryShotNormalized}
-                  alt={`${gallery.title} screenshot ${gallery.index + 1}`}
-                  fill
-                  sizes="(max-width: 991px) 95vw, 78vw"
-                  loading="lazy"
-                  quality={75}
-                />
-              </a>
-              <button
-                type="button"
-                className={styles.galleryNav}
-                onClick={() => goGallery(1)}
-                aria-label="Next screenshot"
-              >
-                →
-              </button>
-            </div>
-
-            <div className={styles.galleryThumbs}>
-              {gallery.screenshots.map((shot, index) => (
-                <button
-                  key={`${gallery.title}-${shot}`}
-                  type="button"
-                  className={
-                    index === gallery.index
-                      ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}`
-                      : styles.galleryThumbButton
-                  }
-                  onClick={() => setGallery({ ...gallery, index })}
-                  aria-label={`Open screenshot ${index + 1}`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Closing ───────────────────────────────────────────────────────── */}
       <MotionInView className={styles.blogClosing} aria-labelledby="blog-closing-title">
         <div>
           <span className={styles.blogClosingKicker}>Final note</span>
@@ -1079,9 +403,9 @@ export default function BlogPageClient() {
           </p>
         </div>
         <div className={styles.blogClosingActions}>
-          <Link href="/" className={styles.secondaryAction}>
+          <a href="/" className={styles.secondaryAction}>
             Back to Portfolio
-          </Link>
+          </a>
           <a
             href={YOUTUBE_CHANNEL_URL}
             target="_blank"
