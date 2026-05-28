@@ -31,7 +31,7 @@
   color: #fff;
   border-color: #fff;
   transform: translateY(-4px) scale(1.06);
-  box-shadow: 0 14px 30px rgba(123, 47, 242, 0.28);
+  box-shadow: none;
 }
 .btnEmail:active {
   transform: scale(0.98);
@@ -206,7 +206,7 @@
   color: var(--bg-color);
   border-style: solid;
   border-color: var(--main-color);
-  box-shadow: 0 14px 28px rgba(var(--main-color-rgb), 0.26);
+  box-shadow: none;
   transform: translateY(-4px) scale(1.05);
 }
 
@@ -224,7 +224,7 @@
   background: #6feab2;
   color: #031d14;
   border-color: #6feab2;
-  box-shadow: 0 14px 28px rgba(111, 234, 178, 0.24);
+  box-shadow: none;
 }
 
 @keyframes pdfPulse {
@@ -270,7 +270,7 @@
   background: linear-gradient(135deg, #a884ff, #c6a6ff);
   color: #1a0f2b;
   border-color: #c6a6ff;
-  box-shadow: 0 14px 28px rgba(168, 132, 255, 0.24);
+  box-shadow: none;
 }
 
 .homeButton .cvBtn {
