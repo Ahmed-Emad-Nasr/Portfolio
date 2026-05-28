@@ -9,7 +9,6 @@
 import { useCallback, useEffect, useRef, useState, memo } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import "yet-another-react-lightbox/styles.css";
 import styles from "./sensei-art.module.css";
 
 
@@ -93,6 +92,8 @@ const SenseiArt = memo(function SenseiArt() {
   const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(-1);
   const [shouldRenderGallery, setShouldRenderGallery] = useState(false);
+  const PAGE_SIZE = 12;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const open = index >= 0;
 
   const handleCloseLightbox = useCallback(() => setIndex(-1), []);
@@ -114,6 +115,24 @@ const SenseiArt = memo(function SenseiArt() {
     return () => observer.disconnect();
   }, []);
 
+  // Load lightbox CSS only when the gallery is about to render/open.
+  useEffect(() => {
+    if (!shouldRenderGallery) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        await import("yet-another-react-lightbox/styles.css");
+      } catch (e) {
+        if (!cancelled) {
+          // swallow — CSS failing to load shouldn't break UI
+          // eslint-disable-next-line no-console
+          console.warn("Failed to load lightbox styles", e);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [shouldRenderGallery]);
+
   return (
     <section ref={sectionRef} className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
@@ -130,8 +149,22 @@ const SenseiArt = memo(function SenseiArt() {
         {shouldRenderGallery ? (
           <div className={styles["art-gallery-content"]}>
             <div className={styles.Gallery}>
-              {GALLERY_IMAGES.map((image, i) => <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />)}
+              {GALLERY_IMAGES.slice(0, visibleCount).map((image, i) => (
+                <ImageItem key={image.src} image={image} index={i} setOpen={setIndex} meta={CERTIFICATION_METADATA[i]} />
+              ))}
             </div>
+
+            {visibleCount < GALLERY_IMAGES.length && (
+              <div className={styles.galleryActions}>
+                <button
+                  type="button"
+                  className={styles.primaryAction}
+                  onClick={() => setVisibleCount((n) => Math.min(GALLERY_IMAGES.length, n + PAGE_SIZE))}
+                >
+                  Show more
+                </button>
+              </div>
+            )}
           </div>
         ) : null}
       </div>

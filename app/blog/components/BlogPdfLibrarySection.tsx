@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import Image from "next/image";
 import MotionInView from "@/app/core/components/MotionInView";
 import BlogCard from "../BlogCard";
@@ -58,6 +59,9 @@ export default function BlogPdfLibrarySection({
   openGallery,
   normalizeHref,
 }: BlogPdfLibrarySectionProps) {
+  const PAGE_SIZE = 12;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
   return (
     <section className={styles.block} aria-labelledby="blog-pdfs-title">
       <MotionInView className={styles.blockHeading}>
@@ -240,7 +244,7 @@ export default function BlogPdfLibrarySection({
       )}
 
       <div className={styles.pdfGrid}>
-        {visiblePdfCards.map((item) => (
+        {visiblePdfCards.slice(0, visibleCount).map((item) => (
           <BlogCard
             key={item.id}
             {...item}
@@ -253,6 +257,19 @@ export default function BlogPdfLibrarySection({
           />
         ))}
       </div>
+
+      {visibleCount < visiblePdfCards.length && (
+        <div className={styles.loadMoreWrap}>
+          <button
+            type="button"
+            className={styles.primaryAction}
+            onClick={() => setVisibleCount((n) => Math.min(visiblePdfCards.length, n + PAGE_SIZE))}
+            aria-label="Load more PDF results"
+          >
+            Load more
+          </button>
+        </div>
+      )}
 
       {filteredCount === 0 && (
         <p className={styles.emptyState}>No PDF results match your current search/filter.</p>

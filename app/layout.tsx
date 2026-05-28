@@ -11,7 +11,7 @@ import { Overlock } from "next/font/google";
 import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/data/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
-import CustomCursor from "./components/custom-cursor";
+import CustomCursor from "./components/custom-cursor-shell";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
