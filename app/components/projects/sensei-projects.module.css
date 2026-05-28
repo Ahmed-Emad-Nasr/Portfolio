@@ -205,7 +205,7 @@
   background:
     radial-gradient(circle at 86% 12%, rgba(var(--accent-color-rgb), 0.08), transparent 34%),
     var(--surface-card-bg); 
-  border: 1px solid var(--surface-card-border); 
+  border: none; 
   border-radius: 12px;
   padding: 2.6rem 2.2rem;
   text-align: left;
@@ -232,7 +232,6 @@
 
 .single-project:hover {
   background: rgba(10, 13, 18, 0.95); 
-  border-color: rgba(var(--main-color-rgb), 0.5); 
   /* Removed heavy box-shadow and translateY for performance */
 }
 

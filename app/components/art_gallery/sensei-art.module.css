@@ -23,51 +23,15 @@
   position: relative; 
   border-radius: 8px;
   background: rgba(10, 15, 25, 0.6);
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  border: none;
   padding: 0.6rem;
   transition: all var(--motion-normal) var(--motion-ease);
   animation: galleryFadeIn 0.7s var(--motion-ease) backwards; /* ← fade-in خفيف */
 }
 
 .art_pic:hover {
-  border-color: var(--main-color);
   box-shadow: none;
   transform: translateY(-5px);
-}
-
-/* Targeting HUD (زوايا التنشين زي الرادار) */
-.art_pic::before, .art_pic::after {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 2px solid transparent;
-  transition: all var(--motion-normal) var(--motion-ease);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.art_pic::before {
-  top: 0; left: 0;
-  border-top-color: var(--main-color);
-  border-left-color: var(--main-color);
-  border-radius: 8px 0 0 0;
-  opacity: 0;
-  transform: translate(10px, 10px);
-}
-
-.art_pic::after {
-  bottom: 0; right: 0;
-  border-bottom-color: var(--main-color);
-  border-right-color: var(--main-color);
-  border-radius: 0 0 8px 0;
-  opacity: 0;
-  transform: translate(-10px, -10px);
-}
-
-.art_pic:hover::before, .art_pic:hover::after {
-  opacity: 1;
-  transform: translate(0, 0);
 }
 
 .imageButton {

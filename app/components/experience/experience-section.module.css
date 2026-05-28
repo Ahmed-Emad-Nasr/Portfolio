@@ -65,7 +65,7 @@
   background:
     radial-gradient(circle at 88% 12%, rgba(var(--accent-color-rgb), 0.08), transparent 40%),
     var(--surface-card-bg);
-  padding: 2.8rem; border-radius: var(--radius-card); border: 1px solid var(--surface-card-border);
+  padding: 2.8rem; border-radius: var(--radius-card); border: none;
   transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
   backface-visibility: hidden;
   position: relative; text-align: left;
@@ -74,7 +74,6 @@
 
 .content:hover {
   background: rgba(10, 13, 18, 0.95);
-  border-color: rgba(var(--main-color-rgb), 0.5); 
   /* Removed heavy box-shadow and translateY for performance */
 }
 
