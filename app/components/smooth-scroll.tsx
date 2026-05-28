@@ -68,9 +68,62 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         gsap.ticker.add(handleRaf);
         gsap.ticker.lagSmoothing(0);
 
+        const handleKeyDown = (e: KeyboardEvent) => {
+          // Ignore when modifier keys are used
+          if (e.altKey || e.ctrlKey || e.metaKey) return;
+
+          const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+          // Don't intercept typing in inputs or editable areas
+          if (targetTag === "input" || targetTag === "textarea" || (e.target as HTMLElement)?.isContentEditable) return;
+
+          const current = (lenis as any).scroll ?? window.scrollY ?? 0;
+          let delta = 0;
+          switch (e.code) {
+            case "ArrowDown":
+                delta = 100; // adjusted step
+              break;
+            case "ArrowUp":
+                delta = -100;
+              break;
+            case "PageDown":
+                delta = window.innerHeight * 0.9; // unchanged
+              break;
+            case "PageUp":
+                delta = -window.innerHeight * 0.9; // unchanged
+              break;
+            case "Space":
+              // Space without shift behaves like PageDown, with shift behaves like PageUp
+              if ((e as KeyboardEvent & { shiftKey?: boolean }).shiftKey) delta = -window.innerHeight * 0.9;
+              else delta = window.innerHeight * 0.9;
+              break;
+            case "Home":
+              e.preventDefault();
+              (lenis as any).scrollTo(0);
+              return;
+            case "End":
+              e.preventDefault();
+              (lenis as any).scrollTo(document.documentElement.scrollHeight || document.body.scrollHeight);
+              return;
+            default:
+              return; // not a scroll key
+          }
+
+          e.preventDefault();
+          const target = Math.max(0, Math.min((document.documentElement.scrollHeight || document.body.scrollHeight), current + delta));
+          // Use lenis.scrollTo if available
+          try {
+            (lenis as any).scrollTo(target);
+          } catch {
+            window.scrollTo({ top: target, behavior: "smooth" });
+          }
+        };
+
+        window.addEventListener("keydown", handleKeyDown, { passive: false });
+
         return () => {
           lenis.off("scroll", handleScroll);
           gsap.ticker.remove(handleRaf);
+          window.removeEventListener("keydown", handleKeyDown);
         };
       }, [lenis]);
 
@@ -90,9 +143,9 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     <ReactLenis
       root
       options={{
-        lerp: 0.08,
-        duration: 0.9,
-        smoothWheel: true,
+        lerp: prefersReducedMotion ? 1 : 0.08,
+        duration: prefersReducedMotion ? 0 : 0.9,
+        smoothWheel: !prefersReducedMotion,
         syncTouch: false,
       }}
     >
