@@ -1,21 +1,9 @@
 "use client";
 
 /*
- * File: page-client.tsx
+ * Client entry for the homepage — lazily loads heavy sections and
+ * manages the app-ready state for a smoother initial render.
  * Author: Ahmed Emad Nasr
- * Optimized by: Performance audit v2
- *
- * CHANGES:
- * - Added CSS transition on the content wrapper opacity (was appearing with a hard cut)
- * - Replaced height: "100vh" → "auto" swap with `visibility` + `position: fixed` trick:
- *     Avoids layout shift (CLS) — the content renders in its final position immediately,
- *     but is invisible and non-interactive until ready.
- * - MIN_LOADER_MS raised from 120ms → 0ms: the loader should hide as soon as content
- *     is actually ready, not after an arbitrary delay. Adjust if your loader has a
- *     minimum visual duration by design.
- * - ArtGallerySection: added loading skeleton (was `null` before — caused layout shift).
- * - Wrapped bootstrap in cleanup-safe pattern (already was, kept + clarified).
- * - Removed `window.setTimeout` in favor of `setTimeout` (no difference, just cleaner).
  */
 
 import { memo, useState, useEffect, useRef } from "react";
@@ -50,17 +38,7 @@ const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sen
  * These are the two states the content wrapper can be in.
  */
 const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
-  /*
-   * WHY NOT height: "100vh" → "auto":
-   * Changing height from a fixed value to "auto" forces a full layout recalculation
-   * on the entire page — that's expensive and causes CLS (Cumulative Layout Shift).
-   *
-   * Instead:
-   * - opacity: 0 → invisible but still in normal flow (no layout shift)
-   * - pointerEvents: "none" → non-interactive while hidden
-   * - visibility: "hidden" → also hides from assistive tech while loading
-   * The content renders at its real height immediately, just invisibly.
-   */
+  // Avoid layout shift: keep content rendered but hidden (opacity/visibility)
   opacity: 0,
   transform: "translate3d(0, 10px, 0)",
   pointerEvents: "none",

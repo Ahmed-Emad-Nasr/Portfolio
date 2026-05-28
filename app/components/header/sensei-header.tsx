@@ -8,10 +8,11 @@
 
 import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
-import { usePathname } from "next/navigation";
 
 const SCROLL_SAMPLE_MS = 180;
 const BLOG_PATH        = "/blog";

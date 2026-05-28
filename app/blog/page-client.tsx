@@ -66,8 +66,6 @@ const blogPdfResources: PdfResource[] = wannacryCase
   ? [cvResource, wannacryCase, ...otherCases]
   : [cvResource, ...caseEvidenceLibrary];
 
- 
-
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
 
@@ -204,9 +202,7 @@ export default function BlogPageClient() {
 
   const featuredVideo = blogFeaturedYoutubeVideo;
 
-  // filteredChannelVideos: featured video is always shown first (even when query is empty),
-  // but is also filtered by query so results are consistent — previously the featured video
-  // would always appear even when it didn't match the search term.
+  // Include featured video first but apply the same query filter for consistency.
   const filteredChannelVideos = useMemo<ChannelVideo[]>(() => {
     const featured: ChannelVideo = {
       videoId: featuredVideo.videoId,

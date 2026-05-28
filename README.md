@@ -1,6 +1,74 @@
 # Ahmed Emad Nasr Portfolio
+<h1 align="center">Sensei-Dev Portfolio</h1>
+<p align="center"><img src="https://socialify.git.ci/Ahmed-Emad-Nasr/Portfolio/image?language=1&name=1&owner=1&stargazers=1&theme=Dark" alt="project-image"></p>
+<p align="center">
+  <strong>Explore a world of innovative Software Development and creative problem-solving.</strong>
+</p>
+<p align="center">
+  <a href="#about">About</a> •
+  <a href="#features">Features</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#technologies">Technologies</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a>
+</p>
 
-Personal portfolio and cybersecurity blog built with Next.js, focused on SOC work, incident response, DFIR writeups, training material, and project evidence.
+---
+
+## About
+
+Welcome to Ahmed Emad Nasr, My Personal portfolio and cybersecurity blog built with Next.js, focused on SOC work, incident response, DFIR writeups, training material, and project evidence.
+## Features
+
+🌟 Here are some of the standout features of this portfolio:
+
+1. **Stunning Visual Design**:
+
+   - Visually appealing interface with smooth animations
+   - Cohesive color scheme creating a harmonious browsing experience
+
+2. **Fully Responsive Layout**:
+
+   - Seamless experience across all devices - from mobile phones to desktop computers
+
+3. **Interactive Project Showcase**:
+
+   - Explore a diverse range of projects
+   - Detailed descriptions and live demos where available
+
+4. **Image Processing**:
+
+   - Dynamic image gallery automatically optimized for performance
+   - Custom Python script for converting and adjusting images for web
+   - Image compression at various levels
+   - Extraction of images from a specified path
+
+5. **Interactive Landing Section**:
+
+   - Attractive and modern design with interactive animations
+
+6. **Specialized Sections**:
+
+   - Services: Clear and organized presentation of offered services
+   - Projects: Showcase of past and current projects
+   - Education and Languages: Information on educational experiences and language proficiencies
+   - Programming Languages: Display of utilized programming languages
+   - Image Gallery: Attractive presentation of images and graphics
+   - Design: Samples of design work
+   - Contact: Form for client communication
+   - Footer: Additional information and important links
+
+7. **Customizable Interface**:
+   - Easy-to-use customization options to tailor the viewing experience to your preferences
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/home.png" width="80%" alt="Screenshot 1">
+  <img src="screenshots/art_gallery.png" width="80%" alt="Screenshot 2">
+</p>
+
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-111827?style=flat-square&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)

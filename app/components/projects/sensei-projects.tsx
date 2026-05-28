@@ -7,13 +7,21 @@
  */
 
 import { memo, useMemo, useState } from "react";
-import { faStar, faCodeBranch, faEye, faArrowUpRightFromSquare, faCirclePlay, faCode } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faStar,
+  faCodeBranch,
+  faEye,
+  faArrowUpRightFromSquare,
+  faCirclePlay,
+  faCode,
+} from "@fortawesome/free-solid-svg-icons";
+
 import styles from "./sensei-projects.module.css";
 import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
 import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
 import { toBulletItems } from "@/app/core/utils/bulletUtils";
 import SectionHeader from "@/app/core/components/SectionHeader";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MotionInView from "@/app/core/components/MotionInView";
 import { projectBullets } from "@/app/core/data/projects";
 
