@@ -30,8 +30,8 @@
   background: linear-gradient(135deg, #1a1a2e 0%, #7b2ff2 100%);
   color: #fff;
   border-color: #fff;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: none;
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 14px 30px rgba(123, 47, 242, 0.28);
 }
 .btnEmail:active {
   transform: scale(0.98);
@@ -189,6 +189,10 @@
 }
 .btn svg { margin-left: 0.8rem; font-size: 1.8rem; }
 
+.btn:hover {
+  transform: translateY(-4px) scale(1.05);
+}
+
 
 .cvBtn {
   background: rgba(123, 47, 242, 0.15);
@@ -202,8 +206,8 @@
   color: var(--bg-color);
   border-style: solid;
   border-color: var(--main-color);
-  box-shadow: none;
-  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 14px 28px rgba(var(--main-color-rgb), 0.26);
+  transform: translateY(-4px) scale(1.05);
 }
 
 .cvBtn:hover svg {
@@ -220,6 +224,7 @@
   background: #6feab2;
   color: #031d14;
   border-color: #6feab2;
+  box-shadow: 0 14px 28px rgba(111, 234, 178, 0.24);
 }
 
 @keyframes pdfPulse {
@@ -245,7 +250,7 @@
 }
 
 .btn:hover::before {
-  left: 120%;
+  left: 135%;
 }
 
 .homeButton .btn,
@@ -265,7 +270,7 @@
   background: linear-gradient(135deg, #a884ff, #c6a6ff);
   color: #1a0f2b;
   border-color: #c6a6ff;
-  box-shadow: none;
+  box-shadow: 0 14px 28px rgba(168, 132, 255, 0.24);
 }
 
 .homeButton .cvBtn {

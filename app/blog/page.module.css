@@ -424,6 +424,11 @@
   transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
+.playlistCard:hover,
+.videoCard:hover {
+  transform: translateY(-5px);
+}
+
 @media (max-width: 992px) {
   .pdfCard {
     grid-template-columns: minmax(0, 1fr);
@@ -451,6 +456,11 @@
   border-color: rgba(var(--main-color-rgb), 0.6);
   background: rgba(10, 15, 25, 0.95);
   box-shadow: none;
+}
+
+.playlistCard:hover .embedPreviewImage,
+.videoCard:hover .embedPreviewImage {
+  transform: scale(1.03);
 }
 
 .caseSpotlight {
@@ -880,6 +890,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  transition: transform var(--motion-normal) var(--motion-ease);
 }
 
 .embedPreview img {
@@ -892,6 +903,10 @@
 
 .embedPreview:hover img {
   filter: saturate(1) brightness(0.85);
+}
+
+.embedPreview:hover .embedPreviewImage {
+  transform: scale(1.03);
 }
 
 .embedPlayButton {

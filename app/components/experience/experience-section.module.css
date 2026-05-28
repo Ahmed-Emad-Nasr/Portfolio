@@ -73,6 +73,7 @@
 }
 
 .content:hover {
+  transform: translateY(-5px);
   background: rgba(10, 13, 18, 0.95);
   /* Removed heavy box-shadow and translateY for performance */
 }
