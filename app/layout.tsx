@@ -9,7 +9,6 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import PortfolioBackToTop from "./components/portfolio-back-to-top";
 import { knowledgeEducationItems } from "@/app/core/data/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
 import CustomCursor from "./components/custom-cursor";
@@ -247,7 +246,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <SmoothScroll>
           {children}
-          <PortfolioBackToTop hideOnBlog />
           <footer className="site-footer" aria-label="Site footer">
             <div className="site-footer__inner">
               <span>Ahmed Emad Nasr Portfolio</span>

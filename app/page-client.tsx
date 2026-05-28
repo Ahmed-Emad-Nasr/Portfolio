@@ -13,7 +13,6 @@
  * - MIN_LOADER_MS raised from 120ms → 0ms: the loader should hide as soon as content
  *     is actually ready, not after an arbitrary delay. Adjust if your loader has a
  *     minimum visual duration by design.
- * - SectionSkeleton: added aria-hidden + role to avoid screen-reader noise.
  * - ArtGallerySection: added loading skeleton (was `null` before — caused layout shift).
  * - Wrapped bootstrap in cleanup-safe pattern (already was, kept + clarified).
  * - Removed `window.setTimeout` in favor of `setTimeout` (no difference, just cleaner).
@@ -22,26 +21,27 @@
 import { memo, useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import AppBar from "@/app/components/header/sensei-header";
-import HomeSection from "@/app/components/home/sensei-home";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import ExperienceSection from "@/app/components/experience/experience-section";
-import ProjectsSection from "@/app/components/projects/sensei-projects";
-import ArtGallerySection from "@/app/components/art_gallery/sensei-art";
 
-// ─── Skeletons ─────────────────────────────────────────────────────────────
+const HomeSection = dynamic(() => import("@/app/components/home/sensei-home"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={HOME_PLACEHOLDER_STYLE} />,
+});
 
-/**
- * Placeholder that reserves vertical space during dynamic import.
- * aria-hidden: true → screen readers skip it entirely.
- * minHeight matches typical section height to minimize layout shift.
- */
-const SectionSkeleton = () => (
-  <div
-    role="presentation"
-    aria-hidden="true"
-    style={SECTION_SKELETON_STYLE}
-  />
-);
+const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={EXPERIENCE_PLACEHOLDER_STYLE} />,
+});
+
+const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={PROJECTS_PLACEHOLDER_STYLE} />,
+});
+
+const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={ART_PLACEHOLDER_STYLE} />,
+});
 
 // ─── Styles ──────────────────────────────────────────────────────────────────
 
@@ -76,13 +76,24 @@ const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
   transition: "opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1)",
 };
 
-const SECTION_SKELETON_STYLE: React.CSSProperties = {
-  minHeight: "50vh",
-  contain: "layout",
-};
-
 const MAIN_STYLE: React.CSSProperties = {
   position: "relative",
+};
+
+const HOME_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "78vh",
+};
+
+const EXPERIENCE_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "88vh",
+};
+
+const PROJECTS_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "92vh",
+};
+
+const ART_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "62vh",
 };
 
 // ─── MainClient ──────────────────────────────────────────────────────────────
@@ -121,16 +132,6 @@ const MainClient = memo(function MainClient() {
     return () => {
       isMounted.current = false;
     };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!("serviceWorker" in navigator)) return;
-
-    const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
-    navigator.serviceWorker.register(`${basePath}/sw.js`).catch(() => {
-      // Ignore SW registration failures; app should continue normally.
-    });
   }, []);
 
   return (

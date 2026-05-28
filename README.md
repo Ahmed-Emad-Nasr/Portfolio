@@ -126,8 +126,6 @@ Before publishing, verify the following paths load correctly:
 
 - `/`
 - `/blog`
-- `/robots.txt`
-- `/sitemap.xml`
 
 If you update the public content or case library, regenerate and redeploy the export so the assets and metadata stay in sync.
 

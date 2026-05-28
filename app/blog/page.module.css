@@ -1189,31 +1189,6 @@
   min-width: 15rem;
 }
 
-.backToTop {
-  position: fixed;
-  right: 2rem;
-  bottom: 2rem;
-  z-index: 100;
-  background: rgba(5, 8, 14, 0.92);
-  color: var(--main-color);
-  border: 1px solid var(--main-color);
-  border-radius: 4px;
-  width: 48px;
-  height: 48px;
-  font-size: 1.8rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: monospace;
-  box-shadow: none;
-}
-
-.backToTop:hover {
-  background: var(--main-color);
-  color: #000;
-}
-
 /* =========================================
    10. PLAYLIST & VIDEO CARDS EXTRA
    ========================================= */

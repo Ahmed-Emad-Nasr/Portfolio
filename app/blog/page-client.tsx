@@ -1,5 +1,7 @@
 "use client";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   blogYoutubeVideos,
@@ -10,21 +12,42 @@ import {
 import {
   caseEvidenceLibrary,
   caseScreenshotsByEvidenceId,
-  EMPTY_SCREENSHOTS,
 } from "@/app/core/data/cases";
 import AppBar from "@/app/components/blog_header/sensei-header";
-import BlogCard from "./BlogCard";
-import HomeSection from "@/app/components/home/sensei-home";
-import BackToTop from "@/app/components/portfolio-back-to-top";
 import styles from "./page.module.css";
 import MotionInView from "@/app/core/components/MotionInView";
-import { getThumbnail, formatDate, normalizePublicHref } from "./blog-utils";
+import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState, ChannelVideo } from "./blog-types";
-import BlogHeroSection from "./components/BlogHeroSection";
-import BlogCaseNavigator from "./components/BlogCaseNavigator";
-import BlogPdfLibrarySection from "./components/BlogPdfLibrarySection";
-import BlogMediaSections from "./components/BlogMediaSections";
-import BlogGalleryModal from "./components/BlogGalleryModal";
+
+const HomeSection = dynamic(() => import("@/app/components/home/sensei-home"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={HOME_PLACEHOLDER_STYLE} />,
+});
+
+const BlogHeroSection = dynamic(() => import("./components/BlogHeroSection"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={HERO_PLACEHOLDER_STYLE} />,
+});
+
+const BlogCaseNavigator = dynamic(() => import("./components/BlogCaseNavigator"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={NAV_PLACEHOLDER_STYLE} />,
+});
+
+const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={PDF_PLACEHOLDER_STYLE} />,
+});
+
+const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" style={MEDIA_PLACEHOLDER_STYLE} />,
+});
+
+const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), {
+  ssr: false,
+  loading: () => null,
+});
 
 // ─── Module-level constants ───────────────────────────────────────────────────
 
@@ -47,6 +70,26 @@ const blogPdfResources: PdfResource[] = wannacryCase
 
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
+
+const HOME_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "34rem",
+};
+
+const HERO_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "28rem",
+};
+
+const NAV_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "18rem",
+};
+
+const PDF_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "52rem",
+};
+
+const MEDIA_PLACEHOLDER_STYLE: React.CSSProperties = {
+  minHeight: "42rem",
+};
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -73,16 +116,6 @@ export default function BlogPageClient() {
     const t = setTimeout(() => setQuery(rawQuery), 300);
     return () => clearTimeout(t);
   }, [rawQuery]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!("serviceWorker" in navigator)) return;
-
-    const basePath = process.env.NODE_ENV === "production" ? "/Portfolio" : "";
-    navigator.serviceWorker.register(`${basePath}/sw.js`).catch(() => {
-      // Ignore SW registration failures; app should continue normally.
-    });
-  }, []);
 
   // ── Filter options ────────────────────────────────────────────────────────
 
@@ -157,12 +190,8 @@ export default function BlogPageClient() {
     });
   }, [filteredPdfs, sortBy]);
 
-  // leadCase is derived from a module-level constant — deps array is intentionally empty.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const leadCase = useMemo(
     () => blogPdfResources.find((item) => item.id === wannacryId) ?? null,
-    // blogPdfResources is module-level and never changes at runtime.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -384,12 +413,14 @@ export default function BlogPageClient() {
         youtubeChannelUrl={YOUTUBE_CHANNEL_URL}
       />
 
-      <BlogGalleryModal
-        gallery={gallery}
-        currentShot={currentGalleryShotNormalized}
-        setGallery={setGallery}
-        goGallery={goGallery}
-      />
+      {gallery ? (
+        <BlogGalleryModal
+          gallery={gallery}
+          currentShot={currentGalleryShotNormalized}
+          setGallery={setGallery}
+          goGallery={goGallery}
+        />
+      ) : null}
 
       <MotionInView className={styles.blogClosing} aria-labelledby="blog-closing-title">
         <div>
@@ -403,9 +434,9 @@ export default function BlogPageClient() {
           </p>
         </div>
         <div className={styles.blogClosingActions}>
-          <a href="/" className={styles.secondaryAction}>
+          <Link href="/" className={styles.secondaryAction}>
             Back to Portfolio
-          </a>
+          </Link>
           <a
             href={YOUTUBE_CHANNEL_URL}
             target="_blank"
@@ -416,8 +447,6 @@ export default function BlogPageClient() {
           </a>
         </div>
       </MotionInView>
-
-      <BackToTop />
     </main>
   );
 }
