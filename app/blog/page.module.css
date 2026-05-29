@@ -395,8 +395,8 @@
 .playlistGrid,
 .videoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1rem;          /* ← تقليل من 2rem */
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 0.75rem;
   margin-top: 2.5rem;
   align-items: start;
 }
@@ -410,15 +410,15 @@
 .videoCard,
 .caseSpotlight,
 .featuredCard {
-  padding: 1.2rem;              /* ← تقليل من 1.6rem */
+  padding: 0.95rem;
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.9);
   box-shadow: none;
-  min-height: auto;             /* ← تقليل من 340px */
+  min-height: auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);  /* ← تبسيط */
-  gap: 1rem;                    /* ← تقليل من 1.8rem */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
   position: relative;
   overflow: hidden;
   transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
@@ -465,9 +465,9 @@
 
 .caseSpotlight {
   display: grid;
-  grid-template-columns: 1fr;   /* ← تبسيط من 1.2fr 0.8fr */
-  gap: 1rem;                    /* ← تقليل من 2rem */
-  margin-bottom: 1.5rem;        /* ← تقليل من 2.5rem */
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
   min-height: auto;
   background: rgba(10, 15, 25, 0.92);
   border: 1px solid rgba(var(--accent-color-rgb), 0.4);
@@ -493,14 +493,14 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  margin: 2rem auto 0;    /* ← تقليل من 2.6rem */
+  margin: 2rem auto 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  /* ← تقليل من repeat(3...) */
-  gap: 0.8rem;            /* ← تقليل من 1rem */
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.7rem;
 }
 
 .caseNavCard {
-  padding: 1rem;            /* ← تقليل من 1.35rem */
+  padding: 0.9rem;
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.92);
@@ -554,27 +554,27 @@
   z-index: 1;
   width: 100%;
   margin: 2rem auto 0;
-  padding: 1.4rem;
+  padding: 1.2rem;
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.18);
   background: rgba(5, 8, 14, 0.9);
 }
 
 .relatedCasesGrid {
-  margin-top: 0.8rem;       /* ← تقليل من 1.2rem */
+  margin-top: 0.7rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  /* ← تبسيط */
-  gap: 0.6rem;              /* ← تقليل من 1rem */
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.55rem;
 }
 
 .relatedCaseCard {
-  padding: 0.9rem;          /* ← تقليل من 1.2rem */
+  padding: 0.85rem;
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.18);
   background: rgba(6, 9, 15, 0.95);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;              /* ← تقليل من 0.55rem */
+  gap: 0.35rem;
 }
 
 .relatedCaseCard h3 {
@@ -1253,11 +1253,11 @@
   .page { padding: 11rem 4% 5rem; }
   .pdfGrid,
   .playlistGrid,
-  .videoGrid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .videoGrid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.2rem; }
   .heroGrid,
   .caseSpotlight { grid-template-columns: 1fr; }
   .featuredCard { grid-template-columns: 1fr; min-height: auto; gap: 1rem; }
-  .caseSpotlight { gap: 1.2rem; }
+  .caseSpotlight { gap: 0.9rem; }
   .metrics,
   .insightStrip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .toolbar { grid-template-columns: 1fr; }
@@ -1269,7 +1269,7 @@
 @media (max-width: 768px) {
   .page { padding: 9rem 1rem 4rem; }
   .toolbar { grid-template-columns: 1fr; }
-  .pdfGrid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .pdfGrid { grid-template-columns: 1fr; gap: 0.9rem; }
   .playlistGrid,
   .videoGrid { grid-template-columns: 1fr; gap: 1.2rem; }
 }
@@ -1307,8 +1307,8 @@
   .blockHeading p { font-size: 1.1rem; }
   .pdfGrid,
   .playlistGrid,
-  .videoGrid { grid-template-columns: 1fr; gap: 1rem; }
-  .pdfCard { padding: 1.2rem; }
+  .videoGrid { grid-template-columns: 1fr; gap: 0.9rem; }
+  .pdfCard { padding: 0.9rem; }
   .caseCardHead { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
   .badge { font-size: 0.9rem; padding: 0.25em 0.6em; }
   .cardTitle { font-size: 1.5rem; }
