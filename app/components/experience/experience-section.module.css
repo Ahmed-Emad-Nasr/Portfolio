@@ -4,7 +4,7 @@
  * Purpose: Experience timeline styles (Cybersecurity / SOC Theme)
  */
 
-.section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; }
+.section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: none; display: inline-block; padding-bottom: 2rem; }
@@ -12,10 +12,10 @@
 .title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
 .title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: none; }
 
-.container { margin: 0 auto; padding: 0 6%; max-width: 1550px; }
+.container { margin: 0 auto; padding: 0 5.25%; max-width: 1500px; }
 
 /* --- 1. Data Stream Timeline --- */
-.time-line { position: relative; max-width: 1200px; margin: 0 auto; padding: 2rem 0; }
+.time-line { position: relative; max-width: 1160px; margin: 0 auto; padding: 2rem 0; }
 .time-line::after {
   content: "";
   position: absolute;

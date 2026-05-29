@@ -14,7 +14,7 @@
   --blog-bg-dark: rgba(5, 8, 14, 0.95);
   --blog-bg-light: rgba(10, 15, 25, 0.8);
 
-  padding: 0 6% 6rem;
+  padding: 0 5.25% 6rem;
   font-family: var(--font-overlock), monospace, sans-serif;
   background-color: var(--bg-color);
   min-height: 100vh;
@@ -36,8 +36,10 @@
 .block {
   position: relative;
   z-index: 1;
-  width: min(100%, 1600px);
+  width: min(100%, 1540px);
   margin: 0 auto;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
 }
 
 .hero {
@@ -1119,7 +1121,7 @@
 .youtubeHub {
   position: relative;
   z-index: 1;
-  width: 100%;
+  width: min(100%, 1280px);
   margin: 3.5rem auto 0;
   padding: 1.8rem;
   border-radius: 8px;

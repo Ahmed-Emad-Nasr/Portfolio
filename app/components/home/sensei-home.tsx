@@ -147,7 +147,7 @@ const SenseiHome = memo(function SenseiHome() {
             <span className={styles.typingHighlight} aria-hidden="true" />
           </h2>
           <p>
-            SOC Analyst with hands-on experience across 10+ SOC training programs and 200+ simulated alerts (DEPI, ITI, projects). Skilled in monitoring, detection, SIEM/EDR investigations, alert triage, IOC analysis, log analysis across IR lifecycle.
+            Computer Science graduate with hands-on experience as a SOC Analyst and Blue Team Operator across 10+ SOC training programs and 200+ simulated alerts (DEPI, ITI, projects). Skilled in monitoring, detection, SIEM/EDR investigations, alert triage, IOC analysis, log analysis across IR lifecycle.
           </p>
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile">

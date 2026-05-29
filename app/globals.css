@@ -97,6 +97,7 @@ html {
   /* 62.5% → 1rem = 10px exactly (standard, predictable) */
   font-size: 62.5%;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
   scroll-behavior: auto;
   scroll-padding-top: clamp(7rem, 10vh, 10rem);
   background-color: var(--bg-color);
@@ -140,6 +141,26 @@ canvas,
 svg {
   max-width: 100%;
   height: auto;
+}
+
+.scrollProgressTrack {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0.25rem;
+  z-index: 3000;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.scrollProgressBar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--main-color), var(--accent-color));
+  will-change: transform;
 }
 
 /* Cinematic Text Selection */
@@ -249,7 +270,7 @@ main {
 
 /*--------- 6. Sections & Glassmorphism ---------*/
 section {
-  padding: 7.1rem 6% 5.9rem;
+  padding: 7.1rem 5.25% 5.9rem;
   position: relative;
   border-radius: var(--radius-card);
   margin-bottom: clamp(6rem, 10vw, 12rem);
@@ -261,6 +282,8 @@ section {
    * (e.g. the navbar) and clip parallax overflow.
    */
   contain: style;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
 }
 
 @media (max-width: 600px) {
@@ -363,7 +386,7 @@ section.glass,
 /*--------- 9. Responsive Breakpoints ---------*/
 @media (max-width: 991px) {
   section {
-    padding: 4rem 4% 4rem;
+    padding: 4rem 3.5% 4rem;
     margin-bottom: clamp(5rem, 8vw, 8rem);
   }
 }
@@ -456,6 +479,10 @@ section.glass,
 
   .cyber-alert-pulse {
     animation: none;
+  }
+
+  .scrollProgressBar {
+    transition: none;
   }
 }
 

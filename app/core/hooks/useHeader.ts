@@ -14,6 +14,7 @@ import {
   faFolder, 
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useScrollSpy } from "./useScrollSpy";
 
 const SECTION_ICONS: Record<string, IconProp> = {
   Home:       faHome,
@@ -23,93 +24,18 @@ const SECTION_ICONS: Record<string, IconProp> = {
 };
 
 const SECTIONS = Object.keys(SECTION_ICONS);
-const SCROLL_SAMPLE_MS = 180;
+const SPY_SECTIONS = SECTIONS.map((label) => ({ label, elementId: label }));
 
 export const useHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("Home");
+  const { activeSection, setActiveSection } = useScrollSpy({
+    sections: SPY_SECTIONS,
+    defaultSection: "Home",
+    storageKey: "portfolio-activeSection",
+  });
 
   const toggleMenu = useCallback((): void => {
     setIsMenuOpen((prev) => !prev);
-  }, []);
-
-  useEffect(() => {
-    // Safely access localStorage with try/catch for cross-origin iframes
-    try {
-      const savedSection = localStorage.getItem("activeSection");
-      if (savedSection && SECTIONS.includes(savedSection)) {
-        setActiveSection(savedSection);
-      }
-    } catch {
-      // localStorage is not available (cross-origin iframe, private browsing, etc.)
-    }
-
-    let rafId = 0;
-    let timeoutId: number | undefined;
-    let lastRun = 0;
-    let lastSection = "Home";
-
-    const handleScroll = (): void => {
-      const now = window.performance.now();
-      const elapsed = now - lastRun;
-
-      if (rafId || timeoutId !== undefined) return;
-
-      const evaluateSection = (): void => {
-        const isMobile = window.innerWidth <= 994;
-        const headerElement = document.querySelector<HTMLElement>("[data-site-header='true']");
-        const headerRect = headerElement?.getBoundingClientRect();
-        const headerHeight = headerRect?.height ?? (isMobile ? 64 : 76);
-        const headerTop = headerElement ? Number.parseFloat(window.getComputedStyle(headerElement).top || "0") : 0;
-        const topOffset = Number.isFinite(headerTop) ? headerTop : 0;
-        const marker = Math.max(72, Math.round(topOffset + headerHeight + (isMobile ? 8 : 12)));
-        let current = "Home";
-        let smallestDistance = Number.POSITIVE_INFINITY;
-
-        for (const section of SECTIONS) {
-          const el = document.getElementById(section);
-          if (!el) continue;
-          const { top } = el.getBoundingClientRect();
-          const distance = Math.abs(top - marker);
-
-          if (distance < smallestDistance) {
-            smallestDistance = distance;
-            current = section;
-          }
-        }
-
-        if (current !== lastSection) {
-          lastSection = current;
-          setActiveSection(current);
-          try {
-            localStorage.setItem("activeSection", current);
-          } catch {
-            // localStorage is not available; silently ignore
-          }
-        }
-
-        lastRun = window.performance.now();
-        rafId = 0;
-        timeoutId = undefined;
-      };
-
-      if (elapsed >= SCROLL_SAMPLE_MS) {
-        rafId = window.requestAnimationFrame(evaluateSection);
-        return;
-      }
-
-      timeoutId = window.setTimeout(() => {
-        rafId = window.requestAnimationFrame(evaluateSection);
-      }, SCROLL_SAMPLE_MS - elapsed);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId) window.cancelAnimationFrame(rafId);
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-    };
   }, []);
 
   useEffect(() => {

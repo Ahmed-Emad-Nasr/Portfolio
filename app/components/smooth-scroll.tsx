@@ -8,11 +8,62 @@ type LenisReactModule = typeof import("lenis/react");
 type GsapModule = typeof import("gsap");
 type ScrollTriggerModule = typeof import("gsap/ScrollTrigger");
 
+function ScrollProgressBar() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let rafId = 0;
+
+    const update = () => {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop || 0;
+      const scrollHeight = Math.max(doc.scrollHeight - window.innerHeight, 1);
+      setProgress(Math.min(100, Math.max(0, (scrollTop / scrollHeight) * 100)));
+      rafId = 0;
+    };
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(update);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  return (
+    <div className="scrollProgressTrack" aria-hidden="true">
+      <span
+        className="scrollProgressBar"
+        style={{ transform: `scaleX(${progress / 100})` }}
+      />
+    </div>
+  );
+}
+
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const prefersReducedMotion = useReducedMotion();
   const [lenisModule, setLenisModule] = useState<LenisReactModule | null>(null);
   const [gsapModule, setGsapModule] = useState<GsapModule | null>(null);
   const [scrollTriggerModule, setScrollTriggerModule] = useState<ScrollTriggerModule | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -134,7 +185,10 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   }, [gsapModule, lenisModule, scrollTriggerModule]);
 
   if (prefersReducedMotion || !lenisModule || !gsapModule || !scrollTriggerModule || !LenisScrollTriggerSync) {
-    return <>{children}</>;
+    return <>
+      <ScrollProgressBar />
+      {children}
+    </>;
   }
 
   const { ReactLenis } = lenisModule;
@@ -143,12 +197,15 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     <ReactLenis
       root
       options={{
-        lerp: prefersReducedMotion ? 1 : 0.08,
-        duration: prefersReducedMotion ? 0 : 0.9,
+        lerp: prefersReducedMotion ? 1 : 0.06,
+        duration: prefersReducedMotion ? 0 : 0.85,
         smoothWheel: !prefersReducedMotion,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1.1,
         syncTouch: false,
       }}
     >
+      <ScrollProgressBar />
       <LenisScrollTriggerSync />
       {children}
     </ReactLenis>

@@ -12,6 +12,7 @@ import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { useScrollSpy } from "@/app/core/hooks/useScrollSpy";
 
 const SCROLL_SAMPLE_MS = 180;
 
@@ -19,6 +20,12 @@ const NAV_ITEMS = [
   { label: "Home", targetId: null, icon: faHouse },
   { label: "Cases", targetId: "blog-pdfs-title", icon: faFileLines },
   { label: "YouTube Hub", targetId: "youtube-hub-title", icon: faYoutube },
+] as const;
+
+const SPY_SECTIONS = [
+  { label: "Home", elementId: "main-content" },
+  { label: "Cases", elementId: "blog-pdfs-title" },
+  { label: "YouTube Hub", elementId: "youtube-hub-title" },
 ] as const;
 
 /** Shield icon — inline SVG so no extra dep needed */
@@ -31,7 +38,11 @@ const ShieldIcon = () => (
 const SenseiHeader = memo(function SenseiHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("Home");
+  const { activeSection, setActiveSection } = useScrollSpy({
+    sections: SPY_SECTIONS,
+    defaultSection: "Home",
+    storageKey: "blog-activeSection",
+  });
 
   // ── Body scroll lock ────────────────────────────────────────────────────────
   useEffect(() => {
