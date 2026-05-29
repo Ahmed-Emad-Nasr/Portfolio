@@ -210,12 +210,6 @@ const SenseiHeader = memo(function SenseiHeader() {
           ))}
         </nav>
 
-        {/* Online status chip */}
-        <div className={styles.statusChip} aria-hidden="true">
-          <span className={styles.statusDot} />
-          online
-        </div>
-
         {/* Blog CTA */}
         <Link
           href={BLOG_PATH}

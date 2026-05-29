@@ -210,7 +210,7 @@ button:hover:not(:disabled) {
   background: rgba(var(--main-color-rgb), 0.14);
   color: #fff;
   border-color: var(--main-color);
-  transform: none;
+  transform: translateY(-1px);
 }
 
 button:active:not(:disabled) {
@@ -307,6 +307,21 @@ section.glass,
   position: relative;
   overflow: hidden;
   will-change: auto;
+}
+
+section.glass:hover,
+.glass-card:hover {
+  border-color: rgba(var(--main-color-rgb), 0.32);
+  transform: translateY(-1px);
+}
+
+.glass-card:hover {
+  background: linear-gradient(
+    120deg,
+    rgba(8, 18, 33, 0.84) 60%,
+    rgba(var(--main-color-rgb), 0.08) 78%,
+    rgba(var(--accent-color-rgb), 0.05) 100%
+  );
 }
 
 .glass-card:hover {

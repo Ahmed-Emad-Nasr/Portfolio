@@ -243,14 +243,45 @@
 .primaryAction::after  { content: " ]"; opacity: 0.5; margin-left: 4px; }
 
 .downloadAction {
-  color: #ffffff !important;
-  border-color: rgba(var(--accent-color-rgb), 0.8) !important;
+  background: rgba(8, 28, 24, 0.92) !important;
+  color: #dcfff1 !important;
+  border-color: rgba(58, 224, 160, 0.78) !important;
 }
 
 .downloadAction:hover {
-  background: rgba(var(--accent-color-rgb), 0.2) !important;
-  border-color: var(--accent-color) !important;
-  color: #fff !important;
+  background: rgba(10, 40, 32, 0.98) !important;
+  border-color: rgba(102, 255, 196, 0.95) !important;
+  color: #f5fffb !important;
+}
+
+.viewAction {
+  background: rgba(8, 20, 34, 0.92) !important;
+  color: #d8f4ff !important;
+  border-color: rgba(56, 170, 255, 0.78) !important;
+}
+
+.galleryOpenAction {
+  background: rgba(8, 24, 30, 0.92) !important;
+  color: #e1fffb !important;
+  border-color: rgba(66, 240, 205, 0.72) !important;
+}
+
+.cardActions .viewAction:hover {
+  background: rgba(10, 28, 46, 0.98) !important;
+  color: #f3fbff !important;
+  border-color: rgba(98, 198, 255, 0.95) !important;
+}
+
+.cardActions .downloadAction:hover {
+  background: rgba(10, 40, 32, 0.98) !important;
+  color: #f5fffb !important;
+  border-color: rgba(102, 255, 196, 0.95) !important;
+}
+
+.cardActions .galleryOpenAction:hover {
+  background: rgba(10, 34, 36, 0.98) !important;
+  color: #f4fffd !important;
+  border-color: rgba(88, 245, 214, 0.95) !important;
 }
 
 /* =========================================
@@ -273,14 +304,7 @@
   box-shadow: none;
 }
 
-@media (min-width: 992px) {
-  .toolbar { position: sticky; top: 9.6rem; z-index: 12; }
-}
-
 .searchInput {
-  width: 100%;
-  min-height: 46px;
-  border-radius: 4px;
   border: 1px solid rgba(var(--main-color-rgb), 0.4);
   background: rgba(0, 0, 0, 0.5);
   color: var(--main-color);
@@ -455,6 +479,7 @@
 .pdfCard:hover,
 .videoCard:hover,
 .playlistCard:hover {
+  transform: translateY(-4px);
   border-color: rgba(var(--main-color-rgb), 0.6);
   background: rgba(10, 15, 25, 0.95);
   box-shadow: none;
@@ -507,6 +532,13 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.92);
   box-shadow: none;
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+}
+
+.caseNavCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--main-color-rgb), 0.45);
+  background: rgba(10, 15, 25, 0.96);
 }
 
 .caseNavCenter {
@@ -577,6 +609,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+}
+
+.relatedCaseCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--accent-color-rgb), 0.35);
+  background: rgba(10, 15, 25, 0.98);
 }
 
 .relatedCaseCard h3 {
@@ -613,6 +652,10 @@
   font-family: monospace;
   font-size: 1.1rem;
   text-transform: uppercase;
+}
+
+.relatedCaseCard a:hover {
+  color: var(--accent-color);
 }
 
 .pdfCardBody {
@@ -832,6 +875,13 @@
   background: #020408;
   cursor: pointer;
   aspect-ratio: 16 / 9;
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+}
+
+.shotThumb:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--main-color-rgb), 0.5);
+  background: #05080f;
 }
 
 .shotGrid {
