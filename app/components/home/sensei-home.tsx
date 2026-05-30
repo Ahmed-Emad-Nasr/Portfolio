@@ -112,7 +112,7 @@ const SenseiHome = memo(function SenseiHome() {
             title="Open introduction video"
           >
             <Image
-              src="/Assets/art-gallery/Images/logo/3omda.webp"
+              src="Assets/art-gallery/Images/logo/3omda.webp"
               alt="Ahmed Emad Nasr portrait"
               className={styles.image}
               width={350}
