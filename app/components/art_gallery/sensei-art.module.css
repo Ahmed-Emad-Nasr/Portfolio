@@ -22,12 +22,20 @@
   width: 100%; 
   position: relative; 
   border-radius: 8px;
-  background: rgba(10, 15, 25, 0.6);
-  border: none;
-  padding: 0.6rem;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  padding: 0;
   transition: all var(--motion-normal) var(--motion-ease);
   animation: galleryFadeIn 0.7s var(--motion-ease) backwards; /* ← fade-in خفيف */
 }
+
+.art_pic::before,
+.art_pic::after {
+  content: none !important;
+}
+
 
 .art_pic:hover {
   box-shadow: none;
@@ -78,6 +86,9 @@
 
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; border-radius: 4px;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
   cursor: pointer;
   filter: grayscale(15%) contrast(1.1); /* شكل داتا بيز قديم شوية */
   transition: filter var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
@@ -90,7 +101,8 @@
 }
 
 .imageButton:focus-visible .galleryImg {
-  border-color: rgba(var(--main-color-rgb), 0.8);
+  border: 0;
+  outline: 0;
   box-shadow: none;
 }
 
@@ -98,9 +110,9 @@
 .skeletonItem {
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(10, 15, 25, 0.6);
-  border: 1px dashed rgba(var(--main-color-rgb), 0.2);
-  padding: 0.6rem;
+  background: transparent;
+  border: 0;
+  padding: 0;
 }
 
 .skeletonThumb {
@@ -178,6 +190,6 @@
 
   .art_pic,
   .skeletonItem {
-    padding: 0.5rem;
+     padding: 0;
   }
 }
