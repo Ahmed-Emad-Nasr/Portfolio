@@ -50,6 +50,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const hasScreenshots = screenshots.length > 0;
     const primaryScreenshot = screenshots[0];
     const secondaryScreenshot = screenshots[1];
+    const cardRef = React.useRef<HTMLElement | null>(null);
+    const [shouldRenderMedia, setShouldRenderMedia] = React.useState(false);
 
     // Track load state for each image independently:
     // null  → no image / not yet attempted
@@ -87,8 +89,27 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
       });
     }, [secondaryScreenshot, normalizeHref]);
 
+    React.useEffect(() => {
+      if (!hasScreenshots) return;
+      const node = cardRef.current;
+      if (!node) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          setShouldRenderMedia(true);
+          observer.disconnect();
+        },
+        { rootMargin: "240px 0px" }
+      );
+
+      observer.observe(node);
+      return () => observer.disconnect();
+    }, [hasScreenshots]);
+
     return (
       <article
+        ref={cardRef}
         className={[
           styles.pdfCard,
           hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly,
@@ -206,7 +227,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
               className={styles.primaryShot}
               aria-label={`Open main screenshot for ${title}`}
             >
-              {primarySrc && (
+              {shouldRenderMedia && primarySrc && (
                 <Image
                   src={primarySrc}
                   alt={`${title} main screenshot`}
@@ -228,7 +249,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                   className={styles.shotThumb}
                   aria-label={`Open screenshot 2 for ${title}`}
                 >
-                  {secondarySrc && (
+                  {shouldRenderMedia && secondarySrc && (
                     <Image
                       src={secondarySrc}
                       alt={`${title} screenshot 2`}
