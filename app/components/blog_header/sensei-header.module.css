@@ -23,7 +23,7 @@
   gap: 0.5rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.22);
-  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
   overflow: visible;
 }
 
@@ -63,7 +63,7 @@
   width: 40%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.09), transparent);
-  animation: hudSweep 4s infinite linear;
+  animation: hudSweep var(--anim-very-slow) infinite linear;
   pointer-events: none;
   border-radius: inherit;
 }
@@ -156,7 +156,7 @@
   border: 1px solid transparent;
   white-space: nowrap;
   min-height: 36px;
-  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
 .navbar a svg {
@@ -221,7 +221,7 @@
   border-radius: 50%;
   background: var(--main-color);
   flex-shrink: 0;
-  animation: dotPulse 2.2s infinite;
+  animation: dotPulse var(--anim-slow) var(--motion-ease) infinite;
 }
 
 @keyframes dotPulse {
@@ -252,7 +252,7 @@
   min-height: 36px;
   cursor: pointer;
   z-index: 1003;
-  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.12s ease;
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
 .blogLink::before {
@@ -293,7 +293,7 @@
   min-width: 40px;
   min-height: 40px;
   border-radius: 6px;
-  transition: border-color 0.16s ease, background 0.16s ease;
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
   flex-shrink: 0;
 }
 
@@ -308,7 +308,7 @@
   background: var(--main-color);
   border-radius: 1px;
   transform-origin: center;
-  transition: transform 0.2s ease, opacity 0.15s ease;
+  transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
 }
 
 .MenuIcon.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
@@ -412,7 +412,7 @@
     visibility: hidden;
     pointer-events: none;
     transform: translateY(-8px);
-    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    transition: opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease), visibility var(--motion-normal) var(--motion-ease);
   }
 
   /* Mobile dropdown header — sys label row */

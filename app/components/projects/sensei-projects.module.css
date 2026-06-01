@@ -155,7 +155,7 @@
   font-family: monospace;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--motion-normal) var(--motion-ease);
 }
 
 .refresh-btn:hover {
@@ -488,7 +488,7 @@
   display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
   padding: 0.8rem 1.4rem; border-radius: 4px; border: 1px solid rgba(var(--accent-color-rgb), 0.4);
   background: rgba(var(--accent-color-rgb), 0.1); color: var(--accent-color); font-size: 1.25rem;
-  font-family: monospace; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase;
+  font-family: monospace; font-weight: 700; cursor: pointer; transition: all var(--motion-normal) var(--motion-ease); text-transform: uppercase;
 }
 
 .reset-filter-btn:hover {

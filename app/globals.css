@@ -50,17 +50,27 @@
   --shadow-glow: none;
   --shadow-glow-hover: none;
 
-  /* Cinematic Motion - Optimized for weak devices */
-  --motion-fast: 180ms;       /* tuned for snappier feel */
-  --motion-normal: 240ms;     /* tuned for snappier feel */
-  --motion-slow: 360ms;       /* tuned for snappier feel */
-  --motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-  
-  /* Animation Durations - للـ keyframes */
-  --anim-fast: 320ms;         /* shorter keyframe durations */
-  --anim-medium: 800ms;       /* shorter keyframe durations */
-  --anim-slow: 1.2s;          /* shorter keyframe durations */
-  --anim-very-slow: 1.8s;     /* shorter keyframe durations */
+  /* Cinematic Motion - Slower, cinematic, consistent across site */
+  --motion-fast: 320ms;       /* snappy but still cinematic */
+  --motion-normal: 520ms;     /* primary site transition duration */
+  --motion-slow: 860ms;       /* slower interactions */
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Animation Durations - للـ keyframes (cinematic rhythm) */
+  --anim-fast: 480ms;         /* quick keyframe (short) */
+  --anim-medium: 1.2s;        /* medium, cinematic */
+  --anim-slow: 2.4s;          /* slow, graceful */
+  --anim-very-slow: 4s;       /* very slow, dramatic */
+
+  /* Stagger step for list/gallery entrances */
+  --stagger-step: 0.08s;
+
+  /* Typing / cursor timings (centralized) */
+  --typing-cursor: 0.9s;
+  --typing-typing: 16s;
+  --typing-words: 16s;
+  --typing-textDrift: 5.5s;
+  --typing-pdfPulse: 0.9s;
 
   /* Blurs */
   --ui-blur: 6px;   /* reduce blur cost */
@@ -512,7 +522,7 @@ section.glass:hover,
 
 .cyber-glitch:hover {
   /* keep the color shift without any shadow artifacts */
-  animation: globalGlitch 0.9s cubic-bezier(0.25, 0.1, 0.25, 1) both 1;
+  animation: globalGlitch var(--anim-fast) var(--motion-ease) both 1;
   color: var(--main-color);
 }
 
@@ -555,7 +565,7 @@ section.glass:hover,
 
 /* 3. Pulse for alerts */
 .cyber-alert-pulse {
-  animation: cyberAlertPulse 1.4s ease-in-out infinite;
+  animation: cyberAlertPulse var(--anim-medium) var(--motion-ease) infinite;
   will-change: opacity;
 }
 

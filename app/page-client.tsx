@@ -47,7 +47,7 @@ const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
   transform: "translate3d(0, 10px, 0)",
   pointerEvents: "none",
   visibility: "hidden",
-  transition: "opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1)",
+  transition: "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)",
 };
 
 const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
@@ -55,7 +55,7 @@ const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
   transform: "translate3d(0, 0, 0)",
   pointerEvents: "auto",
   visibility: "visible",
-  transition: "opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1)",
+  transition: "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)",
 };
 
 const MAIN_STYLE: React.CSSProperties = {

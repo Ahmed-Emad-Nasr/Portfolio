@@ -109,13 +109,34 @@
 
 /* Availability-related styles removed to avoid dead CSS (widget deleted) */
 
-.typingText { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; min-width: 0; width: 100%; margin-bottom: 1.2rem; animation: textDrift var(--anim-very-slow) ease-in-out infinite; }
-.typingHighlight { position: relative; color: var(--main-color); }
-.typingHighlight::before { content: " "; animation: words 16s infinite; }
+.typingText {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  min-width: 0;
+  width: 100%;
+  margin-bottom: 1.2rem;
+  animation: textDrift var(--typing-textDrift) ease-in-out infinite;
+}
+
+.typingHighlight {
+  position: relative;
+  color: var(--main-color);
+}
+
+.typingHighlight::before {
+  content: " ";
+  animation: words var(--typing-words) infinite;
+}
+
 .typingHighlight::after {
-  content: " "; position: absolute; background-color: black; width: calc(100% + 8px);
-  height: 100%; border-left: 3px solid var(--bg-color); right: 0;
-  animation: cursor 0.9s step-end infinite, typing 16s steps(14) infinite;
+  content: " ";
+  position: absolute;
+  background-color: black;
+  width: calc(100% + 8px);
+  height: 100%;
+  border-left: 3px solid var(--bg-color);
+  right: 0;
+  animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite;
 }
 
 @keyframes cursor { to { border-left: 2px solid var(--main-color); } }
@@ -210,7 +231,7 @@
   transform: translateY(-4px) scale(1.05);
 }
 
-.cvBtn:hover svg {
+  .cvBtn:hover svg {
   animation: pdfPulse 0.9s ease-in-out infinite;
 }
 
@@ -310,19 +331,19 @@
   /* availability dot animations removed */
 
   .typingText {
-    animation: textDrift 5.5s ease-in-out infinite !important;
+    animation: textDrift var(--typing-textDrift) ease-in-out infinite !important;
   }
 
   .typingHighlight::before {
-    animation: words 16s infinite !important;
+    animation: words var(--typing-words) infinite !important;
   }
 
   .typingHighlight::after {
-    animation: cursor 0.9s step-end infinite, typing 16s steps(14) infinite !important;
+    animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite !important;
   }
 
   .cvBtn:hover svg {
-    animation: pdfPulse 0.9s ease-in-out infinite !important;
+    animation: pdfPulse var(--typing-pdfPulse) ease-in-out infinite !important;
   }
 }
 

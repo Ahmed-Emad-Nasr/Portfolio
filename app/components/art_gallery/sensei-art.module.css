@@ -28,7 +28,7 @@
   box-shadow: none;
   padding: 0;
   transition: all var(--motion-normal) var(--motion-ease);
-  animation: galleryFadeIn 0.7s var(--motion-ease) backwards; /* ← fade-in خفيف */
+  animation: galleryFadeIn var(--anim-fast) var(--motion-ease) backwards; /* ← fade-in خفيف */
 }
 
 .art_pic::before,
@@ -74,15 +74,15 @@
 }
 
 /* Gallery Items Staggered Animation */
-.Gallery > .art_pic:nth-child(1) { animation-delay: 0.1s; }
-.Gallery > .art_pic:nth-child(2) { animation-delay: 0.2s; }
-.Gallery > .art_pic:nth-child(3) { animation-delay: 0.3s; }
-.Gallery > .art_pic:nth-child(4) { animation-delay: 0.4s; }
-.Gallery > .art_pic:nth-child(5) { animation-delay: 0.5s; }
-.Gallery > .art_pic:nth-child(6) { animation-delay: 0.6s; }
-.Gallery > .art_pic:nth-child(7) { animation-delay: 0.7s; }
-.Gallery > .art_pic:nth-child(8) { animation-delay: 0.8s; }
-.Gallery > .art_pic:nth-child(9) { animation-delay: 0.9s; }
+.Gallery > .art_pic:nth-child(1) { animation-delay: calc(var(--stagger-step) * 1); }
+.Gallery > .art_pic:nth-child(2) { animation-delay: calc(var(--stagger-step) * 2); }
+.Gallery > .art_pic:nth-child(3) { animation-delay: calc(var(--stagger-step) * 3); }
+.Gallery > .art_pic:nth-child(4) { animation-delay: calc(var(--stagger-step) * 4); }
+.Gallery > .art_pic:nth-child(5) { animation-delay: calc(var(--stagger-step) * 5); }
+.Gallery > .art_pic:nth-child(6) { animation-delay: calc(var(--stagger-step) * 6); }
+.Gallery > .art_pic:nth-child(7) { animation-delay: calc(var(--stagger-step) * 7); }
+.Gallery > .art_pic:nth-child(8) { animation-delay: calc(var(--stagger-step) * 8); }
+.Gallery > .art_pic:nth-child(9) { animation-delay: calc(var(--stagger-step) * 9); }
 
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; border-radius: 4px;
