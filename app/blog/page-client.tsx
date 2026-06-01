@@ -13,7 +13,6 @@ import {
   caseEvidenceLibrary,
   caseScreenshotsByEvidenceId,
 } from "@/app/core/data/cases";
-import AppBar from "@/app/components/blog_header/sensei-header";
 import styles from "./page.module.css";
 import MotionInView from "@/app/core/components/MotionInView";
 import { formatDate, normalizePublicHref } from "./blog-utils";
@@ -45,6 +44,11 @@ const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections")
 });
 
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const AppBar = dynamic(() => import("@/app/components/blog_header/sensei-header"), {
   ssr: false,
   loading: () => null,
 });

@@ -8,8 +8,12 @@
 
 import { memo, useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import AppBar from "@/app/components/header/sensei-header";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+
+const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const HomeSection = dynamic(() => import("@/app/components/home/sensei-home"), {
   ssr: false,
