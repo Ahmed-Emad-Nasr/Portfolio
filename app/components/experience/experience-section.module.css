@@ -157,6 +157,39 @@
   box-shadow: none;
 }
 
+.loadMoreWrap {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.primaryAction {
+  min-height: 42px;
+  padding: 0.6rem 1.4rem;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.6);
+  background: rgba(10, 15, 25, 0.8);
+  color: #e2f1ff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
+}
+
+.primaryAction:hover {
+  background: rgba(var(--main-color-rgb), 0.12);
+  color: #fff;
+  border-color: var(--main-color);
+}
+
+.primaryAction:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
 /* Hover States for Content */
 .content:hover .tag h2 { color: #fff; }
 .content:hover .titleIcon { color: var(--main-color); }

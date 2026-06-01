@@ -5,6 +5,7 @@ import BlogCard from "../BlogCard";
 import styles from "../page.module.css";
 import type { PdfResource } from "../blog-types";
 import { EMPTY_SCREENSHOTS } from "@/app/core/data/cases";
+import { useEffect } from "react";
 
 type BlogPdfLibrarySectionProps = {
   filteredCount: number;
@@ -59,8 +60,12 @@ export default function BlogPdfLibrarySection({
   openGallery,
   normalizeHref,
 }: BlogPdfLibrarySectionProps) {
-  const PAGE_SIZE = 12;
+  const PAGE_SIZE = 4;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [visiblePdfCards.length]);
 
   return (
     <section className={styles.block} aria-labelledby="blog-pdfs-title">
@@ -264,9 +269,9 @@ export default function BlogPdfLibrarySection({
             type="button"
             className={styles.primaryAction}
             onClick={() => setVisibleCount((n) => Math.min(visiblePdfCards.length, n + PAGE_SIZE))}
-            aria-label="Load more PDF results"
+              aria-label="Show more PDF results"
           >
-            Load more
+              Show more
           </button>
         </div>
       )}

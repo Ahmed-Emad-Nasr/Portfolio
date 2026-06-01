@@ -6,7 +6,7 @@
  * Purpose: Render experience timeline entries and calculated time ranges
  */
 
-import { memo, useMemo } from "react";
+import { memo, useMemo, useState } from "react";
 import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { calculateExperience } from "@/app/core/utils/experienceUtils";
@@ -102,6 +102,11 @@ const TimelineItem = memo<TimelineItemProps>(({
 TimelineItem.displayName = "TimelineItem";
 
 function ExperienceSection() {
+  const PAGE_SIZE = 4;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const visibleItems = knowledgeEducationItems.slice(0, visibleCount);
+
   return (
     <section className={styles["section-education"]} id="Experience">
       <div className={styles.container}>
@@ -110,12 +115,24 @@ function ExperienceSection() {
         </div>
         {/* إضافة role="list" لدعم الـ Screen Readers */}
         <div className={styles["time-line"]} role="list" aria-label="Work Experience Timeline">
-          {knowledgeEducationItems.map((item, index) => {
+          {visibleItems.map((item, index) => {
             // توزيع الكروت تلقائياً (يمين/يسار) بناءً على الـ index في حال عدم وجود isRight في الداتا
             const isRightSide = item.isRight !== undefined ? item.isRight : index % 2 !== 0;
             return <TimelineItem key={`exp-item-${index}`} {...item} isRight={isRightSide} />;
           })}
         </div>
+
+        {visibleCount < knowledgeEducationItems.length ? (
+          <div className={styles.loadMoreWrap}>
+            <button
+              type="button"
+              className={styles.primaryAction}
+              onClick={() => setVisibleCount((count) => Math.min(knowledgeEducationItems.length, count + PAGE_SIZE))}
+            >
+              Show more
+            </button>
+          </div>
+        ) : null}
       </div>
     </section>
   );

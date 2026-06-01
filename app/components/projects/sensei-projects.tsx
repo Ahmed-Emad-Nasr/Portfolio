@@ -6,7 +6,7 @@
  * Purpose: Render GitHub projects section with stats, tags, and external links
  */
 
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStar,
@@ -212,8 +212,10 @@ const ProjectSkeleton = memo<ProjectSkeletonProps>(({ index }) => (
 ProjectSkeleton.displayName = "ProjectSkeleton";
 
 const SenseiProjects = memo(function SenseiProjects() {
-  const { repos, isLoading, source, loadNotice, loadError, cacheUpdatedAt, refresh } = useGitHubRepos();
+  const { repos, isLoading, source, loadNotice, loadError, cacheUpdatedAt, hasMore, isLoadingMore, loadRemainingRepos, refresh } = useGitHubRepos();
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
+  const PAGE_SIZE = 4;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const filterCounts = useMemo(() => getFilterCounts(repos), [repos]);
 
   const cacheLabel = useMemo(() => {
@@ -231,9 +233,25 @@ const SenseiProjects = memo(function SenseiProjects() {
     return repos.filter((repo) => getCategoriesForRepo(repo).includes(activeFilter));
   }, [repos, activeFilter]);
 
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [activeFilter]);
+
   const summaryText = isLoading
     ? "Loading project data from GitHub..."
     : `${filteredRepos.length} project${filteredRepos.length === 1 ? "" : "s"} shown`;
+
+  const handleShowMore = async () => {
+    if (visibleCount < filteredRepos.length) {
+      setVisibleCount((count) => Math.min(filteredRepos.length, count + PAGE_SIZE));
+      return;
+    }
+
+    if (hasMore && !isLoadingMore) {
+      await loadRemainingRepos();
+      setVisibleCount((count) => count + PAGE_SIZE);
+    }
+  };
 
   return (
     <section className={styles["section-projects"]} id="Projects">
@@ -288,7 +306,7 @@ const SenseiProjects = memo(function SenseiProjects() {
               <ProjectSkeleton key={`project-skeleton-${index}`} index={index} />
             ))
           ) : filteredRepos.length > 0 ? (
-            filteredRepos.map((repo, index) => (
+            filteredRepos.slice(0, visibleCount).map((repo, index) => (
               <ProjectItem key={repo.id} repo={repo} isRight={index % 2 !== 0} />
             ))
           ) : (
@@ -301,6 +319,19 @@ const SenseiProjects = memo(function SenseiProjects() {
             </div>
           )}
         </div>
+
+        {!isLoading && (filteredRepos.length > visibleCount || hasMore) ? (
+          <div className={styles.loadMoreWrap}>
+            <button
+              type="button"
+              className={styles.primaryAction}
+              onClick={() => void handleShowMore()}
+              disabled={isLoadingMore}
+            >
+              {isLoadingMore ? "Loading..." : "Show more"}
+            </button>
+          </div>
+        ) : null}
       </div>
     </section>
   );
