@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import MainClient from "./page-client";
 
 export const metadata: Metadata = {
-  title: "SOC Analyst Portfolio | Incident Response, Threat Hunting, DFIR",
+  title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
   description:
     "Ahmed Emad Nasr portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, and real security case reports.",
   keywords: [
