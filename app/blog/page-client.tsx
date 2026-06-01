@@ -114,6 +114,18 @@ export default function BlogPageClient() {
   // ── Embeds (lazy iframes) ────────────────────────────────────────────────
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
 
+  const prefetchGalleryShots = useCallback((title: string, screenshots: string[], index = 0) => {
+    if (typeof window === "undefined" || screenshots.length === 0) return;
+
+    screenshots.slice(index, index + 2).forEach((shot) => {
+      const image = new window.Image();
+      image.decoding = "async";
+      image.loading = "eager";
+      image.src = normalizePublicHref(shot);
+      image.alt = title;
+    });
+  }, []);
+
   useEffect(() => {
     const t = setTimeout(() => setQuery(rawQuery), 300);
     return () => clearTimeout(t);
@@ -266,12 +278,13 @@ export default function BlogPageClient() {
 
   const openGallery = useCallback((title: string, screenshots: string[], index = 0) => {
     if (!screenshots.length) return;
+    prefetchGalleryShots(title, screenshots, index);
     setGallery({
       title,
       screenshots,
       index: Math.min(Math.max(index, 0), screenshots.length - 1),
     });
-  }, []);
+  }, [prefetchGalleryShots]);
 
   // ── Other handlers ────────────────────────────────────────────────────────
 
@@ -397,6 +410,7 @@ export default function BlogPageClient() {
         setRawQuery={setRawQuery}
         toggleToolFilter={toggleToolFilter}
         openGallery={openGallery}
+        prefetchGallery={prefetchGalleryShots}
         normalizeHref={normalizePublicHref}
       />
 

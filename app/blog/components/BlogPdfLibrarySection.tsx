@@ -31,6 +31,7 @@ type BlogPdfLibrarySectionProps = {
   setRawQuery: (value: string) => void;
   toggleToolFilter: (tool: string) => void;
   openGallery: (title: string, screenshots: string[], index?: number) => void;
+  prefetchGallery: (title: string, screenshots: string[], index?: number) => void;
   normalizeHref: (href: string) => string;
 };
 
@@ -58,6 +59,7 @@ export default function BlogPdfLibrarySection({
   setRawQuery,
   toggleToolFilter,
   openGallery,
+  prefetchGallery,
   normalizeHref,
 }: BlogPdfLibrarySectionProps) {
   const PAGE_SIZE = 4;
@@ -193,6 +195,8 @@ export default function BlogPdfLibrarySection({
               <button
                 type="button"
                 onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
+                onMouseEnter={() => prefetchGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
+                onFocus={() => prefetchGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
                 className={`${styles.galleryOpenAction} ${styles.viewAction}`}
               >
                 View All Screenshots
@@ -255,6 +259,7 @@ export default function BlogPdfLibrarySection({
             {...item}
             screenshots={screenshotsById[item.id] ?? EMPTY_SCREENSHOTS}
             onOpenGallery={openGallery}
+            onPrefetchGallery={prefetchGallery}
             onTagClick={setRawQuery}
             onToolClick={toggleToolFilter}
             getThumbnail={(value) => value.replace(/(\.webp|\.png|\.jpg|\.jpeg)$/i, "-thumb$1")}

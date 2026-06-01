@@ -21,6 +21,7 @@ interface BlogCardProps {
   date?: string;
   screenshots: string[];
   onOpenGallery: (title: string, screenshots: string[], index?: number) => void;
+  onPrefetchGallery?: (title: string, screenshots: string[], index?: number) => void;
   onTagClick?: (tag: string) => void;
   onToolClick?: (tool: string) => void;
   getThumbnail: (imgPath: string) => string;
@@ -42,6 +43,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     date,
     screenshots,
     onOpenGallery,
+    onPrefetchGallery,
     onTagClick,
     onToolClick,
     getThumbnail,
@@ -210,6 +212,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
               <button
                 type="button"
                 onClick={() => onOpenGallery(title, screenshots, 0)}
+                onMouseEnter={() => onPrefetchGallery?.(title, screenshots, 0)}
+                onFocus={() => onPrefetchGallery?.(title, screenshots, 0)}
                 className={`${styles.galleryOpenAction} ${styles.viewAction}`}
               >
                 View All Screenshots

@@ -55,8 +55,9 @@ GallerySkeleton.displayName = "GallerySkeleton";
 const SenseiArt = memo(function SenseiArt() {
   const sectionRef = useRef<HTMLElement>(null);
   const [shouldRenderGallery, setShouldRenderGallery] = useState(false);
-  const PAGE_SIZE = 12;
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const PAGE_SIZE = 3;
+  const INITIAL_VISIBLE_COUNT = 6;
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
   useEffect(() => {
     const sectionNode = sectionRef.current;
@@ -91,7 +92,7 @@ const SenseiArt = memo(function SenseiArt() {
         {shouldRenderGallery ? (
           <div className={styles["art-gallery-content"]}>
             <div className={styles.Gallery}>
-              {GALLERY_IMAGES.slice(0, visibleCount).map((image, i) => (
+              {GALLERY_IMAGES.slice(0, visibleCount).map((image) => (
                 <ImageItem key={image.src} image={image} />
               ))}
             </div>
