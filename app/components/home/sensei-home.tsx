@@ -117,6 +117,7 @@ const SenseiHome = memo(function SenseiHome() {
               className={styles.image}
               width={350}
               height={350}
+              loading="lazy"
               sizes="(max-width: 968px) 80vw, 350px"
               quality={75}
               priority

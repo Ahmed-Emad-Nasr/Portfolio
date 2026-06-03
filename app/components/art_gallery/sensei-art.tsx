@@ -13,7 +13,7 @@ import styles from "./sensei-art.module.css";
 interface GalleryImage { src: string; thumb: string; }
 interface ImageItemProps { image: GalleryImage; }
 
-const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 49 }, (_, k) => ({
+const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 50 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.webp`,
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
