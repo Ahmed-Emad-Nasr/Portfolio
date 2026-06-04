@@ -115,9 +115,8 @@ const SenseiHome = memo(function SenseiHome() {
               src="Assets/art-gallery/Images/logo/3omda.webp"
               alt="Ahmed Emad Nasr portrait"
               className={styles.image}
-              width={350}
-              height={350}
-              loading="lazy"
+              width={450}
+              height={450}
               sizes="(max-width: 968px) 80vw, 350px"
               quality={75}
               priority
