@@ -69,6 +69,74 @@ Welcome to Ahmed Emad Nasr, My Personal portfolio and cybersecurity blog built w
   <img src="screenshots/art_gallery.png" width="80%" alt="Screenshot 2">
 </p>
 
+## Demo
+
+Experience the Ahmed Emad Nasr Portfolio live:
+🚀 [Ahmed Emad Nasr Portfolio Live Demo](https://ahmed-emad-nasr.github.io/Portfolio)
+
+## Installation
+
+Get Sensei-Dev up and running on your local machine in just a few steps:
+
+1. Ensure you have [Node.js](https://nodejs.org/en/download/package-manager) installed on your system.
+2. Clone the repository:
+   ```
+   git clone https://github.com/MostafaSensei106/Sensei-Dev.git
+   ```
+3. Navigate to the project directory and install dependencies:
+   ```
+   cd Sensei-Dev
+   npm install
+   ```
+4. Install Python requirements:
+   ```
+   cd app/image_optmization
+   pip install -r requirements.txt
+   ```
+5. Use the Python script for image optimization:
+   - Place your images in the designated folder within the `public/Assets/art-gallery/Images/image_display` directory.
+   - Run the Python script:
+     ```
+     python image_optimizer.py
+     ```
+   - Follow the on-screen instructions to optimize your images.
+6. Start the development server:
+   ```
+   npm run dev
+   ```
+7. Open your browser and visit `http://localhost:3000` to see the portfolio in action!
+
+## Technologies
+
+This portfolio is built with cutting-edge technologies:
+
+- **Next.js 14**: For server-side rendering and optimal performance
+- **TypeScript**: Ensuring type safety and improved developer experience
+- **Python**: Powering scripts for image optimization and data processing
+- **CSS**: Styling with modern CSS techniques for a polished look
+
+## Contributing
+
+Your contributions are welcome! Here's how you can help improve Sensei-Dev:
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/AmazingFeature`
+3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
+4. Push to the branch: `git push origin feature/AmazingFeature`
+5. Open a pull request
+
+For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the GPL-3.0 license - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://ahmed-emad-nasr.github.io/Portfolio">Ahmed Emad Nasr</a>
+</p>
+
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-111827?style=flat-square&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)
