@@ -66,6 +66,7 @@ Welcome to Ahmed Emad Nasr, My Personal portfolio and cybersecurity blog built w
 
 <p align="center">
   <img src="screenshots/home.png" width="80%" alt="Screenshot 1">
+  
   <img src="screenshots/art_gallery.png" width="80%" alt="Screenshot 2">
 </p>
 
