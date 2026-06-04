@@ -128,7 +128,7 @@ body {
     var(--bg-color);
     
   overflow-x: hidden;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Prevent body reflows from propagating to composited children */
@@ -212,11 +212,10 @@ button {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  /* Keep the button visually light and stable */
-  will-change: transform, opacity;
 }
 
 button:hover:not(:disabled) {
+  will-change: transform, opacity;
   background: rgba(var(--main-color-rgb), 0.14);
   color: #fff;
   border-color: var(--main-color);
@@ -293,7 +292,7 @@ section {
    */
   contain: style;
   content-visibility: auto;
-  contain-intrinsic-size: 1px 900px;
+  contain-intrinsic-size: auto 900px;
 }
 
 @media (max-width: 600px) {
@@ -332,11 +331,6 @@ section.glass:hover,
     rgba(var(--main-color-rgb), 0.08) 78%,
     rgba(var(--accent-color-rgb), 0.05) 100%
   );
-}
-
-.glass-card:hover {
-  border-color: rgba(var(--main-color-rgb), 0.32);
-  transform: translateY(-1px);
 }
 
 .glass-card::after {
@@ -398,9 +392,7 @@ section.glass:hover,
 .site-footer__inner a {
   color: var(--main-color);
   font-weight: 700;
-  transition:
-    color var(--motion-normal) var(--motion-ease),
-    text-shadow var(--motion-normal) var(--motion-ease);
+  transition: color var(--motion-normal) var(--motion-ease);
 }
 
 .site-footer__inner a:hover {

@@ -16,7 +16,7 @@
  * - `margin` and `amount` tuned for a calmer reveal cadence instead of instant pop-in
  */
 
-import React, { memo, useMemo } from "react";
+import React, { memo, useRef, useMemo } from "react";
 import { motion, MotionProps, Variants, useReducedMotion } from "framer-motion";
 
 // ---------------------------------------------------------------------------
@@ -36,13 +36,6 @@ const SPRING_FAST = {
   stiffness: 80,
   damping: 20,
   mass: 1.2,
-} as const;
-
-const SPRING_GENTLE = {
-  type: "spring",
-  stiffness: 55,
-  damping: 18,
-  mass: 1.4,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -174,9 +167,9 @@ const MotionInView = memo<MotionInViewProps>(
   }) => {
     const prefersReducedMotion = useReducedMotion();
 
-    // Merge will-change into style once — avoids inline object creation per render
+    // Remove will-change after animation completes to free GPU memory
     const mergedStyle = useMemo<React.CSSProperties>(
-      () => ({ willChange: "transform, opacity", ...style }),
+      () => ({ ...style }),
       [style]
     );
 
@@ -189,12 +182,18 @@ const MotionInView = memo<MotionInViewProps>(
       return { ...(transition ?? {}), delay };
     }, [delay, transition]);
 
+    const ref = useRef<HTMLDivElement>(null);
+
     return (
       <motion.div
+        ref={ref}
         className={className}
-        style={mergedStyle}
+        style={{ willChange: "transform, opacity", ...mergedStyle }}
         initial={initial ?? "hidden"}
         whileInView={whileInView ?? "visible"}
+        onAnimationComplete={() => {
+          if (ref.current) ref.current.style.willChange = "auto";
+        }}
         viewport={
           viewport ?? {
             once: true,
