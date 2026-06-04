@@ -51,19 +51,19 @@
   --shadow-glow-hover: none;
 
   /* Cinematic Motion - Slower, cinematic, consistent across site */
-  --motion-fast: 320ms;       /* snappy but still cinematic */
-  --motion-normal: 520ms;     /* primary site transition duration */
-  --motion-slow: 860ms;       /* slower interactions */
+  --motion-fast: 500ms;       /* was 320ms — still responsive but calmer */
+  --motion-normal: 800ms;     /* was 520ms — primary site transition duration */
+  --motion-slow: 1300ms;      /* was 860ms — slower interactions */
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Animation Durations - للـ keyframes (cinematic rhythm) */
-  --anim-fast: 480ms;         /* quick keyframe (short) */
-  --anim-medium: 1.2s;        /* medium, cinematic */
-  --anim-slow: 2.4s;          /* slow, graceful */
-  --anim-very-slow: 4s;       /* very slow, dramatic */
+  --anim-fast: 750ms;         /* was 480ms — quick keyframe */
+  --anim-medium: 1.8s;        /* was 1.2s  — medium, cinematic */
+  --anim-slow: 3.2s;          /* was 2.4s  — slow, graceful */
+  --anim-very-slow: 5.5s;     /* was 4s    — very slow, dramatic */
 
   /* Stagger step for list/gallery entrances */
-  --stagger-step: 0.08s;
+  --stagger-step: 0.14s;      /* was 0.08s — more breathing room between items */
 
   /* Typing / cursor timings (centralized) */
   --typing-cursor: 0.9s;
