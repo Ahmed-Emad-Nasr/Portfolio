@@ -27,7 +27,7 @@ const pdfResources = [
 const casesStructuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Cybersecurity Blog - SOC Incident Reports, DFIR Writeups & Threat Analysis",
+  name: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Cybersecurity Blog - SOC Incident Reports, DFIR Writeups & Threat Analysis",
   description:
     "Comprehensive collection of SOC incident response reports, cybersecurity writeups, and threat analysis cases with screenshots and documentation",
   url: `${SITE_BASE_URL}/blog`,
@@ -76,7 +76,7 @@ const breadcrumbSchema = {
 };
 
 export const metadata: Metadata = {
-  title: "Blog - SOC Incident Reports & Cybersecurity Writeups",
+  title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Blog - SOC Incident Reports & Cybersecurity Writeups",
   description:
     "Explore SOC incident response reports, DFIR investigations, and cybersecurity threat analysis cases with detailed documentation and screenshots.",
   keywords: [
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: `${SITE_BASE_URL}/blog`,
-    title: "Blog - SOC Incident Reports & Cybersecurity Writeups",
+    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Blog - SOC Incident Reports & Cybersecurity Writeups",
     description:
       "Comprehensive SOC incident response reports, DFIR writeups, and threat analysis cases with screenshots.",
     siteName: "Ahmed Emad Nasr - Security Analyst",
@@ -109,7 +109,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     creator: "@AhmedEmad",
-    title: "Blog - SOC Incident Reports & Cybersecurity Writeups",
+    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Blog - SOC Incident Reports & Cybersecurity Writeups",
     description:
       "Explore incident response cases, threat analysis, and security investigations.",
     images: [toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png")],
