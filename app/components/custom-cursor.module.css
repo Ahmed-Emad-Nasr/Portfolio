@@ -1,16 +1,78 @@
+/* ─── Cursor Ring ─────────────────────────────────────────────── */
 .cursorRing {
   position: fixed;
   top: 0;
   left: 0;
   width: 4.8rem;
   height: 4.8rem;
-  border: 1px solid rgba(var(--main-color-rgb), 0.9);
   pointer-events: none;
   z-index: 9998;
   mix-blend-mode: difference;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
+/* Corner bracket aesthetic — SOC/targeting theme */
+.cursorRing::before,
+.cursorRing::after {
+  content: '';
+  position: absolute;
+  width: 32%;
+  height: 32%;
+  border-color: rgba(var(--main-color-rgb), 0.9);
+  border-style: solid;
+  transition: width 0.15s ease, height 0.15s ease;
+}
+
+/* Top-left bracket */
+.cursorRing::before {
+  top: 0;
+  left: 0;
+  border-width: 1.5px 0 0 1.5px;
+  border-radius: 0;
+}
+
+/* Bottom-right bracket */
+.cursorRing::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1.5px 1.5px 0;
+  border-radius: 0;
+}
+
+/* Extra corners via inner pseudo — handled with a wrapper span in TSX */
+.cursorRingInner {
+  position: absolute;
+  inset: 0;
+}
+
+.cursorRingInner::before,
+.cursorRingInner::after {
+  content: '';
+  position: absolute;
+  width: 32%;
+  height: 32%;
+  border-color: rgba(var(--main-color-rgb), 0.9);
+  border-style: solid;
+  transition: width 0.15s ease, height 0.15s ease;
+}
+
+/* Top-right bracket */
+.cursorRingInner::before {
+  top: 0;
+  right: 0;
+  border-width: 1.5px 1.5px 0 0;
+  border-radius: 0;
+}
+
+/* Bottom-left bracket */
+.cursorRingInner::after {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 1.5px 1.5px;
+  border-radius: 0;
+}
+
+/* ─── Cursor Dot ──────────────────────────────────────────────── */
 .cursorDot {
   position: fixed;
   top: 0;
@@ -20,15 +82,30 @@
   border-radius: 999px;
   background: var(--main-color);
   pointer-events: none;
-  z-index: 9998;
+  z-index: 9999;
   will-change: transform;
 }
 
+/* ─── Glow effect on the dot ──────────────────────────────────── */
 .cursorGlow {
   position: absolute;
   inset: -0.35rem;
   border-radius: inherit;
   background: var(--main-color);
   filter: blur(4px);
-  opacity: 0.9;
+  opacity: 0.85;
+}
+
+/* ─── Click ripple ────────────────────────────────────────────── */
+.clickRipple {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 4.8rem;
+  height: 4.8rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  will-change: transform, opacity;
 }
