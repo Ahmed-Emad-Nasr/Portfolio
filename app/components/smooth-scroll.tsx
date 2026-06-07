@@ -1,13 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "framer-motion";
 
 type LenisReactModule = typeof import("lenis/react");
 type GsapModule = typeof import("gsap");
 type ScrollTriggerModule = typeof import("gsap/ScrollTrigger");
 
+// ---------------------------------------------------------------------------
+// Scroll Progress Bar
+// ---------------------------------------------------------------------------
 function ScrollProgressBar() {
   const [progress, setProgress] = useState(0);
 
@@ -49,8 +52,234 @@ function ScrollProgressBar() {
 }
 
 // ---------------------------------------------------------------------------
-// Extracted at module level — defining components inside useMemo/useCallback
-// causes React to remount them on every render (breaks hook rules).
+// Scroll-to-Top Button
+// Appears after scrolling 300px, smooth-scrolls back to top via Lenis.
+// ---------------------------------------------------------------------------
+function ScrollToTopButton({ lenis }: { lenis: any }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handleClick = () => {
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.4 });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      aria-label="Scroll to top"
+      className="scrollToTopBtn"
+      style={{
+        position: "fixed",
+        bottom: "2.4rem",
+        right: "2.4rem",
+        zIndex: 2000,
+        width: "4.4rem",
+        height: "4.4rem",
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(224, 17, 95, 0.12)",
+        border: "1px solid rgba(224, 17, 95, 0.3)",
+        color: "#e0115f",
+        cursor: "pointer",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.88)",
+        pointerEvents: visible ? "auto" : "none",
+        transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+        willChange: "transform, opacity",
+        padding: 0,
+        fontSize: "1.8rem",
+        lineHeight: 1,
+      }}
+    >
+      ↑
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Hide/Show Navbar on Scroll
+// Dispatches a custom event — the navbar listens and adds/removes a class.
+// Zero coupling: navbar doesn't need to import this file.
+//
+// USAGE in your Navbar component:
+//   useEffect(() => {
+//     const handler = (e: CustomEvent) => {
+//       setHidden(e.detail.hidden);
+//     };
+//     window.addEventListener("navbar:visibility", handler as EventListener);
+//     return () => window.removeEventListener("navbar:visibility", handler as EventListener);
+//   }, []);
+// ---------------------------------------------------------------------------
+function NavbarVisibilityController() {
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  useEffect(() => {
+    const THRESHOLD = 80; // px to scroll before hiding navbar
+    const SHOW_AT_TOP = 60; // always show when near top
+
+    const dispatch = (hidden: boolean) => {
+      window.dispatchEvent(
+        new CustomEvent("navbar:visibility", { detail: { hidden } })
+      );
+    };
+
+    const update = () => {
+      const current = window.scrollY;
+      const delta = current - lastScrollY.current;
+
+      if (current < SHOW_AT_TOP) {
+        dispatch(false);
+      } else if (delta > THRESHOLD) {
+        dispatch(true);
+        lastScrollY.current = current;
+      } else if (delta < -10) {
+        dispatch(false);
+        lastScrollY.current = current;
+      }
+
+      ticking.current = false;
+    };
+
+    const onScroll = () => {
+      if (ticking.current) return;
+      ticking.current = true;
+      window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Scroll Snap via Lenis
+// Call useLenisSnap() in any component — pass selector for snap targets.
+//
+// USAGE:
+//   // In a page component (must be inside <SmoothScroll>):
+//   useLenisSnap("section[data-snap]");
+//   // Then add data-snap to any section you want to snap to.
+// ---------------------------------------------------------------------------
+export function useLenisSnap(selector: string) {
+  useEffect(() => {
+    const targets = Array.from(
+      document.querySelectorAll<HTMLElement>(selector)
+    );
+    if (!targets.length) return;
+
+    let isSnapping = false;
+    let snapTimeout: ReturnType<typeof setTimeout>;
+
+    const getClosestTarget = (scrollY: number): HTMLElement | null => {
+      let closest: HTMLElement | null = null;
+      let minDist = Infinity;
+
+      for (const el of targets) {
+        const dist = Math.abs(el.getBoundingClientRect().top);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = el;
+        }
+      }
+
+      return minDist < window.innerHeight * 0.45 ? closest : null;
+    };
+
+    const onScrollEnd = () => {
+      if (isSnapping) return;
+      const target = getClosestTarget(window.scrollY);
+      if (!target) return;
+
+      const dist = Math.abs(target.getBoundingClientRect().top);
+      if (dist < 8) return; // already snapped
+
+      isSnapping = true;
+
+      // Use Lenis global instance if available, fallback to native
+      const lenis = (window as any).__lenis__;
+      if (lenis) {
+        lenis.scrollTo(target, {
+          duration: 1.0,
+          offset: 0,
+          onComplete: () => { isSnapping = false; },
+        });
+      } else {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => { isSnapping = false; }, 1000);
+      }
+    };
+
+    const onScroll = () => {
+      clearTimeout(snapTimeout);
+      snapTimeout = setTimeout(onScrollEnd, 180); // fire 180ms after scroll stops
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(snapTimeout);
+    };
+  }, [selector]);
+}
+
+// ---------------------------------------------------------------------------
+// Parallax hook — GPU-safe, uses transform only.
+//
+// USAGE:
+//   const ref = useParallax<HTMLDivElement>(0.3); // 0 = no parallax, 1 = full
+//   <div ref={ref}>...</div>
+// ---------------------------------------------------------------------------
+export function useParallax<T extends HTMLElement>(speed = 0.3) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let rafId = 0;
+
+    const update = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const center = rect.top + rect.height / 2 - window.innerHeight / 2;
+      const offset = -(center * speed);
+      ref.current.style.transform = `translateY(${offset.toFixed(2)}px)`;
+      rafId = 0;
+    };
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, [speed]);
+
+  return ref;
+}
+
+// ---------------------------------------------------------------------------
+// Lenis + GSAP ScrollTrigger sync + keyboard handling
 // ---------------------------------------------------------------------------
 type SyncProps = {
   lenis: NonNullable<ReturnType<LenisReactModule["useLenis"]>>;
@@ -60,9 +289,10 @@ type SyncProps = {
 
 function LenisScrollTriggerSync({ lenis, gsap, ScrollTrigger }: SyncProps) {
   useEffect(() => {
-    const handleScroll = () => {
-      ScrollTrigger.update();
-    };
+    // Expose lenis globally for useLenisSnap fallback
+    (window as any).__lenis__ = lenis;
+
+    const handleScroll = () => { ScrollTrigger.update(); };
 
     const handleRaf = (time: number) => {
       // gsap ticker provides time in seconds; Lenis v2+ expects seconds directly.
@@ -76,7 +306,6 @@ function LenisScrollTriggerSync({ lenis, gsap, ScrollTrigger }: SyncProps) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
-
       const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
       if (
         targetTag === "input" ||
@@ -123,6 +352,7 @@ function LenisScrollTriggerSync({ lenis, gsap, ScrollTrigger }: SyncProps) {
       lenis.off("scroll", handleScroll);
       gsap.ticker.remove(handleRaf);
       window.removeEventListener("keydown", handleKeyDown);
+      delete (window as any).__lenis__;
     };
   }, [lenis, gsap, ScrollTrigger]);
 
@@ -130,8 +360,7 @@ function LenisScrollTriggerSync({ lenis, gsap, ScrollTrigger }: SyncProps) {
 }
 
 // ---------------------------------------------------------------------------
-// Inner wrapper — rendered only after modules are loaded.
-// Keeps the useLenis() call legal (must be inside ReactLenis tree).
+// Inner wrapper
 // ---------------------------------------------------------------------------
 type InnerProps = {
   children: ReactNode;
@@ -164,6 +393,8 @@ function SmoothScrollInner({
       }}
     >
       <ScrollProgressBar />
+      <NavbarVisibilityController />
+      <ScrollToTopButton lenis={lenis} />
       {lenis && (
         <LenisScrollTriggerSync
           lenis={lenis}
@@ -189,14 +420,11 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return;
     const previous = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
-    return () => {
-      window.history.scrollRestoration = previous;
-    };
+    return () => { window.history.scrollRestoration = previous; };
   }, []);
 
   useEffect(() => {
     if (prefersReducedMotion) return;
-
     let isActive = true;
 
     void Promise.all([
@@ -211,17 +439,10 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       setScrollTriggerModule(scrollTrigger);
     });
 
-    return () => {
-      isActive = false;
-    };
+    return () => { isActive = false; };
   }, [prefersReducedMotion]);
 
-  if (
-    prefersReducedMotion ||
-    !lenisModule ||
-    !gsapModule ||
-    !scrollTriggerModule
-  ) {
+  if (prefersReducedMotion || !lenisModule || !gsapModule || !scrollTriggerModule) {
     return (
       <>
         <ScrollProgressBar />
