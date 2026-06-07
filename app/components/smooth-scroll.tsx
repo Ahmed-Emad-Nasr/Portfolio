@@ -155,11 +155,11 @@ function SmoothScrollInner({
     <ReactLenis
       root
       options={{
-        lerp: prefersReducedMotion ? 1 : 0.04,
-        duration: prefersReducedMotion ? 0 : 1.4,
+        lerp: prefersReducedMotion ? 1 : 0.07,
+        duration: prefersReducedMotion ? 0 : 1.1,
         smoothWheel: !prefersReducedMotion,
-        wheelMultiplier: 0.65,
-        touchMultiplier: 0.75,
+        wheelMultiplier: 0.8,
+        touchMultiplier: 0.9,
         syncTouch: false,
       }}
     >
