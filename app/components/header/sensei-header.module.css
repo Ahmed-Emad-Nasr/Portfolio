@@ -197,7 +197,7 @@
 }
 
 /* =============================================
-   5. STATUS CHIP
+   5. STATUS CHIP — FIX: was defined but never rendered in JSX
    ============================================= */
 .statusChip {
   display: flex;
@@ -302,6 +302,12 @@
   background: rgba(var(--main-color-rgb), 0.08);
 }
 
+/* FIX: explicit focus-visible on hamburger for keyboard users */
+.MenuIcon:focus-visible {
+  outline: 2px solid rgba(var(--main-color-rgb), 0.8);
+  outline-offset: 2px;
+}
+
 .MenuIcon span {
   width: 18px;
   height: 1.5px;
@@ -329,6 +335,11 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
+}
+
+/* FIX: hide focus ring on backdrop — it's a large overlay, focus ring looks broken */
+.backdrop:focus-visible {
+  outline: none;
 }
 
 /* =============================================
@@ -362,7 +373,7 @@
 }
 
 /* =============================================
-  9. RESPONSIVE — TABLET / MOBILE (≤994px)
+   9. RESPONSIVE — TABLET / MOBILE (≤994px)
    ============================================= */
 @media (max-width: 994px) {
   .header {
@@ -489,7 +500,14 @@
 }
 
 /* =============================================
-   12. ACCESSIBILITY
+   12. NAV TEXT — FIX: was used in JSX (.navText) but had no CSS rule
+   ============================================= */
+.navText {
+  /* visible by default — override per breakpoint if needed */
+}
+
+/* =============================================
+   13. ACCESSIBILITY
    ============================================= */
 @media (prefers-reduced-motion: reduce) {
   .headerScan,

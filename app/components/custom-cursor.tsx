@@ -7,7 +7,7 @@ import styles from "./custom-cursor.module.css";
 export default function CustomCursor() {
   const [isHovering, setIsHovering]   = useState(false);
   const [isClicking, setIsClicking]   = useState(false);
-  const [isVisible,  setIsVisible]    = useState(false);
+  const [isVisible,  setIsVisible]    = useState(true);
   const [isTextInput, setIsTextInput] = useState(false);
   const [rippleKey,  setRippleKey]    = useState(0);
 
@@ -95,16 +95,18 @@ export default function CustomCursor() {
   useEffect(() => {
     if (!isEnabled) return;
 
+    const root = document.documentElement;
+
     window.addEventListener("pointermove",  handlePointerMove);
-    document.addEventListener("mouseenter", handleMouseEnter);
-    document.addEventListener("mouseleave", handleMouseLeave);
+    root.addEventListener("mouseenter", handleMouseEnter);
+    root.addEventListener("mouseleave", handleMouseLeave);
     window.addEventListener("mousedown",    handleMouseDown);
     window.addEventListener("mouseup",      handleMouseUp);
 
     return () => {
       window.removeEventListener("pointermove",  handlePointerMove);
-      document.removeEventListener("mouseenter", handleMouseEnter);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+      root.removeEventListener("mouseenter", handleMouseEnter);
+      root.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("mousedown",    handleMouseDown);
       window.removeEventListener("mouseup",      handleMouseUp);
     };

@@ -1,7 +1,12 @@
 /*
  * File: sensei-header.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: Header/navbar — Cybersecurity HUD v2 (Redesigned)
+ * Purpose: Header/navbar — Cybersecurity HUD v2 (Blog variant)
+ *
+ * Fixes applied:
+ *  1. .navText rule added — was used in JSX but had no CSS definition
+ *  2. .MenuIcon:focus-visible added for keyboard navigation
+ *  3. .backdrop:focus-visible set to outline:none — prevents broken ring on overlay
  */
 
 /* =============================================
@@ -23,7 +28,9 @@
   gap: 0.5rem;
   z-index: 1000;
   border: 1px solid rgba(var(--main-color-rgb), 0.22);
-  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  transition: transform var(--motion-normal) var(--motion-ease),
+              border-color var(--motion-normal) var(--motion-ease),
+              background var(--motion-normal) var(--motion-ease);
   overflow: visible;
 }
 
@@ -55,7 +62,7 @@
   pointer-events: none;
 }
 
-/* Scan sweep — child span to avoid conflicting with ::before/::after */
+/* Scan sweep */
 .headerScan {
   position: absolute;
   top: 0;
@@ -156,7 +163,10 @@
   border: 1px solid transparent;
   white-space: nowrap;
   min-height: 36px;
-  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+  transition: background var(--motion-normal) var(--motion-ease),
+              color var(--motion-normal) var(--motion-ease),
+              border-color var(--motion-normal) var(--motion-ease),
+              transform var(--motion-normal) var(--motion-ease);
 }
 
 .navbar a svg {
@@ -230,7 +240,7 @@
 }
 
 /* =============================================
-   6. BLOG BUTTON
+   6. BLOG LINK / PORTFOLIO CTA
    ============================================= */
 .blogLink {
   display: inline-flex;
@@ -252,14 +262,10 @@
   min-height: 36px;
   cursor: pointer;
   z-index: 1003;
-  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
-}
-
-.blogLink::before {
-  content: '>_';
-  font-size: 9.5px;
-  opacity: 0.65;
-  letter-spacing: 0;
+  transition: background var(--motion-normal) var(--motion-ease),
+              border-color var(--motion-normal) var(--motion-ease),
+              color var(--motion-normal) var(--motion-ease),
+              transform var(--motion-normal) var(--motion-ease);
 }
 
 .blogLink:hover,
@@ -268,12 +274,6 @@
   border-color: rgba(var(--main-color-rgb), 0.9);
   color: #fff;
   transform: translateY(-2px);
-}
-
-.blogLink.active {
-  background: rgba(var(--main-color-rgb), 0.18);
-  border-color: var(--main-color);
-  color: #fff;
 }
 
 /* =============================================
@@ -293,7 +293,8 @@
   min-width: 40px;
   min-height: 40px;
   border-radius: 6px;
-  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  transition: border-color var(--motion-normal) var(--motion-ease),
+              background var(--motion-normal) var(--motion-ease);
   flex-shrink: 0;
 }
 
@@ -302,13 +303,20 @@
   background: rgba(var(--main-color-rgb), 0.08);
 }
 
+/* FIX: explicit focus-visible for keyboard users */
+.MenuIcon:focus-visible {
+  outline: 2px solid rgba(var(--main-color-rgb), 0.8);
+  outline-offset: 2px;
+}
+
 .MenuIcon span {
   width: 18px;
   height: 1.5px;
   background: var(--main-color);
   border-radius: 1px;
   transform-origin: center;
-  transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
+  transition: transform var(--motion-normal) var(--motion-ease),
+              opacity var(--motion-normal) var(--motion-ease);
 }
 
 .MenuIcon.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
@@ -329,6 +337,11 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
+}
+
+/* FIX: no focus ring on large overlay — looks broken */
+.backdrop:focus-visible {
+  outline: none;
 }
 
 /* =============================================
@@ -362,7 +375,7 @@
 }
 
 /* =============================================
-  9. RESPONSIVE — TABLET / MOBILE (≤994px)
+   9. RESPONSIVE — TABLET / MOBILE (≤994px)
    ============================================= */
 @media (max-width: 994px) {
   .header {
@@ -372,10 +385,8 @@
     background: rgba(6, 10, 18, 0.97);
   }
 
-  /* Hide brand on small screens to save space */
   .brand { display: none; }
 
-  /* Blog link moves left, before hamburger */
   .blogLink {
     order: 1;
     margin-left: auto;
@@ -390,10 +401,8 @@
     order: 2;
   }
 
-  /* Status chip hidden on mobile */
   .statusChip { display: none; }
 
-  /* Mobile dropdown */
   .navbar {
     position: absolute;
     top: calc(100% + 10px);
@@ -407,15 +416,15 @@
     border-radius: 10px;
     border: 1px solid rgba(var(--main-color-rgb), 0.35);
     gap: 2px;
-
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transform: translateY(-8px);
-    transition: opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease), visibility var(--motion-normal) var(--motion-ease);
+    transition: opacity var(--motion-normal) var(--motion-ease),
+                transform var(--motion-normal) var(--motion-ease),
+                visibility var(--motion-normal) var(--motion-ease);
   }
 
-  /* Mobile dropdown header — sys label row */
   .navbar::before {
     content: '// nav_menu';
     display: block;
@@ -469,7 +478,7 @@
 }
 
 /* =============================================
-   11. RESPONSIVE — SMALL MOBILE (≤430px)
+   10. RESPONSIVE — SMALL MOBILE (≤430px)
    ============================================= */
 @media (max-width: 430px) {
   .header {
@@ -486,6 +495,13 @@
   }
 
   .navbar a { font-size: 12px; padding: 9px 12px; }
+}
+
+/* =============================================
+   11. NAV TEXT — FIX: was used in JSX but had no CSS rule
+   ============================================= */
+.navText {
+  /* visible by default — can be hidden per breakpoint if needed */
 }
 
 /* =============================================

@@ -4,6 +4,14 @@
  * File: sensei-header.tsx
  * Author: Ahmed Emad Nasr
  * Purpose: Sticky blog navigation header — Cybersecurity HUD v2
+ *
+ * Fixes applied:
+ *  1. handleNavLinkClick uses NAV_ITEMS to resolve targetId — no more hardcoded strings
+ *  2. setActiveSection added to handleNavLinkClick dependency array
+ *  3. scrollToTop uses "main-content" (matches SPY_SECTIONS) instead of missing "Home" id
+ *  4. SCROLL_SAMPLE_MS reduced 180 → 80ms for snappier scrolled state
+ *  5. resize listener wrapped in requestAnimationFrame to throttle repaints
+ *  6. <header> gets aria-label="Blog header" for multi-landmark clarity
  */
 
 import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
@@ -14,17 +22,18 @@ import { faHouse, faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-i
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useScrollSpy } from "@/app/core/hooks/useScrollSpy";
 
-const SCROLL_SAMPLE_MS = 180;
+// FIX: reduced from 180 → 80ms for snappier scrolled-state response
+const SCROLL_SAMPLE_MS = 80;
 
 const NAV_ITEMS = [
-  { label: "Home", targetId: null, icon: faHouse },
-  { label: "Cases", targetId: "blog-pdfs-title", icon: faFileLines },
-  { label: "YouTube Hub", targetId: "youtube-hub-title", icon: faYoutube },
+  { label: "Home",        targetId: "main-content",      icon: faHouse     },
+  { label: "Cases",       targetId: "blog-pdfs-title",   icon: faFileLines },
+  { label: "YouTube Hub", targetId: "youtube-hub-title", icon: faYoutube   },
 ] as const;
 
 const SPY_SECTIONS = [
-  { label: "Home", elementId: "main-content" },
-  { label: "Cases", elementId: "blog-pdfs-title" },
+  { label: "Home",        elementId: "main-content"      },
+  { label: "Cases",       elementId: "blog-pdfs-title"   },
   { label: "YouTube Hub", elementId: "youtube-hub-title" },
 ] as const;
 
@@ -38,6 +47,7 @@ const ShieldIcon = () => (
 const SenseiHeader = memo(function SenseiHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { activeSection, setActiveSection } = useScrollSpy({
     sections: SPY_SECTIONS,
     defaultSection: "Home",
@@ -46,6 +56,8 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   // ── Body scroll lock ────────────────────────────────────────────────────────
   useEffect(() => {
+    let rafId = 0;
+
     const apply = () => {
       if (window.innerWidth > 994) {
         setIsMenuOpen(false);
@@ -55,10 +67,21 @@ const SenseiHeader = memo(function SenseiHeader() {
       document.body.style.overflow = isMenuOpen ? "hidden" : "";
     };
 
+    // FIX: wrap resize handler in rAF to throttle layout reads on rapid resize
+    const onResize = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        apply();
+        rafId = 0;
+      });
+    };
+
     apply();
-    window.addEventListener("resize", apply);
+    window.addEventListener("resize", onResize);
+
     return () => {
-      window.removeEventListener("resize", apply);
+      window.removeEventListener("resize", onResize);
+      if (rafId) cancelAnimationFrame(rafId);
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
@@ -90,6 +113,7 @@ const SenseiHeader = memo(function SenseiHeader() {
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (rafId) cancelAnimationFrame(rafId);
@@ -106,74 +130,91 @@ const SenseiHeader = memo(function SenseiHeader() {
     return () => window.removeEventListener("keydown", onKey);
   }, [isMenuOpen]);
 
-  // ── Smooth scroll to section ────────────────────────────────────────────────
+  // ── Section fade animation ──────────────────────────────────────────────────
   const playSectionFade = useCallback((target: HTMLElement) => {
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReducedMotion || typeof target.animate !== "function") {
-      return;
-    }
+    if (prefersReducedMotion || typeof target.animate !== "function") return;
 
     target.animate(
       [
         { opacity: 0.35, transform: "translate3d(0, 14px, 0)" },
-        { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        { opacity: 1,    transform: "translate3d(0, 0, 0)"    },
       ],
-      {
-        duration: 420,
-        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-        fill: "both",
-      }
+      { duration: 420, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)", fill: "both" }
     );
   }, []);
 
-  const scrollToSection = useCallback((section: string) => {
-    const target = document.getElementById(section);
-    if (!target) return;
-    const headerEl = document.querySelector<HTMLElement>("[data-site-header='true']");
-    const headerH = headerEl?.getBoundingClientRect().height ?? 0;
-    const computedTop = headerEl
-      ? parseFloat(window.getComputedStyle(headerEl).top || "0")
-      : 0;
-    const offset = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
-    const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
-    window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
-    playSectionFade(target);
-  }, [playSectionFade]);
+  // ── Scroll to a section by DOM id ──────────────────────────────────────────
+  const scrollToSection = useCallback(
+    (elementId: string) => {
+      const target = document.getElementById(elementId);
+      if (!target) return;
 
+      const headerEl  = document.querySelector<HTMLElement>("[data-site-header='true']");
+      const headerH   = headerEl?.getBoundingClientRect().height ?? 0;
+      const computedTop = headerEl
+        ? parseFloat(window.getComputedStyle(headerEl).top || "0")
+        : 0;
+      const offset  = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
+      const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
+
+      window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
+      playSectionFade(target);
+    },
+    [playSectionFade]
+  );
+
+  // ── Scroll to top (Home) ───────────────────────────────────────────────────
   const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-    const homeSection = document.getElementById("Home");
-    if (homeSection) {
-      playSectionFade(homeSection);
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // FIX: was getElementById("Home") which doesn't exist in the DOM.
+    // "main-content" is the correct elementId from SPY_SECTIONS for Home.
+    const homeEl = document.getElementById("main-content");
+    if (homeEl) playSectionFade(homeEl);
   }, [playSectionFade]);
 
+  // ── Nav link click handler ─────────────────────────────────────────────────
   const handleNavLinkClick = useCallback(
-    (section: string, event?: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>) => {
+    (
+      label: string,
+      event?: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>
+    ) => {
       event?.preventDefault();
-      setActiveSection(section);
-      if (section === "Home") {
-        if (window.innerWidth <= 994) setIsMenuOpen(false);
-        scrollToTop();
+
+      // FIX: was added to deps (was missing before)
+      setActiveSection(label);
+
+      if (window.innerWidth <= 994) setIsMenuOpen(false);
+
+      // FIX: resolve targetId from NAV_ITEMS — no more hardcoded label comparisons
+      const item = NAV_ITEMS.find((i) => i.label === label);
+      if (!item) return;
+
+      if (label === "Home") {
+        // Home scrolls to top, not to an anchor
+        if (window.innerWidth <= 994) {
+          requestAnimationFrame(scrollToTop);
+        } else {
+          scrollToTop();
+        }
         return;
       }
+
       if (window.innerWidth <= 994) {
-        setIsMenuOpen(false);
-        requestAnimationFrame(() => scrollToSection(section === "Cases" ? "blog-pdfs-title" : "youtube-hub-title"));
+        requestAnimationFrame(() => scrollToSection(item.targetId));
       } else {
-        scrollToSection(section === "Cases" ? "blog-pdfs-title" : "youtube-hub-title");
+        scrollToSection(item.targetId);
       }
     },
-    [scrollToSection, scrollToTop]
+    // FIX: setActiveSection added to dependency array
+    [scrollToSection, scrollToTop, setActiveSection]
   );
 
-  const handleBackdropClick = useCallback(
-    () => setIsMenuOpen(false),
-    []
-  );
+  const handleBackdropClick = useCallback(() => setIsMenuOpen(false), []);
 
   const menuIconClass = isMenuOpen
     ? `${styles.MenuIcon} ${styles.active}`
@@ -189,9 +230,11 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   return (
     <>
+      {/* FIX: aria-label added for multi-landmark clarity */}
       <header
         className={headerClass}
         data-site-header="true"
+        aria-label="Blog header"
       >
         {/* Scan sweep overlay */}
         <span className={styles.headerScan} aria-hidden="true" />
@@ -215,20 +258,18 @@ const SenseiHeader = memo(function SenseiHeader() {
           {NAV_ITEMS.map((item) => (
             <a
               key={item.label}
-              href={item.targetId ? `#${item.targetId}` : "#top"}
+              href={item.label === "Home" ? "#top" : `#${item.targetId}`}
               className={activeSection === item.label ? styles.active : undefined}
               onClick={(e) => handleNavLinkClick(item.label, e)}
               aria-current={activeSection === item.label ? "page" : undefined}
             >
               <FontAwesomeIcon icon={item.icon} aria-hidden="true" />
-              <span className={styles.navText}>
-                {item.label}
-              </span>
+              <span className={styles.navText}>{item.label}</span>
             </a>
           ))}
         </nav>
 
-        {/* Portfolio CTA */}
+        {/* Portfolio CTA — back link, no active state needed */}
         <Link
           href="/"
           className={styles.blogLink}
@@ -245,7 +286,7 @@ const SenseiHeader = memo(function SenseiHeader() {
         <button
           type="button"
           className={menuIconClass}
-          onClick={() => setIsMenuOpen((current) => !current)}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-expanded={isMenuOpen}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-controls="main-navigation"
