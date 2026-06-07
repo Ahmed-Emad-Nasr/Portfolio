@@ -22,9 +22,6 @@ import { faHouse, faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-i
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useScrollSpy } from "@/app/core/hooks/useScrollSpy";
 
-// FIX: reduced from 180 → 80ms for snappier scrolled-state response
-const SCROLL_SAMPLE_MS = 80;
-
 const NAV_ITEMS = [
   { label: "Home",        targetId: "main-content",      icon: faHouse     },
   { label: "Cases",       targetId: "blog-pdfs-title",   icon: faFileLines },
@@ -45,7 +42,6 @@ const ShieldIcon = () => (
 );
 
 const SenseiHeader = memo(function SenseiHeader() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { activeSection, setActiveSection } = useScrollSpy({
@@ -85,41 +81,6 @@ const SenseiHeader = memo(function SenseiHeader() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
-
-  // ── Scroll detection (throttled) ────────────────────────────────────────────
-  useEffect(() => {
-    let rafId = 0;
-    let timeoutId: number | undefined;
-    let lastRun = 0;
-
-    const update = () => {
-      setIsScrolled(window.scrollY > 18);
-      lastRun = performance.now();
-      rafId = 0;
-      timeoutId = undefined;
-    };
-
-    const onScroll = () => {
-      const elapsed = performance.now() - lastRun;
-      if (rafId || timeoutId !== undefined) return;
-      if (elapsed >= SCROLL_SAMPLE_MS) {
-        rafId = requestAnimationFrame(update);
-      } else {
-        timeoutId = window.setTimeout(() => {
-          rafId = requestAnimationFrame(update);
-        }, SCROLL_SAMPLE_MS - elapsed);
-      }
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-      if (timeoutId !== undefined) clearTimeout(timeoutId);
-    };
-  }, []);
 
   // ── Escape key to close menu ────────────────────────────────────────────────
   useEffect(() => {
@@ -161,7 +122,7 @@ const SenseiHeader = memo(function SenseiHeader() {
       const offset  = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
       const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
 
-      window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
+      window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
       playSectionFade(target);
     },
     [playSectionFade]
@@ -224,9 +185,7 @@ const SenseiHeader = memo(function SenseiHeader() {
     ? `${styles.navbar} ${styles.active}`
     : styles.navbar;
 
-  const headerClass = isScrolled
-    ? `${styles.header} ${styles.scrolled}`
-    : styles.header;
+  const headerClass = styles.header;
 
   return (
     <>

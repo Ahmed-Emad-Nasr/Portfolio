@@ -79,13 +79,6 @@
   to { left: 130%; }
 }
 
-/* Scrolled state */
-.scrolled {
-  transform: translateX(-50%) scale(0.97) !important;
-  background: rgba(4, 7, 12, 0.99) !important;
-  border-color: rgba(var(--main-color-rgb), 0.55) !important;
-}
-
 /* =============================================
    2. BRAND / LOGO
    ============================================= */

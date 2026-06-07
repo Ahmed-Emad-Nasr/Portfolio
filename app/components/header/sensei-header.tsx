@@ -22,9 +22,7 @@ import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
 
-// FIX: reduced from 180 → 80ms for a snappier scrolled-state response
-const SCROLL_SAMPLE_MS = 80;
-const BLOG_PATH        = "/blog";
+const BLOG_PATH = "/blog";
 
 // FIX: safe route-matching helper — avoids false positives like "/blogging"
 function isBlogPath(pathname: string): boolean {
@@ -39,7 +37,6 @@ const ShieldIcon = () => (
 );
 
 const SenseiHeader = memo(function SenseiHeader() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const {
     isMenuOpen,
@@ -84,40 +81,6 @@ const SenseiHeader = memo(function SenseiHeader() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen, setIsMenuOpen]);
-
-  // ── Scroll detection (throttled) ────────────────────────────────────────────
-  useEffect(() => {
-    let rafId = 0;
-    let timeoutId: number | undefined;
-    let lastRun = 0;
-
-    const update = () => {
-      setIsScrolled(window.scrollY > 18);
-      lastRun = performance.now();
-      rafId = 0;
-      timeoutId = undefined;
-    };
-
-    const onScroll = () => {
-      const elapsed = performance.now() - lastRun;
-      if (rafId || timeoutId !== undefined) return;
-      if (elapsed >= SCROLL_SAMPLE_MS) {
-        rafId = requestAnimationFrame(update);
-      } else {
-        timeoutId = window.setTimeout(() => {
-          rafId = requestAnimationFrame(update);
-        }, SCROLL_SAMPLE_MS - elapsed);
-      }
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-      if (timeoutId !== undefined) clearTimeout(timeoutId);
-    };
-  }, []);
 
   // ── Escape key to close menu ────────────────────────────────────────────────
   useEffect(() => {
@@ -196,9 +159,7 @@ const SenseiHeader = memo(function SenseiHeader() {
     ? `${styles.navbar} ${styles.active}`
     : styles.navbar;
 
-  const headerClass = isScrolled
-    ? `${styles.header} ${styles.scrolled}`
-    : styles.header;
+  const headerClass = styles.header;
 
   return (
     <>
