@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     startupImage: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
   title: {
-    default: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
+    default: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
     template: "%s | Ahmed Emad Nasr",
   },
   description:
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
+    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
     description:
       "Incident response, threat hunting, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
     type: "website",
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
+    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
     description:
       "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
     creator: "@0x3omda",
