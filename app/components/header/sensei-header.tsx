@@ -134,7 +134,7 @@ const SenseiHeader = memo(function SenseiHeader() {
       : 0;
     const offset   = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
     const targetY  = window.scrollY + target.getBoundingClientRect().top - offset;
-    window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
+    window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
     playSectionFade(target);
   }, [playSectionFade]);
 
