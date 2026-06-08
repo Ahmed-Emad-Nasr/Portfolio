@@ -139,12 +139,12 @@ const SenseiHeader = memo(function SenseiHeader() {
       : 0;
     const offset = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
     const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
-    window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
+    window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
     playSectionFade(target);
   }, [playSectionFade]);
 
   const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
     const homeSection = document.getElementById("Home");
     if (homeSection) {
       playSectionFade(homeSection);
