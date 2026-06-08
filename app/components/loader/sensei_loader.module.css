@@ -1,3 +1,4 @@
+/* ─── Full-screen overlay ───────────────────────────────────────────────────── */
 .loader {
   position: fixed;
   inset: 0;
@@ -13,6 +14,7 @@
     var(--bg-color);
 }
 
+/* ─── Background grid ──────────────────────────────────────────────────────── */
 .neuralGrid {
   position: absolute;
   inset: 0;
@@ -23,20 +25,33 @@
   background-size: 32px 32px;
 }
 
+/* ─── Ring wrapper ─────────────────────────────────────────────────────────── */
 .ringWrap {
   position: relative;
   width: 12.8rem;
   height: 12.8rem;
 }
 
+/* ─── Pulse halo (radial glow behind the ring) ─────────────────────────────── */
+.ringPulse {
+  position: absolute;
+  inset: -1.2rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.22) 0%, transparent 70%);
+  will-change: transform, opacity;
+}
+
+/* ─── Spinning ring ────────────────────────────────────────────────────────── */
 .ring {
   width: 100%;
   height: 100%;
   border: 2px solid rgba(var(--main-color-rgb), 0.2);
   border-top-color: var(--main-color);
   border-radius: 999px;
+  will-change: transform;
 }
 
+/* ─── Centre symbol ────────────────────────────────────────────────────────── */
 .symbol {
   position: absolute;
   inset: 0;
@@ -50,12 +65,13 @@
   text-shadow: none;
 }
 
+/* ─── Text block ───────────────────────────────────────────────────────────── */
 .copy {
   margin-top: 4.8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.6rem;
+  gap: 1.2rem;
   text-align: center;
 }
 
@@ -86,6 +102,7 @@
   letter-spacing: -0.05em;
   text-transform: uppercase;
   color: #ffffff;
+  margin: 0;
 }
 
 .titleAccent {
@@ -93,6 +110,44 @@
   font-style: italic;
 }
 
+/* ─── Rotating status message ──────────────────────────────────────────────── */
+.statusMsg {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* ─── Skip button ──────────────────────────────────────────────────────────── */
+.skipBtn {
+  position: absolute;
+  bottom: 5rem;
+  right: 2rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.skipBtn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.skipBtn:focus-visible {
+  outline: 2px solid var(--main-color);
+  outline-offset: 3px;
+}
+
+/* ─── Progress bar ─────────────────────────────────────────────────────────── */
 .progressBar {
   position: absolute;
   left: 0;
@@ -105,8 +160,27 @@
 .progressFill {
   height: 100%;
   background: var(--main-color);
+  will-change: width;
 }
 
+/* ─── Reduced-motion overrides ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+    border-top-color: rgba(var(--main-color-rgb), 0.6);
+  }
+
+  .ringPulse {
+    animation: none;
+    opacity: 0.1;
+  }
+
+  .progressFill {
+    transition: none;
+  }
+}
+
+/* ─── Mobile ───────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .ringWrap {
     width: 10rem;
@@ -121,5 +195,9 @@
     margin-top: 3.6rem;
     padding-inline: 1.6rem;
   }
-}
 
+  .skipBtn {
+    bottom: 4rem;
+    right: 1.2rem;
+  }
+}
