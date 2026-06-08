@@ -4,14 +4,6 @@
  * File: sensei-header.tsx
  * Author: Ahmed Emad Nasr
  * Purpose: Sticky navigation header — Cybersecurity HUD v2
- *
- * Fixes applied:
- *  1. statusChip rendered in JSX (was defined in CSS but never used)
- *  2. scrollToSection uses behavior: "smooth" (was "auto")
- *  3. isBlogRoute uses a safe helper to avoid false-positive prefix matches
- *  4. resize listener wrapped in requestAnimationFrame to throttle repaints
- *  5. SCROLL_SAMPLE_MS reduced from 180 → 80ms for snappier scrolled state
- *  6. <header> gets aria-label="Site header" for multi-landmark clarity
  */
 
 import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
@@ -22,12 +14,8 @@ import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
 
-const BLOG_PATH = "/blog";
-
-// FIX: safe route-matching helper — avoids false positives like "/blogging"
-function isBlogPath(pathname: string): boolean {
-  return pathname === BLOG_PATH || pathname.startsWith(`${BLOG_PATH}/`);
-}
+const SCROLL_SAMPLE_MS = 180;
+const BLOG_PATH        = "/blog";
 
 /** Shield icon — inline SVG so no extra dep needed */
 const ShieldIcon = () => (
@@ -37,6 +25,7 @@ const ShieldIcon = () => (
 );
 
 const SenseiHeader = memo(function SenseiHeader() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const {
     isMenuOpen,
@@ -47,14 +36,11 @@ const SenseiHeader = memo(function SenseiHeader() {
     setIsMenuOpen,
   } = useHeader();
 
-  // FIX: use safe helper instead of inline startsWith
-  const isBlogRoute = isBlogPath(pathname);
+  const isBlogRoute =
+    pathname === BLOG_PATH || pathname.startsWith(`${BLOG_PATH}/`);
 
   // ── Body scroll lock ────────────────────────────────────────────────────────
   useEffect(() => {
-    let rafId = 0;
-
-    // FIX: resize handler wrapped in rAF to throttle layout reads on rapid resize
     const apply = () => {
       if (window.innerWidth > 994) {
         setIsMenuOpen(false);
@@ -64,23 +50,47 @@ const SenseiHeader = memo(function SenseiHeader() {
       document.body.style.overflow = isMenuOpen ? "hidden" : "";
     };
 
-    const onResize = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        apply();
-        rafId = 0;
-      });
-    };
-
     apply();
-    window.addEventListener("resize", onResize);
-
+    window.addEventListener("resize", apply);
     return () => {
-      window.removeEventListener("resize", onResize);
-      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", apply);
       document.body.style.overflow = "";
     };
   }, [isMenuOpen, setIsMenuOpen]);
+
+  // ── Scroll detection (throttled) ────────────────────────────────────────────
+  useEffect(() => {
+    let rafId = 0;
+    let timeoutId: number | undefined;
+    let lastRun = 0;
+
+    const update = () => {
+      setIsScrolled(window.scrollY > 18);
+      lastRun = performance.now();
+      rafId = 0;
+      timeoutId = undefined;
+    };
+
+    const onScroll = () => {
+      const elapsed = performance.now() - lastRun;
+      if (rafId || timeoutId !== undefined) return;
+      if (elapsed >= SCROLL_SAMPLE_MS) {
+        rafId = requestAnimationFrame(update);
+      } else {
+        timeoutId = window.setTimeout(() => {
+          rafId = requestAnimationFrame(update);
+        }, SCROLL_SAMPLE_MS - elapsed);
+      }
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    };
+  }, []);
 
   // ── Escape key to close menu ────────────────────────────────────────────────
   useEffect(() => {
@@ -97,12 +107,14 @@ const SenseiHeader = memo(function SenseiHeader() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReducedMotion || typeof target.animate !== "function") return;
+    if (prefersReducedMotion || typeof target.animate !== "function") {
+      return;
+    }
 
     target.animate(
       [
         { opacity: 0.35, transform: "translate3d(0, 14px, 0)" },
-        { opacity: 1,    transform: "translate3d(0, 0, 0)"    },
+        { opacity: 1, transform: "translate3d(0, 0, 0)" },
       ],
       {
         duration: 420,
@@ -112,25 +124,19 @@ const SenseiHeader = memo(function SenseiHeader() {
     );
   }, []);
 
-  const scrollToSection = useCallback(
-    (section: string) => {
-      const target = document.getElementById(section);
-      if (!target) return;
-
-      const headerEl = document.querySelector<HTMLElement>("[data-site-header='true']");
-      const headerH  = headerEl?.getBoundingClientRect().height ?? 0;
-      const computedTop = headerEl
-        ? parseFloat(window.getComputedStyle(headerEl).top || "0")
-        : 0;
-      const offset  = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
-      const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
-
-      // FIX: was behavior: "auto" — changed to "smooth" to match intent
-      window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
-      playSectionFade(target);
-    },
-    [playSectionFade]
-  );
+  const scrollToSection = useCallback((section: string) => {
+    const target = document.getElementById(section);
+    if (!target) return;
+    const headerEl = document.querySelector<HTMLElement>("[data-site-header='true']");
+    const headerH  = headerEl?.getBoundingClientRect().height ?? 0;
+    const computedTop = headerEl
+      ? parseFloat(window.getComputedStyle(headerEl).top || "0")
+      : 0;
+    const offset   = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
+    const targetY  = window.scrollY + target.getBoundingClientRect().top - offset;
+    window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
+    playSectionFade(target);
+  }, [playSectionFade]);
 
   const handleNavLinkClick = useCallback(
     (section: string, event?: MouseEvent<HTMLAnchorElement>) => {
@@ -159,15 +165,15 @@ const SenseiHeader = memo(function SenseiHeader() {
     ? `${styles.navbar} ${styles.active}`
     : styles.navbar;
 
-  const headerClass = styles.header;
+  const headerClass = isScrolled
+    ? `${styles.header} ${styles.scrolled}`
+    : styles.header;
 
   return (
     <>
-      {/* FIX: aria-label added for multi-landmark clarity */}
       <header
         className={headerClass}
         data-site-header="true"
-        aria-label="Site header"
       >
         {/* Scan sweep overlay */}
         <span className={styles.headerScan} aria-hidden="true" />
@@ -203,12 +209,6 @@ const SenseiHeader = memo(function SenseiHeader() {
             </a>
           ))}
         </nav>
-
-        {/* FIX: statusChip was fully defined in CSS but never rendered — added here */}
-        <div className={styles.statusChip} aria-hidden="true">
-          <span className={styles.statusDot} />
-          <span>online</span>
-        </div>
 
         {/* Blog CTA */}
         <Link
