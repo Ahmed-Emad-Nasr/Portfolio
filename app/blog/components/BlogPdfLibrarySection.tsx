@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import MotionInView from "@/app/core/components/MotionInView";
 import BlogCard from "../BlogCard";
 import styles from "../page.module.css";
 import type { PdfResource } from "../blog-types";
 import { EMPTY_SCREENSHOTS } from "@/app/core/data/cases";
-import { useEffect } from "react";
+import { getThumbnail } from "../blog-utils";
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+// Hoisted outside the component so it is never recreated on re-renders.
+const PAGE_SIZE = 4;
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type BlogPdfLibrarySectionProps = {
   filteredCount: number;
@@ -35,6 +42,8 @@ type BlogPdfLibrarySectionProps = {
   normalizeHref: (href: string) => string;
 };
 
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export default function BlogPdfLibrarySection({
   filteredCount,
   pdfTypeFilters,
@@ -62,12 +71,19 @@ export default function BlogPdfLibrarySection({
   prefetchGallery,
   normalizeHref,
 }: BlogPdfLibrarySectionProps) {
-  const PAGE_SIZE = 4;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
+  // Reset pagination when the filtered list length changes.
+  // Using `.length` as the dep is correct — the parent should memoize the array
+  // with useMemo so its reference only changes when content actually changes.
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [visiblePdfCards.length]);
+
+  // Stable reference for getThumbnail — imported from blog-utils so it is
+  // a module-level function and never recreated. Wrapped in useCallback so
+  // BlogCard's React.memo sees an identical reference across renders.
+  const stableThumbnail = useCallback(getThumbnail, []);
 
   return (
     <section className={styles.block} aria-labelledby="blog-pdfs-title">
@@ -218,7 +234,7 @@ export default function BlogPdfLibrarySection({
                 fill
                 sizes="(max-width: 991px) 100vw, 38vw"
                 loading="lazy"
-                quality={10}
+                quality={65}
               />
             </a>
           )}
@@ -262,7 +278,7 @@ export default function BlogPdfLibrarySection({
             onPrefetchGallery={prefetchGallery}
             onTagClick={setRawQuery}
             onToolClick={toggleToolFilter}
-            getThumbnail={(value) => value.replace(/(\.webp|\.png|\.jpg|\.jpeg)$/i, "-thumb$1")}
+            getThumbnail={stableThumbnail}
             normalizeHref={normalizeHref}
           />
         ))}
@@ -274,9 +290,9 @@ export default function BlogPdfLibrarySection({
             type="button"
             className={styles.primaryAction}
             onClick={() => setVisibleCount((n) => Math.min(visiblePdfCards.length, n + PAGE_SIZE))}
-              aria-label="Show more PDF results"
+            aria-label="Show more PDF results"
           >
-              Show more
+            Show more
           </button>
         </div>
       )}

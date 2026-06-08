@@ -37,12 +37,7 @@ const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sen
 
 // ─── Styles ──────────────────────────────────────────────────────────────────
 
-/*
- * Using a static object avoids inline style object creation on every render.
- * These are the two states the content wrapper can be in.
- */
 const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
-  // Avoid layout shift: keep content rendered but hidden (opacity/visibility)
   opacity: 0,
   transform: "translate3d(0, 10px, 0)",
   pointerEvents: "none",
@@ -62,27 +57,15 @@ const MAIN_STYLE: React.CSSProperties = {
   position: "relative",
 };
 
-const HOME_PLACEHOLDER_STYLE: React.CSSProperties = {
-  minHeight: "78vh",
-};
-
-const EXPERIENCE_PLACEHOLDER_STYLE: React.CSSProperties = {
-  minHeight: "88vh",
-};
-
-const PROJECTS_PLACEHOLDER_STYLE: React.CSSProperties = {
-  minHeight: "92vh",
-};
-
-const ART_PLACEHOLDER_STYLE: React.CSSProperties = {
-  minHeight: "62vh",
-};
+const HOME_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "78vh" };
+const EXPERIENCE_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "88vh" };
+const PROJECTS_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "92vh" };
+const ART_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "62vh" };
 
 // ─── MainClient ──────────────────────────────────────────────────────────────
 
 const MainClient = memo(function MainClient() {
   const [isAppReady, setIsAppReady] = useState(false);
-  // Track mount state to avoid setState on unmounted component
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -94,18 +77,19 @@ const MainClient = memo(function MainClient() {
     };
 
     const bootstrap = async () => {
-      // Wait for DOM to be interactive
       if (document.readyState === "loading") {
         await new Promise<void>((resolve) => {
-          document.addEventListener("DOMContentLoaded", () => resolve(), {
-            once: true,
-          });
+          document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
         });
       }
 
-      // Defer to next paint frame — ensures loader has rendered before we hide it
+      // Single rAF + 50 ms minimum timeout.
+      // The double-rAF pattern adds ~32–66 ms on budget devices (30 fps rAF).
+      // One rAF guarantees we're past the current paint frame; the 50 ms
+      // minimum ensures the loader has actually appeared on screen before we
+      // hide it, without adding unnecessary delay on fast devices.
       requestAnimationFrame(() => {
-        requestAnimationFrame(markAppReady); // double rAF: after browser commit
+        setTimeout(markAppReady, 50);
       });
     };
 
@@ -120,15 +104,12 @@ const MainClient = memo(function MainClient() {
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen />
 
-      {/* Keep the header outside the animated content wrapper so it is truly fixed
-         to the viewport and not contained by transforms applied to the page content. */}
+      {/* AppBar is outside the animated wrapper so it is truly fixed to the
+          viewport and unaffected by the transform applied to page content. */}
       <AppBar />
 
-      {/*
-       * Content is always rendered in the DOM (so dynamic imports start immediately),
-       * but invisible and non-interactive until isAppReady flips.
-       * The opacity transition gives a smooth cinematic fade-in.
-       */}
+      {/* Content is always in the DOM (dynamic imports start immediately),
+          but invisible/non-interactive until isAppReady flips. */}
       <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
         <HomeSection />
         <ExperienceSection />

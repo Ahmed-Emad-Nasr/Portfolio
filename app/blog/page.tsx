@@ -40,17 +40,14 @@ const casesStructuredData = {
     "@type": "DigitalDocument",
     "@id": `${SITE_BASE_URL}/blog#pdf-${index + 1}`,
     name: item.title,
-    description:
-      (caseEvidenceLibrary[index] as any)?.description || item.title,
+    description: (item as any)?.description || item.title,
     genre: item.type,
     contentUrl: toAbsoluteAssetUrl(item.href),
     encodingFormat: "application/pdf",
     author: { "@type": "Person", name: "Ahmed Emad Nasr" },
-    datePublished:
-      (caseEvidenceLibrary[index] as any)?.date || "2025-01-01",
+    datePublished: (item as any)?.date || "2025-01-01",
     keywords:
-      (caseEvidenceLibrary[index] as any)?.tags?.join(", ") ||
-      "cybersecurity, incident response",
+      (item as any)?.tags?.join(", ") || "cybersecurity, incident response",
   })),
   keywords:
     "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, security reports",

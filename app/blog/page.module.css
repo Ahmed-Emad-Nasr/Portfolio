@@ -30,6 +30,9 @@
     radial-gradient(circle at 80% 10%, rgba(var(--accent-color-rgb), 0.06), transparent 26%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.02));
   opacity: 0.6;
+  /* Fix #12: Promote to compositor layer — prevents scroll-triggered repaints. */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .hero,
@@ -225,7 +228,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
+  /* Fix #13: Only transition properties that actually change on hover — drop transform/color. */
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
 .primaryAction:hover,

@@ -102,8 +102,6 @@ export const metadata: Metadata = {
 
 // ─── Fonts ────────────────────────────────────────────────────────────────────
 
-// Font objects are created once at module load by next/font/google —
-// calling these outside the component is the correct and required pattern.
 const overlock = Overlock({
   weight: ["400", "700", "900"],
   subsets: ["latin"],
@@ -111,10 +109,15 @@ const overlock = Overlock({
   display: "swap",
 });
 
-// Derived once — the class string never changes between renders.
 const BODY_CLASS = `${overlock.variable}`;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-const structuredData = {
+
+// ─── Structured Data ──────────────────────────────────────────────────────────
+
+// JSON.stringify runs once at module evaluation time (server startup), not on
+// every request. Previously it was called inside dangerouslySetInnerHTML on
+// every render, wasting CPU per request for a value that never changes.
+const STRUCTURED_DATA_JSON = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -217,7 +220,7 @@ const structuredData = {
       })),
     },
   ],
-};
+});
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
@@ -240,9 +243,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             strategy="afterInteractive"
           />
         ) : null}
+        {/* Use the pre-serialised string — no per-request JSON.stringify */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
         />
         <SmoothScroll>
           {children}

@@ -2,7 +2,7 @@
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   blogYoutubeVideos,
   blogYoutubePlaylists,
@@ -73,6 +73,68 @@ const blogPdfResources: PdfResource[] = wannacryCase
 const matchesSearch = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.toLowerCase());
 
+// ─── Static derivations (computed once at module load, never recreated) ───────
+
+// Fix #5: Were useMemo([], []) inside the component — equivalent to module-level constants.
+const PDF_TYPE_FILTERS: string[] = [
+  "All",
+  ...Array.from(new Set(blogPdfResources.map((item) => item.type))),
+];
+
+const DIFFICULTY_OPTIONS: string[] = Array.from(
+  new Set(blogPdfResources.map((item) => item.difficulty).filter((d): d is string => Boolean(d)))
+);
+
+const CATEGORY_OPTIONS: string[] = Array.from(
+  new Set(blogPdfResources.map((item) => item.category).filter((c): c is string => Boolean(c)))
+);
+
+// Fix #6: Pure derivations from static data.
+const CASES_WITH_SCREENSHOTS_COUNT = caseEvidenceLibrary.filter(
+  (item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0
+).length;
+
+const TOTAL_SCREENSHOT_ASSETS = Object.values(caseScreenshotsByEvidenceId).reduce(
+  (sum, shots) => sum + shots.length,
+  0
+);
+
+// Fix #7: leadCase, caseOrder, navigation, and relatedCases are all static — no state dep.
+const LEAD_CASE: PdfResource | null =
+  blogPdfResources.find((item) => item.id === wannacryId) ?? null;
+
+const CASE_ORDER: PdfResource[] = blogPdfResources.filter((item) => item.id !== cvResource.id);
+
+const _leadIdx = CASE_ORDER.findIndex((item) => item.id === LEAD_CASE?.id);
+const LEAD_CASE_NAVIGATION = {
+  leadCaseIndex: _leadIdx,
+  previousCase: _leadIdx > 0 ? CASE_ORDER[_leadIdx - 1] : null,
+  nextCase:
+    _leadIdx >= 0 && _leadIdx < CASE_ORDER.length - 1 ? CASE_ORDER[_leadIdx + 1] : null,
+};
+
+const _leadTags = new Set(LEAD_CASE?.tags ?? []);
+const RELATED_CASES: PdfResource[] = LEAD_CASE
+  ? blogPdfResources
+      .filter((item) => item.id !== LEAD_CASE.id && item.id !== cvResource.id)
+      .map((item) => {
+        let score = 0;
+        if (LEAD_CASE.category && item.category === LEAD_CASE.category) score += 3;
+        if (LEAD_CASE.difficulty && item.difficulty === LEAD_CASE.difficulty) score += 1;
+        score += (item.tags ?? []).filter((tag) => _leadTags.has(tag)).length * 2;
+        return { item, score };
+      })
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map(({ item }) => item)
+  : [];
+
+// Fix #9: Pre-compute date timestamps once — avoids new Date() on every sort comparator call.
+const PDF_DATE_MS = new Map<string, number>(
+  blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0])
+);
+
 const HOME_PLACEHOLDER_STYLE: React.CSSProperties = {
   minHeight: "34rem",
 };
@@ -114,9 +176,9 @@ export default function BlogPageClient() {
   // ── Embeds (lazy iframes) ────────────────────────────────────────────────
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
 
-  const prefetchGalleryShots = useCallback((title: string, screenshots: string[], index = 0) => {
+  // Fix #1: Plain function — no deps, useCallback adds overhead for nothing.
+  const prefetchGalleryShots = (title: string, screenshots: string[], index = 0): void => {
     if (typeof window === "undefined" || screenshots.length === 0) return;
-
     screenshots.slice(index, index + 2).forEach((shot) => {
       const image = new window.Image();
       image.decoding = "async";
@@ -124,43 +186,12 @@ export default function BlogPageClient() {
       image.src = normalizePublicHref(shot);
       image.alt = title;
     });
-  }, []);
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setQuery(rawQuery), 300);
     return () => clearTimeout(t);
   }, [rawQuery]);
-
-  // ── Filter options ────────────────────────────────────────────────────────
-
-  const pdfTypeFilters = useMemo(() => {
-    const uniqueTypes = Array.from(new Set(blogPdfResources.map((item) => item.type)));
-    return ["All", ...uniqueTypes];
-  }, []);
-
-  const difficultyOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          blogPdfResources
-            .map((item) => item.difficulty)
-            .filter((d): d is string => Boolean(d))
-        )
-      ),
-    []
-  );
-
-  const categoryOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          blogPdfResources
-            .map((item) => item.category)
-            .filter((c): c is string => Boolean(c))
-        )
-      ),
-    []
-  );
 
   // ── Filtered + sorted PDFs ────────────────────────────────────────────────
 
@@ -183,6 +214,7 @@ export default function BlogPageClient() {
   }, [pdfFilter, difficultyFilter, categoryFilter, selectedTools, query]);
 
   const sortedPdfs = useMemo(() => {
+    // Fix #9: Use pre-computed timestamps from module-level map — no new Date() per comparison.
     const difficultyOrder: Record<string, number> = { Easy: 1, Medium: 2, Hard: 3 };
     return [...filteredPdfs].sort((a, b) => {
       const aShots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
@@ -190,7 +222,7 @@ export default function BlogPageClient() {
       if (aShots !== bShots) return aShots ? -1 : 1;
       switch (sortBy) {
         case "recent":
-          return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
+          return (PDF_DATE_MS.get(b.id) ?? 0) - (PDF_DATE_MS.get(a.id) ?? 0);
         case "difficulty":
           return (
             (difficultyOrder[b.difficulty ?? ""] || 0) -
@@ -204,10 +236,8 @@ export default function BlogPageClient() {
     });
   }, [filteredPdfs, sortBy]);
 
-  const leadCase = useMemo(
-    () => blogPdfResources.find((item) => item.id === wannacryId) ?? null,
-    []
-  );
+  // Fix #7: LEAD_CASE is a module-level constant — no useMemo needed.
+  const leadCase = LEAD_CASE;
 
   const visiblePdfCards = useMemo(
     () => (leadCase ? sortedPdfs.filter((item) => item.id !== leadCase.id) : sortedPdfs),
@@ -218,7 +248,7 @@ export default function BlogPageClient() {
 
   const featuredVideo = blogFeaturedYoutubeVideo;
 
-  // Include featured video first but apply the same query filter for consistency.
+  // Fix #8: featuredVideo is module-level — only real dep is query.
   const filteredChannelVideos = useMemo<ChannelVideo[]>(() => {
     const featured: ChannelVideo = {
       videoId: featuredVideo.videoId,
@@ -245,38 +275,31 @@ export default function BlogPageClient() {
       seen.add(video.videoId);
       return true;
     });
-  }, [query, featuredVideo.videoId, featuredVideo.title, featuredVideo.description, featuredVideo.sourceUrl]);
+  // Fix #8: featuredVideo is module-level — redundant primitive deps removed.
+  }, [query]);
 
   const filteredPlaylists = useMemo(
     () => blogYoutubePlaylists.filter((p) => matchesSearch(p.title, query)),
     [query]
   );
 
-  // ── Stats ────────────────────────────────────────────────────────────────
+  // ── Stats (Fix #6) ───────────────────────────────────────────────────────
+  // Derived from static data — pulled to module-level constants above.
+  const casesWithScreenshotsCount = CASES_WITH_SCREENSHOTS_COUNT;
+  const totalScreenshotAssets = TOTAL_SCREENSHOT_ASSETS;
 
-  const casesWithScreenshotsCount = useMemo(
-    () =>
-      caseEvidenceLibrary.filter((item) => (caseScreenshotsByEvidenceId[item.id] ?? []).length > 0)
-        .length,
-    []
-  );
+  // ── Gallery handlers (Fix #2, #3) ────────────────────────────────────────
+  // Plain functions — setGallery already uses functional updater, no deps needed.
 
-  const totalScreenshotAssets = useMemo(
-    () => Object.values(caseScreenshotsByEvidenceId).reduce((sum, shots) => sum + shots.length, 0),
-    []
-  );
-
-  // ── Gallery handlers ──────────────────────────────────────────────────────
-
-  const goGallery = useCallback((delta: number) => {
+  const goGallery = (delta: number): void => {
     setGallery((cur) => {
       if (!cur) return null;
       const nextIndex = (cur.index + delta + cur.screenshots.length) % cur.screenshots.length;
       return { ...cur, index: nextIndex };
     });
-  }, []);
+  };
 
-  const openGallery = useCallback((title: string, screenshots: string[], index = 0) => {
+  const openGallery = (title: string, screenshots: string[], index = 0): void => {
     if (!screenshots.length) return;
     prefetchGalleryShots(title, screenshots, index);
     setGallery({
@@ -284,31 +307,29 @@ export default function BlogPageClient() {
       screenshots,
       index: Math.min(Math.max(index, 0), screenshots.length - 1),
     });
-  }, [prefetchGalleryShots]);
+  };
 
-  // ── Other handlers ────────────────────────────────────────────────────────
+  // ── Other handlers (Fix #4) ───────────────────────────────────────────────
 
-  const activateEmbed = useCallback(
-    (key: string) => setActiveEmbeds((cur) => ({ ...cur, [key]: true })),
-    []
-  );
+  const activateEmbed = (key: string): void =>
+    setActiveEmbeds((cur) => ({ ...cur, [key]: true }));
 
-  const toggleToolFilter = useCallback((tool: string) => {
+  const toggleToolFilter = (tool: string): void => {
     setSelectedTools((cur) => {
       const next = new Set(cur);
       next.has(tool) ? next.delete(tool) : next.add(tool);
       return next;
     });
-  }, []);
+  };
 
-  const clearAllFilters = useCallback(() => {
+  const clearAllFilters = (): void => {
     setPdfFilter("All");
     setDifficultyFilter(null);
     setCategoryFilter(null);
     setSelectedTools(new Set());
     setRawQuery("");
     setQuery("");
-  }, []);
+  };
 
   const hasActiveFilters = Boolean(
     rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All"
@@ -323,43 +344,9 @@ export default function BlogPageClient() {
     ? normalizePublicHref(caseScreenshotsByEvidenceId[leadCase.id][0])
     : null;
 
-  const caseOrder = useMemo(() => blogPdfResources.filter((item) => item.id !== cvResource.id), []);
-  const { leadCaseIndex, previousCase, nextCase } = useMemo(() => {
-    const idx = caseOrder.findIndex((item) => item.id === leadCase?.id);
-    return {
-      leadCaseIndex: idx,
-      previousCase: idx > 0 ? caseOrder[idx - 1] : null,
-      nextCase: idx >= 0 && idx < caseOrder.length - 1 ? caseOrder[idx + 1] : null,
-    };
-  }, [caseOrder, leadCase]);
-  
-  const relatedCases = useMemo(() => {
-    if (!leadCase) return [];
-
-    const leadTags = new Set(leadCase.tags ?? []);
-
-    return blogPdfResources
-      .filter((item) => item.id !== leadCase.id && item.id !== cvResource.id)
-      .map((item) => {
-        let score = 0;
-
-        if (leadCase.category && item.category && item.category === leadCase.category) {
-          score += 3;
-        }
-
-        if (leadCase.difficulty && item.difficulty && item.difficulty === leadCase.difficulty) {
-          score += 1;
-        }
-
-        score += (item.tags ?? []).filter((tag) => leadTags.has(tag)).length * 2;
-
-        return { item, score };
-      })
-      .filter(({ score }) => score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3)
-      .map(({ item }) => item);
-  }, [leadCase]);
+  // Fix #7: All navigation and related-case data is static — use module-level constants.
+  const { previousCase, nextCase } = LEAD_CASE_NAVIGATION;
+  const relatedCases = RELATED_CASES;
 
   // ─── Render ──────────────────────────────────────────────────────────────
 
@@ -388,13 +375,13 @@ export default function BlogPageClient() {
 
       <BlogPdfLibrarySection
         filteredCount={filteredPdfs.length}
-        pdfTypeFilters={pdfTypeFilters}
+        pdfTypeFilters={PDF_TYPE_FILTERS}
         pdfFilter={pdfFilter}
         setPdfFilter={setPdfFilter}
-        difficultyOptions={difficultyOptions}
+        difficultyOptions={DIFFICULTY_OPTIONS}
         difficultyFilter={difficultyFilter}
         setDifficultyFilter={setDifficultyFilter}
-        categoryOptions={categoryOptions}
+        categoryOptions={CATEGORY_OPTIONS}
         categoryFilter={categoryFilter}
         setCategoryFilter={setCategoryFilter}
         sortBy={sortBy}

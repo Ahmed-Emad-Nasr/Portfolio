@@ -4,8 +4,19 @@ import React from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 
+// ─── Constants ────────────────────────────────────────────────────────────────
+
 // Placeholder shown when both thumbnail and full-size image fail to load
 const IMG_FALLBACK = "/Assets/art-gallery/logo/logo.png";
+
+// Hoisted outside the component — these objects are identical on every render,
+// creating them inline defeats React.memo on BlogCard.
+const PLACEHOLDER_STYLE: React.CSSProperties = {
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface BlogCardProps {
   title: string;
@@ -27,6 +38,8 @@ interface BlogCardProps {
   getThumbnail: (imgPath: string) => string;
   normalizeHref: (href: string) => string;
 }
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(
   ({
@@ -55,16 +68,29 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const cardRef = React.useRef<HTMLElement | null>(null);
     const [shouldRenderMedia, setShouldRenderMedia] = React.useState(false);
 
+    // Derive image paths once and memoize — avoids recalculating inside
+    // setState updaters (which would close over stale normalizeHref).
+    const primaryThumbSrc = React.useMemo(
+      () => (primaryScreenshot ? normalizeHref(getThumbnail(primaryScreenshot)) : null),
+      [primaryScreenshot, normalizeHref, getThumbnail]
+    );
+    const primaryOrigSrc = React.useMemo(
+      () => (primaryScreenshot ? normalizeHref(primaryScreenshot) : null),
+      [primaryScreenshot, normalizeHref]
+    );
+    const secondaryThumbSrc = React.useMemo(
+      () => (secondaryScreenshot ? normalizeHref(getThumbnail(secondaryScreenshot)) : null),
+      [secondaryScreenshot, normalizeHref, getThumbnail]
+    );
+    const secondaryOrigSrc = React.useMemo(
+      () => (secondaryScreenshot ? normalizeHref(secondaryScreenshot) : null),
+      [secondaryScreenshot, normalizeHref]
+    );
+
     // Track load state for each image independently:
-    // null  → no image / not yet attempted
-    // string → current src to try
     // Three-tier fallback: thumbnail → full-size original → placeholder
-    const [primarySrc, setPrimarySrc] = React.useState<string | null>(
-      primaryScreenshot ? normalizeHref(getThumbnail(primaryScreenshot)) : null
-    );
-    const [secondarySrc, setSecondarySrc] = React.useState<string | null>(
-      secondaryScreenshot ? normalizeHref(getThumbnail(secondaryScreenshot)) : null
-    );
+    const [primarySrc, setPrimarySrc] = React.useState<string | null>(primaryThumbSrc);
+    const [secondarySrc, setSecondarySrc] = React.useState<string | null>(secondaryThumbSrc);
 
     const extraCount = Math.max(0, screenshots.length - 2);
     const difficultyKey = difficulty?.toLowerCase() as "easy" | "medium" | "hard" | undefined;
@@ -73,24 +99,25 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     const handleToolClick = React.useCallback((tool: string) => onToolClick?.(tool), [onToolClick]);
 
     // Three-tier fallback: thumbnail → original → placeholder
+    // Using memoized src values avoids closure over stale normalizeHref.
     const handlePrimaryError = React.useCallback(() => {
       setPrimarySrc((cur) => {
         if (!cur) return IMG_FALLBACK;
-        const original = primaryScreenshot ? normalizeHref(primaryScreenshot) : null;
-        if (original && cur !== original) return original;
+        if (primaryOrigSrc && cur !== primaryOrigSrc) return primaryOrigSrc;
         return IMG_FALLBACK;
       });
-    }, [primaryScreenshot, normalizeHref]);
+    }, [primaryOrigSrc]);
 
     const handleSecondaryError = React.useCallback(() => {
       setSecondarySrc((cur) => {
         if (!cur) return IMG_FALLBACK;
-        const original = secondaryScreenshot ? normalizeHref(secondaryScreenshot) : null;
-        if (original && cur !== original) return original;
+        if (secondaryOrigSrc && cur !== secondaryOrigSrc) return secondaryOrigSrc;
         return IMG_FALLBACK;
       });
-    }, [secondaryScreenshot, normalizeHref]);
+    }, [secondaryOrigSrc]);
 
+    // IntersectionObserver for lazy media rendering — guard runs first so the
+    // observer is never created when there are no screenshots.
     React.useEffect(() => {
       if (!hasScreenshots) return;
       const node = cardRef.current;
@@ -99,8 +126,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
       const observer = new IntersectionObserver(
         (entries) => {
           if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer.disconnect(); // disconnect before setState to avoid any race
           setShouldRenderMedia(true);
-          observer.disconnect();
         },
         { rootMargin: "240px 0px" }
       );
@@ -150,7 +177,6 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
             )}
             {category && <span className={styles.badge}>{category}</span>}
             {readTime && <span className={styles.badge}>{readTime} min</span>}
-            {/* Bug fix: date was declared in the interface but never rendered */}
             {date && <span className={styles.badge}>{date}</span>}
           </div>
 
@@ -238,7 +264,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                   fill
                   sizes="(max-width: 560px) 100vw, (max-width: 991px) 70vw, 40vw"
                   loading="lazy"
-                  quality={30}
+                  quality={70}
                   onError={handlePrimaryError}
                 />
               )}
@@ -260,7 +286,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                       fill
                       sizes="(max-width: 560px) 45vw, 18vw"
                       loading="lazy"
-                      quality={30}
+                      quality={50}
                       onError={handleSecondaryError}
                     />
                   )}

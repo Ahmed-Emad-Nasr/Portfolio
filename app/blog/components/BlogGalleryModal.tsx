@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, type TouchEvent } from "react";
+import { useCallback, useEffect, useRef, type TouchEvent } from "react";
 import styles from "../page.module.css";
 import type { GalleryState } from "../blog-types";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type BlogGalleryModalProps = {
   gallery: GalleryState | null;
@@ -11,6 +13,8 @@ type BlogGalleryModalProps = {
   setGallery: (value: GalleryState | null) => void;
   goGallery: (delta: number) => void;
 };
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function BlogGalleryModal({
   gallery,
@@ -21,14 +25,32 @@ export default function BlogGalleryModal({
   const galleryDialogRef = useRef<HTMLDivElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
 
+  // Effect 1: Focus management — runs only when the gallery opens/closes.
+  // Separating this from the keyboard handler effect means focus is restored
+  // correctly when the gallery closes regardless of which index was last active.
   useEffect(() => {
     if (!gallery) return;
     const prev = document.activeElement as HTMLElement | null;
     const dialog = galleryDialogRef.current;
+    dialog?.querySelectorAll<HTMLElement>(
+      'button, a[href], [tabindex]:not([tabindex="-1"])'
+    )?.[0]?.focus();
+
+    return () => {
+      prev?.focus();
+    };
+    // Only re-run when the gallery is opened/closed, not on index change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gallery != null]);
+
+  // Effect 2: Keyboard navigation — re-runs when gallery/index changes so that
+  // the focusables snapshot and the goGallery/setGallery references stay fresh.
+  useEffect(() => {
+    if (!gallery) return;
+    const dialog = galleryDialogRef.current;
     const focusables = dialog?.querySelectorAll<HTMLElement>(
       'button, a[href], [tabindex]:not([tabindex="-1"])'
     );
-    focusables?.[0]?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") { e.preventDefault(); setGallery(null); return; }
@@ -42,23 +64,28 @@ export default function BlogGalleryModal({
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => { window.removeEventListener("keydown", handleKeyDown); prev?.focus(); };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gallery, goGallery, setGallery]);
 
-  if (!gallery || !currentShot) return null;
-
-  const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
+  // Stable touch handlers — useCallback prevents identity churn on the anchor
+  // element across gallery index changes.
+  const handleTouchStart = useCallback((event: TouchEvent<HTMLElement>) => {
     touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
-  };
+  }, []);
 
-  const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
-    if (touchStartXRef.current === null) return;
-    const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
-    const deltaX = endX - touchStartXRef.current;
-    touchStartXRef.current = null;
-    if (Math.abs(deltaX) < 40) return;
-    goGallery(deltaX < 0 ? 1 : -1);
-  };
+  const handleTouchEnd = useCallback(
+    (event: TouchEvent<HTMLElement>) => {
+      if (touchStartXRef.current === null) return;
+      const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
+      const deltaX = endX - touchStartXRef.current;
+      touchStartXRef.current = null;
+      if (Math.abs(deltaX) < 40) return;
+      goGallery(deltaX < 0 ? 1 : -1);
+    },
+    [goGallery]
+  );
+
+  if (!gallery || !currentShot) return null;
 
   return (
     <div
@@ -89,7 +116,12 @@ export default function BlogGalleryModal({
         </div>
 
         <div className={styles.galleryStage}>
-          <button type="button" className={styles.galleryNav} onClick={() => goGallery(-1)} aria-label="Previous screenshot">
+          <button
+            type="button"
+            className={styles.galleryNav}
+            onClick={() => goGallery(-1)}
+            aria-label="Previous screenshot"
+          >
             ←
           </button>
           <a
@@ -110,7 +142,12 @@ export default function BlogGalleryModal({
               quality={75}
             />
           </a>
-          <button type="button" className={styles.galleryNav} onClick={() => goGallery(1)} aria-label="Next screenshot">
+          <button
+            type="button"
+            className={styles.galleryNav}
+            onClick={() => goGallery(1)}
+            aria-label="Next screenshot"
+          >
             →
           </button>
         </div>
@@ -120,7 +157,11 @@ export default function BlogGalleryModal({
             <button
               key={`${gallery.title}-${shot}`}
               type="button"
-              className={index === gallery.index ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}` : styles.galleryThumbButton}
+              className={
+                index === gallery.index
+                  ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}`
+                  : styles.galleryThumbButton
+              }
               onClick={() => setGallery({ ...gallery, index })}
               aria-label={`Open screenshot ${index + 1}`}
             >
