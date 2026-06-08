@@ -122,6 +122,8 @@ const SenseiHeader = memo(function SenseiHeader() {
       const offset  = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
       const targetY = window.scrollY + target.getBoundingClientRect().top - offset;
 
+      // clear overflow lock before scrolling so layout isn't constrained
+      document.body.style.overflow = "";
       window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
       playSectionFade(target);
     },
@@ -130,10 +132,9 @@ const SenseiHeader = memo(function SenseiHeader() {
 
   // ── Scroll to top (Home) ───────────────────────────────────────────────────
   const scrollToTop = useCallback(() => {
+    // clear overflow lock before scrolling so the header stays visible
+    document.body.style.overflow = "";
     window.scrollTo({ top: 0, behavior: "auto" });
-
-    // FIX: was getElementById("Home") which doesn't exist in the DOM.
-    // "main-content" is the correct elementId from SPY_SECTIONS for Home.
     const homeEl = document.getElementById("main-content");
     if (homeEl) playSectionFade(homeEl);
   }, [playSectionFade]);
