@@ -9,7 +9,8 @@
 import { memo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faWhatsapp, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin, faWhatsapp, faYoutube,   faInstagram,
+  faGithub, } from "@fortawesome/free-brands-svg-icons";
 import { faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
@@ -149,17 +150,57 @@ const SenseiHome = memo(function SenseiHome() {
           <p>
             Computer Science graduate with hands-on experience as a SOC Analyst and Blue Team Operator across 10+ SOC training programs and 200+ simulated alerts (DEPI, ITI, projects). Skilled in monitoring, detection, SIEM/EDR investigations, alert triage, IOC analysis, log analysis across IR lifecycle.
           </p>
-          <div className={styles.socialIcon}>
-            <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="LinkedIn profile">
-              <FontAwesomeIcon icon={faLinkedin} />
-            </a>
-            <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp chat">
-              <FontAwesomeIcon icon={faWhatsapp} />
-            </a>
-            <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="YouTube channel">
-              <FontAwesomeIcon icon={faYoutube} />
-            </a>
-          </div>
+<div className={styles.socialIcon}>
+  <a
+    href="https://www.linkedin.com/in/ahmed-emad-nasr/"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="LinkedIn"
+    aria-label="LinkedIn profile"
+  >
+    <FontAwesomeIcon icon={faLinkedin} />
+  </a>
+
+  <a
+    href="https://wa.me/201018166445"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="WhatsApp"
+    aria-label="WhatsApp chat"
+  >
+    <FontAwesomeIcon icon={faWhatsapp} />
+  </a>
+
+  <a
+    href={YOUTUBE_CHANNEL_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    title="YouTube"
+    aria-label="YouTube channel"
+  >
+    <FontAwesomeIcon icon={faYoutube} />
+  </a>
+
+  <a
+    href="https://www.instagram.com/0x3omda/"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="Instagram"
+    aria-label="Instagram profile"
+  >
+    <FontAwesomeIcon icon={faInstagram} />
+  </a>
+
+  <a
+    href="https://github.com/Ahmed-Emad-Nasr"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="GitHub"
+    aria-label="GitHub profile"
+  >
+    <FontAwesomeIcon icon={faGithub} />
+  </a>
+</div>
           <div className={styles.homeButton}>
             <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download="AhmedEmadNasr_CV.pdf" className={cvBtnClass} aria-label="Download CV">
               {cvBtnLabel} <FontAwesomeIcon icon={faFilePdf} />
