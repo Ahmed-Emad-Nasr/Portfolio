@@ -3,7 +3,12 @@
 /*
  * File: useGitHubRepos.ts
  * Author: Ahmed Emad Nasr
- * Purpose: Fetch and expose GitHub repositories data with retry handling
+ * PERF: loadRemainingRepos uses functional state updater — reads latest repos
+ * without capturing stale closure. Avoids the subtle "appended to wrong list"
+ * bug that could silently corrupt results.
+ * PERF: writeCachePayload extracted to a separate microtask (queueMicrotask)
+ * so the critical path (state update → React re-render → paint) is not blocked
+ * by a localStorage serialise + write.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -14,8 +19,7 @@ import { GITHUB_USERNAME, staticProjectFallback } from "@/app/core/data/projects
 const PAGE_SIZE = 4;
 const API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&direction=desc&per_page=${PAGE_SIZE}&type=owner&page=`;
 const REPO_CACHE_KEY = "portfolio_github_repos_cache_v1";
-const CACHE_TTL_HOURS = 12;
-const CACHE_TTL_MS = CACHE_TTL_HOURS * 60 * 60 * 1000;
+const CACHE_TTL_MS = 12 * 60 * 60 * 1000; // 12 h
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -31,10 +35,7 @@ export interface GitHubRepository {
   open_issues_count: number;
   updated_at: string;
   created_at: string;
-  owner: {
-    login: string;
-    avatar_url: string;
-  };
+  owner: { login: string; avatar_url: string };
   topics: string[];
   default_branch: string;
   watchers_count: number;
@@ -58,48 +59,37 @@ type ValidCachedRepos = {
   nextPage: number;
 };
 
-// ─── Pure Utilities (hoisted outside hook — never recreated) ──────────────────
+// ─── Pure utilities ───────────────────────────────────────────────────────────
 
-// Fix #3: Hoisted outside hook — defined once, never recreated per render/effect.
 function readCachedRepos(): ValidCachedRepos | null {
   try {
     const raw = localStorage.getItem(REPO_CACHE_KEY);
     if (!raw) return null;
-
     const parsed = JSON.parse(raw) as RepoCachePayload;
-    if (!Array.isArray(parsed.items) || parsed.items.length === 0) return null;
-
+    if (!Array.isArray(parsed.items) || !parsed.items.length) return null;
     const updatedAt = parsed.updatedAt ?? null;
     const updatedMs = updatedAt ? new Date(updatedAt).getTime() : NaN;
-    const isFresh = Number.isFinite(updatedMs) ? Date.now() - updatedMs <= CACHE_TTL_MS : false;
-
     return {
       updatedAt,
       items: parsed.items,
-      isFresh,
+      isFresh: Number.isFinite(updatedMs) && Date.now() - updatedMs <= CACHE_TTL_MS,
       hasMore: parsed.hasMore ?? parsed.items.length === PAGE_SIZE,
-      // Fix #6: Store nextPage in cache payload instead of recalculating from length.
       nextPage: parsed.nextPage ?? Math.ceil(parsed.items.length / PAGE_SIZE) + 1,
     };
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
-function writeCachePayload(items: GitHubRepository[], hasMore: boolean, nextPage: number): string | null {
-  try {
-    const nowIso = new Date().toISOString();
-    localStorage.setItem(
-      REPO_CACHE_KEY,
-      JSON.stringify({ updatedAt: nowIso, items, hasMore, nextPage } satisfies RepoCachePayload)
-    );
-    return nowIso;
-  } catch {
-    return null;
-  }
+// PERF: Deferred write — doesn't block the render that triggered the state update
+function writeCacheDeferred(items: GitHubRepository[], hasMore: boolean, nextPage: number): string {
+  const nowIso = new Date().toISOString();
+  queueMicrotask(() => {
+    try {
+      localStorage.setItem(REPO_CACHE_KEY, JSON.stringify({ updatedAt: nowIso, items, hasMore, nextPage }));
+    } catch { /* quota exceeded — non-fatal */ }
+  });
+  return nowIso;
 }
 
-// Fix #1: Hoisted outside hook — plain async function, no useCallback overhead.
 async function fetchRepoPage(page: number, signal: AbortSignal): Promise<GitHubRepository[]> {
   const response = await fetch(`${API_URL}${page}`, {
     signal,
@@ -110,33 +100,17 @@ async function fetchRepoPage(page: number, signal: AbortSignal): Promise<GitHubR
   return Array.isArray(data) ? (data as GitHubRepository[]) : [];
 }
 
-// Fix #4: Abort-aware sleep — clears the timer and rejects on unmount signal
-// so no ghost setTimeout survives component teardown during retry backoff.
 function abortableSleep(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal.aborted) { reject(new DOMException("AbortError", "AbortError")); return; }
     const t = setTimeout(resolve, ms);
-    signal.addEventListener("abort", () => {
-      clearTimeout(t);
-      reject(new DOMException("AbortError", "AbortError"));
-    }, { once: true });
+    signal.addEventListener("abort", () => { clearTimeout(t); reject(new DOMException("AbortError", "AbortError")); }, { once: true });
   });
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export const useGitHubRepos = (): {
-  repos: GitHubRepository[];
-  isLoading: boolean;
-  source: RepoSource;
-  loadNotice: string | null;
-  loadError: string | null;
-  cacheUpdatedAt: string | null;
-  hasMore: boolean;
-  isLoadingMore: boolean;
-  loadRemainingRepos: () => Promise<void>;
-  refresh: () => void;
-} => {
+export const useGitHubRepos = () => {
   const [repos, setRepos] = useState<GitHubRepository[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -148,10 +122,7 @@ export const useGitHubRepos = (): {
   const [cacheUpdatedAt, setCacheUpdatedAt] = useState<string | null>(null);
   const [refreshNonce, setRefreshNonce] = useState(0);
 
-  // Fix #2: useRef guard instead of useCallback with stale-prone dep array.
   const loadingMoreRef = useRef(false);
-
-  // Fix #7: Lifecycle-linked ref for load-more fetches — aborted on unmount.
   const loadMoreControllerRef = useRef<AbortController | null>(null);
 
   const refresh = (): void => {
@@ -170,24 +141,21 @@ export const useGitHubRepos = (): {
       const maxRetries = 3;
       const baseDelay = 1000;
 
-      const setCachedState = (cached: ValidCachedRepos, message: string): void => {
-        setRepos(cached.items);
+      const cachedSnapshot = readCachedRepos();
+
+      const applyCached = (msg: string) => {
+        if (!cachedSnapshot) return;
+        setRepos(cachedSnapshot.items);
         setSource("cache");
-        setCacheUpdatedAt(cached.updatedAt);
-        setHasMore(cached.hasMore);
-        setNextPageToLoad(cached.nextPage);
-        setLoadNotice(
-          cached.isFresh ? message : `${message} Cached data is older than ${CACHE_TTL_HOURS}h.`
-        );
+        setCacheUpdatedAt(cachedSnapshot.updatedAt);
+        setHasMore(cachedSnapshot.hasMore);
+        setNextPageToLoad(cachedSnapshot.nextPage);
+        setLoadNotice(cachedSnapshot.isFresh ? msg : `${msg} Cached data is older than 12h.`);
         setLoadError(null);
         setIsLoading(false);
       };
 
-      // Fix #3: Called once, result reused across all fallback paths — no double parse.
-      const cachedSnapshot = readCachedRepos();
-      if (cachedSnapshot) {
-        setCachedState(cachedSnapshot, "Showing cached repositories while checking for updates.");
-      }
+      if (cachedSnapshot) applyCached("Showing cached repositories while checking for updates.");
 
       for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
@@ -195,48 +163,35 @@ export const useGitHubRepos = (): {
 
           if (normalized.length > 0) {
             const hasMorePages = normalized.length === PAGE_SIZE;
-            const nowIso = writeCachePayload(normalized, hasMorePages, 2);
+            const nowIso = writeCacheDeferred(normalized, hasMorePages, 2);
             setRepos(normalized);
             setSource("live");
             setHasMore(hasMorePages);
             setNextPageToLoad(2);
             setLoadNotice(null);
             setLoadError(null);
-            if (nowIso) setCacheUpdatedAt(nowIso);
-            setIsLoading(false);
-            return;
-          } else {
-            if (process.env.NODE_ENV === "development") {
-              console.warn("GitHub API returned unexpected data format");
-            }
-            if (cachedSnapshot) {
-              setCachedState(cachedSnapshot, "GitHub returned empty data. Showing cached repositories.");
-              return;
-            }
-            setRepos(staticProjectFallback as unknown as GitHubRepository[]);
-            setSource("static");
-            setHasMore(false);
-            setNextPageToLoad(2);
-            setLoadNotice("GitHub returned empty data. Showing curated fallback projects.");
-            setLoadError(null);
-            setIsLoading(false);
-            return;
-          }
-        } catch (error) {
-          if (error instanceof Error && error.name === "AbortError") {
+            setCacheUpdatedAt(nowIso);
             setIsLoading(false);
             return;
           }
 
-          const isLastAttempt = attempt === maxRetries - 1;
-          if (isLastAttempt) {
-            if (error instanceof Error && process.env.NODE_ENV === "development") {
-              console.error("Failed to fetch repositories after retries:", error.message);
-            }
-            if (cachedSnapshot) {
-              setCachedState(cachedSnapshot, "Live GitHub data is unavailable. Showing cached repositories.");
-              return;
-            }
+          if (cachedSnapshot) {
+            applyCached("GitHub returned empty data. Showing cached repositories.");
+            return;
+          }
+          setRepos(staticProjectFallback as unknown as GitHubRepository[]);
+          setSource("static");
+          setHasMore(false);
+          setNextPageToLoad(2);
+          setLoadNotice("GitHub returned empty data. Showing curated fallback projects.");
+          setLoadError(null);
+          setIsLoading(false);
+          return;
+        } catch (error) {
+          if (error instanceof Error && error.name === "AbortError") { setIsLoading(false); return; }
+
+          if (attempt === maxRetries - 1) {
+            if (cachedSnapshot) { applyCached("Live GitHub data is unavailable. Showing cached repositories."); return; }
             setRepos(staticProjectFallback as unknown as GitHubRepository[]);
             setSource("static");
             setHasMore(false);
@@ -245,8 +200,7 @@ export const useGitHubRepos = (): {
             setLoadError("Live GitHub data is unavailable. Showing curated fallback projects.");
             setIsLoading(false);
           } else {
-            // Fix #4: Abort-aware backoff — timer is cleared if component unmounts mid-retry.
-            await abortableSleep(baseDelay * Math.pow(2, attempt), controller.signal);
+            await abortableSleep(baseDelay * (1 << attempt), controller.signal); // bitshift = 2^attempt, avoids Math.pow
           }
         }
       }
@@ -256,12 +210,8 @@ export const useGitHubRepos = (): {
     return () => controller.abort();
   }, [refreshNonce]);
 
-  // Fix #7: Abort load-more fetches on unmount.
-  useEffect(() => {
-    return () => { loadMoreControllerRef.current?.abort(); };
-  }, []);
+  useEffect(() => () => { loadMoreControllerRef.current?.abort(); }, []);
 
-  // Fix #2: Plain async function — ref guard replaces useCallback with stale dep array.
   const loadRemainingRepos = async (): Promise<void> => {
     if (isLoading || loadingMoreRef.current || !hasMore) return;
 
@@ -277,15 +227,20 @@ export const useGitHubRepos = (): {
       const pageItems = await fetchRepoPage(nextPageToLoad, controller.signal);
 
       if (pageItems.length > 0) {
-        // Fix #5: localStorage write outside state updater — no side effects in pure fn.
-        const merged = [...repos, ...pageItems];
         const hasMorePages = pageItems.length === PAGE_SIZE;
         const nextPage = nextPageToLoad + 1;
-        const nowIso = writeCachePayload(merged, hasMorePages, nextPage);
-        setRepos(merged);
+
+        // PERF: Functional updater — reads latest repos without stale closure.
+        // This is the fix for the race condition where loadRemainingRepos was
+        // called with a captured `repos` value that was out of date.
+        setRepos(prev => {
+          const merged = [...prev, ...pageItems];
+          writeCacheDeferred(merged, hasMorePages, nextPage);
+          return merged;
+        });
         setHasMore(hasMorePages);
         setNextPageToLoad(nextPage);
-        if (nowIso) setCacheUpdatedAt(nowIso);
+        setCacheUpdatedAt(new Date().toISOString());
       } else {
         setHasMore(false);
       }
@@ -300,15 +255,8 @@ export const useGitHubRepos = (): {
   };
 
   return {
-    repos,
-    isLoading,
-    source,
-    loadNotice,
-    loadError,
-    cacheUpdatedAt,
-    hasMore,
-    isLoadingMore,
-    loadRemainingRepos,
-    refresh,
+    repos, isLoading, source, loadNotice, loadError,
+    cacheUpdatedAt, hasMore, isLoadingMore,
+    loadRemainingRepos, refresh,
   };
 };

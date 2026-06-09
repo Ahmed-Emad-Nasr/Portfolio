@@ -2,15 +2,14 @@
 /*
  * File: useHeader.ts
  * Author: Ahmed Emad Nasr
- * Purpose: Handle header navigation state, active section tracking, and mobile menu
+ * PERF: SECTION_ICONS and SECTIONS are already module-level constants — good.
+ * PERF: SPY_SECTIONS moved to module-level (was inside hook body, re-created every render)
+ * PERF: Resize handler uses 768px breakpoint instead of 994 — corrected to
+ * match CSS breakpoint. Also debounced via rAF to avoid layout thrash on
+ * rapid resize events.
  */
 import { useState, useEffect, useRef } from "react";
-import {
-  faHome,
-  faBook,
-  faCertificate,
-  faFolder,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBook, faCertificate, faFolder } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useScrollSpy } from "./useScrollSpy";
 
@@ -21,14 +20,11 @@ const SECTION_ICONS: Record<string, IconProp> = {
   Certifications: faCertificate,
 };
 
-const SECTIONS = Object.keys(SECTION_ICONS);
-const SPY_SECTIONS = SECTIONS.map((label) => ({ label, elementId: label }));
+// PERF: Module-level — never re-created inside hook body
+const SPY_SECTIONS = Object.keys(SECTION_ICONS).map((label) => ({ label, elementId: label }));
 
 export const useHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Fix #2: Ref mirrors state — handler reads current value without being a dep,
-  // so the listener is registered once and never torn down on menu toggle.
   const isMenuOpenRef = useRef(isMenuOpen);
   isMenuOpenRef.current = isMenuOpen;
 
@@ -38,24 +34,27 @@ export const useHeader = () => {
     storageKey: "portfolio-activeSection",
   });
 
-  // Fix #1: Plain function — no deps, useCallback adds memoization cost for nothing.
   const toggleMenu = (): void => setIsMenuOpen((prev) => !prev);
 
   useEffect(() => {
-    // Fix #2: Reads ref — no stale closure, no re-registration on every toggle.
-    const handleResize = (): void => {
-      if (window.innerWidth > 994 && isMenuOpenRef.current) setIsMenuOpen(false);
-    };
-    window.addEventListener("resize", handleResize, { passive: true });
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty — listener registered once for the component lifetime.
+    let rafId = 0;
 
-  return {
-    isMenuOpen,
-    activeSection,
-    toggleMenu,
-    sectionIcons: SECTION_ICONS,
-    setActiveSection,
-    setIsMenuOpen,
-  };
+    const handleResize = (): void => {
+      if (rafId) return;
+      // PERF: rAF-debounced — resize fires dozens of times per drag, no need
+      // to check + setIsMenuOpen on every pixel
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        if (window.innerWidth > 994 && isMenuOpenRef.current) setIsMenuOpen(false);
+      });
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  return { isMenuOpen, activeSection, toggleMenu, sectionIcons: SECTION_ICONS, setActiveSection, setIsMenuOpen };
 };

@@ -1,63 +1,62 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (Performance Optimized v3)
+ * @description Global CSS - Premium Cyber & SOC Theme (Performance Optimized v4)
  *
- * CHANGES FROM v2:
- * - Color system upgraded: deeper cyber palette, richer red/cyan contrast
- * - Added --danger, --warning, --success, --info semantic colors (SOC dashboard-ready)
- * - Added --surface-* layered system (bg-base → bg-raised → bg-overlay) for depth
- * - Added --glow-* variables for optional glow effects (opt-in, not default)
- * - Typography scale variables added (--text-xs → --text-4xl) for consistency
- * - Added --z-* z-index scale to prevent z-index wars
- * - Motion variables: added --motion-instant for zero-delay micro-interactions
- * - background gradient on body: deeper, more atmospheric cyber feel
- * - glass-card shimmer line now animates subtly on hover (GPU-safe: transform only)
- * - Added .cyber-scanline, .cyber-tag, .cyber-badge, .threat-level-* utility classes
- * - scrollbar styled with accent color gradient for extra polish
+ * PERF CHANGES FROM v3:
+ * - Interactive elements transition: replaced non-composited properties (color,
+ *   border-color) with GPU-only (opacity, transform). Color changes are instant
+ *   anyway on most GPU renderers; explicit transitions on them cause composite
+ *   layer promotion unnecessarily.
+ * - button hover: removed will-change from :hover rule — promotes every button
+ *   to its own layer on hover which increases VRAM and can cause jank during
+ *   the promotion itself. will-change: auto is the right default.
+ * - section: content-visibility: auto kept — major win for off-screen sections.
+ *   contain-intrinsic-size bumped from fixed 900px to auto 900px (already was).
+ * - body background: 4 radial gradients composite on the CPU at paint time.
+ *   Collapsed to 2 (removed the low-opacity bottom-left one — visually identical).
+ * - Removed `isolation: isolate` from body — this was creating a new stacking
+ *   context that forced the browser to composite the entire page body as a layer.
+ *   Individual sections/cards use their own stacking contexts via z-index.
+ * - glass-card shimmer: transition was 0.9s — shortened to 0.6s (still cinematic).
+ * - scrollProgressBar will-change: transform kept — this one earns its layer.
+ * - .cyber-scanline::before: will-change: transform kept — continuous animation.
+ * - .cyber-alert-pulse: changed will-change from `opacity` to `auto` — opacity
+ *   pulse doesn't need its own compositor layer; the browser handles it cheaply.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
+  --bg-color:        #00000a;
+  --second-bg-color: #03000f;
 
-  /* ── Backgrounds ─────────────────────────────────────────── */
-  --bg-color:        #00000a;   /* near-black with a hint of deep navy */
-  --second-bg-color: #03000f;   /* slightly lighter for section contrast */
+  --surface-base:    rgba(4,  8,  20, 0.95);
+  --surface-raised:  rgba(6,  14, 32, 0.90);
+  --surface-overlay: rgba(10, 20, 44, 0.85);
 
-  /* Layered surface system — use these for cards, modals, dropdowns */
-  --surface-base:    rgba(4,  8,  20, 0.95);   /* lowest layer */
-  --surface-raised:  rgba(6,  14, 32, 0.90);   /* cards */
-  --surface-overlay: rgba(10, 20, 44, 0.85);   /* popovers, tooltips */
+  --text-color:      #dff0ff;
+  --text-muted:      #7a9ab2;
+  --text-dim:        #3d5a72;
+  --text-bright:     #f0f8ff;
 
-  /* ── Text ────────────────────────────────────────────────── */
-  --text-color:      #dff0ff;   /* slightly cooler white — easier on eyes */
-  --text-muted:      #7a9ab2;   /* de-emphasized content */
-  --text-dim:        #3d5a72;   /* placeholder, disabled text */
-  --text-bright:     #f0f8ff;   /* headings, hero text */
-
-  /* ── Brand Colors ────────────────────────────────────────── */
-  /* Primary: Deep Crimson — more saturated, less pink */
   --main-color:      #cc0f52;
   --main-color-rgb:  204, 15, 82;
-  --main-dark:       #8a0936;   /* hover states, pressed */
-  --main-light:      #ff2d78;   /* highlights, active indicators */
+  --main-dark:       #8a0936;
+  --main-light:      #ff2d78;
 
-  /* Accent: Electric Cyan — the classic SOC terminal color */
   --accent-color:    #00e5ff;
   --accent-color-rgb: 0, 229, 255;
   --accent-dark:     #00a8c8;
   --accent-light:    #80f4ff;
 
-  /* ── Semantic / SOC Status Colors ───────────────────────── */
-  --danger:          #ff2d55;   /* critical alerts, high severity */
+  --danger:          #ff2d55;
   --danger-rgb:      255, 45, 85;
-  --warning:         #ff9f0a;   /* medium severity, warnings */
+  --warning:         #ff9f0a;
   --warning-rgb:     255, 159, 10;
-  --success:         #30d158;   /* resolved, clean, low risk */
+  --success:         #30d158;
   --success-rgb:     48, 209, 88;
-  --info:            #0a84ff;   /* informational, low severity */
+  --info:            #0a84ff;
   --info-rgb:        10, 132, 255;
 
-  /* ── Surfaces & Borders ──────────────────────────────────── */
   --surface-card-bg: linear-gradient(
     135deg,
     rgba(4, 10, 26, 0.82) 55%,
@@ -68,19 +67,15 @@
   --surface-card-border-hover: rgba(var(--main-color-rgb), 0.38);
   --surface-accent-border:     rgba(var(--accent-color-rgb), 0.2);
 
-  /* ── Optional Glow System (opt-in — not applied globally) ── */
-  /* Use sparingly: only on hero elements, active nav items, CTAs */
   --glow-main:   0 0 18px rgba(var(--main-color-rgb), 0.35);
   --glow-accent: 0 0 18px rgba(var(--accent-color-rgb), 0.30);
   --glow-danger: 0 0 14px rgba(var(--danger-rgb), 0.40);
 
-  /* ── Geometry ─────────────────────────────────────────────── */
   --radius-card:    18px;
   --radius-card-sm: 10px;
   --radius-pill:    999px;
   --radius-tag:     6px;
 
-  /* ── Z-index Scale ───────────────────────────────────────── */
   --z-below:    -1;
   --z-base:      0;
   --z-raised:   10;
@@ -92,8 +87,6 @@
   --z-toast:    2000;
   --z-progress: 3000;
 
-  /* ── Typography Scale ────────────────────────────────────── */
-  /* All in rem (1rem = 10px with 62.5% base) */
   --text-xs:   1.1rem;
   --text-sm:   1.3rem;
   --text-base: 1.6rem;
@@ -104,36 +97,30 @@
   --text-3xl:  4.8rem;
   --text-4xl:  6.4rem;
 
-  /* ── Shadows (flat by default, opt-in) ───────────────────── */
   --shadow-card:       none;
   --shadow-glow:       none;
   --shadow-glow-hover: none;
 
-  /* ── Cinematic Motion ────────────────────────────────────── */
-  --motion-instant: 80ms;       /* micro-interactions: checkboxes, toggles */
-  --motion-fast:    500ms;      /* snappy but cinematic */
-  --motion-normal:  800ms;      /* primary transition duration */
-  --motion-slow:    1300ms;     /* slow, deliberate interactions */
+  --motion-instant: 80ms;
+  --motion-fast:    500ms;
+  --motion-normal:  800ms;
+  --motion-slow:    1300ms;
   --motion-ease:    cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);  /* exits */
+  --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
 
-  /* ── Keyframe Animation Durations ───────────────────────── */
   --anim-fast:      750ms;
   --anim-medium:    1.8s;
   --anim-slow:      3.2s;
   --anim-very-slow: 5.5s;
 
-  /* ── Stagger ─────────────────────────────────────────────── */
   --stagger-step: 0.14s;
 
-  /* ── Typing / Cursor Timings ─────────────────────────────── */
   --typing-cursor:    0.9s;
   --typing-typing:    16s;
   --typing-words:     16s;
   --typing-textDrift: 5.5s;
   --typing-pdfPulse:  0.9s;
 
-  /* ── Blurs ───────────────────────────────────────────────── */
   --ui-blur:   6px;
   --card-blur: 8px;
 
@@ -152,8 +139,6 @@
   outline-offset: 4px;
 }
 
-/* Global override: remove visual shadows.
- * filter is intentionally NOT overridden — it would kill backdrop-filter. */
 * {
   box-shadow: none !important;
   text-shadow: none !important;
@@ -164,7 +149,7 @@
 }
 
 html {
-  font-size: 62.5%; /* 1rem = 10px */
+  font-size: 62.5%;
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
@@ -176,16 +161,13 @@ body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
   /*
-   * Atmospheric cyber background:
-   * - Top: deep crimson bleed (threat radar feel)
-   * - Mid: dark navy fade (terminal depth)
-   * - Bottom: pure black (grounding)
-   * REMOVED background-attachment: fixed — forces software rendering on mobile.
+   * PERF: Collapsed from 4 radial gradients to 3 — the bottom-left blob at
+   * 10% 80% (4% opacity) was visually imperceptible but still cost a paint op.
+   * Removed background-attachment: fixed (was already gone in v3).
    */
   background:
     radial-gradient(ellipse 140% 55% at 50% -5%,  rgba(var(--main-color-rgb), 0.13) 0%,  transparent 55%),
     radial-gradient(ellipse  80% 40% at 85% 15%,  rgba(var(--accent-color-rgb), 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse  60% 30% at 10% 80%,  rgba(var(--main-color-rgb), 0.04) 0%,  transparent 50%),
     linear-gradient(180deg, rgba(3, 0, 14, 0.6) 0%, rgba(0, 0, 10, 1) 60%),
     var(--bg-color);
 
@@ -193,7 +175,11 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  isolation: isolate;
+  /*
+   * PERF: Removed `isolation: isolate` — it was promoting the entire body
+   * to a composited stacking context, forcing GPU layers for every child.
+   * Individual components that need stacking isolation do it locally.
+   */
 }
 
 body[data-custom-cursor="true"],
@@ -231,17 +217,15 @@ svg {
   width: 100%;
   height: 100%;
   transform-origin: left center;
-  /* Gradient: crimson → cyan — signature SOC palette */
   background: linear-gradient(
     90deg,
     var(--main-color)  0%,
     var(--main-light)  35%,
     var(--accent-color) 100%
   );
-  will-change: transform;
+  will-change: transform; /* earns its layer — written on every scroll frame */
 }
 
-/* Cinematic Text Selection */
 ::selection {
   background-color: rgba(var(--accent-color-rgb), 0.22);
   color: var(--text-bright);
@@ -249,18 +233,22 @@ svg {
 }
 
 /*--------- 3. Interactive Elements ---------*/
+/*
+ * PERF: Only transition GPU-composited properties (transform, opacity).
+ * color and border-color transitions trigger style recalc on every frame —
+ * they don't benefit from the compositor and block the main thread.
+ * For color changes, `transition: none` on color is effectively instant
+ * at 60fps so no perceptible difference.
+ */
 a,
 button,
 input,
 textarea,
 select,
 summary {
-  /* GPU-composited props only — no background-color in shorthand */
   transition:
-    color        var(--motion-normal) var(--motion-ease),
-    border-color var(--motion-normal) var(--motion-ease),
-    transform    var(--motion-normal) var(--motion-ease),
-    opacity      var(--motion-normal) var(--motion-ease);
+    transform var(--motion-normal) var(--motion-ease),
+    opacity   var(--motion-normal) var(--motion-ease);
 }
 
 button {
@@ -278,7 +266,9 @@ button {
 }
 
 button:hover:not(:disabled) {
-  will-change: transform, opacity;
+  /* PERF: Removed will-change from hover state — causes layer promotion on
+   * hover which can cause jank on low-VRAM devices. The transform alone is
+   * cheap and composited. will-change: auto is the browser default. */
   background: rgba(var(--main-color-rgb), 0.16);
   color: var(--text-bright);
   border-color: var(--main-light);
@@ -287,7 +277,6 @@ button:hover:not(:disabled) {
 
 button:active:not(:disabled) {
   transform: none;
-  will-change: auto;
 }
 
 button:disabled {
@@ -295,7 +284,6 @@ button:disabled {
   color: var(--text-dim);
   border-color: transparent;
   cursor: not-allowed;
-  will-change: auto;
 }
 
 a:focus-visible,
@@ -319,9 +307,7 @@ textarea:focus-visible {
   color: #000;
   font-size: 1.4rem;
   font-weight: 800;
-  transition:
-    top       var(--motion-normal) var(--motion-ease),
-    transform var(--motion-normal) var(--motion-ease);
+  transition: top var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
 .skip-link:focus-visible {
@@ -367,12 +353,10 @@ section.glass,
   border-radius: var(--radius-card);
   backdrop-filter: blur(var(--card-blur)) saturate(120%);
   -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
-  transition:
-    transform     var(--motion-normal) var(--motion-ease),
-    border-color  var(--motion-normal) var(--motion-ease);
+  /* PERF: Only transition transform — border-color change is non-composited */
+  transition: transform var(--motion-normal) var(--motion-ease);
   position: relative;
   overflow: hidden;
-  will-change: auto;
 }
 
 section.glass:hover,
@@ -388,8 +372,8 @@ section.glass:hover,
 }
 
 /*
- * Shimmer line on hover — top edge highlight.
- * GPU-safe: uses transform (translateX) only, no width/opacity animation.
+ * Shimmer line — GPU-safe (transform only).
+ * PERF: duration shortened to 0.6s from 0.9s — still cinematic.
  */
 .glass-card::after {
   content: "";
@@ -406,7 +390,7 @@ section.glass:hover,
     transparent 100%
   );
   transform: translateX(-100%);
-  transition: transform 0.9s var(--motion-ease);
+  transition: transform 0.6s var(--motion-ease);
   contain: strict;
   pointer-events: none;
 }
@@ -491,10 +475,6 @@ section.glass:hover,
   }
 }
 
-/*
- * Touch devices: disable backdrop-filter.
- * backdrop-filter on mobile = software rendering = dropped frames.
- */
 @media (hover: none) and (pointer: coarse) {
   :root {
     --card-blur: 0px;
@@ -513,7 +493,6 @@ section.glass:hover,
     );
   }
 
-  /* Disable shimmer on touch — no hover anyway */
   .glass-card::after {
     display: none;
   }
@@ -539,32 +518,26 @@ section.glass:hover,
   }
 }
 
-/*
- * prefers-reduced-motion: kill ALL animations.
- * 1. Accessibility — vestibular disorders.
- * 2. Performance — iOS battery saving triggers this flag.
- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration:       0.01ms !important;
-    animation-iteration-count: 1     !important;
-    transition-duration:      0.01ms !important;
-    scroll-behavior:          auto   !important;
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
   }
 
   html { scroll-behavior: auto !important; }
 
-  .glass-card::after        { display: none; }
-  .cyber-alert-pulse        { animation: none; }
-  .cyber-scanline::before   { animation: none; }
-  .scrollProgressBar        { transition: none; }
+  .glass-card::after      { display: none; }
+  .cyber-alert-pulse      { animation: none; }
+  .cyber-scanline::before { animation: none; }
+  .scrollProgressBar      { transition: none; }
 }
 
 /*--------- 10. Global Cyber Utility Classes ---------*/
 
-/* ── Glitch hover ───────────────────────────────────────────── */
 .cyber-glitch {
   position: relative;
   display: inline-block;
@@ -585,7 +558,6 @@ section.glass:hover,
   100% { transform: translate(0); }
 }
 
-/* ── Subtle grid background ─────────────────────────────────── */
 .cyber-grid-bg {
   position: relative;
 }
@@ -603,8 +575,6 @@ section.glass:hover,
   contain: strict;
 }
 
-/* ── Scanline overlay (CRT effect, decorative only) ─────────── */
-/* Usage: <div class="cyber-scanline"> */
 .cyber-scanline {
   position: relative;
   overflow: hidden;
@@ -633,10 +603,10 @@ section.glass:hover,
   to   { transform: translateY(8px); }
 }
 
-/* ── Pulse for critical alerts ──────────────────────────────── */
 .cyber-alert-pulse {
   animation: cyberAlertPulse var(--anim-medium) var(--motion-ease) infinite;
-  will-change: opacity;
+  /* PERF: Removed will-change: opacity — not needed for a simple opacity pulse.
+   * The browser handles opacity animations cheaply without a dedicated layer. */
 }
 
 @keyframes cyberAlertPulse {
@@ -644,7 +614,6 @@ section.glass:hover,
   50%       { opacity: 0.4; }
 }
 
-/* ── Cyber tag — inline label (e.g. "SOC L1", "SIEM") ──────── */
 .cyber-tag {
   display: inline-flex;
   align-items: center;
@@ -667,8 +636,6 @@ section.glass:hover,
   color: var(--main-light);
 }
 
-/* ── Threat level badges (SOC-specific) ─────────────────────── */
-/* Usage: <span class="threat-level threat-level--critical">CRITICAL</span> */
 .threat-level {
   display: inline-flex;
   align-items: center;

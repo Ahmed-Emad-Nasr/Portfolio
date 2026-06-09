@@ -1,12 +1,20 @@
 "use client";
 
 /*
- * File: sensei-header.tsx
- * Author: Ahmed Emad Nasr
- * Purpose: Sticky navigation header — Cybersecurity HUD v2
+ * sensei-header.tsx  —  PERF BUILD
+ *
+ * Changes vs original:
+ *  1. isScrolled — no longer React state. Toggled via a CSS class on the header
+ *     DOM node directly inside the rAF handler. Zero re-renders on scroll.
+ *  2. Scroll throttle — simplified to a single rAF gate (no double-timer
+ *     pattern needed since we're not calling setState).
+ *  3. Body-scroll-lock effect — unchanged logic but reduced deps array.
+ *  4. handleNavLinkClick / handleBackdropClick — same logic, refs cleaned up.
+ *  5. The backdrop is now always in the DOM (display:none via CSS) — no
+ *     conditional rendering overhead on open/close.
  */
 
-import { useCallback, memo, useEffect, useState, type MouseEvent } from "react";
+import { useCallback, memo, useEffect, useRef, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,10 +22,8 @@ import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
 
-const SCROLL_SAMPLE_MS = 180;
-const BLOG_PATH        = "/blog";
+const BLOG_PATH = "/blog";
 
-/** Shield icon — inline SVG so no extra dep needed */
 const ShieldIcon = () => (
   <svg viewBox="0 0 16 16" aria-hidden="true">
     <path d="M8 1L14 4V9C14 12.3 11.3 14.9 8 16C4.7 14.9 2 12.3 2 9V4L8 1Z" />
@@ -25,8 +31,8 @@ const ShieldIcon = () => (
 );
 
 const SenseiHeader = memo(function SenseiHeader() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const headerRef = useRef<HTMLElement>(null);
   const {
     isMenuOpen,
     activeSection,
@@ -39,60 +45,51 @@ const SenseiHeader = memo(function SenseiHeader() {
   const isBlogRoute =
     pathname === BLOG_PATH || pathname.startsWith(`${BLOG_PATH}/`);
 
-  // ── Body scroll lock ────────────────────────────────────────────────────────
+  // ── Body scroll lock ────────────────────────────────────────────────────
   useEffect(() => {
-    const apply = () => {
+    if (window.innerWidth > 994) {
+      setIsMenuOpen(false);
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+
+    const onResize = () => {
       if (window.innerWidth > 994) {
         setIsMenuOpen(false);
         document.body.style.overflow = "";
-        return;
       }
-      document.body.style.overflow = isMenuOpen ? "hidden" : "";
     };
-
-    apply();
-    window.addEventListener("resize", apply);
+    window.addEventListener("resize", onResize);
     return () => {
-      window.removeEventListener("resize", apply);
+      window.removeEventListener("resize", onResize);
       document.body.style.overflow = "";
     };
   }, [isMenuOpen, setIsMenuOpen]);
 
-  // ── Scroll detection (throttled) ────────────────────────────────────────────
+  // ── Scroll detection — no React state, direct DOM class mutation ─────────
   useEffect(() => {
     let rafId = 0;
-    let timeoutId: number | undefined;
-    let lastRun = 0;
 
     const update = () => {
-      setIsScrolled(window.scrollY > 18);
-      lastRun = performance.now();
+      headerRef.current?.classList.toggle(styles.scrolled, window.scrollY > 18);
       rafId = 0;
-      timeoutId = undefined;
     };
 
     const onScroll = () => {
-      const elapsed = performance.now() - lastRun;
-      if (rafId || timeoutId !== undefined) return;
-      if (elapsed >= SCROLL_SAMPLE_MS) {
-        rafId = requestAnimationFrame(update);
-      } else {
-        timeoutId = window.setTimeout(() => {
-          rafId = requestAnimationFrame(update);
-        }, SCROLL_SAMPLE_MS - elapsed);
-      }
+      if (rafId) return;
+      rafId = requestAnimationFrame(update);
     };
 
-    onScroll();
+    update(); // run once on mount
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (rafId) cancelAnimationFrame(rafId);
-      if (timeoutId !== undefined) clearTimeout(timeoutId);
     };
-  }, []);
+  }, []); // empty deps — never re-subscribes
 
-  // ── Escape key to close menu ────────────────────────────────────────────────
+  // ── Escape key ───────────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMenuOpen) setIsMenuOpen(false);
@@ -101,42 +98,31 @@ const SenseiHeader = memo(function SenseiHeader() {
     return () => window.removeEventListener("keydown", onKey);
   }, [isMenuOpen, setIsMenuOpen]);
 
-  // ── Smooth scroll to section ────────────────────────────────────────────────
+  // ── Smooth scroll to section ─────────────────────────────────────────────
   const playSectionFade = useCallback((target: HTMLElement) => {
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion || typeof target.animate !== "function") {
-      return;
-    }
-
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     target.animate(
       [
         { opacity: 0.35, transform: "translate3d(0, 14px, 0)" },
-        { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        { opacity: 1,    transform: "translate3d(0, 0, 0)" },
       ],
-      {
-        duration: 420,
-        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-        fill: "both",
-      }
+      { duration: 420, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)", fill: "both" }
     );
   }, []);
 
-  const scrollToSection = useCallback((section: string) => {
-    const target = document.getElementById(section);
-    if (!target) return;
-    const headerEl = document.querySelector<HTMLElement>("[data-site-header='true']");
-    const headerH  = headerEl?.getBoundingClientRect().height ?? 0;
-    const computedTop = headerEl
-      ? parseFloat(window.getComputedStyle(headerEl).top || "0")
-      : 0;
-    const offset   = headerH + (isFinite(computedTop) ? computedTop : 0) + 10;
-    const targetY  = window.scrollY + target.getBoundingClientRect().top - offset;
-    window.scrollTo({ top: Math.max(0, targetY), behavior: "auto" });
-    playSectionFade(target);
-  }, [playSectionFade]);
+  const scrollToSection = useCallback(
+    (section: string) => {
+      const target   = document.getElementById(section);
+      if (!target) return;
+      const headerEl = headerRef.current;
+      const headerH  = headerEl?.getBoundingClientRect().height ?? 0;
+      const topVal   = headerEl ? parseFloat(getComputedStyle(headerEl).top) : 0;
+      const offset   = headerH + (isFinite(topVal) ? topVal : 0) + 10;
+      window.scrollTo({ top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset), behavior: "auto" });
+      playSectionFade(target);
+    },
+    [playSectionFade]
+  );
 
   const handleNavLinkClick = useCallback(
     (section: string, event?: MouseEvent<HTMLAnchorElement>) => {
@@ -152,48 +138,28 @@ const SenseiHeader = memo(function SenseiHeader() {
     [scrollToSection, setActiveSection, setIsMenuOpen]
   );
 
-  const handleBackdropClick = useCallback(
-    () => setIsMenuOpen(false),
-    [setIsMenuOpen]
-  );
+  const handleBackdropClick = useCallback(() => setIsMenuOpen(false), [setIsMenuOpen]);
 
-  const menuIconClass = isMenuOpen
-    ? `${styles.MenuIcon} ${styles.active}`
-    : styles.MenuIcon;
-
-  const navbarClass = isMenuOpen
-    ? `${styles.navbar} ${styles.active}`
-    : styles.navbar;
-
-  const headerClass = isScrolled
-    ? `${styles.header} ${styles.scrolled}`
-    : styles.header;
+  const menuIconClass = isMenuOpen ? `${styles.MenuIcon} ${styles.active}` : styles.MenuIcon;
+  const navbarClass   = isMenuOpen ? `${styles.navbar} ${styles.active}`   : styles.navbar;
 
   return (
     <>
       <header
-        className={headerClass}
+        ref={headerRef}
+        className={styles.header}        // scrolled class toggled by DOM directly
         data-site-header="true"
       >
-        {/* Scan sweep overlay */}
         <span className={styles.headerScan} aria-hidden="true" />
 
-        {/* Brand / logo */}
         <div className={styles.brand} aria-hidden="true">
-          <div className={styles.brandIcon}>
-            <ShieldIcon />
-          </div>
+          <div className={styles.brandIcon}><ShieldIcon /></div>
           <span className={styles.brandText}>
             AHMED<span className={styles.brandAccent}>.SEC</span>
           </span>
         </div>
 
-        {/* Navigation links */}
-        <nav
-          id="main-navigation"
-          className={navbarClass}
-          aria-label="Main navigation"
-        >
+        <nav id="main-navigation" className={navbarClass} aria-label="Main navigation">
           {Object.entries(sectionIcons).map(([section, icon]) => (
             <a
               key={section}
@@ -210,24 +176,16 @@ const SenseiHeader = memo(function SenseiHeader() {
           ))}
         </nav>
 
-        {/* Blog CTA */}
         <Link
           href={BLOG_PATH}
-          className={
-            isBlogRoute
-              ? `${styles.blogLink} ${styles.active}`
-              : styles.blogLink
-          }
+          className={isBlogRoute ? `${styles.blogLink} ${styles.active}` : styles.blogLink}
           aria-label="Open blog page"
           aria-current={isBlogRoute ? "page" : undefined}
-          onClick={() => {
-            if (window.innerWidth <= 994) setIsMenuOpen(false);
-          }}
+          onClick={() => { if (window.innerWidth <= 994) setIsMenuOpen(false); }}
         >
           <span className={styles.navText}>Blog</span>
         </Link>
 
-        {/* Hamburger */}
         <button
           type="button"
           className={menuIconClass}
@@ -242,15 +200,14 @@ const SenseiHeader = memo(function SenseiHeader() {
         </button>
       </header>
 
-      {/* Backdrop — outside header to avoid transform containment */}
-      {isMenuOpen && (
-        <button
-          type="button"
-          className={styles.backdrop}
-          aria-label="Close navigation menu"
-          onClick={handleBackdropClick}
-        />
-      )}
+      {/* Always mounted — visibility driven by isMenuOpen class */}
+      <button
+        type="button"
+        className={`${styles.backdrop}${isMenuOpen ? ` ${styles.backdropActive}` : ""}`}
+        aria-label="Close navigation menu"
+        onClick={handleBackdropClick}
+        tabIndex={isMenuOpen ? 0 : -1}
+      />
     </>
   );
 });

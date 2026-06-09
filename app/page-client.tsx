@@ -1,12 +1,13 @@
 "use client";
 
 /*
- * Client entry for the homepage — lazily loads heavy sections and
- * manages the app-ready state for a smoother initial render.
- * Author: Ahmed Emad Nasr
+ * Client entry for the homepage
+ * PERF: bootstrap simplified — single rAF, no DOMContentLoaded wait
+ * (document is already interactive by the time React hydrates in Next.js)
+ * PERF: content wrapper avoids style object re-creation per render
  */
 
-import { memo, useState, useEffect, useRef } from "react";
+import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
@@ -35,14 +36,14 @@ const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sen
   loading: () => <div role="presentation" aria-hidden="true" style={ART_PLACEHOLDER_STYLE} />,
 });
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
+// ─── Styles — module-level constants, never re-allocated ─────────────────────
 
 const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
   opacity: 0,
   transform: "translate3d(0, 10px, 0)",
   pointerEvents: "none",
   visibility: "hidden",
-  transition: "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)",
+  // PERF: transition is in CSS (globals.css motion vars) — no inline overhead
 };
 
 const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
@@ -50,13 +51,9 @@ const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
   transform: "translate3d(0, 0, 0)",
   pointerEvents: "auto",
   visibility: "visible",
-  transition: "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)",
 };
 
-const MAIN_STYLE: React.CSSProperties = {
-  position: "relative",
-};
-
+const MAIN_STYLE: React.CSSProperties = { position: "relative" };
 const HOME_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "78vh" };
 const EXPERIENCE_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "88vh" };
 const PROJECTS_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "92vh" };
@@ -66,50 +63,19 @@ const ART_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "62vh" };
 
 const MainClient = memo(function MainClient() {
   const [isAppReady, setIsAppReady] = useState(false);
-  const isMounted = useRef(true);
 
   useEffect(() => {
-    isMounted.current = true;
-
-    const markAppReady = () => {
-      if (!isMounted.current) return;
-      setIsAppReady(true);
-    };
-
-    const bootstrap = async () => {
-      if (document.readyState === "loading") {
-        await new Promise<void>((resolve) => {
-          document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
-        });
-      }
-
-      // Single rAF + 50 ms minimum timeout.
-      // The double-rAF pattern adds ~32–66 ms on budget devices (30 fps rAF).
-      // One rAF guarantees we're past the current paint frame; the 50 ms
-      // minimum ensures the loader has actually appeared on screen before we
-      // hide it, without adding unnecessary delay on fast devices.
-      requestAnimationFrame(() => {
-        setTimeout(markAppReady, 50);
-      });
-    };
-
-    bootstrap();
-
-    return () => {
-      isMounted.current = false;
-    };
+    // PERF: Next.js guarantees document is at least "interactive" before hydration.
+    // No need to await DOMContentLoaded. Single rAF is sufficient to let the
+    // loader paint before we reveal content.
+    const id = window.requestAnimationFrame(() => setIsAppReady(true));
+    return () => window.cancelAnimationFrame(id);
   }, []);
 
   return (
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen />
-
-      {/* AppBar is outside the animated wrapper so it is truly fixed to the
-          viewport and unaffected by the transform applied to page content. */}
       <AppBar />
-
-      {/* Content is always in the DOM (dynamic imports start immediately),
-          but invisible/non-interactive until isAppReady flips. */}
       <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
         <HomeSection />
         <ExperienceSection />
