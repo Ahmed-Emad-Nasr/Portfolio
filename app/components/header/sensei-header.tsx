@@ -173,13 +173,6 @@ export default function SenseiHeader() {
           </div>
         </div>
 
-        {/* ── Meta row (inside header, below top row) ──────────────────── */}
-        <div className={styles.metaRow} aria-hidden="true">
-          <span className={styles.metaItem}>SESSION <span>{SESSION_ID}</span></span>
-          <span className={styles.metaItem}>UPTIME <span>{uptime}</span></span>
-          <span className={styles.metaItem}>PROTOCOL <span>TLS 1.3</span></span>
-          <span className={styles.metaItem}>LOC <span>EG/CAIRO</span></span>
-        </div>
       </header>
 
       {/* Backdrop */}
