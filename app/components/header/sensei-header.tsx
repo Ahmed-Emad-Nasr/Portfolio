@@ -1,26 +1,12 @@
 "use client";
 
-/*
- * sensei-header.tsx  —  PERF BUILD
- *
- * Changes vs original:
- *  1. isScrolled — no longer React state. Toggled via a CSS class on the header
- *     DOM node directly inside the rAF handler. Zero re-renders on scroll.
- *  2. Scroll throttle — simplified to a single rAF gate (no double-timer
- *     pattern needed since we're not calling setState).
- *  3. Body-scroll-lock effect — unchanged logic but reduced deps array.
- *  4. handleNavLinkClick / handleBackdropClick — same logic, refs cleaned up.
- *  5. The backdrop is now always in the DOM (display:none via CSS) — no
- *     conditional rendering overhead on open/close.
- */
-
-import { useCallback, memo, useEffect, useRef, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import styles from "./sensei-header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
+
+import styles from "./sensei-header.module.css";
 
 const BLOG_PATH = "/blog";
 
@@ -30,186 +16,165 @@ const ShieldIcon = () => (
   </svg>
 );
 
-const SenseiHeader = memo(function SenseiHeader() {
-  const pathname = usePathname();
+function useUptime() {
+  const [elapsed, setElapsed] = useState(0);
+  useEffect(() => {
+    const start = Date.now();
+    const id = setInterval(() => setElapsed(Math.floor((Date.now() - start) / 1000)), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+  const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+  const s = String(elapsed % 60).padStart(2, "0");
+  return `${h}:${m}:${s}`;
+}
+
+const SESSION_ID = `0x${Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")}`;
+
+export default function SenseiHeader() {
+  const pathname  = usePathname();
   const headerRef = useRef<HTMLElement>(null);
-  const {
-    isMenuOpen,
-    activeSection,
-    toggleMenu,
-    sectionIcons,
-    setActiveSection,
-    setIsMenuOpen,
-  } = useHeader();
+  const uptime    = useUptime();
 
-  const isBlogRoute =
-    pathname === BLOG_PATH || pathname.startsWith(`${BLOG_PATH}/`);
+  const { isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen } = useHeader();
 
-  // ── Body scroll lock ────────────────────────────────────────────────────
+  const isBlog = pathname === BLOG_PATH || pathname.startsWith(`${BLOG_PATH}/`);
+
+  // ── Scroll → CSS class, zero re-renders ──────────────────────────────────
   useEffect(() => {
-    if (window.innerWidth > 994) {
-      setIsMenuOpen(false);
-      document.body.style.overflow = "";
-      return;
-    }
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
-
-    const onResize = () => {
-      if (window.innerWidth > 994) {
-        setIsMenuOpen(false);
-        document.body.style.overflow = "";
-      }
-    };
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen, setIsMenuOpen]);
-
-  // ── Scroll detection — no React state, direct DOM class mutation ─────────
-  useEffect(() => {
-    let rafId = 0;
-
-    const update = () => {
+    let raf = 0;
+    const tick = () => {
       headerRef.current?.classList.toggle(styles.scrolled, window.scrollY > 18);
-      rafId = 0;
+      raf = 0;
     };
-
-    const onScroll = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(update);
-    };
-
-    update(); // run once on mount
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    tick();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []); // empty deps — never re-subscribes
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
+  }, []);
 
-  // ── Escape key ───────────────────────────────────────────────────────────
+  // ── Body scroll lock ──────────────────────────────────────────────────────
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isMenuOpen) setIsMenuOpen(false);
-    };
+    if (window.innerWidth > 994) { document.body.style.overflow = ""; return; }
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
+
+  // ── Escape key ────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setIsMenuOpen(false); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [isMenuOpen, setIsMenuOpen]);
 
-  // ── Smooth scroll to section ─────────────────────────────────────────────
-  const playSectionFade = useCallback((target: HTMLElement) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    target.animate(
-      [
-        { opacity: 0.35, transform: "translate3d(0, 14px, 0)" },
-        { opacity: 1,    transform: "translate3d(0, 0, 0)" },
-      ],
-      { duration: 420, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)", fill: "both" }
-    );
-  }, []);
-
-  const scrollToSection = useCallback(
-    (section: string) => {
-      const target   = document.getElementById(section);
-      if (!target) return;
-      const headerEl = headerRef.current;
-      const headerH  = headerEl?.getBoundingClientRect().height ?? 0;
-      const topVal   = headerEl ? parseFloat(getComputedStyle(headerEl).top) : 0;
-      const offset   = headerH + (isFinite(topVal) ? topVal : 0) + 10;
-      window.scrollTo({ top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset), behavior: "auto" });
-      playSectionFade(target);
-    },
-    [playSectionFade]
-  );
-
-  const handleNavLinkClick = useCallback(
-    (section: string, event?: MouseEvent<HTMLAnchorElement>) => {
-      event?.preventDefault();
-      setActiveSection(section);
-      if (window.innerWidth <= 994) {
-        setIsMenuOpen(false);
-        requestAnimationFrame(() => scrollToSection(section));
-      } else {
-        scrollToSection(section);
-      }
-    },
-    [scrollToSection, setActiveSection, setIsMenuOpen]
-  );
-
-  const handleBackdropClick = useCallback(() => setIsMenuOpen(false), [setIsMenuOpen]);
-
-  const menuIconClass = isMenuOpen ? `${styles.MenuIcon} ${styles.active}` : styles.MenuIcon;
-  const navbarClass   = isMenuOpen ? `${styles.navbar} ${styles.active}`   : styles.navbar;
+  // ── Nav click ─────────────────────────────────────────────────────────────
+  const handleNavClick = (section: string, e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setActiveSection(section);
+    const target = document.getElementById(section);
+    if (!target) return;
+    const doScroll = () => {
+      const headerH = headerRef.current?.offsetHeight ?? 0;
+      const topGap  = parseFloat(getComputedStyle(headerRef.current!).top) || 0;
+      window.scrollTo({
+        top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - topGap - 10),
+        behavior: "smooth",
+      });
+    };
+    if (isMenuOpen) { setIsMenuOpen(false); requestAnimationFrame(doScroll); }
+    else doScroll();
+  };
 
   return (
     <>
-      <header
-        ref={headerRef}
-        className={styles.header}        // scrolled class toggled by DOM directly
-        data-site-header="true"
-      >
+      <header ref={headerRef} className={styles.header} data-site-header="true">
         <span className={styles.headerScan} aria-hidden="true" />
 
-        <div className={styles.brand} aria-hidden="true">
-          <div className={styles.brandIcon}><ShieldIcon /></div>
-          <span className={styles.brandText}>
-            AHMED<span className={styles.brandAccent}>.SEC</span>
-          </span>
+        {/* ── Top row ─────────────────────────────────────────────────── */}
+        <div className={styles.topRow}>
+          {/* Brand */}
+          <div className={styles.brand} aria-hidden="true">
+            <div className={styles.brandIcon}><ShieldIcon /></div>
+            <span className={styles.brandText}>
+              AHMED<span className={styles.brandAccent}>.SEC</span>
+            </span>
+          </div>
+
+          {/* Nav */}
+          <nav
+            id="main-navigation"
+            className={isMenuOpen ? `${styles.navbar} ${styles.active}` : styles.navbar}
+            aria-label="Main navigation"
+          >
+            {Object.entries(sectionIcons).map(([section, icon]) => (
+              <a
+                key={section}
+                href={`#${section}`}
+                className={activeSection === section ? styles.active : undefined}
+                onClick={(e) => handleNavClick(section, e)}
+                aria-current={activeSection === section ? "page" : undefined}
+              >
+                <FontAwesomeIcon icon={icon} aria-hidden="true" />
+                {section.replace(/([a-z])([A-Z])/g, "$1 $2")}
+              </a>
+            ))}
+          </nav>
+
+          {/* Right cluster */}
+          <div className={styles.rightCluster}>
+            <span className={styles.threatChip} aria-hidden="true">
+              <span className={styles.threatDot} />
+              THREAT:LOW
+            </span>
+
+            <span className={styles.statusChip} aria-hidden="true">
+              <span className={styles.statusDot} />
+              ONLINE
+            </span>
+
+            <Link
+              href={BLOG_PATH}
+              className={isBlog ? `${styles.blogLink} ${styles.active}` : styles.blogLink}
+              aria-label="Open blog"
+              aria-current={isBlog ? "page" : undefined}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Blog
+            </Link>
+
+            <button
+              type="button"
+              className={isMenuOpen ? `${styles.menuIcon} ${styles.active}` : styles.menuIcon}
+              onClick={toggleMenu}
+              aria-expanded={isMenuOpen}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-controls="main-navigation"
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+          </div>
         </div>
 
-        <nav id="main-navigation" className={navbarClass} aria-label="Main navigation">
-          {Object.entries(sectionIcons).map(([section, icon]) => (
-            <a
-              key={section}
-              href={`#${section}`}
-              className={activeSection === section ? styles.active : undefined}
-              onClick={(e) => handleNavLinkClick(section, e)}
-              aria-current={activeSection === section ? "page" : undefined}
-            >
-              <FontAwesomeIcon icon={icon} aria-hidden="true" />
-              <span className={styles.navText}>
-                {section.replace(/([a-z])([A-Z])/g, "$1 $2")}
-              </span>
-            </a>
-          ))}
-        </nav>
-
-        <Link
-          href={BLOG_PATH}
-          className={isBlogRoute ? `${styles.blogLink} ${styles.active}` : styles.blogLink}
-          aria-label="Open blog page"
-          aria-current={isBlogRoute ? "page" : undefined}
-          onClick={() => { if (window.innerWidth <= 994) setIsMenuOpen(false); }}
-        >
-          <span className={styles.navText}>Blog</span>
-        </Link>
-
-        <button
-          type="button"
-          className={menuIconClass}
-          onClick={toggleMenu}
-          aria-expanded={isMenuOpen}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          aria-controls="main-navigation"
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </button>
+        {/* ── Meta row (inside header, below top row) ──────────────────── */}
+        <div className={styles.metaRow} aria-hidden="true">
+          <span className={styles.metaItem}>SESSION <span>{SESSION_ID}</span></span>
+          <span className={styles.metaItem}>UPTIME <span>{uptime}</span></span>
+          <span className={styles.metaItem}>PROTOCOL <span>TLS 1.3</span></span>
+          <span className={styles.metaItem}>LOC <span>EG/CAIRO</span></span>
+        </div>
       </header>
 
-      {/* Always mounted — visibility driven by isMenuOpen class */}
+      {/* Backdrop */}
       <button
         type="button"
-        className={`${styles.backdrop}${isMenuOpen ? ` ${styles.backdropActive}` : ""}`}
+        className={isMenuOpen ? `${styles.backdrop} ${styles.backdropActive}` : styles.backdrop}
         aria-label="Close navigation menu"
-        onClick={handleBackdropClick}
+        onClick={() => setIsMenuOpen(false)}
         tabIndex={isMenuOpen ? 0 : -1}
       />
     </>
   );
-});
-
-export default SenseiHeader;
+}
