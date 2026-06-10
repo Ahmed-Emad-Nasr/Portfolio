@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 
 type LenisReactModule = typeof import("lenis/react");
@@ -57,78 +57,6 @@ function ScrollProgressBar() {
     <div className="scrollProgressTrack" aria-hidden="true">
       <span ref={barRef} className="scrollProgressBar" />
     </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Scroll-to-Top Button
-// PERF: Drive visibility via ref → no React re-render on scroll
-// ---------------------------------------------------------------------------
-function ScrollToTopButton({ lenis }: { lenis: any }) {
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const visibleRef = useRef(false);
-
-  useEffect(() => {
-    const THRESHOLD = 300;
-
-    const onScroll = () => {
-      const shouldShow = window.scrollY > THRESHOLD;
-      if (shouldShow === visibleRef.current) return; // no change
-      visibleRef.current = shouldShow;
-      const el = btnRef.current;
-      if (!el) return;
-      el.style.opacity = shouldShow ? "1" : "0";
-      el.style.transform = shouldShow ? "translateY(0) scale(1)" : "translateY(12px) scale(0.88)";
-      el.style.pointerEvents = shouldShow ? "auto" : "none";
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const handleClick = () => {
-    if (lenis) {
-      lenis.scrollTo(0, { duration: 1.4 });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  return (
-    <button
-      ref={btnRef}
-      onClick={handleClick}
-      aria-label="Scroll to top"
-      className="scrollToTopBtn"
-      style={{
-        position: "fixed",
-        bottom: "2.4rem",
-        right: "2.4rem",
-        zIndex: 2000,
-        width: "4.4rem",
-        height: "4.4rem",
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(224, 17, 95, 0.12)",
-        border: "1px solid rgba(224, 17, 95, 0.3)",
-        color: "#e0115f",
-        cursor: "pointer",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        opacity: 0,
-        transform: "translateY(12px) scale(0.88)",
-        pointerEvents: "none",
-        transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
-        willChange: "transform, opacity",
-        padding: 0,
-        fontSize: "1.8rem",
-        lineHeight: 1,
-      }}
-    >
-      ↑
-    </button>
   );
 }
 
@@ -341,18 +269,17 @@ function SmoothScrollInner({ children, lenisModule, gsap, ScrollTrigger, prefers
     <ReactLenis
       root
       options={{
-        lerp: 0.1,
+        lerp: 0.07,
         duration: 1.2,
         smoothWheel: true,
-        wheelMultiplier: 1.0,
-        touchMultiplier: 0.76,
+        wheelMultiplier: 0.8,
+        touchMultiplier: 0.6,
         syncTouch: false,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       }}
     >
       <ScrollProgressBar />
       <NavbarVisibilityController />
-      <ScrollToTopButton lenis={lenis} />
       {lenis && <LenisScrollTriggerSync lenis={lenis} gsap={gsap} ScrollTrigger={ScrollTrigger} />}
       {children}
     </ReactLenis>
