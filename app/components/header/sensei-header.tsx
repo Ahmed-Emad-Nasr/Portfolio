@@ -16,6 +16,15 @@ const ShieldIcon = () => (
   </svg>
 );
 
+const SiemIcon = () => (
+  <svg viewBox="0 0 16 16" aria-hidden="true" className={styles.siemIcon}>
+    <rect x="1" y="1" width="6" height="6" rx="1.5" />
+    <rect x="9" y="1" width="6" height="6" rx="1.5" />
+    <rect x="1" y="9" width="6" height="6" rx="1.5" />
+    <path d="M9 12h6M12 9v6" strokeLinecap="round" />
+  </svg>
+);
+
 function useUptime() {
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
@@ -99,6 +108,12 @@ export default function SenseiHeader() {
             <span className={styles.brandText}>
               AHMED<span className={styles.brandAccent}>.SEC</span>
             </span>
+
+            {/* Arabic name chip */}
+            <div className={styles.arabicName}>
+              <SiemIcon />
+              <span className={styles.arabicText}>أحمد عماد</span>
+            </div>
           </div>
 
           {/* Nav */}
