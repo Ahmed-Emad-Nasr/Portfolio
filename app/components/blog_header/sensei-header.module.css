@@ -335,20 +335,22 @@
   .header { padding: 0.85rem 0.75rem 0; }
 
   .topRow {
-    flex-direction: row-reverse;
+    /* شيلنا الـ row-reverse عشان اللوجو يبقى شمال والزراير ترجع يمين */
+    flex-direction: row;
     justify-content: space-between;
     padding-bottom: 0.85rem;
   }
 
   .brand {
-    border-right: none;
-    border-left: 1px solid rgba(var(--main-color-rgb), 0.12);
-    padding-right: 0;
-    padding-left: 10px;
+    border-right: 1px solid rgba(var(--main-color-rgb), 0.12);
+    border-left: none;
+    padding-right: 10px;
+    padding-left: 0;
   }
 
   .rightCluster {
-    margin-left: 0;
+    margin-left: auto;
+    gap: 4px; /* تقليل المسافة بين زرار البورتفوليو والمنيو */
   }
 
   .threatChip { display: none; }
@@ -357,7 +359,7 @@
 
   .blogLink {
     padding: 4px 8px;
-    font-size: 11px; 
+    font-size: 10px; 
     min-height: 30px;
   }
 
@@ -428,30 +430,45 @@
   .header { 
     width: calc(100% - 1rem); 
     top: 0.65rem; 
-    padding: 0.75rem 0.65rem 0; 
+    padding: 0.6rem 0.5rem 0; 
     border-radius: 8px; 
   }
   
   .topRow {
-    padding-bottom: 0.75rem; 
+    padding-bottom: 0.6rem; 
   }
 
   .brand {
-    transform: scale(0.85);
-    transform-origin: right center;
-    gap: 5px;
+    transform: scale(0.75); /* تصغير اللوجو والاسم أكتر عشان يوفر مساحة */
+    transform-origin: left center; /* التكبير والتصغير يكون من ناحية الشمال */
+    gap: 4px;
+    padding-right: 5px;
   }
   
-  .arabicText { font-size: 12px; }
-  .brandText { font-size: 12px; }
+  .arabicText { font-size: 11px; }
+  .brandText { font-size: 11px; }
 
+  /* زرار البورتفوليو أصغر بكتير للموبايل */
   .blogLink { 
-    font-size: 10px; 
-    padding: 3px 6px; 
-    min-height: 28px; 
+    font-size: 8.5px; 
+    padding: 4px 6px; 
+    min-height: 26px; 
+    gap: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .blogLink::before {
+    font-size: 7.5px; /* تصغير السهم */
+  }
+
+  /* تصغير أيقونة القائمة (الهمبرجر) */
+  .menuIcon {
+    min-width: 30px;
+    min-height: 30px;
+    padding: 4px;
   }
   
-  .navbar a { font-size: 13px; padding: 10px 14px; }
+  .navbar a { font-size: 12px; padding: 8px 12px; }
 }
 
 /* ── 15. REDUCED MOTION ──────────────────────────────────────────────────── */
