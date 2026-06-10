@@ -4,14 +4,14 @@
  *
  * PERF CHANGES FROM v4:
  * - section: contain upgraded from `style` to `layout style` — prevents
- *   layout recalc from bubbling up to parent on every child mutation.
+ * layout recalc from bubbling up to parent on every child mutation.
  * - .site-footer__inner a: removed `transition: color` — color is non-composited,
- *   triggers style recalc on every frame. Change is instant at 60fps anyway.
+ * triggers style recalc on every frame. Change is instant at 60fps anyway.
  * - .skip-link: removed `transition: top` — top triggers layout reflow on
- *   every frame. Replaced with transform: translateY for GPU path.
+ * every frame. Replaced with transform: translateY for GPU path.
  * - glass-card / section.glass backdrop-filter: added `contain: strict` to
- *   limit blur repaint to card bounds only, not full viewport.
- *   Also wrapped in @supports to skip on browsers with slow backdrop-filter.
+ * limit blur repaint to card bounds only, not full viewport.
+ * Also wrapped in @supports to skip on browsers with slow backdrop-filter.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
@@ -61,8 +61,9 @@
   --glow-accent: 0 0 18px rgba(var(--accent-color-rgb), 0.30);
   --glow-danger: 0 0 14px rgba(var(--danger-rgb), 0.40);
 
-  --radius-card:    18px;
-  --radius-card-sm: 10px;
+  /* تم التصغير ليكون Compact (LinkedIn Style) */
+  --radius-card:    12px;
+  --radius-card-sm: 8px;
   --radius-pill:    999px;
   --radius-tag:     6px;
 
@@ -77,15 +78,16 @@
   --z-toast:    2000;
   --z-progress: 3000;
 
-  --text-xs:   1.1rem;
-  --text-sm:   1.3rem;
-  --text-base: 1.6rem;
-  --text-md:   1.8rem;
-  --text-lg:   2.2rem;
-  --text-xl:   2.8rem;
-  --text-2xl:  3.6rem;
-  --text-3xl:  4.8rem;
-  --text-4xl:  6.4rem;
+  /* أحجام الخطوط تم تصغيرها لتناسب الديسكتوب المدمج */
+  --text-xs:   1.0rem;
+  --text-sm:   1.2rem;
+  --text-base: 1.4rem;
+  --text-md:   1.5rem;
+  --text-lg:   1.8rem;
+  --text-xl:   2.2rem;
+  --text-2xl:  2.8rem;
+  --text-3xl:  3.6rem;
+  --text-4xl:  4.8rem;
 
   --shadow-card:       none;
   --shadow-glow:       none;
@@ -139,7 +141,8 @@
 }
 
 html {
-  font-size: 62.5%;
+  /* دي هتصغر حجم كل حاجة في الموقع بنسبة 20% تقريباً عن الطبيعي */
+  font-size: 62.5% !important; 
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;

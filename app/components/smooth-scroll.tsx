@@ -61,78 +61,6 @@ function ScrollProgressBar() {
 }
 
 // ---------------------------------------------------------------------------
-// Scroll-to-Top Button
-// PERF: Drive visibility via ref → no React re-render on scroll
-// ---------------------------------------------------------------------------
-function ScrollToTopButton({ lenis }: { lenis: any }) {
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const visibleRef = useRef(false);
-
-  useEffect(() => {
-    const THRESHOLD = 300;
-
-    const onScroll = () => {
-      const shouldShow = window.scrollY > THRESHOLD;
-      if (shouldShow === visibleRef.current) return; // no change
-      visibleRef.current = shouldShow;
-      const el = btnRef.current;
-      if (!el) return;
-      el.style.opacity = shouldShow ? "1" : "0";
-      el.style.transform = shouldShow ? "translateY(0) scale(1)" : "translateY(12px) scale(0.88)";
-      el.style.pointerEvents = shouldShow ? "auto" : "none";
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const handleClick = () => {
-    if (lenis) {
-      lenis.scrollTo(0, { duration: 1.4 });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  return (
-    <button
-      ref={btnRef}
-      onClick={handleClick}
-      aria-label="Scroll to top"
-      className="scrollToTopBtn"
-      style={{
-        position: "fixed",
-        bottom: "2.4rem",
-        right: "2.4rem",
-        zIndex: 2000,
-        width: "4.4rem",
-        height: "4.4rem",
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(224, 17, 95, 0.12)",
-        border: "1px solid rgba(224, 17, 95, 0.3)",
-        color: "#e0115f",
-        cursor: "pointer",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        opacity: 0,
-        transform: "translateY(12px) scale(0.88)",
-        pointerEvents: "none",
-        transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
-        willChange: "transform, opacity",
-        padding: 0,
-        fontSize: "1.8rem",
-        lineHeight: 1,
-      }}
-    >
-      ↑
-    </button>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Hide/Show Navbar on Scroll
 // PERF: Fixed delta comparison — only update lastScrollY when dispatching
 // PERF: Dispatch uses plain CustomEvent constructor (faster than object spread)
@@ -351,7 +279,6 @@ function SmoothScrollInner({ children, lenisModule, gsap, ScrollTrigger, prefers
     >
       <ScrollProgressBar />
       <NavbarVisibilityController />
-      <ScrollToTopButton lenis={lenis} />
       {lenis && <LenisScrollTriggerSync lenis={lenis} gsap={gsap} ScrollTrigger={ScrollTrigger} />}
       {children}
     </ReactLenis>

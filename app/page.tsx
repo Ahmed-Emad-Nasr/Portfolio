@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import MainClient from "./page-client";
 
 export const metadata: Metadata = {
-  title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer",
+  title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer & Noob DFIR and Malware Analyst",
   description:
     "Ahmed Emad Nasr portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, and real security case reports.",
   keywords: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC & Incident Response Portfolio",
+    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer & Noob DFIR and Malware Analyst",
     description:
       "Real SOC/IR case reports, security projects, and cybersecurity training impact by Ahmed Emad Nasr.",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC & IR Portfolio",
+    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer & Noob DFIR and Malware Analyst",
     description:
       "Explore SOC investigations, DFIR workflows, and malware analysis cases.",
     images: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp"],
