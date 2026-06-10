@@ -341,12 +341,13 @@ function SmoothScrollInner({ children, lenisModule, gsap, ScrollTrigger, prefers
     <ReactLenis
       root
       options={{
-        lerp: 0.045,
-        duration: 1.27,
+        lerp: 0.1,
+        duration: 1.2,
         smoothWheel: true,
-        wheelMultiplier: 0.66,
+        wheelMultiplier: 1.0,
         touchMultiplier: 0.76,
         syncTouch: false,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       }}
     >
       <ScrollProgressBar />
@@ -380,6 +381,9 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     if (prefersReducedMotion) return;
     let active = true;
 
+    // Lock native scroll while Lenis loads to prevent flash/jitter on first scroll
+    document.documentElement.style.overflow = "hidden";
+
     // PERF: Single state update vs 3 separate setStates = 1 re-render instead of 3
     void Promise.all([
       import("lenis/react"),
@@ -389,9 +393,16 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       if (!active) return;
       gsap.default.registerPlugin(st.ScrollTrigger);
       setModules({ lenis, gsap: gsap.default, ScrollTrigger: st.ScrollTrigger });
+      // Restore scroll after Lenis takes over
+      requestAnimationFrame(() => {
+        document.documentElement.style.overflow = "";
+      });
     });
 
-    return () => { active = false; };
+    return () => {
+      active = false;
+      document.documentElement.style.overflow = "";
+    };
   }, [prefersReducedMotion]);
 
   if (prefersReducedMotion || !modules) {

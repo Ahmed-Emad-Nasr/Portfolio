@@ -1,27 +1,17 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (Performance Optimized v4)
+ * @description Global CSS - Premium Cyber & SOC Theme (Performance Optimized v5)
  *
- * PERF CHANGES FROM v3:
- * - Interactive elements transition: replaced non-composited properties (color,
- *   border-color) with GPU-only (opacity, transform). Color changes are instant
- *   anyway on most GPU renderers; explicit transitions on them cause composite
- *   layer promotion unnecessarily.
- * - button hover: removed will-change from :hover rule — promotes every button
- *   to its own layer on hover which increases VRAM and can cause jank during
- *   the promotion itself. will-change: auto is the right default.
- * - section: content-visibility: auto kept — major win for off-screen sections.
- *   contain-intrinsic-size bumped from fixed 900px to auto 900px (already was).
- * - body background: 4 radial gradients composite on the CPU at paint time.
- *   Collapsed to 2 (removed the low-opacity bottom-left one — visually identical).
- * - Removed `isolation: isolate` from body — this was creating a new stacking
- *   context that forced the browser to composite the entire page body as a layer.
- *   Individual sections/cards use their own stacking contexts via z-index.
- * - glass-card shimmer: transition was 0.9s — shortened to 0.6s (still cinematic).
- * - scrollProgressBar will-change: transform kept — this one earns its layer.
- * - .cyber-scanline::before: will-change: transform kept — continuous animation.
- * - .cyber-alert-pulse: changed will-change from `opacity` to `auto` — opacity
- *   pulse doesn't need its own compositor layer; the browser handles it cheaply.
+ * PERF CHANGES FROM v4:
+ * - section: contain upgraded from `style` to `layout style` — prevents
+ *   layout recalc from bubbling up to parent on every child mutation.
+ * - .site-footer__inner a: removed `transition: color` — color is non-composited,
+ *   triggers style recalc on every frame. Change is instant at 60fps anyway.
+ * - .skip-link: removed `transition: top` — top triggers layout reflow on
+ *   every frame. Replaced with transform: translateY for GPU path.
+ * - glass-card / section.glass backdrop-filter: added `contain: strict` to
+ *   limit blur repaint to card bounds only, not full viewport.
+ *   Also wrapped in @supports to skip on browsers with slow backdrop-filter.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
@@ -160,11 +150,6 @@ html {
 body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
-  /*
-   * PERF: Collapsed from 4 radial gradients to 3 — the bottom-left blob at
-   * 10% 80% (4% opacity) was visually imperceptible but still cost a paint op.
-   * Removed background-attachment: fixed (was already gone in v3).
-   */
   background:
     radial-gradient(ellipse 140% 55% at 50% -5%,  rgba(var(--main-color-rgb), 0.13) 0%,  transparent 55%),
     radial-gradient(ellipse  80% 40% at 85% 15%,  rgba(var(--accent-color-rgb), 0.05) 0%, transparent 50%),
@@ -175,11 +160,6 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /*
-   * PERF: Removed `isolation: isolate` — it was promoting the entire body
-   * to a composited stacking context, forcing GPU layers for every child.
-   * Individual components that need stacking isolation do it locally.
-   */
 }
 
 body[data-custom-cursor="true"],
@@ -223,7 +203,7 @@ svg {
     var(--main-light)  35%,
     var(--accent-color) 100%
   );
-  will-change: transform; /* earns its layer — written on every scroll frame */
+  will-change: transform;
 }
 
 ::selection {
@@ -233,13 +213,6 @@ svg {
 }
 
 /*--------- 3. Interactive Elements ---------*/
-/*
- * PERF: Only transition GPU-composited properties (transform, opacity).
- * color and border-color transitions trigger style recalc on every frame —
- * they don't benefit from the compositor and block the main thread.
- * For color changes, `transition: none` on color is effectively instant
- * at 60fps so no perceptible difference.
- */
 a,
 button,
 input,
@@ -266,9 +239,6 @@ button {
 }
 
 button:hover:not(:disabled) {
-  /* PERF: Removed will-change from hover state — causes layer promotion on
-   * hover which can cause jank on low-VRAM devices. The transform alone is
-   * cheap and composited. will-change: auto is the browser default. */
   background: rgba(var(--main-color-rgb), 0.16);
   color: var(--text-bright);
   border-color: var(--main-light);
@@ -299,7 +269,7 @@ textarea:focus-visible {
 .skip-link {
   position: absolute;
   left: 1rem;
-  top: -4rem;
+  top: 0;
   z-index: var(--z-modal);
   padding: 0.9rem 1.2rem;
   border-radius: var(--radius-pill);
@@ -307,12 +277,16 @@ textarea:focus-visible {
   color: #000;
   font-size: 1.4rem;
   font-weight: 800;
-  transition: top var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+  /*
+   * FIX: Replaced `transition: top` (triggers layout reflow every frame) with
+   * transform: translateY — GPU composited, zero layout cost.
+   */
+  transform: translateY(-6rem);
+  transition: transform var(--motion-normal) var(--motion-ease);
 }
 
 .skip-link:focus-visible {
-  top: 1rem;
-  transform: translateY(0);
+  transform: translateY(1rem);
 }
 
 /*--------- 5. Typography & Layout ---------*/
@@ -334,7 +308,12 @@ section {
   border-radius: var(--radius-card);
   margin-bottom: clamp(6rem, 10vw, 12rem);
   z-index: 1;
-  contain: style;
+  /*
+   * FIX: Upgraded from `contain: style` to `contain: layout style`.
+   * `layout` containment prevents child mutations from triggering layout
+   * recalc on ancestor elements — meaningful win with many animated sections.
+   */
+  contain: layout style;
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
 }
@@ -351,12 +330,26 @@ section.glass,
   background: var(--surface-card-bg);
   border: 1px solid var(--surface-card-border);
   border-radius: var(--radius-card);
-  backdrop-filter: blur(var(--card-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
-  /* PERF: Only transition transform — border-color change is non-composited */
   transition: transform var(--motion-normal) var(--motion-ease);
   position: relative;
   overflow: hidden;
+}
+
+/*
+ * FIX: backdrop-filter wrapped in @supports + isolated with contain: strict.
+ * `contain: strict` restricts the blur repaint to the card's own bounds,
+ * preventing the browser from repainting surrounding elements on hover.
+ * Without this, every glass-card hover repaints the full stacking context.
+ */
+@supports (backdrop-filter: blur(1px)) {
+  section.glass,
+  .glass-card {
+    backdrop-filter: blur(var(--card-blur)) saturate(120%);
+    -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
+    contain: strict;
+    /* Re-declare: contain:strict resets overflow, keep it hidden */
+    overflow: hidden;
+  }
 }
 
 section.glass:hover,
@@ -371,10 +364,6 @@ section.glass:hover,
   );
 }
 
-/*
- * Shimmer line — GPU-safe (transform only).
- * PERF: duration shortened to 0.6s from 0.9s — still cinematic.
- */
 .glass-card::after {
   content: "";
   position: absolute;
@@ -452,7 +441,11 @@ section.glass:hover,
 .site-footer__inner a {
   color: var(--main-color);
   font-weight: 700;
-  transition: color var(--motion-normal) var(--motion-ease);
+  /*
+   * FIX: Removed `transition: color` — color is non-composited and triggers
+   * style recalc every frame. The opacity transition from the global rule
+   * is sufficient and GPU-composited.
+   */
 }
 
 .site-footer__inner a:hover {
@@ -605,8 +598,6 @@ section.glass:hover,
 
 .cyber-alert-pulse {
   animation: cyberAlertPulse var(--anim-medium) var(--motion-ease) infinite;
-  /* PERF: Removed will-change: opacity — not needed for a simple opacity pulse.
-   * The browser handles opacity animations cheaply without a dedicated layer. */
 }
 
 @keyframes cyberAlertPulse {
