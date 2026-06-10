@@ -6,7 +6,7 @@
   top: 1.1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: min(980px, calc(100% - 2rem));
+  width: min(1150px, calc(100% - 2rem));
   padding: 0.55rem 1rem 0;
   background: rgba(6, 10, 18, 0.97);
   backdrop-filter: blur(20px) saturate(160%);
@@ -109,6 +109,7 @@
   align-items: center;
   gap: 5px;
   padding: 2px 8px 2px 6px;
+  margin-left: 14px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   border-radius: 5px;
   background: rgba(var(--main-color-rgb), 0.05);
@@ -137,27 +138,28 @@
 .navbar {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 7px;
-  padding: 3px;
-  flex: 1;
+  padding: 5px;
+  flex: none;
+  width: fit-content;
 }
 
 .navbar a {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 10px;
+  padding: 8px 14px;
   border-radius: 5px;
   font-family: monospace;
-  font-size: 11px; font-weight: 600;
+  font-size: 13px; font-weight: 600;
   color: rgba(255, 255, 255, 0.42);
   text-transform: uppercase; letter-spacing: 0.08em;
   text-decoration: none;
   border: 1px solid transparent;
-  white-space: nowrap; min-height: 32px;
+  white-space: nowrap; min-height: 38px;
   transition:
     background var(--motion-normal) var(--motion-ease),
     color var(--motion-normal) var(--motion-ease),
@@ -190,6 +192,7 @@
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* ── 6. THREAT CHIP ──────────────────────────────────────────────────────── */
@@ -229,16 +232,16 @@
 
 @keyframes dotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
 
-/* ── 8. BLOG BUTTON ──────────────────────────────────────────────────────── */
+/* ── 8. PORTFOLIO BUTTON (blogLink class) ────────────────────────────────── */
 .blogLink {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 13px;
+  padding: 8px 16px;
   border: 1.5px solid rgba(var(--main-color-rgb), 0.5);
   border-radius: 6px;
   background: rgba(var(--main-color-rgb), 0.06);
-  font-family: monospace; font-size: 11px; font-weight: 700;
+  font-family: monospace; font-size: 13px; font-weight: 700;
   color: var(--main-color); letter-spacing: 0.1em; text-transform: uppercase;
-  text-decoration: none; white-space: nowrap; min-height: 32px; cursor: pointer;
+  text-decoration: none; white-space: nowrap; min-height: 38px; cursor: pointer;
   transition:
     background var(--motion-normal) var(--motion-ease),
     border-color var(--motion-normal) var(--motion-ease),
@@ -322,23 +325,40 @@
 
 /* ── 12. DESKTOP (≥995px) ────────────────────────────────────────────────── */
 @media (min-width: 995px) {
-  .topRow   { gap: 0.75rem; }
-  .navbar a { padding: 0.45rem 1rem; min-height: 34px; }
-  .blogLink { padding: 0.45rem 1.2rem; min-height: 34px; }
+  .topRow   { gap: 1rem; }
+  .navbar a { padding: 0.6rem 1.2rem; min-height: 42px; font-size: 14px; }
+  .blogLink { padding: 0.6rem 1.4rem; min-height: 42px; font-size: 14px; }
 }
 
 /* ── 13. TABLET / MOBILE (≤994px) ────────────────────────────────────────── */
 @media (max-width: 994px) {
-  .header { padding: 0.5rem 0.75rem 0; }
+  /* تم التعديل هنا: زيادة المساحة فوق وتحت عشان الهيدر يبقى أطول */
+  .header { padding: 0.85rem 0.75rem 0; }
+
+  .topRow {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    padding-bottom: 0.85rem; /* زيادة المسافة من تحت */
+  }
+
+  .brand {
+    border-right: none;
+    border-left: 1px solid rgba(var(--main-color-rgb), 0.12);
+    padding-right: 0;
+    padding-left: 10px;
+  }
+
+  .rightCluster {
+    margin-left: 0;
+  }
 
   .threatChip { display: none; }
   .statusChip { display: none; }
   .metaRow    { display: none; }
-  .arabicName { display: none; }
 
   .blogLink {
     padding: 5px 11px;
-    font-size: 10.5px; min-height: 34px;
+    font-size: 11.5px; min-height: 34px;
   }
 
   .menuIcon { display: flex; }
@@ -406,10 +426,28 @@
 
 /* ── 14. SMALL MOBILE (≤430px) ───────────────────────────────────────────── */
 @media (max-width: 430px) {
-  .header { width: calc(100% - 1rem); top: 0.65rem; padding: 0.45rem 0.65rem 0; border-radius: 8px; }
-  .brand  { display: none; }
-  .blogLink { font-size: 10px; padding: 4px 9px; min-height: 32px; }
-  .navbar a { font-size: 12px; padding: 9px 12px; }
+  /* تم التعديل هنا: زيادة المساحة فوق وتحت للشاشات الأصغر */
+  .header { 
+    width: calc(100% - 1rem); 
+    top: 0.65rem; 
+    padding: 0.75rem 0.65rem 0; 
+    border-radius: 8px; 
+  }
+  
+  .topRow {
+    padding-bottom: 0.75rem; /* زيادة المسافة من تحت */
+  }
+
+  .brand {
+    transform: scale(0.85);
+    transform-origin: right center;
+    gap: 5px;
+  }
+  .arabicText { font-size: 12px; }
+  .brandText { font-size: 12px; }
+
+  .blogLink { font-size: 11px; padding: 6px 10px; min-height: 34px; }
+  .navbar a { font-size: 13px; padding: 10px 14px; }
 }
 
 /* ── 15. REDUCED MOTION ──────────────────────────────────────────────────── */
