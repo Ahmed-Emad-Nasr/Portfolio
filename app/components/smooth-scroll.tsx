@@ -341,11 +341,11 @@ function SmoothScrollInner({ children, lenisModule, gsap, ScrollTrigger, prefers
     <ReactLenis
       root
       options={{
-        lerp: 0.047,
+        lerp: 0.05,
         duration: 1.27,
         smoothWheel: true,
-        wheelMultiplier: 0.67,
-        touchMultiplier: 0.77,
+        wheelMultiplier: 0.7,
+        touchMultiplier: 0.8,
         syncTouch: false,
       }}
     >
