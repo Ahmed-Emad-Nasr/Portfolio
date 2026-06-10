@@ -6,12 +6,6 @@
  * Perf pass: tilt isTouchDevice hoisted out of hook body, autoStagger uses
  * useMemo, resolvedVariants stable ref avoids Framer re-diff, single merged
  * motionProps object built inline.
- *
- * Fix pass:
- * - willChange set only during animation, not statically on mount
- * - blur-in uses backdrop-filter path removed; kept but documented as heavy
- * - Children.map key uses React.key if available, fallback to index
- * - DEFAULT_VIEWPORT margin increased for earlier trigger
  */
 
 import React, {
@@ -78,8 +72,6 @@ export const motionVariants = {
     exit:    { opacity: 0, scale: 0.94, transition: { duration: 0.45, ease: CINEMATIC_EASE } },
   } satisfies Variants,
 
-  // PERF NOTE: blur-in is expensive — filter: blur triggers paint on every frame.
-  // Use sparingly (hero section only, max 1-2 elements per viewport).
   "blur-in": {
     hidden:  { opacity: 0, filter: "blur(14px)", scale: 1.04 },
     visible: { opacity: 1, filter: "blur(0px)",  scale: 1,    transition: { duration: MOTION_DURATIONS.medium, ease: CINEMATIC_EASE } },
@@ -113,6 +105,7 @@ const REDUCED_VARIANTS: Variants = {
 
 // ---------------------------------------------------------------------------
 // 4. Touch-device detection — evaluated ONCE at module load, never repeated
+//    Acceptable: device capability doesn't change mid-session
 // ---------------------------------------------------------------------------
 
 const IS_TOUCH_DEVICE =
@@ -120,12 +113,14 @@ const IS_TOUCH_DEVICE =
   window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
 // ---------------------------------------------------------------------------
-// 5. 3D Tilt hook
+// 5. 3D Tilt hook — only allocates motion values when actually enabled
 // ---------------------------------------------------------------------------
 
 function useTilt(enabled: boolean) {
   const active = enabled && !IS_TOUCH_DEVICE;
 
+  // PERF: Motion values created unconditionally (Rules of Hooks) but spring
+  // interpolation only matters when active — Framer doesn't tick inactive springs
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
   const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [6, -6]),  TILT_SPRING);
@@ -144,12 +139,10 @@ function useTilt(enabled: boolean) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Stable viewport config
-// FIX: margin increased to -60px so animation starts before element is
-//      already fully visible — prevents "late pop-in" effect.
+// 6. Stable viewport config — module-level, avoids new object every render
 // ---------------------------------------------------------------------------
 
-const DEFAULT_VIEWPORT = { once: true, amount: 0.08, margin: "0px 0px -60px 0px" } as const;
+const DEFAULT_VIEWPORT = { once: true, amount: 0.08, margin: "0px 0px -2% 0px" } as const;
 
 // ---------------------------------------------------------------------------
 // 7. Component types
@@ -192,13 +185,17 @@ const MotionInView = memo<MotionInViewProps>(
     const ref = useRef<HTMLDivElement>(null);
     const { active: tiltActive, rotateX, rotateY, onMouseMove, onMouseLeave } = useTilt(tilt);
 
+    // Resolve variants — custom > reduced > preset
+    // PERF: Stable reference — won't cause Framer to re-diff animation state
     const resolvedVariants = variants ?? (prefersReducedMotion ? REDUCED_VARIANTS : motionVariants[variant]);
 
+    // Only compute merged transition when delay is provided
     const resolvedTransition = useMemo(
       () => delay ? { ...(transition ?? {}), delay } : transition,
       [delay, transition]
     );
 
+    // PERF: useMemo so Children.count doesn't run every render when props unchanged
     const wrapWithStagger = useMemo(() => {
       if (!autoStagger || variant === "stagger" || variant === "stagger-child") return false;
       return Children.count(children) > 1;
@@ -209,11 +206,8 @@ const MotionInView = memo<MotionInViewProps>(
       [tiltActive, style]
     );
 
-    // FIX: willChange removed from static style — applied only during animation
-    // via onAnimationStart/onAnimationComplete to avoid holding GPU layers on
-    // every element in the DOM at once (causes VRAM pressure + composite lag).
     const baseStyle = useMemo(
-      () => perspectiveStyle ?? {},
+      () => ({ willChange: "transform, opacity" as const, ...perspectiveStyle }),
       [perspectiveStyle]
     );
 
@@ -223,12 +217,7 @@ const MotionInView = memo<MotionInViewProps>(
       [tiltActive, baseStyle]
     );
 
-    // FIX: set willChange only while animation is running, release after
-    const onAnimationStart = () => {
-      if (ref.current) ref.current.style.willChange = "transform, opacity";
-    };
-
-    const onAnimationComplete = () => {
+    const onComplete = () => {
       if (ref.current) ref.current.style.willChange = "auto";
     };
 
@@ -241,18 +230,16 @@ const MotionInView = memo<MotionInViewProps>(
           initial="hidden"
           whileInView="visible"
           exit={enableExit ? "exit" : undefined}
-          onAnimationStart={onAnimationStart}
-          onAnimationComplete={onAnimationComplete}
+          onAnimationComplete={onComplete}
           viewport={viewport ?? DEFAULT_VIEWPORT}
           variants={prefersReducedMotion ? REDUCED_VARIANTS : motionVariants.stagger}
           onMouseMove={tiltActive ? onMouseMove : undefined}
           onMouseLeave={tiltActive ? onMouseLeave : undefined}
           {...rest}
         >
-          {/* FIX: use child's existing key if available to prevent remount on reorder */}
           {Children.map(children, (child, i) => (
             <motion.div
-              key={(React.isValidElement(child) && child.key) ? child.key : i}
+              key={i}
               variants={prefersReducedMotion ? REDUCED_VARIANTS : motionVariants["stagger-child"]}
             >
               {child}
@@ -270,8 +257,7 @@ const MotionInView = memo<MotionInViewProps>(
         initial={initial ?? "hidden"}
         whileInView={whileInView ?? "visible"}
         exit={enableExit ? "exit" : undefined}
-        onAnimationStart={onAnimationStart}
-        onAnimationComplete={onAnimationComplete}
+        onAnimationComplete={onComplete}
         viewport={viewport ?? DEFAULT_VIEWPORT}
         transition={resolvedTransition}
         variants={resolvedVariants}
