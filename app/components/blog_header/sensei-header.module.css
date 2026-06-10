@@ -332,13 +332,12 @@
 
 /* ── 13. TABLET / MOBILE (≤994px) ────────────────────────────────────────── */
 @media (max-width: 994px) {
-  /* تم التعديل هنا: زيادة المساحة فوق وتحت عشان الهيدر يبقى أطول */
   .header { padding: 0.85rem 0.75rem 0; }
 
   .topRow {
     flex-direction: row-reverse;
     justify-content: space-between;
-    padding-bottom: 0.85rem; /* زيادة المسافة من تحت */
+    padding-bottom: 0.85rem;
   }
 
   .brand {
@@ -357,13 +356,13 @@
   .metaRow    { display: none; }
 
   .blogLink {
-    padding: 5px 11px;
-    font-size: 11.5px; min-height: 34px;
+    padding: 4px 8px;
+    font-size: 11px; 
+    min-height: 30px;
   }
 
   .menuIcon { display: flex; }
 
-  /* nav drops down from header */
   .navbar {
     position: absolute;
     top: calc(100% + 8px);
@@ -426,7 +425,6 @@
 
 /* ── 14. SMALL MOBILE (≤430px) ───────────────────────────────────────────── */
 @media (max-width: 430px) {
-  /* تم التعديل هنا: زيادة المساحة فوق وتحت للشاشات الأصغر */
   .header { 
     width: calc(100% - 1rem); 
     top: 0.65rem; 
@@ -435,7 +433,7 @@
   }
   
   .topRow {
-    padding-bottom: 0.75rem; /* زيادة المسافة من تحت */
+    padding-bottom: 0.75rem; 
   }
 
   .brand {
@@ -443,10 +441,16 @@
     transform-origin: right center;
     gap: 5px;
   }
+  
   .arabicText { font-size: 12px; }
   .brandText { font-size: 12px; }
 
-  .blogLink { font-size: 11px; padding: 6px 10px; min-height: 34px; }
+  .blogLink { 
+    font-size: 10px; 
+    padding: 3px 6px; 
+    min-height: 28px; 
+  }
+  
   .navbar a { font-size: 13px; padding: 10px 14px; }
 }
 
