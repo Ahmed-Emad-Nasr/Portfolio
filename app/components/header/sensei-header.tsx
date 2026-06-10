@@ -88,7 +88,7 @@ export default function SenseiHeader() {
       const topGap  = parseFloat(getComputedStyle(headerRef.current!).top) || 0;
       window.scrollTo({
         top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - topGap - 10),
-        behavior: "smooth",
+        behavior: "auto",
       });
     };
     if (isMenuOpen) { setIsMenuOpen(false); requestAnimationFrame(doScroll); }
