@@ -5,10 +5,26 @@
  */
 
 /* =========================================
-   0. ANIMATIONS (compositor-only — opacity + transform only)
+   1. MAIN PAGE BASE (Scope fix for Turbopack)
+   ========================================= */
+.page {
+  --blog-line: rgba(var(--main-color-rgb), 0.15);
+  --blog-text: #e2f1ff;
+  --blog-muted: #8ba4b8;
+  --blog-bg-dark: rgba(5, 8, 14, 0.95);
+  --blog-bg-light: rgba(10, 15, 25, 0.8);
+
+  padding: 0 5.25% 6rem;
+  font-family: var(--font-overlock), monospace, sans-serif;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+}
+
+/* =========================================
+   0. ANIMATIONS (compositor-only — opacity and transform only)
    ========================================= */
 
-/* Fade + slide up — used for cards entering the viewport */
+/* Fade and slide up — used for cards entering the viewport */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -33,21 +49,8 @@
 }
 
 /* =========================================
-   1. MAIN PAGE & HERO
+   1.5. HERO & EXTENDED PAGE STYLES
    ========================================= */
-.page {
-  --blog-line: rgba(var(--main-color-rgb), 0.15);
-  --blog-text: #e2f1ff;
-  --blog-muted: #8ba4b8;
-  --blog-bg-dark: rgba(5, 8, 14, 0.95);
-  --blog-bg-light: rgba(10, 15, 25, 0.8);
-
-  padding: 0 5.25% 6rem;
-  font-family: var(--font-overlock), monospace, sans-serif;
-  background-color: var(--bg-color);
-  min-height: 100vh;
-}
-
 .page::before {
   content: "";
   position: fixed;
@@ -1328,7 +1331,7 @@
 }
 
 /* =========================================
-   10. PLAYLIST & VIDEO CARDS EXTRA
+   10. PLAY PLAYLIST & VIDEO CARDS EXTRA
    ========================================= */
 .playlistContent { padding-top: 0.8rem; }
 .playlistContent h3 { color: #fff; font-family: monospace; font-size: 1.6rem; }
