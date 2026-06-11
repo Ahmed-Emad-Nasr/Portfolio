@@ -20,6 +20,7 @@
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
+  /* الخلفية الأساسية أسود نقي */
   --bg-color:        #000000;
   --second-bg-color: #000000;
 
@@ -150,11 +151,8 @@ html {
 body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
-  background:
-    radial-gradient(ellipse 140% 55% at 50% -5%,  rgba(var(--main-color-rgb), 0.15) 0%,  transparent 55%),
-    radial-gradient(ellipse  80% 40% at 85% 15%,  rgba(var(--main-color-rgb), 0.06) 0%, transparent 50%),
-    linear-gradient(180deg, rgba(20, 0, 5, 0.6) 0%, #000000 60%),
-    #000000;
+  /* الاعتماد على اللون الأسود النقي فقط بدون أي تدرجات */
+  background-color: var(--bg-color);
   overflow-x: hidden;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
@@ -430,22 +428,20 @@ section.glass:hover,
 
 /*--------- 9. Responsive Breakpoints ---------*/
 
-/* شاشات التابلت */
 @media (max-width: 991px) {
   section {
     padding: 4rem 3.5% 4rem;
     margin-bottom: clamp(5rem, 8vw, 8rem);
-    width: 94%; /* تقليل العرض */
+    width: 94%; 
   }
   .site-footer__inner {
     width: 94%;
   }
 }
 
-/* الموبايلات الكبيرة والتابلت الصغير */
 @media (max-width: 768px) {
   section {
-    width: calc(100% - 3rem); /* خصم مسافة من الجوانب */
+    width: calc(100% - 3rem); 
   }
   .site-footer__inner {
     flex-direction: column;
@@ -455,7 +451,6 @@ section.glass:hover,
   }
 }
 
-/* الموبايلات العادية */
 @media (max-width: 600px) {
   section {
     padding: 4.5rem 1.5rem 4.2rem;
@@ -467,7 +462,6 @@ section.glass:hover,
   }
 }
 
-/* الموبايلات الصغيرة جداً */
 @media (max-width: 360px) {
   html { font-size: 56.25%; }
   section {
