@@ -43,18 +43,18 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 1.5rem;        /* ← تقليل من 2.2rem */
+  padding: 1.5rem;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(1.5rem, 2vw, 3rem);  /* ← تقليل */
+  gap: clamp(1.5rem, 2vw, 3rem);
   max-width: 1200px;
   width: 100%;
   min-height: 95vh;
-  padding: 1.2rem 0.8rem;          /* ← تقليل */
+  padding: 1.2rem 0.8rem;
   border-radius: 26px;
   --parallax-x: 0px;
   --parallax-y: 0px;
@@ -77,7 +77,6 @@
 .homeContent {
   transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
   transition: transform var(--motion-normal) var(--motion-ease);
-  /* Allow the content column to expand so paragraphs can use more horizontal space */
   max-width: 950px;
 }
 
@@ -104,10 +103,7 @@
   letter-spacing: 0.015em;
 }
 
-
 .highlight { color: var(--main-color); }
-
-/* Availability-related styles removed to avoid dead CSS (widget deleted) */
 
 .typingText {
   font-size: clamp(2.2rem, 5vw, 3.4rem);
@@ -121,6 +117,8 @@
 .typingHighlight {
   position: relative;
   color: var(--main-color);
+  /* الإضافة دي بتدي مساحة للمؤشر (الكرسور) إنه يقف بعد الكلمة وما يغطيش آخر حرف */
+  padding-right: 8px;
 }
 
 .typingHighlight::before {
@@ -131,15 +129,18 @@
 .typingHighlight::after {
   content: " ";
   position: absolute;
-  background-color: black;
+  /* استخدام var(--bg-color) أفضل عشان تتناسق دايماً مع الخلفية السودا */
+  background-color: var(--bg-color);
   width: calc(100% + 8px);
   height: 100%;
   border-left: 3px solid var(--bg-color);
-  right: 0;
+  right: -2px; /* تشفيت المؤشر لليمين سنة بسيطة */
   animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite;
 }
 
-@keyframes cursor { to { border-left: 2px solid var(--main-color); } }
+/* توحيد حجم المؤشر لـ 3px عشان يكون واضح وميسببش مشاكل في القص */
+@keyframes cursor { to { border-left: 3px solid var(--main-color); } }
+
 @keyframes words {
   0%, 20% { content: "SOC Analyst"; } 21%, 40% { content: "Incident Response Analyst"; }
   41%, 61% { content: "Noob Malware Analyst"; } 62%, 80% { content: "Noob DFIR Engineer"; }
@@ -159,11 +160,8 @@
   margin-bottom: 1.5rem;
   text-align: left;
   line-height: 1.72;
-  /* Increase paragraph max width so text spans further across the content column */
   max-width: 900px;
 }
-
-
 
 .socialIcon { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
 .socialIcon a {
@@ -214,7 +212,6 @@
   transform: translateY(-4px) scale(1.05);
 }
 
-
 .cvBtn {
   background: rgba(123, 47, 242, 0.15);
   color: #e2f1ff;
@@ -231,7 +228,7 @@
   transform: translateY(-4px) scale(1.05);
 }
 
-  .cvBtn:hover svg {
+.cvBtn:hover svg {
   animation: pdfPulse 0.9s ease-in-out infinite;
 }
 
@@ -279,7 +276,6 @@
   box-shadow: none;
 }
 
-
 .btnProjects {
   background: linear-gradient(135deg, rgba(171, 123, 255, 0.22), rgba(122, 92, 255, 0.16));
   color: #cbb6ff;
@@ -297,8 +293,6 @@
 .homeButton .cvBtn {
   min-width: 17rem;
 }
-
-
 
 :global(html[data-portfolio-mode="magazine"]) .container {
   border-color: rgba(255, 219, 166, 0.26);
@@ -328,8 +322,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* availability dot animations removed */
-
   .typingText {
     animation: textDrift var(--typing-textDrift) ease-in-out infinite !important;
   }
@@ -448,8 +440,6 @@
     font-size: 1.45rem;
   }
 
-  /* availabilityStatus removed */
-
   .socialIcon {
     gap: 1rem;
     margin-bottom: 1.8rem;
@@ -499,8 +489,3 @@
     font-size: clamp(1.6rem, 9vw, 2.1rem);
   }
 }
-
-
-
-
-
