@@ -2,7 +2,7 @@
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   blogYoutubeVideos,
   blogYoutubePlaylists,
@@ -289,17 +289,17 @@ export default function BlogPageClient() {
   const totalScreenshotAssets = TOTAL_SCREENSHOT_ASSETS;
 
   // ── Gallery handlers (Fix #2, #3) ────────────────────────────────────────
-  // Plain functions — setGallery already uses functional updater, no deps needed.
+  // useCallback here — these are passed as props to memoized children (BlogCard via BlogPdfLibrarySection)
 
-  const goGallery = (delta: number): void => {
+  const goGallery = useCallback((delta: number): void => {
     setGallery((cur) => {
       if (!cur) return null;
       const nextIndex = (cur.index + delta + cur.screenshots.length) % cur.screenshots.length;
       return { ...cur, index: nextIndex };
     });
-  };
+  }, []);
 
-  const openGallery = (title: string, screenshots: string[], index = 0): void => {
+  const openGallery = useCallback((title: string, screenshots: string[], index = 0): void => {
     if (!screenshots.length) return;
     prefetchGalleryShots(title, screenshots, index);
     setGallery({
@@ -307,29 +307,29 @@ export default function BlogPageClient() {
       screenshots,
       index: Math.min(Math.max(index, 0), screenshots.length - 1),
     });
-  };
+  }, []);
 
   // ── Other handlers (Fix #4) ───────────────────────────────────────────────
 
-  const activateEmbed = (key: string): void =>
-    setActiveEmbeds((cur) => ({ ...cur, [key]: true }));
+  const activateEmbed = useCallback((key: string): void =>
+    setActiveEmbeds((cur) => ({ ...cur, [key]: true })), []);
 
-  const toggleToolFilter = (tool: string): void => {
+  const toggleToolFilter = useCallback((tool: string): void => {
     setSelectedTools((cur) => {
       const next = new Set(cur);
       next.has(tool) ? next.delete(tool) : next.add(tool);
       return next;
     });
-  };
+  }, []);
 
-  const clearAllFilters = (): void => {
+  const clearAllFilters = useCallback((): void => {
     setPdfFilter("All");
     setDifficultyFilter(null);
     setCategoryFilter(null);
     setSelectedTools(new Set());
     setRawQuery("");
     setQuery("");
-  };
+  }, []);
 
   const hasActiveFilters = Boolean(
     rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All"
@@ -347,6 +347,10 @@ export default function BlogPageClient() {
   // Fix #7: All navigation and related-case data is static — use module-level constants.
   const { previousCase, nextCase } = LEAD_CASE_NAVIGATION;
   const relatedCases = RELATED_CASES;
+
+  // Stable wrapper — setRawQuery (from useState) is already stable, but wrapping
+  // avoids a new function identity on every render when passed as onTagClick prop.
+  const handleTagClick = useCallback((tag: string) => setRawQuery(tag), []);
 
   // ─── Render ──────────────────────────────────────────────────────────────
 

@@ -139,6 +139,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
     return (
       <article
         ref={cardRef}
+        data-visible={shouldRenderMedia ? "true" : undefined}
         className={[
           styles.pdfCard,
           hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly,
@@ -257,7 +258,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
               className={styles.primaryShot}
               aria-label={`Open main screenshot for ${title}`}
             >
-              {shouldRenderMedia && primarySrc && (
+              {shouldRenderMedia && primarySrc ? (
                 <Image
                   src={primarySrc}
                   alt={`${title} main screenshot`}
@@ -267,6 +268,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(
                   quality={70}
                   onError={handlePrimaryError}
                 />
+              ) : (
+                <span className={styles.skeletonShimmer} style={{ position: "absolute", inset: 0 }} aria-hidden="true" />
               )}
             </a>
 
