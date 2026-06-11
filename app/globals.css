@@ -5,14 +5,14 @@
  * CHANGES FROM v5:
  * - Interactive element transition: 800ms → 220ms (snappy, not sluggish)
  * - Removed `* { box-shadow: none !important }` — was killing all glow effects
- *   and fighting every component that uses box-shadow for borders/glows.
- *   Replaced with explicit resets only where needed (p, li, h1-h6).
+ * and fighting every component that uses box-shadow for borders/glows.
+ * Replaced with explicit resets only where needed (p, li, h1-h6).
  * - Removed dead `--shadow-card/glow/glow-hover: none` vars (box-shadow was
- *   globally killed anyway — vars were never used).
+ * globally killed anyway — vars were never used).
  * - glass-card / section.glass: unified transition includes border-color so
- *   the border fade on hover is smooth, not instant.
+ * the border fade on hover is smooth, not instant.
  * - Added micro-animations: .btn-glow, .link-underline, .icon-spin-hover,
- *   .tag-pop, @keyframes fadeUp (lightweight utility, no JS needed).
+ * .tag-pop, @keyframes fadeUp (lightweight utility, no JS needed).
  * - Added .cyber-dot-pulse for status indicators (online/active badges).
  * - cyber-tag: added hover lift micro-interaction.
  * - scrollProgressBar: added border-radius on right cap for polish.
@@ -92,12 +92,12 @@
   --text-4xl:  4.8rem;
 
   --motion-instant: 80ms;
-  --motion-fast:    220ms;   /* FIX v6: was 500ms — interactive elements felt sluggish */
-  --motion-normal:  500ms;   /* FIX v6: was 800ms — general transitions */
+  --motion-fast:    220ms;   
+  --motion-normal:  500ms;   
   --motion-slow:    1300ms;
   --motion-ease:    cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
-  --motion-spring:  cubic-bezier(0.34, 1.56, 0.64, 1); /* NEW: slight overshoot for micro-interactions */
+  --motion-spring:  cubic-bezier(0.34, 1.56, 0.64, 1); 
 
   --anim-fast:      750ms;
   --anim-medium:    1.8s;
@@ -130,12 +130,6 @@
   outline-offset: 4px;
 }
 
-/*
- * FIX v6: Removed `* { box-shadow: none !important }` — was globally killing
- * all glow/shadow effects and conflicting with every component that uses
- * box-shadow for visual design. Explicit resets on bare typographic elements
- * only, where shadows are never intentional.
- */
 p, li, h1, h2, h3, h4, h5, h6 {
   text-shadow: none;
 }
@@ -156,7 +150,11 @@ html {
 body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
-  background-color: var(--bg-color);
+  background:
+    radial-gradient(ellipse 140% 55% at 50% -5%,  rgba(var(--main-color-rgb), 0.15) 0%,  transparent 55%),
+    radial-gradient(ellipse  80% 40% at 85% 15%,  rgba(var(--main-color-rgb), 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(20, 0, 5, 0.6) 0%, #000000 60%),
+    #000000;
   overflow-x: hidden;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
@@ -198,7 +196,6 @@ svg {
   width: 100%;
   height: 100%;
   transform-origin: left center;
-  /* FIX v6: border-radius on right cap for a polished pill end */
   border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
   background: linear-gradient(
     90deg,
@@ -216,11 +213,6 @@ svg {
 }
 
 /*--------- 3. Interactive Elements ---------*/
-/*
- * FIX v6: transition duration dropped from --motion-normal (800ms) to
- * --motion-fast (220ms) — buttons and links felt laggy before.
- * Only transform + opacity — both GPU-composited, zero layout cost.
- */
 a,
 button,
 input,
@@ -318,22 +310,11 @@ section {
   contain-intrinsic-size: auto 900px;
 }
 
-@media (max-width: 600px) {
-  section {
-    padding: 5.4rem 1rem 4.2rem;
-    margin-bottom: 5rem;
-  }
-}
-
 section.glass,
 .glass-card {
   background: var(--surface-card-bg);
   border: 1px solid var(--surface-card-border);
   border-radius: var(--radius-card);
-  /*
-   * FIX v6: Added border-color to transition so the border fade on hover
-   * is smooth. transform + border-color both composited-friendly.
-   */
   transition:
     transform      var(--motion-normal) var(--motion-ease),
     border-color   var(--motion-normal) var(--motion-ease),
@@ -364,7 +345,6 @@ section.glass:hover,
   );
 }
 
-/* Shimmer line on hover */
 .glass-card::after {
   content: "";
   position: absolute;
@@ -442,7 +422,6 @@ section.glass:hover,
 .site-footer__inner a {
   color: var(--main-color);
   font-weight: 700;
-  /* color is non-composited — opacity transition from global rule is enough */
 }
 
 .site-footer__inner a:hover {
@@ -450,18 +429,55 @@ section.glass:hover,
 }
 
 /*--------- 9. Responsive Breakpoints ---------*/
+
+/* شاشات التابلت */
 @media (max-width: 991px) {
   section {
     padding: 4rem 3.5% 4rem;
     margin-bottom: clamp(5rem, 8vw, 8rem);
+    width: 94%; /* تقليل العرض */
+  }
+  .site-footer__inner {
+    width: 94%;
   }
 }
 
+/* الموبايلات الكبيرة والتابلت الصغير */
 @media (max-width: 768px) {
+  section {
+    width: calc(100% - 3rem); /* خصم مسافة من الجوانب */
+  }
   .site-footer__inner {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    width: calc(100% - 3rem);
+  }
+}
+
+/* الموبايلات العادية */
+@media (max-width: 600px) {
+  section {
+    padding: 4.5rem 1.5rem 4.2rem;
+    margin-bottom: 5rem;
+    width: calc(100% - 2rem);
+  }
+  .site-footer__inner {
+    width: calc(100% - 2rem);
+  }
+}
+
+/* الموبايلات الصغيرة جداً */
+@media (max-width: 360px) {
+  html { font-size: 56.25%; }
+  section {
+    width: calc(100% - 1.2rem);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 14px;
+  }
+  .site-footer__inner {
+    width: calc(100% - 1.2rem);
   }
 }
 
@@ -485,15 +501,6 @@ section.glass:hover,
 
   .glass-card::after {
     display: none;
-  }
-}
-
-@media (max-width: 360px) {
-  html { font-size: 56.25%; }
-  section {
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
-    border-radius: 14px;
   }
 }
 
@@ -533,7 +540,6 @@ section.glass:hover,
 
 /*--------- 10. Global Cyber Utility Classes ---------*/
 
-/* Glitch on hover */
 .cyber-glitch {
   position: relative;
   display: inline-block;
@@ -554,7 +560,6 @@ section.glass:hover,
   100% { transform: translate(0); }
 }
 
-/* Dot grid background */
 .cyber-grid-bg {
   position: relative;
 }
@@ -572,7 +577,6 @@ section.glass:hover,
   contain: strict;
 }
 
-/* Scanlines overlay */
 .cyber-scanline {
   position: relative;
   overflow: hidden;
@@ -601,7 +605,6 @@ section.glass:hover,
   to   { transform: translateY(8px); }
 }
 
-/* Alert pulse */
 .cyber-alert-pulse {
   animation: cyberAlertPulse var(--anim-medium) var(--motion-ease) infinite;
 }
@@ -611,7 +614,6 @@ section.glass:hover,
   50%       { opacity: 0.4; }
 }
 
-/* Tags */
 .cyber-tag {
   display: inline-flex;
   align-items: center;
@@ -626,7 +628,6 @@ section.glass:hover,
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
-  /* NEW v6: micro hover lift */
   transition:
     transform     var(--motion-fast) var(--motion-spring),
     border-color  var(--motion-fast) var(--motion-ease),
@@ -650,7 +651,6 @@ section.glass:hover,
   background:   rgba(var(--main-color-rgb), 0.16);
 }
 
-/* Threat levels */
 .threat-level {
   display: inline-flex;
   align-items: center;
@@ -694,11 +694,6 @@ section.glass:hover,
 
 /*--------- 11. NEW — Lightweight Micro-Animations ---------*/
 
-/*
- * .btn-glow
- * CTA button with animated glow sweep on hover.
- * Usage: <button class="btn-glow">Click me</button>
- */
 .btn-glow {
   position: relative;
   overflow: hidden;
@@ -737,11 +732,6 @@ section.glass:hover,
   box-shadow: none;
 }
 
-/*
- * .link-underline
- * Animated underline that grows from left on hover.
- * Usage: <a class="link-underline">About</a>
- */
 .link-underline {
   position: relative;
   display: inline-block;
@@ -768,11 +758,6 @@ section.glass:hover,
   transform: scaleX(1);
 }
 
-/*
- * .icon-spin-hover
- * Icon rotates 360° on parent hover. Apply to the <svg> or <img>.
- * Usage: <span class="icon-spin-hover"><SomeIcon /></span>
- */
 .icon-spin-hover {
   display: inline-flex;
   align-items: center;
@@ -784,12 +769,6 @@ section.glass:hover,
   transform: rotate(360deg);
 }
 
-/*
- * .tag-pop
- * Subtle scale pop on mount — use on skill/tech tags appearing in view.
- * Pair with MotionInView stagger for best effect.
- * Usage: <span class="cyber-tag tag-pop">React</span>
- */
 @keyframes tagPop {
   0%   { transform: scale(0.8); opacity: 0; }
   70%  { transform: scale(1.06); }
@@ -800,11 +779,6 @@ section.glass:hover,
   animation: tagPop 0.35s var(--motion-spring) both;
 }
 
-/*
- * .cyber-dot-pulse
- * Pulsing dot for "online / active" status indicators.
- * Usage: <span class="cyber-dot-pulse"></span>
- */
 .cyber-dot-pulse {
   display: inline-block;
   width:  0.75em;
@@ -845,11 +819,6 @@ section.glass:hover,
   100% { box-shadow: 0 0 0 0   rgba(var(--accent-color-rgb), 0); }
 }
 
-/*
- * .fade-up
- * CSS-only fade-up for elements that don't need JS scroll detection.
- * Use when MotionInView is overkill (e.g. footer text, small labels).
- */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
