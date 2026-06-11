@@ -6,7 +6,8 @@
   top: 1.1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1150px, calc(100% - 2rem));
+  /* تم زيادة العرض قليلاً لـ 1080px لاحتواء العناصر دون خروجها عن الإطار */
+  width: min(1080px, calc(100% - 2rem));
   padding: 0.55rem 1rem 0;
   background: rgba(6, 10, 18, 0.97);
   backdrop-filter: blur(20px) saturate(160%);
@@ -65,6 +66,7 @@
 .topRow {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.6rem;
   width: 100%;
   padding-bottom: 0.5rem;
@@ -190,7 +192,6 @@
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
-  margin-left: auto;
 }
 
 /* ── 6. THREAT CHIP ──────────────────────────────────────────────────────── */
@@ -323,9 +324,10 @@
 
 /* ── 12. DESKTOP (≥995px) ────────────────────────────────────────────────── */
 @media (min-width: 995px) {
-  .topRow   { gap: 1rem; }
-  .navbar a { padding: 0.6rem 1.2rem; min-height: 42px; font-size: 14px; }
-  .blogLink { padding: 0.6rem 1.4rem; min-height: 42px; font-size: 14px; }
+  /* تم تقليل المسافات قليلاً في الديسكتوب لاحتواء كل العناصر براحة */
+  .topRow   { gap: 0.8rem; }
+  .navbar a { padding: 0.5rem 1rem; min-height: 40px; font-size: 13.5px; } 
+  .blogLink { padding: 0.5rem 1.2rem; min-height: 40px; font-size: 13.5px; }
 }
 
 /* ── 13. TABLET / MOBILE (≤994px) ────────────────────────────────────────── */
@@ -333,7 +335,6 @@
   .header { padding: 0.85rem 0.75rem 0; }
 
   .topRow {
-    /* شيلنا الـ row-reverse عشان اللوجو يبقى شمال والزراير ترجع يمين */
     flex-direction: row;
     justify-content: space-between;
     padding-bottom: 0.85rem;
@@ -348,7 +349,7 @@
 
   .rightCluster {
     margin-left: auto;
-    gap: 4px; /* تقليل المسافة بين زرار البورتفوليو والمنيو */
+    gap: 4px; 
   }
 
   .threatChip { display: none; }
@@ -437,8 +438,8 @@
   }
 
   .brand {
-    transform: scale(0.75); /* تصغير اللوجو والاسم أكتر عشان يوفر مساحة */
-    transform-origin: left center; /* التكبير والتصغير يكون من ناحية الشمال */
+    transform: scale(0.75); 
+    transform-origin: left center; 
     gap: 4px;
     padding-right: 5px;
   }
@@ -446,7 +447,6 @@
   .arabicText { font-size: 11px; }
   .brandText { font-size: 11px; }
 
-  /* زرار البورتفوليو أصغر بكتير للموبايل */
   .blogLink { 
     font-size: 8.5px; 
     padding: 4px 6px; 
@@ -456,10 +456,9 @@
   }
 
   .blogLink::before {
-    font-size: 7.5px; /* تصغير السهم */
+    font-size: 7.5px; 
   }
 
-  /* تصغير أيقونة القائمة (الهمبرجر) */
   .menuIcon {
     min-width: 30px;
     min-height: 30px;

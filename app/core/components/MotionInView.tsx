@@ -3,15 +3,12 @@
 /*
  * File: MotionInView.tsx
  * Author: Ahmed Emad Nasr
- * Perf pass: tilt isTouchDevice hoisted out of hook body, autoStagger uses
- * useMemo, resolvedVariants stable ref avoids Framer re-diff, single merged
- * motionProps object built inline.
+ * v2 — improved animations, zero breaking changes, no TextReveal (avoids JSX namespace issue)
  */
 
 import React, {
   Children,
   memo,
-  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -27,85 +24,147 @@ import {
 } from "framer-motion";
 
 // ---------------------------------------------------------------------------
-// 1. Easing & spring — module-level singletons
+// 1. Easing curves
 // ---------------------------------------------------------------------------
 
-const CINEMATIC_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const EASE_FADE:     [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
+const EASE_IN_CUBIC: [number, number, number, number] = [0.55, 0, 1, 0.45];
 
-const MOTION_DURATIONS = { short: 0.75, medium: 1.1, long: 1.6 } as const;
-
-const SPRING_FAST = { type: "spring", stiffness: 80, damping: 20, mass: 1.2 } as const;
-const TILT_SPRING = { stiffness: 120, damping: 28, mass: 0.8 };
+const MOTION_DURATIONS = {
+  instant:   0.01,
+  fast:      0.55,
+  medium:    0.85,
+  slow:      1.2,
+} as const;
 
 // ---------------------------------------------------------------------------
-// 2. Variant library — module-level, zero allocation per render
+// 2. Spring configs
+// ---------------------------------------------------------------------------
+
+const SPRING_GENTLE = { type: "spring", stiffness: 60, damping: 18, mass: 1.0 } as const;
+const SPRING_SNAP   = { type: "spring", stiffness: 120, damping: 22, mass: 0.8 } as const;
+const TILT_SPRING   = { stiffness: 110, damping: 26, mass: 0.75 };
+
+// ---------------------------------------------------------------------------
+// 3. Variant library
 // ---------------------------------------------------------------------------
 
 export const motionVariants = {
+
   fade: {
-    hidden:  { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: MOTION_DURATIONS.short, ease: CINEMATIC_EASE } },
-    exit:    { opacity: 0, transition: { duration: MOTION_DURATIONS.short, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, y: 6 },
+    visible: { opacity: 1, y: 0, transition: { duration: MOTION_DURATIONS.medium, ease: EASE_FADE } },
+    exit:    { opacity: 0, y: -4, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
 
   "slide-up": {
-    hidden:  { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0,  transition: { ...SPRING_FAST, delay: 0.08 } },
-    exit:    { opacity: 0, y: 30, transition: { duration: 0.5, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, y: 60 },
+    visible: { opacity: 1, y: 0, transition: { ...SPRING_GENTLE, delay: 0.05 } },
+    exit:    { opacity: 0, y: 24, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
+  } satisfies Variants,
+
+  "slide-down": {
+    hidden:  { opacity: 0, y: -50 },
+    visible: { opacity: 1, y: 0, transition: { ...SPRING_GENTLE, delay: 0.05 } },
+    exit:    { opacity: 0, y: -20, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
 
   "slide-left": {
-    hidden:  { opacity: 0, x: -55 },
-    visible: { opacity: 1, x: 0,   transition: { ...SPRING_FAST, delay: 0.08 } },
-    exit:    { opacity: 0, x: -30, transition: { duration: 0.5, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, x: -65 },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_GENTLE, delay: 0.05 } },
+    exit:    { opacity: 0, x: -28, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
 
   "slide-right": {
-    hidden:  { opacity: 0, x: 55 },
-    visible: { opacity: 1, x: 0,  transition: { ...SPRING_FAST, delay: 0.08 } },
-    exit:    { opacity: 0, x: 30, transition: { duration: 0.5, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, x: 65 },
+    visible: { opacity: 1, x: 0, transition: { ...SPRING_GENTLE, delay: 0.05 } },
+    exit:    { opacity: 0, x: 28, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
 
   scale: {
-    hidden:  { opacity: 0, scale: 0.88 },
-    visible: { opacity: 1, scale: 1,    transition: { ...SPRING_FAST, delay: 0.08 } },
-    exit:    { opacity: 0, scale: 0.94, transition: { duration: 0.45, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, scale: 0.84 },
+    visible: { opacity: 1, scale: 1, transition: { ...SPRING_GENTLE, delay: 0.05 } },
+    exit:    { opacity: 0, scale: 0.92, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
+  } satisfies Variants,
+
+  "scale-up": {
+    hidden:  { opacity: 0, scale: 0.75, y: 12 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { ...SPRING_SNAP } },
+    exit:    { opacity: 0, scale: 0.88, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
 
   "blur-in": {
-    hidden:  { opacity: 0, filter: "blur(14px)", scale: 1.04 },
-    visible: { opacity: 1, filter: "blur(0px)",  scale: 1,    transition: { duration: MOTION_DURATIONS.medium, ease: CINEMATIC_EASE } },
-    exit:    { opacity: 0, filter: "blur(8px)",  scale: 0.98, transition: { duration: 0.5, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, filter: "blur(16px)", scale: 1.06 },
+    visible: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { duration: MOTION_DURATIONS.slow, ease: EASE_OUT_EXPO } },
+    exit:    { opacity: 0, filter: "blur(10px)", scale: 0.97, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
+  } satisfies Variants,
+
+  reveal: {
+    hidden:  { clipPath: "inset(0 0 100% 0)", opacity: 1 },
+    visible: { clipPath: "inset(0 0 0% 0)", opacity: 1, transition: { duration: MOTION_DURATIONS.slow, ease: EASE_OUT_EXPO } },
+    exit:    { clipPath: "inset(0 0 100% 0)", opacity: 1, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
+  } satisfies Variants,
+
+  "reveal-left": {
+    hidden:  { clipPath: "inset(0 100% 0 0)", opacity: 1 },
+    visible: { clipPath: "inset(0 0% 0 0)", opacity: 1, transition: { duration: MOTION_DURATIONS.slow, ease: EASE_OUT_EXPO } },
+    exit:    { clipPath: "inset(0 100% 0 0)", opacity: 1, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
+  } satisfies Variants,
+
+  float: {
+    hidden:  { opacity: 0, y: 0 },
+    visible: {
+      opacity: 1,
+      y: [0, -10, 0],
+      transition: {
+        opacity: { duration: MOTION_DURATIONS.medium, ease: EASE_FADE },
+        y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", repeatType: "loop" },
+      },
+    },
+    exit: { opacity: 0, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
+  } satisfies Variants,
+
+  "text-stagger": {
+    hidden:  {},
+    visible: { transition: { staggerChildren: 0.055, delayChildren: 0.05 } },
+    exit:    { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+  } satisfies Variants,
+
+  "text-word": {
+    hidden:  { opacity: 0, y: 22 },
+    visible: { opacity: 1, y: 0, transition: { ...SPRING_SNAP } },
+    exit:    { opacity: 0, y: -10, transition: { duration: 0.25, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
 
   stagger: {
     hidden:  {},
-    visible: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
-    exit:    { transition: { staggerChildren: 0.08, staggerDirection: -1 } },
+    visible: { transition: { staggerChildren: 0.14, delayChildren: 0.08 } },
+    exit:    { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
   } satisfies Variants,
 
   "stagger-child": {
-    hidden:  { opacity: 0, y: 32 },
-    visible: { opacity: 1, y: 0,  transition: { ...SPRING_FAST, delay: 0.08 } },
-    exit:    { opacity: 0, y: 16, transition: { duration: 0.4, ease: CINEMATIC_EASE } },
+    hidden:  { opacity: 0, y: 36 },
+    visible: { opacity: 1, y: 0, transition: { ...SPRING_GENTLE, delay: 0.05 } },
+    exit:    { opacity: 0, y: 14, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
   } satisfies Variants,
+
 } as const;
 
 export type MotionVariantKey = keyof typeof motionVariants;
 
 // ---------------------------------------------------------------------------
-// 3. Reduced-motion fallback — module-level singleton
+// 4. Reduced-motion fallback
 // ---------------------------------------------------------------------------
 
 const REDUCED_VARIANTS: Variants = {
   hidden:  { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.01 } },
-  exit:    { opacity: 0, transition: { duration: 0.01 } },
+  visible: { opacity: 1, transition: { duration: MOTION_DURATIONS.instant } },
+  exit:    { opacity: 0, transition: { duration: MOTION_DURATIONS.instant } },
 };
 
 // ---------------------------------------------------------------------------
-// 4. Touch-device detection — evaluated ONCE at module load, never repeated
-//    Acceptable: device capability doesn't change mid-session
+// 5. Touch-device detection — once at module load
 // ---------------------------------------------------------------------------
 
 const IS_TOUCH_DEVICE =
@@ -113,24 +172,21 @@ const IS_TOUCH_DEVICE =
   window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
 // ---------------------------------------------------------------------------
-// 5. 3D Tilt hook — only allocates motion values when actually enabled
+// 6. 3D Tilt hook
 // ---------------------------------------------------------------------------
 
 function useTilt(enabled: boolean) {
-  const active = enabled && !IS_TOUCH_DEVICE;
-
-  // PERF: Motion values created unconditionally (Rules of Hooks) but spring
-  // interpolation only matters when active — Framer doesn't tick inactive springs
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [6, -6]),  TILT_SPRING);
-  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-6, 6]), TILT_SPRING);
+  const active  = enabled && !IS_TOUCH_DEVICE;
+  const rawX    = useMotionValue(0);
+  const rawY    = useMotionValue(0);
+  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [7, -7]), TILT_SPRING);
+  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-7, 7]), TILT_SPRING);
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!active) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    rawX.set((e.clientX - rect.left) / rect.width  - 0.5);
-    rawY.set((e.clientY - rect.top)  / rect.height - 0.5);
+    const r = e.currentTarget.getBoundingClientRect();
+    rawX.set((e.clientX - r.left) / r.width  - 0.5);
+    rawY.set((e.clientY - r.top)  / r.height - 0.5);
   };
 
   const onMouseLeave = () => { rawX.set(0); rawY.set(0); };
@@ -139,29 +195,29 @@ function useTilt(enabled: boolean) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Stable viewport config — module-level, avoids new object every render
+// 7. Viewport config
 // ---------------------------------------------------------------------------
 
-const DEFAULT_VIEWPORT = { once: true, amount: 0.08, margin: "0px 0px -2% 0px" } as const;
+const DEFAULT_VIEWPORT = { once: true, amount: 0.07, margin: "0px 0px -3% 0px" } as const;
 
 // ---------------------------------------------------------------------------
-// 7. Component types
+// 8. Component types
 // ---------------------------------------------------------------------------
 
 type MotionInViewProps = Omit<MotionProps, "variants"> & {
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  variant?: MotionVariantKey;
-  variants?: Variants;
-  delay?: number;
-  enableExit?: boolean;
-  tilt?: boolean;
+  children:     React.ReactNode;
+  className?:   string;
+  style?:       React.CSSProperties;
+  variant?:     MotionVariantKey;
+  variants?:    Variants;
+  delay?:       number;
+  enableExit?:  boolean;
+  tilt?:        boolean;
   autoStagger?: boolean;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "style">;
 
 // ---------------------------------------------------------------------------
-// 8. Component
+// 9. Component
 // ---------------------------------------------------------------------------
 
 const MotionInView = memo<MotionInViewProps>(
@@ -169,15 +225,15 @@ const MotionInView = memo<MotionInViewProps>(
     children,
     className,
     style,
-    variant = "slide-up",
+    variant     = "slide-up",
     variants,
     delay,
     initial,
     whileInView,
     viewport,
     transition,
-    enableExit = false,
-    tilt = false,
+    enableExit  = false,
+    tilt        = false,
     autoStagger = false,
     ...rest
   }) => {
@@ -185,36 +241,33 @@ const MotionInView = memo<MotionInViewProps>(
     const ref = useRef<HTMLDivElement>(null);
     const { active: tiltActive, rotateX, rotateY, onMouseMove, onMouseLeave } = useTilt(tilt);
 
-    // Resolve variants — custom > reduced > preset
-    // PERF: Stable reference — won't cause Framer to re-diff animation state
-    const resolvedVariants = variants ?? (prefersReducedMotion ? REDUCED_VARIANTS : motionVariants[variant]);
+    const resolvedVariants =
+      variants ?? (prefersReducedMotion ? REDUCED_VARIANTS : motionVariants[variant]);
 
-    // Only compute merged transition when delay is provided
     const resolvedTransition = useMemo(
       () => delay ? { ...(transition ?? {}), delay } : transition,
-      [delay, transition]
+      [delay, transition],
     );
 
-    // PERF: useMemo so Children.count doesn't run every render when props unchanged
     const wrapWithStagger = useMemo(() => {
       if (!autoStagger || variant === "stagger" || variant === "stagger-child") return false;
       return Children.count(children) > 1;
     }, [autoStagger, variant, children]);
 
     const perspectiveStyle = useMemo(
-      () => tiltActive ? { perspective: "800px", ...style } : style,
-      [tiltActive, style]
+      () => tiltActive ? { perspective: "900px", ...style } : style,
+      [tiltActive, style],
     );
 
     const baseStyle = useMemo(
       () => ({ willChange: "transform, opacity" as const, ...perspectiveStyle }),
-      [perspectiveStyle]
+      [perspectiveStyle],
     );
 
     const tiltStyle = useMemo(
       () => tiltActive ? { ...baseStyle, rotateX, rotateY } : baseStyle,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [tiltActive, baseStyle]
+      [tiltActive, baseStyle],
     );
 
     const onComplete = () => {
@@ -268,7 +321,7 @@ const MotionInView = memo<MotionInViewProps>(
         {children}
       </motion.div>
     );
-  }
+  },
 );
 
 MotionInView.displayName = "MotionInView";

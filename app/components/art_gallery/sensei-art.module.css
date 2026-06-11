@@ -4,7 +4,23 @@
  * Purpose: Art gallery grid and responsive image layout styles (Cybersecurity / SOC Theme)
  */
 
-.art-gallery-section { min-height: 100vh; padding: 8rem 0 6rem; margin: 0; margin-top: clamp(26rem, 45vh, 60rem); position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1000px; }
+/* ── 1. SECTION OVERRIDES ────────────────────────────────────────────────── */
+.art-gallery-section { 
+  /* إجبار القسم على تجاهل الحجم المدمج من الجلوبال وأخذ عرض الشاشة بالكامل */
+  max-width: 100% !important; 
+  width: 100%;
+  border-radius: 0 !important; 
+  
+  min-height: 100vh; 
+  padding: 8rem 0 6rem !important; 
+  margin: 0; 
+  margin-top: clamp(26rem, 45vh, 60rem) !important; 
+  position: relative; 
+  z-index: 1; 
+  content-visibility: auto; 
+  contain-intrinsic-size: 1px 1000px; 
+}
+
 .container { width: 100%; max-width: none; margin: 0 auto; }
 .art-gallery-content { padding: 0 5rem 5%; }
 .header-section { margin-top: 0; text-align: center; }
@@ -149,6 +165,40 @@
 
 .skeletonLineShort { width: 70%; }
 
+/* --- Show More Button --- */
+.galleryActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4rem;
+}
+
+.primaryAction {
+  background: rgba(var(--main-color-rgb), 0.08);
+  color: var(--main-color);
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
+  padding: 1rem 3rem;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: 
+    background var(--motion-normal) var(--motion-ease),
+    border-color var(--motion-normal) var(--motion-ease),
+    color var(--motion-normal) var(--motion-ease),
+    transform var(--motion-normal) var(--motion-ease);
+}
+
+.primaryAction:hover {
+  background: rgba(var(--main-color-rgb), 0.15);
+  border-color: var(--main-color);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
 /* === Media Queries & Mobile Overrides === */
 @media (max-width: 1199px) { 
   .Gallery { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
@@ -163,7 +213,7 @@
 
 @media (max-width: 767px) { 
   .art-gallery-section { min-height: auto; }
-  .art-gallery-section { margin-top: clamp(18rem, 36vh, 40rem); }
+  .art-gallery-section { margin-top: clamp(18rem, 36vh, 40rem) !important; }
   .Gallery { grid-template-columns: 1fr; gap: 20px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 
   .imageButton::before { font-size: 1rem; padding: 0.4rem 0.8rem; }
@@ -171,8 +221,8 @@
 
 @media (max-width: 430px) {
   .art-gallery-section {
-    margin-top: clamp(14rem, 30vh, 28rem);
-    padding: 6rem 0 4.5rem;
+    margin-top: clamp(14rem, 30vh, 28rem) !important;
+    padding: 6rem 0 4.5rem !important;
   }
 
   .art-gallery-content {

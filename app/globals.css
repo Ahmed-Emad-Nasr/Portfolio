@@ -1,23 +1,27 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (Performance Optimized v5)
+ * @description Global CSS - Premium Cyber & SOC Theme (v6)
  *
- * PERF CHANGES FROM v4:
- * - section: contain upgraded from `style` to `layout style` — prevents
- * layout recalc from bubbling up to parent on every child mutation.
- * - .site-footer__inner a: removed `transition: color` — color is non-composited,
- * triggers style recalc on every frame. Change is instant at 60fps anyway.
- * - .skip-link: removed `transition: top` — top triggers layout reflow on
- * every frame. Replaced with transform: translateY for GPU path.
- * - glass-card / section.glass backdrop-filter: added `contain: strict` to
- * limit blur repaint to card bounds only, not full viewport.
- * Also wrapped in @supports to skip on browsers with slow backdrop-filter.
+ * CHANGES FROM v5:
+ * - Interactive element transition: 800ms → 220ms (snappy, not sluggish)
+ * - Removed `* { box-shadow: none !important }` — was killing all glow effects
+ *   and fighting every component that uses box-shadow for borders/glows.
+ *   Replaced with explicit resets only where needed (p, li, h1-h6).
+ * - Removed dead `--shadow-card/glow/glow-hover: none` vars (box-shadow was
+ *   globally killed anyway — vars were never used).
+ * - glass-card / section.glass: unified transition includes border-color so
+ *   the border fade on hover is smooth, not instant.
+ * - Added micro-animations: .btn-glow, .link-underline, .icon-spin-hover,
+ *   .tag-pop, @keyframes fadeUp (lightweight utility, no JS needed).
+ * - Added .cyber-dot-pulse for status indicators (online/active badges).
+ * - cyber-tag: added hover lift micro-interaction.
+ * - scrollProgressBar: added border-radius on right cap for polish.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
-  --bg-color:        #00000a;
-  --second-bg-color: #03000f;
+  --bg-color:        #000000;
+  --second-bg-color: #000000;
 
   --surface-base:    rgba(4,  8,  20, 0.95);
   --surface-raised:  rgba(6,  14, 32, 0.90);
@@ -61,7 +65,6 @@
   --glow-accent: 0 0 18px rgba(var(--accent-color-rgb), 0.30);
   --glow-danger: 0 0 14px rgba(var(--danger-rgb), 0.40);
 
-  /* تم التصغير ليكون Compact (LinkedIn Style) */
   --radius-card:    12px;
   --radius-card-sm: 8px;
   --radius-pill:    999px;
@@ -78,7 +81,6 @@
   --z-toast:    2000;
   --z-progress: 3000;
 
-  /* أحجام الخطوط تم تصغيرها لتناسب الديسكتوب المدمج */
   --text-xs:   1.0rem;
   --text-sm:   1.2rem;
   --text-base: 1.4rem;
@@ -89,16 +91,13 @@
   --text-3xl:  3.6rem;
   --text-4xl:  4.8rem;
 
-  --shadow-card:       none;
-  --shadow-glow:       none;
-  --shadow-glow-hover: none;
-
   --motion-instant: 80ms;
-  --motion-fast:    500ms;
-  --motion-normal:  800ms;
+  --motion-fast:    220ms;   /* FIX v6: was 500ms — interactive elements felt sluggish */
+  --motion-normal:  500ms;   /* FIX v6: was 800ms — general transitions */
   --motion-slow:    1300ms;
   --motion-ease:    cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --motion-spring:  cubic-bezier(0.34, 1.56, 0.64, 1); /* NEW: slight overshoot for micro-interactions */
 
   --anim-fast:      750ms;
   --anim-medium:    1.8s;
@@ -131,9 +130,14 @@
   outline-offset: 4px;
 }
 
-* {
-  box-shadow: none !important;
-  text-shadow: none !important;
+/*
+ * FIX v6: Removed `* { box-shadow: none !important }` — was globally killing
+ * all glow/shadow effects and conflicting with every component that uses
+ * box-shadow for visual design. Explicit resets on bare typographic elements
+ * only, where shadows are never intentional.
+ */
+p, li, h1, h2, h3, h4, h5, h6 {
+  text-shadow: none;
 }
 
 *:focus:not(:focus-visible) {
@@ -141,8 +145,7 @@
 }
 
 html {
-  /* دي هتصغر حجم كل حاجة في الموقع بنسبة 20% تقريباً عن الطبيعي */
-  font-size: 62.5% !important; 
+  font-size: 60.5% !important;
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
@@ -153,12 +156,7 @@ html {
 body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
-  background:
-    radial-gradient(ellipse 140% 55% at 50% -5%,  rgba(var(--main-color-rgb), 0.13) 0%,  transparent 55%),
-    radial-gradient(ellipse  80% 40% at 85% 15%,  rgba(var(--accent-color-rgb), 0.05) 0%, transparent 50%),
-    linear-gradient(180deg, rgba(3, 0, 14, 0.6) 0%, rgba(0, 0, 10, 1) 60%),
-    var(--bg-color);
-
+  background-color: var(--bg-color);
   overflow-x: hidden;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
@@ -200,9 +198,11 @@ svg {
   width: 100%;
   height: 100%;
   transform-origin: left center;
+  /* FIX v6: border-radius on right cap for a polished pill end */
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
   background: linear-gradient(
     90deg,
-    var(--main-color)  0%,
+    var(--main-color)   0%,
     var(--main-light)  35%,
     var(--accent-color) 100%
   );
@@ -216,6 +216,11 @@ svg {
 }
 
 /*--------- 3. Interactive Elements ---------*/
+/*
+ * FIX v6: transition duration dropped from --motion-normal (800ms) to
+ * --motion-fast (220ms) — buttons and links felt laggy before.
+ * Only transform + opacity — both GPU-composited, zero layout cost.
+ */
 a,
 button,
 input,
@@ -223,8 +228,8 @@ textarea,
 select,
 summary {
   transition:
-    transform var(--motion-normal) var(--motion-ease),
-    opacity   var(--motion-normal) var(--motion-ease);
+    transform var(--motion-fast) var(--motion-ease),
+    opacity   var(--motion-fast) var(--motion-ease);
 }
 
 button {
@@ -280,10 +285,6 @@ textarea:focus-visible {
   color: #000;
   font-size: 1.4rem;
   font-weight: 800;
-  /*
-   * FIX: Replaced `transition: top` (triggers layout reflow every frame) with
-   * transform: translateY — GPU composited, zero layout cost.
-   */
   transform: translateY(-6rem);
   transition: transform var(--motion-normal) var(--motion-ease);
 }
@@ -309,13 +310,9 @@ section {
   padding: 7.1rem 5.25% 5.9rem;
   position: relative;
   border-radius: var(--radius-card);
-  margin-bottom: clamp(6rem, 10vw, 12rem);
+  max-width: 1000px;
+  margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
   z-index: 1;
-  /*
-   * FIX: Upgraded from `contain: style` to `contain: layout style`.
-   * `layout` containment prevents child mutations from triggering layout
-   * recalc on ancestor elements — meaningful win with many animated sections.
-   */
   contain: layout style;
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
@@ -333,24 +330,24 @@ section.glass,
   background: var(--surface-card-bg);
   border: 1px solid var(--surface-card-border);
   border-radius: var(--radius-card);
-  transition: transform var(--motion-normal) var(--motion-ease);
+  /*
+   * FIX v6: Added border-color to transition so the border fade on hover
+   * is smooth. transform + border-color both composited-friendly.
+   */
+  transition:
+    transform      var(--motion-normal) var(--motion-ease),
+    border-color   var(--motion-normal) var(--motion-ease),
+    background     var(--motion-normal) var(--motion-ease);
   position: relative;
   overflow: hidden;
 }
 
-/*
- * FIX: backdrop-filter wrapped in @supports + isolated with contain: strict.
- * `contain: strict` restricts the blur repaint to the card's own bounds,
- * preventing the browser from repainting surrounding elements on hover.
- * Without this, every glass-card hover repaints the full stacking context.
- */
 @supports (backdrop-filter: blur(1px)) {
   section.glass,
   .glass-card {
     backdrop-filter: blur(var(--card-blur)) saturate(120%);
     -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
     contain: strict;
-    /* Re-declare: contain:strict resets overflow, keep it hidden */
     overflow: hidden;
   }
 }
@@ -367,6 +364,7 @@ section.glass:hover,
   );
 }
 
+/* Shimmer line on hover */
 .glass-card::after {
   content: "";
   position: absolute;
@@ -382,7 +380,7 @@ section.glass:hover,
     transparent 100%
   );
   transform: translateX(-100%);
-  transition: transform 0.6s var(--motion-ease);
+  transition: transform 0.55s var(--motion-ease);
   contain: strict;
   pointer-events: none;
 }
@@ -425,7 +423,7 @@ section.glass:hover,
 }
 
 .site-footer__inner {
-  width: min(1240px, 100%);
+  width: min(1000px, 100%);
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -444,11 +442,7 @@ section.glass:hover,
 .site-footer__inner a {
   color: var(--main-color);
   font-weight: 700;
-  /*
-   * FIX: Removed `transition: color` — color is non-composited and triggers
-   * style recalc every frame. The opacity transition from the global rule
-   * is sufficient and GPU-composited.
-   */
+  /* color is non-composited — opacity transition from global rule is enough */
 }
 
 .site-footer__inner a:hover {
@@ -508,9 +502,12 @@ section.glass:hover,
   section {
     padding-left: 8%;
     padding-right: 8%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .site-footer__inner {
-    width: min(1500px, 100%);
+    width: min(1200px, 100%);
   }
 }
 
@@ -530,10 +527,13 @@ section.glass:hover,
   .cyber-alert-pulse      { animation: none; }
   .cyber-scanline::before { animation: none; }
   .scrollProgressBar      { transition: none; }
+  .cyber-dot-pulse        { animation: none; }
+  .btn-glow::after        { display: none; }
 }
 
 /*--------- 10. Global Cyber Utility Classes ---------*/
 
+/* Glitch on hover */
 .cyber-glitch {
   position: relative;
   display: inline-block;
@@ -554,6 +554,7 @@ section.glass:hover,
   100% { transform: translate(0); }
 }
 
+/* Dot grid background */
 .cyber-grid-bg {
   position: relative;
 }
@@ -571,6 +572,7 @@ section.glass:hover,
   contain: strict;
 }
 
+/* Scanlines overlay */
 .cyber-scanline {
   position: relative;
   overflow: hidden;
@@ -599,6 +601,7 @@ section.glass:hover,
   to   { transform: translateY(8px); }
 }
 
+/* Alert pulse */
 .cyber-alert-pulse {
   animation: cyberAlertPulse var(--anim-medium) var(--motion-ease) infinite;
 }
@@ -608,6 +611,7 @@ section.glass:hover,
   50%       { opacity: 0.4; }
 }
 
+/* Tags */
 .cyber-tag {
   display: inline-flex;
   align-items: center;
@@ -622,6 +626,17 @@ section.glass:hover,
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
+  /* NEW v6: micro hover lift */
+  transition:
+    transform     var(--motion-fast) var(--motion-spring),
+    border-color  var(--motion-fast) var(--motion-ease),
+    background    var(--motion-fast) var(--motion-ease);
+}
+
+.cyber-tag:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(var(--accent-color-rgb), 0.5);
+  background:   rgba(var(--accent-color-rgb), 0.13);
 }
 
 .cyber-tag--main {
@@ -630,6 +645,12 @@ section.glass:hover,
   color: var(--main-light);
 }
 
+.cyber-tag--main:hover {
+  border-color: rgba(var(--main-color-rgb), 0.55);
+  background:   rgba(var(--main-color-rgb), 0.16);
+}
+
+/* Threat levels */
 .threat-level {
   display: inline-flex;
   align-items: center;
@@ -670,3 +691,175 @@ section.glass:hover,
   border: 1px solid rgba(var(--accent-color-rgb), 0.22);
   color: var(--accent-color);
 }
+
+/*--------- 11. NEW — Lightweight Micro-Animations ---------*/
+
+/*
+ * .btn-glow
+ * CTA button with animated glow sweep on hover.
+ * Usage: <button class="btn-glow">Click me</button>
+ */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform    var(--motion-fast) var(--motion-spring),
+    box-shadow   var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
+}
+
+.btn-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 65%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.55s var(--motion-ease);
+  pointer-events: none;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--glow-main);
+}
+
+.btn-glow:hover::after {
+  transform: translateX(100%);
+}
+
+.btn-glow:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+/*
+ * .link-underline
+ * Animated underline that grows from left on hover.
+ * Usage: <a class="link-underline">About</a>
+ */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--main-color),
+    var(--accent-color)
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/*
+ * .icon-spin-hover
+ * Icon rotates 360° on parent hover. Apply to the <svg> or <img>.
+ * Usage: <span class="icon-spin-hover"><SomeIcon /></span>
+ */
+.icon-spin-hover {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s var(--motion-ease);
+}
+
+.icon-spin-hover:hover {
+  transform: rotate(360deg);
+}
+
+/*
+ * .tag-pop
+ * Subtle scale pop on mount — use on skill/tech tags appearing in view.
+ * Pair with MotionInView stagger for best effect.
+ * Usage: <span class="cyber-tag tag-pop">React</span>
+ */
+@keyframes tagPop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  70%  { transform: scale(1.06); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.tag-pop {
+  animation: tagPop 0.35s var(--motion-spring) both;
+}
+
+/*
+ * .cyber-dot-pulse
+ * Pulsing dot for "online / active" status indicators.
+ * Usage: <span class="cyber-dot-pulse"></span>
+ */
+.cyber-dot-pulse {
+  display: inline-block;
+  width:  0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.6);
+  animation: dotPulse 2s var(--motion-ease) infinite;
+}
+
+.cyber-dot-pulse--main {
+  background: var(--main-color);
+  box-shadow: 0 0 0 0 rgba(var(--main-color-rgb), 0.6);
+  animation-name: dotPulseMain;
+}
+
+.cyber-dot-pulse--accent {
+  background: var(--accent-color);
+  box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.5);
+  animation-name: dotPulseAccent;
+}
+
+@keyframes dotPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(var(--success-rgb), 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(var(--success-rgb), 0); }
+  100% { box-shadow: 0 0 0 0   rgba(var(--success-rgb), 0); }
+}
+
+@keyframes dotPulseMain {
+  0%   { box-shadow: 0 0 0 0   rgba(var(--main-color-rgb), 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(var(--main-color-rgb), 0); }
+  100% { box-shadow: 0 0 0 0   rgba(var(--main-color-rgb), 0); }
+}
+
+@keyframes dotPulseAccent {
+  0%   { box-shadow: 0 0 0 0   rgba(var(--accent-color-rgb), 0.5); }
+  70%  { box-shadow: 0 0 0 7px rgba(var(--accent-color-rgb), 0); }
+  100% { box-shadow: 0 0 0 0   rgba(var(--accent-color-rgb), 0); }
+}
+
+/*
+ * .fade-up
+ * CSS-only fade-up for elements that don't need JS scroll detection.
+ * Use when MotionInView is overkill (e.g. footer text, small labels).
+ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fadeUp var(--motion-normal) var(--motion-ease) both;
+}
+
+.fade-up-d1 { animation-delay: calc(var(--stagger-step) * 1); }
+.fade-up-d2 { animation-delay: calc(var(--stagger-step) * 2); }
+.fade-up-d3 { animation-delay: calc(var(--stagger-step) * 3); }
+.fade-up-d4 { animation-delay: calc(var(--stagger-step) * 4); }

@@ -30,7 +30,7 @@ const ImageItem = memo(({ image }: ImageItemProps) => {
         height={350}
         sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, (max-width: 1199px) 33vw, 25vw"
         loading="lazy"
-        quality={20}
+        quality={10}
         className={styles.galleryImg}
         onError={() => setThumbSrc("Assets/art-gallery/Images/logo/My_Logo.webp")}
       />
