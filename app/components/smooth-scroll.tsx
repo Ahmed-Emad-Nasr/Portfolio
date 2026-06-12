@@ -430,11 +430,11 @@ function SmoothScrollInner({
     <ReactLenis
       root
       options={{
-        lerp:           0.09,    // v2: was 0.07 — slightly snappier
-        duration:       1.05,    // v2: was 1.2  — quicker settle
+        lerp:           0.075,    // v2: was 0.07 — slightly snappier
+        duration:       1.2,    // v2: was 1.2  — quicker settle
         smoothWheel:    true,
-        wheelMultiplier: 0.75,
-        touchMultiplier: 0.85,
+        wheelMultiplier: 0.77,
+        touchMultiplier: 0.87,
         syncTouch:      true,    // v2: native-feel on iOS trackpad / touch
         // @ts-ignore — available in lenis ≥1.1, types may lag
         overscroll:     false,   // v2: prevent rubber-band fighting

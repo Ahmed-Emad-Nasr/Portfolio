@@ -18,22 +18,22 @@ const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
 
 const HomeSection = dynamic(() => import("@/app/components/home/sensei-home"), {
   ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" style={HOME_PLACEHOLDER_STYLE} />,
+  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={HOME_PLACEHOLDER_STYLE} />,
 });
 
 const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), {
   ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" style={EXPERIENCE_PLACEHOLDER_STYLE} />,
+  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={EXPERIENCE_PLACEHOLDER_STYLE} />,
 });
 
 const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), {
   ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" style={PROJECTS_PLACEHOLDER_STYLE} />,
+  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={PROJECTS_PLACEHOLDER_STYLE} />,
 });
 
 const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), {
   ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" style={ART_PLACEHOLDER_STYLE} />,
+  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={ART_PLACEHOLDER_STYLE} />,
 });
 
 // ─── Styles — module-level constants, never re-allocated ─────────────────────

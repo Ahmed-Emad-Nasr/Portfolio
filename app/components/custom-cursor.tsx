@@ -96,19 +96,45 @@ export default function CustomCursor() {
     if (!isEnabled) return;
 
     const root = document.documentElement;
+    let attached = false;
 
-    window.addEventListener("pointermove",  handlePointerMove);
-    root.addEventListener("mouseenter", handleMouseEnter);
-    root.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("mousedown",    handleMouseDown);
-    window.addEventListener("mouseup",      handleMouseUp);
+    const attach = () => {
+      if (attached) return;
+      attached = true;
+      window.addEventListener("pointermove", handlePointerMove);
+      root.addEventListener("mouseenter", handleMouseEnter);
+      root.addEventListener("mouseleave", handleMouseLeave);
+      window.addEventListener("mousedown", handleMouseDown);
+      window.addEventListener("mouseup", handleMouseUp);
+    };
 
-    return () => {
-      window.removeEventListener("pointermove",  handlePointerMove);
+    const detach = () => {
+      if (!attached) return;
+      attached = false;
+      window.removeEventListener("pointermove", handlePointerMove);
       root.removeEventListener("mouseenter", handleMouseEnter);
       root.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("mousedown",    handleMouseDown);
-      window.removeEventListener("mouseup",      handleMouseUp);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    // Pause everything when the tab is in the background — saves CPU/battery.
+    const handleVisibility = () => {
+      if (document.hidden) {
+        detach();
+        setIsVisible(false);
+      } else {
+        attach();
+        setIsVisible(true);
+      }
+    };
+
+    attach();
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      detach();
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [isEnabled, handlePointerMove, handleMouseEnter, handleMouseLeave, handleMouseDown, handleMouseUp]);
 
