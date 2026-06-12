@@ -18,11 +18,6 @@ import MotionInView from "@/app/core/components/MotionInView";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState, ChannelVideo } from "./blog-types";
 
-const HomeSection = dynamic(() => import("@/app/components/home/sensei-home"), {
-  ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" style={HOME_PLACEHOLDER_STYLE} />,
-});
-
 const BlogHeroSection = dynamic(() => import("./components/BlogHeroSection"), {
   ssr: false,
   loading: () => <div role="presentation" aria-hidden="true" style={HERO_PLACEHOLDER_STYLE} />,
@@ -134,10 +129,6 @@ const RELATED_CASES: PdfResource[] = LEAD_CASE
 const PDF_DATE_MS = new Map<string, number>(
   blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0])
 );
-
-const HOME_PLACEHOLDER_STYLE: React.CSSProperties = {
-  minHeight: "34rem",
-};
 
 const HERO_PLACEHOLDER_STYLE: React.CSSProperties = {
   minHeight: "28rem",
@@ -358,7 +349,6 @@ export default function BlogPageClient() {
     <main id="main-content" className={styles.page}>
       <LoadingScreen />
       <AppBar />
-      <HomeSection />
 
       <BlogHeroSection
         leadCaseTitle={leadCase?.title ?? null}

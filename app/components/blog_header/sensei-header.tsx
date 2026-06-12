@@ -16,7 +16,6 @@ import { useScrollSpy } from "@/app/core/hooks/useScrollSpy";
 import styles from "./sensei-header.module.css";
 
 const NAV_ITEMS = [
-  { label: "Home",        targetId: "main-content",       icon: faHouse },
   { label: "Cases",       targetId: "blog-pdfs-title",    icon: faFileLines },
   { label: "YouTube Hub", targetId: "youtube-hub-title",  icon: faYoutube },
 ] as const;
@@ -60,7 +59,7 @@ export default function SenseiHeader() {
 
   const { activeSection, setActiveSection } = useScrollSpy({
     sections: SPY_SECTIONS,
-    defaultSection: "Home",
+    defaultSection: "Cases",
     storageKey: "blog-activeSection",
   });
 

@@ -1,11 +1,11 @@
 ﻿/*
  * File: page.module.css
  * Author: Ahmed Emad Nasr
- * Purpose: SOC Blog — Optimized, No Animations, Clean Terminal Theme
+ * Purpose: SOC Blog — Optimized, Cyber Security Terminal Theme
  */
 
 /* =========================================
-   1. MAIN PAGE BASE (Scope fix for Turbopack)
+   1. MAIN PAGE BASE
    ========================================= */
 .page {
   --blog-line: rgba(var(--main-color-rgb), 0.15);
@@ -14,42 +14,42 @@
   --blog-bg-dark: rgba(5, 8, 14, 0.95);
   --blog-bg-light: rgba(10, 15, 25, 0.8);
 
-  padding: 0 5.25% 6rem;
+  /* تم تعديل المسافة العلوية لـ 12rem لتفادي الهيدر */
+  padding: 12rem 5.25% 6rem;
   font-family: var(--font-overlock), monospace, sans-serif;
   background-color: var(--bg-color);
   min-height: 100vh;
 }
 
 /* =========================================
-   0. ANIMATIONS (compositor-only — opacity and transform only)
+   0. ANIMATIONS
    ========================================= */
-
-/* Fade and slide up — used for cards entering the viewport */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Subtle fade-in — used for the hero, headings, and modal */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-/* Skeleton shimmer — used for loading placeholders */
 @keyframes shimmer {
   0%   { background-position: -600px 0; }
   100% { background-position:  600px 0; }
 }
 
-/* Gentle pulse for embed play buttons */
 @keyframes pulseBorder {
   0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.35); }
   50%       { box-shadow: 0 0 0 6px rgba(var(--accent-color-rgb), 0); }
 }
 
+@keyframes blink { 
+  50% { opacity: 0; } 
+}
+
 /* =========================================
-   1.5. HERO & EXTENDED PAGE STYLES
+   1.5. HERO & EXTENDED PAGE STYLES (CYBER STYLE)
    ========================================= */
 .page::before {
   content: "";
@@ -61,7 +61,6 @@
     radial-gradient(circle at 80% 10%, rgba(var(--accent-color-rgb), 0.06), transparent 26%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.02));
   opacity: 0.6;
-  /* Fix #12: Promote to compositor layer — prevents scroll-triggered repaints. */
   will-change: transform;
   transform: translateZ(0);
 }
@@ -77,12 +76,32 @@
 }
 
 .hero {
+  margin-top: 9rem; /* التعديل هنا: إجبار الهيرو على النزول بمسافة ثابتة تحت الهيدر */
   padding: clamp(2.5rem, 4vw, 4rem);
-  border-radius: 16px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  background: linear-gradient(180deg, rgba(7, 11, 18, 0.98), rgba(3, 5, 9, 0.99));
-  box-shadow: none;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--main-color-rgb), 0.4);
+  background:
+    linear-gradient(rgba(5, 8, 14, 0.95), rgba(3, 5, 9, 0.98)),
+    linear-gradient(0deg, transparent 24%, rgba(var(--main-color-rgb), 0.05) 25%, rgba(var(--main-color-rgb), 0.05) 26%, transparent 27%, transparent 74%, rgba(var(--main-color-rgb), 0.05) 75%, rgba(var(--main-color-rgb), 0.05) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(var(--main-color-rgb), 0.05) 25%, rgba(var(--main-color-rgb), 0.05) 26%, transparent 27%, transparent 74%, rgba(var(--main-color-rgb), 0.05) 75%, rgba(var(--main-color-rgb), 0.05) 76%, transparent 77%, transparent);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  box-shadow: 0 0 25px rgba(var(--main-color-rgb), 0.08), inset 0 0 20px rgba(var(--main-color-rgb), 0.05);
   overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
 }
 
 .heroInner {
@@ -119,7 +138,6 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
-/* Subtle static glow — no animation */
 .heroGlow {
   position: absolute;
   right: -5%;
@@ -148,6 +166,13 @@
   margin-bottom: 1.4rem;
 }
 
+.kicker::after {
+  content: " \2588"; 
+  animation: blink 1s step-end infinite;
+  color: var(--main-color);
+  margin-left: 6px;
+}
+
 .hero h1 {
   font-size: clamp(3rem, 5vw, 5.2rem);
   line-height: 1.1;
@@ -170,9 +195,9 @@
 .heroGrid {
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  align-items: start;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 3rem;
+  align-items: center;
 }
 
 .heroMainContent {
@@ -182,7 +207,31 @@
 }
 
 .heroFeaturedCard {
-  align-self: stretch;
+  position: relative;
+  z-index: 15;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.4);
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(var(--accent-color-rgb), 0.15);
+  aspect-ratio: 16 / 9;
+}
+
+.heroFeaturedCard::before {
+  content: "[ LIVE FEED ]";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ff003c;
+  font-family: monospace;
+  font-size: 0.9rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  z-index: 20;
+  border: 1px solid #ff003c;
+  animation: blink 2s infinite;
+  pointer-events: none;
 }
 
 .metrics {
@@ -260,7 +309,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Fix #13: Only transition properties that actually change on hover — drop transform/color. */
   transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
@@ -464,17 +512,16 @@
 }
 
 .pdfGrid {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
 }
 
-/* Cards animate in when IntersectionObserver sets data-visible="true" */
 .pdfCard[data-visible="true"],
 .playlistCard[data-visible="true"],
 .videoCard[data-visible="true"] {
   animation: fadeUp 0.38s var(--motion-ease) both;
 }
 
-/* Stagger siblings so they don't all pop at once */
 .pdfCard[data-visible="true"]:nth-child(2),
 .playlistCard[data-visible="true"]:nth-child(2),
 .videoCard[data-visible="true"]:nth-child(2) { animation-delay: 0.05s; }
@@ -490,7 +537,7 @@
 .videoCard,
 .caseSpotlight,
 .featuredCard {
-  padding: 0.95rem;
+  padding: 0.8rem;
   border-radius: 8px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: rgba(6, 9, 15, 0.9);
@@ -513,7 +560,7 @@
   .pdfCard {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
-    gap: 0.8rem;              /* ← تقليل */
+    gap: 0.8rem;
   }
 }
 
@@ -521,7 +568,6 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* Video and playlist cards are single-column media cards, not split two-column PDF cards. */
 .playlistCard,
 .videoCard {
   min-height: 0;
@@ -721,7 +767,6 @@
 
 .pdfCardMedia {
   min-width: 0;
-  /* Required: Next.js <Image fill> needs a positioned ancestor */
   position: relative;
 }
 
@@ -738,9 +783,9 @@
    ========================================= */
 .badge {
   display: inline-flex;
-  padding: 0.3em 0.7em;
+  padding: 0.2em 0.5em;
   border-radius: 3px;
-  font-size: 1.05rem;
+  font-size: 0.85rem;
   font-weight: bold;
   font-family: monospace;
   margin-right: 0.4em;
@@ -752,10 +797,6 @@
   letter-spacing: 1px;
 }
 
-/* Difficulty colour overrides.
-   These are intentionally standalone classes (not chained to .badge) so that
-   CSS Modules generates a unique scoped name for each. The JS applies both
-   styles.badge and styles['difficulty-easy'] etc. to the same element. */
 .difficulty-easy   { border-color: rgba(0, 255, 136, 0.5) !important;  color: #00ff88 !important; background: rgba(0, 255, 136, 0.05) !important; }
 .difficulty-medium { border-color: rgba(255, 215, 0, 0.5)  !important; color: #ffd700 !important; background: rgba(255, 215, 0, 0.05)  !important; }
 .difficulty-hard   { border-color: rgba(255, 0, 60, 0.5)   !important; color: #ff003c !important; background: rgba(255, 0, 60, 0.05)   !important; }
@@ -788,14 +829,13 @@
 .cardTitle {
   position: relative;
   color: #fff;
-  font-size: 1.9rem;
+  font-size: 1.4rem;
   line-height: 1.3;
   font-weight: 700;
 }
 
 .pdfCard:hover .cardTitle { color: var(--main-color); }
 
-/* Tooltip — visible on hover only, no animation needed */
 .cardTooltip {
   position: absolute;
   left: 0;
@@ -823,10 +863,10 @@
 .videoDate,
 .playlistDescription,
 .playlistVideoCount {
-  margin-top: 0.7rem;
+  margin-top: 0.5rem;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 1.25rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.5;
   font-family: monospace;
 }
 
@@ -858,19 +898,16 @@
 .toolButton,
 .toolButtonSmall,
 .playlistTag {
-  padding: 0.35rem 0.75rem;
+  padding: 0.25rem 0.6rem;
   border-radius: 3px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(0, 0, 0, 0.4);
   color: rgba(255, 255, 255, 0.6);
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   font-family: monospace;
   cursor: pointer;
 }
 
-/* Tag/tool button ::before pseudo-elements add the # / >_ prefix visually.
-   Do NOT include the prefix character in the button text content in JSX —
-   it would double up (e.g. "##phishing"). */
 .toolButton::before,
 .toolButtonSmall::before { content: ">_ "; opacity: 0.8; color: var(--accent-color); }
 
@@ -939,13 +976,12 @@
 }
 
 .shotGrid {
-  position: relative; /* Required: contains .moreShotsBadge which is position:absolute */
+  position: relative; 
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.6rem;
 }
 
-/* Images — static filter, no scale animation */
 .primaryShot img,
 .shotThumb img,
 .caseSpotlightMedia img {
@@ -977,7 +1013,6 @@
   z-index: 5;
 }
 
-/* Embed Previews */
 .embedPreview {
   position: relative;
   width: 100%;
@@ -1015,7 +1050,6 @@
   transform: scale(1.03);
 }
 
-/* ── Skeleton shimmer placeholder ─────────────────────────────────────────── */
 .skeletonShimmer {
   background: linear-gradient(
     90deg,
@@ -1263,14 +1297,14 @@
 }
 
 .youtubeHubGrid {
-  margin-top: 1rem;         /* ← تقليل من 1.8rem */
+  margin-top: 1rem;         
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  /* ← تبسيط */
-  gap: 1rem;                /* ← تقليل من 2rem */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  
+  gap: 1rem;                
 }
 
 .playlistGrid {
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  /* ← تبسيط */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  
 }
 
 .blogClosing {
@@ -1376,7 +1410,10 @@
    11. RESPONSIVE
    ========================================= */
 @media (max-width: 1024px) {
-  .page { padding: 11rem 4% 5rem; }
+  /* تقليل المسافة للتابلت */
+  .page { padding: 7rem 4% 5rem; }
+  .hero { margin-top: 0; }
+
   .pdfGrid,
   .playlistGrid,
   .videoGrid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.2rem; }
@@ -1393,7 +1430,10 @@
 }
 
 @media (max-width: 768px) {
-  .page { padding: 9rem 1rem 4rem; }
+  /* تقليل المسافة للشاشات المتوسطة */
+  .page { padding: 6rem 1rem 4rem; }
+  .hero { margin-top: 0; }
+
   .toolbar { grid-template-columns: 1fr; }
   .pdfGrid { grid-template-columns: 1fr; gap: 0.9rem; }
   .playlistGrid,
@@ -1401,8 +1441,10 @@
 }
 
 @media (max-width: 600px) {
-  .page { min-height: auto; padding: 8rem 0.75rem 3rem; }
-  .hero { padding: 1.5rem 1rem; }
+  /* ضبط المسافة لتناسب الموبايل وتلغي الفراغ الكبير */
+  .page { min-height: auto; padding: 5rem 0.75rem 3rem; }
+  .hero { margin-top: 0; padding: 1.5rem 1rem; }
+
   .hero h1 { font-size: 2rem; line-height: 1.2; }
   .hero p { font-size: 1rem; }
   .kicker { font-size: 0.95rem; padding: 0.3rem 0.9rem; }
@@ -1411,6 +1453,7 @@
   .heroGlow { right: -15%; top: -25%; width: 300px; height: 300px; }
   .heroActions { flex-direction: column; gap: 0.8rem; }
   .heroGrid { grid-template-columns: 1fr; gap: 1rem; }
+  .heroFeaturedCard { aspect-ratio: 16 / 9; }
   .featuredCard { grid-template-columns: 1fr; min-height: auto; gap: 0.9rem; padding: 1rem; }
   .featuredFrame { aspect-ratio: 16 / 9; }
   .embedPreviewImage { object-fit: cover; }
@@ -1436,10 +1479,10 @@
   .videoGrid { grid-template-columns: 1fr; gap: 0.9rem; }
   .pdfCard { padding: 0.9rem; }
   .caseCardHead { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
-  .badge { font-size: 0.9rem; padding: 0.25em 0.6em; }
-  .cardTitle { font-size: 1.5rem; }
+  .badge { font-size: 0.8rem; padding: 0.2em 0.5em; }
+  .cardTitle { font-size: 1.3rem; }
   .cardDescription,
-  .cardPlatform { font-size: 1.1rem; }
+  .cardPlatform { font-size: 0.95rem; }
   .caseMetadata { gap: 0.3rem; margin-top: 0.6rem; }
   .tagsListInline,
   .toolsListCompact { gap: 0.4rem; margin-top: 0.6rem; }
@@ -1498,8 +1541,9 @@
 }
 
 @media (max-width: 360px) {
-  .page { padding: 7rem 0.5rem 2rem; }
-  .hero { padding: 1.2rem 0.8rem; }
+  /* ضبط للموبايلات الصغيرة جداً */
+  .page { padding: 4.5rem 0.5rem 2rem; }
+  .hero { margin-top: 0; padding: 1.2rem 0.8rem; }
   .hero h1 { font-size: 1.6rem; }
   .hero p { font-size: 0.95rem; }
   .kicker { font-size: 0.85rem; padding: 0.25rem 0.7rem; }
@@ -1512,9 +1556,6 @@
   .primaryShot { min-height: 120px; }
 }
 
-/* =========================================
-   ACCESSIBILITY (REDUCED MOTION)
-   ========================================= */
 @media (prefers-reduced-motion: reduce) {
   :global(*),
   :global(*::before),
@@ -1525,7 +1566,6 @@
     scroll-behavior: auto !important;
   }
 
-  /* Override our custom animations explicitly */
   .heroInner,
   .pdfCard[data-visible="true"],
   .playlistCard[data-visible="true"],
