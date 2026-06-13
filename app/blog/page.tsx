@@ -23,6 +23,9 @@ const pdfResources = [
 // ✅ FIX: In Next.js App Router, structured data goes in generateMetadata or
 // as a <script> inside the page component — NOT via next/head (that's Pages Router only).
 // We inject JSON-LD via a <script> tag directly in the JSX below instead.
+// Perf note: casesStructuredData/breadcrumbSchema are already module-level
+// consts derived only from static imports (pdfResources), so they're computed
+// once per server process, not per request — no further hoisting needed.
 
 const casesStructuredData = {
   "@context": "https://schema.org",

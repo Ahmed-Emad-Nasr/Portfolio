@@ -1,8 +1,16 @@
+import type React from "react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import MotionInView from "@/app/core/components/MotionInView";
 import styles from "../page.module.css";
 import type { ChannelVideo } from "../blog-types";
+
+// Hoisted — identical object was created inline on every render and inside
+// .map() loops for the "loading preview" placeholders.
+const CENTERED_STYLE: React.CSSProperties = {
+  alignItems: "center",
+  justifyContent: "center",
+};
 
 type FeaturedVideo = {
   videoId: string;
@@ -213,7 +221,7 @@ export default function BlogMediaSections({
                 {filteredChannelVideos.slice(0, Math.min(filteredChannelVideos.length, 2)).map((video) => (
                   <article key={`hub-video-placeholder-${video.videoId}`} className={styles.videoCard}>
                     <div className={styles.videoFrame}>
-                      <div className={styles.embedPreview} style={{ alignItems: "center", justifyContent: "center" }}>
+                      <div className={styles.embedPreview} style={CENTERED_STYLE}>
                         Loading preview…
                       </div>
                     </div>
@@ -229,7 +237,7 @@ export default function BlogMediaSections({
                   {filteredPlaylists.slice(0, Math.min(filteredPlaylists.length, 2)).map((playlist) => (
                     <article key={`playlist-placeholder-${playlist.playlistId}`} className={styles.playlistCard}>
                       <div className={styles.playlistFrame}>
-                        <div className={styles.embedPreview} style={{ alignItems: "center", justifyContent: "center" }}>
+                        <div className={styles.embedPreview} style={CENTERED_STYLE}>
                           Loading preview…
                         </div>
                       </div>

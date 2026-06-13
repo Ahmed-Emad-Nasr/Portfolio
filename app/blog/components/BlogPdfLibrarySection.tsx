@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import MotionInView from "@/app/core/components/MotionInView";
 import BlogCard from "../BlogCard";
@@ -80,10 +80,9 @@ export default function BlogPdfLibrarySection({
     setVisibleCount(PAGE_SIZE);
   }, [visiblePdfCards.length]);
 
-  // Stable reference for getThumbnail — imported from blog-utils so it is
-  // a module-level function and never recreated. Wrapped in useCallback so
-  // BlogCard's React.memo sees an identical reference across renders.
-  const stableThumbnail = useCallback(getThumbnail, []);
+  // getThumbnail is already a stable module-level function from blog-utils —
+  // no need to wrap it in useCallback, that just adds an extra closure.
+  const stableThumbnail = getThumbnail;
 
   return (
     <section className={styles.block} aria-labelledby="blog-pdfs-title">
