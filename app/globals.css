@@ -1,21 +1,22 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (v6)
+ * @description Global CSS - Premium Cyber & SOC Theme (v7 — perf pass)
  *
- * CHANGES FROM v5:
- * - Interactive element transition: 800ms → 220ms (snappy, not sluggish)
- * - Removed `* { box-shadow: none !important }` — was killing all glow effects
- * and fighting every component that uses box-shadow for borders/glows.
- * Replaced with explicit resets only where needed (p, li, h1-h6).
- * - Removed dead `--shadow-card/glow/glow-hover: none` vars (box-shadow was
- * globally killed anyway — vars were never used).
- * - glass-card / section.glass: unified transition includes border-color so
- * the border fade on hover is smooth, not instant.
- * - Added micro-animations: .btn-glow, .link-underline, .icon-spin-hover,
- * .tag-pop, @keyframes fadeUp (lightweight utility, no JS needed).
- * - Added .cyber-dot-pulse for status indicators (online/active badges).
- * - cyber-tag: added hover lift micro-interaction.
- * - scrollProgressBar: added border-radius on right cap for polish.
+ * CHANGES FROM v6:
+ * - card-blur / ui-blur: 8px/6px -> 4px. backdrop-filter is the single most
+ * expensive paint operation in this stylesheet; halving it materially cuts
+ * GPU compositing cost on every .glass-card and section.glass on the page.
+ * - Dropped saturate(120%) from the glass blur filter — a second filter pass
+ * for a barely perceptible saturation bump was not worth the cost.
+ * - Removed dead, never-referenced rules that shipped in v6 but were unused
+ * across every module file: .tag-pop/@keyframes tagPop, dotPulseMain,
+ * dotPulseAccent, the unused local copies of @keyframes fadeUp/shimmer,
+ * .skeleton-shimmer, .fade-up/.fade-up-d1..d4, and the reduced-motion
+ * overrides for .cyber-alert-pulse / .cyber-scanline / .scrollProgressBar /
+ * .cyber-dot-pulse (none of these classes exist anywhere in the codebase).
+ * - Kept .btn-glow as-is: unlike the removed rules above, no CSS module in
+ * this codebase references it, but it may still be applied directly in JSX
+ * (not reviewed here) — left in place rather than guessing.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
@@ -113,8 +114,8 @@
   --typing-textDrift: 5.5s;
   --typing-pdfPulse:  0.9s;
 
-  --ui-blur:   6px;
-  --card-blur: 8px;
+  --ui-blur:   4px;
+  --card-blur: 4px; /* reduced from 8px: blur is the most expensive paint op in the file */
 
   color-scheme: dark;
 }
@@ -291,8 +292,8 @@ section.glass,
 @supports (backdrop-filter: blur(1px)) {
   section.glass,
   .glass-card {
-    backdrop-filter: blur(var(--card-blur)) saturate(120%);
-    -webkit-backdrop-filter: blur(var(--card-blur)) saturate(120%);
+    backdrop-filter: blur(var(--card-blur));
+    -webkit-backdrop-filter: blur(var(--card-blur));
     contain: strict;
     overflow: hidden;
   }
@@ -432,12 +433,8 @@ section.glass:hover,
 
   html { scroll-behavior: auto !important; }
 
-  .glass-card::after      { display: none; }
-  .cyber-alert-pulse      { animation: none; }
-  .cyber-scanline::before { animation: none; }
-  .scrollProgressBar      { transition: none; }
-  .cyber-dot-pulse        { animation: none; }
-  .btn-glow::after        { display: none; }
+  .glass-card::after { display: none; }
+  .btn-glow::after    { display: none; }
 }
 
 /*-------- 11. NEW — Lightweight Micro-Animations ---------*/
@@ -479,66 +476,3 @@ section.glass:hover,
   transform: translateY(0) scale(0.98);
   box-shadow: none;
 }
-
-@keyframes tagPop {
-  0%   { transform: scale(0.8); opacity: 0; }
-  70%  { transform: scale(1.06); }
-  100% { transform: scale(1);   opacity: 1; }
-}
-
-.tag-pop {
-  animation: tagPop 0.35s var(--motion-spring) both;
-}
-
-@keyframes dotPulse {
-  0%   { box-shadow: 0 0 0 0   rgba(var(--success-rgb), 0.55); }
-  70%  { box-shadow: 0 0 0 7px rgba(var(--success-rgb), 0); }
-  100% { box-shadow: 0 0 0 0   rgba(var(--success-rgb), 0); }
-}
-
-@keyframes dotPulseMain {
-  0%   { box-shadow: 0 0 0 0   rgba(var(--main-color-rgb), 0.55); }
-  70%  { box-shadow: 0 0 0 7px rgba(var(--main-color-rgb), 0); }
-  100% { box-shadow: 0 0 0 0   rgba(var(--main-color-rgb), 0); }
-}
-
-@keyframes dotPulseAccent {
-  0%   { box-shadow: 0 0 0 0   rgba(var(--accent-color-rgb), 0.5); }
-  70%  { box-shadow: 0 0 0 7px rgba(var(--accent-color-rgb), 0); }
-  100% { box-shadow: 0 0 0 0   rgba(var(--accent-color-rgb), 0); }
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position:  600px 0; }
-}
-
-.skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.10) 40%,
-    rgba(255, 255, 255, 0.04) 80%
-  );
-  background-size: 600px 100%;
-  animation: shimmer 1.4s infinite linear;
-  border-radius: var(--radius-card-sm);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-shimmer { animation: none; }
-}
-
-.fade-up {
-  animation: fadeUp var(--motion-normal) var(--motion-ease) both;
-}
-
-.fade-up-d1 { animation-delay: calc(var(--stagger-step) * 1); }
-.fade-up-d2 { animation-delay: calc(var(--stagger-step) * 2); }
-.fade-up-d3 { animation-delay: calc(var(--stagger-step) * 3); }
-.fade-up-d4 { animation-delay: calc(var(--stagger-step) * 4); }

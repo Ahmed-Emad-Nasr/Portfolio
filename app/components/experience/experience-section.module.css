@@ -2,6 +2,11 @@
  * File: experience-section.module.css
  * Author: Ahmed Emad Nasr
  * Purpose: Experience timeline styles (Cybersecurity / SOC Theme)
+ *
+ * PERF PASS: .skillTag used `transition: all`, which makes the browser
+ * watch every animatable property on the element instead of just the
+ * ones that change on hover (background, border-color, color, transform).
+ * Listed them explicitly.
  */
 
 .section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
@@ -110,7 +115,7 @@
   font-family: monospace; /* خط المبرمجين */
   font-weight: 600;
   letter-spacing: 0.05em;
-  transition: all var(--motion-normal) var(--motion-ease);
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
 .skillTag::before {
@@ -144,7 +149,7 @@
   background: rgba(var(--accent-color-rgb), 0.08);
   font-size: 1.2rem;
   font-weight: 700;
-  transition: all var(--motion-normal) var(--motion-ease);
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
   position: relative;
   overflow: hidden;
 }

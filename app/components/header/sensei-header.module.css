@@ -1,4 +1,18 @@
-/* sensei-header.module.css */
+/* sensei-header.module.css
+ *
+ * PERF PASS:
+ * - .header and the mobile .navbar dropdown both ran backdrop-filter blur
+ * (20px, some with saturate()) behind a background already at 0.97-0.99
+ * opacity. At that opacity the layer underneath is essentially invisible,
+ * so the blur was costing a GPU compositing pass on every scroll frame
+ * (since .header is position:fixed) for no visible difference. Removed
+ * both entirely.
+ * - .backdrop (the mobile nav-open dim overlay) is genuinely translucent
+ * at 0.65 opacity, so its blur is doing real visible work — kept it, just
+ * reduced 4px -> 2px.
+ * - .headerScan sweep animated `left`, a layout property; switched to
+ * `transform: translateX()`.
+ */
 
 /* ── 1. HEADER SHELL ─────────────────────────────────────────────────────── */
 .header {
@@ -10,7 +24,6 @@
   width: min(1080px, calc(100% - 2rem));
   padding: 0.55rem 1rem 0;
   background: rgba(6, 10, 18, 0.97);
-  backdrop-filter: blur(20px) saturate(160%);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -54,7 +67,7 @@
   pointer-events: none;
   border-radius: inherit;
 }
-@keyframes hudSweep { to { left: 120%; } }
+@keyframes hudSweep { to { transform: translateX(514%); } }
 
 .scrolled {
   transform: translateX(-50%) scale(0.98) !important;
@@ -66,7 +79,7 @@
 .topRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* تم الإضافة لتوزيع العناصر بالتساوي وتوسيط القائمة */
   gap: 0.6rem;
   width: 100%;
   padding-bottom: 0.5rem;
@@ -145,6 +158,8 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 7px;
   padding: 5px;
+  flex: none;
+  width: fit-content;
 }
 
 .navbar a {
@@ -192,6 +207,7 @@
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  /* تم إزالة margin-left: auto; لمنع دفع العناصر أقصى اليمين بشكل مفرط */
 }
 
 /* ── 6. THREAT CHIP ──────────────────────────────────────────────────────── */
@@ -231,7 +247,7 @@
 
 @keyframes dotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
 
-/* ── 8. BLOG BUTTON ──────────────────────────────────────────────────────── */
+/* ── 8. PORTFOLIO BUTTON (blogLink class) ────────────────────────────────── */
 .blogLink {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 8px 16px;
@@ -248,7 +264,7 @@
     transform var(--motion-normal) var(--motion-ease);
 }
 
-.blogLink::before { content: '>_'; font-size: 9px; opacity: 0.6; letter-spacing: 0; }
+.blogLink::before { content: '←'; font-size: 9px; opacity: 0.6; letter-spacing: 0; }
 
 .blogLink:hover,
 .blogLink:focus-visible {
@@ -312,7 +328,7 @@
 /* ── 11. BACKDROP ────────────────────────────────────────────────────────── */
 .backdrop {
   position: fixed; inset: 0; z-index: 998;
-  background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(2px);
   border: 0; padding: 0; margin: 0; cursor: pointer;
   opacity: 0; pointer-events: none; visibility: hidden;
   transition:
@@ -326,7 +342,7 @@
 @media (min-width: 995px) {
   /* تم تقليل المسافات قليلاً في الديسكتوب لاحتواء كل العناصر براحة */
   .topRow   { gap: 0.8rem; }
-  .navbar a { padding: 0.5rem 1rem; min-height: 40px; font-size: 13.5px; } 
+  .navbar a { padding: 0.5rem 1rem; min-height: 40px; font-size: 13.5px; }
   .blogLink { padding: 0.5rem 1.2rem; min-height: 40px; font-size: 13.5px; }
 }
 
@@ -335,6 +351,7 @@
   .header { padding: 0.85rem 0.75rem 0; }
 
   .topRow {
+    /* شيلنا الـ row-reverse عشان اللوجو يبقى شمال والزراير ترجع يمين */
     flex-direction: row;
     justify-content: space-between;
     padding-bottom: 0.85rem;
@@ -348,8 +365,8 @@
   }
 
   .rightCluster {
-    margin-left: auto;
-    gap: 4px; 
+    margin-left: auto; /* تمت إعادتها للموبايل فقط لضمان المحاذاة */
+    gap: 4px; /* تقليل المسافة بين زرار البورتفوليو والمنيو */
   }
 
   .threatChip { display: none; }
@@ -371,7 +388,6 @@
     z-index: 1002;
     width: 100%;
     background: rgba(6, 9, 14, 0.99);
-    backdrop-filter: blur(20px) saturate(140%);
     flex-direction: column; flex: unset;
     padding: 8px;
     border-radius: 10px;
@@ -438,8 +454,8 @@
   }
 
   .brand {
-    transform: scale(0.75); 
-    transform-origin: left center; 
+    transform: scale(0.75); /* تصغير اللوجو والاسم أكتر عشان يوفر مساحة */
+    transform-origin: left center; /* التكبير والتصغير يكون من ناحية الشمال */
     gap: 4px;
     padding-right: 5px;
   }
@@ -447,6 +463,7 @@
   .arabicText { font-size: 11px; }
   .brandText { font-size: 11px; }
 
+  /* زرار البورتفوليو أصغر بكتير للموبايل */
   .blogLink { 
     font-size: 8.5px; 
     padding: 4px 6px; 
@@ -456,9 +473,10 @@
   }
 
   .blogLink::before {
-    font-size: 7.5px; 
+    font-size: 7.5px; /* تصغير السهم */
   }
 
+  /* تصغير أيقونة القائمة (الهمبرجر) */
   .menuIcon {
     min-width: 30px;
     min-height: 30px;

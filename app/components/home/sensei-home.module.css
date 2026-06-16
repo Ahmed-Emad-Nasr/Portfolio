@@ -2,6 +2,17 @@
  * File: sensei-home.module.css
  * Author: Ahmed Emad Nasr
  * Purpose: Home section styles (Original Style with Image Scan Only)
+ *
+ * PERF PASS:
+ * - .btn::before / .socialIcon a::after shine sweeps animated `left`, a
+ * layout property that forces reflow every frame. Switched both to
+ * `transform: translateX()`, which the compositor can run on its own
+ * thread without touching layout.
+ * - Removed `will-change: transform/filter` from .homeImg img, .socialIcon a,
+ * and .btn. will-change forces the browser to allocate a dedicated GPU
+ * layer for as long as it's set; on elements that are static almost all
+ * the time (everything here only moves on :hover) that's a standing memory
+ * cost for no benefit. The transition still works identically without it.
  */
 
 /* إضافة كلاس لدعم إمكانية الوصول */
@@ -87,7 +98,6 @@
   box-shadow: none;
   transition: transform var(--motion-normal) var(--motion-ease), filter var(--motion-normal) var(--motion-ease);
   cursor: pointer;
-  will-change: transform, filter;
 }
 .homeImg img { position: relative; z-index: 1; }
 .homeImg img:hover { transform: translate3d(var(--parallax-x), var(--parallax-y), 0); filter: saturate(1.05); box-shadow: none; }
@@ -169,7 +179,6 @@
   background: rgba(var(--main-color-rgb), 0.06); border: 0.2rem solid rgba(var(--main-color-rgb), 0.75); font-size: 2rem;
   border-radius: 1rem; color: var(--main-color);
   transition: transform var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
-  will-change: transform;
   position: relative;
   overflow: hidden;
 }
@@ -187,13 +196,13 @@
   inset: -40% auto auto -150%;
   width: 120%;
   height: 180%;
-  transform: rotate(25deg);
+  transform: rotate(25deg) translateX(0);
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
-  transition: left var(--motion-fast) var(--motion-ease);
+  transition: transform var(--motion-fast) var(--motion-ease);
 }
 
 .socialIcon a:hover::after {
-  left: 120%;
+  transform: rotate(25deg) translateX(220%);
 }
 
 .homeButton { display: flex; gap: 1.5rem; flex-wrap: wrap; }
@@ -202,7 +211,6 @@
   font-size: 1.5rem; letter-spacing: 0.08rem; font-weight: 700;
   transition: transform var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
   cursor: pointer; text-decoration: none; box-shadow: none;
-  will-change: transform;
   position: relative;
   overflow: hidden;
 }
@@ -263,12 +271,12 @@
   width: 65%;
   height: 300%;
   background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transform: rotate(24deg);
-  transition: left var(--motion-fast) var(--motion-ease);
+  transform: rotate(24deg) translateX(0);
+  transition: transform var(--motion-fast) var(--motion-ease);
 }
 
 .btn:hover::before {
-  left: 135%;
+  transform: rotate(24deg) translateX(265%);
 }
 
 .homeButton .btn,

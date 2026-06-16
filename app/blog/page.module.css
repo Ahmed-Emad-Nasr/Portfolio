@@ -2,6 +2,18 @@
  * File: page.module.css
  * Author: Ahmed Emad Nasr
  * Purpose: SOC Blog — Optimized, Cyber Security Terminal Theme
+ *
+ * PERF PASS: .page::before — a full-viewport, position:fixed, completely
+ * static background gradient — had `will-change: transform` plus a
+ * `translateZ(0)` hack forcing it onto its own GPU layer permanently.
+ * Nothing on this element ever animates, so the layer was pure standing
+ * memory/compositing cost with no payoff. Removed both. Also dropped two
+ * no-op declarations on .heroGlow (animation: none / will-change: auto —
+ * both already the browser default, doing nothing either way).
+ * Left .galleryOverlay's backdrop-filter blur(6px) untouched: it only
+ * renders while the lightbox is open, sits at 0.92 background opacity
+ * where the blur is still visibly doing work, and isn't a fixed/always-on
+ * element — a reasonable cost for what it does.
  */
 
 /* =========================================
@@ -61,8 +73,6 @@
     radial-gradient(circle at 80% 10%, rgba(var(--accent-color-rgb), 0.06), transparent 26%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.02));
   opacity: 0.6;
-  will-change: transform;
-  transform: translateZ(0);
 }
 
 .hero,
@@ -147,8 +157,6 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.07), transparent 70%);
   pointer-events: none;
-  animation: none;
-  will-change: auto;
 }
 
 .kicker {

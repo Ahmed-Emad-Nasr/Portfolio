@@ -2,6 +2,14 @@
  * File: sensei-projects.module.css
  * Author: Ahmed Emad Nasr
  * Purpose: Projects card/grid styles (Cybersecurity / SOC Theme)
+ *
+ * PERF PASS: six rules (.filter-btn, .refresh-btn, .case-study, .action-btn,
+ * .stat-badge, .topic-tag, .reset-filter-btn) used `transition: all`, making
+ * the browser watch every animatable CSS property on hover instead of just
+ * the 2-4 that actually change. Replaced each with an explicit property
+ * list. Also removed `will-change: transform` from .filter-btn and
+ * .single-project — both are idle almost all the time, so the standing
+ * GPU-layer cost wasn't earning its keep.
  */
 .section-projects { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
  
@@ -68,8 +76,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-  transition: all var(--motion-normal) var(--motion-ease);
-  will-change: transform;
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
   cursor: pointer;
   min-height: 44px;
   display: inline-flex;
@@ -155,7 +162,7 @@
   font-family: monospace;
   font-weight: 700;
   cursor: pointer;
-  transition: all var(--motion-normal) var(--motion-ease);
+  transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
 .refresh-btn:hover {
@@ -244,7 +251,6 @@
   text-align: left;
   transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
   backface-visibility: hidden; 
-  will-change: transform; 
   position: relative; 
   overflow: hidden; 
   display: flex; 
@@ -312,7 +318,7 @@
   font-size: 1.2rem; font-weight: 600; font-family: monospace;
   background: rgba(10, 15, 25, 0.6); color: rgba(255, 255, 255, 0.7); 
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all var(--motion-normal) var(--motion-ease); 
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease); 
 }
 .single-project:hover .stat-badge { background: rgba(var(--main-color-rgb), 0.1); border-color: rgba(var(--main-color-rgb), 0.3); color: var(--main-color); }
 
@@ -323,7 +329,7 @@
 .topics-container { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: auto; padding-top: 1.5rem; }
 .topic-tag { 
   background: transparent; color: rgba(255, 255, 255, 0.6); padding: 0.3rem 0.6rem; border-radius: 4px; 
-  font-size: 1.15rem; font-family: monospace; font-weight: 600; transition: all var(--motion-normal) var(--motion-ease); 
+  font-size: 1.15rem; font-family: monospace; font-weight: 600; transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease); 
   border: 1px solid rgba(255, 255, 255, 0.1); 
 }
 .topic-tag::before { content: "> "; color: rgba(255, 255, 255, 0.3); transition: color var(--motion-normal) var(--motion-ease); }
@@ -344,7 +350,7 @@
   background: #050a0f; /* لون التيرمينال الحقيقي */
   font-size: 1.2rem; line-height: 1.6; color: rgba(255, 255, 255, 0.6); font-family: monospace;
   display: flex; flex-direction: column; gap: 0.6rem;
-  transition: all var(--motion-normal) var(--motion-ease);
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
 }
 
 .single-project:hover .case-study {
@@ -361,7 +367,7 @@
   padding: 0.8rem 1.4rem; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 1.3rem; font-weight: 700; font-family: monospace; text-transform: uppercase; letter-spacing: 1px;
   color: rgba(255, 255, 255, 0.7); background: transparent;
-  transition: all var(--motion-normal) var(--motion-ease); min-height: 46px;
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease); min-height: 46px;
 }
 
 .action-btn:focus-visible, .reset-filter-btn:focus-visible { outline: 2px solid var(--main-color); outline-offset: 3px; }
@@ -521,7 +527,7 @@
   display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
   padding: 0.8rem 1.4rem; border-radius: 4px; border: 1px solid rgba(var(--accent-color-rgb), 0.4);
   background: rgba(var(--accent-color-rgb), 0.1); color: var(--accent-color); font-size: 1.25rem;
-  font-family: monospace; font-weight: 700; cursor: pointer; transition: all var(--motion-normal) var(--motion-ease); text-transform: uppercase;
+  font-family: monospace; font-weight: 700; cursor: pointer; transition: background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease); text-transform: uppercase;
 }
 
 .reset-filter-btn:hover {

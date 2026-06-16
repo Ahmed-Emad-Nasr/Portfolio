@@ -1,8 +1,13 @@
-/* sensei_loader.module.css  —  PERF BUILD
+/* sensei_loader.module.css  —  PERF BUILD v2
    Diff: ring spin + pulse halo are now CSS keyframe animations (compositor
    thread) instead of Framer Motion per-frame JS updates. Two new classes
    added: .ringSpinAnim and .ringPulseAnim. They are applied conditionally
-   in TSX so prefers-reduced-motion still works. */
+   in TSX so prefers-reduced-motion still works.
+
+   v2 change: .progressIndeterminate animated `left`/`right`, both layout
+   properties that force the browser to reflow on every frame. Switched to
+   `transform: translateX()` with a fixed `width`, which the compositor can
+   run without touching layout at all. */
 
 /* ─── Full-screen overlay ──────────────────────────────────────────────── */
 .loader {
@@ -186,14 +191,16 @@
 
 /* Indeterminate fallback when PerformanceObserver has no data yet */
 @keyframes indeterminate {
-  0%   { left: -35%; right: 100%; }
-  60%  { left: 100%; right: -90%; }
-  100% { left: 100%; right: -90%; }
+  0%   { transform: translateX(-100%); width: 35%; }
+  60%  { transform: translateX(285%);  width: 35%; }
+  100% { transform: translateX(285%);  width: 35%; }
 }
 
 .progressIndeterminate {
   position: absolute;
+  left: 0;
   width: 35%;
+  will-change: transform;
   animation: indeterminate 1.6s ease-in-out 0.5s infinite;
   transition: none; /* override the width transition while indeterminate */
 }
