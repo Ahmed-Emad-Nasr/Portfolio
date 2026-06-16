@@ -177,39 +177,6 @@ svg {
   height: auto;
 }
 
-/*--------- Scroll Progress Bar ---------*/
-.scrollProgressTrack {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 0.25rem;
-  z-index: var(--z-progress);
-  pointer-events: none;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.scrollProgressBar {
-  display: block;
-  width: 100%;
-  height: 100%;
-  transform-origin: left center;
-  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
-  background: linear-gradient(
-    90deg,
-    var(--main-color)   0%,
-    var(--main-light)  35%,
-    var(--accent-color) 100%
-  );
-  will-change: transform;
-}
-
-::selection {
-  background-color: rgba(var(--accent-color-rgb), 0.22);
-  color: var(--text-bright);
-  text-shadow: none;
-}
-
 /*--------- 3. Interactive Elements ---------*/
 a,
 button,
@@ -365,65 +332,6 @@ section.glass:hover,
 
 .glass-card:hover::after {
   transform: translateX(0);
-}
-
-/*--------- 7. Custom Scrollbar ---------*/
-::-webkit-scrollbar {
-  width: 0.6rem;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-color);
-  border-left: 1px solid rgba(255, 255, 255, 0.02);
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    rgba(var(--main-color-rgb), 0.5),
-    rgba(var(--accent-color-rgb), 0.3)
-  );
-  border-radius: var(--radius-pill);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(var(--main-color-rgb), 0.8),
-    rgba(var(--accent-color-rgb), 0.55)
-  );
-}
-
-/*--------- 8. Footer ---------*/
-.site-footer {
-  padding: 0 6% 3.2rem;
-  margin-top: auto;
-}
-
-.site-footer__inner {
-  width: min(1000px, 100%);
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
-  border-radius: var(--radius-card);
-  border: 1px solid var(--surface-card-border);
-  background: rgba(0, 0, 10, 0.5);
-  backdrop-filter: blur(var(--ui-blur));
-  -webkit-backdrop-filter: blur(var(--ui-blur));
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-}
-
-.site-footer__inner a {
-  color: var(--main-color);
-  font-weight: 700;
-}
-
-.site-footer__inner a:hover {
-  color: var(--accent-color);
 }
 
 /*--------- 9. Responsive Breakpoints ---------*/

@@ -248,16 +248,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
         />
-        <SmoothScroll>
-          {children}
-          <footer className="site-footer" aria-label="Site footer">
-            <div className="site-footer__inner">
-              <span>Ahmed Emad Nasr Portfolio</span>
-              <span>SOC • IR • DFIR</span>
-              <a href="#main-content">Back to top</a>
-            </div>
-          </footer>
-        </SmoothScroll>
+        <SmoothScroll>{children}</SmoothScroll>
         <CustomCursor />
       </body>
     </html>
