@@ -60,7 +60,7 @@
 
 /* Applied when reduced motion is NOT preferred */
 .ringPulseAnim {
-  animation: loaderPulse 2.4s ease-in-out infinite;
+  animation: loaderPulse 3.1s ease-in-out infinite; /* was 2.4s — slower breathing pulse */
 }
 
 /* ─── Spinning ring ─────────────────────────────────────────────────────── */
@@ -79,7 +79,7 @@
 
 /* Applied when reduced motion is NOT preferred */
 .ringSpinAnim {
-  animation: loaderSpin 4s linear infinite;
+  animation: loaderSpin 5s linear infinite; /* was 4s — calmer rotation */
 }
 
 /* ─── Centre symbol ─────────────────────────────────────────────────────── */
@@ -186,7 +186,7 @@
   height: 100%;
   background: var(--main-color);
   will-change: width;
-  transition: width 0.4s ease-out; /* CSS transition replaces motion.div animate */
+  transition: width 0.55s ease-out; /* was 0.4s — smoother fill catch-up */
 }
 
 /* Indeterminate fallback when PerformanceObserver has no data yet */
@@ -201,7 +201,7 @@
   left: 0;
   width: 35%;
   will-change: transform;
-  animation: indeterminate 1.6s ease-in-out 0.5s infinite;
+  animation: indeterminate 2s ease-in-out 0.5s infinite; /* was 1.6s — slower sweep */
   transition: none; /* override the width transition while indeterminate */
 }
 

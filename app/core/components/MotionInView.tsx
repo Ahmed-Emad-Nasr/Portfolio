@@ -41,19 +41,19 @@ const EASE_IN_CUBIC: [number, number, number, number] = [0.55, 0, 1, 0.45];
 
 const MOTION_DURATIONS = {
   instant:   0.01,
-  fast:      0.55,
-  medium:    0.85,
-  slow:      1.2,
+  fast:      0.7,   // was 0.55 — slightly slower exits/quick transitions
+  medium:    1.1,   // was 0.85 — entrances feel more deliberate
+  slow:      1.55,  // was 1.2  — reveal/blur-in variants breathe more
 } as const;
 
 // ---------------------------------------------------------------------------
 // 2. Spring configs
 // ---------------------------------------------------------------------------
 
-const SPRING_GENTLE  = { type: "spring", stiffness: 60,  damping: 18, mass: 1.0 } as const;
-const SPRING_SNAP    = { type: "spring", stiffness: 120, damping: 22, mass: 0.8 } as const;
-const TILT_SPRING    = { stiffness: 110, damping: 26, mass: 0.75 };
-const MAGNETIC_SPRING = { stiffness: 90, damping: 20, mass: 0.6 };
+const SPRING_GENTLE  = { type: "spring", stiffness: 48,  damping: 18, mass: 1.0 } as const; // was 60/18 — slower settle
+const SPRING_SNAP    = { type: "spring", stiffness: 95,  damping: 22, mass: 0.85 } as const; // was 120/22 — softer but still snappy
+const TILT_SPRING    = { stiffness: 95,  damping: 26, mass: 0.8 };  // was 110/26 — slightly silkier tilt follow
+const MAGNETIC_SPRING = { stiffness: 78,  damping: 20, mass: 0.65 }; // was 90/20 — smoother cursor-follow drift
 
 // ---------------------------------------------------------------------------
 // 3. Variant library
@@ -128,7 +128,7 @@ export const motionVariants = {
       y: [0, -10, 0],
       transition: {
         opacity: { duration: MOTION_DURATIONS.medium, ease: EASE_FADE },
-        y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", repeatType: "loop" },
+        y: { duration: 4.5, repeat: Infinity, ease: "easeInOut", repeatType: "loop" }, // was 3.5 — slower, more cinematic drift
       },
     },
     exit: { opacity: 0, transition: { duration: MOTION_DURATIONS.fast, ease: EASE_IN_CUBIC } },
@@ -148,7 +148,7 @@ export const motionVariants = {
 
   stagger: {
     hidden:  {},
-    visible: { transition: { staggerChildren: 0.14, delayChildren: 0.08 } },
+    visible: { transition: { staggerChildren: 0.17, delayChildren: 0.08 } }, // was 0.14 — slightly longer cascade
     exit:    { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
   } satisfies Variants,
 
@@ -199,7 +199,7 @@ export const motionVariants = {
       clipPath: "inset(0 0% 0 0)",
       opacity:  1,
       transition: {
-        clipPath: { duration: 1.4, ease: [0.1, 0, 0.2, 1] },
+        clipPath: { duration: 1.7, ease: [0.1, 0, 0.2, 1] }, // was 1.4 — slower reveal
         // Slight flicker at start for authenticity
         opacity:  { duration: 0.05 },
       },

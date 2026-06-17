@@ -212,7 +212,7 @@
   width: 5px; height: 5px; border-radius: 50%;
   background: rgba(255, 200, 50, 0.65);
   flex-shrink: 0;
-  animation: dotPulse 1.8s ease-in-out infinite;
+  animation: dotPulse 2.3s ease-in-out infinite; /* was 1.8s — calmer pulse */
 }
 
 /* ── 7. STATUS CHIP ──────────────────────────────────────────────────────── */
@@ -229,7 +229,7 @@
 .statusDot {
   width: 5px; height: 5px; border-radius: 50%;
   background: var(--main-color); flex-shrink: 0;
-  animation: dotPulse 2s ease-in-out infinite;
+  animation: dotPulse 2.55s ease-in-out infinite; /* was 2s — calmer pulse */
 }
 
 @keyframes dotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }

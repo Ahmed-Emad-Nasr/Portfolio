@@ -237,7 +237,7 @@
 }
 
 .cvBtn:hover svg {
-  animation: pdfPulse 0.9s ease-in-out infinite;
+  animation: pdfPulse 1.15s ease-in-out infinite; /* was 0.9s — calmer pulse */
 }
 
 .cvBtnAlt {

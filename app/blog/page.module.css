@@ -116,7 +116,7 @@
 
 .heroInner {
   position: relative;
-  animation: fadeIn 0.5s var(--motion-ease) both;
+  animation: fadeIn 0.7s var(--motion-ease) both; /* was 0.5s */
 }
 
 .breadcrumbNav {
@@ -255,7 +255,13 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   text-align: center;
   transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  /* Light entrance reusing the existing fadeUp keyframe — no added weight */
+  animation: fadeUp 0.5s var(--motion-ease) both;
 }
+
+.metrics article:nth-child(2) { animation-delay: 0.05s; }
+.metrics article:nth-child(3) { animation-delay: 0.1s; }
+.metrics article:nth-child(4) { animation-delay: 0.15s; }
 
 .metrics article:hover {
   background: rgba(var(--main-color-rgb), 0.05);
@@ -527,18 +533,18 @@
 .pdfCard[data-visible="true"],
 .playlistCard[data-visible="true"],
 .videoCard[data-visible="true"] {
-  animation: fadeUp 0.38s var(--motion-ease) both;
+  animation: fadeUp 0.5s var(--motion-ease) both; /* was 0.38s */
 }
 
 .pdfCard[data-visible="true"]:nth-child(2),
 .playlistCard[data-visible="true"]:nth-child(2),
-.videoCard[data-visible="true"]:nth-child(2) { animation-delay: 0.05s; }
+.videoCard[data-visible="true"]:nth-child(2) { animation-delay: 0.07s; } /* was 0.05s */
 .pdfCard[data-visible="true"]:nth-child(3),
 .playlistCard[data-visible="true"]:nth-child(3),
-.videoCard[data-visible="true"]:nth-child(3) { animation-delay: 0.1s; }
+.videoCard[data-visible="true"]:nth-child(3) { animation-delay: 0.14s; } /* was 0.1s */
 .pdfCard[data-visible="true"]:nth-child(4),
 .playlistCard[data-visible="true"]:nth-child(4),
-.videoCard[data-visible="true"]:nth-child(4) { animation-delay: 0.15s; }
+.videoCard[data-visible="true"]:nth-child(4) { animation-delay: 0.21s; } /* was 0.15s */
 
 .pdfCard,
 .playlistCard,
@@ -1066,7 +1072,7 @@
     rgba(255, 255, 255, 0.04) 80%
   );
   background-size: 600px 100%;
-  animation: shimmer 1.4s infinite linear;
+  animation: shimmer 1.8s infinite linear; /* was 1.4s — calmer shimmer */
   border-radius: 4px;
 }
 
@@ -1085,7 +1091,7 @@
   font-weight: bold;
   text-transform: uppercase;
   z-index: 5;
-  animation: pulseBorder 2.2s ease-in-out infinite;
+  animation: pulseBorder 2.8s ease-in-out infinite; /* was 2.2s — calmer pulse */
 }
 
 .embedPreview:hover .embedPlayButton {
@@ -1109,7 +1115,7 @@
   padding: 1.5rem;
   background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(6px);
-  animation: fadeIn 0.2s ease both;
+  animation: fadeIn 0.3s ease both; /* was 0.2s */
 }
 
 .galleryDialog {
@@ -1122,7 +1128,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeUp 0.25s ease both;
+  animation: fadeUp 0.35s ease both; /* was 0.25s */
 }
 
 .galleryHeader {
@@ -1256,11 +1262,11 @@
   text-align: center;
   box-shadow: none;
   transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
-  animation: fadeUp 0.4s var(--motion-ease) both;
+  animation: fadeUp 0.55s var(--motion-ease) both; /* was 0.4s */
 }
 
-.insightStrip .insightCard:nth-child(2) { animation-delay: 0.07s; }
-.insightStrip .insightCard:nth-child(3) { animation-delay: 0.14s; }
+.insightStrip .insightCard:nth-child(2) { animation-delay: 0.1s; } /* was 0.07s */
+.insightStrip .insightCard:nth-child(3) { animation-delay: 0.2s; } /* was 0.14s */
 
 .insightCard:hover {
   border-color: rgba(var(--accent-color-rgb), 0.35);
@@ -1570,6 +1576,7 @@
   .playlistCard[data-visible="true"],
   .videoCard[data-visible="true"],
   .insightCard,
+  .metrics article,
   .galleryOverlay,
   .galleryDialog,
   .embedPlayButton,

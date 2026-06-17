@@ -430,8 +430,8 @@ function SmoothScrollInner({
     <ReactLenis
       root
       options={{
-        lerp:           0.075,    // v2: was 0.07 — slightly snappier
-        duration:       1.2,    // v2: was 1.2  — quicker settle
+        lerp:           0.072,    // v3: was 0.075 — tiny smoothness nudge, feel unchanged
+        duration:       1.2,
         smoothWheel:    true,
         wheelMultiplier: 0.77,
         touchMultiplier: 0.87,
