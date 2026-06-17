@@ -14,7 +14,7 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: var(--z-navbar);
   border: 1px solid rgba(var(--main-color-rgb), 0.25);
   overflow: visible;
   transition:
@@ -274,7 +274,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.28);
   border-radius: 6px; cursor: pointer;
   padding: 0.5rem; min-width: 36px; min-height: 36px;
-  flex-shrink: 0; z-index: 1001;
+  flex-shrink: 0; z-index: calc(var(--z-navbar) + 1);
   transition:
     border-color var(--motion-normal) var(--motion-ease),
     background var(--motion-normal) var(--motion-ease);
@@ -314,7 +314,7 @@
 
 /* ── 11. BACKDROP ────────────────────────────────────────────────────────── */
 .backdrop {
-  position: fixed; inset: 0; z-index: 998;
+  position: fixed; inset: 0; z-index: calc(var(--z-navbar) - 2);
   background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px);
   border: 0; padding: 0; margin: 0; cursor: pointer;
   opacity: 0; pointer-events: none; visibility: hidden;
@@ -372,7 +372,7 @@
     position: absolute;
     top: calc(100% + 8px);
     left: 0; right: 0;
-    z-index: 1002;
+    z-index: calc(var(--z-navbar) + 2);
     width: 100%;
     background: rgba(6, 9, 14, 0.99);
     backdrop-filter: blur(20px) saturate(140%);
@@ -475,6 +475,11 @@
 }
 
 /* ── 15. REDUCED MOTION ──────────────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .header { backdrop-filter: blur(8px) saturate(120%); }
+  .navbar  { backdrop-filter: blur(8px) saturate(120%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .headerScan, .statusDot, .threatDot { animation: none !important; }
   .header, .navbar, .blogLink, .menuIcon, .menuIcon span, .navbar a { transition-duration: 0.01ms !important; }

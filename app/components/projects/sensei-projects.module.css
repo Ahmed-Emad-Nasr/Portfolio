@@ -193,7 +193,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
+  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
 }
 
 .primaryAction:hover {
@@ -249,7 +249,7 @@
   border-radius: 12px;
   padding: 2.6rem 2.2rem;
   text-align: left;
-  transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
+  transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
   backface-visibility: hidden; 
   position: relative; 
   overflow: hidden; 

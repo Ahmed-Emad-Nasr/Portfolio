@@ -254,7 +254,7 @@
   border-radius: 6px;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   text-align: center;
-  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease);
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
 .metrics article:hover {
@@ -407,8 +407,8 @@
 
 .searchInput:focus-visible {
   border-color: var(--main-color);
-  box-shadow: none;
-  outline: none;
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 .searchInput::placeholder {
@@ -614,7 +614,7 @@
 
 .caseSpotlight,
 .featuredCard {
-  transition: border-color var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
+  transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
 .caseSpotlight:hover,
@@ -1565,15 +1565,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :global(*),
-  :global(*::before),
-  :global(*::after) {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
   .heroInner,
   .pdfCard[data-visible="true"],
   .playlistCard[data-visible="true"],
