@@ -1,32 +1,6 @@
 /*
  * File: sensei-home.module.css
- * Author: Ahmed Emad Nasr
- * Purpose: Home section styles (Original Style with Image Scan Only)
- *
- * PERF PASS:
- * - .btn::before / .socialIcon a::after shine sweeps animated `left`, a
- * layout property that forces reflow every frame. Switched both to
- * `transform: translateX()`, which the compositor can run on its own
- * thread without touching layout.
- * - Removed `will-change: transform/filter` from .homeImg img, .socialIcon a,
- * and .btn. will-change forces the browser to allocate a dedicated GPU
- * layer for as long as it's set; on elements that are static almost all
- * the time (everything here only moves on :hover) that's a standing memory
- * cost for no benefit. The transition still works identically without it.
  */
-
-/* إضافة كلاس لدعم إمكانية الوصول */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
 
 .btnEmail {
   background: linear-gradient(135deg, #7b2ff2 0%, #1a1a2e 100%);
@@ -127,7 +101,6 @@
 .typingHighlight {
   position: relative;
   color: var(--main-color);
-  /* الإضافة دي بتدي مساحة للمؤشر (الكرسور) إنه يقف بعد الكلمة وما يغطيش آخر حرف */
   padding-right: 8px;
 }
 
@@ -139,16 +112,14 @@
 .typingHighlight::after {
   content: " ";
   position: absolute;
-  /* استخدام var(--bg-color) أفضل عشان تتناسق دايماً مع الخلفية السودا */
   background-color: var(--bg-color);
   width: calc(100% + 8px);
   height: 100%;
   border-left: 3px solid var(--bg-color);
-  right: -2px; /* تشفيت المؤشر لليمين سنة بسيطة */
+  right: -2px; 
   animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite;
 }
 
-/* توحيد حجم المؤشر لـ 3px عشان يكون واضح وميسببش مشاكل في القص */
 @keyframes cursor { to { border-left: 3px solid var(--main-color); } }
 
 @keyframes words {
@@ -244,7 +215,7 @@
 }
 
 .cvBtn:hover svg {
-  animation: pdfPulse 1.15s ease-in-out infinite; /* was 0.9s — calmer pulse */
+  animation: pdfPulse 1.15s ease-in-out infinite;
 }
 
 .cvBtnAlt {

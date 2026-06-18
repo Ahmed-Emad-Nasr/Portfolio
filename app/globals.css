@@ -1,27 +1,15 @@
 /**
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (v7 — perf pass)
+ * @description Global CSS - Premium Cyber & SOC Theme (Cleaned & Optimized)
  *
- * CHANGES FROM v6:
- * - card-blur / ui-blur: 8px/6px -> 4px. backdrop-filter is the single most
- * expensive paint operation in this stylesheet; halving it materially cuts
- * GPU compositing cost on every .glass-card and section.glass on the page.
- * - Dropped saturate(120%) from the glass blur filter — a second filter pass
- * for a barely perceptible saturation bump was not worth the cost.
- * - Removed dead, never-referenced rules that shipped in v6 but were unused
- * across every module file: .tag-pop/@keyframes tagPop, dotPulseMain,
- * dotPulseAccent, the unused local copies of @keyframes fadeUp/shimmer,
- * .skeleton-shimmer, .fade-up/.fade-up-d1..d4, and the reduced-motion
- * overrides for .cyber-alert-pulse / .cyber-scanline / .scrollProgressBar /
- * .cyber-dot-pulse (none of these classes exist anywhere in the codebase).
- * - Kept .btn-glow as-is: unlike the removed rules above, no CSS module in
- * this codebase references it, but it may still be applied directly in JSX
- * (not reviewed here) — left in place rather than guessing.
+ * CHANGES:
+ * - Removed entirely unused classes: .glass-card, section.glass, .btn-glow and their heavy ::after pseudo-elements.
+ * - Removed unnecessary media query overrides for the deleted classes.
+ * - Added a hyper-lightweight .skeleton-shimmer for dynamic import loading states.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
-  /* الخلفية الأساسية أسود نقي */
   --bg-color:        #000000;
   --bg-gradient: radial-gradient(circle at 50% 50%, rgba(30, 0, 10, 1) 0%, rgba(0, 0, 0, 1) 70%);
 
@@ -93,34 +81,29 @@
   --text-3xl:  3.6rem;
   --text-4xl:  4.8rem;
 
-  /* Cinematic pass: durations slowed ~25-30% across the board for a
-     smoother, more deliberate feel. Easing curves untouched — same
-     character, just given more time to play out. All values still
-     compositor-only (transform/opacity/filter), so this costs nothing
-     extra on paint/layout; it's purely a timing change. */
   --motion-instant: 80ms;
-  --motion-fast:    280ms;   /* was 220ms */
-  --motion-normal:  650ms;   /* was 500ms */
-  --motion-slow:    1650ms;  /* was 1300ms */
+  --motion-fast:    280ms;
+  --motion-normal:  650ms;
+  --motion-slow:    1650ms;
   --motion-ease:    cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
   --motion-spring:  cubic-bezier(0.34, 1.56, 0.64, 1); 
 
-  --anim-fast:      950ms;  /* was 750ms */
-  --anim-medium:    2.3s;   /* was 1.8s */
-  --anim-slow:      4s;     /* was 3.2s */
-  --anim-very-slow: 6.8s;   /* was 5.5s */
+  --anim-fast:      950ms;
+  --anim-medium:    2.3s;
+  --anim-slow:      4s;
+  --anim-very-slow: 6.8s;
 
-  --stagger-step: 0.16s; /* was 0.14s — slightly longer cascade between staggered items */
+  --stagger-step: 0.16s;
 
   --typing-cursor:    0.9s;
   --typing-typing:    16s;
   --typing-words:     16s;
-  --typing-textDrift: 6.5s; /* was 5.5s — slower, more cinematic float */
-  --typing-pdfPulse:  1.15s; /* was 0.9s — kept in sync with sensei-home_module.css .cvBtn:hover svg */
+  --typing-textDrift: 6.5s;
+  --typing-pdfPulse:  1.15s;
 
   --ui-blur:   4px;
-  --card-blur: 4px; /* reduced from 8px: blur is the most expensive paint op in the file */
+  --card-blur: 4px;
 
   color-scheme: dark;
 }
@@ -157,7 +140,6 @@ html {
 body {
   font-family: var(--font-overlock, sans-serif);
   color: var(--text-color);
-  /* الاعتماد على اللون الأسود النقي فقط بدون أي تدرجات */
   background-color: var(--bg-color);
   background-attachment: fixed;
   background-image: var(--bg-gradient);
@@ -273,11 +255,10 @@ main {
   position: relative;
 }
 
-/*--------- 6. Sections & Glassmorphism ---------*/
+/*--------- 6. Base Section Layout ---------*/
 section {
   padding: 7.1rem 5.25% 5.9rem;
   position: relative;
-  border-radius: var(--radius-card);
   max-width: 1000px;
   margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
   z-index: 1;
@@ -286,75 +267,25 @@ section {
   contain-intrinsic-size: auto 900px;
 }
 
-section.glass,
-.glass-card {
-  background: var(--surface-card-bg);
-  border: 1px solid var(--surface-card-border);
+/*--------- 7. Lightweight Skeleton Shimmer ---------*/
+.skeleton-shimmer {
+  background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-card);
-  transition:
-    transform      var(--motion-normal) var(--motion-ease),
-    border-color   var(--motion-normal) var(--motion-ease),
-    background     var(--motion-normal) var(--motion-ease);
-  position: relative;
-  overflow: hidden;
-}
-
-@supports (backdrop-filter: blur(1px)) {
-  section.glass,
-  .glass-card {
-    backdrop-filter: blur(var(--card-blur));
-    -webkit-backdrop-filter: blur(var(--card-blur));
-    contain: strict;
-    overflow: hidden;
-  }
-}
-
-section.glass:hover,
-.glass-card:hover {
-  border-color: var(--surface-card-border-hover);
-  transform: translateY(-2px);
-  background: linear-gradient(
-    135deg,
-    rgba(6, 14, 32, 0.88) 55%,
-    rgba(var(--main-color-rgb), 0.09) 80%,
-    rgba(var(--accent-color-rgb), 0.05) 100%
-  );
-}
-
-.glass-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
+  animation: shimmerPulse 2s infinite ease-in-out;
   width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(var(--main-color-rgb), 0.6) 40%,
-    rgba(var(--accent-color-rgb), 0.5) 70%,
-    transparent 100%
-  );
-  transform: translateX(-100%);
-  transition: transform 0.75s var(--motion-ease); /* was 0.55s — slower sweep */
-  contain: strict;
-  pointer-events: none;
 }
 
-.glass-card:hover::after {
-  transform: translateX(0);
+@keyframes shimmerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
-/*--------- 9. Responsive Breakpoints ---------*/
-
+/*--------- 8. Responsive Breakpoints ---------*/
 @media (max-width: 991px) {
   section {
     padding: 4rem 3.5% 4rem;
     margin-bottom: clamp(5rem, 8vw, 8rem);
     width: 94%; 
-  }
-  .site-footer__inner {
-    width: 94%;
   }
 }
 
@@ -362,21 +293,12 @@ section.glass:hover,
   section {
     width: calc(100% - 3rem); 
   }
-  .site-footer__inner {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: calc(100% - 3rem);
-  }
 }
 
 @media (max-width: 600px) {
   section {
     padding: 4.5rem 1.5rem 4.2rem;
     margin-bottom: 5rem;
-    width: calc(100% - 2rem);
-  }
-  .site-footer__inner {
     width: calc(100% - 2rem);
   }
 }
@@ -387,33 +309,6 @@ section.glass:hover,
     width: calc(100% - 1.2rem);
     padding-left: 1rem;
     padding-right: 1rem;
-    border-radius: 14px;
-  }
-  .site-footer__inner {
-    width: calc(100% - 1.2rem);
-  }
-}
-
-@media (hover: none) and (pointer: coarse) {
-  :root {
-    --card-blur: 0px;
-    --ui-blur:   0px;
-  }
-
-  section.glass,
-  .glass-card,
-  .site-footer__inner {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: linear-gradient(
-      135deg,
-      rgba(4, 10, 26, 0.97) 55%,
-      rgba(var(--main-color-rgb), 0.07) 100%
-    );
-  }
-
-  .glass-card::after {
-    display: none;
   }
 }
 
@@ -426,9 +321,6 @@ section.glass:hover,
     margin-left: auto;
     margin-right: auto;
   }
-  .site-footer__inner {
-    width: min(1200px, 100%);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -440,56 +332,10 @@ section.glass:hover,
     transition-duration:       0.01ms !important;
     scroll-behavior:           auto   !important;
   }
-
   html { scroll-behavior: auto !important; }
-
-  .glass-card::after { display: none; }
-  .btn-glow::after    { display: none; }
 }
 
-/*-------- 11. NEW — Lightweight Micro-Animations ---------*/
-
-.btn-glow {
-  position: relative;
-  overflow: hidden;
-  transition:
-    transform    var(--motion-fast) var(--motion-spring),
-    box-shadow   var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease);
-}
-
-.btn-glow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.12) 50%,
-    transparent 65%
-  );
-  transform: translateX(-100%);
-  transition: transform 0.75s var(--motion-ease); /* was 0.55s — slower sweep */
-  pointer-events: none;
-}
-
-.btn-glow:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--glow-main);
-}
-
-.btn-glow:hover::after {
-  transform: translateX(100%);
-}
-
-.btn-glow:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: none;
-}
-
-/*--------- 12. High Contrast & Forced Colors ---------*/
-
-/* Windows High Contrast / forced-colors mode */
+/*--------- 9. High Contrast & Forced Colors ---------*/
 @media (forced-colors: active) {
   :root {
     --main-color:   Highlight;
@@ -497,19 +343,6 @@ section.glass:hover,
     --text-color:   CanvasText;
     --text-muted:   CanvasText;
     --bg-color:     Canvas;
-  }
-
-  section.glass,
-  .glass-card {
-    border: 2px solid ButtonText;
-    background: Canvas;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-
-  .glass-card::after,
-  .btn-glow::after {
-    display: none;
   }
 
   button,
@@ -525,18 +358,12 @@ section.glass:hover,
   }
 }
 
-/* prefers-contrast: more — boost border/text contrast */
 @media (prefers-contrast: more) {
   :root {
     --surface-card-border:       rgba(var(--main-color-rgb), 0.55);
     --surface-card-border-hover: rgba(var(--main-color-rgb), 0.85);
     --text-muted: #b0cfe0;
     --text-dim:   #6a8ea8;
-  }
-
-  section.glass,
-  .glass-card {
-    border-color: rgba(var(--main-color-rgb), 0.55);
   }
 
   p, li {

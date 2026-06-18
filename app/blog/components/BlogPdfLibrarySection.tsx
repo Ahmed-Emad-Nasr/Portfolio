@@ -28,7 +28,6 @@ type BlogPdfLibrarySectionProps = {
   clearAllFilters: () => void;
   leadCase: PdfResource | null;
   leadCaseSpotlightImage: string | null;
-  relatedCases: PdfResource[];
   visiblePdfCards: PdfResource[];
   screenshotsById: Record<string, string[]>;
   rawQuery: string;
@@ -43,7 +42,7 @@ export default function BlogPdfLibrarySection({
   difficultyOptions, difficultyFilter, setDifficultyFilter,
   categoryOptions, categoryFilter, setCategoryFilter,
   sortBy, setSortBy, hasActiveFilters, clearAllFilters,
-  leadCase, leadCaseSpotlightImage, relatedCases,
+  leadCase, leadCaseSpotlightImage,
   visiblePdfCards, screenshotsById, rawQuery, setRawQuery,
   toggleToolFilter, openGallery, normalizeHref,
 }: BlogPdfLibrarySectionProps) {
@@ -95,28 +94,29 @@ export default function BlogPdfLibrarySection({
             <p className={styles.caseSpotlightTag}>Case Spotlight</p>
             <h3>{leadCase.title}</h3>
             <p>{leadCase.description || "Featured first for quick navigation."}</p>
+            
             <div className={styles.caseMetadata}>
               {leadCase.difficulty && <span className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}>{leadCase.difficulty}</span>}
               {leadCase.category && <span className={styles.badge}>{leadCase.category}</span>}
               {leadCase.readTime && <span className={styles.badge}>{leadCase.readTime} min read</span>}
             </div>
+
             {leadCase.tags && leadCase.tags.length > 0 && (
-              <div className={styles.tagsList}>
+              <div className={styles.tagsListInline}>
                 {leadCase.tags.slice(0, 4).map((tag) => (
-                  <button key={tag} type="button" className={styles.tagButton} onClick={() => setRawQuery(tag)}>#{tag}</button>
+                  <button key={tag} type="button" className={styles.tagButtonSmall} onClick={() => setRawQuery(tag)}>#{tag}</button>
                 ))}
               </div>
             )}
+
             {leadCase.tools && leadCase.tools.length > 0 && (
-              <div className={styles.toolsList}>
-                <p className={styles.toolsLabel}>Tools:</p>
-                <div className={styles.toolsGrid}>
-                  {leadCase.tools.map((tool) => (
-                    <button key={tool} type="button" className={styles.toolButton} onClick={() => toggleToolFilter(tool)}>{tool}</button>
-                  ))}
-                </div>
+              <div className={styles.toolsListCompact}>
+                {leadCase.tools.map((tool) => (
+                  <button key={tool} type="button" className={styles.toolButtonSmall} onClick={() => toggleToolFilter(tool)}>{tool}</button>
+                ))}
               </div>
             )}
+
             <div className={styles.cardActions}>
               <a href={normalizeHref(leadCase.href)} target="_blank" className={styles.viewAction}>View PDF</a>
               <a href={normalizeHref(leadCase.href)} download className={styles.downloadAction}>Download</a>
@@ -130,29 +130,6 @@ export default function BlogPdfLibrarySection({
               <Image src={leadCaseSpotlightImage} alt="spotlight" fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" quality={65} />
             </a>
           )}
-        </MotionInView>
-      )}
-
-      {relatedCases.length > 0 && (
-        <MotionInView className={styles.relatedCasesStrip}>
-          <div className={styles.blockHeading}>
-            <h2>Related Cases</h2>
-            <p>Cases with a similar category, difficulty, or keyword set.</p>
-          </div>
-          <div className={styles.relatedCasesGrid}>
-            {relatedCases.map((item) => (
-              <article key={item.id} className={styles.relatedCaseCard}>
-                <p className={styles.relatedCaseLabel}>{item.category ?? item.type}</p>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className={styles.caseMetadata}>
-                  {item.difficulty && <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>{item.difficulty}</span>}
-                  {item.readTime && <span className={styles.badge}>{item.readTime} min read</span>}
-                </div>
-                <a href={normalizeHref(item.href)} target="_blank">Open PDF</a>
-              </article>
-            ))}
-          </div>
         </MotionInView>
       )}
 

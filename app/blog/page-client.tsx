@@ -128,7 +128,7 @@ export default function BlogPageClient() {
         sortBy={sortBy} setSortBy={setSortBy} hasActiveFilters={Boolean(rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All")}
         clearAllFilters={clearAllFilters} leadCase={LEAD_CASE}
         leadCaseSpotlightImage={LEAD_CASE && caseScreenshotsByEvidenceId[LEAD_CASE.id]?.[0] ? normalizePublicHref(caseScreenshotsByEvidenceId[LEAD_CASE.id][0]) : null}
-        relatedCases={[]} visiblePdfCards={visiblePdfCards} screenshotsById={caseScreenshotsByEvidenceId}
+        visiblePdfCards={visiblePdfCards} screenshotsById={caseScreenshotsByEvidenceId}
         rawQuery={rawQuery} setRawQuery={setRawQuery} toggleToolFilter={toggleToolFilter}
         openGallery={openGallery} normalizeHref={normalizePublicHref}
       />

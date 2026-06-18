@@ -2,9 +2,9 @@
  * File: layout.tsx
  * Author: Ahmed Emad Nasr
  * PERF IMPROVEMENTS:
- * 1. Removed fonts.gstatic.com preconnect (next/font is self-hosted, no need to waste DNS/TCP).
+ * 1. Removed fonts.gstatic.com preconnect (next/font is self-hosted).
  * 2. Moved theme-color to Viewport export for Next.js static optimization.
- * 3. Kept Structured Data stringified at module scope (Zero CPU overhead on render).
+ * 3. Kept Structured Data stringified at module scope (Zero CPU overhead).
  */
 
 import "./globals.css";
@@ -15,14 +15,14 @@ import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/data/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
 import CustomCursor from "./components/custom-cursor";
-import LoadingScreen from "@/app/components/loader/sensei_loader";
+
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#000000", // تم نقلها هنا لتكامل أسرع مع Next.js
+  themeColor: "#000000",
 };
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -205,7 +205,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
         />
         
-        <LoadingScreen />
         <SmoothScroll>{children}</SmoothScroll>
         <CustomCursor />
       </body>

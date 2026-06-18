@@ -1,12 +1,5 @@
 /*
  * File: experience-section.module.css
- * Author: Ahmed Emad Nasr
- * Purpose: Experience timeline styles (Cybersecurity / SOC Theme)
- *
- * PERF PASS: .skillTag used `transition: all`, which makes the browser
- * watch every animatable property on the element instead of just the
- * ones that change on hover (background, border-color, color, transform).
- * Listed them explicitly.
  */
 
 .section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
@@ -30,10 +23,9 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 1rem;
-  /* تأثير الداتا اللي بتنزل */
   background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 0.1) 0%, rgba(var(--main-color-rgb), 0.8) 50%, rgba(var(--main-color-rgb), 0.1) 100%);
   background-size: 100% 200%;
-  animation: dataStreamTimeline var(--anim-slow) linear infinite; /* ← تقليل من 4s */
+  animation: dataStreamTimeline var(--anim-slow) linear infinite; 
   box-shadow: none;
 }
 
@@ -80,7 +72,6 @@
 .content:hover {
   transform: translateY(-5px);
   background: rgba(10, 13, 18, 0.95);
-  /* Removed heavy box-shadow and translateY for performance */
 }
 
 .tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: rgba(205, 250, 230, 0.84); transition: color var(--motion-normal) var(--motion-ease); }
@@ -107,12 +98,12 @@
   display: inline-flex;
   align-items: center;
   padding: 0.4rem 0.9rem;
-  border-radius: 4px; /* زوايا حادة شوية عشان تبان Tech أكتر */
+  border-radius: 4px;
   border: 1px solid rgba(var(--main-color-rgb), 0.3);
   background: rgba(10, 15, 25, 0.6);
   color: rgba(var(--main-color-rgb), 0.9);
   font-size: 1.15rem;
-  font-family: monospace; /* خط المبرمجين */
+  font-family: monospace; 
   font-weight: 600;
   letter-spacing: 0.05em;
   transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
@@ -240,18 +231,4 @@
   .tag h2 { font-size: 1.8rem; }
   .tag h3 { font-size: 1.4rem; }
   .desc-list { font-size: 1.35rem; }
-}
-
-.content::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(125deg, rgba(var(--main-color-rgb), 0.05), transparent 45%);
-  opacity: 0;
-  transition: opacity var(--motion-normal) var(--motion-ease);
-  pointer-events: none;
-}
-
-.content:hover::before {
-  opacity: 1;
 }

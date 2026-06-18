@@ -3,12 +3,12 @@
 /*
  * Client entry for the homepage
  * PERF: bootstrap simplified — single rAF, no DOMContentLoaded wait
- * (document is already interactive by the time React hydrates in Next.js)
- * PERF: content wrapper avoids style object re-creation per render
+ * PERF: inline styles structured properly to leverage global motion CSS variables
  */
 
 import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import LoadingScreen from "@/app/components/loader/sensei_loader";
 
 const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
   ssr: false,
@@ -37,12 +37,14 @@ const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sen
 
 // ─── Styles — module-level constants, never re-allocated ─────────────────────
 
+const BASE_TRANSITION = "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)";
+
 const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
   opacity: 0,
   transform: "translate3d(0, 10px, 0)",
   pointerEvents: "none",
   visibility: "hidden",
-  // PERF: transition is in CSS (globals.css motion vars) — no inline overhead
+  transition: BASE_TRANSITION,
 };
 
 const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
@@ -50,6 +52,7 @@ const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
   transform: "translate3d(0, 0, 0)",
   pointerEvents: "auto",
   visibility: "visible",
+  transition: BASE_TRANSITION,
 };
 
 const MAIN_STYLE: React.CSSProperties = { position: "relative" };
@@ -64,15 +67,15 @@ const MainClient = memo(function MainClient() {
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    // PERF: Next.js guarantees document is at least "interactive" before hydration.
-    // No need to await DOMContentLoaded. Single rAF is sufficient to let the
-    // loader paint before we reveal content.
+    // Next.js guarantees document is at least "interactive" before hydration.
+    // Single rAF is sufficient to let the loader paint before we reveal content.
     const id = window.requestAnimationFrame(() => setIsAppReady(true));
     return () => window.cancelAnimationFrame(id);
   }, []);
 
   return (
     <main id="main-content" style={MAIN_STYLE}>
+      <LoadingScreen />
       <AppBar />
       <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
         <HomeSection />

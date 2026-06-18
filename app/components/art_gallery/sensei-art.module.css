@@ -1,16 +1,12 @@
 /*
  * File: sensei-art.module.css
- * Author: Ahmed Emad Nasr
- * Purpose: Art gallery grid and responsive image layout styles (Cybersecurity / SOC Theme)
+ * Cleaned: Removed unused Skeleton CSS and redundant pseudo-elements
  */
 
-/* ── 1. SECTION OVERRIDES ────────────────────────────────────────────────── */
 .art-gallery-section { 
-  /* إجبار القسم على تجاهل الحجم المدمج من الجلوبال وأخذ عرض الشاشة بالكامل */
   max-width: 100% !important; 
   width: 100%;
   border-radius: 0 !important; 
-  
   min-height: 100vh; 
   padding: 8rem 0 6rem !important; 
   margin: 0; 
@@ -32,64 +28,33 @@
 
 .Gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
-/* --- Cyber Card Frame --- */
 .art_pic { 
   display: block; 
   width: 100%; 
   position: relative; 
   border-radius: 8px;
   background: transparent;
-  border: 0;
-  outline: 0;
-  box-shadow: none;
-  padding: 0;
   transition: all var(--motion-normal) var(--motion-ease);
-  animation: galleryFadeIn var(--anim-fast) var(--motion-ease) backwards; /* ← fade-in خفيف */
+  animation: galleryFadeIn var(--anim-fast) var(--motion-ease) backwards;
 }
 
-.art_pic::before,
-.art_pic::after {
-  content: none !important;
-}
-
-
-.art_pic:hover {
-  box-shadow: none;
-  transform: translateY(-5px);
-}
+.art_pic:hover { transform: translateY(-5px); }
 
 .imageButton {
   display: block;
   width: 100%;
-  padding: 0;
-  margin: 0;
-  border: 0;
   background: transparent;
-  text-align: inherit;
   cursor: pointer;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
 }
 
-/* Terminal Overlay Text removed per request */
-.imageButton::before {
-  content: none;
-}
-
-/* --- Gallery Entrance Animation --- */
 @keyframes galleryFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96) translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Gallery Items Staggered Animation */
 .Gallery > .art_pic:nth-child(1) { animation-delay: calc(var(--stagger-step) * 1); }
 .Gallery > .art_pic:nth-child(2) { animation-delay: calc(var(--stagger-step) * 2); }
 .Gallery > .art_pic:nth-child(3) { animation-delay: calc(var(--stagger-step) * 3); }
@@ -102,76 +67,18 @@
 
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; border-radius: 4px;
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
   cursor: pointer;
-  filter: grayscale(15%) contrast(1.1); /* شكل داتا بيز قديم شوية */
+  filter: grayscale(15%) contrast(1.1); 
   transition: filter var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+  position: relative; z-index: 1;
 }
-.galleryImg { position: relative; z-index: 1; }
 
 .art_pic:hover .galleryImg {
-  filter: grayscale(0%) contrast(1.15) brightness(1.1); /* الألوان ترجع قوية مع الـ Hover */
+  filter: grayscale(0%) contrast(1.15) brightness(1.1); 
   transform: scale(1.03);
 }
 
-.imageButton:focus-visible .galleryImg {
-  border: 0;
-  outline: 0;
-  box-shadow: none;
-}
-
-/* --- Encrypted Skeletons --- */
-.skeletonItem {
-  border-radius: 8px;
-  overflow: hidden;
-  background: transparent;
-  border: 0;
-  padding: 0;
-}
-
-.skeletonThumb {
-  aspect-ratio: 1 / 1;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.04);
-  position: relative;
-  overflow: hidden;
-}
-
-.skeletonThumb::after {
-  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(var(--main-color-rgb), 0.15), transparent);
-  animation: radarSweep var(--anim-medium) infinite linear; /* ← تقليل من 1.5s */
-}
-
-@keyframes radarSweep {
-  100% { transform: translateX(100%); }
-}
-
-.skeletonCaption {
-  padding: 1rem 0 0;
-  display: grid;
-  gap: 0.7rem;
-}
-
-.skeletonLine,
-.skeletonLineShort {
-  display: block;
-  height: 0.8rem;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.skeletonLineShort { width: 70%; }
-
-/* --- Show More Button --- */
-.galleryActions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 4rem;
-}
+.galleryActions { display: flex; justify-content: center; align-items: center; margin-top: 4rem; }
 
 .primaryAction {
   background: rgba(var(--main-color-rgb), 0.08);
@@ -185,11 +92,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: 
-    background var(--motion-normal) var(--motion-ease),
-    border-color var(--motion-normal) var(--motion-ease),
-    color var(--motion-normal) var(--motion-ease),
-    transform var(--motion-normal) var(--motion-ease);
+  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
 }
 
 .primaryAction:hover {
@@ -199,58 +102,28 @@
   transform: translateY(-2px);
 }
 
-.primaryAction:focus-visible {
+.primaryAction:focus-visible, .imageButton:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 3px;
 }
 
-.imageButton:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* === Media Queries & Mobile Overrides === */
 @media (max-width: 1199px) { 
   .Gallery { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
   .art-gallery-content { padding: 0 3rem 5%; } 
 }
-
 @media (max-width: 991px) { 
   .Gallery { grid-template-columns: repeat(2, 1fr); } 
   .art-gallery-content { padding: 0 2rem 5%; } 
   .title { font-size: 3rem; } 
 }
-
 @media (max-width: 767px) { 
-  .art-gallery-section { min-height: auto; }
-  .art-gallery-section { margin-top: clamp(18rem, 36vh, 40rem) !important; }
+  .art-gallery-section { min-height: auto; margin-top: clamp(18rem, 36vh, 40rem) !important; }
   .Gallery { grid-template-columns: 1fr; gap: 20px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 
-  .imageButton::before { font-size: 1rem; padding: 0.4rem 0.8rem; }
 }
-
 @media (max-width: 430px) {
-  .art-gallery-section {
-    margin-top: clamp(14rem, 30vh, 28rem) !important;
-    padding: 6rem 0 4.5rem !important;
-  }
-
-  .art-gallery-content {
-    padding: 0 1rem 4%;
-  }
-
-  .title {
-    font-size: 2.6rem;
-    margin-bottom: 2.4rem;
-  }
-
-  .Gallery {
-    gap: 16px;
-  }
-
-  .art_pic,
-  .skeletonItem {
-     padding: 0;
-  }
+  .art-gallery-section { margin-top: clamp(14rem, 30vh, 28rem) !important; padding: 6rem 0 4.5rem !important; }
+  .art-gallery-content { padding: 0 1rem 4%; }
+  .title { font-size: 2.6rem; margin-bottom: 2.4rem; }
+  .Gallery { gap: 16px; }
 }
