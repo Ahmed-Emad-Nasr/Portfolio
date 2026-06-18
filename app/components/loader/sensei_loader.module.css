@@ -223,3 +223,11 @@
   .copy      { margin-top: 3.6rem; padding-inline: 1.6rem; }
   .skipBtn   { bottom: 4rem; right: 1.2rem; }
 }
+
+/* ─── Forced colors (Windows High Contrast) ─────────────────────────────── */
+@media (forced-colors: active) {
+  .loader { background: Canvas; }
+  .ring   { border-color: ButtonText; border-top-color: Highlight; }
+  .progressFill { background: Highlight; }
+  .skipBtn { forced-color-adjust: none; border-color: ButtonText; color: ButtonText; }
+}

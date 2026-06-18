@@ -5,7 +5,8 @@ import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUT
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/data/cases";
 import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
-import type { PdfResource, GalleryState, ChannelVideo } from "./blog-types";
+import type { PdfResource, GalleryState} from "./blog-types";
+import LoadingScreen from "@/app/components/loader/sensei_loader";
 
 // Dynamic Imports (خفيفة وبدون aria أو roles)
 const BlogHeroSection = dynamic(() => import("./components/BlogHeroSection"), { ssr: false });
@@ -106,6 +107,7 @@ export default function BlogPageClient() {
 
   return (
     <main id="main-content" className={styles.page}>
+      <LoadingScreen />
       <AppBar />
       <BlogHeroSection
         leadCaseTitle={LEAD_CASE?.title} resourceCount={blogPdfResources.length}

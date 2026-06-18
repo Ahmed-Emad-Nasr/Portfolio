@@ -326,6 +326,16 @@
   transition: border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
 }
 
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible,
+.quickLink:focus-visible,
+.cardActions a:focus-visible,
+.cardActions button:focus-visible,
+.playlistAction:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
 .primaryAction:hover,
 .secondaryAction:hover,
 .quickLink:hover,
@@ -452,6 +462,14 @@
   border-color: rgba(var(--main-color-rgb), 0.5);
   color: #fff;
   background: rgba(var(--main-color-rgb), 0.08);
+}
+
+.sortButton:focus-visible,
+.modeButton:focus-visible,
+.filterButton:focus-visible,
+.clearFiltersBtn:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 .activeSort,
@@ -1159,6 +1177,13 @@
 
 .galleryClose:hover { background: #ff003c; color: #fff; }
 
+.galleryClose:focus-visible,
+.galleryNav:focus-visible,
+.galleryThumbButton:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
 .galleryStage {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -1378,6 +1403,37 @@
   min-width: 15rem;
 }
 
+/* Back to top button */
+.backToTop {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: var(--z-toast);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--main-color-rgb), 0.5);
+  background: rgba(5, 8, 14, 0.92);
+  color: var(--main-color);
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
+}
+
+.backToTop:hover {
+  background: rgba(var(--main-color-rgb), 0.18);
+  border-color: var(--main-color);
+  transform: translateY(-2px);
+}
+
+.backToTop:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
 /* =========================================
    10. PLAY PLAYLIST & VIDEO CARDS EXTRA
    ========================================= */
@@ -1583,4 +1639,32 @@
   .skeletonShimmer {
     animation: none !important;
   }
+}
+
+@media (forced-colors: active) {
+  .hero,
+  .pdfCard,
+  .playlistCard,
+  .videoCard,
+  .caseSpotlight,
+  .featuredCard,
+  .insightCard,
+  .youtubeHub,
+  .toolbar,
+  .blogClosing,
+  .galleryDialog {
+    border: 2px solid ButtonText;
+    background: Canvas;
+  }
+
+  .galleryOverlay  { background: Canvas; backdrop-filter: none; }
+  .embedPlayButton { forced-color-adjust: none; background: Canvas; color: Highlight; border-color: Highlight; }
+  .primaryAction,
+  .secondaryAction,
+  .quickLink,
+  .playlistAction  { forced-color-adjust: none; background: ButtonFace !important; color: ButtonText !important; border-color: ButtonText !important; }
+
+  .difficulty-easy,
+  .difficulty-medium,
+  .difficulty-hard  { forced-color-adjust: none; }
 }

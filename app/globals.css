@@ -232,7 +232,10 @@ button:disabled {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 3px;
   border-radius: var(--radius-card-sm);
@@ -482,4 +485,61 @@ section.glass:hover,
 .btn-glow:active {
   transform: translateY(0) scale(0.98);
   box-shadow: none;
+}
+
+/*--------- 12. High Contrast & Forced Colors ---------*/
+
+/* Windows High Contrast / forced-colors mode */
+@media (forced-colors: active) {
+  :root {
+    --main-color:   Highlight;
+    --accent-color: Highlight;
+    --text-color:   CanvasText;
+    --text-muted:   CanvasText;
+    --bg-color:     Canvas;
+  }
+
+  section.glass,
+  .glass-card {
+    border: 2px solid ButtonText;
+    background: Canvas;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .glass-card::after,
+  .btn-glow::after {
+    display: none;
+  }
+
+  button,
+  a {
+    forced-color-adjust: auto;
+  }
+
+  .skip-link {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+    border: 2px solid ButtonText;
+  }
+}
+
+/* prefers-contrast: more — boost border/text contrast */
+@media (prefers-contrast: more) {
+  :root {
+    --surface-card-border:       rgba(var(--main-color-rgb), 0.55);
+    --surface-card-border-hover: rgba(var(--main-color-rgb), 0.85);
+    --text-muted: #b0cfe0;
+    --text-dim:   #6a8ea8;
+  }
+
+  section.glass,
+  .glass-card {
+    border-color: rgba(var(--main-color-rgb), 0.55);
+  }
+
+  p, li {
+    color: var(--text-muted);
+  }
 }

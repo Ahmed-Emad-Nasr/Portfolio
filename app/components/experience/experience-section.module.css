@@ -42,7 +42,7 @@
   100% { background-position: 0 100%; }
 }
 
-.timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; }
+.timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; margin-bottom: 2.4rem; }
 .timeline-container.left { left: 0; }
 .timeline-container.right { left: 50%; }
 
@@ -160,6 +160,11 @@
   color: #000;
   transform: translateY(-2px);
   box-shadow: none;
+}
+
+.proofLink:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
 }
 
 .loadMoreWrap {

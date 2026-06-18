@@ -212,6 +212,7 @@
   position: relative;
   width: calc(50% - 2.2rem);
   z-index: 2;
+  margin-bottom: 3rem;
 }
 
 .project-item.left {
