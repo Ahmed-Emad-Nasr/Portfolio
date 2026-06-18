@@ -9,7 +9,6 @@
 
 import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import LoadingScreen from "@/app/components/loader/sensei_loader";
 
 const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
   ssr: false,
@@ -74,7 +73,6 @@ const MainClient = memo(function MainClient() {
 
   return (
     <main id="main-content" style={MAIN_STYLE}>
-      <LoadingScreen />
       <AppBar />
       <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
         <HomeSection />

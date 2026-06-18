@@ -23,7 +23,7 @@
 :root {
   /* الخلفية الأساسية أسود نقي */
   --bg-color:        #000000;
-  --second-bg-color: #000000;
+  --bg-gradient: radial-gradient(circle at 50% 50%, rgba(30, 0, 10, 1) 0%, rgba(0, 0, 0, 1) 70%);
 
   --surface-base:    rgba(4,  8,  20, 0.95);
   --surface-raised:  rgba(6,  14, 32, 0.90);
@@ -159,6 +159,8 @@ body {
   color: var(--text-color);
   /* الاعتماد على اللون الأسود النقي فقط بدون أي تدرجات */
   background-color: var(--bg-color);
+  background-attachment: fixed;
+  background-image: var(--bg-gradient);
   overflow-x: hidden;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;

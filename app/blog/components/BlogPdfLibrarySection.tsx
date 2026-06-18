@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import MotionInView from "@/app/core/components/MotionInView";
@@ -7,12 +9,7 @@ import type { PdfResource } from "../blog-types";
 import { EMPTY_SCREENSHOTS } from "@/app/core/data/cases";
 import { getThumbnail } from "../blog-utils";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-// Hoisted outside the component so it is never recreated on re-renders.
 const PAGE_SIZE = 4;
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 type BlogPdfLibrarySectionProps = {
   filteredCount: number;
@@ -38,130 +35,58 @@ type BlogPdfLibrarySectionProps = {
   setRawQuery: (value: string) => void;
   toggleToolFilter: (tool: string) => void;
   openGallery: (title: string, screenshots: string[], index?: number) => void;
-  prefetchGallery: (title: string, screenshots: string[], index?: number) => void;
   normalizeHref: (href: string) => string;
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export default function BlogPdfLibrarySection({
-  filteredCount,
-  pdfTypeFilters,
-  pdfFilter,
-  setPdfFilter,
-  difficultyOptions,
-  difficultyFilter,
-  setDifficultyFilter,
-  categoryOptions,
-  categoryFilter,
-  setCategoryFilter,
-  sortBy,
-  setSortBy,
-  hasActiveFilters,
-  clearAllFilters,
-  leadCase,
-  leadCaseSpotlightImage,
-  relatedCases,
-  visiblePdfCards,
-  screenshotsById,
-  rawQuery,
-  setRawQuery,
-  toggleToolFilter,
-  openGallery,
-  prefetchGallery,
-  normalizeHref,
+  filteredCount, pdfTypeFilters, pdfFilter, setPdfFilter,
+  difficultyOptions, difficultyFilter, setDifficultyFilter,
+  categoryOptions, categoryFilter, setCategoryFilter,
+  sortBy, setSortBy, hasActiveFilters, clearAllFilters,
+  leadCase, leadCaseSpotlightImage, relatedCases,
+  visiblePdfCards, screenshotsById, rawQuery, setRawQuery,
+  toggleToolFilter, openGallery, normalizeHref,
 }: BlogPdfLibrarySectionProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  // Reset pagination when the filtered list length changes.
-  // Using `.length` as the dep is correct — the parent should memoize the array
-  // with useMemo so its reference only changes when content actually changes.
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [visiblePdfCards.length]);
-
-  // getThumbnail is already a stable module-level function from blog-utils —
-  // no need to wrap it in useCallback, that just adds an extra closure.
-  const stableThumbnail = getThumbnail;
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [visiblePdfCards.length]);
 
   return (
-    <section className={styles.block} aria-labelledby="blog-pdfs-title">
+    <section className={styles.block}>
       <MotionInView className={styles.blockHeading}>
         <h2 id="blog-pdfs-title">PDF Library</h2>
         <p>{filteredCount} result(s) found.</p>
       </MotionInView>
 
       <MotionInView className={styles.toolbar}>
-        <input
-          type="search"
-          className={styles.searchInput}
-          placeholder="Search cases, tags, tools…"
-          value={rawQuery}
-          onChange={(event) => setRawQuery(event.target.value)}
-          aria-label="Search PDF resources"
-        />
-
-        <div className={styles.modeSwitch} role="group" aria-label="Filter by type">
+        <input type="search" className={styles.searchInput} placeholder="Search cases, tags, tools…" value={rawQuery} onChange={(e) => setRawQuery(e.target.value)} />
+        <div className={styles.modeSwitch}>
           {pdfTypeFilters.map((filter) => (
-            <button
-              key={filter}
-              type="button"
-              className={`${styles.modeButton} ${pdfFilter === filter ? styles.modeButtonActive : ""}`}
-              onClick={() => setPdfFilter(filter)}
-            >
-              {filter}
-            </button>
+            <button key={filter} type="button" className={`${styles.modeButton} ${pdfFilter === filter ? styles.modeButtonActive : ""}`} onClick={() => setPdfFilter(filter)}>{filter}</button>
           ))}
         </div>
-
         {difficultyOptions.length > 0 && (
-          <div className={styles.sortButtons} role="group" aria-label="Filter by difficulty">
+          <div className={styles.sortButtons}>
             {difficultyOptions.map((difficulty) => (
-              <button
-                key={difficulty}
-                type="button"
-                className={`${styles.sortButton} ${difficultyFilter === difficulty ? styles.activeSort : ""}`}
-                onClick={() => setDifficultyFilter(difficultyFilter === difficulty ? null : difficulty)}
-              >
-                {difficulty}
-              </button>
+              <button key={difficulty} type="button" className={`${styles.sortButton} ${difficultyFilter === difficulty ? styles.activeSort : ""}`} onClick={() => setDifficultyFilter(difficultyFilter === difficulty ? null : difficulty)}>{difficulty}</button>
             ))}
           </div>
         )}
-
         {categoryOptions.length > 0 && (
-          <div className={styles.sortButtons} role="group" aria-label="Filter by category">
+          <div className={styles.sortButtons}>
             {categoryOptions.map((category) => (
-              <button
-                key={category}
-                type="button"
-                className={`${styles.sortButton} ${categoryFilter === category ? styles.activeSort : ""}`}
-                onClick={() => setCategoryFilter(categoryFilter === category ? null : category)}
-              >
-                {category}
-              </button>
+              <button key={category} type="button" className={`${styles.sortButton} ${categoryFilter === category ? styles.activeSort : ""}`} onClick={() => setCategoryFilter(categoryFilter === category ? null : category)}>{category}</button>
             ))}
           </div>
         )}
-
-        <div className={styles.sortButtons} role="group" aria-label="Sort order">
+        <div className={styles.sortButtons}>
           {(["recent", "difficulty", "popularity"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              className={`${styles.sortButton} ${sortBy === value ? styles.activeSort : ""}`}
-              onClick={() => setSortBy(value)}
-            >
+            <button key={value} type="button" className={`${styles.sortButton} ${sortBy === value ? styles.activeSort : ""}`} onClick={() => setSortBy(value)}>
               {value.charAt(0).toUpperCase() + value.slice(1)}
             </button>
           ))}
         </div>
-
-        {hasActiveFilters && (
-          <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>
-            ✕ Clear Filters
-          </button>
-        )}
+        {hasActiveFilters && <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>✕ Clear Filters</button>}
       </MotionInView>
 
       {leadCase && (
@@ -171,20 +96,14 @@ export default function BlogPdfLibrarySection({
             <h3>{leadCase.title}</h3>
             <p>{leadCase.description || "Featured first for quick navigation."}</p>
             <div className={styles.caseMetadata}>
-              {leadCase.difficulty && (
-                <span className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}>
-                  {leadCase.difficulty}
-                </span>
-              )}
+              {leadCase.difficulty && <span className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}>{leadCase.difficulty}</span>}
               {leadCase.category && <span className={styles.badge}>{leadCase.category}</span>}
               {leadCase.readTime && <span className={styles.badge}>{leadCase.readTime} min read</span>}
             </div>
             {leadCase.tags && leadCase.tags.length > 0 && (
               <div className={styles.tagsList}>
                 {leadCase.tags.slice(0, 4).map((tag) => (
-                  <button key={tag} type="button" className={styles.tagButton} onClick={() => setRawQuery(tag)}>
-                    #{tag}
-                  </button>
+                  <button key={tag} type="button" className={styles.tagButton} onClick={() => setRawQuery(tag)}>#{tag}</button>
                 ))}
               </div>
             )}
@@ -193,55 +112,29 @@ export default function BlogPdfLibrarySection({
                 <p className={styles.toolsLabel}>Tools:</p>
                 <div className={styles.toolsGrid}>
                   {leadCase.tools.map((tool) => (
-                    <button key={tool} type="button" className={styles.toolButton} onClick={() => toggleToolFilter(tool)}>
-                      {tool}
-                    </button>
+                    <button key={tool} type="button" className={styles.toolButton} onClick={() => toggleToolFilter(tool)}>{tool}</button>
                   ))}
                 </div>
               </div>
             )}
             <div className={styles.cardActions}>
-              <a href={normalizeHref(leadCase.href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>
-                View PDF
-              </a>
-              <a href={normalizeHref(leadCase.href)} download className={styles.downloadAction}>
-                Download
-              </a>
-              <button
-                type="button"
-                onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
-                onMouseEnter={() => prefetchGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
-                onFocus={() => prefetchGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)}
-                className={`${styles.galleryOpenAction} ${styles.viewAction}`}
-              >
+              <a href={normalizeHref(leadCase.href)} target="_blank" className={styles.viewAction}>View PDF</a>
+              <a href={normalizeHref(leadCase.href)} download className={styles.downloadAction}>Download</a>
+              <button type="button" onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)} className={`${styles.galleryOpenAction} ${styles.viewAction}`}>
                 View All Screenshots
               </button>
             </div>
           </div>
-
           {leadCaseSpotlightImage && (
-            <a
-              href={leadCaseSpotlightImage}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.caseSpotlightMedia}
-              aria-label={`Open spotlight screenshot for ${leadCase.title}`}
-            >
-              <Image
-                src={leadCaseSpotlightImage}
-                alt={`${leadCase.title} spotlight screenshot`}
-                fill
-                sizes="(max-width: 991px) 100vw, 38vw"
-                loading="lazy"
-                quality={65}
-              />
+            <a href={leadCaseSpotlightImage} target="_blank" className={styles.caseSpotlightMedia}>
+              <Image src={leadCaseSpotlightImage} alt="spotlight" fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" quality={65} />
             </a>
           )}
         </MotionInView>
       )}
 
       {relatedCases.length > 0 && (
-        <MotionInView className={styles.relatedCasesStrip} aria-label="Related cases">
+        <MotionInView className={styles.relatedCasesStrip}>
           <div className={styles.blockHeading}>
             <h2>Related Cases</h2>
             <p>Cases with a similar category, difficulty, or keyword set.</p>
@@ -253,14 +146,10 @@ export default function BlogPdfLibrarySection({
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
                 <div className={styles.caseMetadata}>
-                  {item.difficulty && (
-                    <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>
-                      {item.difficulty}
-                    </span>
-                  )}
+                  {item.difficulty && <span className={`${styles.badge} ${styles[`difficulty-${item.difficulty.toLowerCase()}`]}`}>{item.difficulty}</span>}
                   {item.readTime && <span className={styles.badge}>{item.readTime} min read</span>}
                 </div>
-                <a href={normalizeHref(item.href)} target="_blank" rel="noopener noreferrer">Open PDF</a>
+                <a href={normalizeHref(item.href)} target="_blank">Open PDF</a>
               </article>
             ))}
           </div>
@@ -274,10 +163,9 @@ export default function BlogPdfLibrarySection({
             {...item}
             screenshots={screenshotsById[item.id] ?? EMPTY_SCREENSHOTS}
             onOpenGallery={openGallery}
-            onPrefetchGallery={prefetchGallery}
             onTagClick={setRawQuery}
             onToolClick={toggleToolFilter}
-            getThumbnail={stableThumbnail}
+            getThumbnail={getThumbnail}
             normalizeHref={normalizeHref}
           />
         ))}
@@ -285,20 +173,13 @@ export default function BlogPdfLibrarySection({
 
       {visibleCount < visiblePdfCards.length && (
         <div className={styles.loadMoreWrap}>
-          <button
-            type="button"
-            className={styles.primaryAction}
-            onClick={() => setVisibleCount((n) => Math.min(visiblePdfCards.length, n + PAGE_SIZE))}
-            aria-label="Show more PDF results"
-          >
+          <button type="button" className={styles.primaryAction} onClick={() => setVisibleCount((n) => Math.min(visiblePdfCards.length, n + PAGE_SIZE))}>
             Show more
           </button>
         </div>
       )}
 
-      {filteredCount === 0 && (
-        <p className={styles.emptyState}>No PDF results match your current search/filter.</p>
-      )}
+      {filteredCount === 0 && <p className={styles.emptyState}>No PDF results match your current search/filter.</p>}
     </section>
   );
 }

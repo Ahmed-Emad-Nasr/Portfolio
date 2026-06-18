@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useScrollSpy } from "@/app/core/hooks/useScrollSpy";
 
@@ -21,21 +21,6 @@ const NAV_ITEMS = [
 ] as const;
 
 const SPY_SECTIONS = NAV_ITEMS.map(({ label, targetId }) => ({ label, elementId: targetId }));
-
-const SESSION_ID = `0x${Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")}`;
-
-function useUptime() {
-  const [elapsed, setElapsed] = useState(0);
-  useEffect(() => {
-    const start = Date.now();
-    const id = setInterval(() => setElapsed(Math.floor((Date.now() - start) / 1000)), 1000);
-    return () => clearInterval(id);
-  }, []);
-  const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
-  const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
-  const s = String(elapsed % 60).padStart(2, "0");
-  return `${h}:${m}:${s}`;
-}
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -54,7 +39,6 @@ const SiemIcon = () => (
 
 export default function SenseiHeader() {
   const headerRef = useRef<HTMLElement>(null);
-  const uptime    = useUptime();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { activeSection, setActiveSection } = useScrollSpy({

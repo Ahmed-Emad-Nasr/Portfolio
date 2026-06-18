@@ -1,7 +1,8 @@
 /*
  * File: page.tsx
- * Author: Ahmed Emad Nasr
- * Purpose: Server entry page that renders the client page wrapper
+ * PERF BUILD:
+ * - Pre-stringified JSON-LD at module evaluation time. 
+ * Zero CPU cost per request on the server.
  */
 
 import type { Metadata } from "next";
@@ -45,7 +46,8 @@ export const metadata: Metadata = {
   },
 };
 
-const homeStructuredData = {
+// تحويل البيانات إلى نص مرة واحدة فقط في الذاكرة لتوفير معالجة السيرفر
+const STRUCTURED_DATA_JSON = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -68,14 +70,14 @@ const homeStructuredData = {
       url: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact",
     },
   ],
-};
+});
 
 export default function Main() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} // استخدام النص الجاهز مباشرة
       />
       <MainClient />
     </>

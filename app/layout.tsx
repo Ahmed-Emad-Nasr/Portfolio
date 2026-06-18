@@ -1,7 +1,10 @@
 /*
  * File: layout.tsx
  * Author: Ahmed Emad Nasr
- * Purpose: Define root app shell, metadata, and global font/base document setup
+ * PERF IMPROVEMENTS:
+ * 1. Removed fonts.gstatic.com preconnect (next/font is self-hosted, no need to waste DNS/TCP).
+ * 2. Moved theme-color to Viewport export for Next.js static optimization.
+ * 3. Kept Structured Data stringified at module scope (Zero CPU overhead on render).
  */
 
 import "./globals.css";
@@ -12,12 +15,14 @@ import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/data/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
 import CustomCursor from "./components/custom-cursor";
+import LoadingScreen from "@/app/components/loader/sensei_loader";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#000000", // تم نقلها هنا لتكامل أسرع مع Next.js
 };
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -38,25 +43,14 @@ export const metadata: Metadata = {
   description:
     "Ahmed Emad Nasr's cybersecurity portfolio for incident response, threat hunting, digital forensics, security training, projects, and contact.",
   keywords: [
-    "Ahmed Emad Nasr",
-    "SOC Analyst",
-    "Cybersecurity Engineer",
-    "Incident Response",
-    "Threat Hunting",
-    "SIEM",
-    "EDR",
-    "DFIR",
-    "Security Training",
-    "Digital Forensics",
-    "Cairo",
-    "Portfolio",
+    "Ahmed Emad Nasr", "SOC Analyst", "Cybersecurity Engineer",
+    "Incident Response", "Threat Hunting", "SIEM", "EDR", "DFIR",
+    "Security Training", "Digital Forensics", "Cairo", "Portfolio",
   ],
   authors: [{ name: "Ahmed Emad Nasr" }],
   creator: "Ahmed Emad Nasr",
   publisher: "Ahmed Emad Nasr",
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
   category: "technology",
   robots: {
     index: true,
@@ -71,26 +65,22 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
-    description:
-      "Incident response, threat hunting, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
+    description: "Incident response, threat hunting, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
     type: "website",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     locale: "en_US",
     siteName: "Ahmed Emad Nasr Portfolio",
-    images: [
-      {
-        url: "/Assets/art-gallery/Images/logo/My_Logo.webp",
-        width: 1200,
-        height: 630,
-        alt: "Ahmed Emad Nasr cybersecurity portfolio",
-      },
-    ],
+    images: [{
+      url: "/Assets/art-gallery/Images/logo/My_Logo.webp",
+      width: 1200,
+      height: 630,
+      alt: "Ahmed Emad Nasr cybersecurity portfolio",
+    }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
-    description:
-      "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
+    description: "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
     creator: "@0x3omda",
     site: "@0x3omda",
     images: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
@@ -109,14 +99,10 @@ const overlock = Overlock({
   display: "swap",
 });
 
-const BODY_CLASS = `${overlock.variable}`;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 // ─── Structured Data ──────────────────────────────────────────────────────────
 
-// JSON.stringify runs once at module evaluation time (server startup), not on
-// every request. Previously it was called inside dangerouslySetInnerHTML on
-// every render, wasting CPU per request for a value that never changes.
 const STRUCTURED_DATA_JSON = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
@@ -130,16 +116,10 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
       email: "mailto:ahmed.em.nasr@gmail.com",
       telephone: "+20 101 816 6445",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Cairo",
-        addressCountry: "EG",
-      },
+      address: { "@type": "PostalAddress", addressLocality: "Cairo", addressCountry: "EG" },
       contactPoint: {
-        "@type": "ContactPoint",
-        contactType: "customer support",
-        email: "ahmed.em.nasr@gmail.com",
-        availableLanguage: ["en", "ar"],
+        "@type": "ContactPoint", contactType: "customer support",
+        email: "ahmed.em.nasr@gmail.com", availableLanguage: ["en", "ar"],
       },
       sameAs: [
         "https://www.linkedin.com/in/ahmed-emad-nasr/",
@@ -158,29 +138,15 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       "@type": "ProfilePage",
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#profilepage",
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      mainEntity: {
-        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
-      },
-      isPartOf: {
-        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
-      },
+      mainEntity: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
+      isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
     },
     {
       "@type": "BreadcrumbList",
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#breadcrumbs",
       itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://ahmed-emad-nasr.github.io/Portfolio/",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Contact",
-          item: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact",
-        },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://ahmed-emad-nasr.github.io/Portfolio/" },
+        { "@type": "ListItem", position: 2, name: "Contact", item: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact" },
       ],
     },
     {
@@ -188,18 +154,10 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#homepage",
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
       name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
-      description:
-        "A portfolio homepage highlighting cybersecurity work, professional experience, projects, and contact options.",
-      isPartOf: {
-        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
-      },
-      primaryImageOfPage: {
-        "@type": "ImageObject",
-        url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp",
-      },
-      about: {
-        "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
-      },
+      description: "A portfolio homepage highlighting cybersecurity work, professional experience, projects, and contact options.",
+      isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
+      primaryImageOfPage: { "@type": "ImageObject", url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp" },
+      about: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
       inLanguage: "en",
     },
     {
@@ -226,28 +184,28 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" dir="ltr" className={overlock.variable}>
       <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Preload only the absolute critical image for LCP */}
         <link rel="preload" as="image" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
         <link rel="icon" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
-        <meta name="theme-color" content="#000000" />
       </head>
-      <body className={BODY_CLASS}>
-        <a className="skip-link" href="#main-content">
-          Skip to main content
-        </a>
-        {TURNSTILE_SITE_KEY ? (
+      <body>
+        <a className="skip-link" href="#main-content">Skip to main content</a>
+        
+        {TURNSTILE_SITE_KEY && (
           <Script
             src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
             strategy="afterInteractive"
           />
-        ) : null}
-        {/* Use the pre-serialised string — no per-request JSON.stringify */}
+        )}
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
         />
+        
+        <LoadingScreen />
         <SmoothScroll>{children}</SmoothScroll>
         <CustomCursor />
       </body>

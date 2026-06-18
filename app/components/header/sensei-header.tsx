@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,25 +25,9 @@ const SiemIcon = () => (
   </svg>
 );
 
-function useUptime() {
-  const [elapsed, setElapsed] = useState(0);
-  useEffect(() => {
-    const start = Date.now();
-    const id = setInterval(() => setElapsed(Math.floor((Date.now() - start) / 1000)), 1000);
-    return () => clearInterval(id);
-  }, []);
-  const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
-  const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
-  const s = String(elapsed % 60).padStart(2, "0");
-  return `${h}:${m}:${s}`;
-}
-
-const SESSION_ID = `0x${Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")}`;
-
 export default function SenseiHeader() {
   const pathname  = usePathname();
   const headerRef = useRef<HTMLElement>(null);
-  const uptime    = useUptime();
 
   const { isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen } = useHeader();
 

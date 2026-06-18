@@ -1,23 +1,12 @@
 "use client";
 
 /*
- * sensei-projects.tsx  —  PERF BUILD
+ * sensei-projects.tsx  —  ULTRA FAST BUILD
  *
- * Changes vs original:
- *  1. getCategoriesForRepo — result is cached in a WeakMap keyed by repo object
- *     so it never re-runs for the same repo on filter changes.
- *  2. getFilterCounts — pure function, moved above component; wrapped in useMemo
- *     with stable deps so it only recomputes when repos array identity changes.
- *  3. filteredRepos useMemo — unchanged, already correct.
- *  4. setVisibleCount on filter change — kept; minimal cost.
- *  5. buildCaseStudy / getProjectDifficulty — hoisted outside component so they
- *     don't get re-created per render.
- *  6. ProjectItem memo comparator — only re-renders if repo.id changes (was
- *     comparing full objects).
- *  7. formatTimeAgo — moved out of useMemo inside component into a pure module-
- *     level function so it doesn't create a new closure each render.
- *  8. summaryText — computed inline (trivial; no useMemo needed).
- *  9. handleShowMore — useCallback with stable deps.
+ * Changes:
+ * 1. Synced with the new hyper-fast useGitHubRepos hook (removed missing properties like cacheUpdatedAt, loadNotice).
+ * 2. Removed unnecessary UI clutter and Date parsing for cache labels to save CPU cycles.
+ * 3. Kept WeakMap and stable useMemos for raw filtering performance.
  */
 
 import { memo, useEffect, useMemo, useState, useCallback } from "react";
@@ -92,17 +81,8 @@ const buildCaseStudy = (repo: GitHubRepository) => {
 const getProjectDifficulty = (repo: GitHubRepository): "Beginner" | "Intermediate" | "Advanced" => {
   const source = [repo.name, repo.description ?? "", repo.language ?? "", ...repo.topics].join(" ").toLowerCase();
   if (["siem","dfir","forensic","malware","incident","threat","edr"].some((k) => source.includes(k)) || repo.topics.length >= 5) return "Advanced";
-  if (["automation","script","tool","api","monitor"].some((k) => source.includes(k))                 || repo.topics.length >= 3) return "Intermediate";
+  if (["automation","script","tool","api","monitor"].some((k) => source.includes(k))                || repo.topics.length >= 3) return "Intermediate";
   return "Beginner";
-};
-
-const formatTimeAgo = (ts: number): string => {
-  const m = Math.floor((Date.now() - ts) / 60000);
-  if (m < 1)  return "just now";
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
 };
 
 // ── ProjectItem ────────────────────────────────────────────────────────────
@@ -185,8 +165,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
       </article>
     </MotionInView>
   );
-// Only re-render when the repo object identity changes
-}, (prev, next) => prev.repo === next.repo);
+}, (prev, next) => prev.repo.id === next.repo.id); // تحسين بسيط هنا: مقارنة الـ ID فقط بدلاً من الكائن بالكامل
 
 ProjectItem.displayName = "ProjectItem";
 
@@ -220,16 +199,16 @@ const ProjectSkeleton = memo<ProjectSkeletonProps>(({ index }) => (
 
 ProjectSkeleton.displayName = "ProjectSkeleton";
 
-// Stable skeleton array — never re-created
 const SKELETONS = Array.from({ length: 6 }, (_, i) => (
   <ProjectSkeleton key={`skeleton-${i}`} index={i} />
 ));
 
 // ── Main section ───────────────────────────────────────────────────────────
 const SenseiProjects = memo(function SenseiProjects() {
+  // تم تنظيف عملية الاستخراج لتطابق الـ Hook الجديد بالضبط
   const {
-    repos, isLoading, source, loadNotice, loadError,
-    cacheUpdatedAt, hasMore, isLoadingMore, loadRemainingRepos, refresh,
+    repos, isLoading, source, loadError,
+    hasMore, isLoadingMore, loadRemainingRepos, refresh,
   } = useGitHubRepos();
 
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
@@ -243,15 +222,6 @@ const SenseiProjects = memo(function SenseiProjects() {
   }, [repos, activeFilter]);
 
   useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeFilter]);
-
-  // cacheLabel: only recompute when cacheUpdatedAt changes
-  const cacheLabel = useMemo(() => {
-    if (!cacheUpdatedAt) return null;
-    try {
-      const t = new Date(cacheUpdatedAt).getTime();
-      return `${new Date(cacheUpdatedAt).toLocaleString()} (${formatTimeAgo(t)})`;
-    } catch { return null; }
-  }, [cacheUpdatedAt]);
 
   const handleShowMore = useCallback(async () => {
     if (visibleCount < filteredRepos.length) {
@@ -296,7 +266,7 @@ const SenseiProjects = memo(function SenseiProjects() {
         <div className={styles["section-summary"]} aria-live="polite">
           <p>
             {summaryText} • Focused on SOC, DFIR, and automation work.
-            {source === "cache"  ? " Showing cached repositories."         : ""}
+            {source === "cache"  ? " Showing cached repositories."        : ""}
             {source === "static" ? " Showing curated fallback projects."   : ""}
           </p>
           {!isLoading && (
@@ -306,11 +276,7 @@ const SenseiProjects = memo(function SenseiProjects() {
           )}
         </div>
 
-        {loadNotice && <p className={styles["empty-state-hint"]}>{loadNotice}</p>}
         {loadError  && <p className={styles["empty-state-hint"]} role="alert">{loadError}</p>}
-        {source === "cache" && cacheLabel && (
-          <p className={styles["empty-state-hint"]}>Cache last updated: {cacheLabel}</p>
-        )}
 
         <div className={styles["projects-timeline"]} aria-label="Projects Timeline">
           {isLoading ? (

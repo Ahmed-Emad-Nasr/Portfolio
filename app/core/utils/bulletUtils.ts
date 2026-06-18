@@ -1,18 +1,35 @@
+/*
+ * File: bulletUtils.ts
+ * PERF BUILD:
+ * - Removed expensive global Regex `replace(/\s+/g)`.
+ * - Eliminated `map().filter()` chains to prevent multi-array memory allocation overhead.
+ * - Uses blazing fast `includes()` (Native C++ string matching) before attempting any `split()`.
+ */
+
 export const toBulletItems = (text: string): string[] => {
-  const normalized = text.replace(/\s+/g, " ").trim();
-  if (!normalized) return [];
+  if (!text) return [];
 
-  const bulletSplit = normalized.split("•").map((item) => item.trim()).filter(Boolean);
-  if (bulletSplit.length > 1) return bulletSplit;
+  let parts: string[];
 
-  const sentenceSplit = normalized
-    .split(/[.;](?=\s|$)/)
-    .map((item) => item.trim().replace(/[.;]$/, ""))
-    .filter(Boolean);
-  if (sentenceSplit.length > 1) return sentenceSplit;
+  // 1. فحص سريع جداً لمعرفة نوع الفاصل قبل عمل أي Split
+  if (text.includes("•")) {
+    parts = text.split("•");
+  } else if (text.includes(".") || text.includes(";")) {
+    parts = text.split(/[.;]/);
+  } else if (text.includes(",")) {
+    parts = text.split(",");
+  } else {
+    // إذا لم يوجد أي فاصل، نعيد النص كما هو بعد تنظيف أطرافه
+    const trimmed = text.trim();
+    return trimmed ? [trimmed] : [];
+  }
 
-  const commaSplit = normalized.split(",").map((item) => item.trim()).filter(Boolean);
-  if (commaSplit.length > 1) return commaSplit;
+  // 2. فلترة وتنظيف في خطوة واحدة (بدون map و filter) لتوفير الذاكرة
+  const result: string[] = [];
+  for (let i = 0; i < parts.length; i++) {
+    const val = parts[i].trim();
+    if (val) result.push(val);
+  }
 
-  return [normalized];
+  return result;
 };

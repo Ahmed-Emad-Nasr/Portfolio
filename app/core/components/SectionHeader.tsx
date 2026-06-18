@@ -1,12 +1,10 @@
-"use client";
-
 /*
  * File: SectionHeader.tsx
- * Author: Ahmed Emad Nasr
- * Purpose: Reusable bilingual section heading renderer
+ * PERF BUILD: 
+ * - Removed "use client" -> Now a Server Component (0 KB JS shipped to the browser).
+ * - Removed React.memo -> Not needed for Server Components.
+ * - Stripped extra DOM attributes.
  */
-
-import React, { memo } from "react";
 
 interface SectionHeaderProps {
   japaneseText: string;
@@ -14,18 +12,15 @@ interface SectionHeaderProps {
   titleClassName: string;
 }
 
-const SectionHeader = memo<SectionHeaderProps>(({
+export default function SectionHeader({
   japaneseText,
   englishText,
   titleClassName,
-}) => {
+}: SectionHeaderProps) {
   return (
     <h2 className={titleClassName}>
-      <span lang="ja">{japaneseText} •</span>
-      <span lang="en"> {englishText}</span>
+      <span>{japaneseText} •</span>
+      <span> {englishText}</span>
     </h2>
   );
-});
-
-SectionHeader.displayName = "SectionHeader";
-export default SectionHeader;
+}

@@ -1,14 +1,15 @@
 "use client";
+
 /*
  * File: useHeader.ts
- * Author: Ahmed Emad Nasr
- * PERF: SECTION_ICONS and SECTIONS are already module-level constants — good.
- * PERF: SPY_SECTIONS moved to module-level (was inside hook body, re-created every render)
- * PERF: Resize handler uses 768px breakpoint instead of 994 — corrected to
- * match CSS breakpoint. Also debounced via rAF to avoid layout thrash on
- * rapid resize events.
+ * PERF BUILD:
+ * - Replaced `resize` event listener (fires constantly) with `matchMedia`.
+ * This ensures the state only updates EXACTLY when crossing the 995px breakpoint, 
+ * consuming 0 CPU cycles during normal window resizing.
+ * - Removed redundant `useRef` for state tracking.
  */
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect, useCallback } from "react";
 import { faHome, faBook, faCertificate, faFolder } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useScrollSpy } from "./useScrollSpy";
@@ -20,13 +21,10 @@ const SECTION_ICONS: Record<string, IconProp> = {
   Certifications: faCertificate,
 };
 
-// PERF: Module-level — never re-created inside hook body
 const SPY_SECTIONS = Object.keys(SECTION_ICONS).map((label) => ({ label, elementId: label }));
 
 export const useHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isMenuOpenRef = useRef(isMenuOpen);
-  isMenuOpenRef.current = isMenuOpen;
 
   const { activeSection, setActiveSection } = useScrollSpy({
     sections: SPY_SECTIONS,
@@ -34,27 +32,29 @@ export const useHeader = () => {
     storageKey: "portfolio-activeSection",
   });
 
-  const toggleMenu = (): void => setIsMenuOpen((prev) => !prev);
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
   useEffect(() => {
-    let rafId = 0;
-
-    const handleResize = (): void => {
-      if (rafId) return;
-      // PERF: rAF-debounced — resize fires dozens of times per drag, no need
-      // to check + setIsMenuOpen on every pixel
-      rafId = window.requestAnimationFrame(() => {
-        rafId = 0;
-        if (window.innerWidth > 994 && isMenuOpenRef.current) setIsMenuOpen(false);
-      });
+    // استخدام المتصفح مباشرة لمراقبة حجم الشاشة بأداء فائق
+    const mediaQuery = window.matchMedia("(min-width: 995px)");
+    
+    const handleMediaQueryChange = (e: MediaQueryListEvent) => {
+      // إذا تجاوزت الشاشة 994 بيكسل، أغلق القائمة
+      if (e.matches) setIsMenuOpen(false);
     };
 
-    window.addEventListener("resize", handleResize, { passive: true });
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (rafId) window.cancelAnimationFrame(rafId);
-    };
-  }, []);
+    // إضافة المستمع (يعمل فقط عند نقطة الكسر، وليس مع كل بيكسل)
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+    
+    return () => mediaQuery.removeEventListener("change", handleMediaQueryChange);
+  }, []); // [] لضمان إنشاء المستمع مرة واحدة فقط
 
-  return { isMenuOpen, activeSection, toggleMenu, sectionIcons: SECTION_ICONS, setActiveSection, setIsMenuOpen };
+  return { 
+    isMenuOpen, 
+    activeSection, 
+    toggleMenu, 
+    sectionIcons: SECTION_ICONS, 
+    setActiveSection, 
+    setIsMenuOpen 
+  };
 };
