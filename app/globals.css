@@ -19,10 +19,10 @@
   --surface-raised:  rgba(6,  14, 32, 0.90);
   --surface-overlay: rgba(10, 20, 44, 0.85);
 
-  --text-color:      #dff0ff;
-  --text-muted:      #9cb6c9; /* Updated for better contrast */
-  --text-dim:        #5a7b96; /* Updated for better contrast */
-  --text-bright:     #f0f8ff;
+--text-color:  #fdfcf0; /* كريمي فاتح جداً ونقي للـ headings */
+--text-muted:  #e6e2d3; /* كريمي مطفي شوية للنصوص الطويلة عشان يريح العين */
+--text-dim:    #b5b09d; /* للـ secondary text */
+--text-bright: #ffffff; /* للأبيض الصريح لو احتجته */
 
   --main-color:      #cc0f52;
   --main-color-rgb:  204, 15, 82;
