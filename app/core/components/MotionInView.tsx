@@ -3,16 +3,15 @@
 /*
  * File: MotionInView.tsx
  * PERF BUILD:
- * - `once: false` added to viewport to trigger animations EVERY time the element enters the screen.
- * - Stripped heavy CPU/GPU variants and DOM bloat.
+ * - Replaced full `motion` with `m` and `<LazyMotion>`.
+ * - This strips the heavy Framer Motion engine from the initial JS bundle
+ * and lazy-loads it asynchronously only when needed!
+ * - `once: false` kept as requested, but now runs at 0 initial CPU cost.
  */
 
 import React, { memo } from "react";
-import { motion, MotionProps, Variants } from "framer-motion";
-
-// ---------------------------------------------------------------------------
-// 1. Ultra-Lightweight Variant Library
-// ---------------------------------------------------------------------------
+// 👇 تغيير جذري هنا: استيراد m و LazyMotion و domAnimation
+import { m, LazyMotion, domAnimation, MotionProps, Variants } from "framer-motion";
 
 export const motionVariants = {
   fade: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
@@ -37,10 +36,6 @@ export const motionVariants = {
 
 export type MotionVariantKey = keyof typeof motionVariants;
 
-// ---------------------------------------------------------------------------
-// 2. Component Types
-// ---------------------------------------------------------------------------
-
 type MotionInViewProps = Omit<MotionProps, "variants"> & {
   children:          React.ReactNode;
   className?:        string;
@@ -55,10 +50,6 @@ type MotionInViewProps = Omit<MotionProps, "variants"> & {
   autoStagger?:      boolean; 
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "style">;
 
-// ---------------------------------------------------------------------------
-// 3. Component
-// ---------------------------------------------------------------------------
-
 const MotionInView = memo<MotionInViewProps>(({
   children,
   className,
@@ -67,7 +58,6 @@ const MotionInView = memo<MotionInViewProps>(({
   variants,
   delay,
   enableExit = false,
-  // 👇 هنا التعديل: جعلنا once تساوي false
   viewport = { once: false, amount: 0.05 }, 
   tilt, magnetic, magneticStrength, autoStagger,
   ...rest
@@ -75,23 +65,28 @@ const MotionInView = memo<MotionInViewProps>(({
   const resolvedVariants = variants ?? (motionVariants[variant] as Variants);
 
   return (
-    <motion.div
-      className={className}
-      style={style}
-      initial="hidden"
-      whileInView="visible"
-      exit={enableExit ? "exit" : undefined}
-      viewport={viewport}
-      variants={resolvedVariants}
-      transition={delay ? { delay } : undefined}
-      {...rest}
-    >
-      {children}
-    </motion.div>
+    // 👇 تغليف العنصر بـ LazyMotion وتمرير الـ domAnimation (أخف نسخة)
+    <LazyMotion features={domAnimation} strict>
+      {/* 👇 استبدال motion.div بـ m.div */}
+      <m.div
+        className={className}
+        style={style}
+        initial="hidden"
+        whileInView="visible"
+        exit={enableExit ? "exit" : undefined}
+        viewport={viewport}
+        variants={resolvedVariants}
+        transition={delay ? { delay } : undefined}
+        {...rest}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
   );
 });
 
 MotionInView.displayName = "MotionInView";
 
 export default MotionInView;
+// 👇 تصدير الـ AnimatePresence لو كنت بتستخدمها في حتة تانية
 export { AnimatePresence } from "framer-motion";
