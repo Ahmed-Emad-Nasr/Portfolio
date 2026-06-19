@@ -5,21 +5,26 @@ import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUT
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/data/cases";
 import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
-import type { PdfResource, GalleryState} from "./blog-types";
+import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
-// Dynamic Imports (خفيفة وبدون aria أو roles)
+// Dynamic Imports 
 const BlogHeroSection = dynamic(() => import("./components/BlogHeroSection"), { ssr: false });
-const BlogCaseNavigator = dynamic(() => import("./components/BlogCaseNavigator"), { ssr: false });
 const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
 const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), { ssr: false });
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 const AppBar = dynamic(() => import("@/app/components/blog_header/sensei-header"), { ssr: false });
 
+// ─── ترتيب الملفات (إرجاع WannaCry كحالة عادية في الصدارة) ───
 const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
+
 const wannacryId = "malware-analysis-wannacry";
 const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);
-const blogPdfResources: PdfResource[] = wannacryCase ? [cvResource, wannacryCase, ...caseEvidenceLibrary.filter(item => item.id !== wannacryId)] : [cvResource, ...caseEvidenceLibrary];
+
+const blogPdfResources: PdfResource[] = wannacryCase 
+  ? [cvResource, wannacryCase, ...caseEvidenceLibrary.filter(item => item.id !== wannacryId)] 
+  : [cvResource, ...caseEvidenceLibrary];
+
 
 const matchesSearch = (value: string, query: string): boolean => value.toLowerCase().includes(query.toLowerCase());
 
@@ -27,9 +32,6 @@ const matchesSearch = (value: string, query: string): boolean => value.toLowerCa
 const PDF_TYPE_FILTERS = ["All", ...Array.from(new Set(blogPdfResources.map((item) => item.type)))];
 const DIFFICULTY_OPTIONS = Array.from(new Set(blogPdfResources.map((item) => item.difficulty).filter(Boolean))) as string[];
 const CATEGORY_OPTIONS = Array.from(new Set(blogPdfResources.map((item) => item.category).filter(Boolean))) as string[];
-const LEAD_CASE = blogPdfResources.find((item) => item.id === wannacryId) ?? null;
-const CASE_ORDER = blogPdfResources.filter((item) => item.id !== cvResource.id);
-const _leadIdx = CASE_ORDER.findIndex((item) => item.id === LEAD_CASE?.id);
 const PDF_DATE_MS = new Map(blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0]));
 
 export default function BlogPageClient() {
@@ -69,6 +71,12 @@ export default function BlogPageClient() {
   const sortedPdfs = useMemo(() => {
     const diffMap: Record<string, number> = { Easy: 1, Medium: 2, Hard: 3 };
     return [...filteredPdfs].sort((a, b) => {
+      // إبقاء الـ CV والـ WannaCry في الصدارة دائماً إذا كانا موجودين
+      if (a.id === cvResource.id) return -1;
+      if (b.id === cvResource.id) return 1;
+      if (a.id === wannacryId) return -1;
+      if (b.id === wannacryId) return 1;
+
       const aShots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
       const bShots = (caseScreenshotsByEvidenceId[b.id] ?? []).length > 0;
       if (aShots !== bShots) return aShots ? -1 : 1;
@@ -78,8 +86,6 @@ export default function BlogPageClient() {
     });
   }, [filteredPdfs, sortBy]);
 
-  const visiblePdfCards = useMemo(() => (LEAD_CASE ? sortedPdfs.filter((item) => item.id !== LEAD_CASE.id) : sortedPdfs), [sortedPdfs]);
-
   const filteredChannelVideos = useMemo(() => {
     const featured = { ...blogFeaturedYoutubeVideo, sourceUrl: blogFeaturedYoutubeVideo.sourceUrl };
     const others = blogYoutubeVideos.filter((v) => matchesSearch(v.title, query)).map((v) => ({ ...v, sourceUrl: `https://youtu.be/${v.videoId}` }));
@@ -88,7 +94,6 @@ export default function BlogPageClient() {
 
   const filteredPlaylists = useMemo(() => blogYoutubePlaylists.filter((p) => matchesSearch(p.title, query)), [query]);
 
-  // Handlers مبسطة جداً
   const goGallery = useCallback((delta: number) => {
     setGallery((cur) => cur ? { ...cur, index: (cur.index + delta + cur.screenshots.length) % cur.screenshots.length } : null);
   }, []);
@@ -110,28 +115,25 @@ export default function BlogPageClient() {
       <LoadingScreen />
       <AppBar />
       <BlogHeroSection
-        leadCaseTitle={LEAD_CASE?.title} resourceCount={blogPdfResources.length}
+        resourceCount={blogPdfResources.length}
         featuredVideo={blogFeaturedYoutubeVideo} featuredPosterSrc={featuredPosterSrc}
         setFeaturedPosterSrc={setFeaturedPosterSrc} activeEmbeds={activeEmbeds}
         onActivateEmbed={(k: string) => setActiveEmbeds(c => ({...c, [k]: true}))}
       />
-      <BlogCaseNavigator
-        leadCase={LEAD_CASE} previousCase={_leadIdx > 0 ? CASE_ORDER[_leadIdx - 1] : null}
-        nextCase={_leadIdx >= 0 && _leadIdx < CASE_ORDER.length - 1 ? CASE_ORDER[_leadIdx + 1] : null}
-        normalizeHref={normalizePublicHref}
-      />
+      
       <BlogPdfLibrarySection
         filteredCount={filteredPdfs.length} pdfTypeFilters={PDF_TYPE_FILTERS}
         pdfFilter={pdfFilter} setPdfFilter={setPdfFilter} difficultyOptions={DIFFICULTY_OPTIONS}
         difficultyFilter={difficultyFilter} setDifficultyFilter={setDifficultyFilter}
         categoryOptions={CATEGORY_OPTIONS} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
         sortBy={sortBy} setSortBy={setSortBy} hasActiveFilters={Boolean(rawQuery || difficultyFilter || categoryFilter || selectedTools.size > 0 || pdfFilter !== "All")}
-        clearAllFilters={clearAllFilters} leadCase={LEAD_CASE}
-        leadCaseSpotlightImage={LEAD_CASE && caseScreenshotsByEvidenceId[LEAD_CASE.id]?.[0] ? normalizePublicHref(caseScreenshotsByEvidenceId[LEAD_CASE.id][0]) : null}
-        visiblePdfCards={visiblePdfCards} screenshotsById={caseScreenshotsByEvidenceId}
+        clearAllFilters={clearAllFilters} leadCase={null}
+        leadCaseSpotlightImage={null}
+        visiblePdfCards={sortedPdfs} screenshotsById={caseScreenshotsByEvidenceId}
         rawQuery={rawQuery} setRawQuery={setRawQuery} toggleToolFilter={toggleToolFilter}
         openGallery={openGallery} normalizeHref={normalizePublicHref}
       />
+      
       <BlogMediaSections
         totalCasesCount={caseEvidenceLibrary.length} casesWithScreenshotsCount={caseEvidenceLibrary.filter(i => (caseScreenshotsByEvidenceId[i.id] ?? []).length > 0).length}
         totalScreenshotAssets={Object.values(caseScreenshotsByEvidenceId).reduce((sum, shots) => sum + shots.length, 0)}

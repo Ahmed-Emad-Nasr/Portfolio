@@ -1,7 +1,6 @@
 ﻿/*
  * File: page.module.css
- * Cleaned: Removed infinite repaints (blink/pulse), optimized hero backgrounds, 
- * and removed entirely unused classes (blogClosing, backToTop, unused grids).
+ * Cleaned: Removed infinite repaints, unused grids, Case Spotlight, and Case Navigator completely.
  */
 
 /* =========================================
@@ -39,7 +38,7 @@
 }
 
 /* =========================================
-   1.5. HERO & EXTENDED PAGE STYLES (CYBER STYLE)
+   1.5. HERO & EXTENDED PAGE STYLES
    ========================================= */
 .page::before {
   content: "";
@@ -398,8 +397,7 @@
 .blockHeading h2,
 .playlistContent h3,
 .videoCardContent h3,
-.featuredContent h2,
-.caseSpotlightBody h3 { text-wrap: balance; }
+.featuredContent h2 { text-wrap: balance; }
 
 /* =========================================
    5. GRID & CARDS
@@ -426,7 +424,6 @@
 .pdfCard,
 .playlistCard,
 .videoCard,
-.caseSpotlight,
 .featuredCard {
   padding: 0.8rem;
   border-radius: 8px;
@@ -461,60 +458,7 @@
 .playlistCard:hover .embedPreviewImage,
 .videoCard:hover .embedPreviewImage { transform: scale(1.03); }
 
-.caseSpotlight {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.9rem;
-  margin-bottom: 1.4rem;
-  background: rgba(10, 15, 25, 0.92);
-  border: 1px solid rgba(var(--accent-color-rgb), 0.4);
-}
-
-.caseSpotlight:hover { border-color: var(--accent-color); }
 .caseCardLarge { grid-column: span 2; }
-
-.caseNavigator {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  margin: 2rem auto 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 0.7rem;
-}
-
-.caseNavCard {
-  padding: 0.9rem;
-  border-radius: 8px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
-  background: rgba(6, 9, 15, 0.92);
-  transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease);
-}
-
-.caseNavCard:hover {
-  transform: translateY(-3px);
-  border-color: rgba(var(--main-color-rgb), 0.45);
-  background: rgba(10, 15, 25, 0.96);
-}
-
-.caseNavCenter { border-color: rgba(var(--accent-color-rgb), 0.32); background: rgba(10, 15, 25, 0.94); }
-
-.caseNavLabel {
-  display: inline-flex;
-  margin-bottom: 0.8rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 4px;
-  background: rgba(var(--main-color-rgb), 0.08);
-  color: var(--main-color);
-  font-family: monospace;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.caseNavCard h3 { color: #fff; font-family: monospace; font-size: 1.6rem; line-height: 1.4; }
-.caseNavCard p { margin-top: 0.65rem; color: rgba(255, 255, 255, 0.62); font-family: monospace; font-size: 1.2rem; line-height: 1.6; }
-.caseNavCard a { display: inline-flex; margin-top: 1rem; color: var(--accent-color); font-family: monospace; font-size: 1.15rem; text-transform: uppercase; }
 
 .pdfCardBody { display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; }
 .pdfCardMedia { min-width: 0; position: relative; }
@@ -544,7 +488,6 @@
 .difficulty-medium { border-color: rgba(255, 215, 0, 0.5)  !important; color: #ffd700 !important; background: rgba(255, 215, 0, 0.05)  !important; }
 .difficulty-hard   { border-color: rgba(255, 0, 60, 0.5)   !important; color: #ff003c !important; background: rgba(255, 0, 60, 0.05)   !important; }
 
-.caseSpotlightTag,
 .featuredTag {
   display: inline-flex;
   padding: 0.4rem 0.8rem;
@@ -594,7 +537,6 @@
 .cardTitle:hover .cardTooltip { opacity: 1; pointer-events: auto; }
 
 .cardDescription,
-.caseSpotlightBody p,
 .videoDate,
 .playlistDescription,
 .playlistVideoCount { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6); font-size: 1.05rem; line-height: 1.5; font-family: monospace; }
@@ -645,7 +587,6 @@
 
 .primaryShot,
 .shotThumb,
-.caseSpotlightMedia,
 .featuredFrame,
 .playlistFrame,
 .videoFrame {
@@ -663,12 +604,10 @@
 .shotGrid { position: relative; display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
 
 .primaryShot img,
-.shotThumb img,
-.caseSpotlightMedia img { width: 100%; height: 100%; object-fit: contain; object-position: center; filter: grayscale(10%) contrast(1.05); }
+.shotThumb img { width: 100%; height: 100%; object-fit: contain; object-position: center; filter: grayscale(10%) contrast(1.05); }
 
 .primaryShot:hover img,
-.shotThumb:hover img,
-.caseSpotlightMedia:hover img { filter: grayscale(0%) contrast(1.08) brightness(1.05); }
+.shotThumb:hover img { filter: grayscale(0%) contrast(1.08) brightness(1.05); }
 
 .moreShotsBadge {
   position: absolute;
@@ -895,8 +834,6 @@
 .playlistFrame, .videoFrame { width: 100%; }
 .youtubeHubGrid .playlistAction { min-width: 0; }
 .cardActions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.2rem; }
-.caseSpotlightBody { display: flex; flex-direction: column; }
-.caseSpotlightBody h3 { font-size: 2.2rem; color: #fff; font-family: monospace; margin-top: 0.8rem; }
 
 /* =========================================
    11. RESPONSIVE
@@ -905,9 +842,8 @@
   .page { padding: 7rem 4% 5rem; }
   .hero { margin-top: 0; }
   .pdfGrid, .playlistGrid, .videoGrid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.2rem; }
-  .heroGrid, .caseSpotlight { grid-template-columns: 1fr; }
+  .heroGrid { grid-template-columns: 1fr; }
   .featuredCard { grid-template-columns: 1fr; min-height: auto; gap: 1rem; }
-  .caseSpotlight { gap: 0.9rem; }
   .metrics, .insightStrip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .toolbar { grid-template-columns: 1fr; }
   .caseCardLarge { grid-column: span 1; }
@@ -973,10 +909,6 @@
   .youtubeHubSummary { font-size: 1rem; }
   .youtubeHubActions { gap: 0.6rem; }
   .playlistAction { width: 100%; min-width: 0; justify-content: center; }
-  .caseNavigator { grid-template-columns: 1fr; gap: 0.8rem; }
-  .caseNavCard { padding: 1rem; }
-  .caseNavCard h3 { font-size: 1.3rem; }
-  .caseNavCard p { font-size: 1rem; }
   .galleryOverlay { padding: 1rem; }
   .galleryDialog { width: 100%; max-height: 95vh; }
   .galleryHeader { padding: 0.8rem 1rem; gap: 0.6rem; grid-template-columns: 1fr; justify-items: start; }
@@ -1010,7 +942,7 @@
 }
 
 @media (forced-colors: active) {
-  .hero, .pdfCard, .playlistCard, .videoCard, .caseSpotlight, .featuredCard,
+  .hero, .pdfCard, .playlistCard, .videoCard, .featuredCard,
   .insightCard, .youtubeHub, .toolbar, .galleryDialog { border: 2px solid ButtonText; background: Canvas; }
   .galleryOverlay  { background: Canvas; backdrop-filter: none; }
   .embedPlayButton { forced-color-adjust: none; background: Canvas; color: Highlight; border-color: Highlight; }
