@@ -11,40 +11,23 @@ import { getThumbnail } from "../blog-utils";
 
 const PAGE_SIZE = 4;
 
+// 1. تنظيف الـ Props ومسح كل ما يخص الفلاتر
 type BlogPdfLibrarySectionProps = {
-  filteredCount: number;
-  pdfTypeFilters: string[];
-  pdfFilter: string;
-  setPdfFilter: (value: string) => void;
-  difficultyOptions: string[];
-  difficultyFilter: string | null;
-  setDifficultyFilter: (value: string | null) => void;
-  categoryOptions: string[];
-  categoryFilter: string | null;
-  setCategoryFilter: (value: string | null) => void;
-  sortBy: "recent" | "popularity" | "difficulty";
-  setSortBy: (value: "recent" | "popularity" | "difficulty") => void;
-  hasActiveFilters: boolean;
-  clearAllFilters: () => void;
-  leadCase: PdfResource | null;
-  leadCaseSpotlightImage: string | null;
   visiblePdfCards: PdfResource[];
   screenshotsById: Record<string, string[]>;
-  rawQuery: string;
-  setRawQuery: (value: string) => void;
-  toggleToolFilter: (tool: string) => void;
   openGallery: (title: string, screenshots: string[], index?: number) => void;
   normalizeHref: (href: string) => string;
+  leadCase: PdfResource | null;
+  leadCaseSpotlightImage: string | null;
 };
 
 export default function BlogPdfLibrarySection({
-  filteredCount, pdfTypeFilters, pdfFilter, setPdfFilter,
-  difficultyOptions, difficultyFilter, setDifficultyFilter,
-  categoryOptions, categoryFilter, setCategoryFilter,
-  sortBy, setSortBy, hasActiveFilters, clearAllFilters,
-  leadCase, leadCaseSpotlightImage,
-  visiblePdfCards, screenshotsById, rawQuery, setRawQuery,
-  toggleToolFilter, openGallery, normalizeHref,
+  leadCase, 
+  leadCaseSpotlightImage,
+  visiblePdfCards, 
+  screenshotsById, 
+  openGallery, 
+  normalizeHref,
 }: BlogPdfLibrarySectionProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -54,39 +37,11 @@ export default function BlogPdfLibrarySection({
     <section className={styles.block}>
       <MotionInView className={styles.blockHeading}>
         <h2 id="blog-pdfs-title">PDF Library</h2>
-        <p>{filteredCount} result(s) found.</p>
+        {/* 2. استبدال filteredCount بـ visiblePdfCards.length */}
+        <p>{visiblePdfCards.length} result(s) found.</p>
       </MotionInView>
 
-      <MotionInView className={styles.toolbar}>
-        <input type="search" className={styles.searchInput} placeholder="Search cases, tags, tools…" value={rawQuery} onChange={(e) => setRawQuery(e.target.value)} />
-        <div className={styles.modeSwitch}>
-          {pdfTypeFilters.map((filter) => (
-            <button key={filter} type="button" className={`${styles.modeButton} ${pdfFilter === filter ? styles.modeButtonActive : ""}`} onClick={() => setPdfFilter(filter)}>{filter}</button>
-          ))}
-        </div>
-        {difficultyOptions.length > 0 && (
-          <div className={styles.sortButtons}>
-            {difficultyOptions.map((difficulty) => (
-              <button key={difficulty} type="button" className={`${styles.sortButton} ${difficultyFilter === difficulty ? styles.activeSort : ""}`} onClick={() => setDifficultyFilter(difficultyFilter === difficulty ? null : difficulty)}>{difficulty}</button>
-            ))}
-          </div>
-        )}
-        {categoryOptions.length > 0 && (
-          <div className={styles.sortButtons}>
-            {categoryOptions.map((category) => (
-              <button key={category} type="button" className={`${styles.sortButton} ${categoryFilter === category ? styles.activeSort : ""}`} onClick={() => setCategoryFilter(categoryFilter === category ? null : category)}>{category}</button>
-            ))}
-          </div>
-        )}
-        <div className={styles.sortButtons}>
-          {(["recent", "difficulty", "popularity"] as const).map((value) => (
-            <button key={value} type="button" className={`${styles.sortButton} ${sortBy === value ? styles.activeSort : ""}`} onClick={() => setSortBy(value)}>
-              {value.charAt(0).toUpperCase() + value.slice(1)}
-            </button>
-          ))}
-        </div>
-        {hasActiveFilters && <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>✕ Clear Filters</button>}
-      </MotionInView>
+      {/* تم مسح الـ <MotionInView className={styles.toolbar}> بالكامل من هنا */}
 
       {leadCase && (
         <MotionInView className={styles.caseSpotlight}>
@@ -104,7 +59,8 @@ export default function BlogPdfLibrarySection({
             {leadCase.tags && leadCase.tags.length > 0 && (
               <div className={styles.tagsListInline}>
                 {leadCase.tags.slice(0, 4).map((tag) => (
-                  <button key={tag} type="button" className={styles.tagButtonSmall} onClick={() => setRawQuery(tag)}>#{tag}</button>
+                  // تم إزالة onClick للـ tag
+                  <button key={tag} type="button" className={styles.tagButtonSmall}>#{tag}</button>
                 ))}
               </div>
             )}
@@ -112,7 +68,8 @@ export default function BlogPdfLibrarySection({
             {leadCase.tools && leadCase.tools.length > 0 && (
               <div className={styles.toolsListCompact}>
                 {leadCase.tools.map((tool) => (
-                  <button key={tool} type="button" className={styles.toolButtonSmall} onClick={() => toggleToolFilter(tool)}>{tool}</button>
+                  // تم إزالة onClick للـ tool
+                  <button key={tool} type="button" className={styles.toolButtonSmall}>{tool}</button>
                 ))}
               </div>
             )}
@@ -140,8 +97,7 @@ export default function BlogPdfLibrarySection({
             {...item}
             screenshots={screenshotsById[item.id] ?? EMPTY_SCREENSHOTS}
             onOpenGallery={openGallery}
-            onTagClick={setRawQuery}
-            onToolClick={toggleToolFilter}
+            // تم مسح onTagClick و onToolClick عشان شيلنا الفلاتر
             getThumbnail={getThumbnail}
             normalizeHref={normalizeHref}
           />
@@ -156,7 +112,8 @@ export default function BlogPdfLibrarySection({
         </div>
       )}
 
-      {filteredCount === 0 && <p className={styles.emptyState}>No PDF results match your current search/filter.</p>}
+      {/* تم تبسيط الـ Empty state */}
+      {visiblePdfCards.length === 0 && <p className={styles.emptyState}>No PDF results found.</p>}
     </section>
   );
 }
