@@ -129,7 +129,7 @@ p, li, h1, h2, h3, h4, h5, h6 {
 }
 
 html {
-  font-size: 60.5% !important;
+  font-size: 62.5%;
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
