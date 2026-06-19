@@ -8,14 +8,12 @@ import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
-// Dynamic Imports 
-const BlogHeroSection = dynamic(() => import("./components/BlogHeroSection"), { ssr: false });
+// Dynamic Imports (شيلنا الـ BlogHeroSection)
 const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
 const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), { ssr: false });
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 const AppBar = dynamic(() => import("@/app/components/blog_header/sensei-header"), { ssr: false });
 
-// ─── ترتيب الملفات (إرجاع WannaCry كحالة عادية في الصدارة) ───
 const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
 
 const wannacryId = "malware-analysis-wannacry";
@@ -29,10 +27,8 @@ const PDF_DATE_MS = new Map(blogPdfResources.map((item) => [item.id, item.date ?
 
 export default function BlogPageClient() {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
-  const [featuredPosterSrc, setFeaturedPosterSrc] = useState(`https://i.ytimg.com/vi/${blogFeaturedYoutubeVideo.videoId}/hqdefault.jpg`);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
 
-  // ترتيب الكروت الافتراضي (الـ CV ثم WannaCry ثم اللي ليها سكرين شوتس ثم الأحدث)
   const sortedPdfs = useMemo(() => {
     return [...blogPdfResources].sort((a, b) => {
       if (a.id === cvResource.id) return -1;
@@ -66,14 +62,7 @@ export default function BlogPageClient() {
     <main id="main-content" className={styles.page}>
       <LoadingScreen />
       <AppBar />
-      <BlogHeroSection
-        resourceCount={blogPdfResources.length}
-        featuredVideo={blogFeaturedYoutubeVideo} featuredPosterSrc={featuredPosterSrc}
-        setFeaturedPosterSrc={setFeaturedPosterSrc} activeEmbeds={activeEmbeds}
-        onActivateEmbed={(k: string) => setActiveEmbeds(c => ({...c, [k]: true}))}
-      />
       
-      {/* تم إزالة كل الـ Props الزيادة الخاصة بالفلاتر */}
       <BlogPdfLibrarySection
         visiblePdfCards={sortedPdfs}
         screenshotsById={caseScreenshotsByEvidenceId}

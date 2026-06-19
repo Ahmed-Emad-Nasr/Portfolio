@@ -6,6 +6,8 @@
  * - Removed entirely unused classes: .glass-card, section.glass, .btn-glow and their heavy ::after pseudo-elements.
  * - Removed unnecessary media query overrides for the deleted classes.
  * - Added a hyper-lightweight .skeleton-shimmer for dynamic import loading states.
+ * - [NEW] Updated max-width for sections to fix desktop layout.
+ * - [NEW] Improved accessibility by increasing base font sizes and adjusting contrast.
  **/
 
 /*--------- 1. Reset & Global Variables ---------*/
@@ -18,8 +20,8 @@
   --surface-overlay: rgba(10, 20, 44, 0.85);
 
   --text-color:      #dff0ff;
-  --text-muted:      #7a9ab2;
-  --text-dim:        #3d5a72;
+  --text-muted:      #9cb6c9; /* Updated for better contrast */
+  --text-dim:        #5a7b96; /* Updated for better contrast */
   --text-bright:     #f0f8ff;
 
   --main-color:      #cc0f52;
@@ -71,11 +73,12 @@
   --z-toast:    2500;
   --z-progress: 3000;
 
-  --text-xs:   1.0rem;
-  --text-sm:   1.2rem;
-  --text-base: 1.4rem;
-  --text-md:   1.5rem;
-  --text-lg:   1.8rem;
+  /* Updated Font Sizes for Accessibility */
+  --text-xs:   1.2rem;
+  --text-sm:   1.4rem;
+  --text-base: 1.6rem;
+  --text-md:   1.8rem;
+  --text-lg:   2.0rem;
   --text-xl:   2.2rem;
   --text-2xl:  2.8rem;
   --text-3xl:  3.6rem;
@@ -259,7 +262,8 @@ main {
 section {
   padding: 7.1rem 5.25% 5.9rem;
   position: relative;
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1280px; /* Updated for standard desktop screens */
   margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
   z-index: 1;
   contain: layout style;
@@ -317,7 +321,7 @@ section {
   section {
     padding-left: 8%;
     padding-right: 8%;
-    max-width: 1200px;
+    max-width: 1536px; /* Updated for ultra-wide screens */
     margin-left: auto;
     margin-right: auto;
   }
