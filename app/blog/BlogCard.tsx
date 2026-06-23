@@ -97,8 +97,9 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
               alt="main" 
               fill 
               sizes="(max-width: 991px) 70vw, 40vw" 
-              loading="lazy" 
-              quality={70} 
+              loading="lazy"
+              decoding="async" 
+              quality={20} 
               onError={() => setPrimaryFailed(true)} // ← سطر الإنقاذ
             />
           </a>
@@ -110,8 +111,9 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
                   alt="thumb" 
                   fill 
                   sizes="18vw" 
+                  decoding="async"
                   loading="lazy" 
-                  quality={50} 
+                  quality={25} 
                   onError={() => setSecondaryFailed(true)} // ← سطر الإنقاذ
                 />
               </a>

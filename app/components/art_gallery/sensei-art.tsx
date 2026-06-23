@@ -24,6 +24,7 @@ const ImageItem = memo(({ image }: { image: { src: string; thumb: string } }) =>
           height={350}
           sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw"
           loading="lazy"
+          decoding="async"
           quality={10}
           className={styles.galleryImg}
           onError={() => setFailed(true)}

@@ -28,11 +28,12 @@ const SenseiHome = memo(function SenseiHome() {
               src={failed ? "/Assets/art-gallery/Images/logo/My_Logo.webp" : "Assets/art-gallery/Images/logo/3omda.webp"}
               alt="Ahmed Emad Nasr"
               className={styles.image}
-              width={450}
-              height={450}
+              width={350}
+              height={350}
               sizes="(max-width: 968px) 80vw, 350px"
-              quality={75}
-              priority
+              quality={60}
+              loading="lazy"
+              decoding="async"
               onError={() => setFailed(true)}
             />
           </button>
