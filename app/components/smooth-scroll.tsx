@@ -11,26 +11,23 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenis = useLenis();
 
   useEffect(() => {
-    if (lenis) {
-      // Connect Lenis to ScrollTrigger
-      lenis.on("scroll", ScrollTrigger.update);
+    if (!lenis) return;
 
-      gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-      });
+    lenis.on("scroll", ScrollTrigger.update);
 
-      gsap.ticker.lagSmoothing(0);
-    }
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      if (lenis) {
-        lenis.off("scroll", ScrollTrigger.update);
-      }
+      lenis.off("scroll", ScrollTrigger.update);
     };
   }, [lenis]);
 
   return (
-    <ReactLenis root options={{ lerp: 0.08, duration: 1.2, smoothWheel: true }}>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
       {children}
     </ReactLenis>
   );
