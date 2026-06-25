@@ -20,24 +20,24 @@ const pdfResources = [
   ...caseEvidenceLibrary,
 ];
 
-// ✅ FIX: In Next.js App Router, structured data goes in generateMetadata or
-// as a <script> inside the page component — NOT via next/head (that's Pages Router only).
-// We inject JSON-LD via a <script> tag directly in the JSX below instead.
-// Perf note: casesStructuredData/breadcrumbSchema are already module-level
-// consts derived only from static imports (pdfResources), so they're computed
-// once per server process, not per request — no further hoisting needed.
+// ─── Structured Data ──────────────────────────────────────────────────────────
 
 const casesStructuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Cybersecurity Blog - SOC Incident Reports, DFIR Writeups & Threat Analysis",
+  name: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | Cybersecurity Blog - SOC Incident Reports, DFIR Writeups & Malware Analysis",
   description:
-    "Comprehensive collection of SOC incident response reports, cybersecurity writeups, and threat analysis cases with screenshots and documentation",
+    "Comprehensive collection of SOC incident response reports, DFIR writeups, malware analysis, and threat hunting cases with detailed documentation.",
   url: `${SITE_BASE_URL}/blog`,
   publisher: {
     "@type": "Person",
     name: "Ahmed Emad Nasr",
-    sameAs: "https://linkedin.com/in/ahmedoadnasr",
+    jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"], // توحيد المسمى الوظيفي
+    sameAs: [
+      "https://linkedin.com/in/ahmed-emad-nasr/", // تم تعديل رابط لينكدان ليتطابق مع الـ CV
+      "https://x.com/0x3omda",
+      "https://github.com/Ahmed-Emad-Nasr"
+    ],
   },
   hasPart: pdfResources.map((item, index) => ({
     "@type": "DigitalDocument",
@@ -50,10 +50,10 @@ const casesStructuredData = {
     author: { "@type": "Person", name: "Ahmed Emad Nasr" },
     datePublished: (item as any)?.date || "2025-01-01",
     keywords:
-      (item as any)?.tags?.join(", ") || "cybersecurity, incident response",
+      (item as any)?.tags?.join(", ") || "cybersecurity, incident response, SOC, DFIR",
   })),
   keywords:
-    "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, security reports",
+    "SOC analyst, incident response, cybersecurity, DFIR, threat analysis, writeups, security reports, malware analysis",
 };
 
 const breadcrumbSchema = {
@@ -75,43 +75,49 @@ const breadcrumbSchema = {
   ],
 };
 
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
 export const metadata: Metadata = {
-  title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Blog - SOC Incident Reports & Cybersecurity Writeups",
+  title: "Ahmed Emad Nasr | Blog - SOC Incident Reports & Cybersecurity Writeups",
   description:
-    "Explore SOC incident response reports, DFIR investigations, and cybersecurity threat analysis cases with detailed documentation and screenshots.",
+    "Explore SOC incident response reports, DFIR investigations, malware analysis, and cybersecurity threat analysis cases with detailed documentation.",
   keywords: [
     "SOC analyst reports",
     "incident response writeups",
     "cybersecurity cases",
     "DFIR investigations",
     "threat analysis",
+    "malware analysis",
     "security documentation",
     "LetsDefend simulations",
+    "Wazuh",
+    "SIEM"
   ],
   alternates: { canonical: "/blog" },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: `${SITE_BASE_URL}/blog`,
-    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Blog - SOC Incident Reports & Cybersecurity Writeups",
+    title: "Ahmed Emad Nasr | Blog - SOC Incident Reports & Cybersecurity Writeups",
     description:
-      "Comprehensive SOC incident response reports, DFIR writeups, and threat analysis cases with screenshots.",
-    siteName: "Ahmed Emad Nasr - Security Analyst",
+      "Comprehensive SOC incident response reports, DFIR writeups, malware analysis, and threat hunting cases.",
+    siteName: "Ahmed Emad Nasr - SOC & Cybersecurity Analyst", // تعديل الـ SiteName
     images: [
       {
-        url: toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png"),
+        url: toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png"), // يفضل التأكد إن المسار ده صح، في الـ Portfolio كان /Assets/art-gallery/Images/logo/My_Logo.webp
         width: 1200,
         height: 630,
-        alt: "Security Analysis Blog",
+        alt: "Security Analysis Blog by Ahmed Emad Nasr",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@AhmedEmad",
-    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | Blog - SOC Incident Reports & Cybersecurity Writeups",
+    creator: "@0x3omda", // تم توحيد الـ Handle ليتطابق مع الـ Portfolio
+    site: "@0x3omda",
+    title: "Ahmed Emad Nasr | Blog - SOC & DFIR Reports",
     description:
-      "Explore incident response cases, threat analysis, and security investigations.",
+      "Explore incident response cases, threat analysis, malware reverse engineering, and security investigations.",
     images: [toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png")],
   },
 };
@@ -119,7 +125,6 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <>
-      {/* ✅ App Router way: inject JSON-LD structured data directly */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

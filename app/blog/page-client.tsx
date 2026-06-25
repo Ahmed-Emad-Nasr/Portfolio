@@ -14,7 +14,7 @@ const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections")
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 const AppBar = dynamic(() => import("@/app/components/blog_header/sensei-header"), { ssr: false });
 
-const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
+const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC & Cybersecurity Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
 
 const wannacryId = "malware-analysis-wannacry";
 const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);

@@ -16,7 +16,6 @@ import { knowledgeEducationItems } from "@/app/core/data/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
 import CustomCursor from "./components/custom-cursor";
 
-
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
 export const viewport: Viewport = {
@@ -37,15 +36,16 @@ export const metadata: Metadata = {
     startupImage: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
   title: {
-    default: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
+    default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
     template: "%s | Ahmed Emad Nasr",
   },
   description:
-    "Ahmed Emad Nasr's cybersecurity portfolio for incident response, threat hunting, digital forensics, security training, projects, and contact.",
+    "Ahmed Emad Nasr's cybersecurity portfolio specializing in SOC operations, incident response, digital forensics (DFIR), threat hunting, and malware analysis.",
   keywords: [
-    "Ahmed Emad Nasr", "SOC Analyst", "Cybersecurity Engineer",
+    "Ahmed Emad Nasr", "SOC Analyst", "Cybersecurity Analyst", "Information Security Analyst",
     "Incident Response", "Threat Hunting", "SIEM", "EDR", "DFIR",
-    "Security Training", "Digital Forensics", "Cairo", "Portfolio",
+    "Wazuh", "Suricata", "Malware Analysis", "eJPT v2", 
+    "Cairo", "Benha", "Portfolio",
   ],
   authors: [{ name: "Ahmed Emad Nasr" }],
   creator: "Ahmed Emad Nasr",
@@ -64,8 +64,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
-    description: "Incident response, threat hunting, digital forensics, and cybersecurity training from Ahmed Emad Nasr.",
+    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
+    description: "Incident response, threat hunting, DFIR, and cybersecurity training from Ahmed Emad Nasr.",
     type: "website",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     locale: "en_US",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸",
+    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC Analyst",
     description: "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
     creator: "@0x3omda",
     site: "@0x3omda",
@@ -112,13 +112,17 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       name: "Ahmed Emad Nasr",
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
       image: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp",
-      jobTitle: "SOC Analyst",
+      jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
       description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
       email: "mailto:ahmed.em.nasr@gmail.com",
       telephone: "+20 101 816 6445",
-      address: { "@type": "PostalAddress", addressLocality: "Cairo", addressCountry: "EG" },
+      address: { 
+        "@type": "PostalAddress", 
+        addressLocality: "Cairo/Benha", 
+        addressCountry: "EG" 
+      },
       contactPoint: {
-        "@type": "ContactPoint", contactType: "customer support",
+        "@type": "ContactPoint", contactType: "professional inquiry",
         email: "ahmed.em.nasr@gmail.com", availableLanguage: ["en", "ar"],
       },
       sameAs: [
@@ -153,8 +157,8 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       "@type": "WebPage",
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#homepage",
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Engineer",
-      description: "A portfolio homepage highlighting cybersecurity work, professional experience, projects, and contact options.",
+      name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Professional",
+      description: "A portfolio homepage highlighting cybersecurity work, SIEM/EDR projects, malware analysis, and professional experience.",
       isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
       primaryImageOfPage: { "@type": "ImageObject", url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp" },
       about: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },

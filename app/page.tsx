@@ -9,23 +9,25 @@ import type { Metadata } from "next";
 import MainClient from "./page-client";
 
 export const metadata: Metadata = {
-  title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer & Noob DFIR and Malware Analyst",
+  title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst | DFIR & Malware Analysis",
   description:
-    "Ahmed Emad Nasr portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, and real security case reports.",
+    "Ahmed Emad Nasr's portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, and real security case reports using Wazuh, Suricata, and ELK.",
   keywords: [
     "SOC portfolio",
     "incident response portfolio",
     "threat hunting projects",
     "malware analysis reports",
     "DFIR analyst",
+    "Wazuh detection rules",
+    "eJPT certified"
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer & Noob DFIR and Malware Analyst",
+    title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst",
     description:
-      "Real SOC/IR case reports, security projects, and cybersecurity training impact by Ahmed Emad Nasr.",
+      "Real SOC/IR case reports, security projects, malware analysis, and cybersecurity training impact by Ahmed Emad Nasr.",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     type: "website",
     images: [
@@ -39,9 +41,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmed Emad Nasr   🇪🇬   🇵🇸 | SOC Analyst & Cybersecurity Engineer & Noob DFIR and Malware Analyst",
+    title: "Ahmed Emad Nasr | SOC & Incident Response Analyst",
     description:
-      "Explore SOC investigations, DFIR workflows, and malware analysis cases.",
+      "Explore SOC investigations, DFIR workflows, malware analysis cases, and detection engineering.",
     images: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
 };
@@ -66,7 +68,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
         name: "Ahmed Emad Nasr",
       },
       areaServed: "Worldwide",
-      serviceType: ["SOC Monitoring", "Incident Response", "Threat Hunting", "Security Training"],
+      serviceType: ["SOC Monitoring", "Incident Response", "Threat Hunting", "Security Training", "Digital Forensics"],
       url: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact",
     },
   ],
