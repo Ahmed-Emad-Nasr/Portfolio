@@ -1,233 +1,137 @@
-/* sensei_loader.module.css  —  PERF BUILD v2
-   Diff: ring spin + pulse halo are now CSS keyframe animations (compositor
-   thread) instead of Framer Motion per-frame JS updates. Two new classes
-   added: .ringSpinAnim and .ringPulseAnim. They are applied conditionally
-   in TSX so prefers-reduced-motion still works.
+/*
+ * sensei_loader.module.css  —  ULTRA MINIMALIST CYBERPUNK EDITION
+ */
 
-   v2 change: .progressIndeterminate animated `left`/`right`, both layout
-   properties that force the browser to reflow on every frame. Switched to
-   `transform: translateX()` with a fixed `width`, which the compositor can
-   run without touching layout at all. */
-
-/* ─── Full-screen overlay ──────────────────────────────────────────────── */
 .loader {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(var(--main-color-rgb), 0.10) 0%, rgba(0,0,0,0.85) 45%),
-    linear-gradient(180deg, rgba(8,0,0,0.25) 0%, rgba(0,0,0,1) 70%),
-    var(--bg-color);
+  background-color: #030508; /* Deep dark blue/black */
 }
 
-/* ─── Background grid ──────────────────────────────────────────────────── */
-.neuralGrid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px);
-  background-size: 32px 32px;
+/* ─── CRT Scanlines (Replaces the Grid) ────────────────────────────────── */
+.scanlines {
+  position: absolute; inset: 0; opacity: 0.15; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 229, 255, 0.1) 2px,
+    rgba(0, 229, 255, 0.1) 4px
+  );
 }
 
-/* ─── Ring wrapper ─────────────────────────────────────────────────────── */
-.ringWrap {
-  position: relative;
-  width: 12.8rem;
-  height: 12.8rem;
-}
+/* ─── Minimal Spinner ──────────────────────────────────────────────────── */
+.ringWrap { position: relative; width: 6rem; height: 6rem; }
 
-/* ─── Pulse halo ───────────────────────────────────────────────────────── */
-.ringPulse {
-  position: absolute;
-  inset: -1.2rem;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.22) 0%, transparent 70%);
-  will-change: transform, opacity;
-  opacity: 0.18;
-}
-
-@keyframes loaderPulse {
-  0%, 100% { transform: scale(1);    opacity: 0.18; }
-  50%       { transform: scale(1.18); opacity: 0;    }
-}
-
-/* Applied when reduced motion is NOT preferred */
-.ringPulseAnim {
-  animation: loaderPulse 3.1s ease-in-out infinite; /* was 2.4s — slower breathing pulse */
-}
-
-/* ─── Spinning ring ─────────────────────────────────────────────────────── */
 .ring {
-  width: 100%;
-  height: 100%;
-  border: 2px solid rgba(var(--main-color-rgb), 0.2);
-  border-top-color: var(--main-color);
-  border-radius: 999px;
+  width: 100%; height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--accent-color);
+  border-bottom: 1px solid var(--main-color);
+  border-radius: 50%;
   will-change: transform;
 }
 
-@keyframes loaderSpin {
-  to { transform: rotate(360deg); }
+.ring::before {
+  content: ""; position: absolute; inset: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  border-left: 1px solid var(--main-color);
+  border-right: 1px solid var(--accent-color);
+  border-radius: 50%;
+  animation: loaderSpin 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
 }
 
-/* Applied when reduced motion is NOT preferred */
-.ringSpinAnim {
-  animation: loaderSpin 5s linear infinite; /* was 4s — calmer rotation */
-}
+@keyframes loaderSpin { to { transform: rotate(360deg); } }
+.ringSpinAnim { animation: loaderSpin 3s linear infinite; }
 
-/* ─── Centre symbol ─────────────────────────────────────────────────────── */
 .symbol {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-overlock, sans-serif);
-  font-size: 4rem;
-  font-weight: 900;
-  color: var(--main-color);
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: monospace; font-size: 1rem; font-weight: 800; color: #fff;
+  letter-spacing: 2px;
 }
 
-/* ─── Text block ────────────────────────────────────────────────────────── */
-.copy {
-  margin-top: 4.8rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-  text-align: center;
-}
-
-.copyRuleRow {
-  display: flex;
-  align-items: center;
-  gap: 1.6rem;
-}
-
-.copyRule {
-  width: 3.2rem;
-  height: 1px;
-  background: rgba(var(--main-color-rgb), 0.4);
-}
+/* ─── Typography (Terminal Vibe) ───────────────────────────────────────── */
+.copy { margin-top: 4rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
 
 .copyLabel {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
+  font-family: monospace; font-size: 1rem; font-weight: 700;
+  letter-spacing: 0.3em; color: rgba(255, 255, 255, 0.4);
 }
 
 .title {
-  font-family: var(--font-overlock, sans-serif);
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  color: #ffffff;
-  margin: 0;
+  font-family: monospace; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700;
+  letter-spacing: 4px; color: #e0e0e0; margin: 0;
 }
 
-.titleAccent {
-  color: var(--main-color);
-  font-style: italic;
-}
+.titleAccent { color: var(--accent-color); }
 
-/* ─── Status message ────────────────────────────────────────────────────── */
 .statusMsg {
-  margin: 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.28);
-  /* Soft fade between messages via CSS transition on text content change
-     is not possible; we skip the per-message fade to avoid JS overhead.
-     The swap is instant but imperceptible at 1.4s intervals. */
+  margin-top: 1.5rem; font-family: monospace; font-size: 1.1rem;
+  color: var(--main-color); letter-spacing: 1px;
 }
 
-/* ─── Skip button ───────────────────────────────────────────────────────── */
+/* Blinking Terminal Cursor */
+.cursor {
+  display: inline-block; width: 8px; height: 1.1rem;
+  background-color: var(--main-color); margin-left: 4px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ─── Skip Button ──────────────────────────────────────────────────────── */
 .skipBtn {
-  position: absolute;
-  bottom: 5rem;
-  right: 2rem;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 999px;
-  color: rgba(255,255,255,0.4);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  padding: 0.4rem 1rem;
-  cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  position: absolute; bottom: 3rem; right: 3rem;
+  background: transparent; border: none;
+  color: rgba(255, 255, 255, 0.3); font-family: monospace; font-size: 1rem;
+  letter-spacing: 2px; cursor: pointer; transition: all var(--motion-fast) ease;
 }
 
-.skipBtn:hover         { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.35); }
-.skipBtn:focus-visible { outline: 2px solid var(--main-color); outline-offset: 3px; }
+.skipBtn:hover { color: var(--danger); text-shadow: 0 0 8px rgba(var(--danger-rgb), 0.5); }
+.skipBtn:focus-visible { outline: 1px solid var(--danger); outline-offset: 4px; }
 
-/* ─── Progress bar ──────────────────────────────────────────────────────── */
+/* ─── Laser Progress Bar ───────────────────────────────────────────────── */
 .progressBar {
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 100%;
-  height: 0.4rem;
-  background: rgba(255,255,255,0.05);
+  position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .progressFill {
-  height: 100%;
-  background: var(--main-color);
-  will-change: width;
-  transition: width 0.55s ease-out; /* was 0.4s — smoother fill catch-up */
+  height: 100%; background: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
+  position: relative;
+  will-change: width; transition: width 0.2s ease-out; 
 }
 
-/* Indeterminate fallback when PerformanceObserver has no data yet */
+/* Glowing Leading Edge (Playhead) */
+.progressFill::after {
+  content: ''; position: absolute; right: 0; top: -1px;
+  width: 4px; height: 3px; background: #fff;
+  box-shadow: 0 0 10px #fff, 0 0 5px var(--accent-color);
+}
+
 @keyframes indeterminate {
-  0%   { transform: translateX(-100%); width: 35%; }
-  60%  { transform: translateX(285%);  width: 35%; }
-  100% { transform: translateX(285%);  width: 35%; }
+  0%   { transform: translateX(-100%); width: 25%; }
+  100% { transform: translateX(400%);  width: 25%; }
 }
 
 .progressIndeterminate {
-  position: absolute;
-  left: 0;
-  width: 35%;
-  will-change: transform;
-  animation: indeterminate 2s ease-in-out 0.5s infinite; /* was 1.6s — slower sweep */
-  transition: none; /* override the width transition while indeterminate */
+  position: absolute; left: 0; width: 25%;
+  will-change: transform; animation: indeterminate 1.2s linear infinite; transition: none;
 }
 
-/* ─── Reduced-motion overrides ──────────────────────────────────────────── */
+/* ─── Reduced-motion ───────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .ringSpinAnim,
-  .ringPulseAnim,
-  .progressIndeterminate { animation: none !important; }
-
-  .ring              { border-top-color: rgba(var(--main-color-rgb), 0.6); }
-  .ringPulse         { opacity: 0.1; }
-  .progressFill      { transition: none; }
+  .ringSpinAnim, .ring::before, .progressIndeterminate, .cursor { animation: none !important; }
+  .progressFill { transition: none; box-shadow: none; }
+  .progressFill::after { display: none; }
 }
 
 /* ─── Mobile ────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
-  .ringWrap  { width: 10rem; height: 10rem; }
-  .symbol    { font-size: 3rem; }
-  .copy      { margin-top: 3.6rem; padding-inline: 1.6rem; }
-  .skipBtn   { bottom: 4rem; right: 1.2rem; }
-}
-
-/* ─── Forced colors (Windows High Contrast) ─────────────────────────────── */
-@media (forced-colors: active) {
-  .loader { background: Canvas; }
-  .ring   { border-color: ButtonText; border-top-color: Highlight; }
-  .progressFill { background: Highlight; }
-  .skipBtn { forced-color-adjust: none; border-color: ButtonText; color: ButtonText; }
+  .ringWrap { width: 5rem; height: 5rem; }
+  .title { font-size: 1.6rem; }
+  .skipBtn { bottom: 2rem; right: 1.5rem; font-size: 0.9rem; }
 }

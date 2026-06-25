@@ -1,234 +1,133 @@
 /*
  * File: experience-section.module.css
+ * MINIMALIST CYBERPUNK EDITION
  */
 
 .section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
-.title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 1px; text-shadow: none; display: inline-block; padding-bottom: 2rem; }
-.title::before, .title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 5px; }
-.title::before { width: 120%; height: 2px; background: rgba(var(--main-color-rgb), 0.2); }
-.title::after { width: 50%; height: 4px; background: var(--main-color); box-shadow: none; }
+/* Sharp Title */
+.title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 2px; text-transform: uppercase; display: inline-block; padding-bottom: 2rem; }
+.title::before, .title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+.title::before { width: 100%; height: 1px; background: rgba(var(--main-color-rgb), 0.3); }
+.title::after { width: 40%; height: 3px; background: var(--main-color); }
 
 .container { margin: 0 auto; padding: 0 5.25%; max-width: 1500px; }
 
-/* --- 1. Data Stream Timeline --- */
+/* --- 1. Static Cyber Timeline (Optimized) --- */
 .time-line { position: relative; max-width: 1160px; margin: 0 auto; padding: 2rem 0; }
 .time-line::after {
   content: "";
   position: absolute;
-  width: 4px;
+  width: 2px;
   top: 0;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 1rem;
-  background: linear-gradient(to bottom, rgba(var(--main-color-rgb), 0.1) 0%, rgba(var(--main-color-rgb), 0.8) 50%, rgba(var(--main-color-rgb), 0.1) 100%);
-  background-size: 100% 200%;
-  animation: dataStreamTimeline var(--anim-slow) linear infinite; 
-  box-shadow: none;
-}
-
-@keyframes dataStreamTimeline {
-  0% { background-position: 0 -100%; }
-  100% { background-position: 0 100%; }
+  background: rgba(var(--main-color-rgb), 0.2);
 }
 
 .timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; margin-bottom: 2.4rem; }
 .timeline-container.left { left: 0; }
 .timeline-container.right { left: 50%; }
 
-/* --- 2. Radar Pulse Nodes --- */
+/* --- 2. Cyber Nodes (Sharp Diamond instead of circles) --- */
 .timeline-container::after {
-  content: ""; position: absolute; width: 24px; height: 24px;
-  background: radial-gradient(circle at 35% 35%, rgba(var(--accent-color-rgb), 0.9), rgba(7, 26, 19, 0.95));
-  border: 4px solid rgba(var(--accent-color-rgb), 0.92); border-radius: 50%; top: 5rem; z-index: 3;
-  animation: none;
-  transition: background var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+  content: ""; 
+  position: absolute; 
+  width: 14px; 
+  height: 14px;
+  background: var(--bg-color);
+  border: 2px solid var(--accent-color); 
+  top: 5.5rem; 
+  z-index: 3;
+  transform: rotate(45deg);
+  transition: all var(--motion-fast) var(--motion-ease);
 }
 
-.timeline-container.left::after { right: -12px; }
-.timeline-container.right::after { left: -12px; }
+.timeline-container.left::after { right: -7px; }
+.timeline-container.right::after { left: -7px; }
 .timeline-container:hover::after { 
-  background: var(--main-color); 
-  border-color: var(--main-color);
-  transform: scale(1.2);
-  animation: none;
-  box-shadow: none;
+  background: var(--accent-color); 
+  box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.5);
+  transform: rotate(45deg) scale(1.2);
 }
 
-/* --- 3. Cyber Card Content --- */
+/* --- 3. Minimalist Cyber Card --- */
 .content {
-  background:
-    radial-gradient(circle at 88% 12%, rgba(var(--accent-color-rgb), 0.08), transparent 40%),
-    var(--surface-card-bg);
-  padding: 2.8rem; border-radius: var(--radius-card); border: none;
-  transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
-  backface-visibility: hidden;
-  position: relative; text-align: left;
-  overflow: hidden;
+  background: rgba(10, 10, 10, 0.6);
+  padding: 2.5rem; 
+  border-radius: var(--radius-card); 
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 3px solid rgba(var(--main-color-rgb), 0.3);
+  transition: all var(--motion-normal) var(--motion-ease);
+  position: relative; 
+  text-align: left;
 }
 
 .content:hover {
-  transform: translateY(-5px);
-  background: rgba(10, 13, 18, 0.95);
+  transform: translateX(5px);
+  background: rgba(15, 15, 15, 0.9);
+  border-left: 3px solid var(--main-color);
+  border-color: rgba(var(--main-color-rgb), 0.2);
 }
 
-.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: rgba(205, 250, 230, 0.84); transition: color var(--motion-normal) var(--motion-ease); }
-.titleIcon { font-size: 1.8rem; opacity: 0.9; transition: color var(--motion-normal) var(--motion-ease); }
-.tag h3 { margin: 0; font-size: 1.6rem; font-weight: 700; color: rgba(233, 241, 250, 0.9); transition: color var(--motion-normal) var(--motion-ease); display: inline-flex; align-items: center; gap: 0.8rem; }
-.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateY(1px); transition: opacity var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease); }
-.tag h3:hover { cursor: pointer; text-decoration: underline; text-decoration-color: var(--main-color); }
-.tag h3:hover .linkIcon { opacity: 1; color: var(--main-color); }
+.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 700; color: #fff; }
+.titleIcon { font-size: 1.8rem; color: var(--text-muted); transition: color var(--motion-fast) ease; }
+.content:hover .titleIcon { color: var(--main-color); }
 
-.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; color: var(--text-muted); font-size: 1.5rem; line-height: 1.78; font-weight: 500; transition: color var(--motion-normal) var(--motion-ease); }
-.desc-list li { margin-bottom: 0.6rem; }
-.desc-list li::marker { color: rgba(var(--main-color-rgb), 0.5); }
-.desc-list li:last-child { margin-bottom: 0; }
+.tag h3 { margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.8rem; }
+.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateX(-5px); transition: all var(--motion-fast) ease; }
+.tag h3:hover { color: var(--accent-color); }
+.tag h3:hover .linkIcon { opacity: 1; transform: translateX(0); }
+
+.desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; color: var(--text-muted); font-size: 1.4rem; line-height: 1.6; }
+.desc-list li { margin-bottom: 0.8rem; }
+.desc-list li::marker { color: rgba(var(--accent-color-rgb), 0.5); }
+.content:hover .desc-list li::marker { color: var(--accent-color); }
 
 /* --- 4. Terminal Skill Badges --- */
-.skillTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-top: 1.8rem;
-}
-
+.skillTags { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.8rem; }
 .skillTag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.4rem 0.9rem;
-  border-radius: 4px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.3);
-  background: rgba(10, 15, 25, 0.6);
-  color: rgba(var(--main-color-rgb), 0.9);
-  font-size: 1.15rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.2);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1rem;
   font-family: monospace; 
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
+  transition: all var(--motion-fast) ease;
 }
+.skillTag::before { content: "> "; opacity: 0.5; color: var(--main-color); }
+.skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); border-color: var(--main-color); }
 
-.skillTag::before {
-  content: ">_ ";
-  opacity: 0.5;
-  margin-right: 4px;
-}
-
-.skillTag:hover {
-  background: rgba(var(--main-color-rgb), 0.15);
-  border-color: var(--main-color);
-  color: #fff;
-  box-shadow: none;
-  transform: translateY(-2px);
-}
-
-.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed rgba(var(--main-color-rgb), 0.2); transition: border-color var(--motion-normal) var(--motion-ease); gap: 0.6rem; }
-.experience-time, .date-range { display: flex; align-items: center; gap: 0.7rem; }
-.experience-time { font-size: 1.4rem; font-weight: 700; color: var(--main-color); transition: color var(--motion-normal) var(--motion-ease); }
-.date-range { font-size: 1.2rem; color: rgba(233, 241, 250, 0.76); font-weight: 600; font-family: monospace; transition: color var(--motion-normal) var(--motion-ease); }
+.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: 0.6rem; }
+.experience-time { font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: monospace; }
+.date-range { font-size: 1.2rem; color: var(--text-muted); font-family: monospace; }
 
 .proofLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 36px;
-  padding: 0.45rem 1.2rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--accent-color-rgb), 0.4);
-  color: var(--accent-color);
-  background: rgba(var(--accent-color-rgb), 0.08);
-  font-size: 1.2rem;
-  font-weight: 700;
-  transition: background var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease);
-  position: relative;
-  overflow: hidden;
+  display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.3); color: var(--accent-color);
+  font-size: 1.2rem; font-family: monospace; transition: all var(--motion-fast) ease;
 }
+.proofLink:hover { background: rgba(var(--accent-color-rgb), 0.1); border-color: var(--accent-color); }
 
-.proofLink:hover {
-  background: var(--accent-color);
-  border-color: var(--accent-color);
-  color: #000;
-  transform: translateY(-2px);
-  box-shadow: none;
-}
-
-.proofLink:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-}
-
-.loadMoreWrap {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
+.loadMoreWrap { margin-top: 4rem; display: flex; justify-content: center; }
 .primaryAction {
-  min-height: 42px;
-  padding: 0.6rem 1.4rem;
-  border-radius: 4px;
-  border: 1px solid rgba(var(--main-color-rgb), 0.6);
-  background: rgba(10, 15, 25, 0.8);
-  color: #e2f1ff;
-  font-size: 1.2rem;
-  font-weight: 700;
-  font-family: monospace;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
+  padding: 1rem 2rem; border: 1px solid var(--main-color); background: transparent;
+  color: var(--main-color); font-size: 1.3rem; font-family: monospace; text-transform: uppercase; letter-spacing: 2px;
+  cursor: pointer; transition: all var(--motion-fast) ease;
 }
+.primaryAction:hover { background: rgba(var(--main-color-rgb), 0.1); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.2); }
 
-.primaryAction:hover {
-  background: rgba(var(--main-color-rgb), 0.12);
-  color: #fff;
-  border-color: var(--main-color);
-}
-
-.primaryAction:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-}
-
-/* Hover States for Content */
-.content:hover .tag h2 { color: #fff; }
-.content:hover .titleIcon { color: var(--main-color); }
-.content:hover .tag h3 { color: rgba(255, 255, 255, 0.95); }
-.content:hover .desc-list { color: rgba(255, 255, 255, 0.88); }
-.content:hover .desc-list li::marker { color: var(--main-color); }
-.content:hover .date-details { border-top-color: rgba(var(--main-color-rgb), 0.5); }
-.content:hover .experience-time { color: var(--accent-color); }
-.content:hover .date-range { color: rgba(255, 255, 255, 0.8); }
-
-/* === Media Queries & Mobile Overrides === */
+/* === Mobile Overrides === */
 @media (max-width: 991px) { 
-  .section-education {
-    min-height: auto;
-    padding: 6rem 0 4.5rem;
-  }
-
-  .timeline-container { width: 100%; padding-left: 7rem; padding-right: 2rem; } 
+  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; } 
   .timeline-container.left, .timeline-container.right { left: 0; } 
-  .time-line::after { left: 3rem; } 
-  .timeline-container.left::after, .timeline-container.right::after { left: 3rem; right: auto; transform: translateX(-50%); } 
-  .content { padding: 2.5rem 2rem; } 
+  .time-line::after { left: 2rem; } 
+  .timeline-container.left::after, .timeline-container.right::after { left: 1.3rem; right: auto; } 
   .date-details { align-items: flex-start; } 
 }
-
 @media (max-width: 430px) {
-  .section-education {
-    padding: 5.2rem 0 3.5rem;
-  }
-
-  .container { padding: 0 1.2rem; }
   .title { font-size: 2.5rem; }
-  .timeline-container { padding-left: 4.8rem; padding-right: 0.5rem; }
-  .time-line::after { left: 1.8rem; }
-  .timeline-container.left::after,
-  .timeline-container.right::after { left: 1.8rem; width: 18px; height: 18px; border-width: 3px; }
-  .content { padding: 2rem 1.2rem; border-radius: 1.6rem; }
-  .tag h2 { font-size: 1.8rem; }
-  .tag h3 { font-size: 1.4rem; }
-  .desc-list { font-size: 1.35rem; }
+  .content { padding: 1.8rem; }
 }

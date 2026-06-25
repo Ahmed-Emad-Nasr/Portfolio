@@ -3,7 +3,7 @@
 import { useState, memo } from "react";
 import Image from "next/image";
 import styles from "./sensei-art.module.css";
-import MotionInView from "@/app/core/components/MotionInView"; // استيراد المكون المعدل
+import MotionInView from "@/app/core/components/MotionInView"; 
 
 const GALLERY_IMAGES = Array.from({ length: 50 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.webp`,
@@ -14,8 +14,8 @@ const ImageItem = memo(({ image }: { image: { src: string; thumb: string } }) =>
   const [failed, setFailed] = useState(false);
 
   return (
-    // الأنيميشن هنا يتم تفعيله كل مرة يظهر العنصر في الـ Viewport
-    <MotionInView variant="fade" viewport={{ once: false, amount: 0.1 }}>
+    // تم التعديل إلى once: true لضمان سلاسة السكرول وعدم إرهاق المعالج
+    <MotionInView variant="fade" viewport={{ once: true, amount: 0.1 }}>
       <div className={styles.art_pic}>
         <Image
           src={failed ? image.src : image.thumb}

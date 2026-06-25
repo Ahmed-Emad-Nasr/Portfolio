@@ -62,9 +62,9 @@ const SenseiHome = memo(function SenseiHome() {
           </div>
 
           <div className={styles.homeButton}>
-            <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download="AhmedEmadNasr_CV.pdf" className={`${styles.btn} ${styles.cvBtn} ${CV_VARIANT === "B" ? styles.cvBtnAlt : ""}`}>
-              {CV_VARIANT === "A" ? "Download CV" : "Get My CV"} <FontAwesomeIcon icon={faFilePdf} />
-            </a>
+<a href="Assets/cv/AhmedEmadNasr_CV.pdf" download="AhmedEmadNasr_CV.pdf" className={`${styles.btn} ${styles.cvBtn}`}>
+  Download CV <FontAwesomeIcon icon={faFilePdf} />
+</a>
             <a href="#Projects" className={`${styles.btn} ${styles.btnProjects}`}>
               View Projects <FontAwesomeIcon icon={faBriefcase} />
             </a>
