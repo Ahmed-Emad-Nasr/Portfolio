@@ -3,72 +3,67 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 4.8rem;
-  height: 4.8rem;
+  width: 5rem;
+  height: 5rem;
   pointer-events: none;
   z-index: 9998;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.28);
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 56%),
+    radial-gradient(circle at center, rgba(var(--main-color-rgb), 0.18), transparent 70%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 0 18px rgba(var(--accent-color-rgb), 0.12),
+    0 0 34px rgba(var(--main-color-rgb), 0.1);
+  mix-blend-mode: screen;
   will-change: transform, opacity;
 }
 
-/* Corner bracket aesthetic — SOC/targeting theme */
 .cursorRing::before,
 .cursorRing::after {
   content: '';
   position: absolute;
-  width: 32%;
-  height: 32%;
-  border-color: rgba(var(--main-color-rgb), 0.9);
-  border-style: solid;
-  transition: width 0.15s ease, height 0.15s ease;
+  inset: 0.55rem;
+  border-radius: inherit;
+  border: 1px solid rgba(var(--main-color-rgb), 0.28);
+  opacity: 0.85;
 }
 
-/* Top-left bracket */
 .cursorRing::before {
-  top: 0;
-  left: 0;
-  border-width: 1.5px 0 0 1.5px;
-  border-radius: 0;
+  inset: 0.35rem;
+  border-color: rgba(var(--accent-color-rgb), 0.45);
+  opacity: 0.6;
 }
 
-/* Bottom-right bracket */
 .cursorRing::after {
-  bottom: 0;
-  right: 0;
-  border-width: 0 1.5px 1.5px 0;
-  border-radius: 0;
+  inset: 0.9rem;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Extra corners via inner pseudo — handled with a wrapper span in TSX */
 .cursorRingInner {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
 }
 
 .cursorRingInner::before,
 .cursorRingInner::after {
   content: '';
   position: absolute;
-  width: 32%;
-  height: 32%;
-  border-color: rgba(var(--main-color-rgb), 0.9);
-  border-style: solid;
-  transition: width 0.15s ease, height 0.15s ease;
+  inset: 1.15rem;
+  border-radius: inherit;
+  border: 1px solid rgba(var(--main-color-rgb), 0.18);
 }
 
-/* Top-right bracket */
 .cursorRingInner::before {
-  top: 0;
-  right: 0;
-  border-width: 1.5px 1.5px 0 0;
-  border-radius: 0;
+  inset: 1.45rem;
+  border-color: rgba(var(--accent-color-rgb), 0.16);
 }
 
-/* Bottom-left bracket */
 .cursorRingInner::after {
-  bottom: 0;
-  left: 0;
-  border-width: 0 0 1.5px 1.5px;
-  border-radius: 0;
+  inset: 1.8rem;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* ─── Cursor Dot ──────────────────────────────────────────────── */
@@ -76,21 +71,37 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 0; /* تحويل لنقطة حادة (مربع) لستايل السايبر */
-  background: var(--main-color);
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--accent-light), var(--main-color));
   pointer-events: none;
   z-index: 9999;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 10px rgba(var(--main-color-rgb), 0.45),
+    0 0 20px rgba(var(--accent-color-rgb), 0.22);
   will-change: transform;
 }
 
 /* ─── Glow effect on the dot ──────────────────────────────────── */
 .cursorGlow {
   position: absolute;
-  inset: -0.35rem;
+  inset: -0.55rem;
   border-radius: inherit;
-  background: var(--main-color);
+  background: radial-gradient(circle, rgba(var(--main-color-rgb), 0.9), rgba(var(--accent-color-rgb), 0.15) 55%, transparent 72%);
   filter: blur(4px);
-  opacity: 0.85;
+  opacity: 0.8;
+}
+
+@media (max-width: 1024px) {
+  .cursorRing {
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .cursorDot {
+    width: 0.62rem;
+    height: 0.62rem;
+  }
 }

@@ -29,6 +29,10 @@
 
 .Gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
+.Gallery > * {
+  min-width: 0;
+}
+
 /* Cyber Frame for Images */
 .art_pic { 
   display: block; 
@@ -38,6 +42,7 @@
   background: rgba(10, 10, 10, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all var(--motion-normal) var(--motion-ease);
+  will-change: transform, opacity;
 }
 
 .art_pic:hover { 

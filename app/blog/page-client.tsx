@@ -1,12 +1,13 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/data/youtube";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/data/cases";
 import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import BlogHeroSection from "./components/BlogHeroSection";
 
 // Dynamic Imports (شيلنا الـ BlogHeroSection)
 const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
@@ -28,6 +29,7 @@ const PDF_DATE_MS = new Map(blogPdfResources.map((item) => [item.id, item.date ?
 export default function BlogPageClient() {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
+  const [scrolled, setScrolled] = useState(false);
 
   const sortedPdfs = useMemo(() => {
     return [...blogPdfResources].sort((a, b) => {
@@ -58,10 +60,35 @@ export default function BlogPageClient() {
     if (screenshots.length) setGallery({ title, screenshots, index: Math.min(Math.max(index, 0), screenshots.length - 1) });
   }, []);
 
+  // Scroll blur effect: toggles a subtle backdrop blur between background and content for smoothness
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset;
+        setScrolled(y > 24);
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <main id="main-content" className={styles.page}>
+      <div className={styles.scrollBlurOverlay} data-active={scrolled}></div>
       <LoadingScreen />
       <AppBar />
+      <BlogHeroSection
+        totalCasesCount={caseEvidenceLibrary.length}
+        totalScreenshotsCount={Object.values(caseScreenshotsByEvidenceId).reduce((sum, s) => sum + s.length, 0)}
+        featuredWriteupsCount={caseEvidenceLibrary.filter(i => (i.type && i.type.toLowerCase().includes('dfir')) || (i.tags && i.tags.map(t=>t.toLowerCase()).includes('dfir'))).length}
+        synonyms={["DFIR","Writeups","Analyses"]}
+      />
       
       <BlogPdfLibrarySection
         visiblePdfCards={sortedPdfs}

@@ -10,12 +10,15 @@ const GALLERY_IMAGES = Array.from({ length: 50 }, (_, k) => ({
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
 
-const ImageItem = memo(({ image }: { image: { src: string; thumb: string } }) => {
+const ImageItem = memo(({ image, index }: { image: { src: string; thumb: string }; index: number }) => {
   const [failed, setFailed] = useState(false);
 
   return (
-    // تم التعديل إلى once: true لضمان سلاسة السكرول وعدم إرهاق المعالج
-    <MotionInView variant="fade" viewport={{ once: true, amount: 0.1 }}>
+    <MotionInView
+      variant="scale-up"
+      delay={index * 0.05}
+      viewport={{ once: true, amount: 0.15 }}
+    >
       <div className={styles.art_pic}>
         <Image
           src={failed ? image.src : image.thumb}
@@ -42,21 +45,21 @@ const SenseiArt = memo(function SenseiArt() {
   return (
     <section className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
-        <div className={styles["header-section"]}>
+        <MotionInView className={styles["header-section"]} variant="slide-up" viewport={{ once: true, amount: 0.3 }}>
           <h2 className={styles.title}>
             <span lang="ja">認定資格 •</span><span lang="en"> Certifications</span>
           </h2>
-        </div>
-        
+        </MotionInView>
+
         <div className={styles["art-gallery-content"]}>
-          <div className={styles.Gallery}>
-            {GALLERY_IMAGES.slice(0, visibleCount).map((image) => (
-              <ImageItem key={image.src} image={image} />
+          <MotionInView className={styles.Gallery} variant="stagger" viewport={{ once: true, amount: 0.1 }}>
+            {GALLERY_IMAGES.slice(0, visibleCount).map((image, index) => (
+              <ImageItem key={image.src} image={image} index={index} />
             ))}
-          </div>
+          </MotionInView>
 
           {visibleCount < GALLERY_IMAGES.length && (
-            <div className={styles.galleryActions}>
+            <MotionInView className={styles.galleryActions} variant="fade" delay={0.1} viewport={{ once: true, amount: 0.1 }}>
               <button
                 type="button"
                 className={styles.primaryAction}
@@ -64,7 +67,7 @@ const SenseiArt = memo(function SenseiArt() {
               >
                 Show more
               </button>
-            </div>
+            </MotionInView>
           )}
         </div>
       </div>

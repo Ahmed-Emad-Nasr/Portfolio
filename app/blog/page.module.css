@@ -31,6 +31,33 @@
 .blockHeading h2::before { content: "> "; color: var(--main-color); }
 .blockHeading p { font-size: 1.2rem; color: rgba(255, 255, 255, 0.5); margin-top: 0.5rem; }
 
+/* Blog Hero Section */
+.blogHero { margin: 0 auto 3.2rem; width: min(100%, 1400px); padding: 3.6rem 2rem; border-radius: 12px; background: linear-gradient(180deg, rgba(6,10,14,0.6), rgba(8,6,12,0.4)); border: 1px solid rgba(255,255,255,0.04); display: block; }
+.blogHeroInner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.blogHeroContent { max-width: 78%; }
+.blogHeroTitle { font-family: var(--font-sans); font-size: clamp(2.2rem, 2.6vw, 3.4rem); margin: 0 0 0.6rem 0; color: var(--text-color); letter-spacing: 1.6px; }
+.blogHeroSubtitle { margin: 0 0 1.2rem 0; color: var(--text-muted); font-size: 1.05rem; line-height: 1.5; }
+.blogHeroCtas a { margin-right: 0.8rem; }
+.blogHeroStats { display: flex; gap: 1.2rem; align-items: center; color: var(--text-muted); font-family: var(--font-mono); }
+.heroStat { display: flex; flex-direction: column; align-items: flex-end; min-width: 88px; }
+.heroStat strong { font-size: 1.2rem; color: var(--accent-color); }
+.heroStat span { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+/* Scroll blur overlay (sits between background and content) */
+.scrollBlurOverlay {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  backdrop-filter: blur(0px) saturate(100%);
+  -webkit-backdrop-filter: blur(0px) saturate(100%);
+  transition: backdrop-filter 300ms var(--motion-ease), opacity 300ms var(--motion-ease);
+  opacity: 0;
+}
+.scrollBlurOverlay[data-active="true"] {
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  opacity: 0.9;
+}
+
+
 /* =========================================
    2. ANIMATIONS
    ========================================= */
@@ -78,18 +105,21 @@
    ========================================= */
 .pdfGrid, .playlistGrid, .videoGrid { display: grid; margin-top: 2rem; align-items: start; }
 .playlistGrid, .videoGrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-.pdfGrid { grid-template-columns: 1fr; gap: 2rem; }
+.pdfGrid { grid-template-columns: 1fr; gap: clamp(1.2rem, 2.2vw, 2.6rem); }
 
 .pdfCard[data-visible="true"], .playlistCard[data-visible="true"], .videoCard[data-visible="true"] { animation: fadeUp 0.4s ease both; }
 
 /* Cyberpunk Wireframe Cards */
 .pdfCard, .playlistCard, .videoCard, .featuredCard, .insightCard, .youtubeHub {
-  border-radius: 2px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 2px solid transparent;
-  background: rgba(8, 12, 16, 0.7);
+  border-left: 3px solid transparent;
+  background: linear-gradient(180deg, rgba(8,12,16,0.75), rgba(6,8,12,0.6));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: grid; position: relative; overflow: hidden;
-  transition: all var(--motion-normal) ease;
+  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background 300ms ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
 .playlistCard, .videoCard { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
@@ -97,11 +127,19 @@
 .caseCardTextOnly { grid-template-columns: minmax(0, 1fr); padding: 2.5rem; }
 
 /* Cyber Hover Effect */
-.pdfCard:hover, .playlistCard:hover, .videoCard:hover, .insightCard:hover { 
-  transform: translateY(-3px); 
-  border-color: rgba(255, 255, 255, 0.1);
+.pdfCard:hover, .playlistCard:hover, .videoCard:hover, .insightCard:hover {
+  transform: translateY(-6px) scale(1.0025);
+  border-color: rgba(255, 255, 255, 0.12);
   border-left-color: var(--main-color);
-  background: rgba(12, 18, 24, 0.95);
+  background: linear-gradient(180deg, rgba(12,18,24,0.9), rgba(10,12,18,0.85));
+  box-shadow: 0 12px 36px rgba(var(--main-color-rgb), 0.05), 0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* Separator between stacked cases */
+.pdfGrid .pdfCard + .pdfCard {
+  border-top: 1px dashed rgba(var(--accent-color-rgb), 0.08);
+  padding-top: 1.6rem;
+  margin-top: 1.6rem;
 }
 
 .pdfCardBody { display: flex; flex-direction: column; justify-content: center; gap: 0.5rem; }
@@ -128,10 +166,10 @@
 .shotCount::before { content: "[ "; opacity: 0.5; }
 .shotCount::after { content: " ]"; opacity: 0.5; }
 
-.cardTitle { color: #fff; font-size: 2rem; line-height: 1.3; font-weight: 700; font-family: monospace; letter-spacing: 1px; }
-.pdfCard:hover .cardTitle { color: var(--accent-color); }
+.cardTitle { color: #fff; font-size: 1.9rem; line-height: 1.28; font-weight: 700; font-family: var(--font-mono); letter-spacing: 0.8px; }
+.pdfCard:hover .cardTitle { color: var(--accent-color); text-decoration: underline dotted; text-underline-offset: 6px; }
 
-.cardDescription, .videoDate, .playlistDescription { margin-top: 0.8rem; color: rgba(255, 255, 255, 0.5); font-size: 1.3rem; line-height: 1.6; font-family: monospace; }
+.cardDescription, .videoDate, .playlistDescription { margin-top: 0.6rem; color: rgba(255, 255, 255, 0.58); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-sans); }
 .cardPlatform { margin-top: 1rem; color: rgba(255, 255, 255, 0.3); font-size: 1.1rem; font-family: monospace; text-transform: uppercase; }
 
 .caseMetadata { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
@@ -271,6 +309,31 @@
   .galleryNav { min-height: 40px; }
   .galleryImageWrap { min-height: 40vh; }
   .youtubeHub { padding: 1.5rem; }
+}
+
+/* Mobile-specific readability fixes */
+@media (max-width: 480px) {
+  .blogHeroInner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .blogHeroContent { max-width: 100%; }
+  .blogHeroStats { display: none; }
+  .blogHeroTitle { font-family: var(--font-sans); font-size: clamp(1.6rem, 6vw, 2.2rem); letter-spacing: 0.4px; }
+  .blogHeroSubtitle { font-size: 1rem; }
+
+  /* Cards: make titles wrap nicely on small screens */
+  .pdfCard, .playlistCard, .videoCard { padding: 1.2rem; }
+  .cardTitle {
+    font-size: 1.35rem;
+    line-height: 1.25;
+    font-family: var(--font-sans);
+    letter-spacing: 0.2px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .cardDescription, .videoDate, .playlistDescription { font-size: 1rem; }
+  .caseSpotlightMedia { display: none; }
+  .pdfGrid { gap: 1.2rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
