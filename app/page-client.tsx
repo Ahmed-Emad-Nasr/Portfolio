@@ -9,6 +9,8 @@
 import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import KanjiDivider from "@/app/core/components/KanjiDivider";
+import ClientOnly from "@/app/core/components/ClientOnly";
 
 const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
   ssr: false,
@@ -79,9 +81,21 @@ const MainClient = memo(function MainClient() {
       <AppBar />
       <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
         <HomeSection />
+        <ClientOnly>
+          <KanjiDivider text="武士道 • 継続は力なり • 改善 • 不撓不屈" angle={1.5} />
+        </ClientOnly>
         <ExperienceSection />
+        <ClientOnly>
+          <KanjiDivider text="設計 • 開発 • 構築 • 実装 • 実験" reverse angle={-1.5} />
+        </ClientOnly>
         <ProjectsSection />
+        <ClientOnly>
+          <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
+        </ClientOnly>
         <ArtGallerySection />
+        <ClientOnly>
+          <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />
+        </ClientOnly>
       </div>
     </main>
   );

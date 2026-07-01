@@ -15,6 +15,7 @@ import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/data/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
 import CustomCursor from "./components/custom-cursor";
+import ClientOnly from "./core/components/ClientOnly";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -210,7 +211,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         
         <SmoothScroll>{children}</SmoothScroll>
-        <CustomCursor />
+        <ClientOnly>
+          <CustomCursor />
+        </ClientOnly>
       </body>
     </html>
   );

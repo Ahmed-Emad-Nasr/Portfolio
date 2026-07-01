@@ -7,9 +7,10 @@ import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import BlogHeroSection from "./components/BlogHeroSection";
+import KanjiDivider from "@/app/core/components/KanjiDivider";
+import ClientOnly from "@/app/core/components/ClientOnly";
 
-// Dynamic Imports (شيلنا الـ BlogHeroSection)
+// Dynamic Imports
 const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
 const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), { ssr: false });
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
@@ -83,12 +84,6 @@ export default function BlogPageClient() {
       <div className={styles.scrollBlurOverlay} data-active={scrolled}></div>
       <LoadingScreen />
       <AppBar />
-      <BlogHeroSection
-        totalCasesCount={caseEvidenceLibrary.length}
-        totalScreenshotsCount={Object.values(caseScreenshotsByEvidenceId).reduce((sum, s) => sum + s.length, 0)}
-        featuredWriteupsCount={caseEvidenceLibrary.filter(i => (i.type && i.type.toLowerCase().includes('dfir')) || (i.tags && i.tags.map(t=>t.toLowerCase()).includes('dfir'))).length}
-        synonyms={["DFIR","Writeups","Analyses"]}
-      />
       
       <BlogPdfLibrarySection
         visiblePdfCards={sortedPdfs}
@@ -98,6 +93,10 @@ export default function BlogPageClient() {
         leadCase={null}
         leadCaseSpotlightImage={null}
       />
+
+      <ClientOnly>
+        <KanjiDivider text="Reports • Screenshots • Investigation • Evidence" reverse angle={-1.2} />
+      </ClientOnly>
       
       <BlogMediaSections
         totalCasesCount={caseEvidenceLibrary.length} 
