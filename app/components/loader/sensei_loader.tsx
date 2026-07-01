@@ -18,7 +18,7 @@ export default function LoadingScreen() {
   const [currentLine, setCurrentLine] = useState(0);
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof window.setTimeout> | undefined;
+    let timeoutId: number | undefined;
 
     const handleLoad = () => {
       timeoutId = window.setTimeout(() => setLoading(false), 2200);
@@ -31,7 +31,7 @@ export default function LoadingScreen() {
     }
 
     return () => {
-      if (timeoutId) window.clearTimeout(timeoutId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
       window.removeEventListener("load", handleLoad);
     };
   }, []);
