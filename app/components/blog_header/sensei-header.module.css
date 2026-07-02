@@ -1,136 +1,205 @@
 /*
  * File: sensei-header.module.css
- * MINIMALIST CYBERPUNK EDITION
+ * ULTRA-MINIMALIST CYBERPUNK EDITION (FULL-WIDTH TRAPEZOID NAV)
+ * Applied to: Blog header (Cases / YouTube Hub / back to Portfolio)
  */
 
-/* ── 1. HEADER SHELL ─────────────────────────────────────────────────────── */
 .header {
   position: fixed;
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1080px, calc(100% - 2rem));
-  padding: 0.6rem 1rem;
-  background: rgba(5, 5, 5, 0.98); /* تم إزالة الـ blur للحفاظ على الأداء */
-  border-radius: 2px; /* حواف حادة */
-  display: flex;
-  flex-direction: column;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%; /* ممتد بعرض الصفحة بالكامل من الحافة للحافة */
   z-index: var(--z-navbar);
-  border: 1px solid rgba(var(--main-color-rgb), 0.2);
   transition: all var(--motion-normal) var(--motion-ease);
+  padding-top: 2px; /* مساحة للخط الأحمر العلوي الحاد */
 }
 
-/* Sharp Corner Accents */
-.header::before,
-.header::after {
-  content: ''; position: absolute; width: 10px; height: 10px; pointer-events: none;
-}
+/* الخط الأحمر المستمر على كامل عرض الشاشة */
 .header::before {
-  top: -1px; left: -1px;
-  border-top: 2px solid var(--main-color);
-  border-left: 2px solid var(--main-color);
-}
-.header::after {
-  bottom: -1px; right: -1px;
-  border-bottom: 2px solid var(--main-color);
-  border-right: 2px solid var(--main-color);
-}
-
-.scrolled {
-  transform: translateX(-50%) scale(0.98) !important;
-  background: rgba(2, 2, 2, 0.99) !important;
-  border-color: rgba(var(--main-color-rgb), 0.5) !important;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ff003c;
+  z-index: 10;
 }
 
-/* ── 2. TOP ROW ──────────────────────────────────────────────────────────── */
-.topRow { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; width: 100%; }
+/* الحاوية الخارجية للمضلع الممتد (الـ Border الرمادي الرفيع) */
+.headerInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.08);
+  /* قص الأطراف السفلية فقط لإنشاء الـ Trapezoid على كامل الشاشة */
+  clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
+}
 
-/* ── 3. BRAND ────────────────────────────────────────────────────────────── */
-.brand { display: flex; align-items: center; gap: 8px; padding-right: 15px; border-right: 1px solid rgba(255, 255, 255, 0.1); }
+/* الحاوية الداخلية للمحتوى */
+.headerContent {
+  position: absolute;
+  inset: 1px;
+  top: 0;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4rem; /* مسافة داخلية مريحة لتوزيع العناصر */
+  clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
+}
+
+/* تأثير عند عمل Scroll لزيادة عمق اللون الأسود */
+.scrolled .headerContent {
+  background: #000000 !important;
+}
+
+/* ── BRAND LOGO ──────────────────────────────────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .brandIcon {
-  width: 28px; height: 28px; border: 1px solid rgba(var(--main-color-rgb), 0.5);
-  display: flex; align-items: center; justify-content: center; background: transparent;
+  width: 16px;
+  height: 16px;
+  color: #ff003c;
+  flex-shrink: 0;
 }
-.brandIcon svg { width: 14px; height: 14px; stroke: var(--main-color); fill: none; stroke-width: 1.5; }
-.brandText { font-family: monospace; font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 2px; }
-.brandAccent { color: var(--main-color); }
+.brandIcon svg { width: 100%; height: 100%; fill: currentColor; }
 
-/* Arabic Name */
-.arabicName { display: flex; align-items: center; gap: 6px; padding: 2px 8px; margin-left: 10px; background: rgba(var(--main-color-rgb), 0.1); border: 1px solid rgba(var(--main-color-rgb), 0.2); }
-.siemIcon { width: 14px; height: 14px; stroke: var(--main-color); fill: none; }
-.arabicText { font-family: 'Cairo', monospace; font-size: 13px; font-weight: 700; color: #fff; direction: rtl; }
+.brandText {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
-/* ── 4. NAV ──────────────────────────────────────────────────────────────── */
-.navbar { display: flex; align-items: center; gap: 4px; padding: 0 10px; }
+.brandDot {
+  color: #ff003c;
+  font-weight: 900;
+}
+
+/* اسم البراند بالعربي — Tag صغير مينيمال بجانب الاسم */
+.arabicName {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888888;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 10px;
+  white-space: nowrap;
+}
+
+/* ── NAVIGATION & LINKS ──────────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+}
+
 .navbar a {
-  display: flex; align-items: center; gap: 6px; padding: 8px 12px;
-  font-family: monospace; font-size: 13px; font-weight: 600; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
-  transition: all var(--motion-fast) ease; border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: color var(--motion-fast) ease;
 }
-.navbar a svg { width: 12px; height: 12px; }
-.navbar a:hover, .navbar a.active { color: var(--accent-color); border-bottom-color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.05); }
-.navbar a.active::before { content: '['; opacity: 0.5; margin-right: -2px; }
-.navbar a.active::after  { content: ']'; opacity: 0.5; margin-left:  -2px; }
 
-/* ── 5. RIGHT CLUSTER ────────────────────────────────────────────────────── */
-.rightCluster { display: flex; align-items: center; gap: 8px; }
-
-/* Static Chips (No Animation) */
-.threatChip, .statusChip { display: flex; align-items: center; gap: 5px; font-family: monospace; font-size: 10px; letter-spacing: 1px; padding: 4px 8px; border: 1px solid; }
-.threatChip { color: rgba(255, 200, 50, 0.8); border-color: rgba(255, 200, 50, 0.3); }
-.threatDot { width: 6px; height: 6px; background: #ffc832; }
-.statusChip { color: var(--main-color); border-color: rgba(var(--main-color-rgb), 0.3); }
-.statusDot { width: 6px; height: 6px; background: var(--main-color); }
-
-/* Blog Button */
-.blogLink {
-  display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px;
-  border: 1px solid var(--main-color); background: transparent;
-  font-family: monospace; font-size: 12px; font-weight: 700; color: var(--main-color); text-transform: uppercase; letter-spacing: 1px;
-  transition: all var(--motion-fast) ease; text-decoration: none;
+.navbar a svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
+  transition: opacity var(--motion-fast) ease;
 }
-.blogLink:hover, .blogLink.active { background: rgba(var(--main-color-rgb), 0.15); color: #fff; box-shadow: 0 0 10px rgba(var(--main-color-rgb), 0.3); }
 
-/* ── 6. MOBILE MENU & BACKDROP ───────────────────────────────────────────── */
+/* تأثير الـ Hover والـ Active النظيف تماماً للمينيمال ثيم */
+.navbar a:hover,
+.navbar a.active {
+  color: #ffffff;
+}
+
+.navbar a:hover svg,
+.navbar a.active svg {
+  opacity: 1;
+  color: #ff003c;
+}
+
+/* فاصل رفيع بين روابط السكاشن ورابط الرجوع للبورتفوليو */
+.navDivider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── MOBILE MENU ─────────────────────────────────────────────────────────── */
 .menuIcon {
-  display: none; flex-direction: column; gap: 5px; background: transparent; border: 1px solid rgba(255,255,255,0.2);
-  padding: 8px; cursor: pointer; transition: all var(--motion-fast) ease;
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
 }
-.menuIcon span { width: 18px; height: 2px; background: var(--main-color); transition: all var(--motion-fast) ease; }
+
+.menuIcon span {
+  width: 18px;
+  height: 2px;
+  background: #ffffff;
+  transition: all var(--motion-fast) ease;
+}
+
 .menuIcon.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menuIcon.active span:nth-child(2) { opacity: 0; }
 .menuIcon.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 .backdrop {
-  position: fixed; inset: 0; z-index: calc(var(--z-navbar) - 2);
-  background: rgba(0, 0, 0, 0.8); backdrop-filter: none;
-  opacity: 0; pointer-events: none; transition: opacity var(--motion-normal) ease;
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-navbar) - 2);
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-normal) ease;
 }
 .backdropActive { opacity: 1; pointer-events: auto; }
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
-@media (max-width: 994px) {
-  .header { padding: 0.8rem; }
-  .brand { border: none; padding: 0; }
-  .rightCluster { margin-left: auto; }
-  .threatChip, .statusChip { display: none; }
-  .menuIcon { display: flex; }
-  
+@media (max-width: 768px) {
+  .headerContent { padding: 0 1.5rem; }
+  .arabicName { display: none; } /* توفير مساحة على الموبايل */
   .navbar {
-    position: absolute; top: 100%; left: -1px; right: -1px; margin-top: 10px;
-    background: rgba(5, 5, 5, 0.98); border: 1px solid rgba(var(--main-color-rgb), 0.4);
-    flex-direction: column; padding: 10px; opacity: 0; pointer-events: none; transform: translateY(-10px);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #050505;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-direction: column;
+    padding: 15px;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
     transition: all var(--motion-fast) ease;
   }
   .navbar.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .navbar a { width: 100%; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .navbar a:hover, .navbar a.active { border-left: 2px solid var(--accent-color); border-bottom: 1px solid rgba(255,255,255,0.05); }
-}
-
-@media (max-width: 430px) {
-  .header { width: calc(100% - 1rem); padding: 0.6rem; }
-  .brandText { font-size: 12px; }
-  .arabicText { font-size: 11px; }
-  .blogLink { font-size: 10px; padding: 6px 10px; }
+  .navbar a { width: 100%; padding: 10px; }
+  .navDivider { width: 100%; height: 1px; }
+  .menuIcon { display: flex; }
 }

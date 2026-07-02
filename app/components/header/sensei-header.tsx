@@ -5,35 +5,29 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/hooks/useHeader";
-
 import styles from "./sensei-header.module.css";
 
-const BLOG_PATH = "/blog";
-
-const ShieldIcon = () => (
-  <svg viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M8 1L14 4V9C14 12.3 11.3 14.9 8 16C4.7 14.9 2 12.3 2 9V4L8 1Z" />
-  </svg>
-);
-
-const SiemIcon = () => (
-  <svg viewBox="0 0 16 16" aria-hidden="true" className={styles.siemIcon}>
-    <rect x="1" y="1" width="6" height="6" rx="1.5" />
-    <rect x="9" y="1" width="6" height="6" rx="1.5" />
-    <rect x="1" y="9" width="6" height="6" rx="1.5" />
-    <path d="M9 12h6M12 9v6" strokeLinecap="round" />
-  </svg>
-);
+// دالة لمطابقة المسميات المختصرة
+const getShortLabel = (section: string) => {
+  switch (section.toLowerCase()) {
+    case "home": return "HOME";
+    case "experience": return "EXP";
+    case "projects": case "work": return "WORK";
+    case "certifications": case "cert": return "CERT";
+    case "contact": case "mail": return "MAIL";
+    default: return section.toUpperCase();
+  }
+};
 
 export default function SenseiHeader() {
-  const pathname  = usePathname();
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
-
   const { isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen } = useHeader();
 
-  const isBlog = pathname === BLOG_PATH || pathname.startsWith(`${BLOG_PATH}/`);
+  // التحقق مما إذا كان المستخدم داخل صفحة البلوج
+  const isBlog = pathname === "/blog" || pathname.startsWith("/blog/");
 
-  // ── Scroll → CSS class, zero re-renders ──────────────────────────────────
+  // ── Scroll Event Handler (تغيير كلاس الهيدر عند السكرول بدون رندر إضافي) ──
   useEffect(() => {
     let raf = 0;
     const tick = () => {
@@ -46,120 +40,101 @@ export default function SenseiHeader() {
     return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
 
-  // ── Body scroll lock ──────────────────────────────────────────────────────
+  // ── قفل السكرول في الموبايل عند فتح القائمة ──────────────────────────────
   useEffect(() => {
-    if (window.innerWidth > 994) { document.body.style.overflow = ""; return; }
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isMenuOpen]);
 
-  // ── Escape key ────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setIsMenuOpen(false); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [isMenuOpen, setIsMenuOpen]);
-
-  // ── Nav click ─────────────────────────────────────────────────────────────
+  // ── Nav click handler ─────────────────────────────────────────────────────
   const handleNavClick = (section: string, e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setActiveSection(section);
     const target = document.getElementById(section);
     if (!target) return;
+    
     const doScroll = () => {
       const headerH = headerRef.current?.offsetHeight ?? 0;
-      const topGap  = parseFloat(getComputedStyle(headerRef.current!).top) || 0;
       window.scrollTo({
-        top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - topGap - 10),
+        top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - 15),
         behavior: "auto",
       });
     };
-    if (isMenuOpen) { setIsMenuOpen(false); requestAnimationFrame(doScroll); }
-    else doScroll();
+
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+      requestAnimationFrame(doScroll);
+    } else {
+      doScroll();
+    }
   };
 
   return (
     <>
       <header ref={headerRef} className={styles.header} data-site-header="true">
-        <span className={styles.headerScan} aria-hidden="true" />
-
-        {/* ── Top row ─────────────────────────────────────────────────── */}
-        <div className={styles.topRow}>
-          {/* Brand */}
-          <div className={styles.brand} aria-hidden="true">
-            <div className={styles.brandIcon}><ShieldIcon /></div>
-            <span className={styles.brandText}>
-              AHMED<span className={styles.brandAccent}>.SEC</span>
-            </span>
-
-            {/* Arabic name chip */}
-            <div className={styles.arabicName}>
-              <SiemIcon />
-              <span className={styles.arabicText}>أحمد عماد</span>
+        <div className={styles.headerInner}>
+          <div className={styles.headerContent}>
+            
+            {/* جهة اليسار: الـ Logo الجديد AE */}
+            <div className={styles.brand}>
+              <span className={styles.brandText}>
+                AE<span className={styles.brandDot}>.</span>
+              </span>
             </div>
-          </div>
 
-          {/* Nav */}
-          <nav
-            id="main-navigation"
-            className={isMenuOpen ? `${styles.navbar} ${styles.active}` : styles.navbar}
-            aria-label="Main navigation"
-          >
-            {Object.entries(sectionIcons).map(([section, icon]) => (
-              <a
-                key={section}
-                href={`#${section}`}
-                className={activeSection === section ? styles.active : undefined}
-                onClick={(e) => handleNavClick(section, e)}
-                aria-current={activeSection === section ? "page" : undefined}
-              >
-                <FontAwesomeIcon icon={icon} aria-hidden="true" />
-                {section.replace(/([a-z])([A-Z])/g, "$1 $2")}
-              </a>
-            ))}
-          </nav>
-
-          {/* Right cluster */}
-          <div className={styles.rightCluster}>
-            <span className={styles.threatChip} aria-hidden="true">
-              <span className={styles.threatDot} />
-              THREAT:LOW
-            </span>
-
-            <span className={styles.statusChip} aria-hidden="true">
-              <span className={styles.statusDot} />
-              ONLINE
-            </span>
-
-            <Link
-              href={BLOG_PATH}
-              className={isBlog ? `${styles.blogLink} ${styles.active}` : styles.blogLink}
-              aria-label="Open blog"
-              aria-current={isBlog ? "page" : undefined}
-              onClick={() => setIsMenuOpen(false)}
+            {/* القائمة الموحدة الصافية بعرض الصفحة */}
+            <nav
+              id="main-navigation"
+              className={isMenuOpen ? `${styles.navbar} ${styles.active}` : styles.navbar}
+              aria-label="Main navigation"
             >
-              Blog
-            </Link>
+              {Object.entries(sectionIcons).map(([section, icon]) => (
+                <a
+                  key={section}
+                  href={`#${section}`}
+                  className={activeSection === section ? styles.active : undefined}
+                  onClick={(e) => handleNavClick(section, e)}
+                  aria-current={activeSection === section ? "page" : undefined}
+                >
+                  <FontAwesomeIcon icon={icon} aria-hidden="true" />
+                  {getShortLabel(section)}
+                </a>
+              ))}
 
+              {/* زرار البلوج المظبوط */}
+              <Link
+                href="/blog"
+                className={isBlog ? styles.active : undefined}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {/* أيقونة كتاب/مقال مناسبة للبلوج */}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                BLOG
+              </Link>
+            </nav>
+
+            {/* زر القائمة للموبايل فقط */}
             <button
               type="button"
               className={isMenuOpen ? `${styles.menuIcon} ${styles.active}` : styles.menuIcon}
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-label="Toggle menu"
               aria-controls="main-navigation"
             >
               <span aria-hidden="true" />
               <span aria-hidden="true" />
               <span aria-hidden="true" />
             </button>
+
           </div>
         </div>
-
       </header>
 
-      {/* Backdrop */}
+      {/* شاشة الخلفية للموبايل */}
       <button
         type="button"
         className={isMenuOpen ? `${styles.backdrop} ${styles.backdropActive}` : styles.backdrop}
