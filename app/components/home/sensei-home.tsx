@@ -4,7 +4,7 @@ import { memo, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp, faYoutube, faInstagram, faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faFilePdf, faBriefcase, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faFilePdf, faBriefcase, faEnvelope, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
 import { YOUTUBE_CHANNEL_URL } from "@/app/core/data/youtube";
@@ -33,6 +33,15 @@ const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
   const [failed, setFailed] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadClick = () => {
+    setIsDownloading(true);
+    // The download itself is a native browser action (static file, no
+    // network request from React), this just gives the click a moment
+    // of visible feedback before the state resets.
+    window.setTimeout(() => setIsDownloading(false), 1200);
+  };
 
   return (
     <section className={`${styles.home} noLine noBg`} id="Home">
@@ -112,19 +121,28 @@ const SenseiHome = memo(function SenseiHome() {
             <span className={`${styles.hudLine} ${styles.hudAccent}`}>ブルーチーム</span>
           </div>
 
-          <button type="button" className={styles.imageButton} onClick={handleImageClick}>
+          <button
+            type="button"
+            className={styles.imageButton}
+            onClick={handleImageClick}
+            aria-label="Show another photo of Ahmed"
+          >
             <Image
               src={failed ? "/Assets/art-gallery/Images/logo/My_Logo.webp" : "Assets/art-gallery/Images/logo/3omda.webp"}
-              alt="Ahmed Emad Nasr"
+              alt="Ahmed Emad Nasr, SOC Analyst"
               className={styles.image}
-              width={420}
-              height={420}
-              sizes="(max-width: 968px) 80vw, 420px"
-              quality={60}
+              width={560}
+              height={560}
+              sizes="(max-width: 968px) 80vw, 560px"
+              quality={70}
               loading="lazy"
               decoding="async"
               onError={() => setFailed(true)}
             />
+            <span className={styles.imageHint} aria-hidden="true">
+              <FontAwesomeIcon icon={faShuffle} />
+              <span>Shuffle photo</span>
+            </span>
           </button>
 
           <div className={styles.ringDashed} aria-hidden="true" />
@@ -157,15 +175,15 @@ const SenseiHome = memo(function SenseiHome() {
             <div className={styles.specGrid}>
               <div className={styles.specItem}>
                 <span>Role</span>
-                <span>SOC Analyst</span>
+                <span>Blue Team Operator</span>
               </div>
               <div className={styles.specItem}>
                 <span>Tools</span>
-                <span>SIEM, EDR</span>
+                <span>SIEM, EDR, XDR, SOAR</span>
               </div>
               <div className={styles.specItem}>
                 <span>Focus</span>
-                <span>IR Lifecycle</span>
+                <span>MITRE , NIST 800-61</span>
               </div>
             </div>
           </div>
@@ -173,10 +191,7 @@ const SenseiHome = memo(function SenseiHome() {
           <p className={styles.tagline}>
             Computer Science graduate with hands-on experience as a SOC Analyst and Blue Team
             Operator across 10+ SOC training programs and 200+ simulated alerts (DEPI, ITI, projects).
-          </p>
-          <p>
-            Skilled in monitoring, detection, SIEM/EDR investigations, alert triage, IOC analysis,
-            and log analysis across the incident response lifecycle.
+            Cybersecurity professional specialized in Incident Response, SOC operations, and Digital Forensics. Experienced in SIEM tuning (Wazuh, ELK, Splunk), threat detection, and penetration testing across internship and lab environments.
           </p>
 
           <div className={styles.socialIcon}>
@@ -201,9 +216,20 @@ const SenseiHome = memo(function SenseiHome() {
             <a
               href="Assets/cv/AhmedEmadNasr_CV.pdf"
               download="AhmedEmadNasr_CV.pdf"
-              className={`${styles.btn} ${styles.cvBtn}`}
+              className={`${styles.btn} ${styles.cvBtn} ${isDownloading ? styles.btnLoading : ""}`}
+              onClick={handleDownloadClick}
+              aria-live="polite"
             >
-              Download CV <FontAwesomeIcon icon={faFilePdf} />
+              {isDownloading ? (
+                <>
+                  <span className={styles.spinner} aria-hidden="true" />
+                  Downloading…
+                </>
+              ) : (
+                <>
+                  Download CV <FontAwesomeIcon icon={faFilePdf} />
+                </>
+              )}
             </a>
             <a href="#Projects" className={`${styles.btn} ${styles.btnProjects}`}>
               View Projects <FontAwesomeIcon icon={faBriefcase} />
