@@ -1,3 +1,43 @@
+// =============================================================================
+// portfolio.ts
+// Consolidated data file — merges cases.ts, experience.ts, projects.ts,
+// youtube.ts, blog-types.ts, and blog-utils.ts into a single module.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Types (from blog-types.ts + youtube.ts)
+// -----------------------------------------------------------------------------
+
+export type PdfResource = {
+  id: string;
+  title: string;
+  description?: string;
+  platform: string;
+  type: string;
+  category?: string;
+  difficulty?: string;
+  href: string;
+  tags?: readonly string[];
+  tools?: readonly string[];
+  skillsGained?: readonly string[];
+  readTime?: number;
+  date?: string;
+};
+
+export type GalleryState = {
+  title: string;
+  screenshots: string[];
+  index: number;
+};
+
+export type ChannelVideo = {
+  videoId: string;
+  title: string;
+  description?: string;
+  publishedAt?: string;
+  sourceUrl: string;
+};
+
 type CaseStudyHighlight = {
   title: string;
   domain: string;
@@ -23,6 +63,493 @@ type CaseEvidence = {
   screenshots?: readonly string[];
   image?: string;
 };
+
+type BlogYoutubeVideo = {
+  videoId: string;
+  title: string;
+  description?: string;
+  publishedAt: string;
+  tags?: readonly string[];
+};
+
+type FeaturedYoutubeVideo = {
+  videoId: string;
+  title: string;
+  description?: string;
+  sourceUrl: string;
+};
+
+type BlogYoutubePlaylist = {
+  playlistId: string;
+  title: string;
+  description?: string;
+  sourceUrl: string;
+  thumbnailVideoId?: string;
+  tags?: readonly string[];
+  videoCount?: number;
+};
+
+// -----------------------------------------------------------------------------
+// Utils (from blog-utils.ts)
+// -----------------------------------------------------------------------------
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
+const dateCache = new Map<string, string>();
+const DATE_CACHE_MAX = 500;
+
+export const normalizePublicHref = (href: string): string => {
+  if (/^https?:\/\//i.test(href)) return href;
+  const basePath =
+    process.env.NEXT_PUBLIC_BASE_PATH ??
+    (process.env.NODE_ENV === "production" ? "/Portfolio" : "");
+  const normalized = href.startsWith("/") ? href : `/${href}`;
+  return `${basePath}${normalized}`.replace(/\/\//g, "/");
+};
+
+export const getThumbnail = (imgPath: string): string =>
+  imgPath.replace(/(\.webp|\.png|\.jpg|\.jpeg)$/i, "-thumb$1");
+
+export const formatDate = (value: string): string => {
+  const cached = dateCache.get(value);
+  if (cached !== undefined) return cached;
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+
+  const formatted = dateFormatter.format(parsed);
+
+  // Evict oldest entry when cache exceeds the size limit so it never grows
+  // unboundedly for the lifetime of the module (the user's session).
+  if (dateCache.size >= DATE_CACHE_MAX) {
+    dateCache.delete(dateCache.keys().next().value!);
+  }
+  dateCache.set(value, formatted);
+  return formatted;
+};
+
+// -----------------------------------------------------------------------------
+// Experience & Education (from experience.ts)
+// -----------------------------------------------------------------------------
+
+export const knowledgeEducationItems = [
+  {
+    tag: "Incident Response Analyst Intern",
+    subTag: "Digital Egypt Pioneers Initiative (DEPI)",
+    subTagHyperlink: "https://www.depi.gov.eg/",
+    desc: "Completed a 6-month DEPI training program, performing hands-on Incident Response across the full IR lifecycle (labs and projects). • Built and tuned a SIEM environment using ELK, Wazuh, and Suricata, reducing false-positive alerts by 9% and improving alert quality.",
+    isRight: true,
+    startDate: "2026-01-01",
+    showDate: true,
+    skills: ["Incident Response", "Wazuh", "ELK", "Suricata"],
+    certificateUrl: "https://www.depi.gov.eg/",
+  },
+  {
+    tag: "Information Security Analyst Intern",
+    subTag: "Digital Egypt Pioneers Initiative (DEPI)",
+    subTagHyperlink: "https://www.depi.gov.eg/",
+    desc: "Analyzed and triaged simulated SOC alerts using structured workflows, improving investigation consistency and response speed. • Developed a detection lab using Wazuh, Suricata, VirusTotal, and YARA rules, increasing detection coverage by 12%.",
+    isRight: false,
+    startDate: "2025-06-01",
+    endDate: "2025-12-01",
+    showDate: true,
+    skills: ["SOC Triage", "YARA", "VirusTotal", "Detection Engineering"],
+    certificateUrl: "https://www.depi.gov.eg/",
+  },
+  {
+    tag: "Volunteer Cybersecurity Instructor & Technical Trainer",
+    subTag: "Google Developer Groups (GDG) and Science in Code (SIC)",
+    subTagHyperlink: "https://gdg.community.dev/",
+    desc: "Developed and delivered 35+ structured cybersecurity sessions to 120+ learners, achieving a 4.9/5 rating and raising lab scores by 40%.",
+    isRight: true,
+    startDate: "2024-10-01",
+    endDate: "2025-10-01",
+    showDate: true,
+    skills: ["Security Training", "Curriculum Design", "Mentoring"],
+    certificateUrl: "https://gdg.community.dev/",
+  },
+  {
+    tag: "Bachelor of Computer Science",
+    desc: "Major: Information Security and Digital Forensics | GPA: 3.7/4.0. • Activities: Cybersecurity Technical Member at GDG and participant in university CTF competitions.",
+    subTag: "Benha University",
+    subTagHyperlink: "https://www.bu.edu.eg/",
+    isRight: false,
+    startDate: "2022-10-01",
+    endDate: "2026-07-01",
+    showDate: true,
+    skills: ["DFIR", "Information Security", "CTF", "Digital Forensics"],
+    certificateUrl: "https://www.bu.edu.eg/",
+  },
+  {
+    tag: "Cybertalents Penetration Testing Bootcamp",
+    subTag: "Cybertalents",
+    subTagHyperlink: "https://cybertalents.com/",
+    desc: "Completed hands-on penetration testing labs using attack simulation and mitigation workflows. • Discovered and validated 15+ vulnerabilities across lab environments, improving vulnerability identification efficiency by 30%.",
+    isRight: true,
+    startDate: "2025-11-01",
+    endDate: "2025-12-01",
+    showDate: true,
+    skills: ["VAPT", "Web Security", "Exploitation", "Reporting"],
+    certificateUrl: "https://cybertalents.com/",
+  },
+  {
+    tag: "ITI Summer Cybersecurity Program",
+    subTag: "Information Technology Institute",
+    subTagHyperlink: "https://www.iti.gov.eg/",
+    desc: "Participated in SOC simulations, handling 100+ security alerts and performing incident triage. • Reduced false-positive rate by 25% through improved alert analysis and correlation techniques.",
+    isRight: false,
+    startDate: "2025-09-01",
+    endDate: "2025-11-01",
+    showDate: true,
+    skills: ["SOC Simulation", "Alert Correlation", "Incident Triage"],
+    certificateUrl: "https://www.iti.gov.eg/",
+  },
+  {
+    tag: "Introduction to Cybersecurity Bootcamp",
+    subTag: "CyberTalents",
+    subTagHyperlink: "https://cybertalents.com/",
+    desc: "Gained foundational knowledge in networking, cybersecurity principles, and attack vectors. • Completed 20+ hands-on labs, improving detection accuracy and reducing analysis time by 20%.",
+    isRight: true,
+    startDate: "2024-11-01",
+    endDate: "2025-01-01",
+    showDate: true,
+    skills: ["Cybersecurity Fundamentals", "Network Security", "Labs"],
+    certificateUrl: "https://cybertalents.com/",
+  },
+  {
+    tag: "HCIA-Cloud Computing V5.0",
+    subTag: "Huawei ICT Academy",
+    subTagHyperlink: "https://www.huawei.com/minisite/ict-academy/en/",
+    desc: "Built cloud network setups and configured infrastructure, applying cloud security principles. • Deployed and secured 5+ cloud environments, reducing misconfiguration risks by 20%.",
+    isRight: false,
+    startDate: "2024-08-01",
+    endDate: "2024-09-01",
+    showDate: true,
+    skills: ["Cloud Security", "Cloud Networking", "Platform Hardening"],
+    certificateUrl: "https://www.huawei.com/minisite/ict-academy/en/",
+  },
+  {
+    tag: "Huawei Routing & Switching Summer Training",
+    subTag: "Huawei",
+    subTagHyperlink: "https://www.huawei.com/",
+    desc: "Configured and troubleshooted routers and switches in lab environments. • Configured 10+ network devices and reduced lab downtime by 30% through efficient troubleshooting.",
+    isRight: true,
+    startDate: "2023-08-01",
+    endDate: "2023-09-01",
+    showDate: true,
+    skills: ["Routing", "Switching", "Network Troubleshooting"],
+    certificateUrl: "https://www.huawei.com/",
+  },
+] as const;
+
+// -----------------------------------------------------------------------------
+// Projects (from projects.ts)
+// -----------------------------------------------------------------------------
+
+export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
+
+export const projectBullets: Record<string, string[]> = {
+  "insider-threat-detection-deception": [
+    "Designed a deception environment using honeytokens and Wazuh SIEM to detect insider activity and unauthorized access.",
+    "Integrated pfSense and Suricata for real-time monitoring, reducing fatigue alerts by 11% and enhancing alert reliability.",
+  ],
+  "Malware-Analysis-and-Prevention-Strategy": [
+    "Created an isolated malware lab with YARA rules and threat intelligence feeds for IOC extraction.",
+    "Reduced investigation time by 20% and improved detection accuracy through automated static and dynamic malware analysis.",
+  ],
+  "SOC-Environment": [
+    "Deployed a SOC stack using Wazuh, Suricata, and pfSense, automating detection workflows and log collection.",
+    "Simulated 50+ attacks to validate SOC rules, improving incident response and detection efficiency.",
+  ],
+  "Threat-Intelligence-Tool": [
+    "Developed a Python tool integrating VirusTotal and Hybrid Analysis APIs for IOC enrichment and correlation.",
+    "Accelerated threat analysis by 25% and reduced email triage time by 5 minutes for faster decision-making.",
+  ],
+};
+
+export const staticProjectFallback = [
+  {
+    id: 90007,
+    name: "RootedAF Network Security Project",
+    description: "Comprehensive report on network infrastructure design, hardening, and monitoring for RootedAF project (ITI Network Project).",
+    language: "PDF",
+    html_url: null,
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2025-08-11T00:00:00.000Z",
+    created_at: "2025-08-11T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "/Assets/art-gallery/logo/logo.png",
+    },
+    topics: ["rootedaf", "network", "security", "infrastructure", "iti"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+    pdf: "Assets/Cases/ITI NEtwork Project/RootedAF_Report.pdf",
+    image: "/Assets/art-gallery/logo/logo.png",
+  },
+  {
+    id: 90001,
+    name: "SOC-Environment",
+    description: "SOC stack with Wazuh, Suricata, and pfSense for detection automation and triage workflows.",
+    language: "Python",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/SOC-Environment",
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-03-01T00:00:00.000Z",
+    created_at: "2025-01-01T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "",
+    },
+    topics: ["soc", "wazuh", "suricata", "siem"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+  },
+  {
+    id: 90002,
+    name: "Malware-Analysis-and-Prevention-Strategy",
+    description: "Isolated malware lab with YARA-based detection and IOC extraction workflow.",
+    language: "Python",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/Malware-Analysis-and-Prevention-Strategy",
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-02-15T00:00:00.000Z",
+    created_at: "2025-02-01T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "",
+    },
+    topics: ["dfir", "malware", "ioc", "yara"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+  },
+  {
+    id: 90003,
+    name: "insider-threat-detection-deception",
+    description: "Insider threat detection environment using honeytokens and SIEM correlation.",
+    language: "TypeScript",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/insider-threat-detection-deception",
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-01-20T00:00:00.000Z",
+    created_at: "2025-03-01T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "",
+    },
+    topics: ["soc", "deception", "incident-response"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+  },
+  {
+    id: 90005,
+    name: "Wifi Cracking Walkthrough",
+    description: "Step-by-step WiFi security assessment and cracking using real-world tools and techniques.",
+    language: "PDF",
+    html_url: null,
+    homepage: null,
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-03-21T00:00:00.000Z",
+    created_at: "2026-03-21T00:00:00.000Z",
+    owner: {
+      login: "Ahmed-Emad-Nasr",
+      avatar_url: "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
+    },
+    topics: ["wifi", "cracking", "security", "assessment"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: null,
+    pdf: "Assets/Cases/Wifi Cracking/AhmedEmad_WifiCracker.pdf",
+    image: "/Assets/Cases/Wifi Cracking/Screenshot_2026-03-21_111817.webp",
+  },
+] as const;
+
+// -----------------------------------------------------------------------------
+// YouTube (from youtube.ts)
+// -----------------------------------------------------------------------------
+
+export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";
+
+export const blogYoutubeVideos: BlogYoutubeVideo[] = [
+  {
+    videoId: "UNlJszq1Xso",
+    title: "Session Online 1 Part 1",
+    description: "First online session covering foundational security concepts and live demonstrations.",
+    publishedAt: "2025-12-02",
+    tags: ["Training", "Live Session", "Security Fundamentals"],
+  },
+  {
+    videoId: "pWkodhNwQy8",
+    title: "StegCracker شرح بسيط",
+    description: "Simple explanation of StegCracker tool for steganography analysis.",
+    publishedAt: "2025-12-02",
+    tags: ["Steganography", "Tools", "Tutorial"],
+  },
+  {
+    videoId: "dsK-w6G5zdw",
+    title: "Session Online 1 Part 2",
+    publishedAt: "2025-12-02",
+    tags: ["Training", "Live Session", "Advanced Topics"],
+  },
+  {
+    videoId: "tNH1cBceYwY",
+    title: "Session 2 Online",
+    description: "Second comprehensive online training session.",
+    publishedAt: "2025-12-02",
+    tags: ["Training", "Live Session"],
+  },
+  {
+    videoId: "256UCPWbSqM",
+    title: "StegHide شرح بسيط",
+    description: "Tutorial on StegHide tool for digital steganography.",
+    publishedAt: "2025-12-02",
+    tags: ["Steganography", "Tools", "Tutorial"],
+  },
+  {
+    videoId: "GwPbuYulV1U",
+    title: "Configuring and Testing Wazuh With Sysmon",
+    description: "Complete guide to integrating Wazuh SIEM with Sysmon for enhanced threat detection.",
+    publishedAt: "2025-11-28",
+    tags: ["Wazuh", "SIEM", "Sysmon", "Configuration", "Detection"],
+  },
+  {
+    videoId: "ZoRWT-OJvxY",
+    title: "Understanding Malware Types",
+    description: "An overview of different malware types and their characteristics.",
+    publishedAt: "2025-05-02",
+    tags: ["Malware", "Security Fundamentals", "Training"],
+  },
+  {
+    videoId: "J8MNgB-5rMo",
+    title: "Fix Cant Access ossec conf Permission Problem",
+    description: "A quick tutorial on resolving permission issues when accessing the ossec.conf file in Wazuh.",
+    publishedAt: "2025-07-02",
+    tags: ["Wazuh", "Troubleshooting", "ossec.conf", "Permissions", "Tutorial"],
+  },
+  {
+    videoId: "4-_XHZa2lVc",
+    title: "Trying AWS KMS",
+    description: "Exploring and setting up AWS Key Management Service (KMS) for secure key storage and encryption.",
+    publishedAt: "2026-05-02",
+    tags: ["AWS", "KMS", "Cloud Security", "Encryption", "Tutorial"],
+  },
+  {
+    videoId: "AUz6clXvwxw",
+    title: "Solving eCIR INE Lab: Analyzing PE Header",
+    description: "Step-by-step walkthrough of solving the eCIR INE lab focused on analyzing PE headers, understanding executable file structure, and identifying key Portable Executable components for malware analysis and digital forensics.",
+    publishedAt: "2026-05-05",
+    tags: [
+      "eCIR",
+      "INE",
+      "PE Header",
+      "Malware Analysis",
+      "Digital Forensics",
+      "Portable Executable",
+      "Reverse Engineering",
+      "Cyber Security Lab",
+    ],
+  },
+  {
+    videoId: "9LHwl0FpuPM",
+    title: "How To Install and Perform Vulnerability Assessments Using Nessus",
+    description: "Complete hands-on walkthrough for installing and configuring Nessus, setting up vulnerability scans, and performing practical vulnerability assessments. Covers scan configuration, target analysis, interpreting findings, and understanding remediation steps for cybersecurity and vulnerability management.",
+    publishedAt: "2026-05-11",
+    tags: [
+      "Nessus",
+      "Vulnerability Assessment",
+      "Cyber Security",
+      "Network Security",
+      "Penetration Testing",
+      "Vulnerability Scanning",
+      "Tenable Nessus",
+      "Security Assessment",
+    ],
+  },
+  {
+    videoId: "Eq_dYmM9y10",
+    title: "Adding New Data Set in Splunk SIEM",
+    description: "A practical walkthrough of adding a new dataset in Splunk SIEM, configuring data ingestion, setting source types, indexing logs, and validating data visibility for security monitoring and analysis. This tutorial demonstrates how to efficiently onboard new log sources into Splunk for improved threat detection and SOC operations.",
+    publishedAt: "2026-05-08",
+    tags: [
+      "Splunk",
+      "Splunk SIEM",
+      "Dataset",
+      "Data Ingestion",
+      "Log Analysis",
+      "SOC",
+      "Cyber Security",
+      "SIEM",
+      "Security Monitoring",
+      "Splunk Tutorial",
+    ],
+  },
+];
+
+export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
+  videoId: "orw_kiHZvhU",
+  title: "Featured Video",
+  description: "Watch our featured security tutorial and learn key techniques.",
+  sourceUrl: "https://youtu.be/orw_kiHZvhU?si=0D4Ri-NSCzCB-Bg_",
+};
+
+export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
+  {
+    playlistId: "PLO1VSSKnwZUgbiE0ev1TUr5wPI9kxxbgL",
+    title: "Wazuh",
+    description: "Complete Wazuh SIEM setup, configuration, and operation tutorials for SOC environments.",
+    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUgbiE0ev1TUr5wPI9kxxbgL&si=nVzc9L5Kmxhlc1Rc",
+    tags: ["SIEM", "Wazuh", "Security", "Configuration"],
+    videoCount: 12,
+  },
+  {
+    playlistId: "PLO1VSSKnwZUgdrITjagQD0mikt6Xk64yX",
+    title: "Wazuh Threat Emulation",
+    description: "Threat emulation and attack simulation using Wazuh for advanced security testing.",
+    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUgdrITjagQD0mikt6Xk64yX&si=ANb4u1blPp4gyc5F",
+    tags: ["Threat Emulation", "Wazuh", "Testing", "Red Team"],
+    videoCount: 8,
+  },
+  {
+    playlistId: "PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd",
+    title: "Malware Analysis",
+    description: "A complete walkthrough of my malware analysis project. This series covers the step-by-step methodology, safe environment setup, and the practical use of industry-standard tools for both static and dynamic analysis.",
+    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd",
+    tags: ["SOC", "DFIR", "Cybersecurity"],
+    videoCount: 5,
+  },
+  {
+    playlistId: "PLO1VSSKnwZUiZqg_WafsnYr7lTb4e3bTv",
+    title: "GDG",
+    description: "Sessions, workshops, and technical training from GDG (Google Developer Groups) events.",
+    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUiZqg_WafsnYr7lTb4e3bTv&si=YFhAEQIFGe5ZdsId",
+    tags: ["GDG", "Workshops", "Training", "Live Session"],
+    videoCount: 10,
+  },
+];
+
+// -----------------------------------------------------------------------------
+// Cases (from cases.ts)
+// -----------------------------------------------------------------------------
 
 export const EMPTY_SCREENSHOTS: string[] = [];
 

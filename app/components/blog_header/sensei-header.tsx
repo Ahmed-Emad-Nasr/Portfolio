@@ -12,7 +12,7 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { useScrollSpy } from "@/app/core/hooks/useScrollSpy";
+import { useScrollSpy } from "@/app/core/utils/utils";
 
 import styles from "./sensei-header.module.css";
 

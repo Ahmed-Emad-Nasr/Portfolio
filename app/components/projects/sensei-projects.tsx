@@ -17,12 +17,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./sensei-projects.module.css";
-import { useGitHubRepos, type GitHubRepository } from "@/app/core/hooks/useGitHubRepos";
-import { getIconForLanguage, formatDate } from "@/app/core/utils/projectsUtils";
-import { toBulletItems } from "@/app/core/utils/bulletUtils";
+import { useGitHubRepos, type GitHubRepository } from "@/app/core/utils/utils";
+import { getIconForLanguage, formatDate } from "@/app/core/utils/utils";
+import { toBulletItems } from "@/app/core/utils/utils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
-import { projectBullets } from "@/app/core/data/projects";
+import { projectBullets } from "@/app/core/config/portfolio";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type ProjectItemProps    = { repo: GitHubRepository; isRight?: boolean };

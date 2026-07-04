@@ -1,10 +1,33 @@
 /*
  * File: experience-section.module.css
  * MINIMALIST CYBERPUNK EDITION
+ * (adapted 1:1 from صحبي's design — same layout, nodes, card, motion tokens)
+ *
+ * NOTE: this file expects the following CSS custom properties to exist
+ * (usually defined in globals.css / :root). If your theme already exposes
+ * different names (e.g. --primary instead of --main-color), either rename
+ * the vars below or add a couple of aliases in globals.css:
+ *
+ *   --main-color, --main-color-rgb
+ *   --accent-color, --accent-color-rgb
+ *   --bg-color, --text-color, --text-muted
+ *   --radius-card
+ *   --motion-fast, --motion-normal, --motion-ease
  */
 
 .section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 6rem; }
+
+.jpLabel {
+  display: block;
+  font-family: monospace;
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  color: var(--main-color);
+  opacity: 0.6;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
 
 /* Sharp Title */
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 2px; text-transform: uppercase; display: inline-block; padding-bottom: 2rem; }
@@ -33,13 +56,13 @@
 
 /* --- 2. Cyber Nodes (Sharp Diamond instead of circles) --- */
 .timeline-container::after {
-  content: ""; 
-  position: absolute; 
-  width: 14px; 
+  content: "";
+  position: absolute;
+  width: 14px;
   height: 14px;
   background: var(--bg-color);
-  border: 2px solid var(--accent-color); 
-  top: 5.5rem; 
+  border: 2px solid var(--accent-color);
+  top: 5.5rem;
   z-index: 3;
   transform: rotate(45deg);
   transition: all var(--motion-fast) var(--motion-ease);
@@ -47,8 +70,8 @@
 
 .timeline-container.left::after { right: -7px; }
 .timeline-container.right::after { left: -7px; }
-.timeline-container:hover::after { 
-  background: var(--accent-color); 
+.timeline-container:hover::after {
+  background: var(--accent-color);
   box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.5);
   transform: rotate(45deg) scale(1.2);
 }
@@ -56,12 +79,12 @@
 /* --- 3. Minimalist Cyber Card --- */
 .content {
   background: rgba(10, 10, 10, 0.6);
-  padding: 2.5rem; 
-  border-radius: var(--radius-card); 
+  padding: 2.5rem;
+  border-radius: var(--radius-card);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid rgba(var(--main-color-rgb), 0.3);
   transition: all var(--motion-normal) var(--motion-ease);
-  position: relative; 
+  position: relative;
   text-align: left;
 }
 
@@ -72,19 +95,46 @@
   border-color: rgba(var(--main-color-rgb), 0.2);
 }
 
-.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 700; color: #fff; }
-.titleIcon { font-size: 1.8rem; color: var(--text-muted); transition: color var(--motion-fast) ease; }
+.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.8rem; }
+.titleIcon { color: var(--text-muted); transition: color var(--motion-fast) ease; flex-shrink: 0; }
 .content:hover .titleIcon { color: var(--main-color); }
 
 .tag h3 { margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.8rem; }
-.linkIcon { font-size: 1.2rem; opacity: 0; transform: translateX(-5px); transition: all var(--motion-fast) ease; }
+.linkIcon { opacity: 0; transform: translateX(-5px); transition: all var(--motion-fast) ease; }
 .tag h3:hover { color: var(--accent-color); }
 .tag h3:hover .linkIcon { opacity: 1; transform: translateX(0); }
+
+/* Description intro line (Ahmed's `description` field) */
+.descIntro {
+  margin: 1.4rem 0 0;
+  padding-left: 1.2rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.6;
+}
 
 .desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; color: var(--text-muted); font-size: 1.4rem; line-height: 1.6; }
 .desc-list li { margin-bottom: 0.8rem; }
 .desc-list li::marker { color: rgba(var(--accent-color-rgb), 0.5); }
 .content:hover .desc-list li::marker { color: var(--accent-color); }
+
+/* Japanese role tag (Ahmed's `japaneseRole` field) */
+.jpTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--main-color);
+  font-size: 1.1rem;
+  font-family: monospace;
+  color: var(--text-muted);
+  width: fit-content;
+}
+.jpTagLabel { color: rgba(var(--main-color-rgb), 0.6); font-weight: 700; }
 
 /* --- 4. Terminal Skill Badges --- */
 .skillTags { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.8rem; }
@@ -94,15 +144,15 @@
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   font-size: 1.1rem;
-  font-family: monospace; 
+  font-family: monospace;
   transition: all var(--motion-fast) ease;
 }
 .skillTag::before { content: "> "; opacity: 0.5; color: var(--main-color); }
 .skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); border-color: var(--main-color); }
 
 .date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: 0.6rem; }
-.experience-time { font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: monospace; }
-.date-range { font-size: 1.2rem; color: var(--text-muted); font-family: monospace; }
+.experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: monospace; }
+.date-range { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; color: var(--text-muted); font-family: monospace; }
 
 .proofLink {
   display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.5rem 1.2rem;
@@ -113,6 +163,7 @@
 
 .loadMoreWrap { margin-top: 4rem; display: flex; justify-content: center; }
 .primaryAction {
+  display: inline-flex; align-items: center; gap: 0.6rem;
   padding: 1rem 2rem; border: 1px solid var(--main-color); background: transparent;
   color: var(--main-color); font-size: 1.3rem; font-family: monospace; text-transform: uppercase; letter-spacing: 2px;
   cursor: pointer; transition: all var(--motion-fast) ease;
@@ -120,12 +171,12 @@
 .primaryAction:hover { background: rgba(var(--main-color-rgb), 0.1); box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.2); }
 
 /* === Mobile Overrides === */
-@media (max-width: 991px) { 
-  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; } 
-  .timeline-container.left, .timeline-container.right { left: 0; } 
-  .time-line::after { left: 2rem; } 
-  .timeline-container.left::after, .timeline-container.right::after { left: 1.3rem; right: auto; } 
-  .date-details { align-items: flex-start; } 
+@media (max-width: 991px) {
+  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; }
+  .timeline-container.left, .timeline-container.right { left: 0; }
+  .time-line::after { left: 2rem; }
+  .timeline-container.left::after, .timeline-container.right::after { left: 1.3rem; right: auto; }
+  .date-details { align-items: flex-start; }
 }
 @media (max-width: 430px) {
   .title { font-size: 2.5rem; }
