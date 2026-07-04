@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo } from "react";
 import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { calculateExperience } from "@/app/core/utils/utils";
@@ -22,7 +22,7 @@ const TimelineItem = memo(({ isRight, tag, subTag, subTagHyperlink, desc, startD
           {subTag && (
             subTagHyperlink ? (
               <h3>
-                <a href={subTagHyperlink} target="_blank" style={{ cursor: "pointer", color: "inherit", textDecoration: "none" }}>
+                <a href={subTagHyperlink} target="_blank" rel="noopener noreferrer" style={{ cursor: "pointer", color: "inherit", textDecoration: "none" }}>
                   {subTag} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles.linkIcon} />
                 </a>
               </h3>
@@ -36,7 +36,7 @@ const TimelineItem = memo(({ isRight, tag, subTag, subTagHyperlink, desc, startD
           <ul className={styles["desc-list"]}>
             {bullets.map((item: string, i: number) => <li key={i}>{item}</li>)}
           </ul>
-          {skills.length > 0 && (
+          {skills?.length > 0 && (
             <div className={styles.skillTags}>
               {skills.map((skill: string) => <span key={skill} className={styles.skillTag}>{skill}</span>)}
             </div>
@@ -48,7 +48,7 @@ const TimelineItem = memo(({ isRight, tag, subTag, subTagHyperlink, desc, startD
             <div className={styles["experience-time"]}><FontAwesomeIcon icon={faClock} /> <span>{experienceTime}</span></div>
             <div className={styles["date-range"]}><FontAwesomeIcon icon={faCalendarAlt} /> <span>{startDate} {endDate ? `- ${endDate}` : "- Present"}</span></div>
             {certificateUrl && (
-              <a className={styles.proofLink} href={certificateUrl} target="_blank">
+              <a className={styles.proofLink} href={certificateUrl} target="_blank" rel="noopener noreferrer">
                 <FontAwesomeIcon icon={faCertificate} /> Proof / Credential
               </a>
             )}
@@ -62,8 +62,6 @@ const TimelineItem = memo(({ isRight, tag, subTag, subTagHyperlink, desc, startD
 TimelineItem.displayName = "TimelineItem";
 
 function ExperienceSection() {
-  const [visibleCount, setVisibleCount] = useState(4);
-
   return (
     <section className={styles["section-education"]} id="Experience">
       <div className={styles.container}>
@@ -72,22 +70,10 @@ function ExperienceSection() {
         </div>
         
         <div className={styles["time-line"]}>
-          {knowledgeEducationItems.slice(0, visibleCount).map((item, index) => (
+          {knowledgeEducationItems.map((item, index) => (
             <TimelineItem key={index} {...item} isRight={item.isRight !== undefined ? item.isRight : index % 2 !== 0} />
           ))}
         </div>
-
-        {visibleCount < knowledgeEducationItems.length && (
-          <div className={styles.loadMoreWrap}>
-            <button
-              type="button"
-              className={styles.primaryAction}
-              onClick={() => setVisibleCount((c) => Math.min(knowledgeEducationItems.length, c + 4))}
-            >
-              Show more
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );
