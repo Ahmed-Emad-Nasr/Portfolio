@@ -4,7 +4,7 @@ import { useEffect, useRef, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useHeader } from "@/app/core/hooks/useHeader";
+import { useHeader } from "@/app/core/utils/utils";
 import styles from "./sensei-header.module.css";
 
 // دالة لمطابقة المسميات المختصرة

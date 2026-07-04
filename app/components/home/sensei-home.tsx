@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp, faYoutube, faInstagram, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faFilePdf, faBriefcase, faEnvelope, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
-import { useRandomMedia } from "@/app/core/hooks/useRandomMedia";
-import { YOUTUBE_CHANNEL_URL } from "@/app/core/data/youtube";
+import { useRandomMedia } from "@/app/core/utils/utils";
+import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/portfolio";
 
 // تحديد نسخة السيرة الذاتية (A/B Testing) بسرعة بدون Re-renders
 const CV_VARIANT = typeof window !== "undefined"

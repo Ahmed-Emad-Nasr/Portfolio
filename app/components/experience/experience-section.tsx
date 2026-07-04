@@ -3,9 +3,9 @@
 import { memo, useState } from "react";
 import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
-import { calculateExperience } from "@/app/core/utils/experienceUtils";
-import { knowledgeEducationItems } from "@/app/core/data/experience";
-import { toBulletItems } from "@/app/core/utils/bulletUtils";
+import { calculateExperience } from "@/app/core/utils/utils";
+import { knowledgeEducationItems } from "@/app/core/config/portfolio";
+import { toBulletItems } from "@/app/core/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase, faCertificate } from "@fortawesome/free-solid-svg-icons";
 import MotionInView from "@/app/core/components/MotionInView";

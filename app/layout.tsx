@@ -12,7 +12,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import { knowledgeEducationItems } from "@/app/core/data/experience";
+import { knowledgeEducationItems } from "@/app/core/config/portfolio";
 import { SmoothScroll } from "./components/smooth-scroll";
 import CustomCursor from "./components/custom-cursor";
 import ClientOnly from "./core/components/ClientOnly";

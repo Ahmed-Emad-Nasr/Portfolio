@@ -6,7 +6,7 @@ import MotionInView from "@/app/core/components/MotionInView";
 import BlogCard from "../BlogCard";
 import styles from "../page.module.css";
 import type { PdfResource } from "../blog-types";
-import { EMPTY_SCREENSHOTS } from "@/app/core/data/cases";
+import { EMPTY_SCREENSHOTS } from "@/app/core/config/portfolio";
 import { getThumbnail } from "../blog-utils";
 
 const PAGE_SIZE = 4;
