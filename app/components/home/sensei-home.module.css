@@ -357,6 +357,20 @@
 }
 .cvBtn:hover svg { animation: pdfPulse 1.15s ease-in-out infinite; }
 
+.btnLoading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.spinner {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
 .btnProjects {
   background: rgba(255, 255, 255, 0.03);
   color: #fff;
@@ -524,6 +538,40 @@
 }
 .imageButton:hover .image {
   transform: scale(1.1);
+}
+
+.imageHint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  transition: opacity var(--motion-normal) var(--motion-ease);
+  z-index: 5;
+  pointer-events: none;
+}
+.imageHint svg {
+  font-size: 1.4rem;
+}
+.imageButton:hover .imageHint,
+.imageButton:focus-visible .imageHint {
+  opacity: 1;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .imageHint {
+    display: none;
+  }
 }
 
 /* Bottom proverb */
