@@ -23,24 +23,7 @@
   background: rgba(var(--main-color-rgb), 0.2);
 }
 
-/* --- Terminal Style Filters --- */
-.projects-filter { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
-.filter-btn {
-  padding: 0.55rem 1rem; border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted);
-  font-size: 1.05rem; font-family: monospace; text-transform: uppercase; letter-spacing: 0.8px;
-  background: transparent; cursor: pointer; transition: all var(--motion-fast) ease;
-  display: inline-flex; align-items: center; gap: 0.8rem;
-}
-.filter-count {
-  font-size: 1rem; padding: 0.2rem 0.6rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.filter-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
-.filter-btn.active { border-color: var(--main-color); color: var(--main-color); background: rgba(var(--main-color-rgb), 0.05); }
-.filter-btn.active .filter-count { color: var(--main-color); border-color: var(--main-color); }
-
 .section-summary { margin: 0 auto 3rem; max-width: 800px; display: flex; justify-content: center; align-items: center; gap: 1.5rem; font-size: 1.05rem; font-family: monospace; color: var(--text-muted); }
-.refresh-btn { padding: 0.5rem 1rem; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); font-family: monospace; cursor: pointer; transition: all var(--motion-fast) ease; }
-.refresh-btn:hover { background: rgba(var(--accent-color-rgb), 0.1); }
 
 /* --- The Cards --- */
 .project-item { position: relative; width: calc(50% - 2rem); z-index: 2; margin-bottom: 3rem; }
@@ -99,21 +82,6 @@
 .action-btn:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.05); }
 .primary-action { border-color: rgba(var(--main-color-rgb), 0.3); color: var(--main-color); }
 .primary-action:hover { border-color: var(--main-color); background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); }
-
-/* --- Minimal Skeletons --- */
-.skeleton-icon, .skeleton-line { position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.05); }
-.skeleton-icon { width: 2.5rem; height: 2.5rem; }
-.skeleton-line { display: block; height: 1.2rem; margin-bottom: 0.8rem; }
-.skeleton-title { width: 50%; height: 2rem; }
-.skeleton-line::after, .skeleton-icon::after {
-  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  animation: sweep 1.5s infinite ease-in-out; 
-}
-@keyframes sweep { 100% { transform: translateX(100%); } }
-
-.empty-state { text-align: center; padding: 3rem; font-family: monospace; color: var(--text-muted); border: 1px dashed rgba(255, 255, 255, 0.1); }
-.reset-filter-btn { margin-top: 1rem; padding: 0.5rem 1rem; font-family: monospace; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); cursor: pointer; }
 
 /* === Mobile Overrides === */
 @media (max-width: 991px) {
