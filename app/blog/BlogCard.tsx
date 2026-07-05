@@ -18,22 +18,20 @@ interface BlogCardProps {
   date?: string;
   screenshots: string[];
   onOpenGallery: (title: string, screenshots: string[], index?: number) => void;
-  onTagClick?: (tag: string) => void;
-  onToolClick?: (tool: string) => void;
   getThumbnail: (imgPath: string) => string;
   normalizeHref: (href: string) => string;
 }
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(({
   title, description, platform, type, category, difficulty, href, tags, tools,
-  readTime, date, screenshots, onOpenGallery, onTagClick, onToolClick, getThumbnail, normalizeHref
+  readTime, date, screenshots, onOpenGallery, getThumbnail, normalizeHref
 }) => {
   const hasScreenshots = screenshots.length > 0;
   const primaryScreenshot = hasScreenshots ? screenshots[0] : null;
   const secondaryScreenshot = screenshots.length > 1 ? screenshots[1] : null;
   const extraCount = Math.max(0, screenshots.length - 2);
 
-  // Fallback State خفيف جداً: لو ملف الـ thumb مش موجود، هنعرض الصورة الأصلية
+  // Fallback State خفيف جداً
   const [primaryFailed, setPrimaryFailed] = useState(false);
   const [secondaryFailed, setSecondaryFailed] = useState(false);
 
@@ -63,7 +61,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         {tags && tags.length > 0 && (
           <div className={styles.tagsListInline}>
             {tags.slice(0, 3).map((tag) => (
-              <button key={tag} type="button" className={styles.tagButtonSmall} onClick={() => onTagClick?.(tag)}>{tag}</button>
+              <span key={tag} className={styles.tagButtonSmall}>{tag}</span>
             ))}
             {tags.length > 3 && <span className={styles.moreTagsBadge}>+{tags.length - 3}</span>}
           </div>
@@ -72,7 +70,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         {tools && tools.length > 0 && (
           <div className={styles.toolsListCompact}>
             {tools.slice(0, 2).map((tool) => (
-              <button key={tool} type="button" className={styles.toolButtonSmall} onClick={() => onToolClick?.(tool)}>{tool}</button>
+              <span key={tool} className={styles.toolButtonSmall}>{tool}</span>
             ))}
             {tools.length > 2 && <span className={styles.moreToolsBadge}>+{tools.length - 2}</span>}
           </div>
@@ -100,7 +98,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
               loading="lazy"
               decoding="async" 
               quality={20} 
-              onError={() => setPrimaryFailed(true)} // ← سطر الإنقاذ
+              onError={() => setPrimaryFailed(true)} 
             />
           </a>
           {secondaryScreenshot && (
@@ -114,7 +112,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
                   decoding="async"
                   loading="lazy" 
                   quality={25} 
-                  onError={() => setSecondaryFailed(true)} // ← سطر الإنقاذ
+                  onError={() => setSecondaryFailed(true)} 
                 />
               </a>
               {extraCount > 0 && <span className={styles.moreShotsBadge}>+{extraCount}</span>}
