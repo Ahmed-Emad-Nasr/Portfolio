@@ -34,10 +34,10 @@
   --radius-button: 2px;
   --radius-katana: 0.5rem 2rem 0.5rem 2rem;
 
-  --font-display: "Overlock", sans-serif;
-  --font-body: "Overlock", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-jp: "Overlock", sans-serif;
+  --font-display: var(--font-display, 'Dela Gothic One', 'Noto Sans JP', sans-serif);
+  --font-body: var(--font-body, 'Outfit', sans-serif);
+  --font-mono: var(--font-mono, 'JetBrains Mono', monospace);
+  --font-jp: var(--font-jp, 'Noto Sans JP', sans-serif);
 
   /* Backward-compatible aliases used by the current components */
   --bg-color: var(--background);
@@ -166,7 +166,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body, var(--font-overlock, sans-serif));
+  font-family: var(--font-body);
   color: var(--text-color);
   background-color: var(--bg-color);
   background-attachment: fixed;
