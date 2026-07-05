@@ -62,6 +62,14 @@ export default function BlogPdfLibrarySection({
               </div>
             )}
 
+            {leadCase.skillsGained && leadCase.skillsGained.length > 0 && (
+              <div className={styles.skillsListCompact}>
+                {leadCase.skillsGained.map((skill) => (
+                  <span key={skill} className={styles.skillButtonSmall}>{skill}</span>
+                ))}
+              </div>
+            )}
+
             <div className={styles.cardActions}>
               <a href={normalizeHref(leadCase.href)} target="_blank" className={styles.viewAction}>View PDF</a>
               <a href={normalizeHref(leadCase.href)} download className={styles.downloadAction}>Download</a>
@@ -72,7 +80,7 @@ export default function BlogPdfLibrarySection({
           </div>
           {leadCaseSpotlightImage && (
             <a href={leadCaseSpotlightImage} target="_blank" className={styles.caseSpotlightMedia}>
-              <Image src={leadCaseSpotlightImage} alt="spotlight" fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" decoding="async" quality={25} />
+              <Image src={leadCaseSpotlightImage} alt={`${leadCase.title} — spotlight screenshot`} fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" decoding="async" quality={25} />
             </a>
           )}
         </MotionInView>
