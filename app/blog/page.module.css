@@ -21,10 +21,22 @@
   background: repeating-linear-gradient( 0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.8) 2px, rgba(0, 229, 255, 0.8) 4px );
 }
 
+/*
+ * .block is rendered on a literal <section> element (see BlogPdfLibrarySection.tsx
+ * and the nested playlists section in BlogMediaSections.tsx). globals.css has a
+ * blanket `section { max-width:1280px; padding:7.1rem 5.25% 5.9rem; margin:0 auto
+ * clamp(6rem,10vw,12rem) }` rule. Class specificity wins on properties both set,
+ * but max-width and padding are NOT set here at all, so they leak straight through
+ * from globals.css: the intended 1400px grid gets capped at 1280px, and content
+ * gets padded twice (once by .page, once by the global section rule). We neutralize
+ * every property the global rule sets so this block's sizing is fully self-contained.
+ */
 .block {
-  position: relative; z-index: 1; width: min(100%, 1400px); margin: 0 auto;
+  position: relative; z-index: 1; width: min(100%, 1400px); max-width: none; padding: 0;
+  margin: 0 auto clamp(4rem, 8vw, 8rem);
   content-visibility: auto; contain-intrinsic-size: 1px 1000px;
 }
+.block:last-child { margin-bottom: 0; }
 
 /* Terminal Style Headings */
 .blockHeading { margin-bottom: 3rem; }
@@ -68,7 +80,7 @@
 /* =========================================
    3. BUTTONS (TERMINAL STYLE)
    ========================================= */
-.primaryAction, .secondaryAction, .cardActions a, .cardActions button, .playlistAction {
+.primaryAction, .cardActions a, .cardActions button, .playlistAction {
   min-height: 42px; padding: 0.6rem 1.4rem; border-radius: 2px; /* Sharp Edges */
   font-size: 1.2rem !important; font-weight: 700; font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 1px;
   background: transparent !important; color: rgba(255, 255, 255, 0.7) !important;
@@ -92,14 +104,14 @@
 /* =========================================
    4. GRID & CYBER CARDS
    ========================================= */
-.pdfGrid, .playlistGrid, .videoGrid { display: grid; margin-top: 2rem; align-items: start; }
-.playlistGrid, .videoGrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+.pdfGrid, .playlistGrid { display: grid; margin-top: 2rem; align-items: start; }
+.playlistGrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
 .pdfGrid { grid-template-columns: 1fr; gap: clamp(1.2rem, 2.2vw, 2.6rem); }
 
 .pdfCard[data-visible="true"], .playlistCard[data-visible="true"], .videoCard[data-visible="true"] { animation: fadeUp 0.4s ease both; }
 
 /* Cyberpunk Wireframe Cards */
-.pdfCard, .playlistCard, .videoCard, .featuredCard, .insightCard, .youtubeHub {
+.pdfCard, .playlistCard, .videoCard, .insightCard, .youtubeHub {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid transparent;
@@ -136,6 +148,34 @@
 .caseCardTextOnly .pdfCardMedia { display: none; }
 .caseCardTextOnly .cardActions { margin-top: 2rem; }
 
+/* Case Spotlight — was referenced in JSX with NO matching CSS at all (only a
+   mobile display:none for the media half existed). Without this, an active
+   leadCase would render using bare globals.css defaults, breaking the theme. */
+.caseSpotlight {
+  display: grid; grid-template-columns: 1.3fr 0.9fr; align-items: center; gap: 3rem;
+  margin-bottom: 3rem; padding: 3rem; border-radius: 10px;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.35);
+  background: linear-gradient(135deg, rgba(10,14,20,0.92), rgba(6,8,12,0.8));
+  box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.08), 0 20px 50px rgba(0,0,0,0.6);
+  position: relative; overflow: hidden;
+}
+.caseSpotlightBody { display: flex; flex-direction: column; }
+.caseSpotlightTag {
+  display: inline-flex; align-self: flex-start; margin-bottom: 0.8rem; padding: 0.3em 0.8em;
+  border-radius: 2px; border: 1px solid var(--accent-color); color: var(--accent-color);
+  font-family: var(--font-mono, monospace); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px;
+}
+.caseSpotlightTag::before { content: "★ "; }
+.caseSpotlightBody h3 {
+  font-size: 2.4rem; font-family: var(--font-mono, monospace); color: #fff; letter-spacing: 0.5px; line-height: 1.25;
+}
+.caseSpotlightBody > p { margin-top: 0.8rem; color: var(--text-muted); font-size: 1.15rem; line-height: 1.6; }
+.caseSpotlightMedia {
+  position: relative; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.3); background: #000; display: block;
+}
+.caseSpotlightMedia img { object-fit: cover; }
+
 /* =========================================
    5. TERMINAL BADGES & TYPOGRAPHY
    ========================================= */
@@ -158,24 +198,53 @@
 .cardTitle { color: var(--foreground); font-size: 1.9rem; line-height: 1.28; font-weight: 700; font-family: var(--font-mono, monospace); letter-spacing: 0.8px; }
 .pdfCard:hover .cardTitle { color: var(--accent-color); text-decoration: underline dotted; text-underline-offset: 6px; }
 
-.cardDescription, .videoDate, .playlistDescription { margin-top: 0.6rem; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-body, sans-serif); }
-.cardPlatform { margin-top: 1rem; color: rgba(255, 255, 255, 0.3); font-size: 1.1rem; font-family: var(--font-mono, monospace); text-transform: uppercase; }
+.cardDescription, .videoDate, .playlistDescription {
+  margin-top: 0.6rem; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-body, sans-serif);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cardDescriptionExpanded {
+  margin-top: 0.6rem; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-body, sans-serif);
+}
+.descToggle {
+  margin-top: 0.4rem; padding: 0; border: 0; background: transparent; cursor: pointer;
+  color: var(--accent-color); font-family: var(--font-mono, monospace); font-size: 1rem;
+  text-transform: uppercase; letter-spacing: 1px; text-decoration: underline dotted; text-underline-offset: 4px;
+}
+.descToggle:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
+.cardPlatform { margin-top: 1rem; color: rgba(255, 255, 255, 0.55); font-size: 1.1rem; font-family: var(--font-mono, monospace); text-transform: uppercase; }
 
 .caseMetadata { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
-.tagsListInline, .toolsListCompact { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.2rem; }
-.tagButtonSmall, .toolButtonSmall {
+.tagsListInline, .toolsListCompact, .skillsListCompact { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.2rem; }
+.tagButtonSmall, .toolButtonSmall, .skillButtonSmall {
   padding: 0.4rem 0.8rem; border-radius: 2px; border: 1px solid transparent;
-  background: transparent; color: rgba(255, 255, 255, 0.4); font-size: 1.1rem; font-family: var(--font-mono, monospace);
+  background: transparent; color: rgba(255, 255, 255, 0.62); font-size: 1.1rem; font-family: var(--font-mono, monospace);
 }
 .toolButtonSmall::before { content: ">_ "; color: var(--main-color); }
 .tagButtonSmall::before { content: "#"; color: var(--accent-color); }
 
+/* Skills Gained: distinct green tone so readers instantly see "what this case teaches" */
+.skillsListCompact { padding-top: 0.6rem; }
+.skillButtonSmall {
+  border-color: rgba(0, 255, 136, 0.3); color: #6fffbf;
+}
+.skillButtonSmall::before { content: "✓ "; color: #00ff88; }
+.moreSkillsBadge {
+  display: inline-flex; align-items: center; padding: 0.4rem 0.8rem; border-radius: 2px;
+  border: 1px dashed rgba(0, 255, 136, 0.3); color: #6fffbf; font-size: 1.1rem; font-family: var(--font-mono, monospace);
+}
+
+/* "+N more" overflow badges — previously used in markup with no matching CSS */
+.moreTagsBadge, .moreToolsBadge {
+  display: inline-flex; align-items: center; padding: 0.4rem 0.8rem; border-radius: 2px;
+  border: 1px dashed rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.55);
+  font-size: 1.1rem; font-family: var(--font-mono, monospace);
+}
+
 /* =========================================
    6. SCREENSHOTS & MEDIA
    ========================================= */
-.screenshotArea { display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 1rem; margin-top: 1.5rem; }
-.primaryShot, .shotThumb, .featuredFrame, .playlistFrame, .videoFrame {
+.primaryShot, .shotThumb, .playlistFrame, .videoFrame {
   position: relative; border-radius: 2px; overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1); background: #000;
   cursor: pointer; aspect-ratio: 16 / 9; transition: all var(--motion-fast) ease;
@@ -204,14 +273,6 @@
 }
 .embedPreview:hover .embedPlayButton { background: var(--main-color); color: #000; }
 
-.skeletonShimmer {
-  position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.02);
-}
-.skeletonShimmer::after {
-  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  animation: shimmer 1.5s infinite ease-in-out; 
-}
 
 /* =========================================
    7. GALLERY OVERLAY (HUD STYLE)
@@ -271,9 +332,12 @@
 .insightStrip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 4rem auto; }
 .insightCard { padding: 2.5rem; text-align: center; }
 .insightCard strong { display: block; font-size: 3.5rem; color: var(--accent-color); font-family: var(--font-mono, monospace); }
-.insightCard span { display: block; margin-top: 1rem; font-size: 1.2rem; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 2px; }
+.insightCard span { display: block; margin-top: 1rem; font-size: 1.2rem; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 2px; }
 
 .youtubeHub { padding: 3rem; margin: 4rem auto 0; border-style: dashed; }
+.youtubeHubActions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.channelAction { border-color: rgba(var(--accent-color-rgb), 0.4) !important; color: var(--accent-color) !important; }
+.channelAction:hover { background: rgba(var(--accent-color-rgb), 0.15) !important; border-color: var(--accent-color) !important; color: #fff !important; }
 .youtubeHubGrid { margin-top: 2.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
 
 .videoCardContent h3, .playlistContent h3 { color: #fff; font-family: var(--font-mono, monospace); font-size: 1.6rem; letter-spacing: 1px; }
@@ -283,15 +347,16 @@
    ========================================= */
 @media (max-width: 1024px) {
   .page { padding: 8rem 4% 5rem; }
-  .playlistGrid, .videoGrid, .youtubeHubGrid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .playlistGrid, .youtubeHubGrid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
   .insightStrip { grid-template-columns: repeat(2, 1fr); }
   .caseCardLarge { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
+  .caseSpotlight { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
 }
 
 @media (max-width: 600px) {
   .page { padding: 6rem 1rem 3rem; }
-  .playlistGrid, .videoGrid, .youtubeHubGrid { grid-template-columns: 1fr; }
-  .primaryAction, .secondaryAction, .cardActions a, .cardActions button { width: 100%; }
+  .playlistGrid, .youtubeHubGrid { grid-template-columns: 1fr; }
+  .primaryAction, .cardActions a, .cardActions button { width: 100%; }
   .insightStrip { grid-template-columns: 1fr; gap: 1rem; }
   .insightCard { padding: 1.5rem; }
   .galleryStage { grid-template-columns: 1fr; padding: 1rem; }
@@ -321,5 +386,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pdfCard[data-visible="true"], .playlistCard[data-visible="true"], .videoCard[data-visible="true"],
-  .insightCard, .galleryOverlay, .galleryDialog, .skeletonShimmer::after { animation: none !important; }
+  .insightCard, .galleryOverlay, .galleryDialog { animation: none !important; }
 }

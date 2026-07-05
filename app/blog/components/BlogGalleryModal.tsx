@@ -43,7 +43,7 @@ export default function BlogGalleryModal({ gallery, currentShot, setGallery, goG
         </div>
 
         <div className={styles.galleryStage}>
-          <button type="button" className={styles.galleryNav} onClick={() => goGallery(-1)}>←</button>
+          <button type="button" className={styles.galleryNav} onClick={() => goGallery(-1)} aria-label="Previous screenshot">←</button>
           <a
             href={currentShot}
             target="_blank"
@@ -51,9 +51,9 @@ export default function BlogGalleryModal({ gallery, currentShot, setGallery, goG
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <Image src={currentShot} alt="screenshot" fill sizes="(max-width: 991px) 95vw, 78vw" loading="lazy" quality={75} />
+            <Image src={currentShot} alt={`${gallery.title} — screenshot ${gallery.index + 1} of ${gallery.screenshots.length}`} fill sizes="(max-width: 991px) 95vw, 78vw" loading="lazy" quality={75} />
           </a>
-          <button type="button" className={styles.galleryNav} onClick={() => goGallery(1)}>→</button>
+          <button type="button" className={styles.galleryNav} onClick={() => goGallery(1)} aria-label="Next screenshot">→</button>
         </div>
 
         <div className={styles.galleryThumbs}>
@@ -63,6 +63,8 @@ export default function BlogGalleryModal({ gallery, currentShot, setGallery, goG
               type="button"
               className={index === gallery.index ? `${styles.galleryThumbButton} ${styles.activeGalleryThumb}` : styles.galleryThumbButton}
               onClick={() => setGallery({ ...gallery, index })}
+              aria-label={`Go to screenshot ${index + 1}`}
+              aria-current={index === gallery.index}
             >
               {index + 1}
             </button>

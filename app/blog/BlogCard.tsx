@@ -14,6 +14,7 @@ interface BlogCardProps {
   href: string;
   tags?: readonly string[];
   tools?: readonly string[];
+  skillsGained?: readonly string[];
   readTime?: number;
   date?: string;
   screenshots: string[];
@@ -23,7 +24,7 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(({
-  title, description, platform, type, category, difficulty, href, tags, tools,
+  title, description, platform, type, category, difficulty, href, tags, tools, skillsGained,
   readTime, date, screenshots, onOpenGallery, getThumbnail, normalizeHref
 }) => {
   const hasScreenshots = screenshots.length > 0;
@@ -34,6 +35,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
   // Fallback State خفيف جداً
   const [primaryFailed, setPrimaryFailed] = useState(false);
   const [secondaryFailed, setSecondaryFailed] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
+  const isLongDescription = (description?.length ?? 0) > 140;
 
   return (
     <article className={[styles.pdfCard, hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly].filter(Boolean).join(" ")}>
@@ -43,12 +46,23 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
           {hasScreenshots && <span className={styles.shotCount}>{screenshots.length} screenshots</span>}
         </div>
 
-        <h3 className={styles.cardTitle}>
-          {title}
-          {description && <span className={styles.cardTooltip}>{description}</span>}
-        </h3>
+        <h3 className={styles.cardTitle}>{title}</h3>
 
-        {description && <p className={styles.cardDescription}>{description}</p>}
+        {description && (
+          <>
+            <p className={descExpanded ? styles.cardDescriptionExpanded : styles.cardDescription}>{description}</p>
+            {isLongDescription && (
+              <button
+                type="button"
+                className={styles.descToggle}
+                onClick={() => setDescExpanded((v) => !v)}
+                aria-expanded={descExpanded}
+              >
+                {descExpanded ? "Show less" : "Read more"}
+              </button>
+            )}
+          </>
+        )}
         <p className={styles.cardPlatform}>{platform}</p>
 
         <div className={styles.caseMetadata}>
@@ -76,6 +90,15 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
           </div>
         )}
 
+        {skillsGained && skillsGained.length > 0 && (
+          <div className={styles.skillsListCompact}>
+            {skillsGained.slice(0, 3).map((skill) => (
+              <span key={skill} className={styles.skillButtonSmall}>{skill}</span>
+            ))}
+            {skillsGained.length > 3 && <span className={styles.moreSkillsBadge}>+{skillsGained.length - 3}</span>}
+          </div>
+        )}
+
         <div className={styles.cardActions}>
           <a href={normalizeHref(href)} target="_blank" className={styles.viewAction}>View PDF</a>
           <a href={normalizeHref(href)} download className={styles.downloadAction}>Download</a>
@@ -92,7 +115,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
           <a href={normalizeHref(primaryScreenshot)} target="_blank" className={styles.primaryShot}>
             <Image 
               src={normalizeHref(primaryFailed ? primaryScreenshot : getThumbnail(primaryScreenshot))} 
-              alt="main" 
+              alt={`${title} — main screenshot`} 
               fill 
               sizes="(max-width: 991px) 70vw, 40vw" 
               loading="lazy"
@@ -106,7 +129,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
               <a href={normalizeHref(secondaryScreenshot)} target="_blank" className={styles.shotThumb}>
                 <Image 
                   src={normalizeHref(secondaryFailed ? secondaryScreenshot : getThumbnail(secondaryScreenshot))} 
-                  alt="thumb" 
+                  alt={`${title} — additional screenshot`} 
                   fill 
                   sizes="18vw" 
                   decoding="async"
