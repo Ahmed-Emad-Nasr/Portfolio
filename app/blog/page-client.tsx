@@ -7,14 +7,14 @@ import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import KanjiDivider from "@/app/core/components/KanjiDivider";
-import ClientOnly from "@/app/core/components/ClientOnly";
 
 // Dynamic Imports
 const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
 const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), { ssr: false });
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 const AppBar = dynamic(() => import("@/app/components/blog_header/sensei-header"), { ssr: false });
+const ClientOnly = dynamic(() => import("@/app/core/components/ClientOnly"), { ssr: false });
+const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"), { ssr: false });
 
 const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC & Cybersecurity Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
 

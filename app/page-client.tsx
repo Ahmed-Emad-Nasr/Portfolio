@@ -9,8 +9,6 @@
 import { memo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
-import KanjiDivider from "@/app/core/components/KanjiDivider";
-import ClientOnly from "@/app/core/components/ClientOnly";
 
 const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
   ssr: false,
@@ -37,6 +35,15 @@ const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sen
   loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={ART_PLACEHOLDER_STYLE} />,
 });
 
+const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"), {
+  ssr: false,
+  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={HOME_PLACEHOLDER_STYLE} />,
+});
+
+const ClientOnly = dynamic(() => import("@/app/core/components/ClientOnly"), {
+  ssr: false,
+  loading: () => null,
+});
 // ─── Styles — module-level constants, never re-allocated ─────────────────────
 
 const BASE_TRANSITION = "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)";
