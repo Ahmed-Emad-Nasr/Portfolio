@@ -10,7 +10,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Outfit, Dela_Gothic_One, Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
+import { Overlock } from "next/font/google";
 import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/config/portfolio";
 import { SmoothScroll } from "./components/smooth-scroll";
@@ -93,26 +93,11 @@ export const metadata: Metadata = {
 
 // ─── Fonts ────────────────────────────────────────────────────────────────────
 
-const delaGothic = Dela_Gothic_One({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-display",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-body",
-});
-
-const notoJP = Noto_Sans_JP({
-  subsets: ["latin"],
+const overlock = Overlock({
   weight: ["400", "700", "900"],
-  variable: "--font-jp",
+  subsets: ["latin"],
+  variable: "--font-overlock",
+  display: "swap",
 });
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -204,7 +189,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr" className={`${delaGothic.variable} ${jetbrainsMono.variable} ${outfit.variable} ${notoJP.variable}`}>
+    <html lang="en" dir="ltr" className={overlock.variable}>
       <head>
         {/* Preload only the absolute critical image for LCP */}
         <link rel="preload" as="image" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
