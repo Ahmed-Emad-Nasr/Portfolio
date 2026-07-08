@@ -124,6 +124,15 @@
 
   --stagger-step: 0.16s;
 
+  /* Consistent spacing scale — reused everywhere so nothing sits flush
+     against something else ("لازق في بعضه"). Fluid with clamp() so the
+     gap shrinks gracefully on small phones instead of just disappearing. */
+  --space-xs: clamp(0.6rem, 1vw, 0.9rem);
+  --space-sm: clamp(1rem, 2vw, 1.5rem);
+  --space-md: clamp(1.6rem, 3vw, 2.4rem);
+  --space-lg: clamp(2.4rem, 5vw, 4rem);
+  --space-xl: clamp(4rem, 8vw, 6rem);
+
   --typing-cursor: 0.9s;
   --typing-typing: 16s;
   --typing-words: 16s;
@@ -213,6 +222,9 @@ button {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  /* a11y: keep every button at least 44x44 CSS px so it's easy to tap on phones */
+  min-height: 44px;
+  min-width: 44px;
 }
 
 button:hover:not(:disabled) {

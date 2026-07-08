@@ -502,7 +502,9 @@
   text-transform: uppercase;
 }
 .hudMain { color: rgba(var(--main-color-rgb), 0.65); }
-.hudDim { color: rgba(255, 255, 255, 0.28); }
+/* a11y: nudged up from 0.28 → 0.4 so this still reads as decorative HUD
+   flavor text without dropping below a readable contrast level */
+.hudDim { color: rgba(255, 255, 255, 0.4); }
 .hudAccent { color: rgba(var(--accent-color-rgb, 255, 255, 255), 0.5); }
 
 .imageButton {
@@ -647,6 +649,10 @@
   .imageButton:hover .image, .btn:hover, .socialIcon a:hover { transform: none; }
   .cvBtn:hover svg { animation: none; }
   .btn::before { display: none; }
+  /* a11y: any touch/coarse-pointer device (tablets included, not just narrow
+     phones) needs 44px tap targets, regardless of the viewport breakpoint */
+  .socialIcon a { width: 4.4rem; height: 4.4rem; min-width: 44px; min-height: 44px; }
+  .btn, .btnEmail { min-height: 44px; }
 }
 
 /* ───────────────── Responsive ───────────────── */
@@ -677,8 +683,10 @@
   .homeContent h1 { font-size: clamp(2.6rem, 13vw, 3.4rem); }
   .typingText { font-size: clamp(1.4rem, 6.5vw, 1.9rem); }
   .homeContent p, .tagline { font-size: 1.05rem; }
-  .socialIcon a { width: 3.1rem; height: 3.1rem; font-size: 1.2rem; }
-  .btn { padding: 1.1rem 1.8rem; font-size: 0.82rem; }
+  /* a11y: 4.4rem = 44px, the minimum comfortable tap-target size on touch screens */
+  .socialIcon a { width: 4.4rem; height: 4.4rem; font-size: 1.2rem; }
+  .socialIcon { gap: 1rem; }
+  .btn { padding: 1.1rem 1.8rem; font-size: 0.82rem; min-height: 44px; }
   .homeButton { flex-direction: column; width: 100%; }
   .homeButton .btn, .btnEmail { width: 100%; justify-content: center; }
 }
