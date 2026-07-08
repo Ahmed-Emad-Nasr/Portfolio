@@ -131,7 +131,7 @@
   --space-sm: clamp(1rem, 2vw, 1.5rem);
   --space-md: clamp(1.6rem, 3vw, 2.4rem);
   --space-lg: clamp(2.4rem, 5vw, 4rem);
-  --space-xl: clamp(4rem, 8vw, 6rem);
+  --space-xl: clamp(4rem, 8vw, 8rem);
 
   --typing-cursor: 0.9s;
   --typing-typing: 16s;
@@ -184,6 +184,17 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Perf: background-attachment:fixed forces the browser to repaint the
+   background on every scroll frame — this is a well-known jank source on
+   mobile Safari/Chrome in particular. The fixed look barely reads on a
+   phone-sized viewport anyway, so we drop it for touch/narrow devices and
+   keep the desktop parallax feel where it actually has room to show. */
+@media (max-width: 991px), (hover: none) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 body[data-custom-cursor="true"],
@@ -292,7 +303,7 @@ main {
 /*--------- 6A. Theme Utilities ---------*/
 .katana-card {
   background: rgba(18, 18, 18, 0.8);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(var(--card-blur, 4px));
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-katana);
   overflow: hidden;
@@ -489,5 +500,25 @@ section {
 
   p, li {
     color: var(--text-muted);
+  }
+}
+
+/*--------- 10. Cheaper blur on constrained devices ---------*/
+/* backdrop-filter: blur() is one of the most GPU-expensive properties in
+   CSS. --card-blur / --ui-blur already exist as the shared source of truth
+   for every card/glass surface across the module files; scaling them down
+   here (instead of in each file) means one change improves frame rate on
+   every screen that uses them. */
+@media (max-width: 768px) {
+  :root {
+    --card-blur: 2px;
+    --ui-blur: 2px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --card-blur: 0px;
+    --ui-blur: 0px;
   }
 }

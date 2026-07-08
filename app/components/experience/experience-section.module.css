@@ -15,7 +15,7 @@
  *   --motion-fast, --motion-normal, --motion-ease
  */
 
-.section-education { min-height: 100vh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
+.section-education { min-height: 100vh; min-height: 100dvh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
 .jpLabel {
@@ -142,7 +142,7 @@
 .jpTagLabel { color: rgba(var(--main-color-rgb), 0.6); font-weight: 700; }
 
 /* --- 4. Terminal Skill Badges --- */
-.skillTags { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.8rem; }
+.skillTags { display: flex; flex-wrap: wrap; gap: var(--space-xs, 0.8rem); margin-top: var(--space-md, 1.8rem); }
 .skillTag {
   padding: 0.4rem 0.8rem;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
@@ -155,7 +155,7 @@
 .skillTag::before { content: "> "; opacity: 0.5; color: var(--main-color); }
 .skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); border-color: var(--main-color); }
 
-.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: 0.6rem; }
+.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: var(--space-md, 2rem); padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: var(--space-xs, 0.6rem); }
 .experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: monospace; }
 .date-range { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; color: var(--text-muted); font-family: monospace; }
 
