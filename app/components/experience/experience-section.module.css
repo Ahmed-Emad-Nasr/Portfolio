@@ -50,7 +50,7 @@
   background: rgba(var(--main-color-rgb), 0.2);
 }
 
-.timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; margin-bottom: 2.4rem; }
+.timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; margin-bottom: var(--space-lg, 3.2rem); }
 .timeline-container.left { left: 0; }
 .timeline-container.right { left: 50%; }
 
@@ -103,6 +103,11 @@
 .linkIcon { opacity: 0; transform: translateX(-5px); transition: all var(--motion-fast) ease; }
 .tag h3:hover { color: var(--accent-color); }
 .tag h3:hover .linkIcon { opacity: 1; transform: translateX(0); }
+/* a11y: reveal the icon on keyboard focus too, not just mouse hover,
+   so people tabbing through the page (or using a switch/screen reader) see it */
+.tag h3:focus-within { color: var(--accent-color); }
+.tag h3:focus-within .linkIcon { opacity: 1; transform: translateX(0); }
+.tag h3 a:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; border-radius: 2px; }
 
 /* Description intro line (Ahmed's `description` field) */
 .descIntro {
@@ -163,7 +168,7 @@
 
 /* === Mobile Overrides === */
 @media (max-width: 991px) {
-  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; }
+  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; margin-bottom: var(--space-md, 2.2rem); }
   .timeline-container.left, .timeline-container.right { left: 0; }
   .time-line::after { left: 2rem; }
   .timeline-container.left::after, .timeline-container.right::after { left: 1.3rem; right: auto; }
@@ -172,4 +177,11 @@
 @media (max-width: 430px) {
   .title { font-size: 2.5rem; }
   .content { padding: 1.8rem; }
+  .timeline-container { padding-left: 4rem; margin-bottom: var(--space-sm, 1.6rem); }
+  .desc-list, .descIntro { font-size: 1.3rem; }
+}
+@media (max-width: 360px) {
+  .timeline-container { padding-left: 3.4rem; }
+  .content { padding: 1.5rem; }
+  .tag h2 { font-size: 1.9rem; }
 }

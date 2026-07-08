@@ -172,7 +172,9 @@
   font-size: 0.9rem;
   font-family: monospace;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.2);
+  /* a11y: raised from 0.2 → 0.38 opacity so the label is still readable
+     (it's brief loading-screen text, not purely decorative) */
+  color: rgba(255, 255, 255, 0.38);
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }

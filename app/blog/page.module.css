@@ -81,7 +81,8 @@
    3. BUTTONS (TERMINAL STYLE)
    ========================================= */
 .primaryAction, .cardActions a, .cardActions button, .playlistAction {
-  min-height: 42px; padding: 0.6rem 1.4rem; border-radius: 2px; /* Sharp Edges */
+  /* a11y: 44px is the minimum comfortable tap-target height on touch screens */
+  min-height: 44px; padding: 0.6rem 1.4rem; border-radius: 2px; /* Sharp Edges */
   font-size: 1.2rem !important; font-weight: 700; font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 1px;
   background: transparent !important; color: rgba(255, 255, 255, 0.7) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -295,7 +296,9 @@
 
 .galleryTitle { margin: 0; font-size: 1.6rem; color: var(--accent-color); font-family: var(--font-mono, monospace); text-transform: uppercase; }
 .galleryTitle::before { content: "> VIEWING: "; color: #fff; }
-.galleryCounter { font-size: 1.2rem; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono, monospace); }
+/* a11y: 0.4 opacity on this near-black background falls under the 4.5:1
+   contrast ratio required for normal-size text; 0.6 clears it comfortably */
+.galleryCounter { font-size: 1.2rem; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono, monospace); }
 
 .galleryClose {
   padding: 0.6rem 1.4rem; border-radius: 2px; border: 1px solid var(--danger);
@@ -325,7 +328,8 @@
    ========================================= */
 .emptyState {
   margin-top: 2rem; padding: 3rem; border-radius: 2px; border: 1px dashed rgba(var(--danger-rgb), 0.4);
-  background: rgba(10, 5, 5, 0.6); color: rgba(255, 255, 255, 0.5); font-size: 1.4rem; font-family: var(--font-mono, monospace); text-align: center;
+  /* a11y: 0.5 opacity was under the 4.5:1 contrast minimum for this font size; 0.65 clears it */
+  background: rgba(10, 5, 5, 0.6); color: rgba(255, 255, 255, 0.65); font-size: 1.4rem; font-family: var(--font-mono, monospace); text-align: center;
 }
 .emptyState::before { content: "[ ERROR: DATA_NOT_FOUND ]\A "; color: var(--danger); white-space: pre; font-weight: bold; }
 
