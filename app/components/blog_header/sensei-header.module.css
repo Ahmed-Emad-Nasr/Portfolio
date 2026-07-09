@@ -1,7 +1,6 @@
 /*
  * File: sensei-header.module.css
  * ULTRA-MINIMALIST CYBERPUNK EDITION (FULL-WIDTH TRAPEZOID NAV)
- * Applied to: Blog header (Cases / YouTube Hub / back to Portfolio)
  */
 
 .header {
@@ -11,7 +10,7 @@
   right: 0;
   width: 100%; /* ممتد بعرض الصفحة بالكامل من الحافة للحافة */
   z-index: var(--z-navbar);
-  transition: all var(--motion-normal) var(--motion-ease);
+  transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
   padding-top: 2px; /* مساحة للخط الأحمر العلوي الحاد */
 }
 
@@ -44,7 +43,7 @@
   position: absolute;
   inset: 1px;
   top: 0;
-  background: #050505;
+  background: var(--bg-color, #000000);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -54,23 +53,14 @@
 
 /* تأثير عند عمل Scroll لزيادة عمق اللون الأسود */
 .scrolled .headerContent {
-  background: #000000 !important;
+  background: #000000;
 }
 
 /* ── BRAND LOGO ──────────────────────────────────────────────────────────── */
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
-
-.brandIcon {
-  width: 16px;
-  height: 16px;
-  color: #ff003c;
-  flex-shrink: 0;
-}
-.brandIcon svg { width: 100%; height: 100%; fill: currentColor; }
 
 .brandText {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -79,23 +69,11 @@
   color: #ffffff;
   letter-spacing: -0.5px;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .brandDot {
   color: #ff003c;
   font-weight: 900;
-}
-
-/* اسم البراند بالعربي — Tag صغير مينيمال بجانب الاسم */
-.arabicName {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  color: #888888;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
-  padding-left: 10px;
-  white-space: nowrap;
 }
 
 /* ── NAVIGATION & LINKS ──────────────────────────────────────────────────── */
@@ -128,7 +106,7 @@
 }
 
 /* تأثير الـ Hover والـ Active النظيف تماماً للمينيمال ثيم */
-.navbar a:hover,
+.navbar a:hover, 
 .navbar a.active {
   color: #ffffff;
 }
@@ -139,29 +117,29 @@
   color: #ff003c;
 }
 
-/* فاصل رفيع بين روابط السكاشن ورابط الرجوع للبورتفوليو */
-.navDivider {
-  width: 1px;
-  height: 14px;
-  background: rgba(255, 255, 255, 0.15);
-}
-
 /* ── MOBILE MENU ─────────────────────────────────────────────────────────── */
 .menuIcon {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 4px;
+  /* a11y: hit area grows to 44x44 (the accessible minimum); the hamburger
+     glyph itself stays visually small (18px bars), only the invisible
+     tap area around it grows */
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .menuIcon span {
   width: 18px;
   height: 2px;
   background: #ffffff;
-  transition: all var(--motion-fast) ease;
+  transition: transform var(--motion-fast) ease, opacity var(--motion-fast) ease;
 }
 
 .menuIcon.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -190,24 +168,33 @@
     clip-path: none;
   }
   .headerContent { padding: 0 1.5rem; }
-  .arabicName { display: none; } /* توفير مساحة على الموبايل */
   .navbar {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: #050505;
+    background: var(--bg-color, #000000);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     flex-direction: column;
     padding: 15px;
     gap: 10px;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
     transform: translateY(-10px);
-    transition: all var(--motion-fast) ease;
+    transition: opacity var(--motion-fast) ease,
+                transform var(--motion-fast) ease,
+                visibility 0s linear var(--motion-fast);
   }
-  .navbar.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .navbar a { width: 100%; padding: 10px; }
-  .navDivider { width: 100%; height: 1px; }
+  .navbar.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: opacity var(--motion-fast) ease,
+                transform var(--motion-fast) ease,
+                visibility 0s linear 0s;
+  }
+  .navbar a { width: 100%; padding: 12px 10px; }
   .menuIcon { display: flex; }
 }

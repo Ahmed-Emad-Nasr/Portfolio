@@ -95,11 +95,9 @@ export default function SenseiHeader() {
 
             {/* جهة اليسار: الـ Logo + الاسم بالعربي */}
             <div className={styles.brand}>
-              <span className={styles.brandIcon}><ShieldIcon /></span>
-              <span className={styles.brandText}>
-                AHMED<span className={styles.brandDot}>.</span>BLOG
+             <span className={styles.brandText}>
+                AE<span className={styles.brandDot}>.</span>
               </span>
-              <span className={styles.arabicName}>أحمد عماد</span>
             </div>
 
             {/* القائمة الموحدة الصافية بعرض الصفحة */}

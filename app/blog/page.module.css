@@ -12,6 +12,7 @@
   background-color: var(--background);
   color: var(--foreground);
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
 }
 
@@ -33,7 +34,7 @@
  */
 .block {
   position: relative; z-index: 1; width: min(100%, 1400px); max-width: none; padding: 0;
-  margin: 0 auto clamp(4rem, 8vw, 8rem);
+  margin: 0 auto var(--space-xl, clamp(4rem, 8vw, 8rem));
   content-visibility: auto; contain-intrinsic-size: 1px 1000px;
 }
 .block:last-child { margin-bottom: 0; }
@@ -87,7 +88,7 @@
   background: transparent !important; color: rgba(255, 255, 255, 0.7) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   display: inline-flex; align-items: center; justify-content: center;
-  transition: all var(--motion-fast) ease; cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease); cursor: pointer;
 }
 
 .primaryAction:focus-visible, .cardActions a:focus-visible, .cardActions button:focus-visible {
@@ -105,8 +106,8 @@
 /* =========================================
    4. GRID & CYBER CARDS
    ========================================= */
-.pdfGrid, .playlistGrid { display: grid; margin-top: 2rem; align-items: start; }
-.playlistGrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+.pdfGrid, .playlistGrid { display: grid; margin-top: var(--space-md, 2rem); align-items: start; }
+.playlistGrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-sm, 1.5rem); }
 .pdfGrid { grid-template-columns: 1fr; gap: clamp(1.2rem, 2.2vw, 2.6rem); }
 
 .pdfCard[data-visible="true"], .playlistCard[data-visible="true"], .videoCard[data-visible="true"] { animation: fadeUp 0.4s ease both; }
@@ -117,8 +118,8 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid transparent;
   background: linear-gradient(180deg, rgba(8,12,16,0.75), rgba(6,8,12,0.6));
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(var(--card-blur, 4px));
+  -webkit-backdrop-filter: blur(var(--card-blur, 4px));
   display: grid; position: relative; overflow: hidden;
   transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background 300ms ease;
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
@@ -248,13 +249,13 @@
 .primaryShot, .shotThumb, .playlistFrame, .videoFrame {
   position: relative; border-radius: 2px; overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1); background: #000;
-  cursor: pointer; aspect-ratio: 16 / 9; transition: all var(--motion-fast) ease;
+  cursor: pointer; aspect-ratio: 16 / 9; transition: border-color var(--motion-fast) var(--motion-ease);
 }
 
 .shotThumb:hover { border-color: var(--accent-color); }
 .shotGrid { display: grid; grid-template-columns: 1fr; gap: 1rem; position: relative; }
 
-.primaryShot img, .shotThumb img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(50%) contrast(1.1); transition: all var(--motion-fast) ease; }
+.primaryShot img, .shotThumb img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(50%) contrast(1.1); transition: filter var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease); }
 .primaryShot:hover img, .shotThumb:hover img { filter: grayscale(0%) contrast(1.1); transform: scale(1.02); }
 
 .moreShotsBadge {
@@ -263,14 +264,14 @@
 }
 
 .embedPreview { width: 100%; height: 100%; border: 0; background: transparent; cursor: pointer; display: block; position: relative; overflow: hidden; }
-.embedPreview img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%) brightness(0.6); transition: all var(--motion-fast) ease; }
+.embedPreview img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%) brightness(0.6); transition: filter var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease); }
 .embedPreview:hover img { filter: grayscale(0%) brightness(0.8); transform: scale(1.05); }
 
 .embedPlayButton {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   padding: 0.8rem 1.6rem; border-radius: 2px; border: 1px solid var(--main-color); background: rgba(0, 0, 0, 0.8);
   color: var(--main-color); font-family: var(--font-mono, monospace); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; z-index: 5;
-  transition: all var(--motion-fast) ease;
+  transition: background-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease);
 }
 .embedPreview:hover .embedPlayButton { background: var(--main-color); color: #000; }
 
@@ -302,12 +303,12 @@
 
 .galleryClose {
   padding: 0.6rem 1.4rem; border-radius: 2px; border: 1px solid var(--danger);
-  background: transparent; color: var(--danger); font-family: var(--font-mono, monospace); font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;
+  background: transparent; color: var(--danger); font-family: var(--font-mono, monospace); font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 .galleryClose:hover { background: rgba(var(--danger-rgb), 0.15); box-shadow: 0 0 10px rgba(var(--danger-rgb), 0.3); }
 
-.galleryStage { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.5rem; padding: 2rem; }
-.galleryNav { min-width: 50px; min-height: 50px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: #fff; font-family: var(--font-mono, monospace); font-size: 1.8rem; cursor: pointer; transition: all 0.2s ease; }
+.galleryStage { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-sm, 1.5rem); padding: 2rem; }
+.galleryNav { min-width: 50px; min-height: 50px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: #fff; font-family: var(--font-mono, monospace); font-size: 1.8rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease; }
 .galleryNav:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1); }
 
 .galleryImageWrap {
@@ -316,10 +317,10 @@
 }
 .galleryImageWrap img { width: 100%; height: 100%; object-fit: contain; }
 
-.galleryThumbs { display: flex; flex-wrap: wrap; gap: 0.8rem; padding: 1.5rem 2rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); background: #05080c; overflow-y: auto; }
+.galleryThumbs { display: flex; flex-wrap: wrap; gap: var(--space-xs, 0.8rem); padding: 1.5rem 2rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); background: #05080c; overflow-y: auto; }
 .galleryThumbButton {
   min-width: 40px; min-height: 40px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent; color: rgba(255, 255, 255, 0.5); font-family: var(--font-mono, monospace); font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease;
+  background: transparent; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono, monospace); font-size: 1.2rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
 .activeGalleryThumb, .galleryThumbButton:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1); }
 
@@ -333,7 +334,7 @@
 }
 .emptyState::before { content: "[ ERROR: DATA_NOT_FOUND ]\A "; color: var(--danger); white-space: pre; font-weight: bold; }
 
-.insightStrip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 4rem auto; }
+.insightStrip { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md, 2rem); margin: 4rem auto; }
 .insightCard { padding: 2.5rem; text-align: center; }
 .insightCard strong { display: block; font-size: 3.5rem; color: var(--accent-color); font-family: var(--font-mono, monospace); }
 .insightCard span { display: block; margin-top: 1rem; font-size: 1.2rem; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 2px; }
@@ -342,7 +343,7 @@
 .youtubeHubActions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
 .channelAction { border-color: rgba(var(--accent-color-rgb), 0.4) !important; color: var(--accent-color) !important; }
 .channelAction:hover { background: rgba(var(--accent-color-rgb), 0.15) !important; border-color: var(--accent-color) !important; color: #fff !important; }
-.youtubeHubGrid { margin-top: 2.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+.youtubeHubGrid { margin-top: 2.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-sm, 1.5rem); }
 
 .videoCardContent h3, .playlistContent h3 { color: #fff; font-family: var(--font-mono, monospace); font-size: 1.6rem; letter-spacing: 1px; }
 
@@ -367,6 +368,10 @@
   .galleryNav { min-height: 40px; }
   .galleryImageWrap { min-height: 40vh; }
   .youtubeHub { padding: 1.5rem; }
+  .scrollBlurOverlay[data-active="true"] {
+    backdrop-filter: blur(3px) saturate(120%);
+    -webkit-backdrop-filter: blur(3px) saturate(120%);
+  }
 }
 
 /* Mobile-specific readability fixes */

@@ -32,8 +32,19 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 1.5rem;
   overflow: hidden;
+}
+
+/* A phone rotated to landscape can be as short as ~360-400px tall;
+   forcing a full-height hero there squeezes everything uncomfortably.
+   Let it size to its content instead and just add breathing room. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .home {
+    min-height: auto;
+    padding: 2.4rem 1.5rem;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -139,7 +150,7 @@
   margin-bottom: 2.2rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(var(--ui-blur, 4px));
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.1s;
 }
@@ -229,7 +240,7 @@
   margin-bottom: 2.4rem;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(var(--ui-blur, 4px));
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.46s;
 }
@@ -302,8 +313,8 @@
 
 .socialIcon {
   display: flex;
-  gap: 1.3rem;
-  margin-bottom: 2.4rem;
+  gap: var(--space-sm, 1.3rem);
+  margin-bottom: var(--space-lg, 2.4rem);
   flex-wrap: wrap;
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.94s;
@@ -329,7 +340,7 @@
 
 .homeButton {
   display: flex;
-  gap: 1.1rem;
+  gap: var(--space-sm, 1.1rem);
   flex-wrap: wrap;
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 1.06s;

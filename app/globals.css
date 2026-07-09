@@ -13,7 +13,7 @@
 /*--------- 1. Reset & Global Variables ---------*/
 :root {
   /* Simple theme tokens inspired by the reference design */
-  --background: #080808;
+  --background: #000000;
   --foreground: #ffffff;
   --primary: #bc002d;
   --secondary: #1a1a1a;
@@ -41,7 +41,7 @@
 
   /* Backward-compatible aliases used by the current components */
   --bg-color: var(--background);
-  --bg-gradient: radial-gradient(circle at 50% 50%, rgba(30, 0, 10, 1) 0%, rgba(0, 0, 0, 1) 70%);
+  --bg-gradient: none;
   --surface-base: rgba(4, 8, 20, 0.95);
   --surface-raised: rgba(6, 14, 32, 0.90);
   --surface-overlay: rgba(10, 20, 44, 0.85);
@@ -88,6 +88,25 @@
   --radius-pill: 999px;
   --radius-tag: 6px;
 
+  /* Shared tokens for the "Sharp Title" underline used identically in
+     experience-section.module.css and sensei-projects.module.css */
+  --title-underline-thin: 1px;
+  --title-underline-thick: 3px;
+  --title-underline-width: 40%;
+  --title-underline-opacity: 0.3;
+
+  /* Shared tokens for the section .container used identically in both files */
+  --container-max-width: 1500px;
+  --container-pad-x: 5.25%;
+
+  /* Shared tokens for the vertical timeline line used identically in both files */
+  --timeline-line-width: 2px;
+  --timeline-line-opacity: 0.2;
+
+  /* Shared tokens for the "cyber diamond" timeline node used identically in both files */
+  --diamond-node-size: 14px;
+  --diamond-border-width: 2px;
+
   --z-below: -1;
   --z-base: 0;
   --z-raised: 10;
@@ -131,7 +150,7 @@
   --space-sm: clamp(1rem, 2vw, 1.5rem);
   --space-md: clamp(1.6rem, 3vw, 2.4rem);
   --space-lg: clamp(2.4rem, 5vw, 4rem);
-  --space-xl: clamp(4rem, 8vw, 6rem);
+  --space-xl: clamp(4rem, 8vw, 8rem);
 
   --typing-cursor: 0.9s;
   --typing-typing: 16s;
@@ -186,6 +205,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Perf: background-attachment:fixed forces the browser to repaint the
+   background on every scroll frame — this is a well-known jank source on
+   mobile Safari/Chrome in particular. The fixed look barely reads on a
+   phone-sized viewport anyway, so we drop it for touch/narrow devices and
+   keep the desktop parallax feel where it actually has room to show. */
+@media (max-width: 991px), (hover: none) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
 body[data-custom-cursor="true"],
 body[data-custom-cursor="true"] a,
 body[data-custom-cursor="true"] button,
@@ -222,9 +252,6 @@ button {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  /* a11y: keep every button at least 44x44 CSS px so it's easy to tap on phones */
-  min-height: 44px;
-  min-width: 44px;
 }
 
 button:hover:not(:disabled) {
@@ -292,7 +319,7 @@ main {
 /*--------- 6A. Theme Utilities ---------*/
 .katana-card {
   background: rgba(18, 18, 18, 0.8);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(var(--card-blur, 4px));
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-katana);
   overflow: hidden;
@@ -489,5 +516,25 @@ section {
 
   p, li {
     color: var(--text-muted);
+  }
+}
+
+/*--------- 10. Cheaper blur on constrained devices ---------*/
+/* backdrop-filter: blur() is one of the most GPU-expensive properties in
+   CSS. --card-blur / --ui-blur already exist as the shared source of truth
+   for every card/glass surface across the module files; scaling them down
+   here (instead of in each file) means one change improves frame rate on
+   every screen that uses them. */
+@media (max-width: 768px) {
+  :root {
+    --card-blur: 2px;
+    --ui-blur: 2px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --card-blur: 0px;
+    --ui-blur: 0px;
   }
 }
