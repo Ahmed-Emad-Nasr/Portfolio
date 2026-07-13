@@ -81,12 +81,20 @@
 /* =========================================
    3. BUTTONS (TERMINAL STYLE)
    ========================================= */
+/*
+ * Specificity note: the global `button:hover:not(:disabled)` rule in
+ * globals.css resolves to (0,2,1) — higher than a plain `.primaryAction:hover`
+ * at (0,2,0) — which is why every color/border/background here used to need
+ * !important to win. Doubling the class (".primaryAction.primaryAction")
+ * bumps us to (0,3,0), a source-order-independent win over the global rule,
+ * so none of these need !important anymore.
+ */
 .primaryAction, .cardActions a, .cardActions button, .playlistAction {
   /* a11y: 44px is the minimum comfortable tap-target height on touch screens */
   min-height: 44px; padding: 0.6rem 1.4rem; border-radius: 2px; /* Sharp Edges */
-  font-size: 1.2rem !important; font-weight: 700; font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 1px;
-  background: transparent !important; color: rgba(255, 255, 255, 0.7) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  font-size: 1.2rem; font-weight: 700; font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 1px;
+  background: transparent; color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: inline-flex; align-items: center; justify-content: center;
   transition: border-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease); cursor: pointer;
 }
@@ -95,13 +103,14 @@
   outline: 2px solid var(--accent-color); outline-offset: 3px;
 }
 
-/* Specific Action Colors */
-.primaryAction:hover { border-color: var(--main-color) !important; color: var(--main-color) !important; background: rgba(var(--main-color-rgb), 0.1) !important; }
-.downloadAction { border-color: rgba(var(--main-color-rgb), 0.4) !important; color: var(--main-color) !important; }
-.downloadAction:hover { background: rgba(var(--main-color-rgb), 0.15) !important; border-color: var(--main-color) !important; color: #fff !important; }
-.viewAction { border-color: rgba(var(--accent-color-rgb), 0.4) !important; color: var(--accent-color) !important; }
-.viewAction:hover { background: rgba(var(--accent-color-rgb), 0.15) !important; border-color: var(--accent-color) !important; color: #fff !important; }
-.galleryOpenAction { border-style: dashed !important; }
+/* Specific Action Colors — same rgba(main/accent) hover language as
+   .action-btn in sensei-projects and .primaryAction in sensei-art */
+.primaryAction.primaryAction:hover { border-color: var(--main-color); color: var(--main-color); background: rgba(var(--main-color-rgb), 0.1); }
+.downloadAction.downloadAction { border-color: rgba(var(--main-color-rgb), 0.4); color: var(--main-color); }
+.downloadAction.downloadAction:hover { background: rgba(var(--main-color-rgb), 0.15); border-color: var(--main-color); color: #fff; }
+.viewAction.viewAction { border-color: rgba(var(--accent-color-rgb), 0.4); color: var(--accent-color); }
+.viewAction.viewAction:hover { background: rgba(var(--accent-color-rgb), 0.15); border-color: var(--accent-color); color: #fff; }
+.galleryOpenAction.galleryOpenAction { border-style: dashed; }
 
 /* =========================================
    4. GRID & CYBER CARDS
@@ -112,30 +121,32 @@
 
 .pdfCard[data-visible="true"], .playlistCard[data-visible="true"], .videoCard[data-visible="true"] { animation: fadeUp 0.4s ease both; }
 
-/* Cyberpunk Wireframe Cards */
+/* Cyber Wireframe Cards — same flat rgba(10,10,10,.6) surface + hairline
+   border + border-left accent used by .single-project (sensei-projects)
+   and .content (experience-section), so the blog stops reading as a
+   different, rounder site than the rest of the portfolio. */
 .pdfCard, .playlistCard, .videoCard, .insightCard, .youtubeHub {
-  border-radius: 10px;
+  border-radius: var(--radius-card, 4px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 3px solid transparent;
-  background: linear-gradient(180deg, rgba(8,12,16,0.75), rgba(6,8,12,0.6));
+  border-left: 3px solid rgba(var(--main-color-rgb), 0.3);
+  background: rgba(10, 10, 10, 0.6);
   backdrop-filter: blur(var(--card-blur, 4px));
   -webkit-backdrop-filter: blur(var(--card-blur, 4px));
   display: grid; position: relative; overflow: hidden;
-  transition: transform var(--motion-normal) var(--motion-ease), box-shadow var(--motion-normal) var(--motion-ease), background 300ms ease;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
 }
 
 .playlistCard, .videoCard { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
 .caseCardLarge { grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 3rem; padding: 2.5rem; }
 .caseCardTextOnly { grid-template-columns: minmax(0, 1fr); padding: 2.5rem; }
 
-/* Cyber Hover Effect */
+/* Cyber Hover Effect — same translateY(-3px)/rgba(15,15,15,.9)/border-left
+   pattern as .single-project:hover and .content:hover */
 .pdfCard:hover, .playlistCard:hover, .videoCard:hover, .insightCard:hover {
-  transform: translateY(-6px) scale(1.0025);
-  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+  background: rgba(15, 15, 15, 0.9);
+  border-color: rgba(var(--main-color-rgb), 0.2);
   border-left-color: var(--main-color);
-  background: linear-gradient(180deg, rgba(12,18,24,0.9), rgba(10,12,18,0.85));
-  box-shadow: 0 12px 36px rgba(var(--main-color-rgb), 0.05), 0 8px 30px rgba(0,0,0,0.6);
 }
 
 /* Separator between stacked cases */
@@ -155,7 +166,7 @@
    leadCase would render using bare globals.css defaults, breaking the theme. */
 .caseSpotlight {
   display: grid; grid-template-columns: 1.3fr 0.9fr; align-items: center; gap: 3rem;
-  margin-bottom: 3rem; padding: 3rem; border-radius: 10px;
+  margin-bottom: 3rem; padding: 3rem; border-radius: var(--radius-card, 14px);
   border: 1px solid rgba(var(--accent-color-rgb), 0.35);
   background: linear-gradient(135deg, rgba(10,14,20,0.92), rgba(6,8,12,0.8));
   box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.08), 0 20px 50px rgba(0,0,0,0.6);
@@ -173,7 +184,7 @@
 }
 .caseSpotlightBody > p { margin-top: 0.8rem; color: var(--text-muted); font-size: 1.15rem; line-height: 1.6; }
 .caseSpotlightMedia {
-  position: relative; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden;
+  position: relative; aspect-ratio: 16 / 10; border-radius: calc(var(--radius-card, 14px) - 4px); overflow: hidden;
   border: 1px solid rgba(var(--accent-color-rgb), 0.3); background: #000; display: block;
 }
 .caseSpotlightMedia img { object-fit: cover; }
@@ -247,7 +258,7 @@
    6. SCREENSHOTS & MEDIA
    ========================================= */
 .primaryShot, .shotThumb, .playlistFrame, .videoFrame {
-  position: relative; border-radius: 2px; overflow: hidden;
+  position: relative; border-radius: calc(var(--radius-card, 14px) - 6px); overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1); background: #000;
   cursor: pointer; aspect-ratio: 16 / 9; transition: border-color var(--motion-fast) var(--motion-ease);
 }
@@ -285,7 +296,7 @@
 }
 
 .galleryDialog {
-  width: min(1200px, 100%); max-height: 90vh; border-radius: 2px;
+  width: min(1200px, 100%); max-height: 90vh; border-radius: var(--radius-card, 14px);
   border: 1px solid var(--accent-color); background: #030508;
   display: flex; flex-direction: column; overflow: hidden; animation: fadeUp 0.3s ease both;
 }
@@ -312,7 +323,7 @@
 .galleryNav:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1); }
 
 .galleryImageWrap {
-  position: relative; min-height: 60vh; border-radius: 2px; overflow: hidden;
+  position: relative; min-height: 60vh; border-radius: calc(var(--radius-card, 14px) - 4px); overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.05); background: #000;
 }
 .galleryImageWrap img { width: 100%; height: 100%; object-fit: contain; }
@@ -328,7 +339,7 @@
    8. EXTRAS & SECTIONS
    ========================================= */
 .emptyState {
-  margin-top: 2rem; padding: 3rem; border-radius: 2px; border: 1px dashed rgba(var(--danger-rgb), 0.4);
+  margin-top: 2rem; padding: 3rem; border-radius: var(--radius-card, 14px); border: 1px dashed rgba(var(--danger-rgb), 0.4);
   /* a11y: 0.5 opacity was under the 4.5:1 contrast minimum for this font size; 0.65 clears it */
   background: rgba(10, 5, 5, 0.6); color: rgba(255, 255, 255, 0.65); font-size: 1.4rem; font-family: var(--font-mono, monospace); text-align: center;
 }

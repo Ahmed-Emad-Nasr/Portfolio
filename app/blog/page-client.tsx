@@ -12,7 +12,7 @@ import LoadingScreen from "@/app/components/loader/sensei_loader";
 const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
 const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), { ssr: false });
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
-const AppBar = dynamic(() => import("@/app/components/blog_header/sensei-header"), { ssr: false });
+const AppBar = dynamic(() => import("./blog_header/sensei-header"), { ssr: false });
 const ClientOnly = dynamic(() => import("@/app/core/components/ClientOnly"), { ssr: false });
 const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"), { ssr: false });
 

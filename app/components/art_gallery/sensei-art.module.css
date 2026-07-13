@@ -41,6 +41,7 @@
   padding: 0.6rem;
   background: rgba(10, 10, 10, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-card);
   transition: all var(--motion-normal) var(--motion-ease);
   will-change: transform, opacity;
 }
@@ -54,7 +55,7 @@
 /* Gritty Cyberpunk Filter Effect */
 .galleryImg {
   width: 100%; height: auto; object-fit: cover; display: block; 
-  border-radius: 2px; /* حواف حادة */
+  border-radius: calc(var(--radius-card) - 4px); /* ناعمة، متسقة مع إطار الكارت */
   cursor: pointer;
   filter: grayscale(70%) contrast(1.2) brightness(0.8); 
   transition: all var(--motion-normal) var(--motion-ease);

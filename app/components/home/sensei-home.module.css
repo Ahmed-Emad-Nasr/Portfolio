@@ -640,6 +640,29 @@
 
 /* ───────────────── Motion / input preferences ───────────────── */
 
+/* ─────────────────────────────────────────────────────────
+   Perf: pause infinite loops once the hero leaves the viewport
+   ─────────────────────────────────────────────────────────
+   .ringOuter/.ringInner (spin 25s/20s), .badgeDot (pulse 1.6s), and the
+   typing ticker (.typingText + .typingHighlight::before/::after) all loop
+   forever by default — they keep costing GPU/CPU time even after the user
+   has scrolled three sections down. This rule is inert until the Home
+   component sets data-in-view="false" on the root .home element (e.g. via
+   an IntersectionObserver, the same wiring already implied by the
+   [data-visible="true"] pattern used on .pdfCard/.playlistCard/.videoCard
+   in page.module.css). Nothing changes visually until that attribute is
+   wired up — this is additive, not a behavior change on its own. */
+.home[data-in-view="false"] .ringOuter,
+.home[data-in-view="false"] .ringInner,
+.home[data-in-view="false"] .badgeDot,
+.home[data-in-view="false"] .typingText,
+.home[data-in-view="false"] .typingHighlight::before,
+.home[data-in-view="false"] .typingHighlight::after,
+.home[data-in-view="false"] .speedLine,
+.home[data-in-view="false"] .particle {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .typingText { animation: textDrift var(--typing-textDrift) ease-in-out infinite !important; }
   .typingHighlight::before { animation: words var(--typing-words) infinite !important; }
