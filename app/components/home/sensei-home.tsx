@@ -198,7 +198,7 @@ const SenseiHome = memo(function SenseiHome() {
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconLinkedin} aria-label="LinkedIn">
               <FontAwesomeIcon icon={faLinkedin} />
             </a>
-            <a href="https://wa.me/201018166445" target="_blank" rel="noopener noreferrer" className={styles.iconWhatsapp} aria-label="WhatsApp">
+            <a href="https://wa.me/201013972690" target="_blank" rel="noopener noreferrer" className={styles.iconWhatsapp} aria-label="WhatsApp">
               <FontAwesomeIcon icon={faWhatsapp} />
             </a>
             <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className={styles.iconYoutube} aria-label="YouTube">

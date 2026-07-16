@@ -116,7 +116,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
       description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
       email: "mailto:ahmed.em.nasr@gmail.com",
-      telephone: "+20 101 816 6445",
+      telephone: "+20 101 397 2690",
       address: { 
         "@type": "PostalAddress", 
         addressLocality: "Cairo/Benha", 
