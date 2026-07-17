@@ -47,6 +47,33 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     };
   }, [lenis]);
 
+  // a11y / keyboard-nav fix: Lenis drives scroll position itself (virtual
+  // scroll), so it never finds out when the browser's native `Tab` focus
+  // tries to scroll an off-screen element into view. Without this, tabbing
+  // through links/buttons either doesn't visually scroll at all, or snaps
+  // back to the old position once Lenis's next frame runs. We listen for
+  // `focusin` ourselves and explicitly tell Lenis to scroll to whatever
+  // just received focus.
+  useEffect(() => {
+    if (!lenis) return;
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target || typeof target.getBoundingClientRect !== "function") return;
+
+      // Skip elements already fully in view — avoids a jarring re-scroll
+      // on every single Tab press when nothing needs to move.
+      const rect = target.getBoundingClientRect();
+      const inView = rect.top >= 0 && rect.bottom <= window.innerHeight;
+      if (inView) return;
+
+      lenis.scrollTo(target, { offset: -100, immediate: reducedMotion });
+    };
+
+    document.addEventListener("focusin", handleFocusIn);
+    return () => document.removeEventListener("focusin", handleFocusIn);
+  }, [lenis, reducedMotion]);
+
   return (
     <ReactLenis
       root

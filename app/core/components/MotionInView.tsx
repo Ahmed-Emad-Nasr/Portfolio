@@ -27,18 +27,19 @@ export const motionVariants = {
   "slide-right": { hidden: { opacity: 0, x: 25 }, visible: { opacity: 1, x: 0 } },
   scale: { hidden: { opacity: 0, scale: 0.96 }, visible: { opacity: 1, scale: 1 } },
   "scale-up": { hidden: { opacity: 0, scale: 0.96, y: 10 }, visible: { opacity: 1, scale: 1, y: 0 } },
-  "blur-in": { hidden: { opacity: 0 }, visible: { opacity: 1 } }, 
-  reveal: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
-  "reveal-left": { hidden: { opacity: 0 }, visible: { opacity: 1 } },
-  float: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
   "text-stagger": { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } },
   "text-word": { hidden: { opacity: 0 }, visible: { opacity: 1 } },
   stagger: { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } },
   "stagger-child": { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } },
-  glitch: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
-  typewriter: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
-  "scan-line": { hidden: { opacity: 0 }, visible: { opacity: 1 } },
 } as const;
+// Removed: "blur-in", "reveal", "reveal-left", "float", "glitch",
+// "typewriter", "scan-line" — all of these were byte-for-byte identical to
+// `fade` (just opacity 0 → 1), with no blur/reveal/float/glitch/typewriter/
+// scan-line effect actually implemented. The names promised an effect the
+// code never delivered, which is more misleading than having no variant at
+// all. If any of these are used elsewhere as `variant="glitch"` etc., that
+// call site now needs to switch to `variant="fade"` (or get a real
+// implementation) — grep the codebase for these names before deploying.
 
 export type MotionVariantKey = keyof typeof motionVariants;
 
@@ -56,10 +57,14 @@ type MotionInViewProps = Omit<MotionProps, "variants"> & {
   variants?:         Variants;
   delay?:            number;
   enableExit?:       boolean;
-  tilt?:             boolean; 
-  magnetic?:         boolean; 
-  magneticStrength?: number;  
-  autoStagger?:      boolean; 
+  // Removed: `tilt`, `magnetic`, `magneticStrength`, `autoStagger` — these
+  // were accepted as props but never read anywhere in the component body,
+  // so passing them silently did nothing. That's worse than not having
+  // them: a caller writing `<MotionInView magnetic>` would reasonably
+  // believe a magnetic-hover effect was active. If these features are
+  // actually wanted, they need a real implementation (e.g. `magnetic`
+  // driving a pointer-tracked transform); until then it's safer for them
+  // to not type-check at all than to silently no-op.
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "style">;
 
 const MotionInView = memo<MotionInViewProps>(({
@@ -71,7 +76,6 @@ const MotionInView = memo<MotionInViewProps>(({
   delay,
   enableExit = false,
   viewport = DEFAULT_VIEWPORT,
-  tilt, magnetic, magneticStrength, autoStagger,
   ...rest
 }) => {
   // a11y: when the OS-level "reduce motion" setting is on, fall back to a
