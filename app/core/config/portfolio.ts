@@ -138,12 +138,29 @@ export const formatDate = (value: string): string => {
 
 export const knowledgeEducationItems = [
   {
+  tag: "Tutor Assistant (Part-Time)",
+  subTag: "iSchool",
+  subTagHyperlink: "https://ischool-tech.com/",
+  desc: "Supported the delivery of DEPI and DECI summer programs by managing attendance, coordinating 150+ students, and assisting instructors during in-person training sessions.",
+  isRight: false,
+  startDate: "2026-07-01",
+  showDate: true,
+  skills: [
+    "Communication",
+    "Coordination",
+    "Classroom Management",
+    "Leadership"
+  ],
+  certificateUrl: "https://ischool-tech.com/",
+},
+  {
     tag: "Incident Response Analyst Intern",
     subTag: "Digital Egypt Pioneers Initiative (DEPI)",
     subTagHyperlink: "https://www.depi.gov.eg/",
     desc: "Completed a 6-month DEPI training program, performing hands-on Incident Response across the full IR lifecycle (labs and projects). • Built and tuned a SIEM environment using ELK, Wazuh, and Suricata, reducing false-positive alerts by 9% and improving alert quality.",
     isRight: true,
     startDate: "2026-01-01",
+    endDate: "2026-07-14",
     showDate: true,
     skills: ["Incident Response", "Wazuh", "ELK", "Suricata"],
     certificateUrl: "https://www.depi.gov.eg/",
