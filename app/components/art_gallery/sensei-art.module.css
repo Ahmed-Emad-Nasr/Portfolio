@@ -76,7 +76,7 @@
 
 .primaryAction:hover {
   background: rgba(var(--main-color-rgb), 0.1);
-  box-shadow: 0 0 15px rgba(var(--main-color-rgb), 0.2);
+  box-shadow: none; /* Changed here */
   color: #fff;
 }
 

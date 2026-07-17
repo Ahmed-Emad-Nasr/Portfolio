@@ -12,10 +12,7 @@
   background:
     radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 56%),
     radial-gradient(circle at center, rgba(var(--main-color-rgb), 0.18), transparent 70%);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
-    0 0 18px rgba(var(--accent-color-rgb), 0.12),
-    0 0 34px rgba(var(--main-color-rgb), 0.1);
+  box-shadow: none; /* Changed here */
   mix-blend-mode: screen;
   will-change: transform, opacity;
 }
@@ -77,10 +74,7 @@
   background: linear-gradient(180deg, var(--accent-light), var(--main-color));
   pointer-events: none;
   z-index: 9999;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-    0 0 10px rgba(var(--main-color-rgb), 0.45),
-    0 0 20px rgba(var(--accent-color-rgb), 0.22);
+  box-shadow: none; /* Changed here */
   will-change: transform;
 }
 

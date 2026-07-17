@@ -161,15 +161,13 @@
 .caseCardTextOnly .pdfCardMedia { display: none; }
 .caseCardTextOnly .cardActions { margin-top: 2rem; }
 
-/* Case Spotlight — was referenced in JSX with NO matching CSS at all (only a
-   mobile display:none for the media half existed). Without this, an active
-   leadCase would render using bare globals.css defaults, breaking the theme. */
+/* Case Spotlight */
 .caseSpotlight {
   display: grid; grid-template-columns: 1.3fr 0.9fr; align-items: center; gap: 3rem;
   margin-bottom: 3rem; padding: 3rem; border-radius: var(--radius-card, 14px);
   border: 1px solid rgba(var(--accent-color-rgb), 0.35);
   background: linear-gradient(135deg, rgba(10,14,20,0.92), rgba(6,8,12,0.8));
-  box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.08), 0 20px 50px rgba(0,0,0,0.6);
+  box-shadow: none; /* Changed here */
   position: relative; overflow: hidden;
 }
 .caseSpotlightBody { display: flex; flex-direction: column; }
@@ -316,7 +314,7 @@
   padding: 0.6rem 1.4rem; border-radius: 2px; border: 1px solid var(--danger);
   background: transparent; color: var(--danger); font-family: var(--font-mono, monospace); font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-.galleryClose:hover { background: rgba(var(--danger-rgb), 0.15); box-shadow: 0 0 10px rgba(var(--danger-rgb), 0.3); }
+.galleryClose:hover { background: rgba(var(--danger-rgb), 0.15); box-shadow: none; /* Changed here */ }
 
 .galleryStage { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-sm, 1.5rem); padding: 2rem; }
 .galleryNav { min-width: 50px; min-height: 50px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: #fff; font-family: var(--font-mono, monospace); font-size: 1.8rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease; }

@@ -74,7 +74,7 @@
 .timeline-container.right::after { left: -7px; }
 .timeline-container:hover::after {
   background: var(--accent-color);
-  box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.5);
+  box-shadow: none; /* Changed here */
   transform: rotate(45deg) scale(1.2);
 }
 

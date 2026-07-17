@@ -40,7 +40,7 @@
 }
 .project-item.left::after { right: calc(-2rem - 7px); }
 .project-item.right::after { left: calc(-2rem - 7px); }
-.project-item:hover::after { background: var(--accent-color); box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.5); transform: rotate(45deg) scale(1.2); }
+.project-item:hover::after { background: var(--accent-color); box-shadow: none; /* Changed here */ transform: rotate(45deg) scale(1.2); }
 
 .single-project {
   background: rgba(10, 10, 10, 0.6); padding: 2.5rem; border: 1px solid rgba(255, 255, 255, 0.05);

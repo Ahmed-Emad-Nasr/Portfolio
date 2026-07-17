@@ -80,9 +80,9 @@
   --surface-card-border-hover: rgba(var(--main-color-rgb), 0.38);
   --surface-accent-border: rgba(var(--accent-color-rgb), 0.2);
 
-  --glow-main: 0 0 18px rgba(var(--main-color-rgb), 0.35);
-  --glow-accent: 0 0 18px rgba(var(--accent-color-rgb), 0.30);
-  --glow-danger: 0 0 14px rgba(var(--danger-rgb), 0.40);
+  --glow-main: none; /* Changed glow shadows to none globally */
+  --glow-accent: none;
+  --glow-danger: none;
 
   --radius-card-sm: 8px;
   --radius-pill: 999px;
@@ -323,7 +323,7 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-katana);
   overflow: hidden;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  box-shadow: none; /* Changed here */
 }
 
 .vertical-text {
@@ -388,18 +388,12 @@ main {
 
 .glow-red {
   color: var(--primary);
-  text-shadow:
-    0 0 7px rgba(226, 0, 26, 0.6),
-    0 0 20px rgba(226, 0, 26, 0.4),
-    0 0 40px rgba(226, 0, 26, 0.2);
+  text-shadow: none; /* Removed text shadow */
 }
 
 .glow-gold {
   color: var(--accent);
-  text-shadow:
-    0 0 7px rgba(255, 215, 0, 0.6),
-    0 0 20px rgba(255, 215, 0, 0.4),
-    0 0 40px rgba(255, 215, 0, 0.2);
+  text-shadow: none; /* Removed text shadow */
 }
 
 /*--------- 6. Base Section Layout ---------*/
