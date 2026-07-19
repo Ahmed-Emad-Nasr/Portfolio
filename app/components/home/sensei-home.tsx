@@ -204,7 +204,7 @@ const SenseiHome = memo(function SenseiHome() {
             <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className={styles.iconYoutube} aria-label="YouTube">
               <FontAwesomeIcon icon={faYoutube} />
             </a>
-            <a href="https://www.instagram.com/0x3omda/" target="_blank" rel="noopener noreferrer" className={styles.iconInstagram} aria-label="Instagram">
+            <a href="https://www.instagram.com/ahmed_emad_nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconInstagram} aria-label="Instagram">
               <FontAwesomeIcon icon={faInstagram} />
             </a>
             <a href="https://github.com/Ahmed-Emad-Nasr" target="_blank" rel="noopener noreferrer" className={styles.iconGithub} aria-label="GitHub">
