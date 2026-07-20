@@ -397,6 +397,27 @@ export const staticProjectFallback = [
     watchers_count: 0,
     license: null
   },
+  {
+    id: 7,
+    name: "PDFparser-tool",
+    description: "pdf parser tool for malware analysis",
+    language: "Python", // يرجى تعديلها إلى اللغة الفعلية المستخدمة (مثل JavaScript أو C++)
+    html_url: "https://github.com/Ahmed-Emad-Nasr/3omda-PDFparser-tool",
+    homepage: "",
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-07-20T10:00:00Z", 
+    created_at: "2026-07-20T10:00:00Z", 
+    owner: { 
+      login: "Ahmed-Emad-Nasr", 
+      avatar_url: "https://avatars.githubusercontent.com/u/Ahmed-Emad-Nasr" 
+    },
+    topics: ["malware-analysis", "pdf-parser", "security", "forensics"], // كلمات مفتاحية مقترحة بناءً على الوصف
+    default_branch: "main",
+    watchers_count: 0,
+    license: null
+  }
 ] as const;
 
 // -----------------------------------------------------------------------------
@@ -440,6 +461,13 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
       "Cyber Security Lab",
     ],
   },
+  {
+    videoId: "9JR1gbmuYrc",
+    title: "Analyzing PDF files",
+    description: "A practical walkthrough on analyzing PDF files for malware detection, extracting IOCs, and identifying embedded malicious JavaScript.",
+    publishedAt: "2026-07-17",
+    tags: ["Malware Analysis", "PDF Parsing", "Cybersecurity", "Phishing Analysis", "Python"]
+  },
     {
     videoId: "9LHwl0FpuPM",
     title: "How To Install and Perform Vulnerability Assessments Using Nessus",
@@ -474,41 +502,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
       "Splunk Tutorial",
     ],
   },
-  {
-    videoId: "UNlJszq1Xso",
-    title: "Session Online 1 Part 1",
-    description: "First online session covering foundational security concepts and live demonstrations.",
-    publishedAt: "2025-12-02",
-    tags: ["Training", "Live Session", "Security Fundamentals"],
-  },
-  {
-    videoId: "pWkodhNwQy8",
-    title: "StegCracker شرح بسيط",
-    description: "Simple explanation of StegCracker tool for steganography analysis.",
-    publishedAt: "2025-12-02",
-    tags: ["Steganography", "Tools", "Tutorial"],
-  },
-  {
-    videoId: "dsK-w6G5zdw",
-    title: "Session Online 1 Part 2",
-    publishedAt: "2025-12-02",
-    tags: ["Training", "Live Session", "Advanced Topics"],
-  },
-  {
-    videoId: "tNH1cBceYwY",
-    title: "Session 2 Online",
-    description: "Second comprehensive online training session.",
-    publishedAt: "2025-12-02",
-    tags: ["Training", "Live Session"],
-  },
-  {
-    videoId: "256UCPWbSqM",
-    title: "StegHide شرح بسيط",
-    description: "Tutorial on StegHide tool for digital steganography.",
-    publishedAt: "2025-12-02",
-    tags: ["Steganography", "Tools", "Tutorial"],
-  },
-  {
+ {
     videoId: "GwPbuYulV1U",
     title: "Configuring and Testing Wazuh With Sysmon",
     description: "Complete guide to integrating Wazuh SIEM with Sysmon for enhanced threat detection.",
@@ -569,14 +563,6 @@ export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
     sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd",
     tags: ["SOC", "DFIR", "Cybersecurity"],
     videoCount: 5,
-  },
-  {
-    playlistId: "PLO1VSSKnwZUiZqg_WafsnYr7lTb4e3bTv",
-    title: "GDG",
-    description: "Sessions, workshops, and technical training from GDG (Google Developer Groups) events.",
-    sourceUrl: "https://youtube.com/playlist?list=PLO1VSSKnwZUiZqg_WafsnYr7lTb4e3bTv&si=YFhAEQIFGe5ZdsId",
-    tags: ["GDG", "Workshops", "Training", "Live Session"],
-    videoCount: 10,
   },
 ];
 

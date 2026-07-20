@@ -133,16 +133,6 @@ const SenseiProjects = memo(function SenseiProjects() {
       <div className={styles.container}>
         <div className={styles["header-section"]}>
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
-          <p className={styles.sectionLead}>
-            Curated cybersecurity portfolio, securely cached for immediate access.
-          </p>
-        </div>
-
-        {/* عرض إجمالي عدد المشاريع المعمول لها Cache فقط */}
-        <div className={styles["section-summary"]} aria-live="polite">
-          <p>
-            Showing {repos.length} cached project{repos.length === 1 ? "" : "s"}.
-          </p>
         </div>
 
         <div className={styles["projects-timeline"]} aria-label="Projects Timeline">

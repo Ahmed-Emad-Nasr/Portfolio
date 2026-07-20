@@ -118,7 +118,7 @@ const SenseiHome = memo(function SenseiHome() {
           </div>
           <div className={styles.hudBottom} aria-hidden="true">
             <span className={`${styles.hudLine} ${styles.hudDim}`}>SIEM / EDR</span>
-            <span className={`${styles.hudLine} ${styles.hudAccent}`}>ブルーチーム</span>
+            <span className={`${styles.hudLine} ${styles.hudAccent}`}>Ahmed Emad Nasr</span>
           </div>
 
           <button
@@ -134,7 +134,7 @@ const SenseiHome = memo(function SenseiHome() {
               width={560}
               height={560}
               sizes="(max-width: 968px) 80vw, 560px"
-              quality={70}
+              quality={85}
               loading="lazy"
               decoding="async"
               onError={() => setFailed(true)}
