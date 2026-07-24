@@ -462,6 +462,24 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     ],
   },
   {
+    videoId: "Vj8lynVzv2k",
+    title: "Solvin INE Lab FootPrinting And Scanning",
+    description: "A practical walkthrough of solving the INE Footprinting and Scanning lab for the eJPT/PTS course. The video demonstrates essential network enumeration techniques on a Metasploitable 2 target, covering ping sweeps (fping), basic Nmap scans, SYN scans, service version detection, and OS fingerprinting. Perfect for beginners learning penetration testing.",
+    publishedAt: "2026-07-24",
+    tags: [
+      "INE Lab",
+      "eJPT",
+      "Footprinting",
+      "Scanning",
+      "Nmap",
+      "Metasploitable 2",
+      "Cyber Security",
+      "Penetration Testing",
+      "Information Gathering",
+      "OS Fingerprinting"
+    ]
+  },
+  {
     videoId: "9JR1gbmuYrc",
     title: "Analyzing PDF files",
     description: "A practical walkthrough on analyzing PDF files for malware detection, extracting IOCs, and identifying embedded malicious JavaScript.",
