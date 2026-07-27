@@ -99,3 +99,10 @@
     height: 0.62rem;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .cursorRing,
+  .cursorDot {
+    display: none;
+  }
+}

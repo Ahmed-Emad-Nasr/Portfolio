@@ -394,6 +394,8 @@
     letter-spacing: 0.2px;
     word-break: break-word;
     overflow-wrap: anywhere;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
     hyphens: auto;
   }
 

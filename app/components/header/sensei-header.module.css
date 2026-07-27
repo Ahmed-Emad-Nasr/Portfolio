@@ -35,6 +35,7 @@
   height: 56px;
   background: rgba(255, 255, 255, 0.08);
   /* قص الأطراف السفلية فقط لإنشاء الـ Trapezoid على كامل الشاشة */
+  -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
   clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
 }
 
@@ -48,6 +49,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 4rem; /* مسافة داخلية مريحة لتوزيع العناصر */
+  -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
   clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
 }
 
@@ -165,6 +167,7 @@
      لأن الـ padding (24px) كان أصغر من مسافة القصّ (34px). */
   .headerInner,
   .headerContent {
+    -webkit-clip-path: none;
     clip-path: none;
   }
   .headerContent { padding: 0 1.5rem; }
