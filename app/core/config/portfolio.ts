@@ -582,6 +582,14 @@ export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
     tags: ["SOC", "DFIR", "Cybersecurity"],
     videoCount: 5,
   },
+  {
+    playlistId: "PLcw8B9lEwARs",
+    title: "Attack Simulation & Security Assessment",
+    description: "Practical tutorials and methodologies for performing attack simulations and comprehensive security assessments.", // يمكنك تعديل هذا الوصف
+    sourceUrl: "https://youtube.com/playlist?list=PLcw8B9lEwARs&si=gahYoIE2G_X2OwuZ",
+    tags: ["Attack Simulation", "Security Assessment", "Red Team", "Cybersecurity"], // يمكنك تعديل أو إضافة المزيد من العلامات
+    videoCount: 17, 
+  },
 ];
 
 // -----------------------------------------------------------------------------
