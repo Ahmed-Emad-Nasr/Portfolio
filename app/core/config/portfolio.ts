@@ -520,6 +520,24 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
       "Splunk Tutorial",
     ],
   },
+  {
+    videoId: "3v3jbpTspr4",
+    title: "Installing Snort On Linux and Difference Between IPS and IDS",
+    description: "A practical walkthrough of installing Snort on Linux, covering system updates, network versus host IDS configuration, and modifying the snort.conf file. The tutorial also explains the fundamental differences between Intrusion Detection Systems (IDS) and Intrusion Prevention Systems (IPS), their operation modes (Passive vs. Inline), and their architectural placement relative to firewalls for optimal SOC operations.",
+    publishedAt: "2026-07-30",
+    tags: [
+      "Snort",
+      "IDS",
+      "IPS",
+      "Linux",
+      "Intrusion Detection System",
+      "Intrusion Prevention System",
+      "SOC",
+      "Cyber Security",
+      "Network Security",
+      "Security Architecture"
+    ],
+  },
  {
     videoId: "GwPbuYulV1U",
     title: "Configuring and Testing Wazuh With Sysmon",
