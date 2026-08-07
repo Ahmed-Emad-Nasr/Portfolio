@@ -138,6 +138,18 @@ export const formatDate = (value: string): string => {
 
 export const knowledgeEducationItems = [
   {
+    tag: "Information Security Intern",
+    subTag: "Banque Misr",
+    subTagHyperlink: "https://www.banquemisr.com/",
+    desc: "Assessed IT Governance against ISO 27001 and evaluated enterprise architectures including IAM and Cloud. • Analyzed SIEM operations and delivered a capstone project on SOC and Risk Management.",
+    isRight: true,
+    startDate: "2026-07-01",
+    endDate: "2026-09-01",
+    showDate: true,
+    skills: ["ISO 27001", "IT Governance", "Risk Management", "SIEM", "VAPT"],
+    certificateUrl: "https://www.banquemisr.com/",
+  },
+  {
     tag: "Tutor Assistant (Part-Time)",
     subTag: "iSchool",
     subTagHyperlink: "https://ischool-tech.com/",
