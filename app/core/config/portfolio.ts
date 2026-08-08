@@ -533,6 +533,24 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
       "Security Architecture"
     ],
   },
+  {
+    videoId: "XJ9KbMSEqGY",
+    title: "Bypassing License Key During Installing Windows Server On VMware",
+    description: "A practical tutorial on bypassing the license key requirement during the installation of Windows Server 2019 on VMware. This video walks through creating the virtual machine, selecting the 'install operating system later' option to bypass the prompt, and configuring the Windows Server Desktop Experience. It also highlights how to set up this server for a SOC home lab, including preparing for Active Directory Domain Services (AD DS) installation, Wazuh integration, and Sysmon deployment to simulate and monitor AD attacks.",
+    publishedAt: "2026-08-08",
+    tags: [
+      "Windows Server",
+      "VMware",
+      "Home Lab",
+      "Active Directory",
+      "Wazuh",
+      "Sysmon",
+      "SOC",
+      "Cyber Security",
+      "Virtualization",
+      "IT Administration"
+    ],
+  },
  {
     videoId: "GwPbuYulV1U",
     title: "Configuring and Testing Wazuh With Sysmon",
