@@ -29,7 +29,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   }, [lenis]);
 
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
+    <ReactLenis root options={{ lerp: 0.07, duration: 1.2, smoothWheel: true }}>
       {children}
     </ReactLenis>
   );
