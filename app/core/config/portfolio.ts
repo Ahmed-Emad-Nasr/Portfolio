@@ -616,11 +616,19 @@ export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
   {
     playlistId: "PLcw8B9lEwARs",
     title: "Attack Simulation & Security Assessment",
-    description: "Practical tutorials and methodologies for performing attack simulations and comprehensive security assessments.", // يمكنك تعديل هذا الوصف
+    description: "Practical tutorials and methodologies for performing attack simulations and comprehensive security assessments.",
     sourceUrl: "https://youtube.com/playlist?list=PLcw8B9lEwARs&si=gahYoIE2G_X2OwuZ",
-    tags: ["Attack Simulation", "Security Assessment", "Red Team", "Cybersecurity"], // يمكنك تعديل أو إضافة المزيد من العلامات
+    tags: ["Attack Simulation", "Security Assessment", "Red Team", "Cybersecurity"],
     videoCount: 17, 
   },
+  {
+    playlistId: "PLLzq933rD6WE",
+    title: "SOC Environment",
+    description: "Practical tutorials and methodologies for building, configuring, and monitoring a complete Security Operations Center (SOC) environment.",
+    sourceUrl: "https://youtube.com/playlist?list=PLLzq933rD6WE&si=--gWXu7HDVYInl6v",
+    tags: ["SOC", "Blue Team", "Cybersecurity", "Network Monitoring"],
+    videoCount: 10,
+  }
 ];
 
 // -----------------------------------------------------------------------------
