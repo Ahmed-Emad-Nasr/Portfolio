@@ -141,21 +141,21 @@ export const knowledgeEducationItems = [
     tag: "Information Security Intern",
     subTag: "Banque Misr",
     subTagHyperlink: "https://www.banquemisr.com/",
-    desc: "Assessed IT Governance against ISO 27001 and evaluated enterprise architectures including IAM and Cloud. • Analyzed SIEM operations and delivered a capstone project on SOC and Risk Management.",
+    desc: "Assessed 3 units against ISO 27001, PCI DSS, COBIT, and SWIFT, evaluating KPIs to identify governance and risk gaps. • Evaluated enterprise architectures spanning IAM, PAM, DAM, Cloud, AI, and DevSecOps container security. • Analyzed SIEM operations, DFIR, Malware Analysis, VAPT, Threat Intel, and Dark Web monitoring for brand protection.",
     isRight: true,
     startDate: "2026-07-01",
     endDate: "2026-09-01",
     showDate: true,
-    skills: ["ISO 27001", "IT Governance", "Risk Management", "SIEM", "VAPT"],
+    skills: ["ISO 27001", "PCI DSS", "COBIT", "SWIFT", "IAM/PAM/DAM", "SIEM", "VAPT"],
     certificateUrl: "https://www.banquemisr.com/",
   },
   {
     tag: "Tutor Assistant (Part-Time)",
     subTag: "iSchool",
     subTagHyperlink: "https://ischool-tech.com/",
-    desc: "Coordinated attendance and activities for 150+ DEPI/DECI students. • Guided hands-on technical labs and resolved local configuration issues.",
+    desc: "Facilitated logistics and communication for 150+ students in weekly coding labs, improving session efficiency. • Streamlined session delivery by managing operational logistics and facilitating communication between instructors and students.",
     isRight: false,
-    startDate: "2026-07-01",
+    startDate: "2025-07-01",
     showDate: true,
     skills: [
       "Communication",
@@ -169,31 +169,19 @@ export const knowledgeEducationItems = [
     tag: "SOC Analyst Intern",
     subTag: "Digital Egypt Pioneers Initiative (DEPI)",
     subTagHyperlink: "https://www.depi.gov.eg/",
-    desc: "Triaged 150+ simulated alerts via NIST 800-61 with 95%+ accuracy. • Built detection lab with Wazuh, Suricata, and YARA, boosting coverage by 12%.",
+    desc: "Triaged 150+ SOC alerts via NIST 800-61 on THM & LetsDefend, maintaining a 95%+ accuracy rate. • Designed a detection lab using Wazuh, Suricata, VirusTotal & YARA, increasing coverage by 12%. • Investigated 50+ events via log analysis & IOCs, cutting documentation time 20% with standard reports.",
     isRight: true,
-    startDate: "2026-01-01",
+    startDate: "2025-06-01",
     endDate: "2026-06-01",
     showDate: true,
-    skills: ["Incident Response", "Wazuh", "Suricata", "Threat Hunting"],
+    skills: ["Incident Response", "Wazuh", "Suricata", "NIST 800-61", "Threat Hunting"],
     certificateUrl: "https://www.depi.gov.eg/",
   },
   {
-    tag: "Information Security Analyst Intern",
-    subTag: "Digital Egypt Pioneers Initiative (DEPI)",
-    subTagHyperlink: "https://www.depi.gov.eg/",
-    desc: "Applied ISO/IEC 27001 and ISMS principles for risk assessment. • Built ELK logging across 5+ endpoints, detecting alerts in under 60s.",
-    isRight: false,
-    startDate: "2025-06-01",
-    endDate: "2025-12-01",
-    showDate: true,
-    skills: ["SOC Triage", "ELK", "Security Controls", "Risk Assessment"],
-    certificateUrl: "https://www.depi.gov.eg/",
-  },
-  {
-    tag: "Penetration Testing Trainee",
+    tag: "Penetration Tester",
     subTag: "Information Technology Institute (ITI)",
     subTagHyperlink: "https://www.iti.gov.eg/",
-    desc: "Exploited 15+ vulnerabilities and executed lateral movement mapped to MITRE ATT&CK. • Completed all eJPT labs and passed certification with 90%.",
+    desc: "Exploited 15+ vulnerabilities in CTFs, mapping privilege escalation/lateral movement to MITRE ATT&CK. • Completed all INE eJPT labs (enumeration, exploitation, pivoting) and passed the exam with a 90% score. • Performed reconnaissance, service enumeration, vulnerability validation, and post-exploitation.",
     isRight: true,
     startDate: "2025-05-01",
     endDate: "2026-01-01",
@@ -202,10 +190,10 @@ export const knowledgeEducationItems = [
     certificateUrl: "https://www.iti.gov.eg/",
   },
   {
-    tag: "Volunteer Cybersecurity Instructor",
+    tag: "Cybersecurity Instructor (Volunteer)",
     subTag: "Google Developer Groups (GDG)",
     subTagHyperlink: "https://gdg.community.dev/",
-    desc: "Delivered 35+ sessions to 120+ learners, winning 1st place and Best Technical Instructor Award. • Designed custom CTF challenges.",
+    desc: "Delivered 35+ sessions to 120+ learners, earning 1st place and the Best Technical Instructor Award. • Co-designed custom training materials and practical CTF challenges for offensive & defensive concepts with Cyber Cohesion.",
     isRight: false,
     startDate: "2024-10-01",
     endDate: "2025-10-01",
@@ -215,7 +203,7 @@ export const knowledgeEducationItems = [
   },
   {
     tag: "Bachelor of Computer Science",
-    desc: "Major: Information Security & Digital Forensics | GPA: 3.78/4.0. • Graduated in the Top 5% of the class.",
+    desc: "Major: Information Security & Digital Forensics | GPA: 3.78/4.0. • Ranked 5th out of 900 students.",
     subTag: "Benha University",
     subTagHyperlink: "https://www.bu.edu.eg/",
     isRight: true,
@@ -262,15 +250,15 @@ export const knowledgeEducationItems = [
     certificateUrl: "https://www.huawei.com/",
   },
   {
-    tag: "Huawei Routing & Switching Summer Training",
+    tag: "Network & Cloud Intern",
     subTag: "Huawei",
     subTagHyperlink: "https://www.huawei.com/",
-    desc: "Configured 10+ network devices and applied network security best practices in hands-on labs.",
+    desc: "Analyzed enterprise network architectures, earning HCIA-Datacom V1.0 and HCIA-Cloud Computing V5.0 with a 95% score. • Configured and simulated 10+ network topologies via Huawei eNSP, validating routing/switching designs.",
     isRight: true,
-    startDate: "2023-08-01",
+    startDate: "2023-07-01",
     endDate: "2023-09-01",
     showDate: true,
-    skills: ["Routing", "Switching", "Network Troubleshooting"],
+    skills: ["Routing", "Switching", "Cloud Computing", "Network Troubleshooting"],
     certificateUrl: "https://www.huawei.com/",
   }
 ] as const;
@@ -283,24 +271,32 @@ export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
 
 export const projectBullets: Record<string, string[]> = {
   "SOC-Environment": [
-    "Deployed Wazuh/Suricata lab, expanding detection by 12% across 5+ endpoints.",
-    "Simulated 50+ attacks yielding 95%+ true positive rate, and contributed custom rules to SOC Fortress."
+    "Merged a custom Wazuh detection rule into the open-source SOC Fortress repo via a reviewed PR.",
+    "Deployed a Wazuh/Suricata/Zeek/YARA/FIM/auditd/Sysmon lab, expanding detection coverage by 12% across 5+ endpoints.",
+    "Simulated 50+ attacks to validate detection rules, achieving a 95%+ true positive rate across TTPs."
   ],
   "insider-threat-detection-deception": [
-    "Built Wazuh honeytoken lab, detecting 100% of simulated insider access.",
-    "Integrated pfSense/Suricata, reducing false positives by 30%, and automated malicious file deletion via Python/VirusTotal."
+    "Built a Wazuh honeytoken insider threat lab, detecting 100% of access attempts across 3 scenarios.",
+    "Integrated pfSense and Suricata for monitoring, reducing false positive volume by 30% from baseline.",
+    "Developed a Python script to hash files, query VirusTotal, and auto-delete files flagged as malicious."
   ],
   "Malware-Analysis-and-Prevention-Strategy": [
-    "Analyzed 20+ malware samples (incl. 5+ ransomware) via isolated lab to extract actionable IOCs.",
-    "Performed dynamic analysis with FakeNet-NG and engineered custom YARA rules for proactive blocking."
+    "Deployed an isolated lab, analyzing 20+ malware samples (5+ ransomware) and extracting actionable IOCs.",
+    "Used FakeNet-NG and Process Hacker/Explorer for dynamic analysis to uncover C2 traffic behaviors.",
+    "Engineered a custom PDF parsing utility to detect and extract embedded JavaScript payloads, downloaded by 18+ users."
   ],
   "Attack-Simulation-Security-Assessment": [
-    "Executed 15+ end-to-end attacks in virtual lab using Kali and Nessus.",
-    "Mapped attack paths to MITRE ATT&CK and compiled CVSS-prioritized vulnerability reports."
+    "Conducted 15+ attack simulations on Metasploitable 2/3 and DVWA using Kali Linux and Nessus.",
+    "Applied the Cyber Kill Chain & MITRE ATT&CK to document paths, assess impact, and recommend fixes."
   ],
   "Threat-Intelligence-Tool": [
     "Developed Python tool integrating VirusTotal APIs for IOC enrichment.",
     "Accelerated threat analysis by 25% for faster decision-making."
+  ],
+  "Compliance-Framework": [
+    "Developed an AI-driven GRC platform centralizing Risk, AppSec, Audit, and Privacy operations.",
+    "Accelerated assessments by 15% via automated control mapping across 150+ frameworks (ISO, NIST, PCI DSS, GDPR).",
+    "Streamlined continuous compliance by automating evidence validation from security scans and configs."
   ]
 };
 
@@ -308,7 +304,7 @@ export const staticProjectFallback = [
   {
     id: 1,
     name: "SOC-Environment",
-    description: "Enterprise SOC environment setup integrating SIEM, EDR, and log management.",
+    description: "Enterprise SOC environment integrating Wazuh, Suricata, Zeek, YARA, FIM, auditd, and Sysmon, with a merged PR into the open-source SOC Fortress repo.",
     language: "Shell",
     html_url: "https://github.com/Ahmed-Emad-Nasr/SOC-Environment",
     homepage: "",
@@ -397,6 +393,24 @@ export const staticProjectFallback = [
   },
   {
     id: 6,
+    name: "Compliance-Framework",
+    description: "AI-driven GRC platform (VerifAI 360) centralizing Risk, AppSec, Audit, and Privacy operations with automated control mapping across 150+ frameworks.",
+    language: "Python",
+    html_url: "https://github.com/Ahmed-Emad-Nasr/Compliance-Framework",
+    homepage: "",
+    stargazers_count: 0,
+    forks_count: 0,
+    open_issues_count: 0,
+    updated_at: "2026-06-01T10:00:00Z",
+    created_at: "2026-01-01T10:00:00Z",
+    owner: { login: "Ahmed-Emad-Nasr", avatar_url: "https://avatars.githubusercontent.com/u/Ahmed-Emad-Nasr" },
+    topics: ["grc", "ai", "compliance", "risk", "security-automation"],
+    default_branch: "main",
+    watchers_count: 0,
+    license: { name: "MIT License" }
+  },
+  {
+    id: 7,
     name: "PDFparser-tool",
     description: "PDF parser tool optimized for static malware analysis and document forensics.",
     language: "Python", 
