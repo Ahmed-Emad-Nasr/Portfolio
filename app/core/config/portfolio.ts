@@ -290,8 +290,8 @@ export const projectBullets: Record<string, string[]> = {
     "Applied the Cyber Kill Chain & MITRE ATT&CK to document paths, assess impact, and recommend fixes."
   ],
   "Threat-Intelligence-Tool": [
-    "Developed Python tool integrating VirusTotal APIs for IOC enrichment.",
-    "Accelerated threat analysis by 25% for faster decision-making."
+    "Developed a Python-based threat intelligence utility integrating VirusTotal, Hybrid Analysis, NIST for CVEs, and Exploit DB.",
+    "Achieved 10 stars on GitHub, demonstrating community interest and utility in centralizing security data."
   ],
   "Compliance-Framework": [
     "Developed an AI-driven GRC platform centralizing Risk, AppSec, Audit, and Privacy operations.",
@@ -376,17 +376,17 @@ export const staticProjectFallback = [
   {
     id: 5,
     name: "Threat-Intelligence-Tool",
-    description: "Python utility to aggregate, analyze, and automate threat intelligence indicators (IOCs).",
+    description: "Python-based threat intelligence platform integrating VirusTotal, Hybrid Analysis, NIST CVEs, and Exploit DB.",
     language: "Python",
     html_url: "https://github.com/Ahmed-Emad-Nasr/Threat-Intelligence-Tool",
-    homepage: "",
-    stargazers_count: 0,
+    homepage: "https://youtu.be/u_hezaAwnmM",
+    stargazers_count: 10,
     forks_count: 0,
     open_issues_count: 0,
     updated_at: "2026-02-25T10:00:00Z",
     created_at: "2025-12-05T10:00:00Z",
     owner: { login: "Ahmed-Emad-Nasr", avatar_url: "https://avatars.githubusercontent.com/u/Ahmed-Emad-Nasr" },
-    topics: ["automation", "python", "ioc", "tooling", "script"],
+    topics: ["threat-intelligence", "python", "virustotal", "hybrid-analysis", "nist", "exploit-db"],
     default_branch: "main",
     watchers_count: 0,
     license: { name: "MIT License" }
@@ -397,7 +397,7 @@ export const staticProjectFallback = [
     description: "AI-driven GRC platform (VerifAI 360) centralizing Risk, AppSec, Audit, and Privacy operations with automated control mapping across 150+ frameworks.",
     language: "Python",
     html_url: "https://github.com/Ahmed-Emad-Nasr/Compliance-Framework",
-    homepage: "",
+    homepage: "https://youtu.be/G-Ys6VuV91g",
     stargazers_count: 0,
     forks_count: 0,
     open_issues_count: 0,
@@ -592,6 +592,20 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     description: "Exploring and setting up AWS Key Management Service (KMS) for secure key storage and encryption.",
     publishedAt: "2026-05-02",
     tags: ["AWS", "KMS", "Cloud Security", "Encryption", "Tutorial"],
+  },
+  {
+    videoId: "u_hezaAwnmM",
+    title: "Threat Intelligence Platform Tool Demo",
+    description: "A walkthrough demo of a Python-based threat intelligence utility integrating VirusTotal, Hybrid Analysis, NIST for CVEs, and Exploit DB to centralize threat data for faster analysis.",
+    publishedAt: "2026-08-18",
+    tags: ["Threat Intelligence", "Python", "VirusTotal", "Hybrid Analysis", "Exploit DB"],
+  },
+  {
+    videoId: "G-Ys6VuV91g",
+    title: "VerifAI 360 Compliance Framework Demo",
+    description: "A demo of VerifAI 360, an AI-driven GRC platform centralizing Risk, AppSec, Audit, and Privacy operations with automated control mapping across 150+ frameworks.",
+    publishedAt: "2026-08-18",
+    tags: ["GRC", "AI", "Compliance", "Risk Management", "Security Automation"],
   },
 ];
 
