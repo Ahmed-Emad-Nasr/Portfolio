@@ -721,8 +721,9 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
-  "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${63 + i}).webp`),
-  "simple-ctf-writeup": Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).png`),
+  "bounty-hacker-ctf-writeup": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Bounty_Hacker/Screenshot (${78 + i}).webp`),
+  "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
+  "simple-ctf-writeup": Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
   "ecir-registry-forensics": Array.from({ length: 14 }, (_, i) => `Assets/Cases/AhmedEmad_RegistryForencics_eCIR/${i + 1}.webp`),
   "3omda custom detection rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
   "penetration-testing-life-cycle": Array.from({ length: 4 }, (_, i) => `Assets/Cases/penetration-testing-life-cycle/${i + 1}.webp`),
@@ -1426,7 +1427,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     readTime: 15,
     date: "2026-08-19",
     screenshots: Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).png`),
-    image: "Assets/Cases/Simple_CTF/Screenshot (49).png",
+    image: "Assets/Cases/Simple_CTF/Screenshot (49).webp",
   },
   {
     id: "easy-peasy-ctf-writeup",
@@ -1442,7 +1443,24 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Port Scanning", "Web Enumeration", "Encoding/Decoding Analysis", "Source Code Inspection"],
     readTime: 12,
     date: "2026-08-19",
-    screenshots: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${63 + i}).webp`),
+    screenshots: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
     image: "Assets/Cases/Easy_Peasy/Screenshot (63).webp",
+  },
+  {
+    id: "bounty-hacker-ctf-writeup",
+    title: "Bounty Hacker CTF Walkthrough",
+    description: "A complete walkthrough of the Bounty Hacker CTF on TryHackMe. The process includes anonymous FTP access to retrieve a custom wordlist, SSH brute-forcing using Hydra, and Linux privilege escalation by exploiting sudo rights on the tar command via GTFOBins.",
+    platform: "TryHackMe",
+    type: "Write-up",
+    category: "Penetration Testing",
+    difficulty: "Easy",
+    href: "Assets/Cases/Bounty_Hacker/AhmedEmad_BountyHacker.pdf", 
+    tags: ["TryHackMe", "CTF", "FTP", "Brute Force", "Hydra", "Privilege Escalation", "GTFOBins"],
+    tools: ["Nmap", "Hydra", "SSH", "Tar"],
+    skillsGained: ["Service Enumeration", "Password Brute-forcing", "Linux Privilege Escalation"],
+    readTime: 12,
+    date: "2026-08-21",
+    screenshots: Array.from({ length: 16 }, (_, i) => `Assets/Cases/Bounty_Hacker/Screenshot (${78 + i}).webp`),
+    image: "Assets/Cases/Bounty_Hacker/Screenshot (78).webp",
   },
 ] as const;
