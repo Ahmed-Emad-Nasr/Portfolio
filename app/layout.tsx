@@ -14,8 +14,11 @@ import { Overlock } from "next/font/google";
 import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/config/portfolio";
 import { SmoothScroll } from "./components/smooth-scroll";
-import CustomCursor from "./components/custom-cursor";
-import ClientOnly from "./core/components/ClientOnly";
+import { MotionProvider } from "./core/components/MotionInView";
+// FIXED: `dynamic(..., { ssr: false })` cannot live in a Server Component, and
+// this file is one (it exports `metadata`). The call moved into CursorMount,
+// which is a Client Component. Same deferred-chunk benefit, legal placement.
+import CursorMount from "./components/cursor-mount";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -210,10 +213,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
         />
         
-        <SmoothScroll>{children}</SmoothScroll>
-        <ClientOnly>
-          <CustomCursor />
-        </ClientOnly>
+        {/* MotionProvider mounted ONCE here. Previously every MotionInView
+            instance created its own <LazyMotion> — dozens per page. */}
+        <MotionProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+          <CursorMount />
+        </MotionProvider>
       </body>
     </html>
   );

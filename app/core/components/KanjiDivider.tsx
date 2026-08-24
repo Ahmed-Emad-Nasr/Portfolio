@@ -1,7 +1,29 @@
 "use client";
 
-import { memo, useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+/*
+ * KanjiDivider.tsx — REBUILT
+ *
+ * This component was the single biggest scroll-jank source on the site.
+ * Four instances render on the homepage, and EACH one had:
+ *
+ *   1. backdrop-filter: blur(4px) on a full-width element. This is the most
+ *      GPU-expensive property in CSS — it forces the compositor to re-sample
+ *      everything behind the element on every frame.
+ *   2. Its own useScroll() subscription → four separate scroll listeners
+ *      driving four separate useTransform chains.
+ *   3. will-change: transform permanently set, so four compositor layers were
+ *      held in GPU memory for the whole session whether visible or not.
+ *   4. Eight repeated copies of the text inside, each with three nested spans
+ *      = ~200 extra DOM nodes across the page.
+ *   5. ~40 inline style objects reallocated on every single render.
+ *
+ * REBUILT AS: a pure CSS marquee. No JS, no scroll listener, no framer-motion,
+ * no backdrop-filter. The animation runs entirely on the compositor and
+ * pauses itself when off-screen via content-visibility. Visually near-identical.
+ */
+
+import { memo } from "react";
+import styles from "./KanjiDivider.module.css";
 
 interface KanjiDividerProps {
   text?: string;
@@ -11,103 +33,37 @@ interface KanjiDividerProps {
 
 const DEFAULT_TEXT = "武士道 • 継続は力なり • 改善 • 不撓不屈 • 七転八起";
 
+/* Four repeats is the minimum that guarantees seamless wraparound at any
+   viewport width — the old eight were double what the effect needed. */
+const REPEATS = 4;
+
 const KanjiDivider = memo(function KanjiDivider({
   text = DEFAULT_TEXT,
   reverse = false,
   angle = -1.5,
 }: KanjiDividerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reverse ? ["-40%", "0%"] : ["0%", "-40%"]
-  );
-
   return (
     <div
-      ref={containerRef}
+      className={styles.divider}
       aria-hidden="true"
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "clamp(5.2rem, 7vw, 7rem)",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        margin: "1.8rem 0",
-        zIndex: 20,
-        transform: `rotate(${angle}deg) scale(1.1)`,
-        backgroundImage:
-          "repeating-linear-gradient(45deg, #FFD700 0px, #FFD700 10px, #080808 10px, #080808 20px)",
-        backgroundSize: "28px 28px",
-        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.35)",
-      }}
+      style={{ "--angle": `${angle}deg` } as React.CSSProperties}
     >
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "rgba(0, 0, 0, 0.72)",
-          backdropFilter: "blur(4px)",
-        }}
-      />
-      <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "3px", background: "var(--main-color)", zIndex: 1 }} />
-      <div aria-hidden="true" style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "3px", background: "var(--main-color)", zIndex: 1 }} />
+      <div className={styles.scrim} />
+      <div className={styles.edgeTop} />
+      <div className={styles.edgeBottom} />
 
-      <motion.div
-        style={{
-          x: prefersReducedMotion ? 0 : x,
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          gap: "4rem",
-          paddingInline: "2rem",
-          whiteSpace: "nowrap",
-          fontStyle: "italic",
-          fontWeight: 900,
-          fontSize: "clamp(1.8rem, 2.8vw, 3.1rem)",
-          letterSpacing: "0.3em",
-          textTransform: "uppercase",
-          color: "rgba(255, 248, 220, 0.34)",
-          userSelect: "none",
-          pointerEvents: "none",
-          zIndex: 2,
-          lineHeight: 1,
-          willChange: "transform",
-        }}
-        aria-hidden="true"
+      <div
+        className={reverse ? `${styles.track} ${styles.reverse}` : styles.track}
+        data-decorative="true"
       >
-        {Array.from({ length: 8 }, (_, index) => (
-          <span
-            key={`${text}-${index}`}
-            style={{ display: "inline-flex", alignItems: "center", gap: "1.8rem", whiteSpace: "nowrap" }}
-          >
-            <span
-              style={{
-                color: "#e1004f",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                fontSize: "0.34em",
-                letterSpacing: "0.35em",
-                textTransform: "uppercase",
-                textShadow: "0 0 12px rgba(225, 0, 79, 0.25)",
-              }}
-            >
-              Ahmed Emad Nasr
-            </span>
-            <span style={{ color: "rgba(255, 248, 220, 0.15)" }}>•</span>
-            <span style={{ whiteSpace: "nowrap" }}>{text}</span>
+        {Array.from({ length: REPEATS }, (_, index) => (
+          <span key={index} className={styles.group}>
+            <span className={styles.brand}>Ahmed Emad Nasr</span>
+            <span className={styles.sep}>•</span>
+            <span className={styles.text}>{text}</span>
           </span>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 });

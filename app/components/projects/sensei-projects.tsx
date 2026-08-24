@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./sensei-projects.module.css";
-import { type GitHubRepository, getIconForLanguage, formatDate, toBulletItems } from "@/app/core/utils/utils";
+import { type GitHubRepository, getIconForLanguage, formatRepoDate, toBulletItems } from "@/app/core/utils/utils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
 import { projectBullets, staticProjectFallback } from "@/app/core/config/portfolio";
@@ -99,7 +99,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
 
           <div className={styles["meta-info"]}>
             <span>Lang: <strong>{repo.language ?? "N/A"}</strong></span>
-            <span>Upd: {formatDate(repo.updated_at)}</span>
+            <span>Upd: {formatRepoDate(repo.updated_at)}</span>
           </div>
 
           <div className={styles["case-study"]}>

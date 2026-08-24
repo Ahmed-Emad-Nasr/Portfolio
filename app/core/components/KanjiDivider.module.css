@@ -1,0 +1,101 @@
+/*
+ * KanjiDivider.module.css
+ * All styling moved out of inline JS objects (which were reallocated on every
+ * render) and into a static stylesheet the browser can cache and reuse.
+ */
+
+.divider {
+  position: relative;
+  width: 100%;
+  height: clamp(5.2rem, 7vw, 7rem);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  margin: 1.8rem 0;
+  z-index: 20;
+  transform: rotate(var(--angle, -1.5deg)) scale(1.06);
+
+  background-image: repeating-linear-gradient(
+    45deg,
+    #ffd700 0px, #ffd700 10px,
+    #080808 10px, #080808 20px
+  );
+  background-size: 28px 28px;
+
+  /* Skip painting entirely while off-screen. This also pauses the marquee
+     animation below at zero CPU cost. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 7rem;
+}
+
+/* Replaces backdrop-filter: blur(4px). A flat translucent scrim reads almost
+   identically over a repeating stripe pattern but costs nothing to composite. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.edgeTop,
+.edgeBottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--main-color);
+  z-index: 1;
+}
+.edgeTop { top: 0; }
+.edgeBottom { bottom: 0; }
+
+.track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  padding-inline: 2rem;
+  white-space: nowrap;
+  z-index: 2;
+  /* Compositor-only transform — no layout, no paint, no scroll listener. */
+  animation: kanjiMarquee 34s linear infinite;
+}
+
+.track.reverse { animation-direction: reverse; }
+
+@keyframes kanjiMarquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.8rem;
+  white-space: nowrap;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 2.8vw, 3.1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 220, 0.34);
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.brand {
+  color: #e1004f;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  font-size: 0.34em;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+
+.sep { color: rgba(255, 248, 220, 0.15); }
+.text { white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .track { animation: none; }
+}

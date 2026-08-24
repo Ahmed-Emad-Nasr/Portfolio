@@ -9,11 +9,9 @@ import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/utils/utils";
 import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/portfolio";
 
-// تحديد نسخة السيرة الذاتية (A/B Testing) بسرعة بدون Re-renders
-const CV_VARIANT = typeof window !== "undefined"
-  ? (localStorage.getItem("cv_var") || (Math.random() < 0.5 ? "A" : "B"))
-  : "A";
-if (typeof window !== "undefined") localStorage.setItem("cv_var", CV_VARIANT);
+// REMOVED: CV_VARIANT was computed from Math.random() at module scope, written
+// to localStorage on every load, and then never read by anything. Dead code
+// that also risked a hydration mismatch.
 
 // Precomputed so the decorative layers render the same on server and client
 const SPEED_LINES = Array.from({ length: 8 }, (_, i) => ({
@@ -51,6 +49,7 @@ const SenseiHome = memo(function SenseiHome() {
           <span
             key={i}
             className={styles.speedLine}
+            data-decorative="true"
             style={{
               top: `${line.top}%`,
               width: `${line.width}%`,
@@ -67,6 +66,7 @@ const SenseiHome = memo(function SenseiHome() {
           <span
             key={i}
             className={styles.particle}
+            data-decorative="true"
             style={{
               left: `${p.left}%`,
               top: `${p.top}%`,
@@ -92,7 +92,7 @@ const SenseiHome = memo(function SenseiHome() {
       </div>
 
       {/* Scanline overlay */}
-      <div className={styles.scanlines} aria-hidden="true" />
+      <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
 
       <div className={styles.container}>
         <div className={styles.homeImg}>
@@ -102,8 +102,8 @@ const SenseiHome = memo(function SenseiHome() {
           </div>
 
           {/* Rotating rings */}
-          <div className={styles.ringOuter} aria-hidden="true" />
-          <div className={styles.ringInner} aria-hidden="true" />
+          <div className={styles.ringOuter} data-decorative="true" aria-hidden="true" />
+          <div className={styles.ringInner} data-decorative="true" aria-hidden="true" />
 
           {/* Viewfinder corners */}
           <div className={`${styles.corner} ${styles.cornerTL}`} aria-hidden="true" />

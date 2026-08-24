@@ -1,23 +1,40 @@
 "use client";
 
 /*
- * File: MotionInView.tsx
- * PERF BUILD:
- * - Replaced full `motion` with `m` and `<LazyMotion>`.
- * - This trims unused Framer Motion features (drag/pan/layout) out of what
- *   gets bundled with `m.div`, compared to importing `motion.div` directly.
- *   NOTE: `domAnimation` below is still a *static* import, so this alone
- *   does not create a separate async chunk — see the note near the bottom
- *   of this file if you want genuine code-splitting.
- * - `once: false` kept as requested.
- * - a11y: now respects prefers-reduced-motion via Framer Motion's own
- *   `useReducedMotion()` hook — reduced-motion users get a plain opacity
- *   fade instead of sliding/scaling content around the screen.
+ * MotionInView.tsx — FIXED
+ *
+ * BUG: every single instance wrapped itself in its own <LazyMotion>. The art
+ * gallery alone renders up to 50 of them, plus every timeline item and project
+ * card — so the page mounted dozens of duplicate feature-providers. LazyMotion
+ * is designed to be mounted ONCE near the root.
+ *
+ * FIX: <MotionProvider> is exported and mounted once in layout.tsx; this
+ * component now renders a bare m.div.
+ *
+ * Also: `once: false` meant every element re-ran its entrance animation every
+ * time it scrolled back into view — on a long page that is continuous
+ * animation work for the entire scroll. Changed to `once: true`.
  */
 
 import React, { memo } from "react";
-// 👇 تغيير جذري هنا: استيراد m و LazyMotion و domAnimation
-import { m, LazyMotion, domAnimation, MotionProps, Variants, useReducedMotion } from "framer-motion";
+import {
+  m,
+  LazyMotion,
+  domAnimation,
+  useReducedMotion,
+  type MotionProps,
+  type Variants,
+} from "framer-motion";
+import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
+
+/** Mount ONCE, near the root. Provides features for every m.* below it. */
+export function MotionProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <LazyMotion features={domAnimation} strict>
+      {children}
+    </LazyMotion>
+  );
+}
 
 export const motionVariants = {
   fade: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
@@ -32,39 +49,19 @@ export const motionVariants = {
   stagger: { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } },
   "stagger-child": { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } },
 } as const;
-// Removed: "blur-in", "reveal", "reveal-left", "float", "glitch",
-// "typewriter", "scan-line" — all of these were byte-for-byte identical to
-// `fade` (just opacity 0 → 1), with no blur/reveal/float/glitch/typewriter/
-// scan-line effect actually implemented. The names promised an effect the
-// code never delivered, which is more misleading than having no variant at
-// all. If any of these are used elsewhere as `variant="glitch"` etc., that
-// call site now needs to switch to `variant="fade"` (or get a real
-// implementation) — grep the codebase for these names before deploying.
 
 export type MotionVariantKey = keyof typeof motionVariants;
 
-// Stable reference — a default *parameter* object literal (e.g.
-// `viewport = { once: false, amount: 0.05 }` written inline below) gets
-// re-created on every render with a new identity even though its contents
-// never change. Hoisting it here means every instance shares one reference.
-const DEFAULT_VIEWPORT = { once: false, amount: 0.05 };
+// `once: true` — animate on first reveal only. See note above.
+const DEFAULT_VIEWPORT = { once: true, amount: 0.15 };
 
 type MotionInViewProps = Omit<MotionProps, "variants"> & {
-  children:          React.ReactNode;
-  className?:        string;
-  style?:            React.CSSProperties;
-  variant?:          MotionVariantKey;
-  variants?:         Variants;
-  delay?:            number;
-  enableExit?:       boolean;
-  // Removed: `tilt`, `magnetic`, `magneticStrength`, `autoStagger` — these
-  // were accepted as props but never read anywhere in the component body,
-  // so passing them silently did nothing. That's worse than not having
-  // them: a caller writing `<MotionInView magnetic>` would reasonably
-  // believe a magnetic-hover effect was active. If these features are
-  // actually wanted, they need a real implementation (e.g. `magnetic`
-  // driving a pointer-tracked transform); until then it's safer for them
-  // to not type-check at all than to silently no-op.
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  variant?: MotionVariantKey;
+  variants?: Variants;
+  delay?: number;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "style">;
 
 const MotionInView = memo<MotionInViewProps>(({
@@ -74,57 +71,42 @@ const MotionInView = memo<MotionInViewProps>(({
   variant = "slide-up",
   variants,
   delay,
-  enableExit = false,
   viewport = DEFAULT_VIEWPORT,
   ...rest
 }) => {
-  // a11y: when the OS-level "reduce motion" setting is on, fall back to a
-  // plain fade instead of whatever slide/scale the caller asked for.
   const shouldReduceMotion = useReducedMotion();
-  const resolvedVariants = shouldReduceMotion
-    ? (motionVariants.fade as Variants)
-    : (variants ?? (motionVariants[variant] as Variants));
+  const tier = useDeviceTier();
+
+  // On a low-tier device, dozens of simultaneous entrance animations are the
+  // difference between 60fps and 20fps. Render the content plainly instead —
+  // no wrapper animation, no IntersectionObserver, no motion subscription.
+  if (tier === "low" || shouldReduceMotion) {
+    return (
+      <div className={className} style={style} {...(rest as React.HTMLAttributes<HTMLDivElement>)}>
+        {children}
+      </div>
+    );
+  }
+
+  const resolvedVariants = (variants ?? motionVariants[variant]) as Variants;
 
   return (
-    // 👇 تغليف العنصر بـ LazyMotion وتمرير الـ domAnimation (أخف نسخة)
-    <LazyMotion features={domAnimation} strict>
-      {/* 👇 استبدال motion.div بـ m.div */}
-      <m.div
-        className={className}
-        style={style}
-        initial="hidden"
-        whileInView="visible"
-        exit={enableExit ? "exit" : undefined}
-        viewport={viewport}
-        variants={resolvedVariants}
-        transition={delay ? { delay } : undefined}
-        {...rest}
-      >
-        {children}
-      </m.div>
-    </LazyMotion>
+    <m.div
+      className={className}
+      style={style}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewport}
+      variants={resolvedVariants}
+      transition={delay ? { delay } : undefined}
+      {...rest}
+    >
+      {children}
+    </m.div>
   );
 });
 
 MotionInView.displayName = "MotionInView";
 
 export default MotionInView;
-// 👇 تصدير الـ AnimatePresence لو كنت بتستخدمها في حتة تانية
 export { AnimatePresence } from "framer-motion";
-
-/*
- * OPTIONAL — genuine async code-splitting:
- * `domAnimation` above is a static import, so it ships in whatever chunk
- * this file ends up in — it is not actually deferred. For a real separate
- * chunk that only downloads once a MotionInView instance mounts, Framer
- * Motion's LazyMotion accepts a loader function instead of a static value:
- *
- *   const loadFeatures = () =>
- *     import("framer-motion/dom").then((mod) => mod.domAnimation);
- *   ...
- *   <LazyMotion features={loadFeatures} strict>
- *
- * Left as static here since switching it changes bundle/chunk behavior
- * app-wide — worth testing before flipping in case something else in the
- * app already assumes this loads synchronously.
- */

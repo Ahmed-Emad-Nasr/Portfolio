@@ -548,554 +548,64 @@ section {
     --card-blur: 0px;
     --ui-blur: 0px;
   }
-}/**
- * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (Cleaned & Optimized)
- *
- * CHANGES:
- * - Removed entirely unused classes: .glass-card, section.glass, .btn-glow and their heavy ::after pseudo-elements.
- * - Removed unnecessary media query overrides for the deleted classes.
- * - Added a hyper-lightweight .skeleton-shimmer for dynamic import loading states.
- * - [NEW] Updated max-width for sections to fix desktop layout.
- * - [NEW] Improved accessibility by increasing base font sizes and adjusting contrast.
- **/
-
-/*--------- 1. Reset & Global Variables ---------*/
-:root {
-  /* Simple theme tokens inspired by the reference design */
-  --background: #000000;
-  --foreground: #ffffff;
-  --primary: #bc002d;
-  --secondary: #1a1a1a;
-  --accent: #ffd700;
-  --tertiary: #00d2ef;
-  --quaternary: #a29bfe;
-
-  --surface: #121212;
-  --on-surface: #fcfcfc;
-  --on-surface-variant: #a0a0a0;
-  --surface-variant: #1e1e1e;
-
-  --primary-container: rgba(226, 0, 26, 0.1);
-  --tertiary-container: rgba(0, 210, 239, 0.1);
-
-  --radius-base: 0px;
-  --radius-card: 14px;
-  --radius-button: 2px;
-  --radius-katana: 0.5rem 2rem 0.5rem 2rem;
-
-  --font-display: "Overlock", sans-serif;
-  --font-body: "Overlock", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-jp: "Overlock", sans-serif;
-
-  /* Backward-compatible aliases used by the current components */
-  --bg-color: var(--background);
-  --bg-gradient: none;
-  --surface-base: rgba(4, 8, 20, 0.95);
-  --surface-raised: rgba(6, 14, 32, 0.90);
-  --surface-overlay: rgba(10, 20, 44, 0.85);
-
-  --text-color: var(--foreground);
-  --text-muted: #d8d6cc;
-  --text-dim: #a59f90;
-  --text-bright: #ffffff;
-
-  --main-color: var(--primary);
-  --main-color-rgb: 188, 0, 45;
-  --main-dark: #8a0936;
-  --main-light: #ff2d78;
-
-  --accent-color: var(--accent);
-  --accent-color-rgb: 255, 215, 0;
-  --accent-dark: #00a8c8;
-  --accent-light: #fff0a6;
-
-  --danger: #ff2d55;
-  --danger-rgb: 255, 45, 85;
-  --warning: #ff9f0a;
-  --warning-rgb: 255, 159, 10;
-  --success: #30d158;
-  --success-rgb: 48, 209, 88;
-  --info: #0a84ff;
-  --info-rgb: 10, 132, 255;
-
-  --surface-card-bg: linear-gradient(
-    135deg,
-    rgba(4, 10, 26, 0.82) 55%,
-    rgba(var(--main-color-rgb), 0.06) 80%,
-    rgba(var(--accent-color-rgb), 0.04) 100%
-  );
-  --surface-card-border: rgba(var(--main-color-rgb), 0.18);
-  --surface-card-border-hover: rgba(var(--main-color-rgb), 0.38);
-  --surface-accent-border: rgba(var(--accent-color-rgb), 0.2);
-
-  --glow-main: none; /* Changed glow shadows to none globally */
-  --glow-accent: none;
-  --glow-danger: none;
-
-  --radius-card-sm: 8px;
-  --radius-pill: 999px;
-  --radius-tag: 6px;
-
-  /* Shared tokens for the "Sharp Title" underline used identically in
-     experience-section.module.css and sensei-projects.module.css */
-  --title-underline-thin: 1px;
-  --title-underline-thick: 3px;
-  --title-underline-width: 40%;
-  --title-underline-opacity: 0.3;
-
-  /* Shared tokens for the section .container used identically in both files */
-  --container-max-width: 1500px;
-  --container-pad-x: 5.25%;
-
-  /* Shared tokens for the vertical timeline line used identically in both files */
-  --timeline-line-width: 2px;
-  --timeline-line-opacity: 0.2;
-
-  /* Shared tokens for the "cyber diamond" timeline node used identically in both files */
-  --diamond-node-size: 14px;
-  --diamond-border-width: 2px;
-
-  --z-below: -1;
-  --z-base: 0;
-  --z-raised: 10;
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-overlay: 500;
-  --z-modal: 2000;
-  --z-navbar: 1500;
-  --z-toast: 2500;
-  --z-progress: 3000;
-
-  --text-xs: 1.2rem;
-  --text-sm: 1.4rem;
-  --text-base: 1.6rem;
-  --text-md: 1.8rem;
-  --text-lg: 2.0rem;
-  --text-xl: 2.2rem;
-  --text-2xl: 2.8rem;
-  --text-3xl: 3.6rem;
-  --text-4xl: 4.8rem;
-
-  --motion-instant: 80ms;
-  --motion-fast: 280ms;
-  --motion-normal: 650ms;
-  --motion-slow: 1650ms;
-  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
-  --motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  --anim-fast: 950ms;
-  --anim-medium: 2.3s;
-  --anim-slow: 4s;
-  --anim-very-slow: 6.8s;
-
-  --stagger-step: 0.16s;
-
-  /* Consistent spacing scale — reused everywhere so nothing sits flush
-     against something else ("لازق في بعضه"). Fluid with clamp() so the
-     gap shrinks gracefully on small phones instead of just disappearing. */
-  --space-xs: clamp(0.6rem, 1vw, 0.9rem);
-  --space-sm: clamp(1rem, 2vw, 1.5rem);
-  --space-md: clamp(1.6rem, 3vw, 2.4rem);
-  --space-lg: clamp(2.4rem, 5vw, 4rem);
-  --space-xl: clamp(4rem, 8vw, 8rem);
-
-  --typing-cursor: 0.9s;
-  --typing-typing: 16s;
-  --typing-words: 16s;
-  --typing-textDrift: 6.5s;
-  --typing-pdfPulse: 1.15s;
-
-  --ui-blur: 4px;
-  --card-blur: 4px;
-
-  color-scheme: dark;
 }
 
-/*--------- 2. Base Setup ---------*/
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  text-decoration: none;
-  border: none;
-  outline-offset: 4px;
+/*--------- 11. Device-tier motion budget ---------*/
+/* Set by useDeviceTier() on <html data-tier="low|mid|high">.
+   Gating in CSS (not JS) keeps this off the main-thread hot path.
+
+   The site ships ~20 infinitely-animating hero elements plus scroll-linked
+   transforms. On a low-end phone every one of those is a compositor layer
+   fighting for the same GPU budget as the scroll itself. Below we buy the
+   frame rate back by shutting decorative motion off entirely at the low tier
+   and trimming the most expensive properties at mid. */
+
+/* --- LOW: no decorative motion, no blur, no extra layers --- */
+html[data-tier="low"] .skeleton-shimmer,
+html[data-tier="low"] [data-decorative="true"] {
+  animation: none !important;
 }
 
-p, li, h1, h2, h3, h4, h5, h6 {
-  text-shadow: none;
+html[data-tier="low"] [data-decorative="true"] {
+  /* Particles / speed lines / rotating rings are pure decoration.
+     Hiding them removes both the paint and the compositor layer. */
+  display: none !important;
 }
 
-*:focus:not(:focus-visible) {
-  outline: none;
+html[data-tier="low"] {
+  --card-blur: 0px;
+  --ui-blur: 0px;
+  /* Snappier, cheaper transitions — long eases hold layers alive longer. */
+  --motion-fast: 120ms;
+  --motion-normal: 200ms;
+  --motion-slow: 260ms;
 }
 
-html {
-  font-size: 62.5%; 
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
-  scroll-behavior: auto;
-  scroll-padding-top: clamp(7rem, 10vh, 10rem);
-  background-color: var(--bg-color);
+html[data-tier="low"] *,
+html[data-tier="low"] *::before,
+html[data-tier="low"] *::after {
+  /* backdrop-filter is the single most expensive property here. */
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
-body {
-  font-family: var(--font-body, var(--font-overlock, sans-serif));
-  color: var(--text-color);
-  background-color: var(--bg-color);
-  background-attachment: fixed;
-  background-image: var(--bg-gradient);
-  overflow-x: hidden;
-  text-rendering: optimizeSpeed;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* --- MID: keep the character, drop the cost --- */
+html[data-tier="mid"] {
+  --card-blur: 2px;
+  --ui-blur: 2px;
+  --motion-normal: 380ms;
+  --motion-slow: 700ms;
 }
 
-/* Perf: background-attachment:fixed forces the browser to repaint the
-   background on every scroll frame — this is a well-known jank source on
-   mobile Safari/Chrome in particular. The fixed look barely reads on a
-   phone-sized viewport anyway, so we drop it for touch/narrow devices and
-   keep the desktop parallax feel where it actually has room to show. */
-@media (max-width: 991px), (hover: none) {
-  body {
-    background-attachment: scroll;
-  }
+html[data-tier="mid"] [data-decorative="true"] {
+  /* Halve the work: keep the look, run the loops at a slower cadence. */
+  animation-duration: calc(var(--anim-slow) * 1.5) !important;
 }
 
-body[data-custom-cursor="true"],
-body[data-custom-cursor="true"] a,
-body[data-custom-cursor="true"] button,
-body[data-custom-cursor="true"] input,
-body[data-custom-cursor="true"] textarea,
-body[data-custom-cursor="true"] select,
-body[data-custom-cursor="true"] summary {
-  cursor: none;
-}
-
-img,
-video,
-canvas,
-svg {
-  max-width: 100%;
-  height: auto;
-}
-
-/*--------- 3. Interactive Elements ---------*/
-:where(a,button,input,textarea,select,summary) {
-  transition: transform var(--motion-fast) var(--motion-ease),
-              opacity var(--motion-fast) var(--motion-ease);
-}
-
-button {
-  background: rgba(var(--main-color-rgb), 0.1);
-  color: var(--main-color);
-  border: 1px solid var(--surface-card-border);
-  border-radius: var(--radius-card-sm);
-  padding: 0.8em 1.8em;
-  font-weight: 600;
-  font-size: 1.1em;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-button:hover:not(:disabled) {
-  background: rgba(var(--main-color-rgb), 0.16);
-  color: var(--text-bright);
-  border-color: var(--main-light);
-  transform: translateY(-1px);
-}
-
-button:active:not(:disabled) {
-  transform: none;
-}
-
-button:disabled {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-dim);
-  border-color: transparent;
-  cursor: not-allowed;
-}
-
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
-summary:focus-visible,
-[tabindex]:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-  border-radius: var(--radius-card-sm);
-}
-
-/*--------- 4. Accessibility & Skip Links ---------*/
-.skip-link {
-  position: absolute;
-  left: 1rem;
-  top: 0;
-  z-index: var(--z-modal);
-  padding: 0.9rem 1.2rem;
-  border-radius: var(--radius-pill);
-  background: var(--main-color);
-  color: #000;
-  font-size: 1.4rem;
-  font-weight: 800;
-  transform: translateY(-6rem);
-  transition: transform var(--motion-normal) var(--motion-ease);
-}
-
-.skip-link:focus-visible {
-  transform: translateY(1rem);
-}
-
-/*--------- 5. Typography & Layout ---------*/
-p,
-li {
-  color: var(--text-muted);
-  line-height: 1.7;
-  font-size: var(--text-base);
-}
-
-main {
-  position: relative;
-}
-
-/*--------- 6A. Theme Utilities ---------*/
-.katana-card {
-  background: rgba(18, 18, 18, 0.8);
-  -webkit-backdrop-filter: blur(var(--card-blur, 4px));
-  backdrop-filter: blur(var(--card-blur, 4px));
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-katana);
-  overflow: hidden;
-  box-shadow: none; /* Changed here */
-}
-
-.vertical-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1em;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  line-height: 1.2;
-  font-family: var(--font-jp, sans-serif);
-}
-
-.vertical-text span {
-  display: block;
-}
-
-.neural-grid {
-  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
-  background-size: 40px 40px;
-}
-
-.scanlines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.1) 0px,
-    rgba(0, 0, 0, 0.1) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-}
-
-.speed-lines {
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    rgba(255, 255, 255, 0.02) 10px,
-    rgba(255, 255, 255, 0.02) 11px
-  );
-}
-
-.halftone {
-  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
-  background-size: 8px 8px;
-}
-
-.mix-difference {
-  mix-blend-mode: difference;
-}
-
-.katana-slash {
-  -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
-}
-
-.text-stroke {
-  -webkit-text-stroke: 1px currentColor;
-  -webkit-text-fill-color: transparent;
-}
-
-.glow-red {
-  color: var(--primary);
-  text-shadow: none; /* Removed text shadow */
-}
-
-.glow-gold {
-  color: var(--accent);
-  text-shadow: none; /* Removed text shadow */
-}
-
-/*--------- 6. Base Section Layout ---------*/
-section {
-  padding: 7.1rem 5.25% 5.9rem;
-  position: relative;
-  width: 100%;
-  max-width: 1280px; /* Updated for standard desktop screens */
-  margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
-  z-index: 1;
-  contain: layout style;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 900px;
-}
-
-/*--------- 7. Lightweight Skeleton Shimmer ---------*/
-.skeleton-shimmer {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius-card);
-  animation: shimmerPulse 2s infinite ease-in-out;
-  width: 100%;
-}
-
-@keyframes shimmerPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/*--------- 8. Responsive Breakpoints ---------*/
-@media (max-width: 991px) {
-  section {
-    padding: 4rem 3.5% 4rem;
-    margin-bottom: clamp(5rem, 8vw, 8rem);
-    width: 94%; 
-  }
-}
-
-@media (max-width: 768px) {
-  section {
-    width: calc(100% - 3rem); 
-  }
-}
-
-@media (max-width: 600px) {
-  section {
-    padding: 4.5rem 1.5rem 4.2rem;
-    margin-bottom: 5rem;
-    width: calc(100% - 2rem);
-  }
-}
-
-@media (max-width: 360px) {
-  html { font-size: 56.25%; }
-  section {
-    width: calc(100% - 1.2rem);
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-@media (min-width: 1800px) {
-  html { font-size: 68.75%; }
-  section {
-    padding-left: 8%;
-    padding-right: 8%;
-    max-width: 1536px; /* Updated for ultra-wide screens */
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration:        0.01ms !important;
-    animation-iteration-count: 1      !important;
-    transition-duration:       0.01ms !important;
-    scroll-behavior:           auto   !important;
-  }
-  html { scroll-behavior: auto !important; }
-
-  /* The custom cursor (custom-cursor.module.css) tracks the pointer and
-     redraws every frame — the same kind of motion this preference exists
-     to remove, and it can be uncomfortable for people with vestibular
-     disorders. Restore the ordinary system cursor instead of relying on
-     the JS layer alone to notice the preference. */
-  body[data-custom-cursor="true"],
-  body[data-custom-cursor="true"] a,
-  body[data-custom-cursor="true"] button,
-  body[data-custom-cursor="true"] input,
-  body[data-custom-cursor="true"] textarea,
-  body[data-custom-cursor="true"] select,
-  body[data-custom-cursor="true"] summary {
-    cursor: auto;
-  }
-}
-
-/*--------- 9. High Contrast & Forced Colors ---------*/
-@media (forced-colors: active) {
-  :root {
-    --main-color:   Highlight;
-    --accent-color: Highlight;
-    --text-color:   CanvasText;
-    --text-muted:   CanvasText;
-    --bg-color:     Canvas;
-  }
-
-  button,
-  a {
-    forced-color-adjust: auto;
-  }
-
-  .skip-link {
-    forced-color-adjust: none;
-    background: Highlight;
-    color: HighlightText;
-    border: 2px solid ButtonText;
-  }
-}
-
-@media (prefers-contrast: more) {
-  :root {
-    --surface-card-border:       rgba(var(--main-color-rgb), 0.55);
-    --surface-card-border-hover: rgba(var(--main-color-rgb), 0.85);
-    --text-muted: #b0cfe0;
-    --text-dim:   #6a8ea8;
-  }
-
-  p, li {
-    color: var(--text-muted);
-  }
-}
-
-/*--------- 10. Cheaper blur on constrained devices ---------*/
-/* backdrop-filter: blur() is one of the most GPU-expensive properties in
-   CSS. --card-blur / --ui-blur already exist as the shared source of truth
-   for every card/glass surface across the module files; scaling them down
-   here (instead of in each file) means one change improves frame rate on
-   every screen that uses them. */
-@media (max-width: 768px) {
-  :root {
-    --card-blur: 2px;
-    --ui-blur: 2px;
-  }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  :root {
-    --card-blur: 0px;
-    --ui-blur: 0px;
+/* --- Never animate what isn't on screen --- */
+/* Pairs with content-visibility: auto already on the sections. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-decorative="true"] {
+    will-change: auto;
   }
 }

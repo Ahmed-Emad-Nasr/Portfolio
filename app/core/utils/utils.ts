@@ -64,8 +64,14 @@ export const toBulletItems = (text: string): string[] => {
 
   if (text.includes("•")) {
     parts = text.split("•");
-  } else if (text.includes(".") || text.includes(";")) {
-    parts = text.split(/[.;]/);
+  } else if (text.includes(";")) {
+    parts = text.split(";");
+  } else if (text.includes(".")) {
+    // FIX: the old `split(/[.;]/)` split on EVERY period, so "Node.js",
+    // "v2.0" and "10.5%" were shredded mid-word into garbage bullets.
+    // Split only at a real sentence boundary: a period followed by
+    // whitespace + a capital letter, or by end-of-string.
+    parts = text.split(/\.(?=\s+[A-Z]|\s*$)/);
   } else if (text.includes(",")) {
     parts = text.split(",");
   } else {
@@ -91,11 +97,19 @@ export const toBulletItems = (text: string): string[] => {
 // - Pre-calculated MS_PER_MONTH constant.
 // -----------------------------------------------------------------------------
 
-const MS_PER_MONTH = 2629946880;
+// FIX: was 2629946880, which is not any real month length and drifts ~2 days
+// per year — enough to flip the displayed month count on boundary dates.
+// Gregorian mean month = 365.2425 / 12 days.
+const MS_PER_MONTH = 2629746000;
 
 export const calculateExperience = (startDate: string, endDate?: string): string => {
   const start = Date.parse(startDate);
   const end = endDate ? Date.parse(endDate) : Date.now();
+
+  // The previous "PERF BUILD" removed the isNaN guard. A malformed date then
+  // produced NaN, which failed every `> 0` check and silently rendered
+  // "< 1 mo" — a wrong answer that looks like a real one.
+  if (Number.isNaN(start) || Number.isNaN(end)) return "";
 
   const totalMonths = Math.floor((end - start) / MS_PER_MONTH);
   const years = Math.floor(totalMonths / 12);
@@ -129,7 +143,11 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 export const getIconForLanguage = (language: string | null): IconDefinition =>
   (language && ICON_MAP[language]) || faCode;
 
-export const formatDate = (dateString: string): string =>
+// RENAMED from `formatDate`: a second export with that exact name lives in
+// core/config/portfolio.ts using en-GB, while this one uses en-US. The same
+// date rendered differently depending on which module a component imported
+// from. Distinct names make the choice deliberate.
+export const formatRepoDate = (dateString: string): string =>
   DATE_FORMATTER.format(new Date(dateString));
 
 // -----------------------------------------------------------------------------
@@ -139,8 +157,20 @@ export const formatDate = (dateString: string): string =>
 export function useScrollSpy({ sections, defaultSection, storageKey }: UseScrollSpyOptions) {
   const [activeSection, setActiveSection] = useState(defaultSection);
 
+  // The main effect below runs once (deps: []) but needs the LATEST props on
+  // every scroll frame, so they are mirrored into a ref. Writing that ref
+  // during render is what React's `react-hooks/refs` rule forbids — during a
+  // concurrent render React may discard the result, leaving the ref holding
+  // values from a render that never committed.
+  //
+  // Fix: write it in an effect with NO dependency array, so it re-syncs after
+  // every committed render. It is declared BEFORE the main effect so that on
+  // mount it runs first and the main effect always reads fresh values.
   const config = useRef({ sections, defaultSection, storageKey });
-  config.current = { sections, defaultSection, storageKey };
+
+  useEffect(() => {
+    config.current = { sections, defaultSection, storageKey };
+  });
 
   useEffect(() => {
     const { sections, storageKey, defaultSection } = config.current;
@@ -196,9 +226,12 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
             lastActive = current;
             setActiveSection(current);
 
-            setTimeout(() => {
-              localStorage.setItem(config.current.storageKey, current);
-            }, 0);
+            // localStorage.setItem is synchronous and touches disk. Firing it
+            // on every section change during a fast scroll caused visible
+            // hitches; requestIdleCallback defers it to spare time.
+            const persist = () => localStorage.setItem(config.current.storageKey, current);
+            if ("requestIdleCallback" in window) window.requestIdleCallback(persist);
+            else setTimeout(persist, 200);
           }
           ticking = false;
         });
@@ -209,10 +242,22 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
     calculateGeometry();
     handleScroll();
 
+    // FIX: the sections are code-split, so at mount time most of them are
+    // still zero-height placeholders. The old code measured once and cached
+    // those wrong offsets forever — the nav highlighted the wrong section for
+    // the whole session. A ResizeObserver on <body> re-measures whenever a
+    // section actually lands and changes the page height.
+    const resizeObserver = new ResizeObserver(() => {
+      calculateGeometry();
+      handleScroll();
+    });
+    resizeObserver.observe(document.body);
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", calculateGeometry, { passive: true });
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", calculateGeometry);
     };

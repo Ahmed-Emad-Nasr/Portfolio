@@ -1,109 +1,72 @@
 "use client";
 
 /*
- * Client entry for the homepage
- * PERF: bootstrap simplified — single rAF, no DOMContentLoaded wait
- * PERF: inline styles structured properly to leverage global motion CSS variables
+ * page-client.tsx — FIXED
+ *
+ * THE BIG ONE: every section was `dynamic(..., { ssr: false })`. With
+ * `output: "export"` that means the generated HTML contains NO CONTENT —
+ * just empty placeholder divs. Consequences:
+ *
+ *   - LCP is gated on downloading + parsing + executing the whole JS bundle.
+ *     On a mid-range phone that is 3+ seconds of blank screen.
+ *   - Google indexes an empty page. All the JSON-LD in layout.tsx and page.tsx
+ *     describes content the crawler cannot see.
+ *   - `ssr: false` throws away the entire point of a static export.
+ *
+ * FIX: the above-the-fold sections (header + hero) are imported statically so
+ * they are prerendered into the HTML. Only genuinely below-the-fold, heavy
+ * sections stay dynamic — and now WITH prerendering, so their markup still
+ * ships in the HTML and only hydration is deferred.
+ *
+ * Also removed: the `isAppReady` gate that hid ALL content behind opacity:0
+ * until a rAF fired. Combined with the loader that was a double delay, and it
+ * made every section invisible to a crawler that does not run rAF.
  */
 
-import { memo, useState, useEffect } from "react";
+import { memo } from "react";
 import dynamic from "next/dynamic";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
-const AppBar = dynamic(() => import("@/app/components/header/sensei-header"), {
-  ssr: false,
-  loading: () => null,
-});
+// ─── Above the fold: static imports, prerendered into the HTML ──────────────
+// These are what the LCP is measured against. They must be in the markup.
+import AppBar from "@/app/components/header/sensei-header";
+import HomeSection from "@/app/components/home/sensei-home";
 
-const HomeSection = dynamic(() => import("@/app/components/home/sensei-home"), {
-  ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={HOME_PLACEHOLDER_STYLE} />,
-});
-
-const ExperienceSection = dynamic(() => import("@/app/components/experience/experience-section"), {
-  ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={EXPERIENCE_PLACEHOLDER_STYLE} />,
-});
-
-const ProjectsSection = dynamic(() => import("@/app/components/projects/sensei-projects"), {
-  ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={PROJECTS_PLACEHOLDER_STYLE} />,
-});
-
-const ArtGallerySection = dynamic(() => import("@/app/components/art_gallery/sensei-art"), {
-  ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={ART_PLACEHOLDER_STYLE} />,
-});
-
-const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"), {
-  ssr: false,
-  loading: () => <div role="presentation" aria-hidden="true" className="skeleton-shimmer" style={HOME_PLACEHOLDER_STYLE} />,
-});
-
-const ClientOnly = dynamic(() => import("@/app/core/components/ClientOnly"), {
-  ssr: false,
-  loading: () => null,
-});
-// ─── Styles — module-level constants, never re-allocated ─────────────────────
-
-const BASE_TRANSITION = "opacity var(--motion-normal) var(--motion-ease), transform var(--motion-normal) var(--motion-ease)";
-
-const CONTENT_STYLE_HIDDEN: React.CSSProperties = {
-  opacity: 0,
-  transform: "translate3d(0, 10px, 0)",
-  pointerEvents: "none",
-  visibility: "hidden",
-  transition: BASE_TRANSITION,
-};
-
-const CONTENT_STYLE_VISIBLE: React.CSSProperties = {
-  opacity: 1,
-  transform: "translate3d(0, 0, 0)",
-  pointerEvents: "auto",
-  visibility: "visible",
-  transition: BASE_TRANSITION,
-};
+// ─── Below the fold: code-split, but STILL prerendered ──────────────────────
+// Note the absence of `ssr: false`. The markup is generated at build time and
+// included in the export; only the JS chunk is deferred. That is the actual
+// win — you get the bytes savings without blanking the page.
+const ExperienceSection = dynamic(
+  () => import("@/app/components/experience/experience-section"),
+);
+const ProjectsSection = dynamic(
+  () => import("@/app/components/projects/sensei-projects"),
+);
+const ArtGallerySection = dynamic(
+  () => import("@/app/components/art_gallery/sensei-art"),
+);
+const KanjiDivider = dynamic(
+  () => import("@/app/core/components/KanjiDivider"),
+);
 
 const MAIN_STYLE: React.CSSProperties = { position: "relative" };
-const HOME_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "78vh" };
-const EXPERIENCE_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "88vh" };
-const PROJECTS_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "92vh" };
-const ART_PLACEHOLDER_STYLE: React.CSSProperties = { minHeight: "62vh" };
-
-// ─── MainClient ──────────────────────────────────────────────────────────────
 
 const MainClient = memo(function MainClient() {
-  const [isAppReady, setIsAppReady] = useState(false);
-
-  useEffect(() => {
-    // Next.js guarantees document is at least "interactive" before hydration.
-    // Single rAF is sufficient to let the loader paint before we reveal content.
-    const id = window.requestAnimationFrame(() => setIsAppReady(true));
-    return () => window.cancelAnimationFrame(id);
-  }, []);
-
   return (
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen />
       <AppBar />
-      <div style={isAppReady ? CONTENT_STYLE_VISIBLE : CONTENT_STYLE_HIDDEN}>
-        <HomeSection />
-        <ClientOnly>
-          <KanjiDivider text="武士道 • 継続は力なり • 改善 • 不撓不屈" angle={1.5} />
-        </ClientOnly>
-        <ExperienceSection />
-        <ClientOnly>
-          <KanjiDivider text="設計 • 開発 • 構築 • 実装 • 実験" reverse angle={-1.5} />
-        </ClientOnly>
-        <ProjectsSection />
-        <ClientOnly>
-          <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
-        </ClientOnly>
-        <ArtGallerySection />
-        <ClientOnly>
-          <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />
-        </ClientOnly>
-      </div>
+
+      {/* Content is no longer hidden behind an opacity gate — it renders
+          immediately and the loader simply sits on top until dismissed. */}
+      <HomeSection />
+      <KanjiDivider text="武士道 • 継続は力なり • 改善 • 不撓不屈" angle={1.5} />
+      <ExperienceSection />
+      <KanjiDivider text="設計 • 開発 • 構築 • 実装 • 実験" reverse angle={-1.5} />
+      <ProjectsSection />
+      <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
+      <ArtGallerySection />
+      <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />
     </main>
   );
 });

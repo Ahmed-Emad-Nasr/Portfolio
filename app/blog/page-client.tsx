@@ -8,13 +8,18 @@ import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
-// Dynamic Imports
-const BlogPdfLibrarySection = dynamic(() => import("./components/BlogPdfLibrarySection"), { ssr: false });
-const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"), { ssr: false });
+// FIX: every one of these was `ssr: false`, so the exported /blog/index.html
+// contained NO case studies, NO titles, NO links — an empty shell. All the
+// CollectionPage + DigitalDocument JSON-LD in page.tsx described content that
+// was not in the HTML. Dropping `ssr: false` keeps the code-splitting (the JS
+// still loads as a separate chunk) while prerendering the markup at build time.
+import AppBar from "./blog_header/sensei-header";
+import BlogPdfLibrarySection from "./components/BlogPdfLibrarySection";
+
+const BlogMediaSections = dynamic(() => import("./components/BlogMediaSections"));
+const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"));
+// The modal genuinely never renders on load — ssr:false is correct HERE.
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
-const AppBar = dynamic(() => import("./blog_header/sensei-header"), { ssr: false });
-const ClientOnly = dynamic(() => import("@/app/core/components/ClientOnly"), { ssr: false });
-const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"), { ssr: false });
 
 const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC & Cybersecurity Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
 
@@ -94,9 +99,7 @@ export default function BlogPageClient() {
         leadCaseSpotlightImage={null}
       />
 
-      <ClientOnly>
-        <KanjiDivider text="Reports • Screenshots • Investigation • Evidence" reverse angle={-1.2} />
-      </ClientOnly>
+      <KanjiDivider text="Reports • Screenshots • Investigation • Evidence" reverse angle={-1.2} />
       
       <BlogMediaSections
         totalCasesCount={caseEvidenceLibrary.length} 

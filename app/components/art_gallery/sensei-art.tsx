@@ -5,6 +5,11 @@ import Image from "next/image";
 import styles from "./sensei-art.module.css";
 import MotionInView from "@/app/core/components/MotionInView"; 
 
+// Paths are RELATIVE on purpose. This project does not set Next's `basePath`;
+// it handles the /Portfolio sub-path manually. On GitHub Pages the homepage is
+// served at /Portfolio/, so a relative "Assets/..." resolves to
+// /Portfolio/Assets/... correctly. Do NOT add a leading slash here — that
+// would resolve to the domain root and 404 in production.
 const GALLERY_IMAGES = Array.from({ length: 50 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.webp`,
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,

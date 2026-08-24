@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { m, useMotionValue, useSpring } from "framer-motion";
+import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import styles from "./custom-cursor.module.css";
 
 export default function CustomCursor() {
   const [isEnabled, setIsEnabled] = useState(false);
+  const tier = useDeviceTier();
   
   // تجميع الـ State لتقليل الـ Re-renders
   const [state, setState] = useState({ hover: false, click: false, text: false });
@@ -20,6 +22,10 @@ export default function CustomCursor() {
   useEffect(() => {
     // التأكد من دعم الجهاز للماوس قبل تفعيل أي شيء
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    // A spring-driven cursor redraws two elements every frame the pointer
+    // moves. On a weak machine that competes directly with scroll for the
+    // main thread — exactly when smoothness matters most.
+    if (tier === "low") return;
     
     setIsEnabled(true);
     document.body.dataset.customCursor = "true";
@@ -51,7 +57,7 @@ export default function CustomCursor() {
       window.removeEventListener("mouseup", handleUp);
       document.body.removeAttribute("data-custom-cursor");
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, tier]);
 
   if (!isEnabled) return null;
 
@@ -59,7 +65,7 @@ export default function CustomCursor() {
 
   return (
     <>
-      <motion.div
+      <m.div
         className={styles.cursorRing}
         style={{
           x: smoothX,
@@ -80,9 +86,9 @@ export default function CustomCursor() {
         }}
       >
         <span className={styles.cursorRingInner} />
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         className={styles.cursorDot}
         style={{
           x: cursorX,
@@ -95,7 +101,7 @@ export default function CustomCursor() {
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
         <div className={styles.cursorGlow} />
-      </motion.div>
+      </m.div>
     </>
   );
 }

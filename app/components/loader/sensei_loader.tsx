@@ -1,7 +1,31 @@
 "use client";
 
+/*
+ * sensei_loader.tsx — FIXED
+ *
+ * The old version blocked the screen for a MINIMUM of 2.2 s *after* the
+ * `load` event had already fired:
+ *
+ *     handleLoad = () => setTimeout(() => setLoading(false), 2200)
+ *
+ * So a site that finished loading in 800 ms still showed a spinner until
+ * ~3 s. Combined with the sections being ssr:false, first meaningful paint
+ * landed past 3 s on mid-range hardware. That is a self-inflicted LCP
+ * penalty, not a loading indicator.
+ *
+ * New behaviour:
+ * - Dismisses as soon as the page is ready (no artificial floor).
+ * - Keeps a SHORT minimum (400 ms) purely to avoid a jarring flash when the
+ *   page is already cached — long enough to read as intentional, short
+ *   enough to never be the bottleneck.
+ * - Hard safety timeout so a stalled asset can never trap the user behind
+ *   the overlay (the old code had no escape hatch if `load` never fired).
+ * - Skips the whole animated boot sequence at the low tier.
+ */
+
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
+import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import styles from "./sensei_loader.module.css";
 
 const BOOT_LINES = [
@@ -13,122 +37,121 @@ const BOOT_LINES = [
   "SENSEI READY",
 ] as const;
 
+/** Minimum visible time — prevents a one-frame flash, nothing more. */
+const MIN_VISIBLE_MS = 400;
+/** Absolute ceiling: never trap the user, even if an asset hangs. */
+const MAX_VISIBLE_MS = 4000;
+
 export default function LoadingScreen() {
   const [loading, setLoading] = useState(true);
   const [currentLine, setCurrentLine] = useState(0);
+  const tier = useDeviceTier();
+  const reduced = tier === "low";
 
   useEffect(() => {
-    let timeoutId: number | undefined;
+    const mountedAt = performance.now();
+    let minTimer: number | undefined;
 
-    const handleLoad = () => {
-      timeoutId = window.setTimeout(() => setLoading(false), 2200);
+    const dismiss = () => {
+      const elapsed = performance.now() - mountedAt;
+      const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
+      minTimer = window.setTimeout(() => setLoading(false), wait);
     };
 
     if (document.readyState === "complete") {
-      handleLoad();
+      dismiss();
     } else {
-      window.addEventListener("load", handleLoad);
+      window.addEventListener("load", dismiss, { once: true });
     }
 
+    // Escape hatch — the old code would hang forever if `load` never fired.
+    const hardStop = window.setTimeout(() => setLoading(false), MAX_VISIBLE_MS);
+
     return () => {
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-      window.removeEventListener("load", handleLoad);
+      window.removeEventListener("load", dismiss);
+      if (minTimer !== undefined) window.clearTimeout(minTimer);
+      window.clearTimeout(hardStop);
     };
   }, []);
 
+  // Boot-line ticker: pointless work once hidden, and skipped on weak devices.
   useEffect(() => {
-    if (!loading) return;
-
-    const interval = window.setInterval(() => {
-      setCurrentLine((prev) => (prev + 1) % BOOT_LINES.length);
-    }, 350);
-
-    return () => window.clearInterval(interval);
-  }, [loading]);
+    if (!loading || reduced) return;
+    const id = window.setInterval(
+      () => setCurrentLine((prev) => (prev + 1) % BOOT_LINES.length),
+      350,
+    );
+    return () => window.clearInterval(id);
+  }, [loading, reduced]);
 
   return (
-    <AnimatePresence>
-      {loading && (
-        <motion.div
-          initial={{ opacity: 1 }}
-          exit={{ y: "-100%", opacity: 0, scale: 1.05 }}
-          transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-          className={styles.loader}
-          role="status"
-          aria-live="polite"
-          aria-label="Loading screen"
-        >
-          <div className={styles.speedLines} aria-hidden="true" />
-          <div className={styles.neuralGrid} aria-hidden="true" />
-          <div className={styles.scanlines} aria-hidden="true" />
-
-          <div className={styles.cornerTopLeft} aria-hidden="true" />
-          <div className={styles.cornerTopRight} aria-hidden="true" />
-          <div className={styles.cornerBottomLeft} aria-hidden="true" />
-          <div className={styles.cornerBottomRight} aria-hidden="true" />
-
-          <div className={styles.emblem} aria-hidden="true">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              className={styles.outerRing}
-            />
-
-            <motion.div
-              animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className={styles.innerRing}
-            />
-
-            <div className={styles.symbolWrap}>
-              <motion.span
-                animate={{ opacity: [0.8, 1, 0.8] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className={styles.symbol}
-              >
-                師
-              </motion.span>
-            </div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className={styles.bootText}
+    <LazyMotion features={domAnimation} strict>
+      <AnimatePresence>
+        {loading && (
+          <m.div
+            initial={{ opacity: 1 }}
+            exit={reduced ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
+            transition={{ duration: reduced ? 0.2 : 0.5, ease: [0.76, 0, 0.24, 1] }}
+            className={styles.loader}
+            role="status"
+            aria-live="polite"
+            aria-label="Loading"
           >
-            <div className={styles.bootLineRow}>
-              <div className={styles.bootLine} />
-              <motion.span
-                key={currentLine}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className={styles.bootLineText}
-              >
-                {BOOT_LINES[currentLine]}
-              </motion.span>
-              <div className={styles.bootLine} />
+            {/* Three full-screen painted overlays. Decorative only — the CSS
+                tier rules strip them on low-end devices. */}
+            {!reduced && (
+              <>
+                <div className={styles.speedLines} data-decorative="true" aria-hidden="true" />
+                <div className={styles.neuralGrid} data-decorative="true" aria-hidden="true" />
+                <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
+              </>
+            )}
+
+            <div className={styles.cornerTopLeft} aria-hidden="true" />
+            <div className={styles.cornerTopRight} aria-hidden="true" />
+            <div className={styles.cornerBottomLeft} aria-hidden="true" />
+            <div className={styles.cornerBottomRight} aria-hidden="true" />
+
+            <div className={styles.emblem} aria-hidden="true">
+              {/* Previously THREE separate infinite framer-motion loops (rotate,
+                  scale-pulse, opacity-pulse), each its own animation frame
+                  subscription. Rotation alone carries the idea. */}
+              <m.div
+                animate={reduced ? undefined : { rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className={styles.outerRing}
+              />
+              <div className={styles.innerRing} />
+              <div className={styles.symbolWrap}>
+                <span className={styles.symbol}>師</span>
+              </div>
             </div>
 
-            <h2 className={styles.title}>
-              The Samurai <span className={styles.titleAccent}>Way.</span>
-            </h2>
-          </motion.div>
+            <div className={styles.bootText}>
+              <div className={styles.bootLineRow}>
+                <div className={styles.bootLine} />
+                <span className={styles.bootLineText}>
+                  {reduced ? "LOADING" : BOOT_LINES[currentLine]}
+                </span>
+                <div className={styles.bootLine} />
+              </div>
+              <h2 className={styles.title}>
+                The Samurai <span className={styles.titleAccent}>Way.</span>
+              </h2>
+            </div>
 
-          <div className={styles.progressBar} aria-hidden="true">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className={styles.progressFill}
-            />
-          </div>
+            {/* The bar used to animate to 100% over a fixed 2.2 s, which was
+                pure theatre — it reported a duration, not real progress.
+                Now it is an indeterminate CSS sweep, which is honest. */}
+            <div className={styles.progressBar} aria-hidden="true">
+              <div className={styles.progressFill} data-decorative="true" />
+            </div>
 
-          <div className={styles.sideLabelLeft}>SEN-001</div>
-          <div className={styles.sideLabelRight}>武士道</div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <div className={styles.sideLabelLeft}>SEN-001</div>
+            <div className={styles.sideLabelRight}>武士道</div>
+          </m.div>
+        )}
+      </AnimatePresence>
+    </LazyMotion>
   );
 }
