@@ -721,6 +721,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "iam-access-control-room": Array.from({ length: 12 }, (_, i) => `Assets/Cases/IAM_Access_Control/Screenshot (${141 + i}).webp`),
   "bounty-hacker-ctf-writeup": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Bounty_Hacker/Screenshot (${78 + i}).webp`),
   "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
   "simple-ctf-writeup": Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
@@ -1462,5 +1463,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-08-21",
     screenshots: Array.from({ length: 16 }, (_, i) => `Assets/Cases/Bounty_Hacker/Screenshot (${78 + i}).webp`),
     image: "Assets/Cases/Bounty_Hacker/Screenshot (78).webp",
+  },
+  {
+    id: "iam-access-control-room",
+    title: "IAM & Access Control Concepts",
+    description: "Completed the Identity and Access Management room on TryHackMe. Explored core security concepts including Identification, Authentication, Authorization, and Accountability. Deep dive into Access Control Models (DAC, RBAC, MAC), Single Sign-On (SSO), and authentication vulnerabilities like Replay Attacks.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "Access Security",
+    difficulty: "Easy",
+    href: "Assets/Cases/IAM_Access_Control/AhmedEmad_IAM_Access_Control.pdf", 
+    tags: ["TryHackMe", "IAM", "Access Control", "RBAC", "MAC", "Authentication", "SSO"],
+    tools: ["Security Principles", "Identity Management"],
+    skillsGained: ["Identity & Access Management", "Access Control Modeling", "Authentication Mechanisms", "Threat Mitigation"],
+    readTime: 10,
+    date: "2026-08-27",
+    screenshots: Array.from({ length: 12 }, (_, i) => `Assets/Cases/IAM_Access_Control/Screenshot (${141 + i}).webp`),
+    image: "Assets/Cases/IAM_Access_Control/Screenshot (152).webp",
   },
 ] as const;
