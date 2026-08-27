@@ -10,7 +10,7 @@ import MotionInView from "@/app/core/components/MotionInView";
 // served at /Portfolio/, so a relative "Assets/..." resolves to
 // /Portfolio/Assets/... correctly. Do NOT add a leading slash here — that
 // would resolve to the domain root and 404 in production.
-const GALLERY_IMAGES = Array.from({ length: 50 }, (_, k) => ({
+const GALLERY_IMAGES = Array.from({ length: 74 }, (_, k) => ({
   src: `Assets/art-gallery/Images/image_display/${k + 1}.webp`,
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
 }));
