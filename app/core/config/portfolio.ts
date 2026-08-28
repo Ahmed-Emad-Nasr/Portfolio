@@ -454,7 +454,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
       "Reverse Engineering"
     ],
   },
-    {
+  {
     videoId: "AUz6clXvwxw",
     title: "Solving eCIR INE Lab: Analyzing PE Header",
     description: "Step-by-step walkthrough of solving the eCIR INE lab focused on analyzing PE headers, understanding executable file structure, and identifying key Portable Executable components for malware analysis and digital forensics.",
@@ -495,7 +495,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     publishedAt: "2026-07-17",
     tags: ["Malware Analysis", "PDF Parsing", "Cybersecurity", "Phishing Analysis", "Python"]
   },
-    {
+  {
     videoId: "9LHwl0FpuPM",
     title: "How To Install and Perform Vulnerability Assessments Using Nessus",
     description: "Complete hands-on walkthrough for installing and configuring Nessus, setting up vulnerability scans, and performing practical vulnerability assessments. Covers scan configuration, target analysis, interpreting findings, and understanding remediation steps for cybersecurity and vulnerability management.",
@@ -595,7 +595,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   },
   {
     videoId: "u_hezaAwnmM",
-    title: "Threat Intelligence Platform Tool Demo",
+    title: "Demo Threat Inteligence Platform Tool",
     description: "A walkthrough demo of a Python-based threat intelligence utility integrating VirusTotal, Hybrid Analysis, NIST for CVEs, and Exploit DB to centralize threat data for faster analysis.",
     publishedAt: "2026-08-18",
     tags: ["Threat Intelligence", "Python", "VirusTotal", "Hybrid Analysis", "Exploit DB"],
@@ -607,6 +607,22 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
     publishedAt: "2026-08-18",
     tags: ["GRC", "AI", "Compliance", "Risk Management", "Security Automation"],
   },
+  {
+    videoId: "dZs_U8MMV2Q",
+    title: "AI-Powered PCI DSS Compliance! VerifAI 360 Showcase",
+    description: "A comprehensive showcase of the VerifAI 360 Compliance Framework project. The video demonstrates how the application automates PCI DSS compliance by evaluating security policies, configuration results, and uploaded evidence against standard requirements using local and API-based AI models. It covers features like the Self-Assessment Questionnaire (SAQ), gap reporting, risk assessment, compensating controls, and continuous monitoring dashboards.",
+    publishedAt: "2026-08-22",
+    tags: [
+      "VerifAI 360",
+      "PCI DSS",
+      "Compliance",
+      "AI",
+      "GRC",
+      "Cyber Security",
+      "Information Security",
+      "Risk Assessment"
+    ]
+  }
 ];
 
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {

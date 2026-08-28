@@ -1,0 +1,118 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal, 2000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.panel {
+  width: min(620px, 100%);
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 2px solid var(--main-color, #ff003c);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.title::before {
+  content: "// ";
+  color: var(--main-color, #ff003c);
+}
+
+.close {
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #888888;
+  cursor: pointer;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+.close:hover {
+  color: #ffffff;
+  border-color: var(--main-color, #bc002d);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--accent-color, #ffd700);
+  outline-offset: 3px;
+}
+
+.groups {
+  display: grid;
+  gap: 1.5rem;
+  padding: 20px;
+}
+
+.groupTitle {
+  margin-bottom: 0.8rem;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #5a5a5a;
+}
+
+.list {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.keys {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+  min-width: 110px;
+}
+
+.key {
+  padding: 3px 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--accent-color, #ffd700);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.05rem;
+}
+
+.label {
+  font-size: 1.3rem;
+  color: var(--text-muted, #d8d6cc);
+}
+
+@media (max-width: 640px) {
+  .keys {
+    min-width: 92px;
+  }
+  .label {
+    font-size: 1.2rem;
+  }
+}

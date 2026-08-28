@@ -16,6 +16,11 @@ type BlogPdfLibrarySectionProps = {
   normalizeHref: (href: string) => string;
   leadCase: PdfResource | null;
   leadCaseSpotlightImage: string | null;
+  /* NEW: شريط الفلترة بيتحقن كـ node بدل ما القسم ده يعرف حاجة عن حالة
+     الفلاتر — القسم فضل غبي وبيعرض بس، والحالة كلها في page-client. */
+  filterBar?: React.ReactNode;
+  isFiltering?: boolean;
+  onResetFilters?: () => void;
 };
 
 export default function BlogPdfLibrarySection({
@@ -25,6 +30,9 @@ export default function BlogPdfLibrarySection({
   screenshotsById, 
   openGallery, 
   normalizeHref,
+  filterBar,
+  isFiltering,
+  onResetFilters,
 }: BlogPdfLibrarySectionProps) {
   return (
     <section className={styles.block}>
@@ -32,6 +40,8 @@ export default function BlogPdfLibrarySection({
         <h2 id="blog-pdfs-title">PDF Library</h2>
         <p>{visiblePdfCards.length} result(s) found.</p>
       </MotionInView>
+
+      {filterBar}
 
       {leadCase && (
         <MotionInView className={styles.caseSpotlight}>
@@ -41,7 +51,7 @@ export default function BlogPdfLibrarySection({
             <p>{leadCase.description || "Featured first for quick navigation."}</p>
             
             <div className={styles.caseMetadata}>
-              {leadCase.difficulty && <span className={`${styles.badge} ${styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]}`}>{leadCase.difficulty}</span>}
+              {leadCase.difficulty && <span className={[styles.badge, styles[`difficulty-${leadCase.difficulty.toLowerCase()}`]].filter(Boolean).join(" ")}>{leadCase.difficulty}</span>}
               {leadCase.category && <span className={styles.badge}>{leadCase.category}</span>}
               {leadCase.readTime && <span className={styles.badge}>{leadCase.readTime} min read</span>}
             </div>
@@ -71,7 +81,7 @@ export default function BlogPdfLibrarySection({
             )}
 
             <div className={styles.cardActions}>
-              <a href={normalizeHref(leadCase.href)} target="_blank" className={styles.viewAction}>View PDF</a>
+              <a href={normalizeHref(leadCase.href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
               <a href={normalizeHref(leadCase.href)} download className={styles.downloadAction}>Download</a>
               <button type="button" onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)} className={`${styles.galleryOpenAction} ${styles.viewAction}`}>
                 View All Screenshots
@@ -79,7 +89,7 @@ export default function BlogPdfLibrarySection({
             </div>
           </div>
           {leadCaseSpotlightImage && (
-            <a href={leadCaseSpotlightImage} target="_blank" className={styles.caseSpotlightMedia}>
+            <a href={leadCaseSpotlightImage} target="_blank" rel="noopener noreferrer" className={styles.caseSpotlightMedia}>
               <Image src={leadCaseSpotlightImage} alt={`${leadCase.title} — spotlight screenshot`} fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" decoding="async" quality={25} />
             </a>
           )}
@@ -99,7 +109,17 @@ export default function BlogPdfLibrarySection({
         ))}
       </div>
 
-      {visiblePdfCards.length === 0 && <p className={styles.emptyState}>No PDF results found.</p>}
+      {/* الحالة الفاضية بتقول للمستخدم يعمل إيه، مش بس إن مفيش نتايج */}
+      {visiblePdfCards.length === 0 && (
+        <p className={styles.emptyState}>
+          No case matches these filters.{" "}
+          {isFiltering && onResetFilters && (
+            <button type="button" className={styles.descToggle} onClick={onResetFilters}>
+              Clear filters
+            </button>
+          )}
+        </p>
+      )}
     </section>
   );
 }

@@ -22,6 +22,10 @@ import CursorMount from "./components/cursor-mount";
 // شريط تقدّم القراءة — مركّب هنا مرة واحدة عشان يشتغل على البورتفوليو
 // والبلوج مع بعض، من غير تكرار في كل page-client.
 import ScrollProgress from "./core/components/ScrollProgress";
+import BackToTop from "./core/components/BackToTop";
+// الـ palette نفسه بيتحمّل lazy جوه المكوّن ده — مفيش أي كود منه في الـ
+// bundle الأساسي لحد أول Ctrl+K.
+import CommandPaletteMount from "./core/components/CommandPaletteMount";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -57,7 +61,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Ahmed Emad Nasr" }],
   creator: "Ahmed Emad Nasr",
   publisher: "Ahmed Emad Nasr",
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": "/feed.xml" },
+  },
   category: "technology",
   robots: {
     index: true,
@@ -223,6 +230,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MotionProvider>
           <SmoothScroll>{children}</SmoothScroll>
           <CursorMount />
+          <BackToTop />
+          <CommandPaletteMount />
         </MotionProvider>
       </body>
     </html>

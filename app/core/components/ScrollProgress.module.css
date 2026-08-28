@@ -2,8 +2,8 @@
  * ScrollProgress.module.css
  *
  * الـ track مالوش خلفية عن قصد — الخط الأحمر (#ff003c) اللي في
- * .header::before هو نفسه الـ track. الشريط بيمشي فوقه، فالنتيجة
- * خط واحد بيتلون تدريجياً بدل خطين فوق بعض.
+ * .header::before هو نفسه الـ track. الشريط بيمشي فوقه، فالنتيجة خط واحد
+ * بيتلوّن تدريجياً بدل خطين فوق بعض.
  */
 
 .track {
@@ -12,45 +12,60 @@
   left: 0;
   right: 0;
   height: 2px;
+  display: flex;
+  gap: 3px; /* الفواصل بين الأقسام — المعلومة الوحيدة اللي الشريط بيضيفها */
   z-index: var(--z-progress, 3000);
   pointer-events: none;
   background: transparent;
   contain: layout style;
 }
 
-.bar {
+.segment {
+  position: relative;
+  flex-grow: 1;
+  flex-basis: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
   width: 100%;
   height: 100%;
   transform: scaleX(0);
   transform-origin: 0 50%;
-  opacity: 0;
-  background: linear-gradient(
-    90deg,
-    var(--main-color, #bc002d) 0%,
-    var(--accent-color, #ffd700) 60%,
-    #ffffff 100%
-  );
-  box-shadow: 0 0 8px rgba(var(--accent-color-rgb, 255, 215, 0), 0.45);
-  transition: opacity var(--motion-fast, 280ms) ease;
+  background: var(--accent-color, #ffd700);
   will-change: transform;
 }
 
-/* الأجهزة الضعيفة: من غير glow. الـ box-shadow على عنصر ثابت فوق الشاشة
-   بيكلّف repaint في كل فريم على GPU ضعيف. */
-:global(html[data-tier="low"]) .bar {
+/* القسم اللي إنت فيه دلوقتي: أبيض + glow خفيف عشان يبان عن اللي فاتوا */
+.segment[data-state="active"] .fill {
+  background: linear-gradient(90deg, var(--accent-color, #ffd700) 0%, #ffffff 100%);
+  box-shadow: 0 0 8px rgba(var(--accent-color-rgb, 255, 215, 0), 0.5);
+}
+
+/* الأقسام اللي خلصت: دهبي مطفي، موجودة بس مش بتسحب العين */
+.segment[data-state="done"] .fill {
+  opacity: 0.45;
+}
+
+/* الأجهزة الضعيفة: من غير glow. box-shadow على عنصر ثابت فوق الشاشة بيكلّف
+   repaint في كل فريم على GPU ضعيف. */
+:global(html[data-tier="low"]) .segment[data-state="active"] .fill {
   box-shadow: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bar {
-    transition: none;
+  .segment[data-state="active"] .fill {
     box-shadow: none;
   }
 }
 
-/* الموبايل: نفس الارتفاع، بس من غير glow عشان الوضوح على الشاشات الصغيرة */
 @media (max-width: 768px) {
-  .bar {
+  .track {
+    gap: 2px;
+  }
+  .segment[data-state="active"] .fill {
     box-shadow: none;
   }
 }

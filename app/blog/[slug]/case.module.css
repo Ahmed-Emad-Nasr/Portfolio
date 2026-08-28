@@ -1,0 +1,242 @@
+/*
+ * blog/[slug]/case.module.css
+ * صفحة القراءة: عمود واحد ضيّق. عرض السطر محدود بـ ch مش بـ px عشان يفضل
+ * مريح للقراءة مهما كان حجم الخط.
+ */
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  padding: clamp(6rem, 12vh, 10rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vh, 8rem);
+  background: var(--background, #000000);
+}
+
+/* ── شريط التنقّل ────────────────────────────────────────────────────────── */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: 80ch;
+  margin: 0 auto 2.5rem;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.15rem;
+}
+
+.backLink {
+  color: var(--main-color, #ff003c);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--accent-color, #ffd700);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.backLink:focus-visible,
+.shot:focus-visible,
+.sibling:focus-visible,
+.copyAction:focus-visible {
+  outline: 2px solid var(--accent-color, #ffd700);
+  outline-offset: 3px;
+}
+
+.barSep {
+  color: #5a5a5a;
+}
+
+.barCurrent {
+  color: var(--text-muted, #d8d6cc);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── جسم المقال ─────────────────────────────────────────────────────────── */
+.article {
+  max-width: 80ch;
+  margin: 0 auto;
+}
+
+.head {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.kicker {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--main-color, #ff003c);
+}
+
+.kicker::before {
+  content: "// ";
+  opacity: 0.6;
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  color: var(--foreground, #ffffff);
+}
+
+.platform {
+  margin-top: 0.8rem;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.summary {
+  margin: 2.5rem 0;
+  font-size: 1.6rem;
+  line-height: 1.7;
+  color: var(--text-muted, #d8d6cc);
+}
+
+.copyAction {
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #b8b8b8;
+  cursor: pointer;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.copyAction:hover {
+  border-color: var(--accent-color, #ffd700);
+  color: var(--accent-color, #ffd700);
+}
+
+.copied {
+  border-color: #00ff88;
+  color: #00ff88;
+}
+
+/* ── التفاصيل ───────────────────────────────────────────────────────────── */
+.facts {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.factTitle {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #5a5a5a;
+}
+
+/* ── السكرين شوتس ───────────────────────────────────────────────────────── */
+.shots {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.shotGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.shot img {
+  object-fit: cover;
+  filter: grayscale(50%) contrast(1.1);
+  transition: filter var(--motion-fast, 280ms) var(--motion-ease, ease),
+    transform var(--motion-fast, 280ms) var(--motion-ease, ease);
+}
+
+.shot:hover {
+  border-color: var(--accent-color, #ffd700);
+}
+
+.shot:hover img {
+  filter: grayscale(0%) contrast(1.1);
+  transform: scale(1.03);
+}
+
+/* ── السابق / التالي ────────────────────────────────────────────────────── */
+.siblings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sibling {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  transition: border-color var(--motion-fast, 280ms) ease;
+}
+
+.sibling:hover {
+  border-color: var(--main-color, #bc002d);
+}
+
+.siblingNext {
+  text-align: right;
+}
+
+.siblingLabel {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--main-color, #ff003c);
+}
+
+.siblingTitle {
+  font-size: 1.35rem;
+  line-height: 1.4;
+  color: var(--text-muted, #d8d6cc);
+}
+
+.sibling:hover .siblingTitle {
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .siblings {
+    grid-template-columns: 1fr;
+  }
+  .siblingNext {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot:hover img {
+    transform: none;
+  }
+}

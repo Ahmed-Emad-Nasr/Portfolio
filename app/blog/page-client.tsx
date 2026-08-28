@@ -1,12 +1,13 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useState, useEffect, useRef, useDeferredValue } from "react";
 import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/config/portfolio";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/portfolio";
 import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
+import BlogFilterBar, { type Facet } from "./components/BlogFilterBar";
 
 // FIX: every one of these was `ssr: false`, so the exported /blog/index.html
 // contained NO case studies, NO titles, NO links — an empty shell. All the
@@ -32,10 +33,62 @@ const blogPdfResources: PdfResource[] = wannacryCase
 
 const PDF_DATE_MS = new Map(blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0]));
 
+// ─── Search index ────────────────────────────────────────────────────────────
+// كل الكلام اللي ممكن حد يدوّر بيه على case واحدة، متجمّع في نص واحد lowercase
+// مرة واحدة وقت تحميل الموديول. البحث بعد كده مجرد includes() — يعني مفيش
+// أي معالجة نصوص متكررة مع كل حرف بيتكتب.
+const SEARCH_INDEX = new Map<string, string>(
+  blogPdfResources.map((item) => [
+    item.id,
+    [
+      item.title,
+      item.description,
+      item.platform,
+      item.type,
+      item.category,
+      item.difficulty,
+      ...(item.tags ?? []),
+      ...(item.tools ?? []),
+      ...(item.skillsGained ?? []),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase(),
+  ]),
+);
+
+/** عدّاد بسيط بيرجّع القيم مرتبة بالأكتر ظهوراً */
+const countValues = (values: (string | undefined)[]): Facet[] => {
+  const counts = new Map<string, number>();
+  for (const value of values) {
+    if (!value) continue;
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([value, count]) => ({ value, count }))
+    .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value));
+};
+
+const CATEGORY_FACETS = countValues(caseEvidenceLibrary.map((item) => item.category));
+
+// الأدوات كتير، فبناخد الأشهر بس — قايمة chips طويلة أوي بتبقى ضوضا مش فلترة
+const TOOL_FACETS = countValues(
+  caseEvidenceLibrary.flatMap((item) => [...(item.tools ?? [])]),
+).slice(0, 12);
+
 export default function BlogPageClient() {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
+
+  // ── حالة الفلترة ────────────────────────────────────────────────────────
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeTools, setActiveTools] = useState<string[]>([]);
+
+  // useDeferredValue: الكتابة في الخانة تفضل فورية حتى لو إعادة رسم الكروت
+  // اتأخرت فريم أو اتنين. أرخص وأدق من debounce يدوي.
+  const deferredQuery = useDeferredValue(query);
 
   const sortedPdfs = useMemo(() => {
     return [...blogPdfResources].sort((a, b) => {
@@ -50,6 +103,91 @@ export default function BlogPageClient() {
       
       return (PDF_DATE_MS.get(b.id) ?? 0) - (PDF_DATE_MS.get(a.id) ?? 0);
     });
+  }, []);
+
+  const isFiltering =
+    deferredQuery.trim() !== "" || activeCategory !== null || activeTools.length > 0;
+
+  const visiblePdfs = useMemo(() => {
+    if (!isFiltering) return sortedPdfs;
+
+    const needle = deferredQuery.trim().toLowerCase();
+
+    return sortedPdfs.filter((item) => {
+      // الـ CV مش case — بيختفي أول ما تبدأ تفلتر عشان مياخدش مكان نتيجة
+      if (item.id === cvResource.id) return false;
+
+      if (needle && !(SEARCH_INDEX.get(item.id) ?? "").includes(needle)) return false;
+      if (activeCategory && item.category !== activeCategory) return false;
+
+      // OR جوه نفس الفلتر: "وريني اللي فيه Wazuh أو Volatility"
+      if (activeTools.length > 0) {
+        const tools = item.tools ?? [];
+        if (!activeTools.some((tool) => tools.includes(tool))) return false;
+      }
+
+      return true;
+    });
+  }, [sortedPdfs, isFiltering, deferredQuery, activeCategory, activeTools]);
+
+  // ── مزامنة الفلاتر مع الـ URL ───────────────────────────────────────────
+  // مش بنستخدم useSearchParams / router.replace عن قصد: الأولى بتفرض Suspense
+  // boundary وبتخرج الصفحة من الـ static export الكامل، والتانية بتعمل
+  // re-render للشجرة كلها مع كل حرف. history.replaceState بيعمل نفس الشغل
+  // من غير أي واحدة منهم.
+  const filtersHydrated = useRef(false);
+
+  useEffect(() => {
+    const readFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      setQuery(params.get("q") ?? "");
+      setActiveCategory(params.get("cat"));
+      const tools = params.get("tools");
+      setActiveTools(tools ? tools.split(",").filter(Boolean) : []);
+    };
+
+    // بنقرا بعد الـ mount مش أثناء الـ render: الـ HTML المبني على السيرفر
+    // مفيهوش فلاتر، فلو بدأنا بحالة مفلترة كان هيحصل hydration mismatch.
+    readFromUrl();
+    filtersHydrated.current = true;
+
+    // زرار الرجوع في المتصفح لازم يرجّع الفلاتر اللي كانت
+    window.addEventListener("popstate", readFromUrl);
+    return () => window.removeEventListener("popstate", readFromUrl);
+  }, []);
+
+  useEffect(() => {
+    if (!filtersHydrated.current) return;
+
+    // debounce: Safari بيحدّد عدد نداءات replaceState في الدقيقة، والكتابة مع
+    // كل حرف بتوصل للحد ده بسهولة.
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams();
+      if (query.trim()) params.set("q", query.trim());
+      if (activeCategory) params.set("cat", activeCategory);
+      if (activeTools.length) params.set("tools", activeTools.join(","));
+
+      const search = params.toString();
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${search ? `?${search}` : ""}${window.location.hash}`,
+      );
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [query, activeCategory, activeTools]);
+
+  const toggleTool = useCallback((tool: string) => {
+    setActiveTools((current) =>
+      current.includes(tool) ? current.filter((t) => t !== tool) : [...current, tool],
+    );
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setQuery("");
+    setActiveCategory(null);
+    setActiveTools([]);
   }, []);
 
   const channelVideos = useMemo(() => {
@@ -84,6 +222,38 @@ export default function BlogPageClient() {
     };
   }, []);
 
+  // ── Deep link (#case-<id>) ──────────────────────────────────────────────
+  // المتصفح بيحاول يقفز على الهاش قبل ما الكروت تتركّب، فبيفشل بصمت.
+  // بنعيد المحاولة لحد ما العنصر يبان، وبنوقف بعد ٢ ثانية بالظبط بدل ما
+  // نفضل ندوّر على لينك بايظ للأبد.
+  const hashTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith("#case-")) return;
+
+    let cancelled = false;
+    let attempts = 0;
+
+    const tryScroll = () => {
+      if (cancelled) return;
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        // الـ offset بتاع الهيدر متظبط بـ scroll-margin-top في BlogCard.module.css
+        el.scrollIntoView({ block: "start", behavior: "auto" });
+        return;
+      }
+      if (attempts++ < 20) hashTimer.current = window.setTimeout(tryScroll, 100);
+    };
+
+    hashTimer.current = window.setTimeout(tryScroll, 120);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(hashTimer.current);
+    };
+  }, []);
+
   return (
     <main id="main-content" className={styles.page}>
       <div className={styles.scrollBlurOverlay} data-active={scrolled}></div>
@@ -91,12 +261,29 @@ export default function BlogPageClient() {
       <AppBar />
       
       <BlogPdfLibrarySection
-        visiblePdfCards={sortedPdfs}
+        visiblePdfCards={visiblePdfs}
         screenshotsById={caseScreenshotsByEvidenceId}
         openGallery={openGallery} 
         normalizeHref={normalizePublicHref}
         leadCase={null}
         leadCaseSpotlightImage={null}
+        filterBar={
+          <BlogFilterBar
+            query={query}
+            onQueryChange={setQuery}
+            categories={CATEGORY_FACETS}
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+            tools={TOOL_FACETS}
+            activeTools={activeTools}
+            onToolToggle={toggleTool}
+            resultCount={visiblePdfs.length}
+            totalCount={caseEvidenceLibrary.length}
+            onReset={resetFilters}
+          />
+        }
+        onResetFilters={resetFilters}
+        isFiltering={isFiltering}
       />
 
       <KanjiDivider text="Reports • Screenshots • Investigation • Evidence" reverse angle={-1.2} />

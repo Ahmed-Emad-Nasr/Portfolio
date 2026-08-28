@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { TRAILING_SLASH } from "@/app/core/config/site";
 import Image from "next/image";
 import styles from "./page.module.css";
+import anchorStyles from "./BlogCard.module.css";
 
 interface BlogCardProps {
+  /* NEW: كان بيتبعت أصلاً جوه {...item} بس مكانش معرّف، فكان بيضيع.
+     دلوقتي هو أساس الـ deep link (#case-<id>). */
+  id: string;
   title: string;
   description?: string;
   platform: string;
@@ -24,7 +30,7 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(({
-  title, description, platform, type, category, difficulty, href, tags, tools, skillsGained,
+  id, title, description, platform, type, category, difficulty, href, tags, tools, skillsGained,
   readTime, date, screenshots, onOpenGallery, getThumbnail, normalizeHref
 }) => {
   const hasScreenshots = screenshots.length > 0;
@@ -36,10 +42,47 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
   const [primaryFailed, setPrimaryFailed] = useState(false);
   const [secondaryFailed, setSecondaryFailed] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
   const isLongDescription = (description?.length ?? 0) > 140;
 
+  const copyTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
+
+  const copyLink = useCallback(async () => {
+    // اللينك بيروح لصفحة الـ case المستقلة مش للأنكور: دي اللي ليها عنوان
+    // ووصف وصورة خاصين بيها، فبتبان صح لما تتبعت في أي حتة.
+    const path = normalizeHref(`/blog/${id}`);
+    const url = `${window.location.origin}${TRAILING_SLASH ? `${path}/` : path}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // clipboard API محتاج secure context — الـ fallback ده بيشتغل في أي مكان
+      const field = document.createElement("textarea");
+      field.value = url;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      field.select();
+      document.execCommand("copy");
+      document.body.removeChild(field);
+    }
+
+    setCopied(true);
+    window.clearTimeout(copyTimer.current);
+    copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
+  }, [id, normalizeHref]);
+
   return (
-    <article className={[styles.pdfCard, hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly].filter(Boolean).join(" ")}>
+    <article
+      id={`case-${id}`}
+      className={[
+        styles.pdfCard,
+        anchorStyles.anchor,
+        hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly,
+      ].filter(Boolean).join(" ")}
+    >
       <div className={styles.pdfCardBody}>
         <div className={styles.caseCardHead}>
           <p className={styles.badge}>{type}</p>
@@ -66,7 +109,13 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         <p className={styles.cardPlatform}>{platform}</p>
 
         <div className={styles.caseMetadata}>
-          {difficulty && <span className={`${styles.badge} ${styles[`difficulty-${difficulty.toLowerCase()}`]}`}>{difficulty}</span>}
+          {/* FIX: لو جه difficulty مش من التلاتة اللي ليهم كلاس، الـ lookup كان
+              بيرجّع undefined والكلاس بيتكتب حرفياً "badge undefined" في الـ HTML */}
+          {difficulty && (
+            <span className={[styles.badge, styles[`difficulty-${difficulty.toLowerCase()}`]].filter(Boolean).join(" ")}>
+              {difficulty}
+            </span>
+          )}
           {category && <span className={styles.badge}>{category}</span>}
           {readTime && <span className={styles.badge}>{readTime} min</span>}
           {date && <span className={styles.badge}>{date}</span>}
@@ -100,19 +149,29 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         )}
 
         <div className={styles.cardActions}>
-          <a href={normalizeHref(href)} target="_blank" className={styles.viewAction}>View PDF</a>
+          <Link href={`/blog/${id}`} className={styles.primaryAction}>Open case</Link>
+          <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
           <a href={normalizeHref(href)} download className={styles.downloadAction}>Download</a>
           {hasScreenshots && (
             <button type="button" onClick={() => onOpenGallery(title, screenshots, 0)} className={`${styles.galleryOpenAction} ${styles.viewAction}`}>
               View All Screenshots
             </button>
           )}
+          {/* NEW: لينك مباشر للكارت ده لوحده — مفيد وإنت بتبعت case معيّنة
+              في إنترفيو بدل "انزل تحت شوية" */}
+          <button
+            type="button"
+            onClick={copyLink}
+            className={copied ? `${anchorStyles.copyAction} ${anchorStyles.copied}` : anchorStyles.copyAction}
+          >
+            {copied ? "Link copied" : "Copy link"}
+          </button>
         </div>
       </div>
 
       {primaryScreenshot && (
         <div className={styles.pdfCardMedia}>
-          <a href={normalizeHref(primaryScreenshot)} target="_blank" className={styles.primaryShot}>
+          <a href={normalizeHref(primaryScreenshot)} target="_blank" rel="noopener noreferrer" className={styles.primaryShot}>
             <Image 
               src={normalizeHref(primaryFailed ? primaryScreenshot : getThumbnail(primaryScreenshot))} 
               alt={`${title} — main screenshot`} 
@@ -126,7 +185,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
           </a>
           {secondaryScreenshot && (
             <div className={styles.shotGrid}>
-              <a href={normalizeHref(secondaryScreenshot)} target="_blank" className={styles.shotThumb}>
+              <a href={normalizeHref(secondaryScreenshot)} target="_blank" rel="noopener noreferrer" className={styles.shotThumb}>
                 <Image 
                   src={normalizeHref(secondaryFailed ? secondaryScreenshot : getThumbnail(secondaryScreenshot))} 
                   alt={`${title} — additional screenshot`} 

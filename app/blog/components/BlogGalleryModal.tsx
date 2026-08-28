@@ -47,6 +47,7 @@ export default function BlogGalleryModal({ gallery, currentShot, setGallery, goG
           <a
             href={currentShot}
             target="_blank"
+            rel="noopener noreferrer"
             className={styles.galleryImageWrap}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}

@@ -1,0 +1,51 @@
+/*
+ * BlogCard.module.css
+ * إضافات الـ deep link بس — باقي ستايل الكارت في page.module.css زي ما هو.
+ */
+
+/* الهيدر ثابت فوق، فبدون المسافة دي الـ #case-... بيوقف تحت الهيدر
+   والعنوان بيبقى مقصوص. */
+.anchor {
+  scroll-margin-top: 90px;
+}
+
+/* لمعة سريعة على الكارت اللي جاي من لينك مباشر — عشان عينك تلاقيه
+   في وسط باقي الكروت */
+.anchor:target {
+  animation: caseTargetFlash 1.6s var(--motion-ease, ease) 1;
+}
+
+@keyframes caseTargetFlash {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+  20% {
+    box-shadow: inset 3px 0 0 var(--accent-color, #ffd700);
+  }
+  80% {
+    box-shadow: inset 3px 0 0 var(--accent-color, #ffd700);
+  }
+}
+
+.copyAction.copyAction {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #b8b8b8;
+}
+
+.copyAction.copyAction:hover {
+  border-color: var(--accent-color, #ffd700);
+  color: var(--accent-color, #ffd700);
+}
+
+.copied.copied {
+  border-color: #00ff88;
+  color: #00ff88;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anchor:target {
+    animation: none;
+    box-shadow: inset 3px 0 0 var(--accent-color, #ffd700);
+  }
+}

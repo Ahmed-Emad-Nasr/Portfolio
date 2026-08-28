@@ -1,0 +1,80 @@
+/*
+ * BackToTop.module.css
+ * نفس لغة الهيدر: زاوية مقصوصة، مونوسبيس، أحمر على أسود.
+ */
+
+.button {
+  position: fixed;
+  right: clamp(1.2rem, 3vw, 2.5rem);
+  bottom: clamp(1.2rem, 3vw, 2.5rem);
+  z-index: var(--z-sticky, 200);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  /* الحد الأدنى للمس (44px) حتى لو الشكل أصغر */
+  min-width: 46px;
+  min-height: 46px;
+  padding: 8px 10px;
+
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #888888;
+  cursor: pointer;
+
+  /* نفس قصّة الترابيزويد بتاعة الهيدر بس على الزاوية اليمين تحت */
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+
+  opacity: 0;
+  visibility: hidden; /* بيشيله من الـ tab order وهو مخفي */
+  transform: translateY(8px);
+  transition:
+    opacity var(--motion-fast, 280ms) ease,
+    transform var(--motion-fast, 280ms) ease,
+    color var(--motion-fast, 280ms) ease,
+    border-color var(--motion-fast, 280ms) ease,
+    visibility 0s linear var(--motion-fast, 280ms);
+}
+
+.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--motion-fast, 280ms) ease,
+    transform var(--motion-fast, 280ms) ease,
+    color var(--motion-fast, 280ms) ease,
+    border-color var(--motion-fast, 280ms) ease,
+    visibility 0s linear 0s;
+}
+
+.button:hover {
+  color: #ffffff;
+  border-color: var(--main-color, #bc002d);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--accent-color, #ffd700);
+  outline-offset: 3px;
+}
+
+.arrow {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--main-color, #ff003c);
+}
+
+.button:hover .arrow {
+  color: var(--accent-color, #ffd700);
+}
+
+.label {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
