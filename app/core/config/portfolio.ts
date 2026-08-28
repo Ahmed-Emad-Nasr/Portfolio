@@ -721,6 +721,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "offensive-security-intro": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Offensive_Security_Intro/Screenshot (${166 + i}).webp`),
   "iam-access-control-room": Array.from({ length: 12 }, (_, i) => `Assets/Cases/IAM_Access_Control/Screenshot (${141 + i}).webp`),
   "bounty-hacker-ctf-writeup": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Bounty_Hacker/Screenshot (${78 + i}).webp`),
   "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
@@ -1480,5 +1481,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-08-27",
     screenshots: Array.from({ length: 12 }, (_, i) => `Assets/Cases/IAM_Access_Control/Screenshot (${141 + i}).webp`),
     image: "Assets/Cases/IAM_Access_Control/Screenshot (152).webp",
+  },
+  {
+    id: "offensive-security-intro",
+    title: "Offensive Security Intro Walkthrough",
+    description: "Completed the Offensive Security Intro room on TryHackMe. Demonstrated basic web application exploitation by utilizing Dirb to discover hidden directories and accessing an exposed admin portal to manipulate bank transfers.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Easy",
+    href: "Assets/Cases/Offensive_Security_Intro/AhmedEmad_Offensive_Security_Intro.pdf", 
+    tags: ["TryHackMe", "Web Security", "Dirb", "Directory Brute-forcing"],
+    tools: ["Dirb", "Terminal"],
+    skillsGained: ["Web Enumeration", "Vulnerability Discovery", "Hidden Page Exploitation"],
+    readTime: 5,
+    date: "2026-08-28",
+    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/Offensive_Security_Intro/Screenshot (${166 + i}).webp`),
+    image: "Assets/Cases/Offensive_Security_Intro/Screenshot (174).webp",
   },
 ] as const;
