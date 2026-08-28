@@ -19,6 +19,9 @@ import { MotionProvider } from "./core/components/MotionInView";
 // this file is one (it exports `metadata`). The call moved into CursorMount,
 // which is a Client Component. Same deferred-chunk benefit, legal placement.
 import CursorMount from "./components/cursor-mount";
+// شريط تقدّم القراءة — مركّب هنا مرة واحدة عشان يشتغل على البورتفوليو
+// والبلوج مع بعض، من غير تكرار في كل page-client.
+import ScrollProgress from "./core/components/ScrollProgress";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -200,6 +203,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
+
+        <ScrollProgress />
         
         {TURNSTILE_SITE_KEY && (
           <Script
