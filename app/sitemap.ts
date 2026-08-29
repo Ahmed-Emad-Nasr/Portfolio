@@ -66,12 +66,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly" as const,
       priority: 0.8,
     })),
-    // والـ PDF نفسه
-    ...caseEvidenceLibrary.map((item) => ({
-      url: absoluteUrl(item.href),
-      lastModified: parseDate(item.date),
-      changeFrequency: "yearly" as const,
-      priority: 0.6,
-    })),
+    /*
+     * والـ PDF نفسه — للحالات اللي ليها PDF بس.
+     *
+     * `.filter(Boolean)` مش تفصيلة: قبل كده الـ sitemap كان بيقدّم لجوجل
+     * ست ملفات PDF مش موجودة. وsitemap فيه عناوين بترجّع 404 بيقلّل ثقة
+     * محرك البحث في باقي العناوين اللي فيه.
+     */
+    ...caseEvidenceLibrary
+      .filter((item): item is typeof item & { href: string } => Boolean(item.href))
+      .map((item) => ({
+        url: absoluteUrl(item.href),
+        lastModified: parseDate(item.date),
+        changeFrequency: "yearly" as const,
+        priority: 0.6,
+      })),
   ];
 }

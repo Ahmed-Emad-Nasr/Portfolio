@@ -15,9 +15,20 @@ import Credentials from "@/app/components/credentials/credentials";
 // served at /Portfolio/, so a relative "Assets/..." resolves to
 // /Portfolio/Assets/... correctly. Do NOT add a leading slash here — that
 // would resolve to the domain root and 404 in production.
+/*
+ * `src` كان بيشاور على Assets/art-gallery/Images/image_display/ — والمجلد
+ * ده **مش موجود في public/ أصلاً**. الموجود هو image_display_thumb بس.
+ *
+ * الكومبوننت بيعرض الـ thumb افتراضياً وبيرجع لـ src عند الخطأ، فالحيطة
+ * شكلها سليم والمشكلة مكانتش بتبان — بس الـ fallback كان مسار ميت: أول ما
+ * أي thumb يفشل، البديل بيعمل 404 كمان.
+ *
+ * دلوقتي الاتنين على نفس المجلد الموجود. لو رفعت الصور بالحجم الكامل
+ * بعدين، رجّع مسار image_display هنا وهتشتغل على طول.
+ */
 const GALLERY_IMAGES = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
   n: k + 1,
-  src: `Assets/art-gallery/Images/image_display/${k + 1}.webp`,
+  src: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
   alt: certificationAlt(k + 1),
 }));

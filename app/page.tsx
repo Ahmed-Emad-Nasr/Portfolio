@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp",
+        url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
         width: 1200,
         height: 630,
         alt: "Ahmed Emad Nasr SOC portfolio",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | SOC & Incident Response Analyst",
     description:
       "Explore SOC investigations, DFIR workflows, malware analysis cases, and detection engineering.",
-    images: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp"],
+    images: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
   },
 };
 

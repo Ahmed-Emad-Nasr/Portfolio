@@ -97,8 +97,17 @@ export const certifications: readonly Certification[] = [
   },
 ];
 
-/** العدد الكلي لصور الجاليري — مصدر واحد بدل رقم منثور في الكومبوننت */
-export const GALLERY_IMAGE_COUNT = 74;
+/*
+ * العدد الكلي لصور الجاليري.
+ *
+ * كان 74، والموجود فعلاً في public/…/image_display_thumb/ هو **73**
+ * (1.webp لحد 73.webp). يعني الصورة رقم 74 كانت 404 على كل تحميل لقسم
+ * الشهادات.
+ *
+ * لو ضفت صور جديدة، زوّد الرقم ده — وسكربت check:assets هيقولك على طول
+ * لو الرقم بقى أكبر من عدد الملفات.
+ */
+export const GALLERY_IMAGE_COUNT = 73;
 
 /** بحث سريع بالـ galleryIndex عشان مانلفّش على المصفوفة لكل صورة */
 const byGalleryIndex = new Map<number, Certification>(

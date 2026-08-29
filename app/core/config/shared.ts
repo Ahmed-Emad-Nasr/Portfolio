@@ -22,7 +22,18 @@ export type PdfResource = {
   type: string;
   category?: string;
   difficulty?: string;
-  href: string;
+  /*
+   * مسار ملف الـ PDF — **اختياري**.
+   *
+   * مش كل case ليه تقرير مكتوب. ستة منهم أدلتهم صور بس. قبل كده الحقل ده
+   * كان مطلوب، فالستة دول كان لازم يكون ليهم مسار — والمسار كان بيشاور
+   * على ملف مش موجود، وزراير "View PDF" و"Download" بتوديك على 404.
+   *
+   * لما يكون مش موجود: الزراير مبتتعرضش، والـ case مبيدخلش الـ sitemap
+   * كملف، والـ structured data مبتدّعيش وجود PDF. الحالة الطبيعية بقت
+   * "مفيش تقرير" مش "تقرير مكسور".
+   */
+  href?: string;
   tags?: readonly string[];
   tools?: readonly string[];
   skillsGained?: readonly string[];
@@ -73,7 +84,14 @@ export type CaseEvidence = {
   type: string;
   category: string;
   difficulty: string;
-  href: string;
+  /*
+   * مسار الـ PDF — **اختياري**، زي PdfResource فوق وللسبب نفسه: ستة
+   * cases أدلتهم صور بس ومفيش لهم تقرير مكتوب.
+   *
+   * النوعين لازم يفضلوا متطابقين في النقطة دي، لأن caseEvidenceLibrary
+   * بيتحقن في blogPdfResources وبيترندر بنفس الكومبوننت.
+   */
+  href?: string;
   tags: readonly string[];
   tools: readonly string[];
   skillsGained: readonly string[];

@@ -28,7 +28,7 @@ type CaseItem = {
   type: string;
   category: string;
   difficulty: string;
-  href: string;
+  href?: string;
   tags: readonly string[];
   tools: readonly string[];
   skillsGained: readonly string[];
@@ -48,6 +48,53 @@ type Related = {
   readTime: number;
   sharedTechniques: number;
 };
+
+/*
+ * getThumbnail() بيحوّل "1.webp" لـ "1-thumb.webp" — بيفترض إن كل صورة
+ * ليها نسخة مصغّرة على القرص. والافتراض ده مش صحيح لكل الـ cases: سكربت
+ * فحص اللينكات لقى تسع صور في case واحد بيدوّروا على -thumb مش موجود،
+ * فشبكة الأدلة كانت بتعرض مربعات مكسورة.
+ *
+ * BlogCard عنده الحماية دي أصلاً (بيرجع للصورة الكاملة عند الخطأ)، بس
+ * صفحة الـ case مكانش عندها. الكومبوننت ده بيوحّد السلوك.
+ *
+ * لاحظ إن الـ state لازم يبقى جوه كومبوننت لكل صورة — لو كان في الأب،
+ * فشل صورة واحدة كان هيخلي كل الصور ترجع للحجم الكامل.
+ */
+function CaseShot({
+  shot,
+  index,
+  total,
+  title,
+  onOpen,
+}: {
+  shot: string;
+  index: number;
+  total: number;
+  title: string;
+  onOpen: (index: number) => void;
+}) {
+  const [thumbFailed, setThumbFailed] = useState(false);
+
+  return (
+    <button
+      type="button"
+      className={styles.shot}
+      onClick={() => onOpen(index)}
+      aria-label={`Open screenshot ${index + 1} of ${total}`}
+    >
+      <Image
+        src={normalizePublicHref(thumbFailed ? shot : getThumbnail(shot))}
+        alt={`${title} — screenshot ${index + 1}`}
+        fill
+        sizes="(max-width: 991px) 45vw, 24vw"
+        loading="lazy"
+        decoding="async"
+        onError={() => setThumbFailed(true)}
+      />
+    </button>
+  );
+}
 
 export default function CaseArticle({
   item,
@@ -139,17 +186,23 @@ export default function CaseArticle({
         <p className={styles.summary}>{item.description}</p>
 
         <div className={blogStyles.cardActions}>
-          <a
-            href={normalizePublicHref(item.href)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={blogStyles.viewAction}
-          >
-            View PDF
-          </a>
-          <a href={normalizePublicHref(item.href)} download className={blogStyles.downloadAction}>
-            Download
-          </a>
+          {/* الـ case ده ممكن يكون أدلته صور بس. لما مفيش PDF، مفيش زراير —
+              أحسن من زرار بيودّي على 404. */}
+          {item.href && (
+            <>
+              <a
+                href={normalizePublicHref(item.href)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={blogStyles.viewAction}
+              >
+                View PDF
+              </a>
+              <a href={normalizePublicHref(item.href)} download className={blogStyles.downloadAction}>
+                Download
+              </a>
+            </>
+          )}
           {screenshots.length > 0 && (
             <button
               type="button"
@@ -207,22 +260,14 @@ export default function CaseArticle({
             </h2>
             <div className={styles.shotGrid}>
               {screenshots.map((shot, i) => (
-                <button
+                <CaseShot
                   key={shot}
-                  type="button"
-                  className={styles.shot}
-                  onClick={() => openGallery(i)}
-                  aria-label={`Open screenshot ${i + 1} of ${screenshots.length}`}
-                >
-                  <Image
-                    src={normalizePublicHref(getThumbnail(shot))}
-                    alt={`${item.title} — screenshot ${i + 1}`}
-                    fill
-                    sizes="(max-width: 991px) 45vw, 24vw"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </button>
+                  shot={shot}
+                  index={i}
+                  total={screenshots.length}
+                  title={item.title}
+                  onOpen={openGallery}
+                />
               ))}
             </div>
           </section>

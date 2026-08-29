@@ -173,7 +173,7 @@ const SenseiHome = memo(function SenseiHome() {
                 layout.tsx preloaded a DIFFERENT file. `priority` emits the
                 correct preload automatically — the manual <link> can go. */}
             <Image
-              src={failed ? "/Assets/art-gallery/Images/logo/My_Logo.webp" : "Assets/art-gallery/Images/logo/3omda.webp"}
+              src={failed ? "/Assets/art-gallery/Images/logo/3omda.webp" : "Assets/art-gallery/Images/logo/3omda.webp"}
               alt="Ahmed Emad Nasr, SOC Analyst"
               className={styles.image}
               width={560}

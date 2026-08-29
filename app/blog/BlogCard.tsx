@@ -17,7 +17,8 @@ interface BlogCardProps {
   type: string;
   category?: string;
   difficulty?: string;
-  href: string;
+  /** مسار الـ PDF — اختياري: الزراير بتختفي لما يكون مش موجود */
+  href?: string;
   tags?: readonly string[];
   tools?: readonly string[];
   skillsGained?: readonly string[];
@@ -154,8 +155,14 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
 
         <div className={styles.cardActions}>
           <Link href={detailPath} className={styles.primaryAction}>Open case</Link>
-          <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
-          <a href={normalizeHref(href)} download className={styles.downloadAction}>Download</a>
+          {/* مش كل case ليه PDF — ستة منهم أدلتهم صور بس. قبل كده الزراير
+              كانت بتتعرض دايماً وبتودّي على 404. */}
+          {href && (
+            <>
+              <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
+              <a href={normalizeHref(href)} download className={styles.downloadAction}>Download</a>
+            </>
+          )}
           {hasScreenshots && (
             <button type="button" onClick={() => onOpenGallery(title, screenshots, 0)} className={`${styles.galleryOpenAction} ${styles.viewAction}`}>
               View All Screenshots

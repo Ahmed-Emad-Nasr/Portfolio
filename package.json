@@ -16,7 +16,8 @@
         "verify": "npm run lint && npm run type-check && npm run check:assets && npm run build && npm run check:links",
         "icons": "node scripts/generate-icons.cjs",
         "check:assets": "node scripts/check-assets.mjs",
-        "check:links": "node scripts/check-links.mjs"
+        "check:links": "node scripts/check-links.mjs",
+        "thumbs": "node scripts/generate-thumbs.mjs"
     },
     "dependencies": {
         "framer-motion": "^12.38.0",

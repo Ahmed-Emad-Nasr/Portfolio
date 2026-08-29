@@ -87,7 +87,7 @@ export async function generateMetadata({
 
   // أول سكرين شوت هو صورة المشاركة — أنسب بكتير من اللوجو العام
   const shots = caseScreenshotsByEvidenceId[item.id] ?? [];
-  const ogImage = absoluteUrl(item.image ?? shots[0] ?? "Assets/art-gallery/Images/logo/My_Logo.webp");
+  const ogImage = absoluteUrl(item.image ?? shots[0] ?? "Assets/art-gallery/Images/logo/3omda.webp");
   const title = `${item.title} | Ahmed Emad Nasr`;
 
   return {
@@ -143,12 +143,18 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         publisher: { "@type": "Person", name: "Ahmed Emad Nasr" },
         mainEntityOfPage: caseUrl(item.id),
         image: screenshots.slice(0, 3).map((shot) => absoluteUrl(shot)),
-        associatedMedia: {
-          "@type": "DigitalDocument",
-          name: item.title,
-          encodingFormat: "application/pdf",
-          contentUrl: absoluteUrl(item.href),
-        },
+        /* associatedMedia بيتحط بس لو فيه PDF فعلاً — الحالات اللي أدلتها
+           صور بس مبتدّعيش وجود مستند. */
+        ...(item.href
+          ? {
+              associatedMedia: {
+                "@type": "DigitalDocument",
+                name: item.title,
+                encodingFormat: "application/pdf",
+                contentUrl: absoluteUrl(item.href),
+              },
+            }
+          : {}),
       },
       {
         "@type": "BreadcrumbList",

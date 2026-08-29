@@ -49,6 +49,17 @@ for (const f of files) {
 }
 
 const broken = new Map();
+/*
+ * الـ thumbnails حالة خاصة.
+ *
+ * getThumbnail() بيولّد "X-thumb.webp" لكل صورة. لو الملف مش موجود،
+ * الكومبوننتس بترجع للصورة الكاملة — فالصفحة شغالة والزائر مش شايف حاجة
+ * مكسورة. مجرد إن المتصفح بيحمّل صورة أكبر من اللازم.
+ *
+ * لو حسبناها أخطاء، الـ CI هيفضل أحمر على حاجة مش كاسرة — وأي فحص بيفضل
+ * أحمر بيتجاهل. فبتتعد تحذير، والعدد بيتعرض عشان تعرف حجم المشكلة.
+ */
+const missingThumbs = new Map();
 let checkedLinks = 0;
 
 for (const f of files.filter((f) => f.endsWith(".html"))) {
@@ -70,12 +81,24 @@ for (const f of files.filter((f) => f.endsWith(".html"))) {
 
     if (candidates.some((c) => servable.has(c))) continue;
 
-    if (!broken.has(href)) broken.set(href, new Set());
-    broken.get(href).add(from);
+    const target = /-thumb\.(webp|png|jpe?g)$/i.test(href) ? missingThumbs : broken;
+    if (!target.has(href)) target.set(href, new Set());
+    target.get(href).add(from);
   }
 }
 
 console.log(`Checked ${checkedLinks} internal link(s) across ${files.filter((f) => f.endsWith(".html")).length} page(s).`);
+
+if (missingThumbs.size > 0) {
+  const dirs = new Set([...missingThumbs.keys()].map((h) => h.replace(/\/[^/]*$/, "")));
+  console.warn(
+    `\n⚠ ${missingThumbs.size} thumbnail(s) missing across ${dirs.size} folder(s).\n` +
+    `  Not a failure: the components fall back to the full-size image, so the\n` +
+    `  page renders correctly. But the browser then downloads the large file\n` +
+    `  where a thumbnail was intended — this is the single biggest payload\n` +
+    `  problem on the site. Run your image script over these folders.\n`,
+  );
+}
 
 if (broken.size === 0) {
   console.log("✔ No broken internal links.");

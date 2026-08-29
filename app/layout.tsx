@@ -57,7 +57,7 @@ export const metadata: Metadata = {
      *
      * عنوان مطلق كامل، زي صور الـ OG في page.tsx بالظبط.
      */
-    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp"],
+    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
   },
   title: {
     default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Ahmed Emad Nasr Portfolio",
     images: [{
-      url: "/Assets/art-gallery/Images/logo/My_Logo.webp",
+      url: "/Assets/art-gallery/Images/logo/3omda.webp",
       width: 1200,
       height: 630,
       alt: "Ahmed Emad Nasr cybersecurity portfolio",
@@ -110,7 +110,7 @@ export const metadata: Metadata = {
     description: "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
     creator: "@0x3omda",
     site: "@0x3omda",
-    images: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
+    images: ["/Assets/art-gallery/Images/logo/3omda.webp"],
   },
   verification: {
     google: "VCIeVhcDb-vQGmE68weZARtruR_F2bUwv6hcjKYdwqo",
@@ -160,7 +160,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
       name: "Ahmed Emad Nasr",
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      image: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp",
+      image: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
       jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
       /* knowsAbout هو الحقل اللي جوجل بيستخدمه لفهم مجال الشخص. المهارات
          كانت متناثرة كتاجات في الـ JSX ومحدش مصدّرها كبيانات — دلوقتي
@@ -217,7 +217,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Professional",
       description: "A portfolio homepage highlighting cybersecurity work, SIEM/EDR projects, malware analysis, and professional experience.",
       isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
-      primaryImageOfPage: { "@type": "ImageObject", url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp" },
+      primaryImageOfPage: { "@type": "ImageObject", url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp" },
       about: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
       inLanguage: "en",
     },
@@ -255,7 +255,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
            المسار الحرج ويأخّر اللي عليه. الصورة الصح بقت `priority`،
            وNext بيولّد الـ preload الصح بالمسار الصح.
 
-        2. <link rel="icon" href="/Assets/art-gallery/Images/logo/My_Logo.webp">
+        2. <link rel="icon" href="/Assets/art-gallery/Images/logo/3omda.webp">
            مسار مكتوب بإيد **من غير basePath**. سكربت فحص اللينكات أكّد
            ده: العنوان ده هو الوحيد في الموقع كله اللي طالع من غير
            /Portfolio قدامه — يعني 404 على كل تحميل صفحة، على كل صفحة.

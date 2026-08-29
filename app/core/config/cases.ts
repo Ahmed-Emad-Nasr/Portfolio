@@ -142,7 +142,13 @@ export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).webp`),
   "malware-analysis-wannacry": [
     ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.webp`),
-    ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).webp`),
+/* التسلسل ده كان Array.from({ length: 24 }, … 343 + i) — بيفترض إن
+       الأرقام متتابعة من غير فجوات. بس Screenshot (349) و (353) مش
+       موجودين على القرص، فصورتين من كل عرض للـ case ده كانوا مكسورين.
+
+       الأرقام مكتوبة صريحة دلوقتي: أطول، بس بتوصف الموجود فعلاً بدل ما
+       تفترض. لو ضفت الصورتين الناقصين، رجّع الـ Array.from. */
+    ...[343, 344, 345, 346, 347, 348, 350, 351, 352, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366].map((n) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${n}).webp`),
   ],
   "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/1.webp", "Assets/Cases/Wifi Cracking/2.webp"],
   "ass6-mitre": [
@@ -292,7 +298,13 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-03-01",
     screenshots: [
       ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.webp`),
-      ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).webp`),
+  /* التسلسل ده كان Array.from({ length: 24 }, … 343 + i) — بيفترض إن
+       الأرقام متتابعة من غير فجوات. بس Screenshot (349) و (353) مش
+       موجودين على القرص، فصورتين من كل عرض للـ case ده كانوا مكسورين.
+
+       الأرقام مكتوبة صريحة دلوقتي: أطول، بس بتوصف الموجود فعلاً بدل ما
+       تفترض. لو ضفت الصورتين الناقصين، رجّع الـ Array.from. */
+    ...[343, 344, 345, 346, 347, 348, 350, 351, 352, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366].map((n) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${n}).webp`),
     ],
     /* كان "/ 21.webp" — مسافة زايدة قبل الرقم. الملف على القرص اسمه
        "21.webp"، فصورة الغلاف بتاعة الـ case ده كانت 404. سكربت فحص
@@ -373,7 +385,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Cloud Security",
     difficulty: "Hard",
-    href: "Assets/Cases/Amazon GuardDuty/Amazon_GuardDuty.pdf",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
     tags: ["AWS", "GuardDuty", "Threat Detection", "Security Monitoring"],
     tools: ["Amazon GuardDuty", "AWS Console"],
     skillsGained: ["Continuous Monitoring", "Alert Triage", "Cloud Threat Detection"],
@@ -788,13 +800,17 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Penetration Testing",
     difficulty: "Easy",
-    href: "Assets/Cases/Simple_CTF/AhmedEmad_SimpleCTF.pdf", 
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
     tags: ["TryHackMe", "CTF", "SQL Injection", "Privilege Escalation", "CVE-2019-9053"],
     tools: ["Exploit-DB", "Python", "SSH", "Vim"],
     skillsGained: ["Vulnerability Exploitation", "Password Cracking", "Linux Privilege Escalation"],
     readTime: 15,
     date: "2026-08-19",
-    screenshots: Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).png`),
+    /* كان .png — والملفات على القرص .webp، ونفس الـ case في
+       caseScreenshotsByEvidenceId (سطر 85) مكتوب .webp صح. نفس غلطة
+       Serpent Stealer: الـ case معرّف مرتين واتنينهم اختلفوا. النتيجة إن
+       شبكة الأدلة في صفحة الـ case كانت بتعرض 11 صورة مكسورة. */
+    screenshots: Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
     image: "Assets/Cases/Simple_CTF/Screenshot (49).webp",
   },
   {
@@ -805,7 +821,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Penetration Testing",
     difficulty: "Easy",
-    href: "Assets/Cases/Easy_Peasy/AhmedEmad_EasyPeasy.pdf", 
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
     tags: ["TryHackMe", "CTF", "Enumeration", "Gobuster", "Cryptography", "CyberChef"],
     tools: ["Nmap", "Gobuster", "CyberChef"],
     skillsGained: ["Port Scanning", "Web Enumeration", "Encoding/Decoding Analysis", "Source Code Inspection"],
@@ -822,7 +838,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Penetration Testing",
     difficulty: "Easy",
-    href: "Assets/Cases/Bounty_Hacker/AhmedEmad_BountyHacker.pdf", 
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
     tags: ["TryHackMe", "CTF", "FTP", "Brute Force", "Hydra", "Privilege Escalation", "GTFOBins"],
     tools: ["Nmap", "Hydra", "SSH", "Tar"],
     skillsGained: ["Service Enumeration", "Password Brute-forcing", "Linux Privilege Escalation"],
@@ -839,7 +855,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Access Security",
     difficulty: "Easy",
-    href: "Assets/Cases/IAM_Access_Control/AhmedEmad_IAM_Access_Control.pdf", 
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
     tags: ["TryHackMe", "IAM", "Access Control", "RBAC", "MAC", "Authentication", "SSO"],
     tools: ["Security Principles", "Identity Management"],
     skillsGained: ["Identity & Access Management", "Access Control Modeling", "Authentication Mechanisms", "Threat Mitigation"],
@@ -856,7 +872,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Web Security",
     difficulty: "Easy",
-    href: "Assets/Cases/Offensive_Security_Intro/AhmedEmad_Offensive_Security_Intro.pdf", 
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
     tags: ["TryHackMe", "Web Security", "Dirb", "Directory Brute-forcing"],
     tools: ["Dirb", "Terminal"],
     skillsGained: ["Web Enumeration", "Vulnerability Discovery", "Hidden Page Exploitation"],

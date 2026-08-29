@@ -67,7 +67,52 @@ const ASSET_RE = /["'`](\/?Assets\/[^"'`\\$]+)["'`]/g;
    مش ممكن تتقري ثابتة — بنستخرج المجلد ونتأكد إنه موجود على الأقل. */
 const TEMPLATE_RE = /["'`](\/?Assets\/[^"'`]*?)\$\{/g;
 
+/*
+ * الشكل ده بيتكرر في كل الـ config:
+ *
+ *   Array.from({ length: 24 }, (_, i) => `Assets/Cases/X/Screenshot (${343 + i}).webp`)
+ *
+ * وفحص المجلد لوحده مبيكفيش: المجلد موجود، بس الترقيم بيفترض إن الملفات
+ * متتابعة من غير فجوات — والافتراض ده اتكسر فعلاً (Screenshot 349 و 353
+ * مش موجودين وسط سلسلة 343–366).
+ *
+ * فبدل ما نفحص المجلد، بنفكّ الحلقة ونفحص كل ملف بالاسم. الشكل ده مغطّي
+ * الحالتين المستخدمتين: `${i + 1}` و `${BASE + i}`.
+ */
+const LOOP_RE =
+  /Array\.from\(\s*\{\s*length:\s*(\d+)\s*\}\s*,\s*\(_,\s*i\)\s*=>\s*`([^`]*?)\$\{\s*(?:(\d+)\s*\+\s*i|i\s*\+\s*(\d+))\s*\}([^`]*?)`/g;
+
+/** بيفكّ الحلقة لمسارات فعلية */
+const expandLoop = (length, prefix, base, suffix) => {
+  const out = [];
+  for (let i = 0; i < length; i++) out.push(`${prefix}${base + i}${suffix}`);
+  return out;
+};
+
+/*
+ * لما ملف يبقى ناقص، أهم سؤال بعديه على طول هو: "أمال إيه اللي في المجلد؟"
+ *
+ * من غير الإجابة دي، كل ملف ناقص بيتحول لرحلة يدوية: تفتح المجلد، تبص،
+ * تقارن. والسكربت شايف المجلد أصلاً — فالأولى إنه يقولك.
+ *
+ * ده بيحوّل "الملف مش موجود" لـ "الملف مش موجود، واللي موجود هو دول" —
+ * واللي غالباً بيوضّح على طول هل الاسم مختلف ولا الملف فعلاً ناقص.
+ */
+const listDir = (dir, limit = 12) => {
+  const entries = [...realPaths]
+    .filter((p) => p.startsWith(`${dir}/`) && !p.slice(dir.length + 1).includes("/"))
+    .map((p) => p.slice(dir.length + 1))
+    .sort();
+
+  if (entries.length === 0) return null;
+  const shown = entries.slice(0, limit);
+  const more = entries.length > limit ? ` … (+${entries.length - limit} more)` : "";
+  return { count: entries.length, text: shown.join(", ") + more };
+};
+
 const missing = [];
+/** thumbnails ناقصة — تحذير مش خطأ (فيه fallback في الكومبوننتس) */
+const missingThumbs = new Set();
 const checkedDirs = new Set();
 let checked = 0;
 
@@ -104,8 +149,57 @@ for (const file of CONFIG_FILES) {
     });
   }
 
+  /*
+   * الصور بتتعرض عن طريق getThumbnail() اللي بيحوّل "1.webp" لـ
+   * "1-thumb.webp". يعني كل صورة في الـ config ليها **مسارين** على
+   * الموقع، والفحص كان بيشوف واحد بس.
+   *
+   * ده اللي خلّى تسع صور مكسورة في صفحة case تعدّي من الفحص ده وتتمسك
+   * في فحص اللينكات بعد الـ build. الأولى نمسكها هنا — أسرع وأوضح.
+   *
+   * الـ thumbnails بتتبلّغ كتحذير مش كخطأ: الكومبوننتس بترجع للصورة
+   * الكاملة لو الـ thumb مش موجود، فالصفحة بتشتغل — بس بتحمّل صورة أكبر
+   * من اللازم، وده مقصود نعرفه.
+   */
+  for (const [, raw] of src.matchAll(ASSET_RE)) {
+    const rel = raw.replace(/^\//, "");
+    if (!/\.(webp|png|jpe?g)$/i.test(rel)) continue;
+    /*
+     * getThumbnail() بيتطبّق على صور الـ cases بس — الكروت وشبكة الأدلة.
+     * اللوجو مثلاً بيتعرض بمساره المباشر ومبيمرّش عليها، فطلب نسخة مصغّرة
+     * ليه تحذير كاذب.
+     */
+    if (!rel.startsWith("Assets/Cases/")) continue;
+    const thumb = rel.replace(/(\.\w+)$/, "-thumb$1");
+    if (realPaths.has(rel) && !realPaths.has(thumb)) missingThumbs.add(thumb);
+  }
+
+  /* الحلقات المفكوكة — كل ملف بالاسم، مش المجلد بس */
+  const loopCovered = new Set();
+  for (const [, len, prefix, baseA, baseB, suffix] of src.matchAll(LOOP_RE)) {
+    const base = Number(baseA ?? baseB);
+    if (!prefix.includes("Assets/")) continue;
+
+    for (const path of expandLoop(Number(len), prefix, base, suffix)) {
+      const rel = path.replace(/^\//, "");
+      loopCovered.add(rel.replace(/\/[^/]*$/, ""));
+      checked++;
+      if (realPaths.has(rel)) continue;
+      const alt = lowerMap.get(rel.toLowerCase());
+      missing.push({
+        file,
+        path: rel,
+        hint: alt
+          ? `case mismatch — the real file is "${alt}"`
+          : "not found — a generated sequence assumes consecutive numbering, and this number is a gap",
+      });
+    }
+  }
+
   for (const [, raw] of src.matchAll(TEMPLATE_RE)) {
     const dir = raw.replace(/^\//, "").replace(/\/[^/]*$/, "");
+    /* اتفحص ملف ملف فوق — مفيش داعي نفحص المجلد تاني */
+    if (loopCovered.has(dir)) continue;
     if (!dir || checkedDirs.has(dir)) continue;
     checkedDirs.add(dir);
     checked++;
@@ -120,6 +214,18 @@ for (const file of CONFIG_FILES) {
 }
 
 console.log(`Checked ${checked} asset reference(s) across ${CONFIG_FILES.length} config file(s).`);
+
+if (missingThumbs.size > 0) {
+  console.warn(
+    `\n⚠ ${missingThumbs.size} image(s) have no -thumb variant. The components fall\n` +
+    `  back to the full-size file, so nothing is visibly broken — but the browser\n` +
+    `  downloads the large image where a thumbnail was intended.\n` +
+    `  Re-run your image script over these folders:\n`,
+  );
+  const dirs = new Set([...missingThumbs].map((t) => t.replace(/\/[^/]*$/, "")));
+  for (const d of [...dirs].sort()) console.warn(`    ${d}/`);
+  console.warn("");
+}
 
 if (missing.length === 0) {
   console.log("✔ Every referenced asset exists in public/.");
@@ -169,16 +275,39 @@ if (wholeDirs.length > 0) {
       : `not in public/ at all — is it committed?`;
     console.error(`  ${dir}/`);
     console.error(`      ${group.items.length} file(s) reference it — ${detail}`);
-    console.error(`      referenced in ${group.file}\n`);
+    console.error(`      referenced in ${group.file}`);
+
+    const parent = dir.replace(/\/[^/]*$/, "");
+    const siblings = parent !== dir ? listDir(parent) : null;
+    if (siblings) {
+      console.error(`      its parent "${parent}/" contains ${siblings.count} item(s):`);
+      console.error(`        ${siblings.text}`);
+    }
+    console.error("");
     annotate("Missing directory", `${dir}/ — ${detail} (${group.items.length} files)`, group.file);
   }
 }
 
 if (strays.length > 0) {
   console.error(`── ${strays.length} individual file(s) missing ──\n`);
+  /* مجلدات اتعرض محتواها قبل كده — عشان مانكررش نفس الليستة لكل ملف
+     ناقص في نفس المجلد */
+  const shownDirs = new Set();
+
   for (const m of strays.sort((a, b) => a.path.localeCompare(b.path))) {
     console.error(`  ${m.path}`);
-    console.error(`      referenced in ${m.file} — ${m.hint}\n`);
+    console.error(`      referenced in ${m.file} — ${m.hint}`);
+
+    const dir = m.path.replace(/\/[^/]*$/, "");
+    if (dir !== m.path && !shownDirs.has(dir)) {
+      shownDirs.add(dir);
+      const contents = listDir(dir);
+      if (contents) {
+        console.error(`      the folder DOES exist and contains ${contents.count} item(s):`);
+        console.error(`        ${contents.text}`);
+      }
+    }
+    console.error("");
     annotate("Missing asset", `${m.path} — ${m.hint}`, m.file);
   }
 }

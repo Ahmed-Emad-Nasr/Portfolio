@@ -42,7 +42,11 @@ const casesStructuredData = {
       "https://github.com/Ahmed-Emad-Nasr"
     ],
   },
-  hasPart: pdfResources.map((item, index) => ({
+  /* الحالات اللي مالهاش PDF مبتدخلش هنا: DigitalDocument من غير contentUrl
+     ادّعاء بوجود ملف مش موجود. */
+  hasPart: pdfResources
+    .filter((item): item is typeof item & { href: string } => Boolean(item.href))
+    .map((item, index) => ({
     "@type": "DigitalDocument",
     "@id": `${SITE_BASE_URL}/blog#pdf-${index + 1}`,
     name: item.title,
@@ -116,7 +120,7 @@ export const metadata: Metadata = {
          * النتيجة إن أي مشاركة لصفحة البلوج على لينكدإن أو تويتر أو
          * واتساب كانت بتطلع من غير صورة.
          */
-        url: toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/My_Logo.webp"),
+        url: toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/3omda.webp"),
         width: 1200,
         height: 630,
         alt: "Security Analysis Blog by Ahmed Emad Nasr",
@@ -132,7 +136,7 @@ export const metadata: Metadata = {
       "Explore incident response cases, threat analysis, malware reverse engineering, and security investigations.",
     /* نفس المسار الغلط بتاع og:image كان متكرر هنا كمان — أنا ظبّطت
        الأول وفات ده. سكربت فحص الأصول مسكه. */
-    images: [toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/My_Logo.webp")],
+    images: [toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/3omda.webp")],
   },
 };
 
