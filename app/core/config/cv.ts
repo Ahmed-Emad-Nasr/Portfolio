@@ -17,7 +17,7 @@
 export const CV_CONTACT = {
   name: "Ahmed Emad Nasr",
   headline: "SOC Analyst · Incident Response · DFIR",
-  location: "Benha, Egypt",
+  location: "Cairo, Egypt",
   email: "ahmed.em.nasr@gmail.com",
   phone: "+20 101 397 2690",
   linkedin: { label: "linkedin.com/in/ahmed-emad-nasr", href: "https://www.linkedin.com/in/ahmed-emad-nasr/" },
