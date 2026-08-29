@@ -22,7 +22,24 @@ const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"))
 // The modal genuinely never renders on load — ssr:false is correct HERE.
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 
-const cvResource: PdfResource = { id: "soc-analyst-cv", title: "Ahmed Emad Nasr SOC & Cybersecurity Analyst CV", platform: "Professional Profile", type: "PDF CV", href: "Assets/cv/AhmedEmadNasr_CV.pdf" };
+/*
+ * كارت الـ CV بيتحقن في مكتبة البلوج، بس هو **مش** case: مفيش صفحة
+ * بتتولّد ليه من generateStaticParams (اللي بيقرا caseEvidenceLibrary بس).
+ *
+ * فزرار "Open case" كان بيبني اللينك من الـ id ويودّي على
+ *     /Portfolio/blog/soc-analyst-cv  →  404
+ * على الموقع المنشور.
+ *
+ * detailHref بيوجّهه لصفحة /cv الحقيقية بدل صفحة متولّدتش.
+ */
+const cvResource: PdfResource = {
+  id: "soc-analyst-cv",
+  title: "Ahmed Emad Nasr SOC & Cybersecurity Analyst CV",
+  platform: "Professional Profile",
+  type: "PDF CV",
+  href: "Assets/cv/AhmedEmadNasr_CV.pdf",
+  detailHref: "/cv",
+};
 
 const wannacryId = "malware-analysis-wannacry";
 const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);
@@ -30,6 +47,26 @@ const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);
 const blogPdfResources: PdfResource[] = wannacryCase 
   ? [cvResource, wannacryCase, ...caseEvidenceLibrary.filter(item => item.id !== wannacryId)] 
   : [cvResource, ...caseEvidenceLibrary];
+
+
+/*
+ * حارس: أي عنصر في المكتبة لازم يكون ليه صفحة تفاصيل موجودة فعلاً — يا إما
+ * لأنه case (والـ id بتاعه في caseEvidenceLibrary) يا إما لأنه محدد
+ * detailHref بنفسه.
+ *
+ * من غير الفحص ده، إضافة أي كارت مش case بتطلّع لينك 404 صامت — ومحدش
+ * بياخد باله غير لما حد يدوس عليه على الموقع المنشور، وده اللي حصل بالظبط
+ * مع كارت الـ CV.
+ */
+const CASE_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
+for (const item of blogPdfResources) {
+  if (!item.detailHref && !CASE_IDS.has(item.id)) {
+    throw new Error(
+      `[blog] "${item.id}" is in the library but has no generated case page. ` +
+      `Either add it to caseEvidenceLibrary, or give it an explicit detailHref.`,
+    );
+  }
+}
 
 const PDF_DATE_MS = new Map(blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0]));
 

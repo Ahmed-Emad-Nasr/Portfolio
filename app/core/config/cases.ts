@@ -84,7 +84,15 @@ export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
   "simple-ctf-writeup": Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
   "ecir-registry-forensics": Array.from({ length: 14 }, (_, i) => `Assets/Cases/AhmedEmad_RegistryForencics_eCIR/${i + 1}.webp`),
-  "3omda-custom-detection-rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda-custom-detection-rules/${i + 1}.webp`),
+  /* الـ id اتغيّر لـ 3omda-custom-detection-rules، بس **المجلد على القرص
+     لسه اسمه بمسافات**. المسار هنا لازم يفضل مطابق للملفات الفعلية في
+     public/ وإلا الصور والـ PDF يعملوا 404.
+
+     لو حابب تنضّفه: غيّر اسم المجلد في public/Assets/Cases/ لـ
+     3omda-custom-detection-rules وبعدين ظبّط السطور دي. مش مستعجل —
+     المسافات في مسار أصل بتشتغل عادي، المشكلة كانت في الـ id بس لأنه
+     بيتحوّل لمسار صفحة. */
+  "3omda-custom-detection-rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
   "penetration-testing-life-cycle": Array.from({ length: 4 }, (_, i) => `Assets/Cases/penetration-testing-life-cycle/${i + 1}.webp`),
   autopsy: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.webp`),
   "data-exfiltration-investigation": Array.from({ length: 37 }, (_, i) => `Assets/Cases/Data Exfiltiration Investigation/${i + 1}.webp`),
@@ -296,14 +304,14 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "PDF Report",
     category: "Threat Detection",
     difficulty: "Hard",
-    href: "Assets/Cases/3omda-custom-detection-rules/3omda-custom-detection-rules.pdf",
+    href: "Assets/Cases/3omda custom detection rules/3omda custom detection rules.pdf",
     tags: ["Wazuh", "SIEM", "Threat Detection", "Custom Rules", "Blue Team", "SOC", "Network Security"],
     tools: ["Wazuh", "EDR", "SIEM"],
     skillsGained: ["Wazuh Rule Creation", "Threat Hunting", "Log Analysis", "Detecting Defense Evasion", "Privilege Escalation Detection"],
     readTime: 26,
     date: "2026-05-05",
-    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda-custom-detection-rules/${i + 1}.webp`),
-    image: "Assets/Cases/3omda-custom-detection-rules/1.webp",
+    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
+    image: "Assets/Cases/3omda custom detection rules/1.webp",
   },
   {
     id: "penetration-testing-life-cycle",

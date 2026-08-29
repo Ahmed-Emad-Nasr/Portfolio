@@ -28,6 +28,19 @@ export type PdfResource = {
   skillsGained?: readonly string[];
   readTime?: number;
   date?: string;
+  /*
+   * صفحة التفاصيل بتاعة العنصر ده.
+   *
+   * الافتراضي `/blog/{id}` — وده صح لكل الـ cases لأن generateStaticParams
+   * بيولّد صفحة لكل id في caseEvidenceLibrary.
+   *
+   * بس مكتبة البلوج بيتحقن فيها عنصر **مش** case: كارت الـ CV بـ id
+   * "soc-analyst-cv". مفيش صفحة بتتولّد ليه، فزرار "Open case" كان بيودّي
+   * على /blog/soc-analyst-cv → 404 على الموقع المنشور.
+   *
+   * الحقل ده بيخلي أي عنصر يقول صفحته فين صراحةً بدل ما نفترض.
+   */
+  detailHref?: string;
 };
 
 export type GalleryState = {

@@ -615,3 +615,92 @@ next-image-unconfigured-qualities
 | صفحة `/teaching` | محتاجة قايمة السيشنز |
 | تعارض أرقام الـ CV | قرارك |
 | مراجعة `caseAttackMapping` | محتاجة قراية التقارير |
+
+---
+
+# جولة سابعة — الـ 404 اللي في الصورة
+
+## 1. `/blog/soc-analyst-cv` — كارت الـ CV كان بيودّي على صفحة متولّدتش 🔴
+
+الصورة اللي بعتها:
+
+```
+ahmed-emad-nasr.github.io/Portfolio/blog/soc-analyst-cv  →  404
+```
+
+**السبب:** مكتبة البلوج بيتحقن فيها كارت مش case:
+
+```ts
+const cvResource: PdfResource = { id: "soc-analyst-cv", … };
+const blogPdfResources = [cvResource, ...caseEvidenceLibrary];
+```
+
+و`BlogCard` بيبني زرار "Open case" من الـ id دايماً:
+
+```tsx
+<Link href={`/blog/${id}`}>Open case</Link>
+```
+
+بس `generateStaticParams` بيقرا `caseEvidenceLibrary` **بس** — و
+`soc-analyst-cv` مش فيها. يعني الصفحة دي متولّدتش أصلاً، والزرار بيودّي
+على 404. اللينك كان مكسور على الموقع المنشور من غير ما حد ياخد باله، لأن
+الكارت شكله زي أي كارت تاني.
+
+**الإصلاح:** `PdfResource` بقى فيه `detailHref?: string`. الافتراضي لسه
+`/blog/{id}` (صح لكل الـ cases)، وكارت الـ CV بيقول صفحته صراحةً:
+
+```ts
+detailHref: "/cv",
+```
+
+يعني الزرار دلوقتي بيودّي على صفحة الـ CV الحقيقية اللي عملناها الجولة
+اللي فاتت — وده أصلاً المكان اللي المفروض يروحه.
+
+**وحارس عشان ميتكررش:** فحص وقت الـ build في `page-client.tsx` — أي عنصر
+في المكتبة من غير صفحة (لا هو case ولا عنده `detailHref`) بيفشّل الـ build
+برسالة واضحة بدل لينك 404 صامت.
+
+## 2. غلطة مني في الجولة اللي فاتت — أصلحتها ⚠️
+
+لما غيّرت الـ id من `3omda custom detection rules` لـ
+`3omda-custom-detection-rules`، عملت استبدال شامل في `cases.ts` —
+واللي غيّر كمان **مسارات الأصول**:
+
+```
+Assets/Cases/3omda custom detection rules/1.webp
+  → Assets/Cases/3omda-custom-detection-rules/1.webp   ❌
+```
+
+والمجلد على القرص لسه اسمه بمسافات، فده كان هيخلي 9 صور والـ PDF بتوع
+الـ case ده يعملوا 404.
+
+اكتشفتها لما عملت crawl لكل اللينكات الداخلية في الـ export. المسارات
+رجعت لأصلها والـ id فضل متغيّر — دول حاجتين مختلفتين: المسافات في مسار
+**أصل** بتشتغل عادي، المشكلة كانت في الـ **id** بس لأنه بيتحوّل لمسار صفحة.
+
+فيه تعليق في `cases.ts` بيشرح ده، ولو حبيت تنضّف اسم المجلد بعدين هي
+خطوة منفصلة ومش مستعجلة.
+
+## 3. فحص شامل للينكات
+
+عملت crawl لكل ملف HTML في الـ export وفحصت كل `href` داخلي:
+
+```
+broken NON-asset internal links: none
+```
+
+(الـ `/Assets/*` مستثناة لأن `public/` مش معايا هنا — إنت اللي عندك
+الملفات دي.)
+
+وشغّلت `next dev` تاني:
+
+```
+/                                     200
+/blog                                 200
+/cv                                   200
+/blog/soc127-pdf                      200
+/blog/3omda-custom-detection-rules    200
+/blog/soc-analyst-cv                  404  ← صح، مفيش حاجة بتلينك عليها دلوقتي
+```
+
+`tsc` نضيف · `eslint` نضيف بصفر تحذيرات · `next build` نجح (47 صفحة).

@@ -23,6 +23,9 @@ interface BlogCardProps {
   skillsGained?: readonly string[];
   readTime?: number;
   date?: string;
+  /* لو مش متبعت، الكارت بيفترض /blog/{id}. الكروت اللي مش cases (زي كارت
+     الـ CV) لازم تبعته صراحةً، وإلا اللينك بيودّي على صفحة متولّدتش. */
+  detailHref?: string;
   screenshots: string[];
   onOpenGallery: (title: string, screenshots: string[], index?: number) => void;
   getThumbnail: (imgPath: string) => string;
@@ -31,8 +34,9 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = React.memo(({
   id, title, description, platform, type, category, difficulty, href, tags, tools, skillsGained,
-  readTime, date, screenshots, onOpenGallery, getThumbnail, normalizeHref
+  readTime, date, detailHref, screenshots, onOpenGallery, getThumbnail, normalizeHref
 }) => {
+  const detailPath = detailHref ?? `/blog/${id}`;
   const hasScreenshots = screenshots.length > 0;
   const primaryScreenshot = hasScreenshots ? screenshots[0] : null;
   const secondaryScreenshot = screenshots.length > 1 ? screenshots[1] : null;
@@ -51,7 +55,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
   const copyLink = useCallback(async () => {
     // اللينك بيروح لصفحة الـ case المستقلة مش للأنكور: دي اللي ليها عنوان
     // ووصف وصورة خاصين بيها، فبتبان صح لما تتبعت في أي حتة.
-    const path = normalizeHref(`/blog/${id}`);
+    const path = normalizeHref(detailPath);
     const url = `${window.location.origin}${TRAILING_SLASH ? `${path}/` : path}`;
 
     try {
@@ -72,7 +76,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
     setCopied(true);
     window.clearTimeout(copyTimer.current);
     copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
-  }, [id, normalizeHref]);
+  }, [detailPath, normalizeHref]);
 
   return (
     <article
@@ -149,7 +153,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         )}
 
         <div className={styles.cardActions}>
-          <Link href={`/blog/${id}`} className={styles.primaryAction}>Open case</Link>
+          <Link href={detailPath} className={styles.primaryAction}>Open case</Link>
           <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
           <a href={normalizeHref(href)} download className={styles.downloadAction}>Download</a>
           {hasScreenshots && (
