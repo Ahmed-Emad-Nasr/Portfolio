@@ -3,8 +3,8 @@
 import { useEffect, useRef, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "@/app/core/utils/utils";
+import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-header.module.css";
 
 // دالة لمطابقة المسميات المختصرة
@@ -97,7 +97,7 @@ export default function SenseiHeader() {
                   onClick={(e) => handleNavClick(section, e)}
                   aria-current={activeSection === section ? "page" : undefined}
                 >
-                  <FontAwesomeIcon icon={icon} aria-hidden="true" />
+                  <Icon name={icon} />
                   {getShortLabel(section)}
                 </a>
               ))}

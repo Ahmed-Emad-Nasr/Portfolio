@@ -2,12 +2,11 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faWhatsapp, faYoutube, faInstagram, faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faFilePdf, faBriefcase, faEnvelope, faShuffle } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/utils/utils";
-import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
+import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
 
 // REMOVED: CV_VARIANT was computed from Math.random() at module scope, written
 // to localStorage on every load, and then never read by anything. Dead code
@@ -45,7 +44,6 @@ const ROLES = [
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
   const [failed, setFailed] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   /* globals/sensei-home.module.css already contain a rule set that pauses
@@ -75,13 +73,9 @@ const SenseiHome = memo(function SenseiHome() {
     return () => observer.disconnect();
   }, []);
 
-  const handleDownloadClick = () => {
-    setIsDownloading(true);
-    // The download itself is a native browser action (static file, no
-    // network request from React), this just gives the click a moment
-    // of visible feedback before the state resets.
-    window.setTimeout(() => setIsDownloading(false), 1200);
-  };
+  /* handleDownloadClick + isDownloading اتشالوا مع زرار التحميل: مبقاش
+     فيه تحميل ملف يستنى مؤشر — اللينك بيروح على صفحة. أقل state في أكبر
+     كومبوننت على الصفحة. */
 
   return (
     <section ref={sectionRef} className={`${styles.home} noLine noBg`} id="Home" data-in-view="true">
@@ -191,7 +185,7 @@ const SenseiHome = memo(function SenseiHome() {
               onError={() => setFailed(true)}
             />
             <span className={styles.imageHint} aria-hidden="true">
-              <FontAwesomeIcon icon={faShuffle} />
+              <Icon name="faShuffle" />
               <span>Watch channel</span>
             </span>
           </button>
@@ -252,46 +246,43 @@ const SenseiHome = memo(function SenseiHome() {
               أيقونات السوشيال بدل الفورم. */}
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconLinkedin} aria-label="LinkedIn">
-              <FontAwesomeIcon icon={faLinkedin} />
+              <Icon name="faLinkedin" />
             </a>
             <a href="https://wa.me/201013972690" target="_blank" rel="noopener noreferrer" className={styles.iconWhatsapp} aria-label="WhatsApp">
-              <FontAwesomeIcon icon={faWhatsapp} />
+              <Icon name="faWhatsapp" />
             </a>
             <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className={styles.iconYoutube} aria-label="YouTube">
-              <FontAwesomeIcon icon={faYoutube} />
+              <Icon name="faYoutube" />
             </a>
             <a href="https://www.instagram.com/ahmed_emad_nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconInstagram} aria-label="Instagram">
-              <FontAwesomeIcon icon={faInstagram} />
+              <Icon name="faInstagram" />
             </a>
             <a href="https://github.com/Ahmed-Emad-Nasr" target="_blank" rel="noopener noreferrer" className={styles.iconGithub} aria-label="GitHub">
-              <FontAwesomeIcon icon={faGithub} />
+              <Icon name="faGithub" />
             </a>
           </div>
 
           <div className={styles.homeButton}>
-            <a
-              href="Assets/cv/AhmedEmadNasr_CV.pdf"
-              download="AhmedEmadNasr_CV.pdf"
-              className={`${styles.btn} ${styles.cvBtn} ${isDownloading ? styles.btnLoading : ""}`}
-              onClick={handleDownloadClick}
-              aria-live="polite"
-            >
-              {isDownloading ? (
-                <>
-                  <span className={styles.spinner} aria-hidden="true" />
-                  Downloading…
-                </>
-              ) : (
-                <>
-                  Download CV <FontAwesomeIcon icon={faFilePdf} />
-                </>
-              )}
-            </a>
+            {/*
+              كان <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download>: مسار
+              نسبي بيتحل بالنسبة لعنوان الصفحة الحالية، فشغّال من
+              "/Portfolio/" وبيقع من أي مكان أعمق — ولو الملف نفسه ناقص أو
+              اتغيّر اسمه، الزائر بيوصل لـ 404 من غير أي بديل.
+
+              دلوقتي بيروح على /cv: صفحة HTML بتتبني من نفس الـ config بتاع
+              الموقع، فمستحيل تبقى ناقصة أو قديمة، وفيها زرار تحميل للـ PDF
+              جوّاها. و<Link> بيتولّى الـ basePath لوحده زي لينك /blog في
+              الهيدر بالظبط — عشان كده مش بيعدّي على normalizePublicHref،
+              اللي كان هيضيف البادئة مرتين.
+            */}
+            <Link href="/cv" className={`${styles.btn} ${styles.cvBtn}`}>
+              View CV <Icon name="faFilePdf" />
+            </Link>
             <a href="#Projects" className={`${styles.btn} ${styles.btnProjects}`}>
-              View Projects <FontAwesomeIcon icon={faBriefcase} />
+              View Projects <Icon name="faBriefcase" />
             </a>
             <a href="mailto:ahmed.em.nasr@gmail.com" className={`${styles.btn} ${styles.btnEmail}`}>
-              Email Me <FontAwesomeIcon icon={faEnvelope} />
+              Email Me <Icon name="faEnvelope" />
             </a>
           </div>
         </div>

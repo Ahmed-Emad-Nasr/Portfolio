@@ -90,7 +90,7 @@ export default function BlogPdfLibrarySection({
           </div>
           {leadCaseSpotlightImage && (
             <a href={leadCaseSpotlightImage} target="_blank" rel="noopener noreferrer" className={styles.caseSpotlightMedia}>
-              <Image src={leadCaseSpotlightImage} alt={`${leadCase.title} — spotlight screenshot`} fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" decoding="async" quality={25} />
+              <Image src={leadCaseSpotlightImage} alt={`${leadCase.title} — spotlight screenshot`} fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" decoding="async" />
             </a>
           )}
         </MotionInView>

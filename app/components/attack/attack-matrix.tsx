@@ -1,5 +1,3 @@
-"use client";
-
 /*
  * attack-matrix.tsx
  * Author: Ahmed Emad Nasr
@@ -16,10 +14,20 @@
  *     reader بالمجان.
  *  3. content-visibility على القسم — نفس الاتفاقية المستخدمة في باقي
  *     السكاشن.
+ *  4. **Server Component عن قصد — مفيش "use client".** ده مش تفصيلة: الملف
+ *     ده بيقرا caseEvidenceLibrary (42 كيلوبايت). لو كان client component،
+ *     الداتا دي كانت هتتحزم في bundle الصفحة الرئيسية وتتحمّل على كل زائر
+ *     عشان يقرا عناوين 38 تقرير — وهي عناوين متحوّلة أصلاً لـ HTML وقت
+ *     الـ build. كـ server component الداتا بتفضل على السيرفر (يعني وقت
+ *     الـ build هنا) والزائر بياخد الـ markup بس.
+ *
+ *     عشان كده page.tsx بيرندره ويبعته كـ prop لـ page-client بدل ما
+ *     page-client يستورده — أي حاجة client component بيستوردها بتبقى
+ *     client تلقائياً.
  */
 
-import { memo } from "react";
 import Link from "next/link";
+import SectionHeader from "@/app/core/components/SectionHeader";
 import { buildCoverage, coveredTechniqueCount } from "@/app/core/config/attack";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import styles from "./attack-matrix.module.css";
@@ -35,17 +43,18 @@ const MAX_DEPTH = Math.max(
   ...COVERAGE.flatMap((column) => column.techniques.map((t) => t.caseIds.length)),
 );
 
-const AttackMatrix = memo(function AttackMatrix() {
+export default function AttackMatrix() {
   return (
-    <section className={styles.section} id="Coverage" aria-labelledby="coverage-title">
+    <section className={styles.section} id="Coverage" aria-label="MITRE ATT&CK coverage">
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h2 className={styles.title} id="coverage-title">
-            <span lang="ja">戦術地図 •</span> <span lang="en">ATT&amp;CK Coverage</span>
-          </h2>
+        {/* نفس هيكل الهيدر المستخدم في Experience و Projects و Certifications:
+            عنوان متوسّط بالخط الأحمر تحته. القسم كان بهيدر محاذي لليسار
+            وشكله كإنه من موقع تاني. */}
+        <div className={styles["header-section"]}>
+          <SectionHeader japaneseText="戦術地図" englishText="ATT&CK Coverage" titleClassName={styles.title} />
           <p className={styles.lede}>
             Every technique below is backed by a published report in the case
-            library. Click a technique to open the evidence.
+            library. Open a technique to see the evidence.
           </p>
           <dl className={styles.stats}>
             <div className={styles.stat}>
@@ -61,10 +70,13 @@ const AttackMatrix = memo(function AttackMatrix() {
               <dd>{caseEvidenceLibrary.length}</dd>
             </div>
           </dl>
-        </header>
+        </div>
 
-        <div className={styles.scroller} tabIndex={0} role="group" aria-label="ATT&CK coverage matrix, scrollable">
-          <div className={styles.matrix}>
+        {/* كان scroller أفقي: على الديسكتوب كان بيقص آخر عمودين ويطلّع شريط
+            تمرير رمادي بتاع النظام في نص التصميم، وأسماء التكنيكات كانت
+            بتتقص ("Network Service Disco…"). الـ grid بيلف الأعمدة على سطور
+            بدل ما يخبّيها — كل التكتيكات ظاهرة على أي عرض شاشة. */}
+        <div className={styles.matrix}>
             {COVERAGE.map(({ tactic, techniques }) => (
               <div key={tactic.id} className={styles.column}>
                 <h3 className={styles.tactic}>{tactic.name}</h3>
@@ -97,11 +109,8 @@ const AttackMatrix = memo(function AttackMatrix() {
                 ))}
               </div>
             ))}
-          </div>
         </div>
       </div>
     </section>
   );
-});
-
-export default AttackMatrix;
+}

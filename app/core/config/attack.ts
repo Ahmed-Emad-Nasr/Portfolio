@@ -133,7 +133,7 @@ export const caseAttackMapping: Record<string, readonly string[]> = {
   "penetration-testing-life-cycle": ["T1595", "T1046", "T1068"],
 
   // ── Detection engineering / infrastructure ──────────────────────────────
-  "3omda custom detection rules": ["T1059", "T1547", "T1110", "T1112"],
+  "3omda-custom-detection-rules": ["T1059", "T1547", "T1110", "T1112"],
   "soc-env-depi-r3-project": ["T1059", "T1547", "T1046"],
 
   // ── Cloud & IAM ─────────────────────────────────────────────────────────

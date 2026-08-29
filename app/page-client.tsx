@@ -23,7 +23,7 @@
  * made every section invisible to a crawler that does not run rAF.
  */
 
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import LoadingScreen from "@/app/components/loader/sensei_loader";
 
@@ -48,10 +48,6 @@ const ArtGallerySection = dynamic(
 const KanjiDivider = dynamic(
   () => import("@/app/core/components/KanjiDivider"),
 );
-// خريطة تغطية ATT&CK — بتتحسب وقت الـ build، فالـ chunk ده markup تقريباً.
-const AttackMatrix = dynamic(
-  () => import("@/app/components/attack/attack-matrix"),
-);
 // الفورم فيه state وfetch، فمنطقي يتأجّل — بس الـ markup بيتولّد وقت الـ
 // build زي الباقي (مفيش ssr: false).
 const ContactSection = dynamic(
@@ -60,7 +56,15 @@ const ContactSection = dynamic(
 
 const MAIN_STYLE: React.CSSProperties = { position: "relative" };
 
-const MainClient = memo(function MainClient() {
+/*
+ * `coverage` بييجي جاهز من page.tsx (Server Component). السبب في التعليق
+ * اللي فوق الـ import هناك: خريطة ATT&CK بتقرا مكتبة الـ cases كاملة،
+ * واستيرادها من هنا كان هيحوّلها لـ client component ويحزّم الـ 42 كيلوبايت
+ * دي في bundle الصفحة الرئيسية.
+ */
+type MainClientProps = { coverage: ReactNode };
+
+const MainClient = memo(function MainClient({ coverage }: MainClientProps) {
   return (
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen />
@@ -76,7 +80,7 @@ const MainClient = memo(function MainClient() {
       <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
       <ArtGallerySection />
       <KanjiDivider text="戦術 • 検知 • 防御 • 対応 • 回復" angle={1.5} />
-      <AttackMatrix />
+      {coverage}
       <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />
       <ContactSection />
     </main>

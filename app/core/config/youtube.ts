@@ -24,7 +24,9 @@ import type {
 // YouTube (from youtube.ts)
 // -----------------------------------------------------------------------------
 
-export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";
+// اتنقل لـ shared.ts (شوف التعليق هناك). بيتعاد تصديره من هنا عشان أي
+// import قديم يفضل شغّال.
+export { YOUTUBE_CHANNEL_URL } from "./shared";
 
 export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {

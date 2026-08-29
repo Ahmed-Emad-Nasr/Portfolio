@@ -20,17 +20,31 @@ import React, { memo } from "react";
 import {
   m,
   LazyMotion,
-  domAnimation,
   useReducedMotion,
   type MotionProps,
   type Variants,
 } from "framer-motion";
 import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 
+/*
+ * `domAnimation` كان static import، فالـ ~25KB بتاعته كانت جزء من الـ bundle
+ * الأساسي على كل صفحة — بما فيها صفحات البلوج اللي أنيميشناتها أقل.
+ *
+ * LazyMotion بيقبل دالة بترجّع Promise، فالحزمة بتتحمّل بعد الـ paint الأول
+ * بدل ما تتأخّره. الـ m.* components بترندر بحالتها الابتدائية لحد ما توصل،
+ * وده بالظبط اللي بيحصل دلوقتي برضه أثناء تحميل الـ bundle — الفرق إن
+ * المحتوى بيتعرض أسرع.
+ *
+ * الدالة بره الكومبوننت عن قصد: لو اتعرّفت جوّه، كل render كان هيبعت
+ * مرجع جديد وLazyMotion هيعيد التحميل.
+ */
+const loadDomAnimation = () =>
+  import("framer-motion").then((mod) => mod.domAnimation);
+
 /** Mount ONCE, near the root. Provides features for every m.* below it. */
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   return (
-    <LazyMotion features={domAnimation} strict>
+    <LazyMotion features={loadDomAnimation} strict>
       {children}
     </LazyMotion>
   );

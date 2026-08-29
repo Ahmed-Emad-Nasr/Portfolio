@@ -1,12 +1,11 @@
 "use client";
 
 import { memo } from "react";
+import Icon from "@/app/core/icons/Icon";
 import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { calculateExperience, toBulletItems } from "@/app/core/utils/utils";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faClock, faArrowUpRightFromSquare, faBriefcase, faCertificate } from "@fortawesome/free-solid-svg-icons";
 import MotionInView from "@/app/core/components/MotionInView";
 
 /*
@@ -56,12 +55,12 @@ const TimelineItem = memo(({
           {/* was <h2>: the section already owns an h2 ("経験 • Experience"),
               so ten more h2s at the same level flattened the outline. Each
               role is a child of that section — h3 — and its employer h4. */}
-          <h3><FontAwesomeIcon icon={faBriefcase} className={styles.titleIcon} /> {tag}</h3>
+          <h3><Icon name="faBriefcase" className={styles.titleIcon} /> {tag}</h3>
           {subTag && (
             subTagHyperlink ? (
               <h4>
                 <a href={subTagHyperlink} target="_blank" rel="noopener noreferrer" className={styles.subTagLink}>
-                  {subTag} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles.linkIcon} />
+                  {subTag} <Icon name="faArrowUpRightFromSquare" className={styles.linkIcon} />
                 </a>
               </h4>
             ) : (
@@ -83,11 +82,11 @@ const TimelineItem = memo(({
 
         {showDate && (
           <div className={styles["date-details"]}>
-            <div className={styles["experience-time"]}><FontAwesomeIcon icon={faClock} /> <span>{experienceTime}</span></div>
-            <div className={styles["date-range"]}><FontAwesomeIcon icon={faCalendarAlt} /> <span>{startDate} {endDate ? `- ${endDate}` : "- Present"}</span></div>
+            <div className={styles["experience-time"]}><Icon name="faClock" /> <span>{experienceTime}</span></div>
+            <div className={styles["date-range"]}><Icon name="faCalendarAlt" /> <span>{startDate} {endDate ? `- ${endDate}` : "- Present"}</span></div>
             {certificateUrl && (
               <a className={styles.proofLink} href={certificateUrl} target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faCertificate} /> Proof / Credential
+                <Icon name="faCertificate" /> Proof / Credential
               </a>
             )}
           </div>

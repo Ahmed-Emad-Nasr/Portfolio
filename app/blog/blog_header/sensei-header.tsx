@@ -9,16 +9,14 @@
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileLines, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useScrollSpy } from "@/app/core/utils/utils";
 
+import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-header.module.css";
 
 const NAV_ITEMS = [
-  { label: "Cases",       targetId: "blog-pdfs-title",   icon: faFileLines },
-  { label: "YouTube Hub", targetId: "youtube-hub-title", icon: faYoutube },
+  { label: "Cases",       targetId: "blog-pdfs-title",   icon: "faFileLines" },
+  { label: "YouTube Hub", targetId: "youtube-hub-title", icon: "faYoutube" },
 ] as const;
 
 const SPY_SECTIONS = NAV_ITEMS.map(({ label, targetId }) => ({ label, elementId: targetId }));
@@ -114,7 +112,7 @@ export default function SenseiHeader() {
                   onClick={(e) => handleNavClick(label, targetId, e)}
                   aria-current={activeSection === label ? "page" : undefined}
                 >
-                  <FontAwesomeIcon icon={icon} aria-hidden="true" />
+                  <Icon name={icon} />
                   {label}
                 </a>
               ))}
@@ -127,7 +125,7 @@ export default function SenseiHeader() {
                 aria-label="Back to portfolio"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <FontAwesomeIcon icon={faArrowLeft} aria-hidden="true" />
+                <Icon name="faArrowLeft" aria-hidden="true" />
                 PORTFOLIO
               </Link>
             </nav>

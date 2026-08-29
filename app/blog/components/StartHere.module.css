@@ -1,0 +1,82 @@
+/* StartHere.module.css */
+
+.section {
+  margin: 0 auto 4rem;
+  padding: 0 var(--container-pad-x, 5.25%);
+  max-width: var(--container-max-width, 1500px);
+}
+
+.head { max-width: 60ch; margin-bottom: 1.6rem; }
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  margin: 0 0 0.5rem;
+}
+
+.lede { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+
+.list {
+  list-style: none;
+  counter-reset: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1100px;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.item { min-width: 0; }
+
+.card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.1rem 1.3rem;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--main-color);
+  border-radius: var(--radius-card-sm, 6px);
+  background: rgba(255, 255, 255, 0.015);
+  transition: border-color var(--motion-fast, 150ms) ease,
+              background var(--motion-fast, 150ms) ease;
+}
+.card:hover,
+.card:focus-visible {
+  border-color: rgba(var(--main-color-rgb), 0.5);
+  border-left-color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.03);
+}
+.card:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(var(--main-color-rgb), 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+.body { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.label { color: var(--text-bright); font-weight: 700; font-size: 1.02rem; line-height: 1.3; }
+.why { color: var(--text-dim); font-size: 0.85rem; line-height: 1.5; }
+
+.minutes {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .card { grid-template-columns: auto minmax(0, 1fr); row-gap: 0.5rem; }
+  .minutes { grid-column: 2; justify-self: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+}

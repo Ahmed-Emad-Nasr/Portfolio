@@ -137,3 +137,14 @@ export const formatDate = (value: string): string => {
   dateCache.set(value, formatted);
   return formatted;
 };
+
+/*
+ * ثابت مش داتا — بس مكانه كان جوه config/youtube.ts جنب مصفوفات الفيديوهات
+ * والـ playlists. النتيجة إن sensei-home.tsx اللي محتاج السطر ده بس كان
+ * بيجرّ موديول اليوتيوب كله معاه للصفحة الرئيسية: 40 كيلوبايت من داتا
+ * البلوج على صفحة مش بتعرض ولا فيديو.
+ *
+ * ده بالظبط السبب اللي خلّى تقسيم portfolio.ts ضروري: الـ tree-shaking
+ * مبيشيلش موديول كامل عشان إنت واخد منه ثابت واحد.
+ */
+export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";

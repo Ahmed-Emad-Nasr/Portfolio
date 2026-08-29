@@ -45,6 +45,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      // صفحة الـ CV بـ HTML. أولوية أعلى من الـ PDF: جوجل بيفهرس الصفحة
+      // أحسن، وأنظمة الـ ATS بتقراها أحسن، وهي بتتبني من نفس الـ config
+      // بتاع الموقع فمستحيل تبقى قديمة.
+      url: absoluteUrl("/cv"),
+      lastModified: latestCaseDate,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: absoluteUrl("/Assets/cv/AhmedEmadNasr_CV.pdf"),
       lastModified: latestCaseDate,
       changeFrequency: "monthly",

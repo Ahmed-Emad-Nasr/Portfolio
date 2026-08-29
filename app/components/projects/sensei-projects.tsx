@@ -5,12 +5,8 @@
  */
 
 import { memo } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faStar, faCodeBranch, faEye, faArrowUpRightFromSquare,
-  faCirclePlay, faCode,
-} from "@fortawesome/free-solid-svg-icons";
 
+import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-projects.module.css";
 import { type GitHubRepository, getIconForLanguage, formatRepoDate, toBulletItems } from "@/app/core/utils/utils";
 import SectionHeader from "@/app/core/components/SectionHeader";
@@ -74,7 +70,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
     <MotionInView className={`${styles["project-item"]} ${isRight ? styles.right : styles.left}`}>
       <article className={styles["single-project"]}>
         <div className={styles["part-1"]}>
-          <FontAwesomeIcon icon={getIconForLanguage(repo.language)} aria-hidden="true" />
+          <Icon name={getIconForLanguage(repo.language)} />
           <h3>
             <a
               className={styles["title-link"]}
@@ -83,7 +79,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
               rel="noopener noreferrer"
               aria-label={`Open project ${repo.name} on GitHub`}
             >
-              {repo.name} <FontAwesomeIcon icon={faArrowUpRightFromSquare} className={styles["link-icon"]} />
+              {repo.name} <Icon name="faArrowUpRightFromSquare" className={styles["link-icon"]} />
             </a>
           </h3>
         </div>
@@ -102,17 +98,17 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
           <div className={styles["stats-container"]}>
             {repo.stargazers_count > 0 && (
               <span className={styles["stat-badge"]} aria-label={`${repo.stargazers_count} stars`}>
-                <FontAwesomeIcon icon={faStar} aria-hidden="true" /> {repo.stargazers_count}
+                <Icon name="faStar" aria-hidden="true" /> {repo.stargazers_count}
               </span>
             )}
             {repo.forks_count > 0 && (
               <span className={styles["stat-badge"]} aria-label={`${repo.forks_count} forks`}>
-                <FontAwesomeIcon icon={faCodeBranch} aria-hidden="true" /> {repo.forks_count}
+                <Icon name="faCodeBranch" aria-hidden="true" /> {repo.forks_count}
               </span>
             )}
             {repo.watchers_count > 0 && (
               <span className={styles["stat-badge"]} aria-label={`${repo.watchers_count} watchers`}>
-                <FontAwesomeIcon icon={faEye} aria-hidden="true" /> {repo.watchers_count}
+                <Icon name="faEye" aria-hidden="true" /> {repo.watchers_count}
               </span>
             )}
             <span className={`${styles["stat-badge"]} ${styles["difficulty-badge"]}`} aria-label={`Project complexity: ${difficulty}`}>
@@ -142,10 +138,10 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
 
           <div className={styles["project-actions"]}>
             <a href={liveUrl} target="_blank" rel="noopener noreferrer" className={`${styles["action-btn"]} ${styles["primary-action"]}`} aria-label={`Open live project for ${repo.name}`}>
-              <FontAwesomeIcon icon={faCirclePlay} /> Live
+              <Icon name="faCirclePlay" /> Live
             </a>
             <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className={styles["action-btn"]} aria-label={`Open source code for ${repo.name}`}>
-              <FontAwesomeIcon icon={faCode} /> Code
+              <Icon name="faCode" /> Code
             </a>
           </div>
         </div>

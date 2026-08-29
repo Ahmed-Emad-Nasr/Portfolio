@@ -24,9 +24,8 @@
  */
 
 import { useState, type FormEvent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPaperPlane, faCircleCheck, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import SectionHeader from "@/app/core/components/SectionHeader";
+import Icon from "@/app/core/icons/Icon";
 import styles from "./contact-section.module.css";
 
 const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
@@ -75,40 +74,51 @@ export default function ContactSection() {
   };
 
   return (
-    <section className={styles.section} id="Contact" aria-labelledby="contact-title">
-      <div className={styles.container}>
-        <div className={styles.intro}>
-          <h2 className={styles.title} id="contact-title">
-            <span lang="ja">連絡 •</span> <span lang="en">Get in touch</span>
-          </h2>
-          <p className={styles.lede}>
-            Open to SOC, incident response, and DFIR roles, and to security
-            training work. Fastest reply is by email.
-          </p>
+    <section className={styles.section} id="Contact" aria-label="Contact">
+      {/* نفس هيكل الهيدر المتوسّط بتاع باقي السكاشن — كان محاذي لليسار
+          وشكله كإنه جاي من موقع تاني. */}
+      <div className={styles["header-section"]}>
+        <SectionHeader japaneseText="連絡" englishText="Contact" titleClassName={styles.title} />
+        <p className={styles.lede}>
+          Open to SOC, incident response, and DFIR roles, and to security
+          training work. Fastest reply is by email.
+        </p>
+      </div>
 
+      <div className={styles.container} data-form={FORMSPREE_ENDPOINT ? "on" : "off"}>
+        <div className={styles.intro}>
           <ul className={styles.direct}>
             <li>
               <a href={`mailto:${EMAIL}`}>
-                <FontAwesomeIcon icon={faEnvelope} aria-hidden="true" />
+                <Icon name="faEnvelope" aria-hidden="true" />
                 {EMAIL}
               </a>
             </li>
             <li>
               <a href={LINKEDIN} target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faLinkedin} aria-hidden="true" />
+                <Icon name="faLinkedin" aria-hidden="true" />
                 LinkedIn
               </a>
             </li>
             <li>
               <a href={WHATSAPP} target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faWhatsapp} aria-hidden="true" />
+                <Icon name="faWhatsapp" aria-hidden="true" />
                 WhatsApp
               </a>
             </li>
           </ul>
+
+          {!FORMSPREE_ENDPOINT && (
+            /* ملاحظة للمطوّر، مش للزائر. كانت بتتعرض كصندوق متقطّع كبير في
+               مكان الفورم — الزائر بيقرا رسالة خطأ تقنية مالهاش معنى
+               بالنسباله، والقسم كله بيبان مكسور: نصه محتوى ونصه فراغ. */
+            <p className={styles.disabled} role="note">
+              Contact form inactive — set <code>NEXT_PUBLIC_FORMSPREE_ENDPOINT</code> to enable it.
+            </p>
+          )}
         </div>
 
-        {FORMSPREE_ENDPOINT ? (
+        {FORMSPREE_ENDPOINT && (
           <form className={styles.form} onSubmit={handleSubmit} noValidate={false}>
             <div className={styles.field}>
               <label htmlFor="contact-name">Name</label>
@@ -134,7 +144,7 @@ export default function ContactSection() {
 
             <button type="submit" className={styles.submit} disabled={status === "sending"}>
               {status === "sending" ? "Sending…" : "Send message"}
-              <FontAwesomeIcon icon={faPaperPlane} aria-hidden="true" />
+              <Icon name="faPaperPlane" aria-hidden="true" />
             </button>
 
             {/* aria-live عشان اللي بيستخدم screen reader يسمع النتيجة —
@@ -142,23 +152,16 @@ export default function ContactSection() {
             <p className={styles.status} role="status" aria-live="polite">
               {status === "sent" && (
                 <span className={styles.ok}>
-                  <FontAwesomeIcon icon={faCircleCheck} aria-hidden="true" /> Thanks — I&apos;ll get back to you.
+                  <Icon name="faCircleCheck" aria-hidden="true" /> Thanks — I&apos;ll get back to you.
                 </span>
               )}
               {status === "error" && (
                 <span className={styles.err}>
-                  <FontAwesomeIcon icon={faTriangleExclamation} aria-hidden="true" /> Could not send ({error}). Email me directly instead.
+                  <Icon name="faTriangleExclamation" aria-hidden="true" /> Could not send ({error}). Email me directly instead.
                 </span>
               )}
             </p>
           </form>
-        ) : (
-          <p className={styles.disabled}>
-            The contact form is disabled because{" "}
-            <code>NEXT_PUBLIC_FORMSPREE_ENDPOINT</code> is not set. Set it in
-            your deployment environment to enable it — until then the links
-            above are the way to reach me.
-          </p>
         )}
       </div>
     </section>

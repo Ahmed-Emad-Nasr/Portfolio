@@ -7,6 +7,10 @@
 
 import type { Metadata } from "next";
 import MainClient from "./page-client";
+// Server Component. رندره هنا معناه إن مكتبة الـ cases (42KB) بتفضل وقت
+// الـ build ومبتوصلش لمتصفح الزائر — لو page-client استورده كان هيبقى
+// client component تلقائياً وتتحزم الداتا معاه.
+import AttackMatrix from "./components/attack/attack-matrix";
 
 export const metadata: Metadata = {
   title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst | DFIR & Malware Analysis",
@@ -81,7 +85,7 @@ export default function Main() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} // استخدام النص الجاهز مباشرة
       />
-      <MainClient />
+      <MainClient coverage={<AttackMatrix />} />
     </>
   );
 }

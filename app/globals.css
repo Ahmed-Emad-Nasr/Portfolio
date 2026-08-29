@@ -34,10 +34,32 @@
   --radius-button: 2px;
   --radius-katana: 0.5rem 2rem 0.5rem 2rem;
 
-  --font-display: "Overlock", sans-serif;
-  --font-body: "Overlock", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-jp: "Overlock", sans-serif;
+  --font-display: var(--font-overlock), "Overlock", sans-serif;
+  --font-body: var(--font-overlock), "Overlock", sans-serif;
+
+  /* كان: "JetBrains Mono", monospace — والخط ده مكانش بيتحمّل من أي مكان.
+     70 تصريح في الـ CSS بيطلبوه، وكلهم كانوا بيرجعوا لـ monospace بتاع
+     النظام (Courier New على ويندوز). دلوقتي layout.tsx بيحمّله فعلاً عن
+     طريق next/font، والمتغيّر ده بيشاور على النسخة اللي اتحمّلت. */
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace,
+    "SF Mono", Menlo, Consolas, monospace;
+
+  /* كان: "Overlock", sans-serif
+
+     Overlock مفيهوش ولا حرف ياباني. يعني كل النص الياباني على الموقع —
+     武士道 في الـ dividers، セキュリティ في الـ hero، عناوين كل قسم — كان
+     بيرجع لأي خط CJK موجود على الجهاز: Yu Gothic على ويندوز، Hiragino على
+     ماك، Noto على أندرويد. تلات أوزان وثلاث عروض مختلفة لنفس الهوية،
+     ومربّعات فاضية على أي جهاز مفهوش خط CJK أصلاً.
+
+     الحل هنا stack نظام مضبوط لكل منصة: صفر بايت تحميل، ونتيجة متسقة
+     ومقصودة بدل "أي حاجة".
+
+     لو عايز تحكّم كامل: حمّل Noto Sans JP بـ next/font/local من subset
+     فيه الحروف المستخدمة بس (هي معدودة وثابتة) — كده تاخد نفس الشكل على
+     كل جهاز مقابل ~20KB بدل ~1.5MB للخط الكامل. */
+  --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    "Noto Sans JP", "Noto Sans CJK JP", Meiryo, sans-serif;
 
   /* Backward-compatible aliases used by the current components */
   --bg-color: var(--background);
@@ -608,4 +630,125 @@ html[data-tier="mid"] [data-decorative="true"] {
   [data-decorative="true"] {
     will-change: auto;
   }
+}
+/* ═══════════════════════════════════════════════════════════════════════════
+   تحسينات شكلية وتفصيلية — كلها CSS خالص، صفر جافاسكريبت وصفر بايت تحميل
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── كل نص ياباني ياخد خط CJK مقصود ─────────────────────────────────────────
+   قبل كده --font-jp كان متطبّق على .vertical-text بس. باقي الياباني في
+   الموقع (عناوين الأقسام، الـ dividers، الـ HUD) كان بيرث Overlock — واللي
+   مفيهوش حروف يابانية — فالمتصفح بيعمل fallback حرف بحرف لأي خط CJK لقاه.
+   النتيجة نفس السطر بخطين مختلفين أحياناً. */
+[lang="ja"],
+:lang(ja) {
+  font-family: var(--font-jp);
+  /* الياباني بيتقرا أوضح بمسافة سطور أوسع شوية من اللاتيني */
+  line-height: 1.5;
+}
+
+/* ── تحديد النص ───────────────────────────────────────────────────────────
+   الافتراضي أزرق النظام، وده بيقطع الهوية اللي كلها أحمر/ذهبي أول ما حد
+   يعلّم على أي سطر. */
+::selection {
+  background: rgba(var(--main-color-rgb), 0.85);
+  color: #fff;
+}
+
+/* ── لينكات الـ anchor ماتختفيش تحت الهيدر الثابت ─────────────────────────
+   الـ nav بيتعامل مع ده بجافاسكريبت (بيحسب ارتفاع الهيدر ويطرحه)، بس أي
+   وصول تاني للقسم بيتجاهله بالكامل: لينك #Contact من بره الموقع، زرار
+   الرجوع في المتصفح، والـ command palette. القسم بيروح تحت الهيدر
+   والعنوان بيتقص.
+
+   scroll-margin-top بيخلي ده شغّال في كل الحالات من غير أي كود. */
+section[id],
+[id="main-content"] {
+  scroll-margin-top: 6rem;
+}
+
+/* ── العناوين ماتتكسرش بكلمة واحدة في آخر سطر ─────────────────────────────
+   text-wrap: balance بيوزّع الكلمات على السطور بالتساوي بدل ما يسيب كلمة
+   وحيدة (orphan) في آخر سطر — أوضح فرق بيبان في العناوين الطويلة على
+   الموبايل. مدعوم في كل المتصفحات الحديثة وبيتجاهل بأمان في القديمة. */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+/* pretty بيمنع الـ orphan في الفقرات من غير تكلفة الـ balance الكاملة */
+p {
+  text-wrap: pretty;
+}
+
+/* ── الأرقام تتحاذى في الأعمدة ─────────────────────────────────────────────
+   الأرقام المتناسبة (proportional) بتخلي العواميد ترقص: "111" أضيق من
+   "999". في الإحصائيات والتواريخ والعدّادات ده بيبان. */
+time,
+[class*="stat"],
+[class*="count"],
+[class*="Year"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── شريط التمرير ─────────────────────────────────────────────────────────
+   الافتراضي على ويندوز أبيض عريض، وبيقطع التصميم الغامق من جنب الصفحة
+   للأخير. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--main-color-rgb), 0.5) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(var(--main-color-rgb), 0.45);
+  border: 3px solid var(--bg-color);
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(var(--main-color-rgb), 0.7); }
+
+/* ── الطباعة ──────────────────────────────────────────────────────────────
+   بورتفوليو بيتطبع فعلاً: حد بيعمل Save as PDF ويبعته لزميله، أو بيطبعه قبل
+   إنترفيو. من غير القواعد دي بيطلع خلفية سودا (بتاكل حبر وبتخلي النص
+   يختفي)، وكل اللينكات بتبقى نص من غير عناوين.
+
+   نفس الفكرة بتخلي "Save as PDF" من المتصفح تطلّع نسخة مقروءة من الموقع
+   من غير ما تحتاج ملف PDF منفصل. */
+@media print {
+  /* لون فاتح ونص أسود */
+  :root {
+    --bg-color: #fff;
+    --background: #fff;
+    --text-color: #000;
+    --text-bright: #000;
+    --text-muted: #333;
+    --text-dim: #555;
+  }
+
+  body { background: #fff !important; color: #000 !important; }
+
+  /* الزخرفة كلها تختفي: مفيش داعي تطبع particles وscanlines وشرايط متحركة */
+  [data-decorative="true"],
+  [aria-hidden="true"],
+  header[data-site-header],
+  nav,
+  form,
+  video,
+  iframe {
+    display: none !important;
+  }
+
+  /* اللينكات تطبع عنوانها جنبها — من غير كده الصفحة المطبوعة فيها كلمات
+     ملهاش معنى زي "Verify" و"Open case" */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #555;
+    word-break: break-all;
+  }
+
+  /* ماينفعش قسم يتقطع في نص عنوان */
+  h1, h2, h3, h4 { break-after: avoid; }
+  section { break-inside: auto; }
+
+  /* content-visibility بتخفي المحتوى اللي بره الشاشة عن الطابعة كمان */
+  * { content-visibility: visible !important; }
 }

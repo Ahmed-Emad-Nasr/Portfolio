@@ -70,7 +70,7 @@
 /* Action Button */
 .primaryAction {
   padding: 1rem 2rem; border: 1px solid var(--main-color); background: transparent;
-  color: var(--main-color); font-size: 1.3rem; font-family: monospace; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--main-color); font-size: 1.3rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 2px;
   cursor: pointer; transition: all var(--motion-fast) ease;
 }
 

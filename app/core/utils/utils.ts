@@ -7,13 +7,16 @@
 // =============================================================================
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { faHome, faBook, faCertificate, faFolder, faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import type { IconProp, IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faCode, faTerminal } from "@fortawesome/free-solid-svg-icons";
-import {
-  faReact, faJs, faPython, faHtml5, faCss3, faJava,
-  faPhp, faAndroid, faSwift, faWindows,
-} from "@fortawesome/free-brands-svg-icons";
+/*
+ * الملف ده كان بيستورد 18 أيقونة من تلات حزم @fortawesome. الحزم دي
+ * (المحرّك + الـ core + الأيقونات) كانت بتضيف 94 كيلوبايت للـ bundle
+ * الأساسي عشان ترسم 38 أيقونة ثابتة.
+ *
+ * دلوقتي الخرايط دي بتخزّن **اسم** الأيقونة، والـ <Icon> بيقرا مسار الـ
+ * SVG من جدول مولّد (core/icons/icon-data.ts). نفس الشكل بالظبط، من غير
+ * أي مكتبة وقت التشغيل.
+ */
+import type { IconName } from "@/app/core/icons/icon-data";
 
 // -----------------------------------------------------------------------------
 // Types (from useGitHubRepos.ts + useScrollSpy.ts)
@@ -130,18 +133,18 @@ export const calculateExperience = (startDate: string, endDate?: string): string
 // - Inlined fallback returns to save memory allocation.
 // -----------------------------------------------------------------------------
 
-const ICON_MAP: Record<string, IconDefinition> = {
-  TypeScript: faReact, JavaScript: faJs, Python: faPython, HTML: faHtml5,
-  CSS: faCss3, Java: faJava, PHP: faPhp, Kotlin: faAndroid,
-  Swift: faSwift, PowerShell: faTerminal, Shell: faTerminal, VisualBasic: faWindows,
+const ICON_MAP: Record<string, IconName> = {
+  TypeScript: "faReact", JavaScript: "faJs", Python: "faPython", HTML: "faHtml5",
+  CSS: "faCss3", Java: "faJava", PHP: "faPhp", Kotlin: "faAndroid",
+  Swift: "faSwift", PowerShell: "faTerminal", Shell: "faTerminal", VisualBasic: "faWindows",
 };
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
   year: "numeric", month: "short", day: "numeric",
 });
 
-export const getIconForLanguage = (language: string | null): IconDefinition =>
-  (language && ICON_MAP[language]) || faCode;
+export const getIconForLanguage = (language: string | null): IconName =>
+  (language && ICON_MAP[language]) || "faCode";
 
 // RENAMED from `formatDate`: a second export with that exact name lives in
 // core/config/portfolio.ts using en-GB, while this one uses en-US. The same
@@ -283,13 +286,13 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
  * كان فيه JSON-LD في layout.tsx و page.tsx بيشاور على "#Contact" ومفيش
  * أي طريقة في الـ nav توصّلك له.
  */
-const SECTION_ICONS: Record<string, IconProp> = {
-  Home:           faHome,
-  Experience:     faBook,
-  Projects:       faFolder,
-  Certifications: faCertificate,
-  Coverage:       faShieldHalved,
-  Contact:        faEnvelope,
+const SECTION_ICONS: Record<string, IconName> = {
+  Home:           "faHome",
+  Experience:     "faBook",
+  Projects:       "faFolder",
+  Certifications: "faCertificate",
+  Coverage:       "faShieldHalved",
+  Contact:        "faEnvelope",
 };
 
 const SPY_SECTIONS = Object.keys(SECTION_ICONS).map((label) => ({ label, elementId: label }));

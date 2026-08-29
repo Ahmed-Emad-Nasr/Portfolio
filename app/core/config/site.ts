@@ -17,7 +17,19 @@
 
 export const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
 
-export const TRAILING_SLASH = true;
+/*
+ * كان true، والموقع المنشور بيرد على /Portfolio/blog **من غير** سلاش —
+ * وnext.config.mjs مفيهوش trailingSlash. النتيجة إن الـ sitemap و og:url
+ * و JSON-LD @id و روابط الـ RSS كلهم كانوا بيقولوا عناوين بسلاش، بينما
+ * الـ canonical واللينكات الحقيقية في الصفحة من غيره.
+ *
+ * يعني كنت بتقدّم لجوجل عنوانين مختلفين لنفس الصفحة، والعنوان اللي في
+ * الـ sitemap مش هو اللي بيفتح.
+ *
+ * ده مش موضوع مسارات — ده SEO. لو غيّرت رأيك وحطيت trailingSlash: true
+ * في next.config.mjs، رجّعها true هنا عشان يفضلوا متطابقين.
+ */
+export const TRAILING_SLASH = false;
 
 /** بيحوّل مسار داخلي لعنوان مطلق بالشكل الصح للـ crawlers */
 export const absoluteUrl = (path: string): string => {

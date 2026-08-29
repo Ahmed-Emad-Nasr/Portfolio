@@ -19,8 +19,11 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <h2 className={titleClassName}>
-      <span>{japaneseText} •</span>
-      <span> {englishText}</span>
+      {/* lang="ja" بيخلي قاعدة :lang(ja) في globals.css تدّي النص خط CJK
+          مقصود بدل ما المتصفح يختار أي خط ياباني موجود على الجهاز — وبيمنع
+          الـ screen reader إنه ينطق الكانجي بنطق إنجليزي. */}
+      <span lang="ja">{japaneseText} •</span>
+      <span lang="en"> {englishText}</span>
     </h2>
   );
 }

@@ -20,7 +20,7 @@
 
 .jpLabel {
   display: block;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   letter-spacing: 4px;
   color: var(--main-color);
@@ -146,7 +146,7 @@
   background: rgba(255, 255, 255, 0.03);
   border-left: 2px solid var(--main-color);
   font-size: 1.1rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--text-muted);
   width: fit-content;
 }
@@ -160,7 +160,7 @@
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   font-size: 1.1rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
   transition: background-color var(--motion-fast) var(--motion-ease),
               color var(--motion-fast) var(--motion-ease),
               border-color var(--motion-fast) var(--motion-ease);
@@ -169,13 +169,13 @@
 .skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); border-color: var(--main-color); }
 
 .date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: var(--space-md, 2rem); padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: var(--space-xs, 0.6rem); }
-.experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: monospace; }
-.date-range { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; color: var(--text-muted); font-family: monospace; }
+.experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: var(--font-mono); }
+.date-range { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; color: var(--text-muted); font-family: var(--font-mono); }
 
 .proofLink {
   display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.5rem 1.2rem;
   border: 1px solid rgba(var(--accent-color-rgb), 0.3); color: var(--accent-color);
-  font-size: 1.2rem; font-family: monospace; transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease);
+  font-size: 1.2rem; font-family: var(--font-mono); transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease);
 }
 .proofLink:hover { background: rgba(var(--accent-color-rgb), 0.1); border-color: var(--accent-color); }
 

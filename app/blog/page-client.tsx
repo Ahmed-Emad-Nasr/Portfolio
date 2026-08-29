@@ -76,7 +76,15 @@ const TOOL_FACETS = countValues(
   caseEvidenceLibrary.flatMap((item) => [...(item.tools ?? [])]),
 ).slice(0, 12);
 
-export default function BlogPageClient() {
+/*
+ * `startHere` بييجي جاهز مرندر من page.tsx (Server Component). لو الملف ده
+ * استورد الكومبوننت مباشرة كان هيبقى client component ويحزّم مكتبة الـ
+ * cases في bundle المتصفح — نفس السبب اللي خلّى خريطة ATT&CK تتبعت كـ prop
+ * في الصفحة الرئيسية.
+ */
+type BlogPageClientProps = { startHere?: React.ReactNode };
+
+export default function BlogPageClient({ startHere }: BlogPageClientProps) {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
@@ -260,6 +268,10 @@ export default function BlogPageClient() {
       <LoadingScreen />
       <AppBar />
       
+      {/* مسار قراءة قصير قبل المكتبة الكاملة: 38 تقرير في ليستة واحدة
+          بتشلّ اللي فاتحها، وأغلب اللي بيفتح الصفحة دي عنده خمس دقايق. */}
+      {startHere}
+
       <BlogPdfLibrarySection
         visiblePdfCards={visiblePdfs}
         screenshotsById={caseScreenshotsByEvidenceId}

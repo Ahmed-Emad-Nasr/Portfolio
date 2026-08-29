@@ -22,10 +22,7 @@ import Link from "next/link";
 import { certifications } from "@/app/core/config/certifications";
 import { achievements } from "@/app/core/config/achievements";
 import { skillGroups, languages } from "@/app/core/config/skills";
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import styles from "./credentials.module.css";
-
-const CASE_TITLES = new Map(caseEvidenceLibrary.map((item) => [item.id, item.title]));
 
 const Credentials = memo(function Credentials() {
   return (
@@ -42,8 +39,8 @@ const Credentials = memo(function Credentials() {
                 <span className={styles.certName}>{cert.shortName ?? cert.name}</span>
                 {cert.shortName && <span className={styles.certFull}>{cert.name}</span>}
               </div>
-              <span className={styles.certIssuer}>{cert.issuer}</span>
               <span className={styles.certYear}>{cert.year}</span>
+              <span className={styles.certIssuer}>{cert.issuer}</span>
               {cert.verifyUrl ? (
                 <a
                   className={styles.verify}
@@ -106,11 +103,9 @@ const Credentials = memo(function Credentials() {
               </ul>
               {group.evidence && group.evidence.length > 0 && (
                 <ul className={styles.evidenceList}>
-                  {group.evidence.map((caseId) => (
-                    <li key={caseId}>
-                      <Link href={`/blog/${caseId}`}>
-                        {CASE_TITLES.get(caseId) ?? caseId}
-                      </Link>
+                  {group.evidence.map((item) => (
+                    <li key={item.id}>
+                      <Link href={`/blog/${item.id}`}>{item.label}</Link>
                     </li>
                   ))}
                 </ul>

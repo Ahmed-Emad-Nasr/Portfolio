@@ -268,7 +268,7 @@
 .primaryShot:hover img, .shotThumb:hover img { filter: grayscale(0%) contrast(1.1); transform: scale(1.02); }
 
 .moreShotsBadge {
-  position: absolute; right: 0.8rem; bottom: 0.8rem; border-radius: 2px; font-size: 1.2rem; font-family: monospace;
+  position: absolute; right: 0.8rem; bottom: 0.8rem; border-radius: 2px; font-size: 1.2rem; font-family: var(--font-mono);
   padding: 0.4rem 0.8rem; border: 1px solid var(--accent-color); background: rgba(0, 0, 0, 0.9); color: var(--accent-color); z-index: 5;
 }
 

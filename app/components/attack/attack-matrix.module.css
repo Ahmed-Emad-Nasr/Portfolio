@@ -1,87 +1,107 @@
-/* attack-matrix.module.css — نفس التوكنز المستخدمة في باقي السكاشن */
+/*
+ * attack-matrix.module.css
+ *
+ * متوافق مع باقي السكاشن: نفس الـ padding، نفس الـ container، نفس شكل
+ * العنوان المتوسّط بالخط الأحمر تحته.
+ */
 
 .section {
-  padding: 6rem 0 5rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 8rem 0 6rem;
   position: relative;
   z-index: 1;
   content-visibility: auto;
-  contain-intrinsic-size: 1px 900px;
+  contain-intrinsic-size: 1px 1200px;
 }
 
 .container {
-  max-width: var(--container-max-width, 1280px);
   margin: 0 auto;
-  padding: 0 var(--container-pad-x, 1.5rem);
+  padding: 0 var(--container-pad-x, 5.25%);
+  max-width: var(--container-max-width, 1500px);
 }
 
-.header { margin-bottom: 2.5rem; }
+.header-section { text-align: center; margin-bottom: 4rem; }
 
+/* نفس تعريف .title الموجود في Projects و Experience — مقصود يبقى مطابق */
 .title {
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 900;
-  color: var(--text-bright);
-  margin: 0 0 0.8rem;
+  position: relative;
+  font-weight: 800;
+  font-size: 2.6rem;
+  color: var(--text-color);
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  display: inline-block;
+  padding-bottom: 1.6rem;
 }
-.title span[lang="ja"] { color: var(--main-color); }
+.title::before,
+.title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+.title::before { width: 100%; height: 1px; background: rgba(var(--main-color-rgb), 0.3); }
+.title::after { width: 40%; height: 3px; background: var(--main-color); }
 
 .lede {
   color: var(--text-muted);
-  max-width: 62ch;
-  margin: 0 0 1.6rem;
+  max-width: 60ch;
+  margin: 1.6rem auto 0;
   font-size: 1.05rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 2.4rem;
-  margin: 0;
+  justify-content: center;
+  gap: 3rem;
+  margin: 2.2rem 0 0;
 }
 .stat { margin: 0; }
 .stat dt {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .stat dd {
-  margin: 0.2rem 0 0;
-  font-size: 1.9rem;
+  margin: 0.25rem 0 0;
+  font-size: 2rem;
   font-weight: 800;
   color: var(--main-color);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-/* أفقي على الموبايل بدل ما الأعمدة تتلخبط. tabIndex عليه في الـ TSX
-   عشان اللي بيستخدم كيبورد يقدر يـ scroll جواه. */
-.scroller {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  padding-bottom: 1rem;
-}
-.scroller:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 4px; }
-
+/*
+ * كان grid-auto-flow: column جوّه scroller أفقي — يعني على الديسكتوب آخر
+ * عمودين مخفيين ورا شريط تمرير رمادي بتاع النظام في نص التصميم.
+ *
+ * auto-fill بيلف الأعمدة على سطور بدل ما يخبّيها: كل التكتيكات ظاهرة على
+ * أي عرض من غير أي scroll، والأعمدة بتتراص لوحدها من 6 على الديسكتوب
+ * لعمود واحد على الموبايل.
+ *
+ * align-items: start عشان العمود اللي فيه تكنيك واحد مايتمدّش لطول العمود
+ * اللي جنبه.
+ */
 .matrix {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(15rem, 1fr);
-  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 2rem 1.2rem;
   align-items: start;
+  max-width: 1160px;
+  margin: 0 auto;
 }
 
 .column { min-width: 0; }
 
 .tactic {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.8rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cell { margin-bottom: 0.5rem; }
@@ -90,52 +110,71 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.65rem 0.75rem;
+  gap: 0.55rem;
+  padding: 0.6rem 0.7rem;
   cursor: pointer;
   list-style: none;
-  border: 1px solid rgba(var(--main-color-rgb), calc(0.18 + var(--depth, 0) * 0.5));
-  /* شدة الخلفية بتتغيّر مع عدد التقارير */
-  background: rgba(var(--main-color-rgb), calc(0.05 + var(--depth, 0) * 0.22));
-  transition: border-color var(--motion-fast, 150ms) ease;
+  border: 1px solid rgba(var(--main-color-rgb), calc(0.2 + var(--depth, 0) * 0.45));
+  border-radius: var(--radius-card-sm, 6px);
+  /* شدة الخلفية = عدد التقارير، فالتغطية العميقة بتبان بنظرة واحدة */
+  background: rgba(var(--main-color-rgb), calc(0.05 + var(--depth, 0) * 0.2));
+  transition: border-color var(--motion-fast, 150ms) ease,
+              background var(--motion-fast, 150ms) ease;
 }
 .cellSummary::-webkit-details-marker { display: none; }
-.cellSummary:hover { border-color: var(--accent-color); }
+.cellSummary::marker { content: ""; }
+.cellSummary:hover {
+  border-color: var(--accent-color);
+  background: rgba(var(--main-color-rgb), calc(0.12 + var(--depth, 0) * 0.2));
+}
 .cellSummary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
 
 .techniqueId {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
   color: var(--accent-color);
+  font-variant-numeric: tabular-nums;
 }
 .techniqueName {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-color);
   line-height: 1.3;
+  /* الاسم بيلف على سطرين بدل ما يتقص */
+  overflow-wrap: anywhere;
 }
 .count {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
 }
 
 .evidence {
   list-style: none;
   margin: 0;
-  padding: 0.5rem 0.75rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.6rem 0.7rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-top: 0;
+  border-radius: 0 0 var(--radius-card-sm, 6px) var(--radius-card-sm, 6px);
 }
-.evidence li { margin-bottom: 0.35rem; }
+.evidence li { margin-bottom: 0.4rem; }
+.evidence li:last-child { margin-bottom: 0; }
 .evidence a {
   color: var(--text-muted);
-  font-size: 0.8rem;
-  line-height: 1.35;
+  font-size: 0.78rem;
+  line-height: 1.4;
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
 .evidence a:hover,
 .evidence a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
+
+@media (max-width: 991px) {
+  .section { padding: 5rem 0 4rem; }
+  .title { font-size: 2rem; }
+  .stats { gap: 2rem; }
+  .matrix { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .cellSummary { transition: none; }

@@ -206,7 +206,6 @@ export default function CaseArticle({
                     sizes="(max-width: 991px) 45vw, 24vw"
                     loading="lazy"
                     decoding="async"
-                    quality={25}
                   />
                 </button>
               ))}

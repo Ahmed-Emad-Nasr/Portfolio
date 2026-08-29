@@ -10,7 +10,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Overlock } from "next/font/google";
+import { Overlock, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
 import { certifications, certificationsJsonLd } from "@/app/core/config/certifications";
@@ -116,6 +116,28 @@ const overlock = Overlock({
   display: "swap",
 });
 
+/*
+ * JetBrains Mono — كان ناقص تماماً.
+ *
+ * globals.css فيه `--font-mono: "JetBrains Mono", monospace` ومفيش أي حاجة
+ * بتحمّل الخط ده. عدّيت على الـ CSS: **70 تصريح** بيطلبه — الـ HUD بتاع
+ * الـ hero، وعناوين التكتيكات، وشارات المشاريع، والترمينال، والـ command
+ * palette، وكل التواريخ والأرقام.
+ *
+ * كل واحدة فيهم كانت بترجع للـ monospace بتاع النظام: Courier New على
+ * ويندوز، Menlo على ماك، Roboto Mono على أندرويد. يعني الحتة اللي الهوية
+ * البصرية كلها قايمة عليها كانت بتتعرض بتلات خطوط مختلفة حسب جهاز الزائر —
+ * وعلى ويندوز، وهو أغلب الزوار، بـ Courier New.
+ *
+ * وزنين بس (400 للنص، 700 للـ labels) عشان مانزوّدش الحمل.
+ */
+const jetbrainsMono = JetBrains_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
+
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 // ─── Structured Data ──────────────────────────────────────────────────────────
@@ -213,7 +235,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr" className={overlock.variable}>
+    <html lang="en" dir="ltr" className={`${overlock.variable} ${jetbrainsMono.variable}`}>
       <head>
         {/*
           REMOVED: <link rel="preload" as="image" href=".../My_Logo.webp">

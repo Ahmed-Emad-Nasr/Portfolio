@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import BlogPageClient from "./page-client";
+// Server Component: بيقرا مكتبة الـ cases وقت الـ build. بيتبعت كـ prop
+// عشان page-client (client component) ماستوردهوش ويجرّ الداتا للمتصفح.
+import StartHere from "./components/StartHere";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 
 const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
@@ -137,7 +140,7 @@ export default function BlogPage() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <BlogPageClient />
+      <BlogPageClient startHere={<StartHere />} />
     </>
   );
 }

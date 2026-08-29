@@ -133,7 +133,7 @@
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: rgba(0, 229, 255, 0.7);
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 .title {
@@ -170,7 +170,7 @@
   position: absolute;
   bottom: 2.2rem;
   font-size: 0.9rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   /* a11y: raised from 0.2 → 0.38 opacity so the label is still readable
      (it's brief loading-screen text, not purely decorative) */

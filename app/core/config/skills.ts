@@ -17,8 +17,18 @@ export type SkillGroup = {
   /** اسم المجموعة زي ما هو في الـ CV */
   label: string;
   items: readonly string[];
-  /** ids من مكتبة الـ cases بتثبت المجموعة دي */
-  evidence?: readonly string[];
+  /*
+   * الـ cases اللي بتثبت المجموعة دي.
+   *
+   * الـ label متكتوب هنا بدل ما يتجاب من caseEvidenceLibrary عن قصد:
+   * الكومبوننت اللي بيعرض المهارات client component، فأي import لمكتبة
+   * الـ cases كان بيحزّم 42 كيلوبايت من داتا البلوج في bundle الصفحة
+   * الرئيسية عشان يقرا 13 عنوان. النسخ المحدود هنا أرخص بكتير.
+   *
+   * الـ id لازم يطابق caseEvidenceLibrary[].id — لو غيّرت id في cases.ts
+   * غيّره هنا، اللينك هيبقى 404 من غير كده.
+   */
+  evidence?: readonly { id: string; label: string }[];
 };
 
 export const skillGroups: readonly SkillGroup[] = [
@@ -26,19 +36,29 @@ export const skillGroups: readonly SkillGroup[] = [
     id: "siem",
     label: "SIEM & Security Monitoring",
     items: ["Wazuh", "ELK Stack", "Splunk", "Security Onion", "Sysmon", "auditd", "Threat Intelligence"],
-    evidence: ["3omda custom detection rules", "soc-env-depi-r3-project"],
+    evidence: [
+      { id: "3omda-custom-detection-rules", label: "Custom Wazuh detection rules" },
+      { id: "soc-env-depi-r3-project", label: "SOC environment build" },
+    ],
   },
   {
     id: "ir",
     label: "Incident Response & Threat Detection",
     items: ["Alert Triage", "IOC Analysis", "Log Analysis", "Incident Response"],
-    evidence: ["soc326-report", "soc336-report", "soc274-pdf"],
+    evidence: [
+      { id: "soc326-report", label: "SOC326 — full IR lifecycle" },
+      { id: "soc336-report", label: "SOC336 — APT persistence" },
+      { id: "soc274-pdf", label: "SOC274 — lateral movement" },
+    ],
   },
   {
     id: "identity",
     label: "Identity & Access Security",
     items: ["IAM", "PAM", "DAM", "RBAC", "ABAC"],
-    evidence: ["iam-access-control-room", "aws-kms-security"],
+    evidence: [
+      { id: "iam-access-control-room", label: "IAM & access control" },
+      { id: "aws-kms-security", label: "AWS KMS key management" },
+    ],
   },
   {
     id: "automation",
@@ -49,13 +69,21 @@ export const skillGroups: readonly SkillGroup[] = [
     id: "network",
     label: "Networking & Network Security",
     items: ["TCP/IP", "VPN", "Packet Analysis", "IDS/IPS", "Suricata", "Zeek", "Wireshark", "pfSense"],
-    evidence: ["ettercap-case", "malicious-web-traffic-room-report"],
+    evidence: [
+      { id: "ettercap-case", label: "EtterCap MITM analysis" },
+      { id: "malicious-web-traffic-room-report", label: "Malicious web traffic" },
+    ],
   },
   {
     id: "forensics",
     label: "Malware Analysis & Forensics",
     items: ["Volatility", "Autopsy", "PEStudio", "CFF Explorer", "YARA", "FakeNet-NG", "Process Hacker"],
-    evidence: ["data-exfiltration-investigation", "autopsy", "ecir-registry-forensics", "malware-analysis-wannacry"],
+    evidence: [
+      { id: "data-exfiltration-investigation", label: "Memory forensics — exfiltration" },
+      { id: "autopsy", label: "Autopsy data recovery" },
+      { id: "ecir-registry-forensics", label: "Windows registry forensics" },
+      { id: "malware-analysis-wannacry", label: "WannaCry analysis & response" },
+    ],
   },
   {
     id: "frameworks",

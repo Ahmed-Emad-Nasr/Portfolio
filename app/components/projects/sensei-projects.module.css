@@ -6,7 +6,7 @@
 .section-projects { min-height: 100vh; min-height: 100dvh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 5rem; }
 
-.sectionLead { color: var(--text-muted); font-size: 1.2rem; font-family: monospace; margin-top: 1.2rem; }
+.sectionLead { color: var(--text-muted); font-size: 1.2rem; font-family: var(--font-mono); margin-top: 1.2rem; }
 
 /* Sharp Title */
 .title { position: relative; font-weight: 800; font-size: 2.6rem; color: var(--text-color); letter-spacing: 1.6px; text-transform: uppercase; display: inline-block; padding-bottom: 1.6rem; }
@@ -23,7 +23,7 @@
   background: rgba(var(--main-color-rgb), var(--timeline-line-opacity, 0.2));
 }
 
-.section-summary { margin: 0 auto 3rem; max-width: 800px; display: flex; justify-content: center; align-items: center; gap: 1.5rem; font-size: 1.05rem; font-family: monospace; color: var(--text-muted); }
+.section-summary { margin: 0 auto 3rem; max-width: 800px; display: flex; justify-content: center; align-items: center; gap: 1.5rem; font-size: 1.05rem; font-family: var(--font-mono); color: var(--text-muted); }
 
 /* --- The Cards --- */
 .project-item { position: relative; width: calc(50% - 2rem); z-index: 2; margin-bottom: 3rem; }
@@ -56,7 +56,7 @@
 .part-1 { display: flex; align-items: center; gap: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .part-1 svg { font-size: 2.5rem; color: var(--text-muted); transition: color var(--motion-fast) ease; }
 .single-project:hover .part-1 svg { color: var(--main-color); }
-.part-1 h3 { font-size: 1.6rem; color: #fff; margin: 0; font-family: monospace; letter-spacing: -0.4px; }
+.part-1 h3 { font-size: 1.6rem; color: #fff; margin: 0; font-family: var(--font-mono); letter-spacing: -0.4px; }
 .title-link { color: inherit; display: inline-flex; align-items: center; gap: 0.8rem; }
 .link-icon { font-size: 1.2rem; opacity: 0; transform: translateX(-5px); transition: opacity var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease); }
 .single-project:hover .link-icon { opacity: 1; transform: translateX(0); color: var(--main-color); }
@@ -73,23 +73,23 @@
 
 /* Stats & Tags */
 .stats-container { display: flex; gap: var(--space-xs, 0.8rem); flex-wrap: wrap; margin-bottom: var(--space-sm, 1.5rem); }
-.stat-badge { font-size: 1rem; font-family: monospace; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
+.stat-badge { font-size: 1rem; font-family: var(--font-mono); color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
 .single-project:hover .stat-badge { color: rgba(255, 255, 255, 0.8); }
 .difficulty-badge { padding: 0.2rem 0.6rem; border: 1px solid rgba(var(--accent-color-rgb), 0.3); color: var(--accent-color); }
 
 .topics-container { display: flex; flex-wrap: wrap; gap: var(--space-xs, 0.6rem); margin-top: auto; }
-.topic-tag { font-size: 1rem; font-family: monospace; color: rgba(255, 255, 255, 0.6); }
+.topic-tag { font-size: 1rem; font-family: var(--font-mono); color: rgba(255, 255, 255, 0.6); }
 .topic-tag::before { content: "#"; color: var(--main-color); }
 
-.meta-info { font-size: 1rem; font-family: monospace; color: rgba(255, 255, 255, 0.6); display: flex; justify-content: space-between; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
+.meta-info { font-size: 1rem; font-family: var(--font-mono); color: rgba(255, 255, 255, 0.6); display: flex; justify-content: space-between; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
 /* Terminal Output (Case Study) */
-.case-study { margin-top: 1.5rem; padding: 1.2rem; background: #000; border: 1px solid rgba(255, 255, 255, 0.05); font-family: monospace; font-size: 1.05rem; color: var(--text-muted); }
+.case-study { margin-top: 1.5rem; padding: 1.2rem; background: #000; border: 1px solid rgba(255, 255, 255, 0.05); font-family: var(--font-mono); font-size: 1.05rem; color: var(--text-muted); }
 .case-study strong { color: var(--accent-color); }
 
 /* Action Buttons */
 .project-actions { display: flex; gap: var(--space-sm, 1rem); margin-top: var(--space-sm, 1.5rem); }
-.action-btn { flex: 1; text-align: center; padding: 0.7rem; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; font-family: monospace; font-size: 1.05rem; text-transform: uppercase; border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); transition: border-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease); }
+.action-btn { flex: 1; text-align: center; padding: 0.7rem; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 1.05rem; text-transform: uppercase; border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); transition: border-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease); }
 .action-btn:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 .action-btn:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.05); }
 .primary-action { border-color: rgba(var(--main-color-rgb), 0.3); color: var(--main-color); }

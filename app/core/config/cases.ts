@@ -84,7 +84,7 @@ export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
   "simple-ctf-writeup": Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
   "ecir-registry-forensics": Array.from({ length: 14 }, (_, i) => `Assets/Cases/AhmedEmad_RegistryForencics_eCIR/${i + 1}.webp`),
-  "3omda custom detection rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
+  "3omda-custom-detection-rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda-custom-detection-rules/${i + 1}.webp`),
   "penetration-testing-life-cycle": Array.from({ length: 4 }, (_, i) => `Assets/Cases/penetration-testing-life-cycle/${i + 1}.webp`),
   autopsy: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.webp`),
   "data-exfiltration-investigation": Array.from({ length: 37 }, (_, i) => `Assets/Cases/Data Exfiltiration Investigation/${i + 1}.webp`),
@@ -289,21 +289,21 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.webp",
   },
   {
-    id: "3omda custom detection rules",
+    id: "3omda-custom-detection-rules",
     title: "My Custom Detection Rules in Wazuh SIEM Solution with 92% Detection Rate",
     description: "Custom detection rules for identifying suspicious activities in the network.",
     platform: "SIEM Lab",
     type: "PDF Report",
     category: "Threat Detection",
     difficulty: "Hard",
-    href: "Assets/Cases/3omda custom detection rules/3omda custom detection rules.pdf",
+    href: "Assets/Cases/3omda-custom-detection-rules/3omda-custom-detection-rules.pdf",
     tags: ["Wazuh", "SIEM", "Threat Detection", "Custom Rules", "Blue Team", "SOC", "Network Security"],
     tools: ["Wazuh", "EDR", "SIEM"],
     skillsGained: ["Wazuh Rule Creation", "Threat Hunting", "Log Analysis", "Detecting Defense Evasion", "Privilege Escalation Detection"],
     readTime: 26,
     date: "2026-05-05",
-    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
-    image: "Assets/Cases/3omda custom detection rules/1.webp",
+    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda-custom-detection-rules/${i + 1}.webp`),
+    image: "Assets/Cases/3omda-custom-detection-rules/1.webp",
   },
   {
     id: "penetration-testing-life-cycle",
@@ -857,3 +857,44 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     image: "Assets/Cases/Offensive_Security_Intro/Screenshot (174).webp",
   },
 ] as const;
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════
+ * حارس وقت الـ build: كل id لازم يكون صالح كـ URL
+ * ═══════════════════════════════════════════════════════════════════════
+ *
+ * الـ id بيتحوّل مباشرة لمسار الصفحة (`/blog/{id}`) وبيترجّع من
+ * generateStaticParams. الـ id اللي كان اسمه "3omda custom detection rules"
+ * — بمسافات — كان بيكسّر الصفحة بالخطأ ده:
+ *
+ *     Page "/blog/[slug]/page" is missing param "/blog/[slug]"
+ *     in "generateStaticParams()", which is required with "output: export"
+ *
+ * السبب إن اللينك في الصفحة بيتعمله encode (`%20`) والـ param الراجع من
+ * generateStaticParams فيه مسافات فعلية، فالراوتر مش بيلاقي تطابق.
+ *
+ * الفحص ده بيفشّل الـ build فوراً برسالة واضحة بدل ما تكتشف المشكلة من
+ * صفحة 404 في المتصفح. بيتنفذ وقت الـ build بس (الملف ده بيتقري في
+ * Server Components)، فتكلفته صفر على الزائر.
+ */
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+for (const item of caseEvidenceLibrary) {
+  if (!SLUG_PATTERN.test(item.id)) {
+    throw new Error(
+      `[cases.ts] Case id "${item.id}" is not URL-safe. ` +
+      `Ids become page paths, so they must be lowercase letters, digits and ` +
+      `single hyphens (e.g. "wannacry-analysis"). Spaces, uppercase letters ` +
+      `and punctuation break generateStaticParams with output: "export".`,
+    );
+  }
+}
+
+const seen = new Set<string>();
+for (const item of caseEvidenceLibrary) {
+  if (seen.has(item.id)) {
+    // ids مكررة معناها إن صفحة بتتكتب فوق التانية وقت الـ export
+    throw new Error(`[cases.ts] Duplicate case id "${item.id}".`);
+  }
+  seen.add(item.id);
+}

@@ -60,7 +60,11 @@ const KanjiDivider = memo(function KanjiDivider({
           <span key={index} className={styles.group}>
             <span className={styles.brand}>Ahmed Emad Nasr</span>
             <span className={styles.sep}>•</span>
-            <span className={styles.text}>{text}</span>
+            {/* lang="ja" مش زخرفة: هو اللي بيخلي القاعدة العامة في
+                globals.css تدّي النص ده خط CJK مقصود بدل ما المتصفح يعمل
+                fallback حرف بحرف لأي خط لقاه. وكمان بيقول للـ screen
+                reader يبدّل اللغة بدل ما يقرا الكانجي بنطق إنجليزي. */}
+            <span className={styles.text} lang="ja">{text}</span>
           </span>
         ))}
       </div>
