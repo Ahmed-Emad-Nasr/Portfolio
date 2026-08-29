@@ -16,12 +16,60 @@ import { notFound } from "next/navigation";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import CaseArticle from "./CaseArticle";
 import { absoluteUrl, caseUrl } from "@/app/core/config/site";
+import { caseAttackMapping, TECHNIQUES } from "@/app/core/config/attack";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
 
 // dynamicParams = false: أي slug مش في القايمة بيبقى 404 وقت الـ build بدل ما
 // يحاول يعمل render وقت التشغيل (اللي مش موجود أصلاً في static export).
 export const dynamicParams = false;
+
+
+/*
+ * تفاصيل إضافية بتتحسب هنا (Server Component) وبتتبعت جاهزة للكومبوننت —
+ * فمفيش منها ولا بايت في bundle المتصفح.
+ */
+
+const TECHNIQUE_BY_ID = new Map(TECHNIQUES.map((t) => [t.id, t]));
+
+/** تكنيكات ATT&CK بتاعة الـ case ده، بالاسم الكامل */
+const techniquesFor = (caseId: string) =>
+  (caseAttackMapping[caseId] ?? [])
+    .map((id) => TECHNIQUE_BY_ID.get(id))
+    .filter((t): t is NonNullable<typeof t> => Boolean(t));
+
+/*
+ * تقارير قريبة من التقرير ده.
+ *
+ * الترتيب: تكنيكات ATT&CK مشتركة أولاً (ده أقوى إشارة على التشابه
+ * الحقيقي)، وبعدها الأدوات المشتركة، وبعدها نفس التصنيف. أي case معندوش
+ * أي تقاطع مبيظهرش خالص — "مقترحات" عشوائية أسوأ من مفيش مقترحات.
+ */
+const relatedTo = (item: (typeof caseEvidenceLibrary)[number], limit = 3) => {
+  const myTechniques = new Set(caseAttackMapping[item.id] ?? []);
+  const myTools = new Set(item.tools ?? []);
+
+  return caseEvidenceLibrary
+    .filter((other) => other.id !== item.id)
+    .map((other) => {
+      const sharedTechniques = (caseAttackMapping[other.id] ?? [])
+        .filter((t) => myTechniques.has(t)).length;
+      const sharedTools = (other.tools ?? []).filter((t) => myTools.has(t)).length;
+      const sameCategory = other.category === item.category ? 1 : 0;
+      return {
+        id: other.id,
+        title: other.title,
+        category: other.category,
+        readTime: other.readTime,
+        // الأوزان: تكنيك مشترك أثقل من أداة مشتركة بكتير
+        score: sharedTechniques * 5 + sharedTools * 2 + sameCategory,
+        sharedTechniques,
+      };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+    .slice(0, limit);
+};
 
 export function generateStaticParams() {
   return caseEvidenceLibrary.map((item) => ({ slug: item.id }));
@@ -121,6 +169,8 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         screenshots={screenshots}
         previous={previous ? { id: previous.id, title: previous.title } : null}
         next={next ? { id: next.id, title: next.title } : null}
+        techniques={techniquesFor(item.id)}
+        related={relatedTo(item)}
       />
     </>
   );

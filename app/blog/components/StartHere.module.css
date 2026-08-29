@@ -6,6 +6,23 @@
   max-width: var(--container-max-width, 1500px);
 }
 
+/* عنوان الصفحة — كان ناقص تماماً (شوف التعليق في StartHere.tsx) */
+.pageTitle {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 900;
+  color: var(--text-bright);
+  margin: 0 0 0.7rem;
+  letter-spacing: -0.5px;
+}
+
+.pageLede {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 62ch;
+  margin: 0 0 3rem;
+}
+
 .head { max-width: 60ch; margin-bottom: 1.6rem; }
 
 .title {

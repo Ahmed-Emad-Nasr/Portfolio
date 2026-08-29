@@ -107,7 +107,16 @@ export const metadata: Metadata = {
     siteName: "Ahmed Emad Nasr - SOC & Cybersecurity Analyst", // تعديل الـ SiteName
     images: [
       {
-        url: toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png"), // يفضل التأكد إن المسار ده صح، في الـ Portfolio كان /Assets/art-gallery/Images/logo/My_Logo.webp
+        /*
+         * كان "/Assets/art-gallery/logo/logo.png" — والتعليق اللي كان هنا
+         * بيشك في المسار وهو محق: `Images/` ناقصة والامتداد غلط. الملف
+         * الحقيقي هو Images/logo/My_Logo.webp، وهو المستخدم في كل مكان
+         * تاني في المشروع.
+         *
+         * النتيجة إن أي مشاركة لصفحة البلوج على لينكدإن أو تويتر أو
+         * واتساب كانت بتطلع من غير صورة.
+         */
+        url: toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/My_Logo.webp"),
         width: 1200,
         height: 630,
         alt: "Security Analysis Blog by Ahmed Emad Nasr",

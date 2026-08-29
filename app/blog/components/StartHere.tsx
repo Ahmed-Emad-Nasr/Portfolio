@@ -27,13 +27,26 @@ export default function StartHere() {
 
   return (
     <section className={styles.section} aria-labelledby="start-here-title">
+      {/*
+        صفحة البلوج كانت **من غير <h1> خالص** — 42 عنوان فيها وولا واحد h1.
+        ده أهم عنصر واحد في الصفحة بالنسبة لجوجل ولقارئ الشاشة: الأول
+        بيستخدمه كعنوان الصفحة في نتايج البحث، والتاني بيبدأ التصفح منه.
+
+        الـ h1 هنا لأن ده أول محتوى حقيقي في الصفحة بعد الهيدر.
+      */}
+      <h1 className={styles.pageTitle}>Cybersecurity Case Library</h1>
+      <p className={styles.pageLede}>
+        {caseEvidenceLibrary.length} published investigation reports — SOC
+        incidents, DFIR, malware analysis, and detection engineering.
+      </p>
+
       <div className={styles.head}>
         <h2 className={styles.title} id="start-here-title">
           Short on time? Start here
         </h2>
         <p className={styles.lede}>
-          Three reports that cover the range of the work. The full library of{" "}
-          {caseEvidenceLibrary.length} is below.
+          Three reports that cover the range of the work. The full library is
+          below.
         </p>
       </div>
 

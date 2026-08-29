@@ -13,8 +13,10 @@
         "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
         "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
         "audit": "npm audit --omit=dev",
-        "verify": "npm run lint && npm run type-check && npm run build",
-        "icons": "node scripts/generate-icons.cjs"
+        "verify": "npm run lint && npm run type-check && npm run check:assets && npm run build && npm run check:links",
+        "icons": "node scripts/generate-icons.cjs",
+        "check:assets": "node scripts/check-assets.mjs",
+        "check:links": "node scripts/check-links.mjs"
     },
     "dependencies": {
         "framer-motion": "^12.38.0",

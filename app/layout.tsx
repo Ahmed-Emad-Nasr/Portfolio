@@ -47,7 +47,17 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Ahmed Portfolio",
-    startupImage: ["/Assets/art-gallery/Images/logo/My_Logo.webp"],
+    /*
+     * كان "/Assets/…" — مسار من الجذر.
+     *
+     * Next بيضيف الـ basePath تلقائياً لصور openGraph و twitter (بيعملها
+     * resolve مقابل metadataBase)، بس **مش** لـ startupImage. فسكربت فحص
+     * اللينكات لقى ده آخر عنوان في الموقع كله طالع من غير /Portfolio
+     * قدامه — يعني أيقونة شاشة البداية على iOS كانت 404.
+     *
+     * عنوان مطلق كامل، زي صور الـ OG في page.tsx بالظبط.
+     */
+    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp"],
   },
   title: {
     default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
@@ -236,23 +246,22 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr" className={`${overlock.variable} ${jetbrainsMono.variable}`}>
-      <head>
-        {/*
-          REMOVED: <link rel="preload" as="image" href=".../My_Logo.webp">
+      {/*
+        الـ <head> اليدوي اتشال بالكامل. كان فيه سطرين:
 
-          It preloaded the WRONG file. The LCP element is 3omda.webp in
-          sensei-home.tsx, not the logo — so this reserved a connection for an
-          image that is not on the critical path and pushed the one that is
-          further down the queue. That image now carries `priority`, which
-          makes Next emit the correct preload with the correct URL.
+        1. <link rel="preload" as="image" href=".../My_Logo.webp">
+           بيعمل preload للملف الغلط — صورة الـ LCP هي 3omda.webp في
+           sensei-home.tsx، مش اللوجو. يعني كان بيحجز اتصال لصورة مش على
+           المسار الحرج ويأخّر اللي عليه. الصورة الصح بقت `priority`،
+           وNext بيولّد الـ preload الصح بالمسار الصح.
 
-          The <link rel="icon"> below is kept because your deployment resolves
-          it fine, but note it duplicates app/favicon.ico, which Next injects
-          automatically — two icon declarations for one icon. Safe to delete
-          once you have confirmed the .ico renders on its own.
-        */}
-        <link rel="icon" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
-      </head>
+        2. <link rel="icon" href="/Assets/art-gallery/Images/logo/My_Logo.webp">
+           مسار مكتوب بإيد **من غير basePath**. سكربت فحص اللينكات أكّد
+           ده: العنوان ده هو الوحيد في الموقع كله اللي طالع من غير
+           /Portfolio قدامه — يعني 404 على كل تحميل صفحة، على كل صفحة.
+           و`app/favicon.ico` موجود وNext بيحقنه أوتوماتيك بالمسار الصح،
+           فالسطر ده كان تعريف تاني متعارض ومكسور في نفس الوقت.
+      */}
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
 

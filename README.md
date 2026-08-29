@@ -82,7 +82,7 @@ Get Sensei-Dev up and running on your local machine in just a few steps:
 1. Ensure you have [Node.js](https://nodejs.org/en/download/package-manager) installed on your system.
 2. Clone the repository:
    ```
-   git clone https://github.com/MostafaSensei106/Sensei-Dev.git
+   git clone https://github.com/Ahmed-Emad-Nasr/Portfolio
    ```
 3. Navigate to the project directory and install dependencies:
    ```

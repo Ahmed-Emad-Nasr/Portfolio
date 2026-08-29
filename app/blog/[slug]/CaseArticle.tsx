@@ -38,16 +38,31 @@ type CaseItem = {
 
 type Sibling = { id: string; title: string } | null;
 
+/* بتتحسب في page.tsx (Server Component) وبتوصل جاهزة — الكومبوننت ده
+   client، فأي import لـ attack.ts أو cases.ts هنا كان هيتحزم في المتصفح. */
+type Technique = { id: string; name: string; tactic: string };
+type Related = {
+  id: string;
+  title: string;
+  category: string;
+  readTime: number;
+  sharedTechniques: number;
+};
+
 export default function CaseArticle({
   item,
   screenshots,
   previous,
   next,
+  techniques = [],
+  related = [],
 }: {
   item: CaseItem;
   screenshots: string[];
   previous: Sibling;
   next: Sibling;
+  techniques?: readonly Technique[];
+  related?: readonly Related[];
 }) {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [copied, setCopied] = useState(false);
@@ -210,6 +225,47 @@ export default function CaseArticle({
                 </button>
               ))}
             </div>
+          </section>
+        )}
+
+        {techniques.length > 0 && (
+          <section className={styles.attack} aria-labelledby="case-attack-title">
+            <h2 className={styles.factTitle} id="case-attack-title">
+              MITRE ATT&amp;CK — {techniques.length} technique(s)
+            </h2>
+            <ul className={styles.attackList}>
+              {techniques.map((technique) => (
+                <li key={technique.id} className={styles.attackChip}>
+                  <span className={styles.attackId}>{technique.id}</span>
+                  <span className={styles.attackName}>{technique.name}</span>
+                </li>
+              ))}
+            </ul>
+            <p className={styles.attackNote}>
+              <Link href="/#Coverage">See the full coverage map →</Link>
+            </p>
+          </section>
+        )}
+
+        {related.length > 0 && (
+          <section className={styles.related} aria-labelledby="case-related-title">
+            <h2 className={styles.factTitle} id="case-related-title">
+              Related reports
+            </h2>
+            <ul className={styles.relatedList}>
+              {related.map((entry) => (
+                <li key={entry.id}>
+                  <Link href={`/blog/${entry.id}`} className={styles.relatedCard}>
+                    <span className={styles.relatedTitle}>{entry.title}</span>
+                    <span className={styles.relatedMeta}>
+                      {entry.category} · {entry.readTime} min
+                      {entry.sharedTechniques > 0 &&
+                        ` · ${entry.sharedTechniques} shared technique(s)`}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

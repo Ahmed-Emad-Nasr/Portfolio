@@ -1,0 +1,59 @@
+# .github/workflows/verify.yml
+#
+# بيشغّل نفس الفحوصات المحلية على كل push و pull request.
+#
+# ليه ده مهم أكتر من أي حاجة تانية في المشروع؟ لأن أغلب المشاكل اللي وصلت
+# للإنتاج هنا مكانتش أخطاء منطق — كانت لينكات وأصول مكسورة: id فيه مسافات،
+# كارت بيلينك على صفحة متولّدتش، مسار أصل اتغيّر في الكود ومااتغيرش على
+# القرص. الأنواع دي كلها بتعدي من TypeScript ومن next build بنجاح.
+#
+# الـ workflow ده بيمسكهم قبل ما يوصلوا للموقع.
+
+name: Verify
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      # لازم قبل الـ build: مفيش فايدة نبني موقع بيشاور على ملفات مش موجودة
+      - name: Check assets exist in public/
+        run: npm run check:assets
+
+      - name: Build
+        run: npm run build
+
+      # بعد الـ build: بيزحف على out/ ويتأكد إن كل لينك داخلي بيوصل
+      - name: Check internal links
+        run: npm run check:links
+
+      # الأصول والصفحات المولّدة — مفيدة لو الـ build فشل عندك وإنت
+      # محتاج تشوف اللي اتولّد فعلاً
+      - name: Upload build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: out
+          path: out/
+          retention-days: 5

@@ -240,3 +240,85 @@
     transform: none;
   }
 }
+
+/* ── ATT&CK techniques ─────────────────────────────────────────────────────
+   التقرير بيقول "إيه اللي حصل"، والتكنيكات بتقول "ده بيقع فين على الإطار
+   اللي كل SOC بيتكلم بيه". القراءة بتتحسب في page.tsx وقت الـ build. */
+
+.attack { margin-top: 3rem; }
+
+.attackList {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.attackChip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(var(--main-color-rgb), 0.35);
+  border-radius: var(--radius-card-sm, 6px);
+  background: rgba(var(--main-color-rgb), 0.07);
+}
+
+.attackId {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-color);
+  font-variant-numeric: tabular-nums;
+}
+.attackName { font-size: 0.84rem; color: var(--text-color); }
+
+.attackNote { margin: 0; font-size: 0.85rem; }
+.attackNote a {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.attackNote a:hover, .attackNote a:focus-visible {
+  color: var(--accent-color);
+  border-bottom-color: currentColor;
+}
+
+/* ── Related reports ───────────────────────────────────────────────────────
+   مرتّبة بالتكنيكات المشتركة أولاً، مش بالتاريخ ولا عشوائي. أي تقرير
+   مالوش تقاطع حقيقي مبيظهرش. */
+
+.related { margin-top: 3rem; }
+
+.relatedList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0.8rem;
+}
+
+.relatedCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--main-color);
+  border-radius: var(--radius-card-sm, 6px);
+  background: rgba(255, 255, 255, 0.015);
+  transition: border-color var(--motion-fast, 150ms) ease;
+}
+.relatedCard:hover, .relatedCard:focus-visible { border-left-color: var(--accent-color); }
+.relatedCard:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
+
+.relatedTitle { color: var(--text-bright); font-weight: 700; font-size: 0.95rem; line-height: 1.35; }
+.relatedMeta { color: var(--text-dim); font-size: 0.76rem; margin-top: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .relatedCard { transition: none; }
+}
