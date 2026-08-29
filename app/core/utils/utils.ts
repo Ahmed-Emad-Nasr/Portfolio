@@ -7,7 +7,7 @@
 // =============================================================================
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { faHome, faBook, faCertificate, faFolder } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBook, faCertificate, faFolder, faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import type { IconProp, IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faCode, faTerminal } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -275,11 +275,21 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
 // - Removed redundant `useRef` for state tracking.
 // -----------------------------------------------------------------------------
 
+/*
+ * الترتيب هنا هو ترتيب الـ nav وترتيب الـ scrollspy وترتيب اختصارات
+ * "g + حرف" في الـ command palette — مصدر واحد للتلاتة.
+ *
+ * اتضاف: Coverage (خريطة ATT&CK) و Contact (قسم الفورم الجديد). قبل كده
+ * كان فيه JSON-LD في layout.tsx و page.tsx بيشاور على "#Contact" ومفيش
+ * أي طريقة في الـ nav توصّلك له.
+ */
 const SECTION_ICONS: Record<string, IconProp> = {
   Home:           faHome,
   Experience:     faBook,
   Projects:       faFolder,
   Certifications: faCertificate,
+  Coverage:       faShieldHalved,
+  Contact:        faEnvelope,
 };
 
 const SPY_SECTIONS = Object.keys(SECTION_ICONS).map((label) => ({ label, elementId: label }));

@@ -246,10 +246,11 @@ const SenseiHome = memo(function SenseiHome() {
             Cybersecurity professional specialized in Incident Response, SOC operations, and Digital Forensics. Experienced in SIEM tuning (Wazuh, ELK, Splunk), threat detection, and penetration testing across internship and lab environments.
           </p>
 
-          {/* FIX: كل من page.tsx و layout.tsx فيهم JSON-LD بيشاور على "#Contact"،
-              وماكانش فيه أي عنصر بالـ id ده في الموقع كله. ده مكان بيانات
-              التواصل فعلياً — الإضافة دي id بس، مفيش أي path اتغير. */}
-          <div id="Contact" className={styles.socialIcon}>
+          {/* الـ id="Contact" اتشال من هنا: بقى فيه قسم تواصل حقيقي بفورم
+              في آخر الصفحة شايل الـ id ده. عنصرين بنفس الـ id = HTML غير
+              صالح، والمتصفح بيروح على أول واحد — يعني اللينك كان هيوقف عند
+              أيقونات السوشيال بدل الفورم. */}
+          <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconLinkedin} aria-label="LinkedIn">
               <FontAwesomeIcon icon={faLinkedin} />
             </a>

@@ -20,6 +20,19 @@
 
 export const knowledgeEducationItems = [
   {
+    // مضاف من الـ CV — الدور ده كان ناقص من الموقع خالص، وهو أحدث دور
+    // تدريسي عندك ولسه مستمر.
+    tag: "Cybersecurity Instructor (Part-Time)",
+    subTag: "National Telecommunication Institute (NTI)",
+    subTagHyperlink: "https://nti.sci.eg/",
+    desc: "Instructed 42+ students across Linux, Networking, SOC Fundamentals and Penetration Testing, achieving an 85% pass rate. \u2022 Delivered 120+ hours of hands-on labs, advancing practical offensive and defensive skills.",
+    isRight: false,
+    startDate: "2026-02-01",
+    showDate: true,
+    skills: ["Security Training", "Linux", "SOC Fundamentals", "Penetration Testing", "Curriculum Design"],
+    certificateUrl: "https://nti.sci.eg/",
+  },
+  {
     tag: "Information Security Intern",
     subTag: "Banque Misr",
     subTagHyperlink: "https://www.banquemisr.com/",

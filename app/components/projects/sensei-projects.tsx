@@ -29,7 +29,29 @@ const buildCaseStudy = (repo: GitHubRepository) => {
   const action = repo.topics.length > 0
     ? `Implemented with ${repo.topics.slice(0, 2).join(" + ")}${repo.language ? ` using ${repo.language}` : ""}.`
     : `Implemented secure workflow${repo.language ? ` using ${repo.language}` : ""}.`;
-  const result = `Open-source impact: ${repo.stargazers_count} stars • ${repo.forks_count} forks • ${repo.watchers_count} watchers.`;
+  /*
+   * كان: `Open-source impact: ${stars} stars • ${forks} forks • ${watchers} watchers.`
+   *
+   * كل الأرقام في config/projects.ts مكتوبة صفر بالإيد (ما عدا
+   * Threat-Intelligence-Tool بـ 10) — لأن الـ GitHub fetch اتشال في نسخة
+   * سابقة والسطر فضل. النتيجة إن الموقع كان بيعلن على 6 مشاريع من 7:
+   *
+   *     "Open-source impact: 0 stars • 0 forks • 0 watchers."
+   *
+   * يعني السطر اللي المفروض يبيع الشغل كان بيقول إن الشغل ملوش تأثير.
+   *
+   * دلوقتي السطر بيتعرض بس لما يكون فيه رقم حقيقي يستاهل. غير كده بيتقال
+   * إيه اللي اتعمل بدل إيه اللي اتقاس — وده الصح لمشروع لسه جديد.
+   *
+   * ⭐ لو عايز الأرقام الحقيقية: هات الداتا من GitHub API في GitHub Action
+   *    وقت الـ build واكتبها في config/projects.ts. مفيش داعي لأي fetch
+   *    من المتصفح.
+   */
+  const engagement = repo.stargazers_count + repo.forks_count;
+  const result = engagement > 0
+    ? `Open-source traction: ${repo.stargazers_count} stars • ${repo.forks_count} forks.`
+    : `Published as open source${repo.language ? ` in ${repo.language}` : ""}, with the full methodology documented in the repository.`;
+
   return { problem: baseProblem, action, result };
 };
 
@@ -73,16 +95,26 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
             ))}
           </ul>
 
+          {/* الشارات دي كانت بتتعرض دايماً، والأرقام في config/projects.ts
+              كلها أصفار — فالموقع كان بيطبع "0 ⭐ 0 🍴 0 👁" على 6 مشاريع
+              من 7. صفر معروض بيقرا كـ "محدش مهتم"؛ الشارة الغايبة بتقرا
+              كـ "الرقم مش مهم هنا". الشارة بتظهر بس لما فيها رقم فعلاً. */}
           <div className={styles["stats-container"]}>
-            <span className={styles["stat-badge"]} aria-label={`${repo.stargazers_count} stars`}>
-              <FontAwesomeIcon icon={faStar} aria-hidden="true" /> {repo.stargazers_count}
-            </span>
-            <span className={styles["stat-badge"]} aria-label={`${repo.forks_count} forks`}>
-              <FontAwesomeIcon icon={faCodeBranch} aria-hidden="true" /> {repo.forks_count}
-            </span>
-            <span className={styles["stat-badge"]} aria-label={`${repo.watchers_count} watchers`}>
-              <FontAwesomeIcon icon={faEye} aria-hidden="true" /> {repo.watchers_count}
-            </span>
+            {repo.stargazers_count > 0 && (
+              <span className={styles["stat-badge"]} aria-label={`${repo.stargazers_count} stars`}>
+                <FontAwesomeIcon icon={faStar} aria-hidden="true" /> {repo.stargazers_count}
+              </span>
+            )}
+            {repo.forks_count > 0 && (
+              <span className={styles["stat-badge"]} aria-label={`${repo.forks_count} forks`}>
+                <FontAwesomeIcon icon={faCodeBranch} aria-hidden="true" /> {repo.forks_count}
+              </span>
+            )}
+            {repo.watchers_count > 0 && (
+              <span className={styles["stat-badge"]} aria-label={`${repo.watchers_count} watchers`}>
+                <FontAwesomeIcon icon={faEye} aria-hidden="true" /> {repo.watchers_count}
+              </span>
+            )}
             <span className={`${styles["stat-badge"]} ${styles["difficulty-badge"]}`} aria-label={`Project complexity: ${difficulty}`}>
               {difficulty}
             </span>

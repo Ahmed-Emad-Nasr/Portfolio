@@ -1,0 +1,122 @@
+/* contact-section.module.css */
+
+.section {
+  padding: 6rem 0 7rem;
+  position: relative;
+  z-index: 1;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
+}
+
+.container {
+  max-width: var(--container-max-width, 1280px);
+  margin: 0 auto;
+  padding: 0 var(--container-pad-x, 1.5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--text-bright);
+  margin: 0 0 0.9rem;
+}
+.title span[lang="ja"] { color: var(--main-color); }
+
+.lede { color: var(--text-muted); line-height: 1.65; margin: 0 0 1.8rem; max-width: 46ch; }
+
+.direct { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.direct a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.direct a:hover, .direct a:focus-visible {
+  color: var(--accent-color);
+  border-bottom-color: currentColor;
+}
+.direct svg { color: var(--main-color); width: 1.05em; }
+
+.form { display: grid; gap: 1.1rem; }
+
+.field { display: grid; gap: 0.4rem; }
+.field label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.field input,
+.field textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-bright);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.75rem 0.9rem;
+  width: 100%;
+  resize: vertical;
+}
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+/* الـ honeypot مخفي بالـ CSS مش بـ type="hidden" — البوتات بتتجاهل
+   الـ hidden وبتملّي اللي شكله input عادي. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.submit {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  background: var(--main-color);
+  border: 0;
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+  transition: opacity var(--motion-fast, 150ms) ease;
+}
+.submit:hover:not(:disabled) { opacity: 0.88; }
+.submit:disabled { opacity: 0.55; cursor: progress; }
+.submit:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
+
+.status { margin: 0; min-height: 1.4rem; font-size: 0.9rem; }
+.ok { color: #4ade80; display: inline-flex; align-items: center; gap: 0.45rem; }
+.err { color: var(--main-light, #ff2d78); display: inline-flex; align-items: center; gap: 0.45rem; }
+
+.disabled {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  padding: 1.2rem;
+}
+.disabled code { font-family: var(--font-mono, monospace); color: var(--accent-color); }
+
+@media (max-width: 900px) {
+  .container { grid-template-columns: 1fr; gap: 2.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submit { transition: none; }
+}

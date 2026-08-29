@@ -8,6 +8,7 @@ import {
   GALLERY_IMAGE_COUNT,
   certificationAlt,
 } from "@/app/core/config/certifications";
+import Credentials from "@/app/components/credentials/credentials";
 
 // Paths are RELATIVE on purpose. This project does not set Next's `basePath`;
 // it handles the /Portfolio sub-path manually. On GitHub Pages the homepage is
@@ -72,6 +73,10 @@ const SenseiArt = memo(function SenseiArt() {
             <span lang="ja">認定資格 •</span><span lang="en"> Certifications</span>
           </h2>
         </MotionInView>
+
+        {/* الشهادات والإنجازات والمهارات كبيانات مقروءة، فوق حيطة الصور.
+            حيطة الصور لوحدها كانت بتقول "عندي حاجات" من غير ما تقول إيه. */}
+        <Credentials />
 
         <div className={styles["art-gallery-content"]}>
           <MotionInView className={styles.Gallery} variant="stagger" viewport={{ once: true, amount: 0.1 }}>

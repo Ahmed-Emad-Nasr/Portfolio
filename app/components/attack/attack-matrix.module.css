@@ -1,0 +1,142 @@
+/* attack-matrix.module.css — نفس التوكنز المستخدمة في باقي السكاشن */
+
+.section {
+  padding: 6rem 0 5rem;
+  position: relative;
+  z-index: 1;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+.container {
+  max-width: var(--container-max-width, 1280px);
+  margin: 0 auto;
+  padding: 0 var(--container-pad-x, 1.5rem);
+}
+
+.header { margin-bottom: 2.5rem; }
+
+.title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--text-bright);
+  margin: 0 0 0.8rem;
+}
+.title span[lang="ja"] { color: var(--main-color); }
+
+.lede {
+  color: var(--text-muted);
+  max-width: 62ch;
+  margin: 0 0 1.6rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.4rem;
+  margin: 0;
+}
+.stat { margin: 0; }
+.stat dt {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.stat dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--main-color);
+  line-height: 1;
+}
+
+/* أفقي على الموبايل بدل ما الأعمدة تتلخبط. tabIndex عليه في الـ TSX
+   عشان اللي بيستخدم كيبورد يقدر يـ scroll جواه. */
+.scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: 1rem;
+}
+.scroller:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 4px; }
+
+.matrix {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(15rem, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.column { min-width: 0; }
+
+.tactic {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 0.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cell { margin-bottom: 0.5rem; }
+
+.cellSummary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.75rem;
+  cursor: pointer;
+  list-style: none;
+  border: 1px solid rgba(var(--main-color-rgb), calc(0.18 + var(--depth, 0) * 0.5));
+  /* شدة الخلفية بتتغيّر مع عدد التقارير */
+  background: rgba(var(--main-color-rgb), calc(0.05 + var(--depth, 0) * 0.22));
+  transition: border-color var(--motion-fast, 150ms) ease;
+}
+.cellSummary::-webkit-details-marker { display: none; }
+.cellSummary:hover { border-color: var(--accent-color); }
+.cellSummary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
+
+.techniqueId {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  color: var(--accent-color);
+}
+.techniqueName {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  line-height: 1.3;
+}
+.count {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.evidence {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 0;
+}
+.evidence li { margin-bottom: 0.35rem; }
+.evidence a {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.evidence a:hover,
+.evidence a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cellSummary { transition: none; }
+}

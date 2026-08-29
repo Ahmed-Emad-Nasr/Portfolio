@@ -29,7 +29,7 @@ import { usePathname } from "next/navigation";
 import styles from "./ScrollProgress.module.css";
 
 // نفس الـ IDs المستخدمة في الـ scroll spy — مصدر واحد للحقيقة
-const PORTFOLIO_SECTIONS = ["Home", "Experience", "Projects", "Certifications"] as const;
+const PORTFOLIO_SECTIONS = ["Home", "Experience", "Projects", "Certifications", "Coverage", "Contact"] as const;
 const BLOG_SECTIONS = ["blog-pdfs-title", "youtube-hub-title"] as const;
 // صفحة الـ case مفيهاش أقسام — شريط واحد متصل على طول الصفحة.
 // (أول جزء دايماً بيبدأ من 0 وآخر جزء بينتهي عند آخر الصفحة، فجزء واحد

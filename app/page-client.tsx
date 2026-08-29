@@ -48,6 +48,15 @@ const ArtGallerySection = dynamic(
 const KanjiDivider = dynamic(
   () => import("@/app/core/components/KanjiDivider"),
 );
+// خريطة تغطية ATT&CK — بتتحسب وقت الـ build، فالـ chunk ده markup تقريباً.
+const AttackMatrix = dynamic(
+  () => import("@/app/components/attack/attack-matrix"),
+);
+// الفورم فيه state وfetch، فمنطقي يتأجّل — بس الـ markup بيتولّد وقت الـ
+// build زي الباقي (مفيش ssr: false).
+const ContactSection = dynamic(
+  () => import("@/app/components/contact/contact-section"),
+);
 
 const MAIN_STYLE: React.CSSProperties = { position: "relative" };
 
@@ -66,7 +75,10 @@ const MainClient = memo(function MainClient() {
       <ProjectsSection />
       <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
       <ArtGallerySection />
+      <KanjiDivider text="戦術 • 検知 • 防御 • 対応 • 回復" angle={1.5} />
+      <AttackMatrix />
       <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />
+      <ContactSection />
     </main>
   );
 });

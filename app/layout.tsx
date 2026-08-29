@@ -13,6 +13,9 @@ import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
+import { certifications, certificationsJsonLd } from "@/app/core/config/certifications";
+import { achievements } from "@/app/core/config/achievements";
+import { skillGroups } from "@/app/core/config/skills";
 import { SmoothScroll } from "./components/smooth-scroll";
 import { MotionProvider } from "./core/components/MotionInView";
 // FIXED: `dynamic(..., { ssr: false })` cannot live in a Server Component, and
@@ -127,6 +130,14 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       url: "https://ahmed-emad-nasr.github.io/Portfolio/",
       image: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/My_Logo.webp",
       jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
+      /* knowsAbout هو الحقل اللي جوجل بيستخدمه لفهم مجال الشخص. المهارات
+         كانت متناثرة كتاجات في الـ JSX ومحدش مصدّرها كبيانات — دلوقتي
+         مصدر واحد في config/skills.ts بيغذّي العرض والـ JSON-LD مع بعض. */
+      knowsAbout: skillGroups.flatMap((group) => group.items),
+      /* الشهادات كانت 74 صورة، صفر منها مفهوم لأي crawler. */
+      hasCredential: certificationsJsonLd("https://ahmed-emad-nasr.github.io/Portfolio/#person"),
+      /* قسم الجوايز كان في الـ CV ومش موجود على الموقع بأي شكل. */
+      award: achievements.map((item) => `${item.title} — ${item.context}`),
       description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
       email: "mailto:ahmed.em.nasr@gmail.com",
       telephone: "+20 101 397 2690",
