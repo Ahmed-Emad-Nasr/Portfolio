@@ -294,7 +294,10 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
       ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.webp`),
       ...Array.from({ length: 24 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${343 + i}).webp`),
     ],
-    image: "Assets/Cases/Malware Analysis and Prevention Strategy/ 21.webp",
+    /* كان "/ 21.webp" — مسافة زايدة قبل الرقم. الملف على القرص اسمه
+       "21.webp"، فصورة الغلاف بتاعة الـ case ده كانت 404. سكربت فحص
+       الأصول هو اللي مسكها. */
+    image: "Assets/Cases/Malware Analysis and Prevention Strategy/21.webp",
   },
   {
     id: "3omda-custom-detection-rules",
@@ -563,23 +566,21 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     readTime: 19,
     date: "2026-04-21",
     screenshots: [
-      "Assets/Cases/Serpent Stealer/Screenshot (1).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (2).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (3).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (4).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (5).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (6).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (7).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (8).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (9).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (10).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (11).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (12).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (13).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (14).webp",
-      "Assets/Cases/Serpent Stealer/Screenshot (15).webp",
+      /*
+       * كانت ليستة يدوية من Screenshot (1) لـ (15) — والملفات دي مش موجودة.
+       *
+       * السبب إن نفس الـ case معرّف في مكانين بترقيمين مختلفين:
+       *   caseScreenshotsByEvidenceId  →  Screenshot (135) … (146)
+       *   الليستة دي                    →  Screenshot (1)   … (15)
+       *
+       * والملفات الحقيقية هي 135–146. يعني شبكة الصور في صفحة الـ case
+       * كانت بتعرض 15 صورة مكسورة.
+       *
+       * دلوقتي بتستخدم نفس التعبير بالظبط، فمستحيل الاتنين يفترقوا تاني.
+       */
+      ...Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).webp`),
     ],
-    image: "Assets/Cases/Serpent Stealer/Screenshot (1).webp",
+    image: "Assets/Cases/Serpent Stealer/Screenshot (135).webp",
   },
   {
     id: "unload-malware-report",

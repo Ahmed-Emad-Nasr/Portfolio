@@ -130,7 +130,9 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | Blog - SOC & DFIR Reports",
     description:
       "Explore incident response cases, threat analysis, malware reverse engineering, and security investigations.",
-    images: [toAbsoluteAssetUrl("/Assets/art-gallery/logo/logo.png")],
+    /* نفس المسار الغلط بتاع og:image كان متكرر هنا كمان — أنا ظبّطت
+       الأول وفات ده. سكربت فحص الأصول مسكه. */
+    images: [toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/My_Logo.webp")],
   },
 };
 
