@@ -1,13 +1,13 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faWhatsapp, faYoutube, faInstagram, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faFilePdf, faBriefcase, faEnvelope, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import styles from "./sensei-home.module.css";
 import { useRandomMedia } from "@/app/core/utils/utils";
-import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/portfolio";
+import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
 
 // REMOVED: CV_VARIANT was computed from Math.random() at module scope, written
 // to localStorage on every load, and then never read by anything. Dead code
@@ -28,10 +28,52 @@ const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   delay: i * 0.3,
 }));
 
+/* The role ticker is animated with CSS `content:` inside @keyframes words.
+   Text that only exists in a pseudo-element is NOT in the DOM: crawlers see
+   an empty <h2> and screen readers announce nothing — right where the most
+   important keywords on the page should be. Keeping the same strings here
+   as a visually-hidden node puts them back in the markup without touching
+   the visual effect. Keep this list in sync with @keyframes words. */
+const ROLES = [
+  "Information Security Engineer",
+  "Cybersecurity Engineer",
+  "SOC/DFIR Engineer",
+  "Malware Analyst",
+  "Cybersecurity Instructor",
+] as const;
+
 const SenseiHome = memo(function SenseiHome() {
   const { handleImageClick } = useRandomMedia();
   const [failed, setFailed] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  /* globals/sensei-home.module.css already contain a rule set that pauses
+     every infinite loop in this section (.ringOuter, .ringInner, .badgeDot,
+     the typing ticker, .speedLine, .particle) via
+     `.home[data-in-view="false"]`. Nothing was ever setting that attribute,
+     so all of it kept running for the whole session — including while the
+     visitor is three sections down. This observer is the missing half.
+
+     The attribute is written directly on the node instead of through state:
+     toggling a class must not re-render a section this large, and the CSS
+     is the only consumer. */
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.dataset.inView = entry.isIntersecting ? "true" : "false";
+      },
+      // Resume slightly before the hero is back on screen so the animations
+      // are already running by the time it is visible.
+      { rootMargin: "150px 0px", threshold: 0 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleDownloadClick = () => {
     setIsDownloading(true);
@@ -42,7 +84,7 @@ const SenseiHome = memo(function SenseiHome() {
   };
 
   return (
-    <section className={`${styles.home} noLine noBg`} id="Home">
+    <section ref={sectionRef} className={`${styles.home} noLine noBg`} id="Home" data-in-view="true">
       {/* Speed lines */}
       <div className={styles.bgLayer} aria-hidden="true">
         {SPEED_LINES.map((line, i) => (
@@ -78,7 +120,9 @@ const SenseiHome = memo(function SenseiHome() {
       </div>
 
       {/* Kanji watermark */}
-      <div className={styles.japaneseBg} aria-hidden="true" role="img">
+      {/* role="img" without an accessible name is invalid, and aria-hidden
+          cancels it anyway. Decoration only — aria-hidden alone is correct. */}
+      <div className={styles.japaneseBg} aria-hidden="true">
         <div className={styles.vertical}>
           <span>セ</span>
           <span>キ</span>
@@ -121,12 +165,19 @@ const SenseiHome = memo(function SenseiHome() {
             <span className={`${styles.hudLine} ${styles.hudAccent}`}>Ahmed Emad Nasr</span>
           </div>
 
+          {/* The handler opens a YouTube video, not another photo. A control
+              that does something other than what its label says is a liability
+              on a page a recruiter is reading — label now matches behaviour. */}
           <button
             type="button"
             className={styles.imageButton}
             onClick={handleImageClick}
-            aria-label="Show another photo of Ahmed"
+            aria-label="Watch Ahmed's YouTube channel"
           >
+            {/* LCP element. It carried `loading="lazy"`, which told the browser
+                to defer the one image the score is measured against, while
+                layout.tsx preloaded a DIFFERENT file. `priority` emits the
+                correct preload automatically — the manual <link> can go. */}
             <Image
               src={failed ? "/Assets/art-gallery/Images/logo/My_Logo.webp" : "Assets/art-gallery/Images/logo/3omda.webp"}
               alt="Ahmed Emad Nasr, SOC Analyst"
@@ -134,14 +185,14 @@ const SenseiHome = memo(function SenseiHome() {
               width={560}
               height={560}
               sizes="(max-width: 968px) 80vw, 560px"
-              quality={85}
-              loading="lazy"
+              priority
+              fetchPriority="high"
               decoding="async"
               onError={() => setFailed(true)}
             />
             <span className={styles.imageHint} aria-hidden="true">
               <FontAwesomeIcon icon={faShuffle} />
-              <span>Shuffle photo</span>
+              <span>Watch channel</span>
             </span>
           </button>
 
@@ -163,7 +214,8 @@ const SenseiHome = memo(function SenseiHome() {
 
           {/* Typing role ticker */}
           <h2 className={styles.typingText}>
-            <span className={styles.typingHighlight} />
+            <span className={styles.roleStatic}>{ROLES.join(" · ")}</span>
+            <span className={styles.typingHighlight} aria-hidden="true" />
           </h2>
 
           {/* Spec sheet */}
@@ -245,7 +297,7 @@ const SenseiHome = memo(function SenseiHome() {
       </div>
 
       {/* Bottom proverb */}
-      <div className={styles.quote} aria-hidden="true" role="img">
+      <div className={styles.quote} aria-hidden="true">
         <div className={styles.quoteRule} />
         <p className={styles.quoteText}>備えあれば憂いなし — READINESS LEAVES NO ROOM FOR FEAR</p>
       </div>

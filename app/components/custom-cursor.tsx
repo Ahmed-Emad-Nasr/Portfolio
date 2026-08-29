@@ -30,17 +30,40 @@ export default function CustomCursor() {
     setIsEnabled(true);
     document.body.dataset.customCursor = "true";
 
+    /*
+     * pointermove fires per input sample, not per frame — a 1000 Hz gaming
+     * mouse dispatches it ~1000 times a second, and a 120 Hz trackpad ~120.
+     * The old handler ran TWO `closest()` DOM walks on every one of those
+     * events, on the main thread, competing with scroll.
+     *
+     * The motion values still update on every event (they feed the spring and
+     * are cheap — no React render). The expensive hit-testing is coalesced
+     * into one run per animation frame, so it happens at most 60 times a
+     * second regardless of the device's polling rate.
+     */
+    let frame = 0;
+    let latestTarget: EventTarget | null = null;
+
+    const evaluateTarget = () => {
+      frame = 0;
+      const target = latestTarget;
+      if (!(target instanceof Element)) return;
+
+      const hover = !!target.closest('a, button, .interactive');
+      const text = !!target.closest('input, textarea, [contenteditable="true"]');
+
+      // Only re-render when a boundary is actually crossed.
+      setState((prev) =>
+        prev.hover !== hover || prev.text !== text ? { ...prev, hover, text } : prev,
+      );
+    };
+
     const handleMove = (e: PointerEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
-      
-      // استخدام target.closest بدلاً من composedPath لأداء صاروخي مبني على الـ Browser Engine
-      const target = e.target as HTMLElement;
-      const hover = !!target.closest?.('a, button, .interactive');
-      const text = !!target.closest?.('input, textarea, [contenteditable="true"]');
-      
-      // تحديث الـ State فقط إذا تغيرت القيمة فعلياً
-      setState(prev => (prev.hover !== hover || prev.text !== text) ? { ...prev, hover, text } : prev);
+
+      latestTarget = e.target;
+      if (!frame) frame = requestAnimationFrame(evaluateTarget);
     };
 
     const handleDown = () => setState(p => ({ ...p, click: true }));
@@ -55,6 +78,7 @@ export default function CustomCursor() {
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("mousedown", handleDown);
       window.removeEventListener("mouseup", handleUp);
+      if (frame) cancelAnimationFrame(frame);
       document.body.removeAttribute("data-custom-cursor");
     };
   }, [cursorX, cursorY, tier]);
@@ -76,13 +100,17 @@ export default function CustomCursor() {
         }}
         animate={{
           scale: click ? 0.65 : hover ? 1.5 : 1,
+          // The infinite 2s rotation ran for as long as the pointer sat on any
+          // link — a permanent rAF subscription for an effect nobody watches
+          // while reading. A single 0.6s turn reads the same on entry and then
+          // stops.
           rotate: hover && !click ? 360 : 0,
         }}
         transition={{
           type: "spring",
           stiffness: 280,
           damping: 22,
-          rotate: hover ? { duration: 2, repeat: Infinity, ease: "linear" } : {}
+          rotate: { duration: 0.6, ease: "easeOut" },
         }}
       >
         <span className={styles.cursorRingInner} />

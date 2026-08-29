@@ -99,19 +99,26 @@
   border-color: rgba(var(--main-color-rgb), 0.2);
 }
 
-.tag h2 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.8rem; }
+/* Heading levels moved down one step (h2->h3, h3->h4) so the page outline
+   is Home h1 > section h2 > role h3 > employer h4 instead of ten sibling h2s.
+   Selectors follow; sizes and behaviour are unchanged. */
+.tag h3 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.8rem; }
 .titleIcon { color: var(--text-muted); transition: color var(--motion-fast) ease; flex-shrink: 0; }
 .content:hover .titleIcon { color: var(--main-color); }
 
-.tag h3 { margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.8rem; }
+.tag h4 { margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.8rem; }
 .linkIcon { opacity: 0; transform: translateX(-5px); transition: opacity var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease); }
-.tag h3:hover { color: var(--accent-color); }
-.tag h3:hover .linkIcon { opacity: 1; transform: translateX(0); }
+.tag h4:hover { color: var(--accent-color); }
+.tag h4:hover .linkIcon { opacity: 1; transform: translateX(0); }
 /* a11y: reveal the icon on keyboard focus too, not just mouse hover,
    so people tabbing through the page (or using a switch/screen reader) see it */
-.tag h3:focus-within { color: var(--accent-color); }
-.tag h3:focus-within .linkIcon { opacity: 1; transform: translateX(0); }
-.tag h3 a:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; border-radius: 2px; }
+.tag h4:focus-within { color: var(--accent-color); }
+.tag h4:focus-within .linkIcon { opacity: 1; transform: translateX(0); }
+.tag h4 a:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; border-radius: 2px; }
+
+/* Replaces the inline style object that was allocated on every render of
+   every timeline row. Same three declarations, now cacheable by the browser. */
+.subTagLink { cursor: pointer; color: inherit; text-decoration: none; }
 
 /* Description intro line (Ahmed's `description` field) */
 .descIntro {
@@ -189,5 +196,5 @@
 @media (max-width: 360px) {
   .timeline-container { padding-left: 3.4rem; }
   .content { padding: 1.5rem; }
-  .tag h2 { font-size: 1.9rem; }
+  .tag h3 { font-size: 1.9rem; }
 }

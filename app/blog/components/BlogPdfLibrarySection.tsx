@@ -6,7 +6,7 @@ import MotionInView from "@/app/core/components/MotionInView";
 import BlogCard from "../BlogCard";
 import styles from "../page.module.css";
 import type { PdfResource } from "../blog-types";
-import { EMPTY_SCREENSHOTS } from "@/app/core/config/portfolio";
+import { EMPTY_SCREENSHOTS } from "@/app/core/config/cases";
 import { getThumbnail } from "../blog-utils";
 
 type BlogPdfLibrarySectionProps = {

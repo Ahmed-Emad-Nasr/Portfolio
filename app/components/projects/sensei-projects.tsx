@@ -15,7 +15,7 @@ import styles from "./sensei-projects.module.css";
 import { type GitHubRepository, getIconForLanguage, formatRepoDate, toBulletItems } from "@/app/core/utils/utils";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import MotionInView from "@/app/core/components/MotionInView";
-import { projectBullets, staticProjectFallback } from "@/app/core/config/portfolio";
+import { projectBullets, staticProjectFallback } from "@/app/core/config/projects";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type ProjectItemProps = { repo: GitHubRepository; isRight?: boolean };

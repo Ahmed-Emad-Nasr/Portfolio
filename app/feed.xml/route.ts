@@ -8,7 +8,7 @@
  * يبقى static بالكامل، فأي حاجة ديناميكية هتكسر الـ build.
  */
 
-import { caseEvidenceLibrary } from "@/app/core/config/portfolio";
+import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { absoluteUrl, caseUrl } from "@/app/core/config/site";
 
 export const dynamic = "force-static";

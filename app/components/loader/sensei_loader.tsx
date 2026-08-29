@@ -24,7 +24,11 @@
  */
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
+// LazyMotion is deliberately NOT imported here. layout.tsx mounts
+// <MotionProvider> (a strict LazyMotion) above everything, and this component
+// renders inside it — the nested provider it used to create was a duplicate
+// feature bundle, the exact pattern that was just removed from MotionInView.
+import { AnimatePresence, m } from "framer-motion";
 import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import styles from "./sensei_loader.module.css";
 
@@ -85,7 +89,6 @@ export default function LoadingScreen() {
   }, [loading, reduced]);
 
   return (
-    <LazyMotion features={domAnimation} strict>
       <AnimatePresence>
         {loading && (
           <m.div
@@ -94,7 +97,11 @@ export default function LoadingScreen() {
             transition={{ duration: reduced ? 0.2 : 0.5, ease: [0.76, 0, 0.24, 1] }}
             className={styles.loader}
             role="status"
-            aria-live="polite"
+            /* aria-live was "polite" around a ticker that swaps text every
+               350 ms — a screen reader would read six boot lines out loud
+               before the visitor reached any content. The overlay announces
+               itself once via aria-label; the theatre inside is decoration. */
+            aria-live="off"
             aria-label="Loading"
           >
             {/* Three full-screen painted overlays. Decorative only — the CSS
@@ -127,7 +134,7 @@ export default function LoadingScreen() {
               </div>
             </div>
 
-            <div className={styles.bootText}>
+            <div className={styles.bootText} aria-hidden="true">
               <div className={styles.bootLineRow}>
                 <div className={styles.bootLine} />
                 <span className={styles.bootLineText}>
@@ -135,9 +142,13 @@ export default function LoadingScreen() {
                 </span>
                 <div className={styles.bootLine} />
               </div>
-              <h2 className={styles.title}>
+              {/* was <h2>. This overlay ships inside the exported HTML, so
+                  "The Samurai Way." was the first heading a crawler met on
+                  every single page — above the real one. It is decoration,
+                  so it is a <p> now. Styling is unchanged. */}
+              <p className={styles.title}>
                 The Samurai <span className={styles.titleAccent}>Way.</span>
-              </h2>
+              </p>
             </div>
 
             {/* The bar used to animate to 100% over a fixed 2.2 s, which was
@@ -152,6 +163,5 @@ export default function LoadingScreen() {
           </m.div>
         )}
       </AnimatePresence>
-    </LazyMotion>
   );
 }

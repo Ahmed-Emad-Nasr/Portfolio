@@ -1,8 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
 import React, { useCallback, useMemo, useState, useEffect, useRef, useDeferredValue } from "react";
-import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/config/portfolio";
-import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/portfolio";
+import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
+import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import styles from "./page.module.css";
 import { formatDate, normalizePublicHref } from "./blog-utils";
 import type { PdfResource, GalleryState } from "./blog-types";

@@ -13,7 +13,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/portfolio";
+import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import CaseArticle from "./CaseArticle";
 import { absoluteUrl, caseUrl } from "@/app/core/config/site";
 

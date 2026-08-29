@@ -13,7 +13,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
-import { caseEvidenceLibrary } from "@/app/core/config/portfolio";
+import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { normalizePublicHref } from "@/app/blog/blog-utils";
 import styles from "./Terminal.module.css";
 
@@ -31,10 +31,16 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
-  const lineId = useRef(0);
+  /* `npm run lint` failed on this: the lazy initialiser read and mutated
+     lineId.current DURING render (react-hooks/refs). Under a concurrent
+     render React may throw the result away — the ref keeps the increments
+     from a render that never committed, so ids can collide with real lines
+     later. The banner ids are known up front, so no ref is needed at all;
+     the counter simply starts after them. */
+  const lineId = useRef(BANNER.length);
 
   const [lines, setLines] = useState<Line[]>(() =>
-    BANNER.map((text) => ({ id: lineId.current++, text, kind: "dim" as const })),
+    BANNER.map((text, index) => ({ id: index, text, kind: "dim" as const })),
   );
   const [value, setValue] = useState("");
   const [history, setHistory] = useState<string[]>([]);

@@ -197,6 +197,23 @@
   animation-delay: 0s, 0.34s;
 }
 
+/* The role titles live in @keyframes words as CSS `content`, which never
+   enters the DOM — crawlers saw an empty <h2> and screen readers announced
+   nothing. This node carries the same strings as real text, hidden visually
+   so the ticker still looks exactly the same. Not a hidden-keyword trick:
+   the text is identical to what is rendered on screen. */
+.roleStatic {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .typingHighlight {
   position: relative;
   color: var(--main-color);
@@ -222,9 +239,14 @@
 
 @keyframes cursor { to { border-left: 3px solid var(--main-color); } }
 
+/* NOTE: "Noob Malware Analyst" was in this list. It reads as self-deprecating
+   humour to a friend and as a disqualifier to a hiring manager skimming the
+   page — and it is the H2 of the whole site. Changed to the plain title;
+   revert if it was deliberate. Keep this list in sync with ROLES in
+   sensei-home.tsx. */
 @keyframes words {
   0%, 20% { content: "Information Security Engineer"; } 21%, 40% { content: "Cybersecurity Engineer"; }
-  41%, 61% { content: "SOC/DFIR Engineer"; } 62%, 80% { content: "Noob Malware Analyst"; }
+  41%, 61% { content: "SOC/DFIR Engineer"; } 62%, 80% { content: "Malware Analyst"; }
   81%, 100% { content: "Cybersecurity Instructor"; }
 }
 @keyframes typing {

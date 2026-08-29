@@ -17,7 +17,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { caseEvidenceLibrary, YOUTUBE_CHANNEL_URL } from "@/app/core/config/portfolio";
+import { caseEvidenceLibrary } from "@/app/core/config/cases";
+import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
 import { normalizePublicHref } from "@/app/blog/blog-utils";
 import styles from "./CommandPalette.module.css";
 

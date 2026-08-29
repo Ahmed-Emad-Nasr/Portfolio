@@ -12,7 +12,7 @@
  */
 
 import type { MetadataRoute } from "next";
-import { caseEvidenceLibrary } from "@/app/core/config/portfolio";
+import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { absoluteUrl, caseUrl } from "@/app/core/config/site";
 
 // مطلوبة مع output: "export" — زي robots.ts بالظبط.

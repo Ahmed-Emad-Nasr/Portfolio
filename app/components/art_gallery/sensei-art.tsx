@@ -3,37 +3,54 @@
 import { useState, memo } from "react";
 import Image from "next/image";
 import styles from "./sensei-art.module.css";
-import MotionInView from "@/app/core/components/MotionInView"; 
+import MotionInView from "@/app/core/components/MotionInView";
+import {
+  GALLERY_IMAGE_COUNT,
+  certificationAlt,
+} from "@/app/core/config/certifications";
 
 // Paths are RELATIVE on purpose. This project does not set Next's `basePath`;
 // it handles the /Portfolio sub-path manually. On GitHub Pages the homepage is
 // served at /Portfolio/, so a relative "Assets/..." resolves to
 // /Portfolio/Assets/... correctly. Do NOT add a leading slash here — that
 // would resolve to the domain root and 404 in production.
-const GALLERY_IMAGES = Array.from({ length: 74 }, (_, k) => ({
+const GALLERY_IMAGES = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
+  n: k + 1,
   src: `Assets/art-gallery/Images/image_display/${k + 1}.webp`,
   thumb: `Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`,
+  alt: certificationAlt(k + 1),
 }));
 
-const ImageItem = memo(({ image, index }: { image: { src: string; thumb: string }; index: number }) => {
+type GalleryImage = (typeof GALLERY_IMAGES)[number];
+
+const ImageItem = memo(({ image, index }: { image: GalleryImage; index: number }) => {
   const [failed, setFailed] = useState(false);
 
   return (
+    // delay={index * 0.05} meant image #60 waited three full seconds after
+    // entering the viewport before appearing. The stagger is capped so the
+    // effect stays a flourish instead of a delay.
     <MotionInView
       variant="scale-up"
-      delay={index * 0.05}
+      delay={Math.min(index, 6) * 0.05}
       viewport={{ once: true, amount: 0.15 }}
     >
       <div className={styles.art_pic}>
+        {/* alt was the literal string "Certification" on all 74 images.
+            See core/config/certifications.ts — fill that map in and every
+            certificate here gets its real name, issuer and (optionally) a
+            verification link, for free.
+
+            `quality` is gone: it is a no-op while images.unoptimized is true,
+            so it only implied an optimisation pipeline that does not run. */}
         <Image
           src={failed ? image.src : image.thumb}
-          alt="Certification"
+          alt={image.alt}
           width={350}
           height={350}
           sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw"
           loading="lazy"
           decoding="async"
-          quality={10}
           className={styles.galleryImg}
           onError={() => setFailed(true)}
         />

@@ -12,7 +12,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Overlock } from "next/font/google";
 import Script from "next/script";
-import { knowledgeEducationItems } from "@/app/core/config/portfolio";
+import { knowledgeEducationItems } from "@/app/core/config/experience";
 import { SmoothScroll } from "./components/smooth-scroll";
 import { MotionProvider } from "./core/components/MotionInView";
 // FIXED: `dynamic(..., { ssr: false })` cannot live in a Server Component, and
@@ -204,8 +204,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr" className={overlock.variable}>
       <head>
-        {/* Preload only the absolute critical image for LCP */}
-        <link rel="preload" as="image" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
+        {/*
+          REMOVED: <link rel="preload" as="image" href=".../My_Logo.webp">
+
+          It preloaded the WRONG file. The LCP element is 3omda.webp in
+          sensei-home.tsx, not the logo — so this reserved a connection for an
+          image that is not on the critical path and pushed the one that is
+          further down the queue. That image now carries `priority`, which
+          makes Next emit the correct preload with the correct URL.
+
+          The <link rel="icon"> below is kept because your deployment resolves
+          it fine, but note it duplicates app/favicon.ico, which Next injects
+          automatically — two icon declarations for one icon. Safe to delete
+          once you have confirmed the .ico renders on its own.
+        */}
         <link rel="icon" href="/Assets/art-gallery/Images/logo/My_Logo.webp" />
       </head>
       <body>
