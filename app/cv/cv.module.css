@@ -1,41 +1,43 @@
 /*
  * cv.module.css
  *
- * الصفحة دي متصمّمة عشان تتقرا وتتطبع، مش عشان تبهر. مفيش أنيميشن ولا
- * زخرفة ولا خلفيات: أي حد فاتحها فاتحها عشان يقرا محتوى، والقواعد بتاعة
- * @media print في globals.css بتحوّلها لورقة نضيفة من غير أي شغل زيادة.
+ * ⚠️ المقياس: globals.css فيه html { font-size: 62.5% } → 1rem = 10px.
+ * الملف كان مكتوب على أساس 16px، فالصفحة كلها طلعت بحوالي 60% من حجمها،
+ * والورقة نفسها طلعت 520 بكسل عرض بدل 830.
+ *
+ * الصفحة دي متصمّمة تتقرا وتتطبع، مش تبهر: مفيش أنيميشن ولا زخرفة.
+ * قواعد @media print في globals.css بتحوّلها لورقة نضيفة لوحدها.
  */
 
 .page {
   min-height: 100vh;
-  padding: 5rem 1.5rem 6rem;
+  padding: 7rem 2rem 9rem;
   background: var(--bg-color);
 }
 
-.sheet {
-  max-width: 52rem;      /* ~90 حرف — أوسع من كده مبيتقراش */
-  margin: 0 auto;
-}
+/* ~90 حرف في السطر — أوسع من كده مبيتقراش */
+.sheet { max-width: 86rem; margin: 0 auto; }
 
-/* ── Header ─────────────────────────────────────────────────────── */
+/* ── Header ─────────────────────────────────────────────────────────────── */
 
-.head { padding-bottom: 1.6rem; border-bottom: 2px solid var(--main-color); }
+.head { padding-bottom: 2.6rem; border-bottom: 2px solid var(--main-color); }
 
 .name {
-  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-size: clamp(3.6rem, 6vw, 5.2rem);
   font-weight: 900;
   color: var(--text-bright);
   margin: 0;
   letter-spacing: -0.5px;
+  line-height: 1.05;
 }
 
 .headline {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--main-color);
-  margin: 0.5rem 0 1.2rem;
+  margin: 1rem 0 2.2rem;
 }
 
 .contact {
@@ -44,55 +46,56 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.4rem;
-  font-size: 0.9rem;
+  gap: 0.8rem 2.4rem;
+  font-size: var(--text-base);
   color: var(--text-muted);
 }
-.contact a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+.contact a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
 .contact a:hover, .contact a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
 
-.actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.6rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 2.6rem; }
 
 .primaryAction,
 .secondaryAction {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 1.3rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 0.6rem 1.2rem;
+  padding: 1.1rem 2.2rem;
   border-radius: var(--radius-button, 2px);
 }
 .primaryAction { background: var(--main-color); color: #fff; }
 .primaryAction:hover { opacity: 0.88; }
-.secondaryAction { border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text-muted); }
+.secondaryAction { border: 1px solid rgba(255, 255, 255, 0.22); color: var(--text-muted); }
 .secondaryAction:hover, .secondaryAction:focus-visible { color: var(--accent-color); border-color: currentColor; }
 .primaryAction:focus-visible,
 .secondaryAction:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .summary {
-  margin: 2rem 0 0;
+  margin: 3.2rem 0 0;
   color: var(--text-muted);
-  font-size: 1.02rem;
-  line-height: 1.7;
+  font-size: var(--text-md);
+  line-height: 1.75;
+  max-width: 78ch;
 }
 
-/* ── Sections ───────────────────────────────────────────────────── */
+/* ── Sections ───────────────────────────────────────────────────────────── */
 
-.section { margin-top: 3rem; }
+.section { margin-top: 5rem; }
 
 .sectionTitle {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
+  font-size: 1.4rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--main-color);
-  margin: 0 0 1.4rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 0 2.4rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.entry { margin-bottom: 1.8rem; break-inside: avoid; }
+.entry { margin-bottom: 3rem; break-inside: avoid; }
 .entry:last-child { margin-bottom: 0; }
 
 .entryHead {
@@ -100,97 +103,101 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.4rem 1rem;
+  gap: 0.6rem 1.6rem;
 }
 
 .role {
   margin: 0;
-  font-size: 1.08rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--text-bright);
   text-transform: capitalize;
+  line-height: 1.3;
 }
 
 .dates {
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 1.3rem;
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-a.dates { text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+a.dates { text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
 a.dates:hover, a.dates:focus-visible { color: var(--accent-color); }
 
-.org { margin: 0.2rem 0 0.6rem; font-size: 0.9rem; color: var(--text-muted); }
-.org a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+.org { margin: 0.5rem 0 1.1rem; font-size: var(--text-base); color: var(--text-muted); }
+.org a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
 .org a:hover, .org a:focus-visible { color: var(--accent-color); }
 
-.bullets { margin: 0; padding-left: 1.15rem; }
+.bullets { margin: 0; padding-left: 2rem; }
 .bullets li {
   color: var(--text-muted);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  margin-bottom: 0.35rem;
+  font-size: var(--text-base);
+  line-height: 1.7;
+  margin-bottom: 0.7rem;
 }
 .bullets li::marker { color: var(--main-color); }
 
-.coursework { margin: 1.2rem 0 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+.coursework { margin: 2rem 0 0; font-size: var(--text-base); color: var(--text-muted); line-height: 1.7; }
 .coursework strong { color: var(--text-bright); }
 
-.plainList { margin: 0; padding-left: 1.15rem; }
-.plainList li { color: var(--text-muted); font-size: 0.93rem; line-height: 1.65; margin-bottom: 0.4rem; }
+.plainList { margin: 0; padding-left: 2rem; }
+.plainList li { color: var(--text-muted); font-size: var(--text-base); line-height: 1.75; margin-bottom: 0.8rem; }
 .plainList li::marker { color: var(--main-color); }
 .plainList strong { color: var(--text-bright); }
 .plainList a { color: var(--accent-color); }
 
-/* ── Skills ─────────────────────────────────────────────────────── */
+/* ── Skills ─────────────────────────────────────────────────────────────── */
 
 .skills { margin: 0; }
 
 .skillRow {
   display: grid;
-  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
-  gap: 0.4rem 1.5rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+  gap: 0.6rem 2.4rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   break-inside: avoid;
 }
-.skillRow dt { font-weight: 700; color: var(--text-bright); font-size: 0.9rem; }
-.skillRow dd { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.55; }
+.skillRow dt { font-weight: 700; color: var(--text-bright); font-size: var(--text-base); }
+.skillRow dd { margin: 0; color: var(--text-muted); font-size: var(--text-base); line-height: 1.65; }
 
 .foot {
-  margin-top: 3.5rem;
-  padding-top: 1.4rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.82rem;
+  margin-top: 5rem;
+  padding-top: 2.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: var(--text-sm);
   color: var(--text-dim);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 .foot a { color: var(--text-muted); }
 
 @media (max-width: 640px) {
-  .page { padding: 3rem 1.2rem 4rem; }
-  .skillRow { grid-template-columns: 1fr; gap: 0.15rem; }
+  .page { padding: 4rem 1.6rem 6rem; }
+  .skillRow { grid-template-columns: 1fr; gap: 0.3rem; }
 }
 
 /*
- * الطباعة: globals.css بيعمل الشغل الأساسي (خلفية بيضا، نص أسود، إخفاء
- * الزخرفة، طباعة عناوين اللينكات). هنا التعديلات الخاصة بالصفحة دي بس.
+ * الطباعة: globals.css بيعمل الأساسي (خلفية بيضا، نص أسود، إخفاء الزخرفة،
+ * طباعة عناوين اللينكات). هنا التعديلات الخاصة بالصفحة دي بس — بالـ pt
+ * لأن ده وحدة الورق، ومش متأثرة بالـ 62.5%.
  */
 @media print {
   .page { padding: 0; min-height: 0; }
   .sheet { max-width: none; }
-  /* CSS Modules بترفض selector من غير class محلي ("not pure")، فالقاعدة
-     متسكوبة على .sheet — وده أصح كمان: بتأثر على الصفحة دي بس. */
   .sheet [data-print="hide"] { display: none !important; }
-
-  /* عناوين اللينكات بتتطبع من قاعدة globals — بس في الـ CV العناوين دي هي
-     كل الفايدة، فسيبناها ظاهرة هنا ما عدا اللينكات الداخلية اللي مالهاش
-     معنى على ورق. */
   .foot { display: none; }
 
-  .section { margin-top: 1.4rem; }
-  .entry { margin-bottom: 1rem; }
-  .bullets li { font-size: 10pt; margin-bottom: 0.15rem; }
-  .name { font-size: 20pt; }
+  .section { margin-top: 16pt; }
+  .entry { margin-bottom: 11pt; }
+  .name { font-size: 22pt; }
+  .headline { font-size: 9pt; margin: 4pt 0 8pt; }
+  .contact { font-size: 8.5pt; gap: 2pt 14pt; }
+  .summary { font-size: 9.5pt; margin-top: 12pt; line-height: 1.45; }
+  .sectionTitle { font-size: 9pt; margin-bottom: 8pt; }
+  .role { font-size: 11pt; }
+  .dates, .org { font-size: 9pt; }
+  .bullets li, .plainList li { font-size: 9.5pt; margin-bottom: 2pt; line-height: 1.4; }
+  .skillRow { padding: 3pt 0; }
+  .skillRow dt, .skillRow dd { font-size: 9pt; }
 }

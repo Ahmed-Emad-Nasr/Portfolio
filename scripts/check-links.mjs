@@ -83,8 +83,23 @@ if (broken.size === 0) {
 }
 
 console.error(`\n✖ ${broken.size} broken internal link(s):\n`);
+
+const inCI = Boolean(process.env.GITHUB_ACTIONS);
+
 for (const [href, pages] of [...broken].sort()) {
+  const from = [...pages].slice(0, 3).join(", ");
+  const more = pages.size > 3 ? ` (+${pages.size - 3} more)` : "";
   console.error(`  ${href}`);
-  console.error(`      linked from: ${[...pages].slice(0, 3).join(", ")}${pages.size > 3 ? ` (+${pages.size - 3} more)` : ""}\n`);
+  console.error(`      linked from: ${from}${more}\n`);
+  if (inCI) {
+    console.log(`::error title=Broken link::${href} — linked from ${from}${more}`);
+  }
 }
+
+console.error(
+  "\nEach of these is a link on a built page pointing at a file that does not\n" +
+  "exist in out/. Common causes: a page id that generateStaticParams does not\n" +
+  "emit, or an asset path that no longer matches public/.\n",
+);
+
 process.exit(1);

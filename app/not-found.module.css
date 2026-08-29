@@ -1,75 +1,81 @@
-/* not-found.module.css */
+/*
+ * not-found.module.css
+ *
+ * ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px.
+ */
 
 .page {
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 5rem 1.5rem;
+  padding: 7rem 2rem;
   background: var(--bg-color);
 }
 
-.inner { max-width: 44rem; width: 100%; }
+.inner { max-width: 72rem; width: 100%; }
 
 .code {
   font-family: var(--font-mono);
-  font-size: clamp(4rem, 14vw, 8rem);
+  font-size: clamp(7rem, 16vw, 13rem);
   font-weight: 700;
   line-height: 1;
-  margin: 0 0 0.5rem;
+  margin: 0 0 1rem;
   color: rgba(var(--main-color-rgb), 0.35);
   font-variant-numeric: tabular-nums;
 }
 
 .title {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
   font-weight: 900;
   color: var(--text-bright);
-  margin: 0 0 0.8rem;
+  margin: 0 0 1.4rem;
+  line-height: 1.15;
 }
 
-.lede { color: var(--text-muted); line-height: 1.65; margin: 0 0 2rem; max-width: 52ch; }
+.lede { color: var(--text-muted); font-size: var(--text-md); line-height: 1.7; margin: 0 0 3.4rem; max-width: 56ch; }
 
-.actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 3rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 5rem; }
 
 .primary, .secondary {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 1.3rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 0.7rem 1.4rem;
+  padding: 1.2rem 2.4rem;
   border-radius: var(--radius-button, 2px);
 }
 .primary { background: var(--main-color); color: #fff; }
 .primary:hover { opacity: 0.88; }
-.secondary { border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text-muted); }
+.secondary { border: 1px solid rgba(255, 255, 255, 0.22); color: var(--text-muted); }
 .secondary:hover, .secondary:focus-visible { color: var(--accent-color); border-color: currentColor; }
 .primary:focus-visible, .secondary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .suggestTitle {
   font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.16em;
+  font-size: 1.3rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--main-color);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 0 1.8rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.suggestList { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-.suggestList li { display: flex; flex-direction: column; gap: 0.2rem; }
+.suggestList { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.8rem; }
+.suggestList li { display: flex; flex-direction: column; gap: 0.4rem; }
 .suggestList a {
   color: var(--text-bright);
   font-weight: 700;
+  font-size: var(--text-md);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   align-self: start;
 }
 .suggestList a:hover, .suggestList a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
-.suggestWhy { color: var(--text-dim); font-size: 0.84rem; line-height: 1.5; }
+.suggestWhy { color: var(--text-dim); font-size: var(--text-sm); line-height: 1.6; }
 
-.report { margin: 3rem 0 0; font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+.report { margin: 5rem 0 0; font-size: var(--text-sm); color: var(--text-dim); line-height: 1.7; }
 .report a { color: var(--text-muted); }
 .report a:hover, .report a:focus-visible { color: var(--accent-color); }

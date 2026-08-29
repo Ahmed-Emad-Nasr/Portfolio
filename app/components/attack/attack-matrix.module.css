@@ -1,8 +1,20 @@
 /*
  * attack-matrix.module.css
  *
- * متوافق مع باقي السكاشن: نفس الـ padding، نفس الـ container، نفس شكل
- * العنوان المتوسّط بالخط الأحمر تحته.
+ * ⚠️ ملحوظة عن المقياس — دي كانت سبب إن كل النصوص طلعت صغيرة جداً:
+ *
+ *     globals.css فيه  html { font-size: 62.5% }  →  1rem = 10px مش 16px
+ *
+ * يعني `font-size: 0.8rem` بتطلع **8 بكسل** مش 13. وده اللي كان حاصل في
+ * كل الملف ده.
+ *
+ * وglobals.css فيه توكنز جاهزة للمقاسات مكنتش بستخدمها:
+ *     --text-sm 1.4rem · --text-base 1.6rem · --text-md 1.8rem
+ *     --text-lg 2.0rem · --text-xl 2.2rem   · --text-2xl 2.8rem
+ *     --space-xs … --space-xl
+ *
+ * الملف كله اتعاد كتابته على التوكنز دي، فبقى مطابق لباقي الموقع بدل ما
+ * يبقى ليه مقياس خاص بيه.
  */
 
 .section {
@@ -21,9 +33,9 @@
   max-width: var(--container-max-width, 1500px);
 }
 
-.header-section { text-align: center; margin-bottom: 4rem; }
+.header-section { text-align: center; margin-bottom: 5rem; }
 
-/* نفس تعريف .title الموجود في Projects و Experience — مقصود يبقى مطابق */
+/* مطابق بالحرف لـ .title في Projects و Experience */
 .title {
   position: relative;
   font-weight: 800;
@@ -41,30 +53,30 @@
 
 .lede {
   color: var(--text-muted);
-  max-width: 60ch;
-  margin: 1.6rem auto 0;
-  font-size: 1.05rem;
-  line-height: 1.65;
+  max-width: 62ch;
+  margin: 2rem auto 0;
+  font-size: var(--text-base);
+  line-height: 1.7;
 }
 
 .stats {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 3rem;
-  margin: 2.2rem 0 0;
+  gap: var(--space-lg);
+  margin: 3.2rem 0 0;
 }
 .stat { margin: 0; }
 .stat dt {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 1.2rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .stat dd {
-  margin: 0.25rem 0 0;
-  font-size: 2rem;
+  margin: 0.6rem 0 0;
+  font-size: 3.4rem;
   font-weight: 800;
   color: var(--main-color);
   line-height: 1;
@@ -72,22 +84,15 @@
 }
 
 /*
- * كان grid-auto-flow: column جوّه scroller أفقي — يعني على الديسكتوب آخر
- * عمودين مخفيين ورا شريط تمرير رمادي بتاع النظام في نص التصميم.
- *
- * auto-fill بيلف الأعمدة على سطور بدل ما يخبّيها: كل التكتيكات ظاهرة على
- * أي عرض من غير أي scroll، والأعمدة بتتراص لوحدها من 6 على الديسكتوب
- * لعمود واحد على الموبايل.
- *
- * align-items: start عشان العمود اللي فيه تكنيك واحد مايتمدّش لطول العمود
- * اللي جنبه.
+ * أعمدة بتلف على سطور بدل scroller أفقي (اللي كان بيقص آخر عمودين ويطلّع
+ * شريط تمرير رمادي بتاع النظام في نص التصميم).
  */
 .matrix {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: 2rem 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  gap: 3.2rem 2rem;
   align-items: start;
-  max-width: 1160px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -95,23 +100,23 @@
 
 .tactic {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 1.2rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin: 0 0 0.8rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 0 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.cell { margin-bottom: 0.5rem; }
+.cell { margin-bottom: 0.8rem; }
 
 .cellSummary {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.6rem 0.7rem;
+  gap: 1rem;
+  padding: 1.1rem 1.2rem;
   cursor: pointer;
   list-style: none;
   border: 1px solid rgba(var(--main-color-rgb), calc(0.2 + var(--depth, 0) * 0.45));
@@ -125,26 +130,25 @@
 .cellSummary::marker { content: ""; }
 .cellSummary:hover {
   border-color: var(--accent-color);
-  background: rgba(var(--main-color-rgb), calc(0.12 + var(--depth, 0) * 0.2));
+  background: rgba(var(--main-color-rgb), calc(0.13 + var(--depth, 0) * 0.2));
 }
 .cellSummary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
 
 .techniqueId {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 1.2rem;
   color: var(--accent-color);
   font-variant-numeric: tabular-nums;
 }
 .techniqueName {
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   color: var(--text-color);
-  line-height: 1.3;
-  /* الاسم بيلف على سطرين بدل ما يتقص */
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 .count {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 1.2rem;
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
@@ -152,17 +156,17 @@
 .evidence {
   list-style: none;
   margin: 0;
-  padding: 0.6rem 0.7rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 1rem 1.2rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-top: 0;
   border-radius: 0 0 var(--radius-card-sm, 6px) var(--radius-card-sm, 6px);
 }
-.evidence li { margin-bottom: 0.4rem; }
+.evidence li { margin-bottom: 0.7rem; }
 .evidence li:last-child { margin-bottom: 0; }
 .evidence a {
   color: var(--text-muted);
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: var(--text-sm);
+  line-height: 1.5;
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
@@ -171,9 +175,10 @@
 
 @media (max-width: 991px) {
   .section { padding: 5rem 0 4rem; }
-  .title { font-size: 2rem; }
-  .stats { gap: 2rem; }
-  .matrix { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+  .title { font-size: 2.2rem; }
+  .stats { gap: var(--space-md); }
+  .stat dd { font-size: 2.8rem; }
+  .matrix { grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

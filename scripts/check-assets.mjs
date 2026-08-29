@@ -111,8 +111,23 @@ if (missing.length === 0) {
 }
 
 console.error(`\n✖ ${missing.length} missing asset(s):\n`);
+
+/* في GitHub Actions، `::error::` بيخلي السطر يظهر كتنبيه على الـ run نفسه
+   بدل ما يبقى مدفون في اللوج. */
+const inCI = Boolean(process.env.GITHUB_ACTIONS);
+
 for (const m of missing) {
   console.error(`  ${m.path}`);
   console.error(`      referenced in ${m.file} — ${m.hint}\n`);
+  if (inCI) {
+    console.log(`::error file=${m.file},title=Missing asset::${m.path} — ${m.hint}`);
+  }
 }
+
+console.error(
+  "\nNothing here is a code error — these are files the code expects to find\n" +
+  "in public/. Either the file is not committed, or a path in the config is\n" +
+  "out of date. Fix whichever is wrong and re-run.\n",
+);
+
 process.exit(1);

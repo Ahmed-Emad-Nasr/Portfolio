@@ -1,21 +1,21 @@
 /*
  * contact-section.module.css
  *
- * متوافق مع باقي السكاشن: نفس الـ padding، نفس الـ container، نفس شكل
- * العنوان المتوسّط.
+ * ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px. الملف اتعاد كتابته
+ * على توكنز الموقع بدل مقياس خاص بيه.
  */
 
 .section {
-  padding: 8rem 0 8rem;
+  padding: 8rem 0 9rem;
   position: relative;
   z-index: 1;
   content-visibility: auto;
-  contain-intrinsic-size: 1px 800px;
+  contain-intrinsic-size: 1px 900px;
 }
 
-.header-section { text-align: center; margin-bottom: 4rem; }
+.header-section { text-align: center; margin-bottom: 5rem; }
 
-/* مطابق لتعريف .title في Projects و Experience */
+/* مطابق بالحرف لـ .title في Projects و Experience */
 .title {
   position: relative;
   font-weight: 800;
@@ -33,9 +33,10 @@
 
 .lede {
   color: var(--text-muted);
-  max-width: 52ch;
-  margin: 1.6rem auto 0;
-  line-height: 1.65;
+  max-width: 56ch;
+  margin: 2rem auto 0;
+  font-size: var(--text-base);
+  line-height: 1.7;
 }
 
 .container {
@@ -43,31 +44,26 @@
   padding: 0 var(--container-pad-x, 5.25%);
   max-width: var(--container-max-width, 1500px);
   display: grid;
-  grid-template-columns: minmax(0, 22rem) minmax(0, 34rem);
+  grid-template-columns: minmax(0, 34rem) minmax(0, 52rem);
   justify-content: center;
-  gap: 4rem;
+  gap: 6rem;
   align-items: start;
 }
 
-/*
- * من غير الحالة دي، لما الفورم مقفول العمود التاني بيفضل فاضي والقسم كله
- * بيبان مكسور — نصه محتوى ونصه فراغ.
- */
-.container[data-form="off"] {
-  grid-template-columns: minmax(0, 30rem);
-}
+/* لما الفورم مقفول، العمود التاني كان بيفضل فاضي والقسم يبان مكسور */
+.container[data-form="off"] { grid-template-columns: minmax(0, 46rem); }
 
 .intro { min-width: 0; }
 
-.direct { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
+.direct { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.4rem; }
 .direct a {
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 1.1rem;
   color: var(--text-muted);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  font-size: 1.02rem;
+  font-size: var(--text-md);
 }
 .direct a:hover, .direct a:focus-visible {
   color: var(--accent-color);
@@ -75,25 +71,25 @@
 }
 .direct svg { color: var(--main-color); width: 1.1em; flex-shrink: 0; }
 
-.form { display: grid; gap: 1.1rem; min-width: 0; }
+.form { display: grid; gap: 1.8rem; min-width: 0; }
 
-.field { display: grid; gap: 0.4rem; }
+.field { display: grid; gap: 0.7rem; }
 .field label {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-size: 1.2rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .field input,
 .field textarea {
   font-family: inherit;
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--text-bright);
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-card-sm, 6px);
-  padding: 0.8rem 0.95rem;
+  padding: 1.3rem 1.5rem;
   width: 100%;
   resize: vertical;
 }
@@ -117,15 +113,15 @@
   justify-self: start;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1rem;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--text-bright);
   background: var(--main-color);
   border: 0;
   border-radius: var(--radius-button, 2px);
-  padding: 0.85rem 1.7rem;
+  padding: 1.4rem 2.8rem;
   cursor: pointer;
   transition: opacity var(--motion-fast, 150ms) ease;
 }
@@ -133,29 +129,25 @@
 .submit:disabled { opacity: 0.55; cursor: progress; }
 .submit:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
-.status { margin: 0; min-height: 1.4rem; font-size: 0.9rem; }
-.ok { color: #4ade80; display: inline-flex; align-items: center; gap: 0.45rem; }
-.err { color: var(--main-light, #ff2d78); display: inline-flex; align-items: center; gap: 0.45rem; }
+.status { margin: 0; min-height: 2.2rem; font-size: var(--text-sm); }
+.ok { color: #4ade80; display: inline-flex; align-items: center; gap: 0.7rem; }
+.err { color: var(--main-light, #ff2d78); display: inline-flex; align-items: center; gap: 0.7rem; }
 
-/*
- * كانت صندوق متقطّع كبير جنب بيانات التواصل — الزائر بيقرا رسالة خطأ تقنية
- * مالهاش أي معنى بالنسباله. بقت سطر صغير هادي تحت اللينكات: المطوّر بيشوفها
- * والزائر بالكاد بياخد باله منها.
- */
+/* ملاحظة للمطوّر مش للزائر — كانت صندوق متقطّع كبير في مكان الفورم */
 .disabled {
-  margin: 1.8rem 0 0;
-  font-size: 0.75rem;
-  line-height: 1.5;
+  margin: 2.8rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.6;
   color: var(--text-dim);
-  opacity: 0.55;
+  opacity: 0.6;
 }
-.disabled code { font-family: var(--font-mono); font-size: 0.72rem; }
+.disabled code { font-family: var(--font-mono); font-size: 1.2rem; }
 
 @media (max-width: 900px) {
-  .section { padding: 5rem 0 5rem; }
-  .title { font-size: 2rem; }
+  .section { padding: 5rem 0 6rem; }
+  .title { font-size: 2.2rem; }
   .container,
-  .container[data-form="off"] { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; max-width: 34rem; }
+  .container[data-form="off"] { grid-template-columns: minmax(0, 1fr); gap: 4rem; max-width: 52rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

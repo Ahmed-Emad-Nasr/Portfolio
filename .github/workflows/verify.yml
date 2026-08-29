@@ -1,13 +1,19 @@
 # .github/workflows/verify.yml
 #
-# بيشغّل نفس الفحوصات المحلية على كل push و pull request.
+# بيشغّل نفس فحوصات `npm run verify` على كل push و pull request.
 #
-# ليه ده مهم أكتر من أي حاجة تانية في المشروع؟ لأن أغلب المشاكل اللي وصلت
-# للإنتاج هنا مكانتش أخطاء منطق — كانت لينكات وأصول مكسورة: id فيه مسافات،
-# كارت بيلينك على صفحة متولّدتش، مسار أصل اتغيّر في الكود ومااتغيرش على
-# القرص. الأنواع دي كلها بتعدي من TypeScript ومن next build بنجاح.
+# ليه ده مهم؟ لأن أغلب المشاكل اللي وصلت للإنتاج في المشروع ده مكانتش
+# أخطاء منطق — كانت لينكات وأصول مكسورة: id فيه مسافات، كارت بيلينك على
+# صفحة متولّدتش، مسار أصل اتغيّر في الكود ومااتغيرش على القرص. الأنواع
+# دي كلها بتعدّي من TypeScript ومن next build بنجاح.
 #
-# الـ workflow ده بيمسكهم قبل ما يوصلوا للموقع.
+# ── ملحوظة عن تصميم الملف ده ─────────────────────────────────────────────
+# النسخة الأولى كانت بتوقف عند أول خطوة تفشل. ودي غلطة: إنت بتستنى دقيقة
+# عشان تعرف مشكلة واحدة، تصلّحها، تـpush، تستنى تاني... لخطأ تاني كان
+# ممكن تعرفه من نفس الـ run.
+#
+# دلوقتي كل الفحوصات بتشتغل بـ `if: always()`، وفيه خطوة أخيرة بتجمع
+# النتايج وتفشل لو أي واحدة وقعت. run واحد = كل المشاكل مرة واحدة.
 
 name: Verify
 
@@ -15,6 +21,7 @@ on:
   push:
     branches: [master, main]
   pull_request:
+  workflow_dispatch:   # عشان تقدر تشغّله بإيدك من تاب Actions
 
 jobs:
   verify:
@@ -28,32 +35,82 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Environment
+        run: |
+          echo "node $(node -v) · npm $(npm -v)"
+          echo "public/ exists: $([ -d public ] && echo yes || echo NO)"
+
       - name: Install dependencies
-        run: npm ci
+        id: install
+        run: |
+          npm ci || {
+            echo "::error title=Install failed::npm ci failed. If it says the lockfile is out of sync, run 'npm install' locally and commit package-lock.json."
+            exit 1
+          }
+
+      # ── من هنا: كل فحص بيشتغل حتى لو اللي قبله وقع ──────────────────────
 
       - name: Lint
+        id: lint
+        if: always() && steps.install.outcome == 'success'
         run: npm run lint
 
       - name: Type check
+        id: types
+        if: always() && steps.install.outcome == 'success'
         run: npm run type-check
 
-      # لازم قبل الـ build: مفيش فايدة نبني موقع بيشاور على ملفات مش موجودة
+      # بيتأكد إن كل مسار Assets/ في الـ config موجود فعلاً في public/.
+      # بيمسك: مجلد اتغيّر اسمه، PDF مش مرفوع، صورة اتمسحت، واختلاف
+      # حروف كابيتال/سمول (شغّال على ويندوز وبيقع على GitHub Pages).
       - name: Check assets exist in public/
+        id: assets
+        if: always() && steps.install.outcome == 'success'
         run: npm run check:assets
 
       - name: Build
+        id: build
+        if: always() && steps.install.outcome == 'success'
         run: npm run build
 
-      # بعد الـ build: بيزحف على out/ ويتأكد إن كل لينك داخلي بيوصل
+      # بيزحف على out/ ويتأكد إن كل لينك داخلي بيوصل لملف موجود
       - name: Check internal links
+        id: links
+        if: always() && steps.build.outcome == 'success'
         run: npm run check:links
 
-      # الأصول والصفحات المولّدة — مفيدة لو الـ build فشل عندك وإنت
-      # محتاج تشوف اللي اتولّد فعلاً
       - name: Upload build output
-        if: always()
+        if: always() && steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: out
           path: out/
           retention-days: 5
+
+      # ── ملخّص: كل النتايج في مكان واحد ──────────────────────────────────
+      - name: Summary
+        if: always()
+        run: |
+          status() { [ "$1" = "success" ] && echo "✅ pass" || { [ "$1" = "skipped" ] && echo "⏭️ skipped" || echo "❌ FAIL"; }; }
+
+          {
+            echo "## Verify results"
+            echo ""
+            echo "| Check | Result |"
+            echo "|---|---|"
+            echo "| Lint | $(status '${{ steps.lint.outcome }}') |"
+            echo "| Type check | $(status '${{ steps.types.outcome }}') |"
+            echo "| Assets exist in public/ | $(status '${{ steps.assets.outcome }}') |"
+            echo "| Build | $(status '${{ steps.build.outcome }}') |"
+            echo "| Internal links | $(status '${{ steps.links.outcome }}') |"
+            echo ""
+            echo "Open the failing step above for the full output."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # تفشل لو أي فحص وقع
+          for r in '${{ steps.lint.outcome }}' '${{ steps.types.outcome }}' \
+                   '${{ steps.assets.outcome }}' '${{ steps.build.outcome }}' \
+                   '${{ steps.links.outcome }}'; do
+            [ "$r" = "failure" ] && exit 1
+          done
+          exit 0

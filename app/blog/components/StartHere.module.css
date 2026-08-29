@@ -1,47 +1,52 @@
-/* StartHere.module.css */
+/*
+ * StartHere.module.css
+ *
+ * ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px. اتعاد كتابته على
+ * توكنز الموقع.
+ */
 
 .section {
-  margin: 0 auto 4rem;
+  margin: 0 auto 6rem;
   padding: 0 var(--container-pad-x, 5.25%);
   max-width: var(--container-max-width, 1500px);
 }
 
-/* عنوان الصفحة — كان ناقص تماماً (شوف التعليق في StartHere.tsx) */
+/* عنوان الصفحة — صفحة البلوج كانت من غير <h1> خالص */
 .pageTitle {
-  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-size: clamp(3.2rem, 5vw, 4.6rem);
   font-weight: 900;
   color: var(--text-bright);
-  margin: 0 0 0.7rem;
+  margin: 0 0 1.2rem;
   letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
 .pageLede {
   color: var(--text-muted);
-  font-size: 1.05rem;
-  line-height: 1.6;
+  font-size: var(--text-md);
+  line-height: 1.65;
   max-width: 62ch;
-  margin: 0 0 3rem;
+  margin: 0 0 5rem;
 }
 
-.head { max-width: 60ch; margin-bottom: 1.6rem; }
+.head { max-width: 62ch; margin-bottom: 2.4rem; }
 
 .title {
-  font-size: 1.5rem;
+  font-size: var(--text-xl);
   font-weight: 800;
   color: var(--text-bright);
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.8rem;
 }
 
-.lede { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+.lede { color: var(--text-muted); font-size: var(--text-base); line-height: 1.65; margin: 0; }
 
 .list {
   list-style: none;
-  counter-reset: none;
   margin: 0 auto;
   padding: 0;
-  max-width: 1100px;
+  max-width: 1120px;
   display: grid;
-  gap: 0.7rem;
+  gap: 1.2rem;
 }
 
 .item { min-width: 0; }
@@ -50,8 +55,8 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 1.2rem;
-  padding: 1.1rem 1.3rem;
+  gap: 2rem;
+  padding: 2rem 2.2rem;
   text-decoration: none;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-left: 2px solid var(--main-color);
@@ -70,19 +75,20 @@
 
 .index {
   font-family: var(--font-mono);
-  font-size: 1.4rem;
+  font-size: 2.6rem;
   font-weight: 700;
   color: rgba(var(--main-color-rgb), 0.55);
   font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
-.body { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
-.label { color: var(--text-bright); font-weight: 700; font-size: 1.02rem; line-height: 1.3; }
-.why { color: var(--text-dim); font-size: 0.85rem; line-height: 1.5; }
+.body { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.label { color: var(--text-bright); font-weight: 700; font-size: var(--text-md); line-height: 1.3; }
+.why { color: var(--text-dim); font-size: var(--text-sm); line-height: 1.55; }
 
 .minutes {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 1.2rem;
   letter-spacing: 0.08em;
   color: var(--text-dim);
   white-space: nowrap;
@@ -90,8 +96,9 @@
 }
 
 @media (max-width: 640px) {
-  .card { grid-template-columns: auto minmax(0, 1fr); row-gap: 0.5rem; }
+  .card { grid-template-columns: auto minmax(0, 1fr); row-gap: 0.8rem; gap: 1.4rem; }
   .minutes { grid-column: 2; justify-self: start; }
+  .pageLede { margin-bottom: 3.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
