@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "report-writing-soc-l2": Array.from({ length: 5 }, (_, i) => `Assets/Cases/Report_Writing_SOC_L2/Screenshot (${190 + i}).webp`),
   "soc-l2-alert-triage": Array.from({ length: 5 }, (_, i) => `Assets/Cases/SOC_L2_Alert_Triage/Screenshot (${185 + i}).webp`),
   "offensive-security-intro": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Offensive_Security_Intro/Screenshot (${166 + i}).webp`),
   "iam-access-control-room": Array.from({ length: 12 }, (_, i) => `Assets/Cases/IAM_Access_Control/Screenshot (${141 + i}).webp`),
@@ -898,6 +899,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-08-30",
     screenshots: Array.from({ length: 5 }, (_, i) => `Assets/Cases/SOC_L2_Alert_Triage/Screenshot (${185 + i}).webp`),
     image: "Assets/Cases/SOC_L2_Alert_Triage/Screenshot (185).webp",
+  },
+  {
+    id: "report-writing-soc-l2",
+    title: "Report Writing for SOC L2 Walkthrough",
+    description: "Completed the Report Writing for SOC L2 room on TryHackMe. Focused on creating effective incident reports tailored for different audiences, including C-Level executive summaries and detailed DFIR handover notes, emphasizing clear communication and actionable intelligence.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "SOC Analysis",
+    difficulty: "Medium",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["TryHackMe", "SOC", "Tier 2", "Report Writing", "Incident Response", "DFIR"],
+    tools: ["Documentation", "Executive Summaries"],
+    skillsGained: ["Technical Writing", "Incident Reporting", "C-Level Communication", "DFIR Handovers"],
+    readTime: 10,
+    date: "2026-08-30",
+    screenshots: Array.from({ length: 5 }, (_, i) => `Assets/Cases/Report_Writing_SOC_L2/Screenshot (${190 + i}).webp`),
+    image: "Assets/Cases/Report_Writing_SOC_L2/Screenshot (194).webp",
   },
 ] as const;
 
