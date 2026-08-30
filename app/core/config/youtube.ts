@@ -30,6 +30,22 @@ export { YOUTUBE_CHANNEL_URL } from "./shared";
 
 export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
+    videoId: "PEeh_0QBjmc",
+    title: "TryHackMe SOC Simulation: Phishing Analysis Walkthrough",
+    description: "A practical walkthrough of solving a TryHackMe SOC Simulation focused on phishing analysis. The video demonstrates how to investigate inbound emails, extract IOCs (URLs, Domains, IPs), verify them using threat intelligence platforms, determine true/false positives, and write comprehensive case reports.",
+    publishedAt: "2026-08-30",
+    tags: [
+      "TryHackMe",
+      "SOC",
+      "Phishing Analysis",
+      "Cyber Security",
+      "Threat Intelligence",
+      "Incident Response",
+      "IOC Extraction",
+      "Blue Team"
+    ],
+  },
+  {
     videoId: "z4GbIULmsLA",
     title: "Analyzing WannaCry Malware",
     description: "A comprehensive walkthrough of analyzing the WannaCry ransomware. This video covers static and dynamic analysis techniques, exploring its propagation mechanisms, encryption payload, and network indicators. Essential for DFIR professionals and SOC analysts looking to understand, dissect, and defend against ransomware threats.",
