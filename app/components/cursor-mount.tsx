@@ -3,22 +3,45 @@
 /*
  * cursor-mount.tsx
  *
- * Exists purely to hold the `ssr: false` dynamic import.
+ * موجود عشان يشيل الـ dynamic import اللي فيه ssr: false.
  *
- * WHY: `next/dynamic` with `ssr: false` is forbidden inside a Server
- * Component, and app/layout.tsx IS a Server Component (it exports
- * `metadata`, which only Server Components can do). Putting the call here,
- * behind a "use client" boundary, is the supported pattern.
+ * ليه: `next/dynamic` بـ `ssr: false` ممنوع جوه Server Component،
+ * وapp/layout.tsx **هو** Server Component (بيصدّر `metadata`، وده حاجة
+ * الـ Server Components بس اللي بتعملها). حطّه هنا، ورا حاجز "use client"،
+ * هو النمط المدعوم.
  *
- * The cursor is desktop-only decoration that pulls in framer-motion's spring
- * engine and subscribes to every pointermove. Deferring it keeps it out of
- * the initial bundle — mobile visitors, who can never see it, never download it.
+ * ═══ التعديل ═══
+ *
+ * `dynamic()` بيبدأ تحميل الـ chunk أول ما المكوّن يترندر — يعني على
+ * التليفون الـ chunk كان بيتحمّل بالكامل وبعدين المكوّن يقرا
+ * matchMedia("(pointer: fine)") جوّه ويرجع من غير ما يعمل حاجة.
+ *
+ * والـ chunk ده مش صغير: useMotionValue + useSpring بيجروا محرّك الأنيميشن
+ * بتاع framer-motion كله وراهم. بايتس بتتحمّل وتتفكّ وتتنفّذ على المسار
+ * الحرج، على جهاز مستحيل يستخدمها.
+ *
+ * الفحص بقى **قبل** الـ import: التليفون عمره ما يطلب الملف أصلاً.
+ * الـ state ضروري عشان أول render في المتصفح يطابق اللي جه من السيرفر
+ * (null في الحالتين) — مفيش hydration mismatch.
  */
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { isTouchDevice } from "@/app/core/hooks/useDeviceTier";
 
 const CustomCursor = dynamic(() => import("./custom-cursor"), { ssr: false });
 
 export default function CursorMount() {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    if (isTouchDevice()) return;
+    // reduced-motion برضه بيلغيه: مؤشر بزنبرك هو بالظبط نوع الحركة اللي
+    // الإعداد ده موجود عشانها.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setEnabled(true);
+  }, []);
+
+  if (!enabled) return null;
   return <CustomCursor />;
 }

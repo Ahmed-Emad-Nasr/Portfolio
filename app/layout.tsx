@@ -29,6 +29,11 @@ import BackToTop from "./core/components/BackToTop";
 // الـ palette نفسه بيتحمّل lazy جوه المكوّن ده — مفيش أي كود منه في الـ
 // bundle الأساسي لحد أول Ctrl+K.
 import CommandPaletteMount from "./core/components/CommandPaletteMount";
+// سكربت صغير بيتنفّذ في <head> قبل أول paint ويكتب data-tier على <html>.
+// من غيره الـ CSS gating (html[data-tier="low"]) مكانش بيشتغل غير بعد الـ
+// hydration — يعني كل الأنيميشن التقيل بيتحمّل ثمنه بالكامل بالظبط في
+// النافذة اللي الـ LCP والـ TBT بيتقاسوا فيها.
+import { DEVICE_TIER_SCRIPT } from "./core/hooks/useDeviceTier";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -146,6 +151,18 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
   display: "swap",
+  /*
+   * preload: false — الفرق ده مهم على الموبايل تحديداً.
+   *
+   * next/font بيعمل <link rel="preload"> لكل ملف خط بشكل افتراضي. مع
+   * Overlock بتلات أوزان + JetBrains بوزنين، ده **خمس طلبات بأولوية عالية**
+   * بتتنافس مع صورة الـ LCP على نفس نافذة الاتصال المحدودة بتاعة الـ 3G/4G.
+   *
+   * JetBrains Mono مش في أي نص فوق الطية له وزن في القياس — هو للـ HUD،
+   * والـ labels، والتواريخ، والترمينال. `display: swap` بيخلّيه يتبدّل لما
+   * يوصل، من غير ما يكون له أولوية على الصورة اللي الدرجة بتتقاس عليها.
+   */
+  preload: false,
 });
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -245,9 +262,34 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr" className={`${overlock.variable} ${jetbrainsMono.variable}`}>
+    /* suppressHydrationWarning: السكربت تحت بيضيف data-tier على <html> قبل
+       ما React يعمل hydrate. من غير ده React بيشتكي من attribute مش موجود
+       في الـ markup اللي جه من السيرفر. نفس النمط المستخدم في next-themes. */
+    <html
+      lang="en"
+      dir="ltr"
+      className={`${overlock.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/*
+          سكربت inline بيتنفّذ فوراً — قبل الـ CSS ما يترسم وقبل أي bundle.
+          بيصنّف الجهاز ويكتب data-tier="low|mid|high" على <html>.
+
+          ليه ده أكبر تعديل في الملف كله؟ لأن globals.css فيه بالفعل ميزانية
+          حركة كاملة متعلّقة على html[data-tier="low"] (مفيش أنيميشن زخرفي،
+          مفيش backdrop-filter، transitions أقصر). المشكلة إن اللي بيكتب
+          الـ attribute ده كان useEffect — يعني مبيشتغلش غير بعد ما الـ
+          bundle يتحمّل ويعمل hydrate. النتيجة: التليفون بيدفع تكلفة الحركة
+          الكاملة في أول 2–3 ثواني بالظبط، وبعدين يقفلها.
+
+          دلوقتي القواعد شغّالة من أول فريم، وصفر جافاسكريبت في المسار الحرج.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: DEVICE_TIER_SCRIPT }} />
+      </head>
       {/*
-        الـ <head> اليدوي اتشال بالكامل. كان فيه سطرين:
+        الـ <head> فوق فيه السكربت بتاع الـ tier وبس. السطرين القدام دول
+        كانوا فيه واتشالوا:
 
         1. <link rel="preload" as="image" href=".../My_Logo.webp">
            بيعمل preload للملف الغلط — صورة الـ LCP هي 3omda.webp في

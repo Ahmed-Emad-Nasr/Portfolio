@@ -1,34 +1,32 @@
 "use client";
 
 /*
- * sensei_loader.tsx — FIXED
+ * sensei_loader.tsx — نسخة الموبايل
  *
- * The old version blocked the screen for a MINIMUM of 2.2 s *after* the
- * `load` event had already fired:
+ * ═══ المشكلتين اللي كانوا هنا ═══
  *
- *     handleLoad = () => setTimeout(() => setLoading(false), 2200)
+ * 1) كان بيستنى حدث `load` بتاع الـ window.
+ *    `load` مبيضربش غير لما **كل** المصادر تخلص: كل الصور (بما فيها اللي
+ *    تحت الطية)، كل الخطوط، كل ملف JS. على تليفون على شبكة متوسطة ده بسهولة
+ *    3–5 ثواني والشاشة سودا. اللي محتاجينه هو "المحتوى الأساسي اتعرض"،
+ *    وده `DOMContentLoaded` — بيضرب أبكر بكتير.
  *
- * So a site that finished loading in 800 ms still showed a spinner until
- * ~3 s. Combined with the sections being ssr:false, first meaningful paint
- * landed past 3 s on mid-range hardware. That is a self-inflicted LCP
- * penalty, not a loading indicator.
+ * 2) كان بيستورد framer-motion (AnimatePresence + m) عشان انيميشن خروج واحد.
+ *    ده بيحط محرّك الأنيميشن على المسار الحرج للصفحة الرئيسية عشان fade
+ *    ممكن يتعمل بـ CSS transition ببلاش. دلوقتي صفر جافاسكريبت أنيميشن هنا.
  *
- * New behaviour:
- * - Dismisses as soon as the page is ready (no artificial floor).
- * - Keeps a SHORT minimum (400 ms) purely to avoid a jarring flash when the
- *   page is already cached — long enough to read as intentional, short
- *   enough to never be the bottleneck.
- * - Hard safety timeout so a stalled asset can never trap the user behind
- *   the overlay (the old code had no escape hatch if `load` never fired).
- * - Skips the whole animated boot sequence at the low tier.
+ * ═══ وعلى التليفون خصوصاً ═══
+ *
+ * الـ CSS بيخفي الـ overlay بالكامل على html[data-tier="low"]، والسكربت في
+ * <head> بيحدّد الـ tier قبل أول paint. يعني زائر الموبايل **عمره ما يشوف
+ * الشاشة السودا** — أول paint هو الـ hero نفسه. ده أكبر مكسب في الـ FCP
+ * والـ Speed Index في الملف كله.
+ *
+ * الـ overlay لسه بيترندر في الـ HTML (نفس markup السيرفر والمتصفح، مفيش
+ * hydration mismatch) — الـ CSS بس هو اللي بيقرر يوريه ولا لأ.
  */
 
 import { useEffect, useState } from "react";
-// LazyMotion is deliberately NOT imported here. layout.tsx mounts
-// <MotionProvider> (a strict LazyMotion) above everything, and this component
-// renders inside it — the nested provider it used to create was a duplicate
-// feature bundle, the exact pattern that was just removed from MotionInView.
-import { AnimatePresence, m } from "framer-motion";
 import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import styles from "./sensei_loader.module.css";
 
@@ -41,127 +39,124 @@ const BOOT_LINES = [
   "SENSEI READY",
 ] as const;
 
-/** Minimum visible time — prevents a one-frame flash, nothing more. */
-const MIN_VISIBLE_MS = 400;
-/** Absolute ceiling: never trap the user, even if an asset hangs. */
-const MAX_VISIBLE_MS = 4000;
+/** أقل وقت ظهور — بيمنع ومضة فريم واحد وبس. */
+const MIN_VISIBLE_MS = 250;
+/** السقف المطلق: عمرنا ما نحبس الزائر، حتى لو مصدر علّق. */
+const MAX_VISIBLE_MS = 1500;
+/** لازم يساوي مدة الـ transition في .leaving داخل الـ CSS. */
+const EXIT_MS = 420;
 
 export default function LoadingScreen() {
-  const [loading, setLoading] = useState(true);
+  const [phase, setPhase] = useState<"visible" | "leaving" | "gone">("visible");
   const [currentLine, setCurrentLine] = useState(0);
   const tier = useDeviceTier();
   const reduced = tier === "low";
 
   useEffect(() => {
     const mountedAt = performance.now();
+    let exitTimer: number | undefined;
     let minTimer: number | undefined;
 
-    const dismiss = () => {
+    const start = () => {
       const elapsed = performance.now() - mountedAt;
-      const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
-      minTimer = window.setTimeout(() => setLoading(false), wait);
+      minTimer = window.setTimeout(() => {
+        setPhase("leaving");
+        exitTimer = window.setTimeout(() => setPhase("gone"), EXIT_MS);
+      }, Math.max(0, MIN_VISIBLE_MS - elapsed));
     };
 
-    if (document.readyState === "complete") {
-      dismiss();
+    /*
+     * `readyState === "loading"` معناه إن الـ parser لسه شغّال.
+     * أي حاجة غير كده ("interactive" أو "complete") معناها إن الـ DOM جاهز
+     * والمحتوى اللي وراه اتعرض — مفيش سبب نستنى الصور اللي تحت الطية.
+     */
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", start, { once: true });
     } else {
-      window.addEventListener("load", dismiss, { once: true });
+      start();
     }
 
-    // Escape hatch — the old code would hang forever if `load` never fired.
-    const hardStop = window.setTimeout(() => setLoading(false), MAX_VISIBLE_MS);
+    // مخرج طوارئ — القديم كان ممكن يفضل معلّق للأبد لو `load` معضربش.
+    const hardStop = window.setTimeout(() => setPhase("gone"), MAX_VISIBLE_MS);
 
     return () => {
-      window.removeEventListener("load", dismiss);
+      document.removeEventListener("DOMContentLoaded", start);
       if (minTimer !== undefined) window.clearTimeout(minTimer);
+      if (exitTimer !== undefined) window.clearTimeout(exitTimer);
       window.clearTimeout(hardStop);
     };
   }, []);
 
-  // Boot-line ticker: pointless work once hidden, and skipped on weak devices.
+  // شريط الإقلاع: شغل من غير فايدة بعد ما يختفي، ومتخطّى على الأجهزة الضعيفة.
   useEffect(() => {
-    if (!loading || reduced) return;
+    if (phase !== "visible" || reduced) return;
     const id = window.setInterval(
       () => setCurrentLine((prev) => (prev + 1) % BOOT_LINES.length),
       350,
     );
     return () => window.clearInterval(id);
-  }, [loading, reduced]);
+  }, [phase, reduced]);
+
+  if (phase === "gone") return null;
 
   return (
-      <AnimatePresence>
-        {loading && (
-          <m.div
-            initial={{ opacity: 1 }}
-            exit={reduced ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
-            transition={{ duration: reduced ? 0.2 : 0.5, ease: [0.76, 0, 0.24, 1] }}
-            className={styles.loader}
-            role="status"
-            /* aria-live was "polite" around a ticker that swaps text every
-               350 ms — a screen reader would read six boot lines out loud
-               before the visitor reached any content. The overlay announces
-               itself once via aria-label; the theatre inside is decoration. */
-            aria-live="off"
-            aria-label="Loading"
-          >
-            {/* Three full-screen painted overlays. Decorative only — the CSS
-                tier rules strip them on low-end devices. */}
-            {!reduced && (
-              <>
-                <div className={styles.speedLines} data-decorative="true" aria-hidden="true" />
-                <div className={styles.neuralGrid} data-decorative="true" aria-hidden="true" />
-                <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
-              </>
-            )}
+    <div
+      className={`${styles.loader} ${phase === "leaving" ? styles.leaving : ""}`}
+      role="status"
+      /* aria-live كان "polite" حوالين ticker بيغيّر النص كل 350ms — قارئ
+         الشاشة كان هيقرا ست سطور إقلاع قبل ما الزائر يوصل لأي محتوى.
+         الـ overlay بيعرّف نفسه مرة واحدة بـ aria-label. */
+      aria-live="off"
+      aria-label="Loading"
+    >
+      {/* تلات طبقات بتغطي الشاشة كلها. زخرفة بحتة — قواعد الـ tier في
+          الـ CSS بتشيلها على الأجهزة الضعيفة. */}
+      {!reduced && (
+        <>
+          <div className={styles.speedLines} data-decorative="true" aria-hidden="true" />
+          <div className={styles.neuralGrid} data-decorative="true" aria-hidden="true" />
+          <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
+        </>
+      )}
 
-            <div className={styles.cornerTopLeft} aria-hidden="true" />
-            <div className={styles.cornerTopRight} aria-hidden="true" />
-            <div className={styles.cornerBottomLeft} aria-hidden="true" />
-            <div className={styles.cornerBottomRight} aria-hidden="true" />
+      <div className={styles.cornerTopLeft} aria-hidden="true" />
+      <div className={styles.cornerTopRight} aria-hidden="true" />
+      <div className={styles.cornerBottomLeft} aria-hidden="true" />
+      <div className={styles.cornerBottomRight} aria-hidden="true" />
 
-            <div className={styles.emblem} aria-hidden="true">
-              {/* Previously THREE separate infinite framer-motion loops (rotate,
-                  scale-pulse, opacity-pulse), each its own animation frame
-                  subscription. Rotation alone carries the idea. */}
-              <m.div
-                animate={reduced ? undefined : { rotate: 360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className={styles.outerRing}
-              />
-              <div className={styles.innerRing} />
-              <div className={styles.symbolWrap}>
-                <span className={styles.symbol}>師</span>
-              </div>
-            </div>
+      <div className={styles.emblem} aria-hidden="true">
+        {/* كانت تلات حلقات framer-motion لا نهائية منفصلة (دوران، نبض حجم،
+            نبض شفافية) كل واحدة اشتراك animation frame لوحدها. بقت دوران
+            واحد بـ CSS — نفس الفكرة، صفر جافاسكريبت. */}
+        <div className={styles.outerRing} data-decorative="true" />
+        <div className={styles.innerRing} />
+        <div className={styles.symbolWrap}>
+          <span className={styles.symbol}>師</span>
+        </div>
+      </div>
 
-            <div className={styles.bootText} aria-hidden="true">
-              <div className={styles.bootLineRow}>
-                <div className={styles.bootLine} />
-                <span className={styles.bootLineText}>
-                  {reduced ? "LOADING" : BOOT_LINES[currentLine]}
-                </span>
-                <div className={styles.bootLine} />
-              </div>
-              {/* was <h2>. This overlay ships inside the exported HTML, so
-                  "The Samurai Way." was the first heading a crawler met on
-                  every single page — above the real one. It is decoration,
-                  so it is a <p> now. Styling is unchanged. */}
-              <p className={styles.title}>
-                The Samurai <span className={styles.titleAccent}>Way.</span>
-              </p>
-            </div>
+      <div className={styles.bootText} aria-hidden="true">
+        <div className={styles.bootLineRow}>
+          <div className={styles.bootLine} />
+          <span className={styles.bootLineText}>
+            {reduced ? "LOADING" : BOOT_LINES[currentLine]}
+          </span>
+          <div className={styles.bootLine} />
+        </div>
+        {/* كان <h2>. الـ overlay ده بيتشحن جوه الـ HTML المصدّر، يعني
+            "The Samurai Way." كان أول عنوان يقابل أي crawler على كل صفحة —
+            فوق العنوان الحقيقي. ده زخرفة، فبقى <p>. */}
+        <p className={styles.title}>
+          The Samurai <span className={styles.titleAccent}>Way.</span>
+        </p>
+      </div>
 
-            {/* The bar used to animate to 100% over a fixed 2.2 s, which was
-                pure theatre — it reported a duration, not real progress.
-                Now it is an indeterminate CSS sweep, which is honest. */}
-            <div className={styles.progressBar} aria-hidden="true">
-              <div className={styles.progressFill} data-decorative="true" />
-            </div>
+      <div className={styles.progressBar} aria-hidden="true">
+        <div className={styles.progressFill} data-decorative="true" />
+      </div>
 
-            <div className={styles.sideLabelLeft}>SEN-001</div>
-            <div className={styles.sideLabelRight}>武士道</div>
-          </m.div>
-        )}
-      </AnimatePresence>
+      <div className={styles.sideLabelLeft}>SEN-001</div>
+      <div className={styles.sideLabelRight}>武士道</div>
+    </div>
   );
 }
