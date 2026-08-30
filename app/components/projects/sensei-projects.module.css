@@ -6,7 +6,7 @@
 .section-projects { min-height: 100vh; min-height: 100dvh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 5rem; }
 
-.sectionLead { color: var(--text-muted); font-size: 1.2rem; font-family: var(--font-mono); margin-top: 1.2rem; }
+
 
 /* Sharp Title */
 .title { position: relative; font-weight: 800; font-size: 2.6rem; color: var(--text-color); letter-spacing: 1.6px; text-transform: uppercase; display: inline-block; padding-bottom: 1.6rem; }
@@ -23,7 +23,7 @@
   background: rgba(var(--main-color-rgb), var(--timeline-line-opacity, 0.2));
 }
 
-.section-summary { margin: 0 auto 3rem; max-width: 800px; display: flex; justify-content: center; align-items: center; gap: 1.5rem; font-size: 1.05rem; font-family: var(--font-mono); color: var(--text-muted); }
+
 
 /* --- The Cards --- */
 .project-item { position: relative; width: calc(50% - 2rem); z-index: 2; margin-bottom: 3rem; }
@@ -42,16 +42,11 @@
 .project-item.right::after { left: calc(-2rem - 7px); }
 .project-item:hover::after { background: var(--accent-color); box-shadow: none; /* Changed here */ transform: rotate(45deg) scale(1.2); }
 
-.single-project {
-  background: rgba(10, 10, 10, 0.6); padding: 2.5rem; border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 2px solid transparent;
-  border-radius: var(--radius-card);
-  transition: transform var(--motion-normal) var(--motion-ease),
-              background-color var(--motion-normal) var(--motion-ease),
-              border-color var(--motion-normal) var(--motion-ease);
-  display: flex; flex-direction: column;
-}
-.single-project:hover { transform: translateY(-3px); background: rgba(15, 15, 15, 0.9); border-color: rgba(var(--main-color-rgb), 0.2); border-top-color: var(--main-color); }
+/* الحدود والخلفية ونصف القطر والخط الأحمر فوق كلهم اتنقلوا للقاعدة
+   المشتركة html [data-fx="card"] في globals.css — الشكل ده بقى لغة
+   الموقع كله مش خاص بالمشاريع. اللي فاضل هنا التخطيط بس. */
+/* الشكل كله من html [data-fx="card"] في globals.css */
+.single-project { display: flex; flex-direction: column; }
 
 .part-1 { display: flex; align-items: center; gap: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .part-1 svg { font-size: 2.5rem; color: var(--text-muted); transition: color var(--motion-fast) ease; }
@@ -104,7 +99,7 @@
 }
 @media (max-width: 430px) {
   .title { font-size: 2.1rem; }
-  .single-project { padding: 1.2rem; }
+
   .action-btn { font-size: 1rem; }
   .part-1 h3 { font-size: 1.4rem; }
   .description-list { font-size: 1rem; }
@@ -113,6 +108,6 @@
 }
 @media (max-width: 360px) {
   .project-item { padding-left: 3.4rem; }
-  .single-project { padding: 1rem; }
+
   .project-actions { flex-direction: column; }
 }

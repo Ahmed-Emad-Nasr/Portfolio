@@ -10,7 +10,8 @@ import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-projects.module.css";
 import { type GitHubRepository, getIconForLanguage, formatRepoDate, toBulletItems } from "@/app/core/utils/utils";
 import SectionHeader from "@/app/core/components/SectionHeader";
-import MotionInView from "@/app/core/components/MotionInView";
+import Reveal from "@/app/core/components/Reveal";
+import Spotlight from "@/app/core/components/Spotlight";
 import { projectBullets, staticProjectFallback } from "@/app/core/config/projects";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -67,8 +68,8 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
   const difficulty      = getProjectDifficulty(repo);
 
   return (
-    <MotionInView className={`${styles["project-item"]} ${isRight ? styles.right : styles.left}`}>
-      <article className={styles["single-project"]}>
+    <Reveal className={`${styles["project-item"]} ${isRight ? styles.right : styles.left}`}>
+      <article className={styles["single-project"]} data-fx="card">
         <div className={styles["part-1"]}>
           <Icon name={getIconForLanguage(repo.language)} />
           <h3>
@@ -146,7 +147,7 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
           </div>
         </div>
       </article>
-    </MotionInView>
+    </Reveal>
   );
 }, (prev, next) => prev.repo.id === next.repo.id);
 
@@ -163,11 +164,11 @@ const SenseiProjects = memo(function SenseiProjects() {
           <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
         </div>
 
-        <div className={styles["projects-timeline"]} aria-label="Projects Timeline">
+        <Spotlight className={styles["projects-timeline"]} aria-label="Projects Timeline">
           {repos.map((repo, index) => (
             <ProjectItem key={repo.id} repo={repo} isRight={index % 2 !== 0} />
           ))}
-        </div>
+        </Spotlight>
       </div>
     </section>
   );

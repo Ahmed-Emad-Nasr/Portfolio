@@ -53,7 +53,7 @@ export default function StartHere() {
       <ol className={styles.list}>
         {ENTRIES.map((entry, index) => (
           <li key={entry.id} className={styles.item}>
-            <Link href={`/blog/${entry.id}`} className={styles.card}>
+            <Link href={`/blog/${entry.id}`} className={styles.card} data-fx="card" data-card="compact">
               <span className={styles.index} aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import MotionInView from "@/app/core/components/MotionInView";
+import Reveal from "@/app/core/components/Reveal";
 import styles from "../page.module.css";
 
 const CENTERED_STYLE = { alignItems: "center", justifyContent: "center" };
@@ -26,13 +26,13 @@ export default function BlogMediaSections({
 
   return (
     <>
-      <MotionInView className={styles.insightStrip}>
-        <article className={styles.insightCard}><strong>{totalCasesCount}</strong><span>Total Cases</span></article>
-        <article className={styles.insightCard}><strong>{casesWithScreenshotsCount}</strong><span>With Screenshots</span></article>
-        <article className={styles.insightCard}><strong>{totalScreenshotAssets}</strong><span>Screenshot Assets</span></article>
-      </MotionInView>
+      <Reveal className={styles.insightStrip}>
+        <article className={styles.insightCard} data-fx="card" data-card="compact"><strong>{totalCasesCount}</strong><span>Total Cases</span></article>
+        <article className={styles.insightCard} data-fx="card" data-card="compact"><strong>{casesWithScreenshotsCount}</strong><span>With Screenshots</span></article>
+        <article className={styles.insightCard} data-fx="card" data-card="compact"><strong>{totalScreenshotAssets}</strong><span>Screenshot Assets</span></article>
+      </Reveal>
 
-      <MotionInView className={styles.youtubeHub} variant="fade">
+      <Reveal className={styles.youtubeHub} variant="fade" data-fx="card">
         <div ref={hubRef}>
           <div className={styles.blockHeading}>
             <h2 id="youtube-hub-title">YouTube Hub</h2>
@@ -48,7 +48,7 @@ export default function BlogMediaSections({
             <>
               <div className={styles.youtubeHubGrid}>
                 {filteredChannelVideos.map((video: any) => (
-                  <article key={video.videoId} className={styles.videoCard}>
+                  <article key={video.videoId} className={styles.videoCard} data-fx="card">
                     <div className={styles.videoFrame}>
                       {activeEmbeds[`video-${video.videoId}`] ? (
                         <iframe src={`https://www.youtube-nocookie.com/embed/${video.videoId}`} loading="lazy" allowFullScreen />
@@ -69,12 +69,12 @@ export default function BlogMediaSections({
               </div>
 
               <section className={styles.block}>
-                <MotionInView className={styles.blockHeading}>
+                <Reveal className={styles.blockHeading}>
                   <h2 id="blog-playlists-title">YouTube Playlists</h2>
-                </MotionInView>
+                </Reveal>
                 <div className={styles.playlistGrid}>
                   {filteredPlaylists.map((playlist: any) => (
-                    <article key={playlist.playlistId} className={styles.playlistCard}>
+                    <article key={playlist.playlistId} className={styles.playlistCard} data-fx="card">
                       <div className={styles.playlistFrame}>
                         {activeEmbeds[`playlist-${playlist.playlistId}`] ? (
                           <iframe src={`https://www.youtube-nocookie.com/embed/videoseries?list=${playlist.playlistId}`} loading="lazy" allowFullScreen />
@@ -99,7 +99,7 @@ export default function BlogMediaSections({
             <p className={styles.emptyState}>Loading Previews...</p>
           )}
         </div>
-      </MotionInView>
+      </Reveal>
     </>
   );
 }

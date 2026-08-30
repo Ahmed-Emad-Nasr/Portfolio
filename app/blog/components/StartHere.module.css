@@ -56,22 +56,8 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 2rem;
-  padding: 2rem 2.2rem;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 2px solid var(--main-color);
-  border-radius: var(--radius-card-sm, 6px);
-  background: rgba(255, 255, 255, 0.015);
-  transition: border-color var(--motion-fast, 150ms) ease,
-              background var(--motion-fast, 150ms) ease;
 }
-.card:hover,
-.card:focus-visible {
-  border-color: rgba(var(--main-color-rgb), 0.5);
-  border-left-color: var(--accent-color);
-  background: rgba(255, 255, 255, 0.03);
-}
-.card:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .index {
   font-family: var(--font-mono);
@@ -102,5 +88,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card { transition: none; }
+
 }

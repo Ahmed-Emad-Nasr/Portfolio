@@ -498,25 +498,81 @@ html:not([data-tier]) {
 
 /*--------- 10. شريط التمرير ---------*/
 /*
- * كان محدد `*` — يعني المتصفح بيطبّق خصائص الـ scrollbar على كل عنصر
- * في الصفحة وقت حساب الأنماط، والعناصر اللي بتـscroll فعلاً معدودة.
- * scrollbar-width/color بيتوارثوا، فـ html كفاية للصفحة كلها.
- * ::-webkit-scrollbar مبيتوارثش، فبنسيبه على * لكن جوه :where()
- * عشان الوزن يبقى صفر ومزاحمش أي قاعدة موضعية.
+ * الشريط بيتعمله ستايل مرتين لأن المتصفحات اتقسمت:
+ *   · فايرفوكس        → scrollbar-width / scrollbar-color (معياري، تحكّم محدود)
+ *   · كروم/سفاري/إيدج → ::-webkit-scrollbar (غير معياري، تحكّم كامل)
+ *
+ * القيمتين مضبوطين على نفس اللون. قبل كده كانوا مختلفين، فالموقع كان
+ * بيبان بشكلين حسب المتصفح.
+ *
+ * القاعدة القديمة كانت `border: 3px solid var(--bg-color)` على thumb
+ * عرضه 10px — يعني 6 بكسل بيتاكلوا والباقي 4 بكسل أحمر باهت. الحيلة
+ * هنا `border: 2px solid transparent` + `background-clip: padding-box`:
+ * الهامش بيسيب الـ track يبان من تحته بدل ما يرسم فوقه.
  */
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--main-color-rgb), 0.5) transparent;
+  scrollbar-color: rgba(var(--main-color-rgb), 0.55) rgba(255, 255, 255, 0.04);
 }
 
-:where(*)::-webkit-scrollbar { width: 10px; height: 10px; }
-:where(*)::-webkit-scrollbar-track { background: transparent; }
-:where(*)::-webkit-scrollbar-thumb {
-  background: rgba(var(--main-color-rgb), 0.45);
-  border: 3px solid var(--bg-color);
+:where(*)::-webkit-scrollbar { width: 12px; height: 12px; }
+
+/* خطوط أفقية خفيفة تدّي إحساس المسطرة + خط عمودي أحمر على الحافة.
+   التدرّجات ثابتة مبتتحركش، فالمتصفح بيرسمها مرة وبيكاشها. */
+:where(*)::-webkit-scrollbar-track {
+  background:
+    linear-gradient(90deg, rgba(var(--main-color-rgb), 0.35) 0 1px, transparent 1px),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 6px),
+    rgba(255, 255, 255, 0.03);
 }
+
+/* تدرّج أحمر ← ذهبي + شرطتين بيضتين في النص، زي مقبض في واجهة HUD */
+:where(*)::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(
+      180deg,
+      transparent calc(50% - 5px),
+      rgba(255, 255, 255, 0.5) calc(50% - 5px) calc(50% - 4px),
+      transparent calc(50% - 4px) calc(50% + 3px),
+      rgba(255, 255, 255, 0.5) calc(50% + 3px) calc(50% + 4px),
+      transparent calc(50% + 4px)
+    ),
+    linear-gradient(180deg, rgba(var(--main-color-rgb), 0.9), rgba(var(--accent-color-rgb), 0.75));
+  background-clip: padding-box;
+}
+
 :where(*)::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      transparent calc(50% - 5px),
+      rgba(255, 255, 255, 0.75) calc(50% - 5px) calc(50% - 4px),
+      transparent calc(50% - 4px) calc(50% + 3px),
+      rgba(255, 255, 255, 0.75) calc(50% + 3px) calc(50% + 4px),
+      transparent calc(50% + 4px)
+    ),
+    linear-gradient(180deg, var(--main-color), var(--accent-color));
+  background-clip: padding-box;
+}
+
+/* الحالة المضغوطة — من غيرها مفيش أي رد فعل وقت السحب */
+:where(*)::-webkit-scrollbar-thumb:active {
+  background: var(--accent-color);
+  background-clip: padding-box;
+}
+
+/* المربع بين الشريط الرأسي والأفقي — افتراضياً أبيض على ويندوز */
+:where(*)::-webkit-scrollbar-corner { background: var(--bg-color); }
+
+/* الأجهزة الضعيفة: شريط مسطّح بلون واحد. التدرّجات التلاتة بتترسم من
+   جديد في كل فريم الـ thumb بيتحرك فيه. */
+html[data-tier="low"] ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+html[data-tier="low"] ::-webkit-scrollbar-thumb {
   background: rgba(var(--main-color-rgb), 0.7);
+  background-clip: padding-box;
 }
 
 /*--------- 11. الطباعة ---------*/
@@ -558,4 +614,431 @@ html {
 
   /* content-visibility بتخفي المحتوى اللي بره الشاشة عن الطابعة كمان */
   * { content-visibility: visible !important; }
+}
+
+/*--------- 12. ظهور العناصر مع الـ scroll ---------*/
+/*
+ * الحركة دي هي نفس `fadeInUp` بتاعة الـ hero بالظبط — نفس المسافة، نفس
+ * الـ easing، نفس منطق التأخير المتدرّج. الفرق إنها بقت متاحة لكل الموقع
+ * بدل ما تكون مكتوبة بالإيد في sensei-home.module.css.
+ *
+ * كلها `opacity` و`transform` بس — الخاصيتين الوحيدتين اللي المتصفح
+ * بيحرّكهم على الـ compositor من غير layout ولا paint. ده السبب إن
+ * الأنيميشن ده مجاني فعلاً على الموبايل، مش تفضيل جمالي.
+ *
+ * الجافاسكريبت (Reveal.tsx) دوره حاجة واحدة: يغيّر data-reveal من
+ * "pending" لـ "in" مرة واحدة لما العنصر يدخل الشاشة.
+ */
+
+:root {
+  --reveal-distance: 24px;
+  --reveal-duration: 640ms;
+  --reveal-delay: 0ms;
+  --reveal-stagger: 60ms;
+}
+
+/*
+ * الحالة الابتدائية مشروطة بـ html[data-tier] عن قصد: الـ attribute ده
+ * بيتكتب بسكربت inline في <head> قبل أول paint. لو الجافاسكريبت مقفول
+ * تماماً، الشرط مبيتحققش والمحتوى بيتعرض عادي.
+ */
+html[data-tier] [data-reveal="pending"] { opacity: 0; }
+
+html[data-tier] [data-reveal="pending"][data-reveal-variant="up"]    { transform: translate3d(0, var(--reveal-distance), 0); }
+html[data-tier] [data-reveal="pending"][data-reveal-variant="down"]  { transform: translate3d(0, calc(var(--reveal-distance) * -1), 0); }
+html[data-tier] [data-reveal="pending"][data-reveal-variant="left"]  { transform: translate3d(calc(var(--reveal-distance) * -1), 0, 0); }
+html[data-tier] [data-reveal="pending"][data-reveal-variant="right"] { transform: translate3d(var(--reveal-distance), 0, 0); }
+html[data-tier] [data-reveal="pending"][data-reveal-variant="scale"] { transform: scale(0.96); }
+/* "fade" مالوش transform — opacity بس. أرخص واحدة، وهي الصح لأي حاجة
+   جوه عنصر بيتحرك أصلاً (transform جوه transform بيعمل تداخل). */
+
+/*
+ * `transform: none` مش `translate3d(0,0,0)`: الأولانية بتسيب المتصفح
+ * يفك الطبقة بعد ما الحركة تخلص. التانية بتخلّي العنصر محتفظ بطبقة
+ * compositor للأبد — وعلى صفحة فيها 50 عنصر ده 50 طبقة عايشة.
+ */
+html[data-tier] [data-reveal="in"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--reveal-duration) var(--motion-ease) var(--reveal-delay),
+    transform var(--reveal-duration) var(--motion-ease) var(--reveal-delay);
+}
+
+/* التدرّج داخل المجموعات — CSS بالكامل، مفيش مؤقّتات جافاسكريبت.
+   RevealGroup بيحط --i على كل ابن والحساب هنا. */
+html[data-tier] [data-reveal-group="true"] > * {
+  transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
+}
+
+/* سقف للتدرّج. من غيره قايمة 50 عنصر × 60ms = 3 ثواني قبل ما آخر واحد
+   يبان — الزائر بيبقى وصل تحت والعناصر لسه بتظهر. */
+html[data-tier] [data-reveal-group="true"] > *:nth-child(n + 13) {
+  transition-delay: calc(12 * var(--reveal-stagger));
+}
+
+/*
+ * الشبكة الأمنية.
+ *
+ * opacity: 0 بتتكتب في الـ HTML من السيرفر. لو الـ bundle فشل يتحمّل
+ * لأي سبب — chunk مكسور، شبكة قطعت — الموقع كان هيفضل مخفي بالكامل.
+ *
+ * القاعدة دي بتظهر كل حاجة بعد 4 ثواني طول ما الجافاسكريبت مقالش إنه
+ * اشتغل. أول ما Reveal يعمل mount بيحط data-reveal-ready على <html>،
+ * فالقاعدة بتبطّل تطابق ومبتضربش أبداً في الحالة الطبيعية.
+ */
+html[data-tier]:not([data-reveal-ready]) [data-reveal="pending"] {
+  animation: revealSafety 1ms linear 4s forwards;
+}
+
+@keyframes revealSafety {
+  to { opacity: 1; transform: none; }
+}
+
+/*
+ * التليفونات كلها tier="low". بس الظهور مش زخرفة — هو الفرق بين صفحة
+ * بتتبني قدام الزائر وصفحة بتظهر فجأة. فبدل ما نقفله: opacity بس ومدة
+ * أقصر ومن غير تدرّج. opacity أرخص خاصية ممكن تتحرك أصلاً.
+ */
+html[data-tier="low"] [data-reveal="pending"] { transform: none; }
+html[data-tier="low"] [data-reveal="in"] { transition: opacity 280ms linear; }
+html[data-tier="low"] [data-reveal-group="true"] > *,
+html[data-tier="low"] [data-reveal-group="true"] > *:nth-child(n + 13) {
+  transition-delay: 0ms;
+}
+
+/* reduced-motion: مفيش حركة خالص. مش نسخة أسرع — مفيش. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-tier] [data-reveal="pending"],
+  html[data-tier] [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}
+
+/*--------- 13. لمعة الزراير ---------*/
+/*
+ * قاعدة `button` في قسم 3 فيها position/overflow/z-index. التلاتة دول
+ * ملهمش أي معنى لوحدهم — overflow: hidden على زرار مفيهوش حاجة بتخرج
+ * بره، وz-index: 1 من غير عنصر يزاحمه. ده تجهيز لـ pseudo-element
+ * اتخطّط ومحصلش. تمامه هنا.
+ */
+button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(var(--accent-color-rgb), 0.18) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 600ms var(--motion-ease);
+}
+
+button:hover:not(:disabled)::before { transform: translateX(100%); }
+
+/* الأجهزة اللمسية مفيهاش hover — اللمعة كانت هتتعلّق في نص الحركة بعد
+   أول ضغطة وتفضل واقفة هناك. */
+@media (hover: none) { button::before { display: none; } }
+html[data-tier="low"] button::before { display: none; }
+
+/*--------- 14. الكارت ---------*/
+/*
+ * ══ المصدر الوحيد لشكل أي كارت في الموقع ══
+ *
+ * قبل كده كان كل قسم بيعرّف كارته من الأول. خمس معالجات مختلفة، كلها
+ * بتحاول توصل لنفس الشكل بقيم مختلفة:
+ *
+ *   .single-project   حدود .05 + خط 2px فوق (شفاف→أحمر)  bg 10,10,10,.6   padding 2.5rem
+ *   .content          حدود .05 + خط 3px شمال (أحمر باهت)  bg 10,10,10,.6   padding 2.5rem
+ *   .pdfCard وإخواته  حدود .05 + خط 3px شمال (أحمر باهت)  bg 10,10,10,.6   padding 2.5rem
+ *   .relatedCard/.card حدود .08 + خط 2px شمال (أحمر صريح) bg 255,255,255,.015  padding 1.8rem
+ *   .art_pic          حدود .05 + مفيش لمسة لون            bg 10,10,10,.6   padding 0.6rem
+ *
+ * دلوقتي كلهم من هنا. ملفات الـ modules مبقاش فيها ولا تصريح حدود ولا
+ * خلفية ولا نصف قطر ولا padding ولا hover للكارت نفسه — بس التخطيط
+ * الداخلي، وده اللي بيفرق فعلاً بين كارت مشروع وكارت صورة.
+ *
+ * ── الاستخدام ──
+ *
+ *   <article data-fx="card">                    الافتراضي (padding 2.5rem)
+ *   <article data-fx="card" data-card="compact"> أضيق (1.8rem)
+ *   <article data-fx="card" data-card="tight">   إطار حوالين صورة (0.6rem)
+ *
+ * ── ليه `html [data-fx="card"]` مش `[data-fx="card"]` ──
+ *
+ * المحدد بـ attribute لوحده وزنه (0,1,0) — نفس وزن أي كلاس في ملفات
+ * الـ modules. فاللي بيكسب كان بيبقى حسب ترتيب تحميل الـ CSS، وده مش
+ * مضمون في Next. زيادة `html` بتخلّيه (0,1,1) فبيكسب دايماً.
+ */
+
+:root {
+  --card-bg: rgba(10, 10, 10, 0.6);
+  --card-bg-hover: rgba(15, 15, 15, 0.9);
+  --card-border-color: rgba(255, 255, 255, 0.05);
+  --card-border-color-hover: rgba(var(--main-color-rgb), 0.2);
+  --card-accent-height: 2px;
+  --card-pad: 2.5rem;
+  --card-pad-compact: 1.8rem 2rem;
+  --card-pad-tight: 0.6rem;
+  --card-lift: -3px;
+}
+
+html [data-fx="card"] {
+  position: relative;
+  /* بيقص الخط العلوي عند الزوايا المدوّرة — من غيره بيطلع مربع
+     برّه المنحنى */
+  overflow: hidden;
+  padding: var(--card-pad);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border-color);
+  border-radius: var(--radius-card);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
+}
+
+html [data-fx="card"][data-card="compact"] { padding: var(--card-pad-compact); }
+html [data-fx="card"][data-card="tight"]   { padding: var(--card-pad-tight); }
+
+/*
+ * الخط الأحمر فوق.
+ *
+ * على ::before مش border-top-color: الـ pseudo-element بيترسم بـ
+ * transform: scaleX (خاصية compositor، مجانية)، بينما تغيير لون الحدود
+ * بيسبب paint. والمكسب الجانبي إن الخط "بيترسم" بدل ما يظهر فجأة.
+ */
+html [data-fx="card"]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--card-accent-height);
+  background: linear-gradient(90deg, var(--main-color), var(--accent-color));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 380ms var(--motion-ease);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* اللمعة. زاوية 105 درجة عشان تعدّي مايلة زي انعكاس ضوء حقيقي. */
+html [data-fx="card"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(var(--accent-color-rgb), 0.07) 50%,
+    transparent 65%
+  );
+  transform: translateX(-100%);
+  transition: transform 700ms var(--motion-ease);
+  pointer-events: none;
+}
+
+html [data-fx="card"] :is(img, [data-fx-media]) {
+  transition: transform 600ms var(--motion-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="card"]:hover {
+    transform: translate3d(0, var(--card-lift), 0);
+    background: var(--card-bg-hover);
+    border-color: var(--card-border-color-hover);
+  }
+  html [data-fx="card"]:hover::before { transform: scaleX(1); }
+  html [data-fx="card"]:hover::after  { transform: translateX(100%); }
+  html [data-fx="card"]:hover :is(img, [data-fx-media]) { transform: scale(1.04); }
+}
+
+/*
+ * لوحة المفاتيح.
+ *
+ * من غير ده الزائر اللي بيتنقّل بالـ Tab مبيشوفش أي رد فعل — الكارت
+ * بيبقى تفاعلي للماوس بس. وده كان الحال في كل كارت في الموقع ما عدا
+ * .single-project اللي كان عنده :focus-within للأيقونة بس.
+ */
+html [data-fx="card"]:focus-within {
+  background: var(--card-bg-hover);
+  border-color: var(--card-border-color-hover);
+}
+html [data-fx="card"]:focus-within::before { transform: scaleX(1); }
+
+/* الكروت اللي هي نفسها لينك محتاجة حلقة فوكس، مش تغيير لون بس */
+html a[data-fx="card"]:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+/* اللمس: مفيش hover على التليفون، فالكارت كان هيفضل ميت. */
+@media (hover: none) {
+  html [data-fx="card"]:active {
+    transform: scale(0.985);
+    transition-duration: 90ms;
+  }
+  html [data-fx="card"]:active::before { transform: scaleX(1); }
+  html [data-fx="card"]::after { display: none; }
+}
+
+html[data-tier="low"] [data-fx="card"]::after { display: none; }
+html[data-tier="low"] [data-fx="card"] :is(img, [data-fx-media]) { transition: none; }
+html[data-tier="low"] [data-fx="card"]:hover :is(img, [data-fx-media]) { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html [data-fx="card"],
+  html [data-fx="card"]::before,
+  html [data-fx="card"]::after,
+  html [data-fx="card"] :is(img, [data-fx-media]) { transition: none; animation: none; }
+  html [data-fx="card"]:hover { transform: none; }
+  html [data-fx="card"]::after { display: none; }
+  /* الخط الأحمر بيفضل بيظهر — ده معلومة (إنت واقف على إيه) مش زخرفة */
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-pad: 1.8rem;
+    --card-pad-compact: 1.4rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --card-pad: 1.4rem;
+    --card-pad-compact: 1.2rem;
+  }
+}
+
+/*--------- 14b. بقعة الضوء (اختياري) ---------*/
+/*
+ * القواعد دي بتشتغل مع <Spotlight> بس — وهو مش مركّب في أي حتة دلوقتي.
+ * سايبها عشان لو قررت تستخدمه تبقى جاهزة.
+ *
+ * التدرّج بيركب على نفس ::after بتاع اللمعة، فاللمعة بتتلغي على الكارت
+ * اللي تحت الماوس. الاتنين مايشتغلوش مع بعض: لمعة بتعدّي وبقعة بتتبع
+ * الماوس في نفس اللحظة بتبقى زحمة.
+ *
+ * ⚠️ ده الحاجة الوحيدة في الملف اللي بتكلّف رسم: radial-gradient بموضع
+ * متغيّر = إعادة رسم الكارت في كل فريم الماوس بيتحرك فيه. المكوّن
+ * بيخرج بدري على أي جهاز لمسي وأي tier مش "high".
+ */
+html [data-fx="card"][data-spot="on"]::after {
+  background: radial-gradient(
+    circle 180px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(var(--accent-color-rgb), 0.10),
+    transparent 70%
+  );
+  transform: none;
+  transition: opacity 200ms linear;
+}
+
+/*--------- 15. تفاعلات صغيرة ---------*/
+
+/* الخط تحت اللينكات: بيترسم من الشمال وبيتمسح ناحية اليمين، فبيحس إنه
+   بيعدّي مش بيظهر ويختفي. transform مش text-decoration — الأخيرة
+   بتسبب layout. */
+[data-fx="link"] { position: relative; display: inline-block; }
+
+[data-fx="link"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 320ms var(--motion-ease);
+}
+
+[data-fx="link"]:hover::after,
+[data-fx="link"]:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* السهم في لينكات "شوف أكتر" — حركة 3px بس، بتدّي إحساس الاتجاه */
+[data-fx="arrow"] {
+  display: inline-block;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+:is(a, button):hover [data-fx="arrow"],
+:is(a, button):focus-visible [data-fx="arrow"] { transform: translateX(3px); }
+
+/* التاجات والشيبس — الموقع مليان بيهم وكلهم كانوا ساكنين */
+[data-fx="tag"] {
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-fx="tag"]:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--accent-color-rgb), 0.5);
+    color: var(--accent-color);
+  }
+}
+
+[data-fx="tag"]:active { transform: scale(0.94); transition-duration: 80ms; }
+
+/*
+ * رد فعل الضغط على كل حاجة تفاعلية.
+ *
+ * أرخص حاجة في الملف وأكترهم إحساساً. على الموبايل مفيش hover خالص —
+ * الزائر بيلمس والموقع بيسكت. الانكماش ده بيحوّل الإحساس من "ضغطت
+ * ومستني" لـ "ضغطت وحصل حاجة". 40 ملي ثانية.
+ *
+ * :where() بيخلي الوزن صفر فمبيزاحمش أي قاعدة موضعية.
+ */
+:where(a, button, [role="button"], summary) {
+  transition: transform 120ms var(--motion-ease);
+}
+
+:where(a, button, [role="button"], summary):active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* حقول الإدخال — الحقل بيرتفع شوية عند الفوكس */
+:where(input, textarea, select) {
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+
+:where(input, textarea):focus-visible { transform: translateY(-1px); }
+
+/* أيقونات السوشيال */
+[data-fx="social"] { transition: transform var(--motion-fast) var(--motion-ease); }
+
+@media (hover: hover) and (pointer: fine) {
+  [data-fx="social"]:hover { transform: translateY(-3px) rotate(-4deg); }
+}
+
+html[data-tier="low"] :where([data-fx="tag"], [data-fx="social"]):hover {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fx="link"]::after,
+  [data-fx="arrow"],
+  [data-fx="tag"],
+  [data-fx="social"],
+  :where(a, button, [role="button"], summary),
+  :where(input, textarea, select) { transition: none; }
+  :where(a, button, [role="button"], summary):active { transform: none; }
+  /* الخط تحت اللينك بيفضل بيظهر — ده معلومة مش زخرفة */
+  [data-fx="link"]:hover::after,
+  [data-fx="link"]:focus-visible::after { transform: scaleX(1); }
 }

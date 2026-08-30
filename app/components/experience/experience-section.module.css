@@ -18,16 +18,7 @@
 .section-education { min-height: 100vh; min-height: 100dvh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
 .header-section { text-align: center; margin-bottom: 6rem; }
 
-.jpLabel {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  letter-spacing: 4px;
-  color: var(--main-color);
-  opacity: 0.6;
-  margin-bottom: 0.8rem;
-  text-transform: uppercase;
-}
+
 
 /* Sharp Title */
 .title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 2px; text-transform: uppercase; display: inline-block; padding-bottom: 2rem; }
@@ -79,25 +70,8 @@
 }
 
 /* --- 3. Minimalist Cyber Card --- */
-.content {
-  background: rgba(10, 10, 10, 0.6);
-  padding: 2.5rem;
-  border-radius: var(--radius-card);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 3px solid rgba(var(--main-color-rgb), 0.3);
-  transition: transform var(--motion-normal) var(--motion-ease),
-              background-color var(--motion-normal) var(--motion-ease),
-              border-color var(--motion-normal) var(--motion-ease);
-  position: relative;
-  text-align: left;
-}
-
-.content:hover {
-  transform: translateX(5px);
-  background: rgba(15, 15, 15, 0.9);
-  border-left: 3px solid var(--main-color);
-  border-color: rgba(var(--main-color-rgb), 0.2);
-}
+/* الشكل كله من html [data-fx="card"] في globals.css */
+.content { text-align: left; }
 
 /* Heading levels moved down one step (h2->h3, h3->h4) so the page outline
    is Home h1 > section h2 > role h3 > employer h4 instead of ten sibling h2s.
@@ -121,15 +95,7 @@
 .subTagLink { cursor: pointer; color: inherit; text-decoration: none; }
 
 /* Description intro line (Ahmed's `description` field) */
-.descIntro {
-  margin: 1.4rem 0 0;
-  padding-left: 1.2rem;
-  border-left: 2px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-muted);
-  font-size: 1.35rem;
-  font-style: italic;
-  line-height: 1.6;
-}
+
 
 .desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; color: var(--text-muted); font-size: 1.4rem; line-height: 1.6; }
 .desc-list li { margin-bottom: 0.8rem; }
@@ -137,20 +103,8 @@
 .content:hover .desc-list li::marker { color: var(--accent-color); }
 
 /* Japanese role tag (Ahmed's `japaneseRole` field) */
-.jpTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 1.6rem;
-  padding: 0.4rem 0.9rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-left: 2px solid var(--main-color);
-  font-size: 1.1rem;
-  font-family: var(--font-mono);
-  color: var(--text-muted);
-  width: fit-content;
-}
-.jpTagLabel { color: rgba(var(--main-color-rgb), 0.6); font-weight: 700; }
+
+
 
 /* --- 4. Terminal Skill Badges --- */
 .skillTags { display: flex; flex-wrap: wrap; gap: var(--space-xs, 0.8rem); margin-top: var(--space-md, 1.8rem); }
@@ -189,12 +143,12 @@
 }
 @media (max-width: 430px) {
   .title { font-size: 2.5rem; }
-  .content { padding: 1.8rem; }
+
   .timeline-container { padding-left: 4rem; margin-bottom: var(--space-sm, 1.6rem); }
-  .desc-list, .descIntro { font-size: 1.3rem; }
+  .desc-list { font-size: 1.3rem; }
 }
 @media (max-width: 360px) {
   .timeline-container { padding-left: 3.4rem; }
-  .content { padding: 1.5rem; }
+
   .tag h3 { font-size: 1.9rem; }
 }

@@ -300,7 +300,7 @@ export default function CaseArticle({
             <ul className={styles.relatedList}>
               {related.map((entry) => (
                 <li key={entry.id}>
-                  <Link href={`/blog/${entry.id}`} className={styles.relatedCard}>
+                  <Link href={`/blog/${entry.id}`} className={styles.relatedCard} data-fx="card" data-card="compact">
                     <span className={styles.relatedTitle}>{entry.title}</span>
                     <span className={styles.relatedMeta}>
                       {entry.category} · {entry.readTime} min

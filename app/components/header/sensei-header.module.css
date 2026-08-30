@@ -201,3 +201,15 @@
   .navbar a { width: 100%; padding: 12px 10px; }
   .menuIcon { display: flex; }
 }
+
+/* فاصل بصري بين مجموعات اللينكات في الـ nav.
+   هيدر البلوج بيستخدم .navDivider في الـ JSX، والكلاس ده مكانش موجود في
+   أي واحد من ملفي الهيدر — يعني الـ span كان بيترندر بـ class="undefined"
+   من غير أي ستايل. */
+.navDivider {
+  width: 1px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  align-self: center;
+}

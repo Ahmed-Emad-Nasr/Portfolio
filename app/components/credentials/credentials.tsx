@@ -1,4 +1,20 @@
-"use client";
+/*
+ * Server Component عن قصد — مفيش "use client".
+ *
+ * الملف ده فيه صفر hooks وصفر handlers وصفر استخدام لـ window/document.
+ * عرض HTML ثابت وبس. ومع ذلك كان عليه "use client"، يعني كان بيحزّم
+ * الداتا اللي بيستوردها في bundle الصفحة الرئيسية:
+ *
+ *     certifications.ts   5,191 بايت
+ *     skills.ts           4,140 بايت
+ *     achievements.ts     2,426 بايت
+ *
+ * ~11.7 كيلوبايت بتتحمّل على كل زائر عشان يترسم markup اتولّد وقت الـ
+ * build أصلاً. كـ server component الرقم بيبقى صفر.
+ *
+ * عشان كده page.tsx بيرندره ويبعته كـ prop لحد ما يوصل sensei-art —
+ * أي حاجة client component بيستوردها بتبقى client تلقائياً.
+ */
 
 /*
  * credentials.tsx

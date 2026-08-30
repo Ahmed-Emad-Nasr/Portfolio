@@ -46,18 +46,24 @@
 .blockHeading p { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.5rem; }
 
 /* Scroll blur overlay (sits between background and content) */
+/*
+ * كان عليه transition على backdrop-filter نفسه — إعادة رسم blur على
+ * الشاشة كلها في كل فريم لمدة 300ms. backdrop-filter أغلى خاصية في
+ * CSS؛ تحريكها بالـ transition أغلى حاجة ممكن تتعمل بيها.
+ *
+ * دلوقتي الـ transition على opacity بس (خاصية compositor، ببلاش)
+ * وقيمة الـ blur ثابتة وجاية من --ui-blur — فالـ overlay ده بقى داخل
+ * في ميزانية الجهاز زي أي سطح زجاجي تاني. على تليفون --ui-blur = 0px
+ * والتأثير بيقفل لوحده.
+ */
 .scrollBlurOverlay {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  backdrop-filter: blur(0px) saturate(100%);
-  -webkit-backdrop-filter: blur(0px) saturate(100%);
-  transition: backdrop-filter 300ms var(--motion-ease), opacity 300ms var(--motion-ease);
+  backdrop-filter: blur(var(--ui-blur)) saturate(120%);
+  -webkit-backdrop-filter: blur(var(--ui-blur)) saturate(120%);
+  transition: opacity 300ms var(--motion-ease);
   opacity: 0;
 }
-.scrollBlurOverlay[data-active="true"] {
-  backdrop-filter: blur(6px) saturate(120%);
-  -webkit-backdrop-filter: blur(6px) saturate(120%);
-  opacity: 0.9;
-}
+.scrollBlurOverlay[data-active="true"] { opacity: 0.9; }
 
 
 /* =========================================
@@ -125,29 +131,28 @@
    border + border-left accent used by .single-project (sensei-projects)
    and .content (experience-section), so the blog stops reading as a
    different, rounder site than the rest of the portfolio. */
+/* الشكل كله من html [data-fx="card"] في globals.css 
+   الـ backdrop-filter فاضل هنا لأنه خاص بكروت البلوج — دي الوحيدة اللي
+   وراها خلفية شفافة. */
 .pdfCard, .playlistCard, .videoCard, .insightCard, .youtubeHub {
-  border-radius: var(--radius-card, 4px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 3px solid rgba(var(--main-color-rgb), 0.3);
-  background: rgba(10, 10, 10, 0.6);
   backdrop-filter: blur(var(--card-blur, 4px));
   -webkit-backdrop-filter: blur(var(--card-blur, 4px));
-  display: grid; position: relative; overflow: hidden;
-  transition: transform var(--motion-normal) var(--motion-ease), background-color var(--motion-normal) var(--motion-ease), border-color var(--motion-normal) var(--motion-ease);
+  display: grid;
 }
 
-.playlistCard, .videoCard { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
-.caseCardLarge { grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 3rem; padding: 2.5rem; }
-.caseCardTextOnly { grid-template-columns: minmax(0, 1fr); padding: 2.5rem; }
+.playlistCard, .videoCard { display: flex; flex-direction: column; gap: 1.2rem; }
+.caseCardLarge { grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 3rem; }
+.caseCardTextOnly { grid-template-columns: minmax(0, 1fr); }
 
-/* Cyber Hover Effect — same translateY(-3px)/rgba(15,15,15,.9)/border-left
-   pattern as .single-project:hover and .content:hover */
-.pdfCard:hover, .playlistCard:hover, .videoCard:hover, .insightCard:hover {
-  transform: translateY(-3px);
-  background: rgba(15, 15, 15, 0.9);
-  border-color: rgba(var(--main-color-rgb), 0.2);
-  border-left-color: var(--main-color);
-}
+/*
+ * الـ transform والـ border-color اتنقلوا للقاعدة المشتركة
+ * [data-fx="card"] في globals.css — الكروت دي بقى عليها الـ attribute.
+ *
+ * اللي فاضل هنا هو تغميق الخلفية بس، وده خاص بكروت البلوج ومش جزء من
+ * السلوك المشترك. لو سبنا الاتنين، كل كارت كان هياخد translateY مرتين
+ * بقيمتين مختلفتين حسب ترتيب تحميل الـ CSS.
+ */
+/* الـ hover كله بقى في القاعدة المشتركة */
 
 /* Separator between stacked cases */
 .pdfGrid .pdfCard + .pdfCard {
@@ -344,11 +349,13 @@
 .emptyState::before { content: "[ ERROR: DATA_NOT_FOUND ]\A "; color: var(--danger); white-space: pre; font-weight: bold; }
 
 .insightStrip { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md, 2rem); margin: 4rem auto; }
-.insightCard { padding: 2.5rem; text-align: center; }
+.insightCard { text-align: center; }
 .insightCard strong { display: block; font-size: 3.5rem; color: var(--accent-color); font-family: var(--font-mono, monospace); }
 .insightCard span { display: block; margin-top: 1rem; font-size: 1.2rem; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono, monospace); text-transform: uppercase; letter-spacing: 2px; }
 
-.youtubeHub { padding: 3rem; margin: 4rem auto 0; border-style: dashed; }
+/* border-style: dashed هو الحاجة الوحيدة اللي بتفرّق الـ hub عن أي
+   كارت تاني — الباقي كله من القاعدة المشتركة. */
+.youtubeHub { margin: 4rem auto 0; border-style: dashed; }
 .youtubeHubActions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
 .channelAction { border-color: rgba(var(--accent-color-rgb), 0.4) !important; color: var(--accent-color) !important; }
 .channelAction:hover { background: rgba(var(--accent-color-rgb), 0.15) !important; border-color: var(--accent-color) !important; color: #fff !important; }
@@ -372,21 +379,17 @@
   .playlistGrid, .youtubeHubGrid { grid-template-columns: 1fr; }
   .primaryAction, .cardActions a, .cardActions button { width: 100%; }
   .insightStrip { grid-template-columns: 1fr; gap: 1rem; }
-  .insightCard { padding: 1.5rem; }
+
   .galleryStage { grid-template-columns: 1fr; padding: 1rem; }
   .galleryNav { min-height: 40px; }
   .galleryImageWrap { min-height: 40vh; }
-  .youtubeHub { padding: 1.5rem; }
-  .scrollBlurOverlay[data-active="true"] {
-    backdrop-filter: blur(3px) saturate(120%);
-    -webkit-backdrop-filter: blur(3px) saturate(120%);
-  }
+
 }
 
 /* Mobile-specific readability fixes */
 @media (max-width: 480px) {
   /* Cards: make titles wrap nicely on small screens */
-  .pdfCard, .playlistCard, .videoCard { padding: 1.2rem; }
+
   .cardTitle {
     font-size: 1.35rem;
     line-height: 1.25;

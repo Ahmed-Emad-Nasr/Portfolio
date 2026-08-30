@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useScrollSpy } from "@/app/core/utils/utils";
 
 import Icon from "@/app/core/icons/Icon";
-import styles from "./sensei-header.module.css";
+import styles from "@/app/components/header/sensei-header.module.css";
 
 const NAV_ITEMS = [
   { label: "Cases",       targetId: "blog-pdfs-title",   icon: "faFileLines" },

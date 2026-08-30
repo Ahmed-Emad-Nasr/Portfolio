@@ -38,19 +38,14 @@
   display: block; 
   width: 100%; 
   position: relative; 
-  padding: 0.6rem;
-  background: rgba(10, 10, 10, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-card);
-  transition: all var(--motion-normal) var(--motion-ease);
-  will-change: transform, opacity;
+  /* data-card="tight" في الـ JSX بيدّي الـ padding.
+
+     `transition: all` كان هنا واتشال: بيراقب كل خاصية على العنصر بما
+     فيها خصائص بتسبب layout. و`will-change: transform, opacity` اتشال
+     كمان — كان بيحجز طبقة compositor دايمة لـ 50 عنصر في المعرض. */
 }
 
-.art_pic:hover { 
-  transform: translateY(-4px); 
-  background: rgba(15, 15, 15, 0.9);
-  border-color: rgba(var(--main-color-rgb), 0.4);
-}
+/* الـ hover كله بقى في القاعدة المشتركة */
 
 /* Gritty Cyberpunk Filter Effect */
 .galleryImg {
@@ -102,5 +97,5 @@
   .art-gallery-content { padding: 0 1rem 4%; }
   .title { font-size: 2.6rem; margin-bottom: 2.4rem; }
   .Gallery { gap: 16px; }
-  .art_pic { padding: 0.4rem; }
+
 }

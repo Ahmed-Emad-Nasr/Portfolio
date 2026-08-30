@@ -62,9 +62,15 @@ const MAIN_STYLE: React.CSSProperties = { position: "relative" };
  * واستيرادها من هنا كان هيحوّلها لـ client component ويحزّم الـ 42 كيلوبايت
  * دي في bundle الصفحة الرئيسية.
  */
-type MainClientProps = { coverage: ReactNode };
+type MainClientProps = {
+  coverage: ReactNode;
+  /* نفس سبب `coverage`: credentials.tsx بيقرا certifications + skills +
+     achievements (~11.7 كيلوبايت). استيراده من شجرة الـ client كان
+     بيحزّم الداتا دي في bundle الصفحة الرئيسية. */
+  credentials: ReactNode;
+};
 
-const MainClient = memo(function MainClient({ coverage }: MainClientProps) {
+const MainClient = memo(function MainClient({ coverage, credentials }: MainClientProps) {
   return (
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen />
@@ -78,7 +84,7 @@ const MainClient = memo(function MainClient({ coverage }: MainClientProps) {
       <KanjiDivider text="設計 • 開発 • 構築 • 実装 • 実験" reverse angle={-1.5} />
       <ProjectsSection />
       <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
-      <ArtGallerySection />
+      <ArtGallerySection credentials={credentials} />
       <KanjiDivider text="戦術 • 検知 • 防御 • 対応 • 回復" angle={1.5} />
       {coverage}
       <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />

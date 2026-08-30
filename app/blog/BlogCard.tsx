@@ -87,6 +87,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         anchorStyles.anchor,
         hasScreenshots ? styles.caseCardLarge : styles.caseCardTextOnly,
       ].filter(Boolean).join(" ")}
+      data-fx="card"
     >
       <div className={styles.pdfCardBody}>
         <div className={styles.caseCardHead}>

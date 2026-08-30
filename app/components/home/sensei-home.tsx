@@ -116,7 +116,7 @@ const SenseiHome = memo(function SenseiHome() {
       {/* Kanji watermark */}
       {/* role="img" without an accessible name is invalid, and aria-hidden
           cancels it anyway. Decoration only — aria-hidden alone is correct. */}
-      <div className={styles.japaneseBg} aria-hidden="true">
+      <div className={styles.japaneseBg} lang="ja" aria-hidden="true">
         <div className={styles.vertical}>
           <span>セ</span>
           <span>キ</span>
@@ -197,7 +197,12 @@ const SenseiHome = memo(function SenseiHome() {
           {/* Badge */}
           <div className={styles.badge}>
             <span className={styles.badgeDot} />
-            <span className={styles.badgeText}>セキュリティ・アナリスト</span>
+            {/* lang="ja" هنا مش تجميل: الشارة دي مش aria-hidden، يعني قارئ
+                الشاشة بيقراها فعلاً. من غير الـ attribute بيحاول ينطق
+                الكاتاكانا بقواعد إنجليزية. وكمان بيخلي قاعدة :lang(ja)
+                في globals.css تدّي النص خط CJK مقصود بدل ما المتصفح
+                يختار أي خط ياباني موجود على الجهاز. */}
+            <span className={styles.badgeText} lang="ja">セキュリティ・アナリスト</span>
           </div>
 
           {/* Massive name */}
@@ -289,7 +294,7 @@ const SenseiHome = memo(function SenseiHome() {
       </div>
 
       {/* Bottom proverb */}
-      <div className={styles.quote} aria-hidden="true">
+      <div className={styles.quote} lang="ja" aria-hidden="true">
         <div className={styles.quoteRule} />
         <p className={styles.quoteText}>備えあれば憂いなし — READINESS LEAVES NO ROOM FOR FEAR</p>
       </div>

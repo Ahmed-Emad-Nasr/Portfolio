@@ -29,6 +29,12 @@ import BackToTop from "./core/components/BackToTop";
 // الـ palette نفسه بيتحمّل lazy جوه المكوّن ده — مفيش أي كود منه في الـ
 // bundle الأساسي لحد أول Ctrl+K.
 import CommandPaletteMount from "./core/components/CommandPaletteMount";
+// بيسجّل public/sw.js بعد الـ load، production بس. الموقع فعلاً بيعلن
+// نفسه installable في manifest.ts — من غيره التثبيت شكل من غير caching حقيقي.
+import ServiceWorkerRegister from "./core/components/ServiceWorkerRegister";
+// مقفول لحد ما NEXT_PUBLIC_PLAUSIBLE_DOMAIN يتحط — شوف الكومنت جوه
+// Analytics.tsx. من غير المتغيّر ده الكومبوننت بيرجع null.
+import Analytics from "./core/components/Analytics";
 // سكربت صغير بيتنفّذ في <head> قبل أول paint ويكتب data-tier على <html>.
 // من غيره الـ CSS gating (html[data-tier="low"]) مكانش بيشتغل غير بعد الـ
 // hydration — يعني كل الأنيميشن التقيل بيتحمّل ثمنه بالكامل بالظبط في
@@ -64,6 +70,19 @@ export const metadata: Metadata = {
      */
     startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
   },
+  /*
+   * الـ metadata كانت فيها appleWebApp.capable = true من غير أي أيقونة —
+   * يعني الموقع بيقول لـ iOS "أنا قابل للتثبيت" وبعدين مبيديش أيقونة،
+   * فالنظام بياخد screenshot للصفحة ويستخدمه كأيقونة.
+   *
+   * favicon.ico في app/ بيتلقط تلقائياً. الباقي لازم يتكتب.
+   */
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/Assets/art-gallery/Images/logo/3omda.webp",
+  },
+  manifest: "/manifest.webmanifest",
   title: {
     default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
     template: "%s | Ahmed Emad Nasr",
@@ -152,15 +171,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   display: "swap",
   /*
-   * preload: false — الفرق ده مهم على الموبايل تحديداً.
-   *
    * next/font بيعمل <link rel="preload"> لكل ملف خط بشكل افتراضي. مع
-   * Overlock بتلات أوزان + JetBrains بوزنين، ده **خمس طلبات بأولوية عالية**
-   * بتتنافس مع صورة الـ LCP على نفس نافذة الاتصال المحدودة بتاعة الـ 3G/4G.
+   * Overlock بتلات أوزان + JetBrains بوزنين ده خمس طلبات بأولوية عالية
+   * بتتنافس مع صورة الـ LCP على نفس نافذة الاتصال المحدودة.
    *
-   * JetBrains Mono مش في أي نص فوق الطية له وزن في القياس — هو للـ HUD،
-   * والـ labels، والتواريخ، والترمينال. `display: swap` بيخلّيه يتبدّل لما
-   * يوصل، من غير ما يكون له أولوية على الصورة اللي الدرجة بتتقاس عليها.
+   * JetBrains Mono مش في أي نص فوق الطية له وزن في القياس — هو للـ HUD
+   * والـ labels والترمينال. display: swap بيخلّيه يتبدّل لما يوصل.
    */
   preload: false,
 });
@@ -264,7 +280,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     /* suppressHydrationWarning: السكربت تحت بيضيف data-tier على <html> قبل
        ما React يعمل hydrate. من غير ده React بيشتكي من attribute مش موجود
-       في الـ markup اللي جه من السيرفر. نفس النمط المستخدم في next-themes. */
+       في الـ markup اللي جه من السيرفر. نفس نمط next-themes. */
     <html
       lang="en"
       dir="ltr"
@@ -273,23 +289,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head>
         {/*
-          سكربت inline بيتنفّذ فوراً — قبل الـ CSS ما يترسم وقبل أي bundle.
-          بيصنّف الجهاز ويكتب data-tier="low|mid|high" على <html>.
+          بيتنفّذ فوراً — قبل الـ CSS ما يترسم وقبل أي bundle. بيصنّف
+          الجهاز ويكتب data-tier="low|mid|high" على <html>.
 
-          ليه ده أكبر تعديل في الملف كله؟ لأن globals.css فيه بالفعل ميزانية
-          حركة كاملة متعلّقة على html[data-tier="low"] (مفيش أنيميشن زخرفي،
-          مفيش backdrop-filter، transitions أقصر). المشكلة إن اللي بيكتب
-          الـ attribute ده كان useEffect — يعني مبيشتغلش غير بعد ما الـ
-          bundle يتحمّل ويعمل hydrate. النتيجة: التليفون بيدفع تكلفة الحركة
-          الكاملة في أول 2–3 ثواني بالظبط، وبعدين يقفلها.
-
-          دلوقتي القواعد شغّالة من أول فريم، وصفر جافاسكريبت في المسار الحرج.
+          globals.css فيه بالفعل ميزانية حركة كاملة معلّقة على
+          html[data-tier="low"]. المشكلة كانت إن اللي بيكتب الـ attribute
+          ده هو useEffect — يعني مبيشتغلش غير بعد ما الـ bundle يتحمّل
+          ويعمل hydrate. النتيجة: التليفون بيدفع تكلفة الحركة الكاملة في
+          أول 2–3 ثواني بالظبط، وبعدين يقفلها.
         */}
         <script dangerouslySetInnerHTML={{ __html: DEVICE_TIER_SCRIPT }} />
       </head>
       {/*
-        الـ <head> فوق فيه السكربت بتاع الـ tier وبس. السطرين القدام دول
-        كانوا فيه واتشالوا:
+        الـ <head> اليدوي اتشال بالكامل. كان فيه سطرين:
 
         1. <link rel="preload" as="image" href=".../My_Logo.webp">
            بيعمل preload للملف الغلط — صورة الـ LCP هي 3omda.webp في
@@ -315,6 +327,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             strategy="afterInteractive"
           />
         )}
+
+        <Analytics />
         
         <script
           type="application/ld+json"
@@ -328,6 +342,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <CursorMount />
           <BackToTop />
           <CommandPaletteMount />
+          <ServiceWorkerRegister />
         </MotionProvider>
       </body>
     </html>

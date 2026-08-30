@@ -11,6 +11,9 @@ import MainClient from "./page-client";
 // الـ build ومبتوصلش لمتصفح الزائر — لو page-client استورده كان هيبقى
 // client component تلقائياً وتتحزم الداتا معاه.
 import AttackMatrix from "./components/attack/attack-matrix";
+// نفس السبب: Server Component بيقرا certifications + skills + achievements،
+// فالداتا بتفضل وقت الـ build ومبتوصلش لمتصفح الزائر.
+import Credentials from "./components/credentials/credentials";
 
 export const metadata: Metadata = {
   title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst | DFIR & Malware Analysis",
@@ -85,7 +88,7 @@ export default function Main() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} // استخدام النص الجاهز مباشرة
       />
-      <MainClient coverage={<AttackMatrix />} />
+      <MainClient coverage={<AttackMatrix />} credentials={<Credentials />} />
     </>
   );
 }

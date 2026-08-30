@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "soc-l2-alert-triage": Array.from({ length: 5 }, (_, i) => `Assets/Cases/SOC_L2_Alert_Triage/Screenshot (${185 + i}).webp`),
   "offensive-security-intro": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Offensive_Security_Intro/Screenshot (${166 + i}).webp`),
   "iam-access-control-room": Array.from({ length: 12 }, (_, i) => `Assets/Cases/IAM_Access_Control/Screenshot (${141 + i}).webp`),
   "bounty-hacker-ctf-writeup": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Bounty_Hacker/Screenshot (${78 + i}).webp`),
@@ -880,6 +881,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-08-28",
     screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/Offensive_Security_Intro/Screenshot (${166 + i}).webp`),
     image: "Assets/Cases/Offensive_Security_Intro/Screenshot (174).webp",
+  },
+  {
+    id: "soc-l2-alert-triage",
+    title: "SOC L2 Alert Triage Walkthrough",
+    description: "Completed the SOC L2 Alert Triage room on TryHackMe. Transitioned from Tier 1 quick triage to Tier 2 deep log analysis, focusing on the Threat Hunting Loop, building event timelines, false positive tuning, and implementing effective containment strategies.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "SOC Analysis",
+    difficulty: "Medium",
+    //href: "Assets/Cases/SOC_L2_Alert_Triage/AhmedEmad_SOC_L2_Alert_Triage.pdf", 
+    tags: ["TryHackMe", "SOC", "Tier 2", "Alert Triage", "Threat Hunting", "Incident Response"],
+    tools: ["SIEM", "Log Analysis"],
+    skillsGained: ["Advanced Alert Triage", "Threat Hunting", "Incident Containment", "False Positive Analysis"],
+    readTime: 12,
+    date: "2026-08-30",
+    screenshots: Array.from({ length: 5 }, (_, i) => `Assets/Cases/SOC_L2_Alert_Triage/Screenshot (${185 + i}).webp`),
+    image: "Assets/Cases/SOC_L2_Alert_Triage/Screenshot (185).webp",
   },
 ] as const;
 

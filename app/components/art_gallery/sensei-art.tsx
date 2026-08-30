@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, memo } from "react";
+import React, { useState, memo, type ReactNode } from "react";
 import Image from "next/image";
 import styles from "./sensei-art.module.css";
-import MotionInView from "@/app/core/components/MotionInView";
+import Reveal, { RevealGroup } from "@/app/core/components/Reveal";
+import Spotlight from "@/app/core/components/Spotlight";
 import {
   GALLERY_IMAGE_COUNT,
   certificationAlt,
 } from "@/app/core/config/certifications";
-import Credentials from "@/app/components/credentials/credentials";
 
 // Paths are RELATIVE on purpose. This project does not set Next's `basePath`;
 // it handles the /Portfolio sub-path manually. On GitHub Pages the homepage is
@@ -35,19 +35,30 @@ const GALLERY_IMAGES = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
 
 type GalleryImage = (typeof GALLERY_IMAGES)[number];
 
-const ImageItem = memo(({ image, index }: { image: GalleryImage; index: number }) => {
+const ImageItem = memo(({
+  image,
+  style,
+}: {
+  image: GalleryImage;
+  /* بييجي من RevealGroup — هو اللي بيحط --i عليه عشان التدرّج في الـ CSS */
+  style?: React.CSSProperties;
+}) => {
   const [failed, setFailed] = useState(false);
 
   return (
-    // delay={index * 0.05} meant image #60 waited three full seconds after
-    // entering the viewport before appearing. The stagger is capped so the
-    // effect stays a flourish instead of a delay.
-    <MotionInView
-      variant="scale-up"
-      delay={Math.min(index, 6) * 0.05}
-      viewport={{ once: true, amount: 0.15 }}
-    >
-      <div className={styles.art_pic}>
+    /*
+     * الغلاف MotionInView اتشال من هنا.
+     *
+     * كل صورة كانت بتلف نفسها في MotionInView — يعني IntersectionObserver
+     * لكل صورة، واشتراك في محرّك framer-motion لكل صورة. المعرض بيرندر
+     * لحد 50 صورة.
+     *
+     * دلوقتي RevealGroup على الشبكة بيراقب الحاوية بس، والتدرّج بيحصل
+     * في الـ CSS عن طريق --i. observer entry واحد بدل خمسين.
+     *
+     * `style` بييجي من RevealGroup — هو اللي بيحط --i عليه.
+     */
+    <div className={styles.art_pic} style={style} data-fx="card" data-card="tight">
         {/* alt was the literal string "Certification" on all 74 images.
             See core/config/certifications.ts — fill that map in and every
             certificate here gets its real name, issuer and (optionally) a
@@ -66,38 +77,50 @@ const ImageItem = memo(({ image, index }: { image: GalleryImage; index: number }
           className={styles.galleryImg}
           onError={() => setFailed(true)}
         />
-      </div>
-    </MotionInView>
+    </div>
   );
 });
 
 ImageItem.displayName = "ImageItem";
 
-const SenseiArt = memo(function SenseiArt() {
+/*
+ * `credentials` بييجي جاهز من page.tsx (Server Component).
+ *
+ * السبب: credentials.tsx بيقرا certifications + skills + achievements
+ * (~11.7 كيلوبايت). استيراده من هنا كان بيحوّله لـ client component
+ * ويحزّم الداتا دي في bundle الصفحة الرئيسية. نفس النمط المستخدم مع
+ * AttackMatrix بالظبط.
+ */
+type SenseiArtProps = { credentials?: ReactNode };
+
+const SenseiArt = memo(function SenseiArt({ credentials }: SenseiArtProps) {
   const [visibleCount, setVisibleCount] = useState(6);
 
   return (
     <section className={styles["art-gallery-section"]} id="Certifications">
       <div className={styles.container}>
-        <MotionInView className={styles["header-section"]} variant="slide-up" viewport={{ once: true, amount: 0.3 }}>
+        <Reveal className={styles["header-section"]} variant="up">
           <h2 className={styles.title}>
             <span lang="ja">認定資格 •</span><span lang="en"> Certifications</span>
           </h2>
-        </MotionInView>
+        </Reveal>
 
         {/* الشهادات والإنجازات والمهارات كبيانات مقروءة، فوق حيطة الصور.
             حيطة الصور لوحدها كانت بتقول "عندي حاجات" من غير ما تقول إيه. */}
-        <Credentials />
+        {credentials}
 
         <div className={styles["art-gallery-content"]}>
-          <MotionInView className={styles.Gallery} variant="stagger" viewport={{ once: true, amount: 0.1 }}>
-            {GALLERY_IMAGES.slice(0, visibleCount).map((image, index) => (
-              <ImageItem key={image.src} image={image} index={index} />
-            ))}
-          </MotionInView>
+          <Spotlight>
+            <RevealGroup className={styles.Gallery} variant="scale" staggerMs={50}>
+              {GALLERY_IMAGES.slice(0, visibleCount).map((image) => (
+                <ImageItem key={image.src} image={image} />
+              ))}
+            </RevealGroup>
+          </Spotlight>
 
           {visibleCount < GALLERY_IMAGES.length && (
-            <MotionInView className={styles.galleryActions} variant="fade" delay={0.1} viewport={{ once: true, amount: 0.1 }}>
+            /* delay بالملي ثانية دلوقتي مش بالثواني — كان 0.1 يعني 100ms */
+            <Reveal className={styles.galleryActions} variant="fade" delay={100}>
               <button
                 type="button"
                 className={styles.primaryAction}
@@ -105,7 +128,7 @@ const SenseiArt = memo(function SenseiArt() {
               >
                 Show more
               </button>
-            </MotionInView>
+            </Reveal>
           )}
         </div>
       </div>

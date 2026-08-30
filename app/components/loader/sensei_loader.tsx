@@ -274,7 +274,7 @@ export default function LoadingScreen() {
               </span>
               <span className={styles.consolePath}>3omda@soc-01: ~/portfolio</span>
               <SessionClock />
-              <span className={styles.consoleBadge}>師</span>
+              <span className={styles.consoleBadge} lang="ja">師</span>
             </div>
 
             {/* العلامة */}
@@ -282,7 +282,7 @@ export default function LoadingScreen() {
               {WORDMARK.map((row, i) => (
                 <span key={i} className={styles.wordmarkRow}>{row}</span>
               ))}
-              <span className={styles.wordmarkTag}>セキュリティ・アナリスト</span>
+              <span className={styles.wordmarkTag} lang="ja">セキュリティ・アナリスト</span>
             </div>
 
             {/* السجل */}
@@ -324,7 +324,7 @@ export default function LoadingScreen() {
           </div>
 
           <div className={styles.sideLabelLeft}>SEN-001</div>
-          <div className={styles.sideLabelRight}>武士道</div>
+          <div className={styles.sideLabelRight} lang="ja">武士道</div>
         </m.div>
       )}
     </AnimatePresence>

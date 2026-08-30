@@ -305,20 +305,12 @@
   flex-direction: column;
   gap: 0.7rem;
   height: 100%;
-  padding: 1.8rem 2rem;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 2px solid var(--main-color);
-  border-radius: var(--radius-card-sm, 6px);
-  background: rgba(255, 255, 255, 0.015);
-  transition: border-color var(--motion-fast, 150ms) ease;
 }
-.relatedCard:hover, .relatedCard:focus-visible { border-left-color: var(--accent-color); }
-.relatedCard:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .relatedTitle { color: var(--text-bright); font-weight: 700; font-size: var(--text-md); line-height: 1.35; }
 .relatedMeta { color: var(--text-dim); font-size: 1.3rem; margin-top: auto; line-height: 1.5; }
 
 @media (prefers-reduced-motion: reduce) {
-  .relatedCard { transition: none; }
+
 }

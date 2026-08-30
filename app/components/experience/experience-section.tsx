@@ -6,7 +6,8 @@ import styles from "./experience-section.module.css";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { calculateExperience, toBulletItems } from "@/app/core/utils/utils";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
-import MotionInView from "@/app/core/components/MotionInView";
+import Reveal from "@/app/core/components/Reveal";
+import Spotlight from "@/app/core/components/Spotlight";
 
 /*
  * These props were typed `any`, which switched TypeScript off inside the most
@@ -49,8 +50,8 @@ const TimelineItem = memo(({
   const bullets = toBulletItems(desc);
 
   return (
-    <MotionInView className={`${styles["timeline-container"]} ${isRight ? styles.right : styles.left}`}>
-      <div className={styles.content}>
+    <Reveal className={`${styles["timeline-container"]} ${isRight ? styles.right : styles.left}`}>
+      <div className={styles.content} data-fx="card">
         <div className={styles.tag}>
           {/* was <h2>: the section already owns an h2 ("経験 • Experience"),
               so ten more h2s at the same level flattened the outline. Each
@@ -92,7 +93,7 @@ const TimelineItem = memo(({
           </div>
         )}
       </div>
-    </MotionInView>
+    </Reveal>
   );
 });
 
@@ -106,7 +107,7 @@ function ExperienceSection() {
           <SectionHeader japaneseText="経験" englishText="Experience" titleClassName={styles.title} />
         </div>
         
-        <div className={styles["time-line"]}>
+        <Spotlight className={styles["time-line"]}>
           {knowledgeEducationItems.map((item: TimelineEntry, index) => (
             <TimelineItem
               // key={index} breaks React's reconciliation the moment an entry
@@ -117,7 +118,7 @@ function ExperienceSection() {
               isRight={item.isRight !== undefined ? item.isRight : index % 2 !== 0}
             />
           ))}
-        </div>
+        </Spotlight>
       </div>
     </section>
   );

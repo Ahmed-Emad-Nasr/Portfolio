@@ -1,278 +1,200 @@
-# Ahmed Emad Nasr Portfolio
-<h1 align="center">Sensei-Dev Portfolio</h1>
-<p align="center"><img src="https://socialify.git.ci/Ahmed-Emad-Nasr/Portfolio/image?language=1&name=1&owner=1&stargazers=1&theme=Dark" alt="project-image"></p>
-<p align="center">
-  <strong>Explore a world of innovative Software Development and creative problem-solving.</strong>
-</p>
-<p align="center">
-  <a href="#about">About</a> •
-  <a href="#features">Features</a> •
-  <a href="#demo">Demo</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#technologies">Technologies</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
-</p>
+# حزمة التعديلات الكاملة
 
----
+> **`ARCHITECTURE.md`** جنب الملف ده فيه شرح كامل لبنية المشروع
+> بالإنجليزي: حدود Server/Client، نظام الـ tier، نظام الكروت، الأنيميشن،
+> الأداء، ومصائد معروفة. اقراه لو هتغيّر حاجة بنيوية.
 
-## About
-
-Welcome to Ahmed Emad Nasr, My Personal portfolio and cybersecurity blog built with Next.js, focused on SOC work, incident response, DFIR writeups, training material, and project evidence.
-## Features
-
-🌟 Here are some of the standout features of this portfolio:
-
-1. **Stunning Visual Design**:
-
-   - Visually appealing interface with smooth animations
-   - Cohesive color scheme creating a harmonious browsing experience
-
-2. **Fully Responsive Layout**:
-
-   - Seamless experience across all devices - from mobile phones to desktop computers
-
-3. **Interactive Project Showcase**:
-
-   - Explore a diverse range of projects
-   - Detailed descriptions and live demos where available
-
-4. **Image Processing**:
-
-   - Dynamic image gallery automatically optimized for performance
-   - Custom Python script for converting and adjusting images for web
-   - Image compression at various levels
-   - Extraction of images from a specified path
-
-5. **Interactive Landing Section**:
-
-   - Attractive and modern design with interactive animations
-
-6. **Specialized Sections**:
-
-   - Services: Clear and organized presentation of offered services
-   - Projects: Showcase of past and current projects
-   - Education and Languages: Information on educational experiences and language proficiencies
-   - Programming Languages: Display of utilized programming languages
-   - Image Gallery: Attractive presentation of images and graphics
-   - Design: Samples of design work
-   - Contact: Form for client communication
-   - Footer: Additional information and important links
-
-7. **Customizable Interface**:
-   - Easy-to-use customization options to tailor the viewing experience to your preferences
-
-## Screenshots
-
-<p align="center">
-  <img src="screenshots/home.png" width="80%" alt="Screenshot 1">
-  
-  <img src="screenshots/art_gallery.png" width="80%" alt="Screenshot 2">
-</p>
-
-## Demo
-
-Experience the Ahmed Emad Nasr Portfolio live:
-🚀 [Ahmed Emad Nasr Portfolio Live Demo](https://ahmed-emad-nasr.github.io/Portfolio)
-
-## Installation
-
-Get Sensei-Dev up and running on your local machine in just a few steps:
-
-1. Ensure you have [Node.js](https://nodejs.org/en/download/package-manager) installed on your system.
-2. Clone the repository:
-   ```
-   git clone https://github.com/Ahmed-Emad-Nasr/Portfolio
-   ```
-3. Navigate to the project directory and install dependencies:
-   ```
-   cd Sensei-Dev
-   npm install
-   ```
-4. Install Python requirements:
-   ```
-   cd app/image_optmization
-   pip install -r requirements.txt
-   ```
-5. Use the Python script for image optimization:
-   - Place your images in the designated folder within the `public/Assets/art-gallery/Images/image_display` directory.
-   - Run the Python script:
-     ```
-     python image_optimizer.py
-     ```
-   - Follow the on-screen instructions to optimize your images.
-6. Start the development server:
-   ```
-   npm run dev
-   ```
-7. Open your browser and visit `http://localhost:3000` to see the portfolio in action!
-
-## Technologies
-
-This portfolio is built with cutting-edge technologies:
-
-- **Next.js 14**: For server-side rendering and optimal performance
-- **TypeScript**: Ensuring type safety and improved developer experience
-- **Python**: Powering scripts for image optimization and data processing
-- **CSS**: Styling with modern CSS techniques for a polished look
-
-## Contributing
-
-Your contributions are welcome! Here's how you can help improve Sensei-Dev:
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/AmazingFeature`
-3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
-4. Push to the branch: `git push origin feature/AmazingFeature`
-5. Open a pull request
-
-For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-This project is licensed under the GPL-3.0 license - see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Made with ❤️ by <a href="https://ahmed-emad-nasr.github.io/Portfolio">Ahmed Emad Nasr</a>
-</p>
-
-
-![Next.js](https://img.shields.io/badge/Next.js-16-111827?style=flat-square&logo=nextdotjs&logoColor=white)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Framer Motion](https://img.shields.io/badge/Motion-Framer-000000?style=flat-square)
-
-## Overview
-
-<table>
-  <tr>
-    <td>
-      <ul>
-        <li><b>Live portfolio:</b> <a href="https://ahmed-emad-nasr.github.io/Portfolio/">ahmed-emad-nasr.github.io/Portfolio</a></li>
-        <li><b>LinkedIn:</b> <a href="https://www.linkedin.com/in/0x3omda/">linkedin.com/in/0x3omda</a></li>
-        <li><b>YouTube:</b> <a href="https://www.youtube.com/@AhmedEmad-0x3omda">@AhmedEmad-0x3omda</a></li>
-      </ul>
-    </td>
-    <td><img align="right" height="153" width="159" src="gif/anime-frieren.gif" /></td>
-    <td><img align="right" height="153" width="159" src="gif/giphy.gif" /></td>
-  </tr>
-</table>
-
-This repo contains two connected experiences:
-
-- A portfolio homepage with intro, experience timeline, projects, and art gallery sections.
-- A cybersecurity blog/archive with case studies, evidence libraries, screenshots, PDFs, and embedded YouTube content.
-
-The app is structured as a static-export-friendly Next.js App Router project and is prepared for GitHub Pages deployment.
-
-## What The Site Includes
-
-- A polished landing page with animated sections and a fixed header.
-- A blog archive with filtering, sorting, searchable content, and evidence-rich writeups.
-- Downloadable and viewable assets for reports, screenshots, CVs, and gallery media.
-- SEO metadata, Open Graph cards, Twitter cards, robots/sitemap support, and JSON-LD structured data.
-- Responsive layouts that work on desktop and mobile.
-
-## Main Routes
-
-- `/` - portfolio homepage.
-- `/blog` - cybersecurity blog and case library.
-- `/thank-you` - post-submit thank-you page.
-- Custom not-found experience for invalid routes.
-
-## Content Areas
-
-### Portfolio Home
-
-- Hero/introduction section with personal summary.
-- Experience and education timeline.
-- Projects section for security-related work and highlights.
-- Art gallery section for visual work.
-- Fixed navigation with smooth motion and section-based interactions.
-
-### Blog
-
-- SOC incident reports and cybersecurity case studies.
-- DFIR and malware-analysis writeups.
-- Screenshot libraries for investigations and lab walkthroughs.
-- PDF resources such as CVs and evidence packs.
-- Embedded YouTube videos and playlists.
-
-## Tech Stack
-
-- Next.js 16 with App Router and static export.
-- React 19.
-- TypeScript 5.9.
-- Framer Motion.
-- CSS Modules plus global CSS.
-- Font Awesome icons.
-- Yet Another React Lightbox for media viewing.
-
-## Project Structure
-
-- `app/layout.tsx` sets the root metadata, fonts, viewport, and structured data.
-- `app/page.tsx` and `app/page-client.tsx` render the main portfolio experience.
-- `app/blog/page.tsx` and `app/blog/page-client.tsx` render the blog archive.
-- `app/core/data.ts` stores the main static content for skills, timeline items, blog media, and playlists.
-- `app/components/` contains the reusable sections for the homepage and blog.
-- `public/Assets/` contains screenshots, PDFs, logos, case evidence, CV files, and other media.
-- `gif/` holds the animated assets used in the README and site presentation.
-
-## Local Development
-
-Install dependencies and run the development server:
+فك الضغط في **جذر المشروع**. الملفات كلها بمساراتها الحقيقية:
 
 ```bash
-npm install
-npm run dev
+unzip portfolio-complete.zip -d /path/to/Portfolio
 ```
 
-Then open the local address shown by Next.js, usually `http://localhost:3000`.
-
-## Available Scripts
+بعدين:
 
 ```bash
-npm run dev
 npm run build
-npm run start
-npm run lint
-npm run type-check
-npm run format
-npm run format:check
-npm run clean
-npm run audit
-npm run verify
 ```
 
-## Environment Notes
+---
 
-The app is mostly static, but some contact/deployment-related behavior depends on environment variables when enabled in the UI.
+## ⚠️ اقرا ده الأول
 
-- `NEXT_PUBLIC_FORMSPREE_ENDPOINT` - contact form delivery.
-- `NEXT_PUBLIC_TELEGRAM_WEBHOOK_URL` - optional notification relay.
-- `NEXT_PUBLIC_TELEGRAM_BOT_TOKEN` and `NEXT_PUBLIC_TELEGRAM_CHAT_ID` - direct Telegram mode.
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` - optional anti-spam challenge.
+**مبنيتش المشروع.** الحزمة اللي بعتّها فيها فولدر `app/` بس — مفيش
+`package.json` ولا `next.config` ولا `public/`، فمقدرتش أعمل
+`npm install` ولا `next build`.
 
-## Deployment
+اللي **اتحقق منه فعلاً**:
 
-The Next config is set up for static export, so the site can be deployed to GitHub Pages or any static host.
+| الفحص | النتيجة |
+|---|---|
+| كل ملف `.ts`/`.tsx` بيـparse | ✅ ٤١ ملف |
+| أقواس كل ملف CSS متوازنة | ✅ ٢٤ ملف |
+| كل `styles.X` في الـ JSX موجود في الـ module بتاعه | ✅ (ما عدا ٤ مشاكل قديمة، تحت) |
+| مفيش `MotionInView` متبقّي في شجرة العرض | ✅ |
+| كل توكن CSS في `globals.css` مقروء في مكان | ✅ صفر ميت |
 
-Before publishing, verify the following paths load correctly:
+اللي **مااتحققش منه**: أنواع TypeScript، سلوك التشغيل، الشكل البصري.
+`esbuild` بيتأكد إن الملف بيـparse مش إن أنواعه مضبوطة.
 
-- `/`
-- `/blog`
+**اعمل commit قبل ما تفك الضغط.**
 
-If you update the public content or case library, regenerate and redeploy the export so the assets and metadata stay in sync.
+---
 
-## Design Notes
+## ٤ باجات قديمة لقيتها أثناء الفحص (مش من تعديلاتي)
 
-- Motion is intentionally smooth and cinematic rather than abrupt.
-- The portfolio uses reusable sections and typed content instead of hard-coded page fragments.
-- Structured data is embedded for the homepage and blog to improve discoverability.
-- The gifs are kept as part of the visual identity.
+كلاسات مستخدمة في الـ JSX ومش موجودة في الـ CSS — يعني بترندر
+`class="undefined"` من غير أي ستايل دلوقتي:
 
-## License
+| الملف | الكلاس |
+|---|---|
+| `app/not-found.tsx` | `.suggest` |
+| `app/components/experience/experience-section.tsx` | `.desc` |
+| `app/blog/[slug]/CaseArticle.tsx` | `.factBlock` |
+| `app/core/components/ShortcutsHelp.tsx` | `.group` |
 
-This project is released under the MIT License. See [LICENSE](LICENSE).
+سبتهم زي ما هم — مش عارف الشكل اللي كنت قاصده. `node scripts/css-audit.mjs`
+بيمسكهم.
+
+(خامسة اتصلحت: `.navDivider` في هيدر البلوج — ضفت القاعدة.)
+
+---
+
+## اللي اتعمل
+
+### الأداء
+- **سكربت `data-tier` في `<head>` قبل أول paint.** كان `useEffect`، يعني
+  ميزانية الحركة في `globals.css` مكانتش بتشتغل غير بعد الـ hydration —
+  التليفون بيدفع التكلفة الكاملة في نافذة الـ LCP/TBT بالظبط وبعدين
+  يقفلها. وكل التليفونات بقت `"low"` (كانت `"mid"`).
+- **`content-visibility: auto` كانت شغّالة على الـ hero** — كروم مبيحسبش
+  LCP لمحتوى جوه subtree متخطّى. استثنيت `#Home`.
+- **`credentials.tsx` بقى Server Component** — كان `"use client"` بصفر
+  hooks، وبيشحن `certifications` + `skills` + `achievements` (~١١.٧
+  كيلوبايت) لكل زائر. دلوقتي صفر. مرّرته كـ slot من `page.tsx`.
+- **الـ loader بقى CSS + observer مشترك** بدل ٥٠ IntersectionObserver.
+- **`preload: false` على JetBrains Mono** — كان خامس ملف خط بأولوية عالية
+  بيزاحم صورة الـ LCP.
+- **`cursor-mount` بيفحص اللمس قبل الـ dynamic import** — الـ chunk مبقاش
+  يتحمّل على التليفون.
+
+### الـ CSS
+- `globals.css`: ٢٤٫٥ك → ٢٨٫٩ك بايت، بس ٩١ → ٧١ قاعدة أساسية. شلت ٤٧
+  توكن ميت (٤٢٪) و١١ كلاس utility مش مستخدم و١٦ `box-shadow: none`،
+  وضفت أقسام الظهور والتفاعلات.
+- شلت المحدد العالمي `html[data-tier="low"] *` للـ `backdrop-filter` —
+  كان بيجبر إعادة حساب أنماط على كل عنصر عشان يلغي ٤ تصريحات بتقرا
+  `var(--card-blur)` أصلاً.
+- **هيدر البلوج بقى بيستخدم ملف الهيدر الرئيسي** (كانوا ٩٨٪ نفس الملف،
+  والنسخة الثانية ناقصها `-webkit-clip-path` — يعني الشكل مكسور على
+  سفاري في صفحات البلوج بس).
+- `.scrollBlurOverlay` كان عليه `transition` على `backdrop-filter` بملء
+  الشاشة. بقى `opacity` + `var(--ui-blur)`.
+- شلت ٨ كلاسات ميتة.
+
+### الأنيميشن والتفاعل
+- `Reveal.tsx` + `RevealGroup` — CSS transitions + observer واحد للصفحة.
+- **شكل موحّد للكروت.** الموقع كان فيه أربع معالجات مختلفة اتكتبوا في
+  أوقات مختلفة:
+
+  | | الحدود | الخلفية | نصف القطر |
+  |---|---|---|---|
+  | `.single-project` | خط **2px فوق** (شفاف → أحمر) | `10,10,10,.6` | `--radius-card` |
+  | `.pdfCard` وإخواته | خط **3px شمال** (أحمر باهت) | `10,10,10,.6` | `--radius-card` |
+  | `.relatedCard` / `.card` | خط **2px شمال** (أحمر صريح) | `255,255,255,.015` | `--radius-card-sm` |
+  | `.art_pic` | **مفيش لمسة لون** | `10,10,10,.6` | `--radius-card` |
+
+  دلوقتي **مفيش ولا تصريح واحد لشكل الكارت في أي ملف module**. لا حدود،
+  لا خلفية، لا نصف قطر، لا padding، لا hover. كله من القسم ١٤ في
+  `globals.css`.
+
+  ```tsx
+  <article data-fx="card">                      {/* 2.5rem */}
+  <article data-fx="card" data-card="compact">  {/* 1.8rem 2rem */}
+  <article data-fx="card" data-card="tight">    {/* 0.6rem — إطار صورة */}
+  ```
+
+  اللي فاضل في الـ modules هو التخطيط الداخلي بس:
+
+  ```css
+  /* All appearance comes from html [data-fx="card"] in globals.css */
+  .single-project { display: flex; flex-direction: column; }
+  ```
+
+  ١٢ كارت في الموقع شايلين الـ attribute، وفيه سكربت فحص أكّد إن مفيش
+  كود شكل متبقّي.
+- لمعة الزراير، خط اللينكات، التاجات، رد فعل الضغط.
+- شريط تمرير مخصص (كان ٤ بكسل أحمر باهت بعد ما الـ border ياكل ٦).
+- `Spotlight.tsx` (اختياري، مش مركّب في أي حتة).
+
+### الموثوقية والوصولية
+- `error.tsx` + `global-error.tsx` — مكانوش موجودين. أي exception في أي
+  من الـ ٢٨ client component كان بيدّي **صفحة بيضا فاضية**.
+- `lang="ja"` على النص الياباني في الـ hero والـ loader.
+- `icons` + `manifest.ts` — الموقع كان بيقول لـ iOS إنه قابل للتثبيت
+  (`appleWebApp.capable`) من غير ما يدّي أيقونة.
+
+---
+
+## خطوتين ناقصين منك
+
+**١. صور الـ hero متعددة المقاسات**
+
+```bash
+npm i -D sharp
+node scripts/generate-hero-sizes.mjs
+```
+
+**مش مطبّق في الكود.** مع `output: "export"` لازم `images.unoptimized`،
+وساعتها `<Image>` بترندر `<img>` من غير `srcset` — يعني تليفون ٣٦٠px
+بيحمّل نفس ملف شاشة الـ 4K، وهي صورة الـ LCP.
+
+سبته لأنه محتاج `next.config` عشان أتأكد من `images.unoptimized`، وطلبته
+تلات مرات ولسه مش شايفه. ابعتهولي وأنا أطبّقه.
+
+**٢. `data-fx` على باقي العناصر**
+
+ضفت `data-fx="card"` على ٨ كروت حقيقية. لسه ينفع تضيف:
+
+- `data-fx="tag"` على `.skillTag` · `.chip` · `.attackChip` · `.badge`
+- `data-fx="link"` على `.proofLink` · `.backLink` · `.subTagLink`
+- `data-fx="social"` على أيقونات السوشيال
+
+سبتهم لأنهم اختيار جمالي مش إصلاح، وإنت اللي تشوف فين يناسب.
+
+> `.content` في قسم الخبرات اتوحّد كمان بناءً على طلبك. كان عنده
+> `translateX(5px)` على الـ hover بدل الارتفاع — الحركة دي اتشالت عشان
+> يبقى زي باقي الكروت بالظبط.
+
+### ملاحظة على وزن المحددات
+
+القاعدة المشتركة مكتوبة `html [data-fx="card"]` مش `[data-fx="card"]`
+لوحده. السبب إن التاني وزنه (0,1,0) — نفس وزن أي كلاس في ملفات الـ
+modules — فاللي بيكسب كان بيبقى حسب ترتيب تحميل الـ CSS، وده مش مضمون.
+زيادة `html` بتخلّيه (0,1,1) فبيكسب دايماً.
+
+شلت التصريحات المتعارضة من الـ modules كمان، فالنقطة دي شبكة أمان
+لأي كارت أضفته بعدين ونسيت تنضّفه.
+
+---
+
+## بعد البناء، اتأكد من دول
+
+```bash
+grep -o 'data-tier' out/index.html | head    # السكربت وصل الـ HTML؟
+node scripts/css-audit.mjs                   # فحص CSS
+```
+
+وفي المتصفح:
+
+1. **صفحة رئيسية** — الـ loader بيقلع، الشريط بيمشي، السطور بتظهر ورا بعض
+2. **إعادة تحميل من الكاش** — الـ loader لازم يقفز لـ ١٠٠٪ ويختفي فوراً
+3. **`npm run dev` + الـ console** — لو ظهر hydration warning عن `<html>`،
+   اتأكد إن `suppressHydrationWarning` موجودة
+4. **اقفل الجافاسكريبت** — كل المحتوى لازم يبان (شبكة أمان الـ Reveal)
+5. **اقطع الشبكة بعد أول paint** — كل حاجة تبان خلال ٤ ثواني
+6. **موبايل** — `<html>` عليه `data-tier="low"`، مفيش زخرفة متحركة
+7. **hover على كارت** — يرتفع ٣px، خط جانبي يمتد، لمعة تعدّي
+8. **Tab على كارت** — نفس رد الفعل (`:focus-within`)
+
+لو حاجة اتكسرت: `git diff` وابعتلي الملف.

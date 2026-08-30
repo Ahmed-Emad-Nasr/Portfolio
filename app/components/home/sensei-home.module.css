@@ -393,19 +393,9 @@
 }
 .cvBtn:hover svg { animation: pdfPulse 1.15s ease-in-out infinite; }
 
-.btnLoading {
-  pointer-events: none;
-  opacity: 0.85;
-}
 
-.spinner {
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
+
+
 
 .btnProjects {
   background: rgba(255, 255, 255, 0.03);
@@ -494,8 +484,6 @@
   border-radius: 50%;
   pointer-events: none;
 }
-
-@keyframes spin { to { transform: rotate(360deg); } }
 
 .corner {
   position: absolute;
@@ -643,6 +631,11 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* بتستخدمها .ringOuter (25s) و .ringInner (20s عكسي).
+   كانت بتستخدمها .spinner كمان — الكلاس دي اتشالت مع زرار تحميل الـ CV،
+   بس الحلقتين لسه محتاجينها. */
+@keyframes spin { to { transform: rotate(360deg); } }
+
 @keyframes heroImageIn {
   from { opacity: 0; transform: scale(1.08); }
   to { opacity: 1; transform: scale(1); }
@@ -663,12 +656,6 @@
   50% { opacity: 0.35; }
 }
 
-/* Reduced-motion fallback for .spinner (the CV-download loading state):
-   keeps a legible "still working" cue via opacity instead of a 360deg spin. */
-@keyframes spinnerPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
 
 /* ───────────────── Motion / input preferences ───────────────── */
 
@@ -713,9 +700,6 @@
     animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite !important;
   }
   .cvBtn:hover svg { animation: none !important; }
-  .spinner {
-    animation: spinnerPulse 1.2s ease-in-out infinite !important;
-  }
 }
 
 @media (hover: none), (pointer: coarse) {

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import MotionInView from "@/app/core/components/MotionInView";
+import Reveal from "@/app/core/components/Reveal";
 import BlogCard from "../BlogCard";
 import styles from "../page.module.css";
 import type { PdfResource } from "../blog-types";
@@ -36,15 +36,15 @@ export default function BlogPdfLibrarySection({
 }: BlogPdfLibrarySectionProps) {
   return (
     <section className={styles.block}>
-      <MotionInView className={styles.blockHeading}>
+      <Reveal className={styles.blockHeading}>
         <h2 id="blog-pdfs-title">PDF Library</h2>
         <p>{visiblePdfCards.length} result(s) found.</p>
-      </MotionInView>
+      </Reveal>
 
       {filterBar}
 
       {leadCase && (
-        <MotionInView className={styles.caseSpotlight}>
+        <Reveal className={styles.caseSpotlight}>
           <div className={styles.caseSpotlightBody}>
             <p className={styles.caseSpotlightTag}>Case Spotlight</p>
             <h3>{leadCase.title}</h3>
@@ -97,7 +97,7 @@ export default function BlogPdfLibrarySection({
               <Image src={leadCaseSpotlightImage} alt={`${leadCase.title} — spotlight screenshot`} fill sizes="(max-width: 991px) 100vw, 38vw" loading="lazy" decoding="async" />
             </a>
           )}
-        </MotionInView>
+        </Reveal>
       )}
 
       <div className={styles.pdfGrid}>
