@@ -1,3 +1,15 @@
+/*
+ * sensei_loader.module.css — SOC console boot
+ *
+ * الخلفيات الأربعة (speedLines / neuralGrid / scanlines / الأركان) زي ما
+ * هي بالحرف من النسخة القديمة. الجديد هو نافذة الكونسول والشريط.
+ *
+ * قاعدة أساسية في الملف ده: أي حاجة بتتحرك مع التقدّم بتتحرك بـ
+ * transform أو opacity بس. دول الخاصيتين اللي المتصفح بيعالجهم على الـ
+ * compositor من غير layout ولا paint — مهم هنا تحديداً لأن ده بيحصل في
+ * نفس اللحظة اللي المتصفح بيفك فيها ضغط الصور ويعمل parse للـ JS.
+ */
+
 .loader {
   position: fixed;
   inset: 0;
@@ -9,6 +21,8 @@
   overflow: hidden;
   background: var(--bg-color);
 }
+
+/* ── الخلفيات الزخرفية ─────────────────────────────────────────────── */
 
 .speedLines,
 .neuralGrid,
@@ -70,100 +84,273 @@
 .cornerBottomLeft { bottom: 2.4rem; left: 2.4rem; border-width: 0 0 2px 2px; }
 .cornerBottomRight { bottom: 2.4rem; right: 2.4rem; border-width: 0 2px 2px 0; }
 
-.emblem {
+/* ── نافذة الكونسول ────────────────────────────────────────────────── */
+
+.console {
   position: relative;
+  z-index: 2;
+  width: min(58rem, calc(100vw - 6rem));
+  border: 1px solid rgba(var(--main-color-rgb), 0.35);
+  background: rgba(0, 0, 0, 0.72);
+  font-family: var(--font-mono);
+  /* الشكل المشطوف من الركن — نفس لغة الـ trapezoid بتاعة الهيدر.
+     clip-path أرخص من border-radius هنا لأن مفيش anti-aliasing على
+     منحنى، والشكل ثابت مبيتحركش. */
+  clip-path: polygon(
+    0 0, calc(100% - 1.4rem) 0, 100% 1.4rem,
+    100% 100%, 1.4rem 100%, 0 calc(100% - 1.4rem)
+  );
 }
 
-.outerRing {
-  width: 14.4rem;
-  height: 14.4rem;
-  border: 2px solid rgba(var(--main-color-rgb), 0.2);
-  border-top-color: var(--main-color);
-  border-radius: 50%;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-}
-
-.innerRing {
-  position: absolute;
-  inset: 0.75rem;
-  border: 1px solid rgba(var(--main-color-rgb), 0.3);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-}
-
-.symbolWrap {
-  position: absolute;
-  inset: 0;
+.consoleBar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 1.2rem;
+  padding: 0.9rem 1.4rem;
+  border-bottom: 1px solid rgba(var(--main-color-rgb), 0.25);
+  background: rgba(var(--main-color-rgb), 0.08);
 }
 
-.symbol {
-  font-family: var(--font-overlock, sans-serif);
-  font-size: 5rem;
-  font-weight: 900;
+.consoleDots {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.consoleDots i {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.consoleDots i:first-child { border-color: rgba(var(--main-color-rgb), 0.8); }
+
+.consolePath {
+  flex: 1;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.consoleBadge {
+  font-family: var(--font-jp);
+  font-size: 1.4rem;
+  font-weight: 700;
   color: var(--main-color);
-  text-shadow: 0 0 20px rgba(204, 15, 82, 0.5);
+  flex-shrink: 0;
 }
 
-.bootText {
-  margin-top: 5.6rem;
+/* ساعة الجلسة — وقت الزائر الحقيقي بتوقيت UTC.
+   tabular-nums ضروري: من غيرها الشريط بيهتز كل ثانية لأن "1" أضيق
+   من "8"، والساعة قاعدة جنب نص متغيّر أصلاً. */
+.clock {
+  flex-shrink: 0;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── العلامة ────────────────────────────────────────────────────────
+   حروف بلوك بالـ monospace. `pre` عشان المسافات المتعددة متتاكلش —
+   ده اللي بيخلي الحروف تتحاذى فوق بعض. */
+.wordmark {
+  padding: 1.6rem 1.4rem 0.4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.8rem;
-  text-align: center;
+  gap: 0.1rem;
 }
 
-.bootLineRow {
+.wordmarkRow {
+  white-space: pre;
+  font-size: 1.1rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: var(--main-color);
+  /* التدرّج بيدي الحروف عمق من غير أي طبقة زيادة — أرخص من ظل. */
+  background: linear-gradient(180deg, var(--main-color), rgba(var(--accent-color-rgb), 0.55));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.wordmarkTag {
+  margin-top: 0.8rem;
+  font-family: var(--font-jp);
+  font-size: 0.9rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.consoleBody {
+  /*
+   * ارتفاع ثابت + overflow: hidden + justify-content: flex-end.
+   *
+   * التلاتة مع بعض بيدّوا سلوك الترمينال الحقيقي: السطور الجديدة بتيجي
+   * من تحت والقديمة بتخرج من فوق. والأهم إن الصندوق **عمره ما يكبر** —
+   * لو كان بيكبر مع كل سطر كان الشريط والصفحة كلها هيقفزوا سبع مرات
+   * أثناء التحميل، وده CLS في أسوأ لحظة ممكنة.
+   *
+   * على الموبايل السطر بيتكسر لسطرين، فالسطور القديمة بتخرج أسرع —
+   * وده مقبول: آخر سطرين هما اللي فيهم المعلومة الجديدة.
+   */
+  height: 17rem;
+  overflow: hidden;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.logLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.75);
+  /* السطر بيدخل بـ opacity + translate بس — الاتنين على الـ compositor.
+     مفيش height animation عشان مفيش reflow. */
+  animation: logIn 220ms var(--motion-ease) both;
+}
+
+@keyframes logIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.logTag {
+  flex-shrink: 0;
+  min-width: 4.2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+.logLine[data-tag="ok"] .logTag { color: var(--accent-color); }
+.logLine[data-tag="run"] .logTag { color: rgba(255, 255, 255, 0.35); }
+.logLine[data-tag="scan"] .logTag { color: var(--main-light); }
+/* بصمة العميل نص فنّي — بيتعرض بلون أهدى من قيم الـ CV اللي فوقه
+   عشان مايسحبش العين عن اللي المفروض الزائر يقراه. */
+.logLine[data-tag="scan"] .logValue {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.logLabel {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* النقط اللي بتملا المسافة بين الاسم والقيمة — سطر واحد CSS بدل ما
+   تتكتب نقط في الـ JSX وتتغير مع كل عرض شاشة. */
+.logDots {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.14);
+  transform: translateY(-0.3rem);
+}
+
+.logValue {
+  flex-shrink: 0;
+  color: var(--text-bright);
+  font-weight: 700;
+  text-align: right;
+}
+
+.logCaret {
+  color: var(--main-color);
+  animation: caretBlink 0.9s step-end infinite;
+}
+
+@keyframes caretBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ── الشريط ────────────────────────────────────────────────────────── */
+
+.progressWrap {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.2rem;
+  padding: 1rem 1.4rem 1.2rem;
+  border-top: 1px solid rgba(var(--main-color-rgb), 0.25);
 }
 
-.bootLine {
-  width: 4rem;
-  height: 2px;
-  background: rgba(var(--main-color-rgb), 0.6);
-}
-
-.bootLineText {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: rgba(0, 229, 255, 0.7);
-  font-family: var(--font-mono);
-}
-
-.title {
-  margin: 0;
-  font-family: var(--font-overlock, sans-serif);
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-
-.titleAccent {
-  color: var(--main-color);
-  font-style: italic;
-}
-
-.progressBar {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 0.4rem;
+.progressTrack {
+  position: relative;
+  flex: 1;
+  height: 1rem;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(var(--main-color-rgb), 0.3);
 }
 
+/*
+ * الجزء الممتلئ. عرضه 100٪ دايماً والتحديث بيحصل على scaleX من الـ JSX.
+ *
+ * ليه مش `width: X%`؟ لأن تغيير العرض بيجبر layout ثم paint ثم composite
+ * في كل تحديث — تمن مرات في الثانية، في نفس اللحظة اللي المتصفح بيحمّل
+ * فيها الصفحة. `transform` بيتعامل معاه الـ compositor لوحده.
+ */
 .progressFill {
-  height: 100%;
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
   background: linear-gradient(90deg, var(--main-color), var(--accent-color));
+  transition: transform 180ms linear;
 }
+
+/* الشبكة اللي بتقسّم الشريط لبلوكات. طبقة ثابتة فوق الممتلئ — مبتتحركش
+   فمبتكلّفش حاجة، والنتيجة شكل الشريط المقسّم بتاع الترمينال. */
+.progressGrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 5px,
+    var(--bg-color) 5px,
+    var(--bg-color) 7px
+  );
+}
+
+/* كلمة الحالة — بتوصف الحاجة اللي المتصفح بيعملها فعلاً عند النسبة دي.
+   عرض ثابت عشان الشريط مايتزحلقش لما الكلمة تتغيّر. */
+.progressPhase {
+  flex-shrink: 0;
+  width: 9.5rem;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.progressPct {
+  flex-shrink: 0;
+  min-width: 4.5rem;
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-color);
+  /* الأرقام بعرض ثابت — من غير كده الشريط بيهتز يمين وشمال وهو بيعدّ
+     لأن "1" أضيق من "8". */
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── اللافتات الجانبية ─────────────────────────────────────────────── */
 
 .sideLabelLeft,
 .sideLabelRight {
@@ -172,39 +359,109 @@
   font-size: 0.9rem;
   font-family: var(--font-mono);
   font-weight: 700;
-  /* a11y: raised from 0.2 → 0.38 opacity so the label is still readable
-     (it's brief loading-screen text, not purely decorative) */
+  /* a11y: 0.38 مش 0.2 — ده نص مقروء لثانية، مش زخرفة خالصة */
   color: rgba(255, 255, 255, 0.38);
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
 .sideLabelLeft { left: 2.2rem; }
-.sideLabelRight { right: 2.2rem; }
+.sideLabelRight { right: 2.2rem; font-family: var(--font-jp); }
 
 @keyframes speedDrift {
   from { background-position: 0 0; }
   to { background-position: 240px 0; }
 }
 
+/* ── الموبايل ──────────────────────────────────────────────────────── */
+
 @media (max-width: 640px) {
-  .outerRing { width: 11rem; height: 11rem; }
-  .symbol { font-size: 3.8rem; }
-  .bootText { margin-top: 4.4rem; padding-inline: 1.6rem; }
-  .sideLabelLeft,
-  .sideLabelRight { bottom: 1.6rem; }
+  .console { width: calc(100vw - 3.2rem); }
+
+  /* العلامة ٤٦ حرف عرض — على شاشة تليفون بتتكسر لسطرين وتبقى شخبطة.
+     الـ 師 في شريط العنوان بيحمل نفس المعنى في مساحة أصغر. */
+  .wordmark { display: none; }
+
+  /* المسار الكامل مالوش مكان جنب الساعة */
+  .consolePath { font-size: 1rem; }
+  .clock { font-size: 0.95rem; }
+
+  /* الشريط بياخد كل العرض؛ كلمة الحالة بتنزل تحته */
+  .progressWrap { flex-wrap: wrap; }
+  .progressPhase { order: 3; width: auto; flex: 1; }
+  .progressTrack { flex-basis: 100%; order: 1; }
+  .progressPct { order: 2; }
+
+  .consoleBody {
+    height: 15rem;
+    padding: 1.1rem;
+  }
+
+  .logLine {
+    font-size: 1.05rem;
+    gap: 0.6rem;
+    /* على شاشة ضيقة السطر بـ ٤ أعمدة بيتكسر وحش. القيمة بتنزل تحت
+       الاسم، والنقط بتختفي لأن مبقاش فيه مسافة تتملى. */
+    flex-wrap: wrap;
+  }
+
+  .logDots { display: none; }
+
+  .logValue {
+    flex-basis: 100%;
+    text-align: left;
+    padding-left: 5.1rem;
+  }
+
   .cornerTopLeft,
   .cornerTopRight,
   .cornerBottomLeft,
   .cornerBottomRight { width: 3.6rem; height: 3.6rem; }
+
+  .sideLabelLeft,
+  .sideLabelRight { bottom: 1.6rem; }
 }
+
+/* لابتوب قصير أو تليفون في وضع أفقي: الكونسول كله (شريط + علامة +
+   ٧ سطور + الشريط) بيوصل ٣٣rem. تحت ٧٢٠px ارتفاع بيبدأ يزاحم حواف
+   الشاشة، فبنقلّل السجل بدل ما نقص من العلامة. */
+@media (max-height: 720px) {
+  .wordmark { padding-top: 1rem; padding-bottom: 0; }
+  .consoleBody { height: 13rem; }
+}
+
+@media (max-height: 560px) {
+  .wordmark { display: none; }
+  .consoleBody { height: 11rem; }
+}
+
+@media (max-width: 380px) {
+  /* أقل من كده الأركان بتزاحم الكونسول */
+  .cornerBottomLeft,
+  .cornerBottomRight { display: none; }
+}
+
+/* ── التفضيلات ─────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .speedLines { animation: none; }
+  .logLine { animation: none; }
+  .logCaret { animation: none; opacity: 1; }
+  /* الشريط لسه بيتحرك — ده مؤشر حالة حقيقي، مش زخرفة. بس من غير
+     تنعيم، بيقفز للقيمة الجديدة على طول. */
+  .progressFill { transition: none; }
 }
 
 @media (forced-colors: active) {
   .loader { background: Canvas; }
-  .outerRing { border-color: ButtonText; border-top-color: Highlight; }
+  /* background-clip: text بيخلي الحروف شفافة — في الوضع ده التدرّج
+     بيتشال والحروف بتختفي خالص. نرجّعها لون صريح. */
+  .wordmarkRow {
+    -webkit-text-fill-color: CanvasText;
+    background: none;
+    color: CanvasText;
+  }
+  .console { border-color: ButtonText; }
   .progressFill { background: Highlight; }
+  .progressGrid { display: none; }
 }

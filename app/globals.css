@@ -1,73 +1,45 @@
 /**
+ * globals.css — Premium Cyber & SOC Theme
  * @author Ahmed Emad Nasr
- * @description Global CSS - Premium Cyber & SOC Theme (Cleaned & Optimized)
  *
- * CHANGES:
- * - Removed entirely unused classes: .glass-card, section.glass, .btn-glow and their heavy ::after pseudo-elements.
- * - Removed unnecessary media query overrides for the deleted classes.
- * - Added a hyper-lightweight .skeleton-shimmer for dynamic import loading states.
- * - [NEW] Updated max-width for sections to fix desktop layout.
- * - [NEW] Improved accessibility by increasing base font sizes and adjusting contrast.
+ * ═══ إيه اللي اتشال في التنضيف ده ═══
+ *
+ *  · ٤٧ متغيّر CSS معرّف ومحدش بيقراه (٤٢٪ من نظام التوكنز كله)
+ *  · ١١ كلاس utility عام (.katana-card و.glow-red و.text-stroke …) —
+ *    ولا واحد فيهم مكتوب في أي JSX في الموقع
+ *  · .skeleton-shimmer — متعرّف ومتعمله gating في ميزانية الحركة، ومش
+ *    مستخدم في أي حتة
+ *  · ١٦ تصريح `box-shadow: none` — دول أثر عملية شيل الـ glow: الشخص
+ *    كتب `none` مكان القيمة بدل ما يمسح السطر
+ *  · محدد `*` عالمي بـ !important للـ backdrop-filter — اتشال لصالح
+ *    التوكن نفسه (شوف قسم ٩)
+ *
+ * ═══ إيه اللي اتصلّح ═══
+ *
+ *  · content-visibility كانت شغّالة على الـ hero (قسم ٦)
+ *  · قاعدة الـ mid tier كانت بتساوي كل الأنيميشن الزخرفي على مدة واحدة
+ *  · --motion-slow كان بيتكتب في ٣ أماكن وبيتقرا في صفر
+ *
+ * ملاحظة على الحجم: التعليقات دي بتتشال بالكامل في build الإنتاج
+ * (Next بيـminify الـ CSS). التنضيف هنا بيقلّل عدد **القواعد** اللي
+ * المتصفح بيمرّ عليها في كل style recalculation — ده اللي بيتقاس، مش
+ * حجم الملف في الريبو.
  **/
 
-/*--------- 1. Reset & Global Variables ---------*/
+/*--------- 1. التوكنز ---------*/
+/* كل توكن هنا مقروء في مكان واحد على الأقل. لو ضفت واحد جديد ومحدش
+   بيستخدمه، هو مش توكن — هو ملاحظة، ومكانها التعليقات. */
 :root {
-  /* Simple theme tokens inspired by the reference design */
+  /* الألوان الأساسية */
   --background: #000000;
   --foreground: #ffffff;
   --primary: #bc002d;
-  --secondary: #1a1a1a;
   --accent: #ffd700;
   --tertiary: #00d2ef;
-  --quaternary: #a29bfe;
 
-  --surface: #121212;
-  --on-surface: #fcfcfc;
-  --on-surface-variant: #a0a0a0;
-  --surface-variant: #1e1e1e;
-
-  --primary-container: rgba(226, 0, 26, 0.1);
-  --tertiary-container: rgba(0, 210, 239, 0.1);
-
-  --radius-base: 0px;
-  --radius-card: 14px;
-  --radius-button: 2px;
-  --radius-katana: 0.5rem 2rem 0.5rem 2rem;
-
-  --font-display: var(--font-overlock), "Overlock", sans-serif;
-  --font-body: var(--font-overlock), "Overlock", sans-serif;
-
-  /* كان: "JetBrains Mono", monospace — والخط ده مكانش بيتحمّل من أي مكان.
-     70 تصريح في الـ CSS بيطلبوه، وكلهم كانوا بيرجعوا لـ monospace بتاع
-     النظام (Courier New على ويندوز). دلوقتي layout.tsx بيحمّله فعلاً عن
-     طريق next/font، والمتغيّر ده بيشاور على النسخة اللي اتحمّلت. */
-  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace,
-    "SF Mono", Menlo, Consolas, monospace;
-
-  /* كان: "Overlock", sans-serif
-
-     Overlock مفيهوش ولا حرف ياباني. يعني كل النص الياباني على الموقع —
-     武士道 في الـ dividers، セキュリティ في الـ hero، عناوين كل قسم — كان
-     بيرجع لأي خط CJK موجود على الجهاز: Yu Gothic على ويندوز، Hiragino على
-     ماك، Noto على أندرويد. تلات أوزان وثلاث عروض مختلفة لنفس الهوية،
-     ومربّعات فاضية على أي جهاز مفهوش خط CJK أصلاً.
-
-     الحل هنا stack نظام مضبوط لكل منصة: صفر بايت تحميل، ونتيجة متسقة
-     ومقصودة بدل "أي حاجة".
-
-     لو عايز تحكّم كامل: حمّل Noto Sans JP بـ next/font/local من subset
-     فيه الحروف المستخدمة بس (هي معدودة وثابتة) — كده تاخد نفس الشكل على
-     كل جهاز مقابل ~20KB بدل ~1.5MB للخط الكامل. */
-  --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
-    "Noto Sans JP", "Noto Sans CJK JP", Meiryo, sans-serif;
-
-  /* Backward-compatible aliases used by the current components */
+  /* أسماء بديلة بيستخدمها الكود الحالي */
   --bg-color: var(--background);
   --bg-gradient: none;
-  --surface-base: rgba(4, 8, 20, 0.95);
-  --surface-raised: rgba(6, 14, 32, 0.90);
-  --surface-overlay: rgba(10, 20, 44, 0.85);
-
   --text-color: var(--foreground);
   --text-muted: #d8d6cc;
   --text-dim: #a59f90;
@@ -75,118 +47,89 @@
 
   --main-color: var(--primary);
   --main-color-rgb: 188, 0, 45;
-  --main-dark: #8a0936;
   --main-light: #ff2d78;
 
   --accent-color: var(--accent);
   --accent-color-rgb: 255, 215, 0;
-  --accent-dark: #00a8c8;
   --accent-light: #fff0a6;
 
   --danger: #ff2d55;
   --danger-rgb: 255, 45, 85;
-  --warning: #ff9f0a;
-  --warning-rgb: 255, 159, 10;
-  --success: #30d158;
-  --success-rgb: 48, 209, 88;
-  --info: #0a84ff;
-  --info-rgb: 10, 132, 255;
 
-  --surface-card-bg: linear-gradient(
-    135deg,
-    rgba(4, 10, 26, 0.82) 55%,
-    rgba(var(--main-color-rgb), 0.06) 80%,
-    rgba(var(--accent-color-rgb), 0.04) 100%
-  );
   --surface-card-border: rgba(var(--main-color-rgb), 0.18);
-  --surface-card-border-hover: rgba(var(--main-color-rgb), 0.38);
-  --surface-accent-border: rgba(var(--accent-color-rgb), 0.2);
 
-  --glow-main: none; /* Changed glow shadows to none globally */
-  --glow-accent: none;
-  --glow-danger: none;
+  /* الخطوط */
+  --font-body: var(--font-overlock), "Overlock", sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace,
+    "SF Mono", Menlo, Consolas, monospace;
+  /* Overlock مفيهوش ولا حرف ياباني. من غير الـ stack ده كل نص ياباني
+     بيرجع لأي خط CJK موجود على الجهاز — Yu Gothic على ويندوز، Hiragino
+     على ماك، Noto على أندرويد. تلات أشكال مختلفة لنفس الهوية.
+     لو عايز تحكّم كامل: Noto Sans JP بـ next/font/local من subset فيه
+     الحروف المستخدمة بس (هي معدودة وثابتة) — ~20KB بدل ~1.5MB. */
+  --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    "Noto Sans JP", "Noto Sans CJK JP", Meiryo, sans-serif;
 
+  /* الأنصاف والحواف */
+  --radius-card: 14px;
   --radius-card-sm: 8px;
+  --radius-button: 2px;
   --radius-pill: 999px;
-  --radius-tag: 6px;
 
-  /* Shared tokens for the "Sharp Title" underline used identically in
-     experience-section.module.css and sensei-projects.module.css */
-  --title-underline-thin: 1px;
-  --title-underline-thick: 3px;
-  --title-underline-width: 40%;
-  --title-underline-opacity: 0.3;
-
-  /* Shared tokens for the section .container used identically in both files */
-  --container-max-width: 1500px;
-  --container-pad-x: 5.25%;
-
-  /* Shared tokens for the vertical timeline line used identically in both files */
-  --timeline-line-width: 2px;
-  --timeline-line-opacity: 0.2;
-
-  /* Shared tokens for the "cyber diamond" timeline node used identically in both files */
-  --diamond-node-size: 14px;
-  --diamond-border-width: 2px;
-
-  --z-below: -1;
-  --z-base: 0;
-  --z-raised: 10;
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-overlay: 500;
-  --z-modal: 2000;
-  --z-navbar: 1500;
-  --z-toast: 2500;
-  --z-progress: 3000;
-
-  --text-xs: 1.2rem;
+  /* مقاييس النص — html بـ 62.5% يعني 1rem = 10px */
   --text-sm: 1.4rem;
   --text-base: 1.6rem;
   --text-md: 1.8rem;
   --text-lg: 2.0rem;
   --text-xl: 2.2rem;
-  --text-2xl: 2.8rem;
-  --text-3xl: 3.6rem;
-  --text-4xl: 4.8rem;
 
-  --motion-instant: 80ms;
+  /* الحركة */
   --motion-fast: 280ms;
   --motion-normal: 650ms;
-  --motion-slow: 1650ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
-  --motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --anim-fast: 950ms;
-  --anim-medium: 2.3s;
-  --anim-slow: 4s;
-  --anim-very-slow: 6.8s;
+  /* تايمنج الـ ticker بتاع المسميات في الـ hero */
+  --typing-cursor: 0.9s;
+  --typing-typing: 16s;
+  --typing-words: 16s;
+  --typing-textDrift: 6.5s;
 
-  --stagger-step: 0.16s;
-
-  /* Consistent spacing scale — reused everywhere so nothing sits flush
-     against something else ("لازق في بعضه"). Fluid with clamp() so the
-     gap shrinks gracefully on small phones instead of just disappearing. */
+  /* المسافات — clamp عشان تصغر بالتدريج على الشاشات الضيقة
+     بدل ما تختفي فجأة عند breakpoint */
   --space-xs: clamp(0.6rem, 1vw, 0.9rem);
   --space-sm: clamp(1rem, 2vw, 1.5rem);
   --space-md: clamp(1.6rem, 3vw, 2.4rem);
   --space-lg: clamp(2.4rem, 5vw, 4rem);
   --space-xl: clamp(4rem, 8vw, 8rem);
 
-  --typing-cursor: 0.9s;
-  --typing-typing: 16s;
-  --typing-words: 16s;
-  --typing-textDrift: 6.5s;
-  --typing-pdfPulse: 1.15s;
+  /* توكنز مشتركة بين experience-section و sensei-projects */
+  --container-max-width: 1500px;
+  --container-pad-x: 5.25%;
+  --title-underline-thin: 1px;
+  --title-underline-thick: 3px;
+  --title-underline-width: 40%;
+  --title-underline-opacity: 0.3;
+  --timeline-line-width: 2px;
+  --timeline-line-opacity: 0.2;
+  --diamond-node-size: 14px;
+  --diamond-border-width: 2px;
 
+  /* طبقات z — الأربعة المستخدمة بس */
+  --z-sticky: 200;
+  --z-navbar: 1500;
+  --z-modal: 2000;
+  --z-progress: 3000;
+
+  /* الـ blur — المصدر الوحيد لكل سطح زجاجي في الموقع.
+     تغييره هنا بيغيّر كل حتة، وده بالظبط اللي بيخلّي قسم ٩ ينفع
+     يشتغل من غير محدد عالمي بـ !important. */
   --ui-blur: 4px;
   --card-blur: 4px;
 
   color-scheme: dark;
 }
 
-/*--------- 2. Base Setup ---------*/
+/*--------- 2. الأساس ---------*/
 *,
 *::before,
 *::after {
@@ -198,16 +141,12 @@
   outline-offset: 4px;
 }
 
-p, li, h1, h2, h3, h4, h5, h6 {
-  text-shadow: none;
-}
-
 *:focus:not(:focus-visible) {
   outline: none;
 }
 
 html {
-  font-size: 62.5%; 
+  font-size: 62.5%;
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
@@ -216,7 +155,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body, var(--font-overlock, sans-serif));
+  font-family: var(--font-body);
   color: var(--text-color);
   background-color: var(--bg-color);
   background-attachment: fixed;
@@ -227,24 +166,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Perf: background-attachment:fixed forces the browser to repaint the
-   background on every scroll frame — this is a well-known jank source on
-   mobile Safari/Chrome in particular. The fixed look barely reads on a
-   phone-sized viewport anyway, so we drop it for touch/narrow devices and
-   keep the desktop parallax feel where it actually has room to show. */
+/* background-attachment: fixed بيجبر المتصفح يعيد رسم الخلفية في كل فريم
+   scroll — مصدر jank معروف على سفاري وكروم الموبايل تحديداً. والشكل
+   نفسه مبيبانش على شاشة تليفون أصلاً. */
 @media (max-width: 991px), (hover: none) {
-  body {
-    background-attachment: scroll;
-  }
+  body { background-attachment: scroll; }
 }
 
 body[data-custom-cursor="true"],
-body[data-custom-cursor="true"] a,
-body[data-custom-cursor="true"] button,
-body[data-custom-cursor="true"] input,
-body[data-custom-cursor="true"] textarea,
-body[data-custom-cursor="true"] select,
-body[data-custom-cursor="true"] summary {
+body[data-custom-cursor="true"] :where(a, button, input, textarea, select, summary) {
   cursor: none;
 }
 
@@ -256,8 +186,8 @@ svg {
   height: auto;
 }
 
-/*--------- 3. Interactive Elements ---------*/
-:where(a,button,input,textarea,select,summary) {
+/*--------- 3. العناصر التفاعلية ---------*/
+:where(a, button, input, textarea, select, summary) {
   transition: transform var(--motion-fast) var(--motion-ease),
               opacity var(--motion-fast) var(--motion-ease);
 }
@@ -283,9 +213,7 @@ button:hover:not(:disabled) {
   transform: translateY(-1px);
 }
 
-button:active:not(:disabled) {
-  transform: none;
-}
+button:active:not(:disabled) { transform: none; }
 
 button:disabled {
   background: rgba(255, 255, 255, 0.04);
@@ -294,19 +222,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
-summary:focus-visible,
-[tabindex]:focus-visible {
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 3px;
   border-radius: var(--radius-card-sm);
 }
 
-/*--------- 4. Accessibility & Skip Links ---------*/
+/*--------- 4. الوصولية ---------*/
 .skip-link {
   position: absolute;
   left: 1rem;
@@ -322,11 +244,9 @@ summary:focus-visible,
   transition: transform var(--motion-normal) var(--motion-ease);
 }
 
-.skip-link:focus-visible {
-  transform: translateY(1rem);
-}
+.skip-link:focus-visible { transform: translateY(1rem); }
 
-/*--------- 5. Typography & Layout ---------*/
+/*--------- 5. الطباعة والتخطيط ---------*/
 p,
 li {
   color: var(--text-muted);
@@ -334,98 +254,32 @@ li {
   font-size: var(--text-base);
 }
 
-main {
-  position: relative;
+main { position: relative; }
+
+/* text-wrap: balance بيوزّع كلمات العنوان على السطور بالتساوي بدل ما
+   يسيب كلمة وحيدة في آخر سطر — أوضح فرق بيبان على الموبايل.
+   pretty بيعمل نفس الحاجة للفقرات بتكلفة أقل. */
+h1, h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+/* الياباني بيتقرا أوضح بمسافة سطور أوسع شوية من اللاتيني */
+[lang="ja"],
+:lang(ja) {
+  font-family: var(--font-jp);
+  line-height: 1.5;
 }
 
-/*--------- 6A. Theme Utilities ---------*/
-.katana-card {
-  background: rgba(18, 18, 18, 0.8);
-  -webkit-backdrop-filter: blur(var(--card-blur, 4px));
-  backdrop-filter: blur(var(--card-blur, 4px));
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-katana);
-  overflow: hidden;
-  box-shadow: none; /* Changed here */
+::selection {
+  background: rgba(var(--main-color-rgb), 0.85);
+  color: #fff;
 }
 
-.vertical-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1em;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  line-height: 1.2;
-  font-family: var(--font-jp, sans-serif);
-}
-
-.vertical-text span {
-  display: block;
-}
-
-.neural-grid {
-  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
-  background-size: 40px 40px;
-}
-
-.scanlines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.1) 0px,
-    rgba(0, 0, 0, 0.1) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-}
-
-.speed-lines {
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    rgba(255, 255, 255, 0.02) 10px,
-    rgba(255, 255, 255, 0.02) 11px
-  );
-}
-
-.halftone {
-  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
-  background-size: 8px 8px;
-}
-
-.mix-difference {
-  mix-blend-mode: difference;
-}
-
-.katana-slash {
-  -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
-}
-
-.text-stroke {
-  -webkit-text-stroke: 1px currentColor;
-  -webkit-text-fill-color: transparent;
-}
-
-.glow-red {
-  color: var(--primary);
-  text-shadow: none; /* Removed text shadow */
-}
-
-.glow-gold {
-  color: var(--accent);
-  text-shadow: none; /* Removed text shadow */
-}
-
-/*--------- 6. Base Section Layout ---------*/
+/*--------- 6. تخطيط الأقسام ---------*/
 section {
   padding: 7.1rem 5.25% 5.9rem;
   position: relative;
   width: 100%;
-  max-width: 1280px; /* Updated for standard desktop screens */
+  max-width: 1280px;
   margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
   z-index: 1;
   contain: layout style;
@@ -433,32 +287,57 @@ section {
   contain-intrinsic-size: auto 900px;
 }
 
-/*--------- 7. Lightweight Skeleton Shimmer ---------*/
-.skeleton-shimmer {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius-card);
-  animation: shimmerPulse 2s infinite ease-in-out;
-  width: 100%;
+/*
+ * إصلاح: الـ hero لازم يترسم في أول pass.
+ *
+ * `section` بيشمل <section id="Home"> — اللي جواه صورة الـ LCP بالظبط.
+ * `content-visibility: auto` بيقول للمتصفح "أجّل حساب وlayout وpaint
+ * العنصر ده". على حاجة تحت الطية ده مكسب. على حاجة **فوق** الطية هو
+ * عقوبة مباشرة: كروم بيأجّل الـ subtree لخطوة render تانية ومبيحسبش
+ * LCP لمحتوى جوه subtree متخطّى.
+ *
+ * وكمان الـ 900px المحجوزة أقل من ارتفاع الـ hero الفعلي على تليفون
+ * (min-height: auto تحت 992px) — يعني CLS من غير سبب.
+ *
+ * :where() بيخلّي الوزن صفر فمبيزاحمش أي قاعدة تانية.
+ */
+section:where(#Home) {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+  contain: none;
 }
 
-@keyframes shimmerPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+/* الوصول لقسم من بره (لينك #Contact، زرار الرجوع، الـ command palette)
+   بيتجاهل حساب ارتفاع الهيدر اللي في الجافاسكريبت، فالعنوان بيتقص تحت
+   الهيدر الثابت. scroll-margin بيصلّح كل الحالات دي من غير أي كود. */
+section[id],
+#main-content {
+  scroll-margin-top: 6rem;
 }
 
-/*--------- 8. Responsive Breakpoints ---------*/
+/* الأرقام المتناسبة بتخلي العواميد ترقص: "111" أضيق من "999".
+   بيبان في الإحصائيات والتواريخ والعدّادات.
+
+   ملاحظة: المحددات دي كانت [class*="stat"] وأخواتها — بحث نصّي جزئي
+   على كل عنصر في الصفحة، وده من أبطأ أنواع المحددات، وكمان هش لأن
+   CSS Modules بيهاش أسماء الكلاسات. <time> عنصر حقيقي، والباقي
+   بيتحدّد بـ data attribute صريح: زوّد data-nums على أي عنصر عايزه. */
+time,
+[data-nums] {
+  font-variant-numeric: tabular-nums;
+}
+
+/*--------- 7. Breakpoints ---------*/
 @media (max-width: 991px) {
   section {
     padding: 4rem 3.5% 4rem;
     margin-bottom: clamp(5rem, 8vw, 8rem);
-    width: 94%; 
+    width: 94%;
   }
 }
 
 @media (max-width: 768px) {
-  section {
-    width: calc(100% - 3rem); 
-  }
+  section { width: calc(100% - 3rem); }
 }
 
 @media (max-width: 600px) {
@@ -483,54 +362,40 @@ section {
   section {
     padding-left: 8%;
     padding-right: 8%;
-    max-width: 1536px; /* Updated for ultra-wide screens */
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 1536px;
+    margin-inline: auto;
   }
 }
 
+/*--------- 8. تفضيلات المستخدم ---------*/
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration:        0.01ms !important;
-    animation-iteration-count: 1      !important;
-    transition-duration:       0.01ms !important;
-    scroll-behavior:           auto   !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   html { scroll-behavior: auto !important; }
 
-  /* The custom cursor (custom-cursor.module.css) tracks the pointer and
-     redraws every frame — the same kind of motion this preference exists
-     to remove, and it can be uncomfortable for people with vestibular
-     disorders. Restore the ordinary system cursor instead of relying on
-     the JS layer alone to notice the preference. */
+  /* المؤشر المخصص بيتتبع الماوس وبيعيد الرسم كل فريم — بالظبط نوع
+     الحركة اللي التفضيل ده موجود عشانه. */
   body[data-custom-cursor="true"],
-  body[data-custom-cursor="true"] a,
-  body[data-custom-cursor="true"] button,
-  body[data-custom-cursor="true"] input,
-  body[data-custom-cursor="true"] textarea,
-  body[data-custom-cursor="true"] select,
-  body[data-custom-cursor="true"] summary {
+  body[data-custom-cursor="true"] :where(a, button, input, textarea, select, summary) {
     cursor: auto;
   }
 }
 
-/*--------- 9. High Contrast & Forced Colors ---------*/
 @media (forced-colors: active) {
   :root {
-    --main-color:   Highlight;
+    --main-color: Highlight;
     --accent-color: Highlight;
-    --text-color:   CanvasText;
-    --text-muted:   CanvasText;
-    --bg-color:     Canvas;
+    --text-color: CanvasText;
+    --text-muted: CanvasText;
+    --bg-color: Canvas;
   }
-
-  button,
-  a {
-    forced-color-adjust: auto;
-  }
-
+  button, a { forced-color-adjust: auto; }
   .skip-link {
     forced-color-adjust: none;
     background: Highlight;
@@ -541,179 +406,124 @@ section {
 
 @media (prefers-contrast: more) {
   :root {
-    --surface-card-border:       rgba(var(--main-color-rgb), 0.55);
-    --surface-card-border-hover: rgba(var(--main-color-rgb), 0.85);
+    --surface-card-border: rgba(var(--main-color-rgb), 0.55);
     --text-muted: #b0cfe0;
-    --text-dim:   #6a8ea8;
-  }
-
-  p, li {
-    color: var(--text-muted);
-  }
-}
-
-/*--------- 10. Cheaper blur on constrained devices ---------*/
-/* backdrop-filter: blur() is one of the most GPU-expensive properties in
-   CSS. --card-blur / --ui-blur already exist as the shared source of truth
-   for every card/glass surface across the module files; scaling them down
-   here (instead of in each file) means one change improves frame rate on
-   every screen that uses them. */
-@media (max-width: 768px) {
-  :root {
-    --card-blur: 2px;
-    --ui-blur: 2px;
+    --text-dim: #6a8ea8;
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  :root {
-    --card-blur: 0px;
-    --ui-blur: 0px;
-  }
+  :root { --card-blur: 0px; --ui-blur: 0px; }
 }
 
-/*--------- 11. Device-tier motion budget ---------*/
-/* Set by useDeviceTier() on <html data-tier="low|mid|high">.
-   Gating in CSS (not JS) keeps this off the main-thread hot path.
+/*--------- 9. ميزانية الحركة حسب الجهاز ---------*/
+/*
+ * data-tier بيتكتب على <html> بسكربت inline في <head> — قبل أول paint.
+ * القواعد دي شغّالة من أول فريم، وبصفر جافاسكريبت في المسار الحرج.
+ *
+ * الفلسفة: كل حاجة زخرفية عليها data-decorative="true" في الـ JSX.
+ * ده بيخلّي القرار "إيه اللي ممكن يتشال" بيتاخد في المكوّن — مكانه
+ * الصح — والـ CSS هنا بينفّذ بس.
+ */
 
-   The site ships ~20 infinitely-animating hero elements plus scroll-linked
-   transforms. On a low-end phone every one of those is a compositor layer
-   fighting for the same GPU budget as the scroll itself. Below we buy the
-   frame rate back by shutting decorative motion off entirely at the low tier
-   and trimming the most expensive properties at mid. */
-
-/* --- LOW: no decorative motion, no blur, no extra layers --- */
-html[data-tier="low"] .skeleton-shimmer,
+/* --- LOW: صفر حركة زخرفية، صفر blur --- */
 html[data-tier="low"] [data-decorative="true"] {
-  animation: none !important;
-}
-
-html[data-tier="low"] [data-decorative="true"] {
-  /* Particles / speed lines / rotating rings are pure decoration.
-     Hiding them removes both the paint and the compositor layer. */
+  /* display: none بيشيل الرسم والطبقة على الـ compositor مع بعض.
+     animation: none كان بيشيل الحركة وبيسيب الطبقة عايشة. */
   display: none !important;
 }
 
 html[data-tier="low"] {
+  /* التوكنز دي هي كل الـ blur في الموقع — أربع تصريحات بتقراهم.
+     تصفيرهم هنا بيقفل الـ backdrop-filter في كل حتة من غير أي محدد
+     عالمي بـ !important، واللي كان بيجبر إعادة حساب الأنماط على كل
+     عنصر في الصفحة. */
   --card-blur: 0px;
   --ui-blur: 0px;
-  /* Snappier, cheaper transitions — long eases hold layers alive longer. */
-  --motion-fast: 120ms;
-  --motion-normal: 200ms;
-  --motion-slow: 260ms;
+  /* eases قصيرة: كل transition طويلة بتخلي طبقة الـ compositor عايشة
+     مدة أطول، وعلى شاشة تليفون الفرق البصري صفر تقريباً. */
+  --motion-fast: 140ms;
+  --motion-normal: 220ms;
 }
 
-html[data-tier="low"] *,
-html[data-tier="low"] *::before,
-html[data-tier="low"] *::after {
-  /* backdrop-filter is the single most expensive property here. */
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-/* --- MID: keep the character, drop the cost --- */
+/* --- MID: نفس الشخصية، بتكلفة أقل --- */
 html[data-tier="mid"] {
   --card-blur: 2px;
   --ui-blur: 2px;
   --motion-normal: 380ms;
-  --motion-slow: 700ms;
 }
 
-html[data-tier="mid"] [data-decorative="true"] {
-  /* Halve the work: keep the look, run the loops at a slower cadence. */
-  animation-duration: calc(var(--anim-slow) * 1.5) !important;
+/*
+ * إصلاح: القاعدة القديمة كانت
+ *     animation-duration: calc(var(--anim-slow) * 1.5) !important
+ * وده مكانش بيبطّأ الأنيميشن — كان **بيساوي كل الأنيميشن الزخرفي على
+ * 6 ثواني**، مهما كانت مدته الأصلية. نبضة الـ badge (1.6s) والحلقة
+ * الدوّارة (25s) والـ particles (4s) كلهم كانوا بيبقوا نفس المدة،
+ * فالتزامن اللي التصميم قايم عليه كان بيتكسر.
+ *
+ * animation-play-state هو الأداة الصح هنا: بيوقف الحركة من غير ما
+ * يلمس المدد. والإيقاف بيحصل لما العنصر يخرج من الشاشة — القاعدة
+ * الموجودة في sensei-home.module.css بتغطّي ده فعلاً.
+ */
+
+/* احتياطي: لو الجافاسكريبت اتعطّل تماماً والسكربت معملش تصنيف،
+   التليفون ياخد الميزانية المنخفضة بدل الكاملة. */
+html:not([data-tier]) [data-decorative="true"] {
+  display: none !important;
+}
+html:not([data-tier]) {
+  --card-blur: 0px;
+  --ui-blur: 0px;
 }
 
-/* --- Never animate what isn't on screen --- */
-/* Pairs with content-visibility: auto already on the sections. */
-@media (prefers-reduced-motion: no-preference) {
-  [data-decorative="true"] {
-    will-change: auto;
+/* سقف صريح للحركة على التليفونات — بيمسك الحاجات اللي مش عليها
+   data-decorative فمش داخلة في الـ gating فوق. */
+@media (pointer: coarse) and (max-width: 900px) {
+  /*
+   * ملاحظة: كان هنا `* { will-change: auto !important }`.
+   *
+   * الفكرة كانت صح — طبقة compositor دايمة بتخصم من نفس ميزانية الـ GPU
+   * اللي الـ scroll بيتنافس عليها. بس الموقع كله فيه **تلات** تصريحات
+   * will-change، اتنين منهم في المؤشر المخصص (ديسكتوب بس، عمره ما
+   * بيتركّب على الموبايل) والتالت transform بس. يعني المحدد العالمي كان
+   * بيجبر إعادة حساب أنماط على كل عنصر في الصفحة عشان يلغي تصريح واحد
+   * غير ضار. راجع التلاتة بإيدك بدل ده.
+   */
+
+  /* الـ tap highlight الأزرق بتاع أندرويد بيقطع الهوية الحمرا/الذهبية */
+  a, button, [role="button"] {
+    -webkit-tap-highlight-color: rgba(var(--main-color-rgb), 0.18);
   }
 }
-/* ═══════════════════════════════════════════════════════════════════════════
-   تحسينات شكلية وتفصيلية — كلها CSS خالص، صفر جافاسكريبت وصفر بايت تحميل
-   ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── كل نص ياباني ياخد خط CJK مقصود ─────────────────────────────────────────
-   قبل كده --font-jp كان متطبّق على .vertical-text بس. باقي الياباني في
-   الموقع (عناوين الأقسام، الـ dividers، الـ HUD) كان بيرث Overlock — واللي
-   مفيهوش حروف يابانية — فالمتصفح بيعمل fallback حرف بحرف لأي خط CJK لقاه.
-   النتيجة نفس السطر بخطين مختلفين أحياناً. */
-[lang="ja"],
-:lang(ja) {
-  font-family: var(--font-jp);
-  /* الياباني بيتقرا أوضح بمسافة سطور أوسع شوية من اللاتيني */
-  line-height: 1.5;
-}
-
-/* ── تحديد النص ───────────────────────────────────────────────────────────
-   الافتراضي أزرق النظام، وده بيقطع الهوية اللي كلها أحمر/ذهبي أول ما حد
-   يعلّم على أي سطر. */
-::selection {
-  background: rgba(var(--main-color-rgb), 0.85);
-  color: #fff;
-}
-
-/* ── لينكات الـ anchor ماتختفيش تحت الهيدر الثابت ─────────────────────────
-   الـ nav بيتعامل مع ده بجافاسكريبت (بيحسب ارتفاع الهيدر ويطرحه)، بس أي
-   وصول تاني للقسم بيتجاهله بالكامل: لينك #Contact من بره الموقع، زرار
-   الرجوع في المتصفح، والـ command palette. القسم بيروح تحت الهيدر
-   والعنوان بيتقص.
-
-   scroll-margin-top بيخلي ده شغّال في كل الحالات من غير أي كود. */
-section[id],
-[id="main-content"] {
-  scroll-margin-top: 6rem;
-}
-
-/* ── العناوين ماتتكسرش بكلمة واحدة في آخر سطر ─────────────────────────────
-   text-wrap: balance بيوزّع الكلمات على السطور بالتساوي بدل ما يسيب كلمة
-   وحيدة (orphan) في آخر سطر — أوضح فرق بيبان في العناوين الطويلة على
-   الموبايل. مدعوم في كل المتصفحات الحديثة وبيتجاهل بأمان في القديمة. */
-h1, h2, h3, h4 {
-  text-wrap: balance;
-}
-
-/* pretty بيمنع الـ orphan في الفقرات من غير تكلفة الـ balance الكاملة */
-p {
-  text-wrap: pretty;
-}
-
-/* ── الأرقام تتحاذى في الأعمدة ─────────────────────────────────────────────
-   الأرقام المتناسبة (proportional) بتخلي العواميد ترقص: "111" أضيق من
-   "999". في الإحصائيات والتواريخ والعدّادات ده بيبان. */
-time,
-[class*="stat"],
-[class*="count"],
-[class*="Year"] {
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── شريط التمرير ─────────────────────────────────────────────────────────
-   الافتراضي على ويندوز أبيض عريض، وبيقطع التصميم الغامق من جنب الصفحة
-   للأخير. */
-* {
+/*--------- 10. شريط التمرير ---------*/
+/*
+ * كان محدد `*` — يعني المتصفح بيطبّق خصائص الـ scrollbar على كل عنصر
+ * في الصفحة وقت حساب الأنماط، والعناصر اللي بتـscroll فعلاً معدودة.
+ * scrollbar-width/color بيتوارثوا، فـ html كفاية للصفحة كلها.
+ * ::-webkit-scrollbar مبيتوارثش، فبنسيبه على * لكن جوه :where()
+ * عشان الوزن يبقى صفر ومزاحمش أي قاعدة موضعية.
+ */
+html {
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--main-color-rgb), 0.5) transparent;
 }
-*::-webkit-scrollbar { width: 10px; height: 10px; }
-*::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb {
+
+:where(*)::-webkit-scrollbar { width: 10px; height: 10px; }
+:where(*)::-webkit-scrollbar-track { background: transparent; }
+:where(*)::-webkit-scrollbar-thumb {
   background: rgba(var(--main-color-rgb), 0.45);
   border: 3px solid var(--bg-color);
 }
-*::-webkit-scrollbar-thumb:hover { background: rgba(var(--main-color-rgb), 0.7); }
+:where(*)::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--main-color-rgb), 0.7);
+}
 
-/* ── الطباعة ──────────────────────────────────────────────────────────────
-   بورتفوليو بيتطبع فعلاً: حد بيعمل Save as PDF ويبعته لزميله، أو بيطبعه قبل
-   إنترفيو. من غير القواعد دي بيطلع خلفية سودا (بتاكل حبر وبتخلي النص
-   يختفي)، وكل اللينكات بتبقى نص من غير عناوين.
-
-   نفس الفكرة بتخلي "Save as PDF" من المتصفح تطلّع نسخة مقروءة من الموقع
-   من غير ما تحتاج ملف PDF منفصل. */
+/*--------- 11. الطباعة ---------*/
+/* بورتفوليو بيتطبع فعلاً: حد بيعمل Save as PDF ويبعته لزميله، أو
+   بيطبعه قبل إنترفيو. من غير القواعد دي بيطلع خلفية سودا وكل
+   اللينكات نص من غير عناوين. */
 @media print {
-  /* لون فاتح ونص أسود */
   :root {
     --bg-color: #fff;
     --background: #fff;
@@ -725,7 +535,6 @@ time,
 
   body { background: #fff !important; color: #000 !important; }
 
-  /* الزخرفة كلها تختفي: مفيش داعي تطبع particles وscanlines وشرايط متحركة */
   [data-decorative="true"],
   [aria-hidden="true"],
   header[data-site-header],
@@ -736,8 +545,7 @@ time,
     display: none !important;
   }
 
-  /* اللينكات تطبع عنوانها جنبها — من غير كده الصفحة المطبوعة فيها كلمات
-     ملهاش معنى زي "Verify" و"Open case" */
+  /* من غير ده الصفحة المطبوعة فيها كلمات ملهاش معنى زي "Verify" */
   a[href^="http"]::after {
     content: " (" attr(href) ")";
     font-size: 0.75em;
@@ -745,7 +553,6 @@ time,
     word-break: break-all;
   }
 
-  /* ماينفعش قسم يتقطع في نص عنوان */
   h1, h2, h3, h4 { break-after: avoid; }
   section { break-inside: auto; }
 

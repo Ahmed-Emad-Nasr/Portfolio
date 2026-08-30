@@ -1,162 +1,332 @@
 "use client";
 
 /*
- * sensei_loader.tsx — نسخة الموبايل
+ * sensei_loader.tsx — SOC console boot v2
+ * Author: Ahmed Emad Nasr
  *
- * ═══ المشكلتين اللي كانوا هنا ═══
+ * ═══ الفكرة ═══
  *
- * 1) كان بيستنى حدث `load` بتاع الـ window.
- *    `load` مبيضربش غير لما **كل** المصادر تخلص: كل الصور (بما فيها اللي
- *    تحت الطية)، كل الخطوط، كل ملف JS. على تليفون على شبكة متوسطة ده بسهولة
- *    3–5 ثواني والشاشة سودا. اللي محتاجينه هو "المحتوى الأساسي اتعرض"،
- *    وده `DOMContentLoaded` — بيضرب أبكر بكتير.
+ * الشاشة دي أول حاجة أي حد بيشوفها، وأغلبهم recruiters. فبدل ما تبقى
+ * spinner بيقول "استنى"، بقت أول معلومة عنك: كونسول SOC بيقلع.
  *
- * 2) كان بيستورد framer-motion (AnimatePresence + m) عشان انيميشن خروج واحد.
- *    ده بيحط محرّك الأنيميشن على المسار الحرج للصفحة الرئيسية عشان fade
- *    ممكن يتعمل بـ CSS transition ببلاش. دلوقتي صفر جافاسكريبت أنيميشن هنا.
+ * والقاعدة اللي الملف كله ماشي عليها: **كل رقم على الشاشة دي حقيقي.**
+ * مفيش عدّاد وهمي ولا شريط بيتحرك على مؤقّت. لو مفيش مصدر حقيقي
+ * للمعلومة، مبتتعرضش.
  *
- * ═══ وعلى التليفون خصوصاً ═══
+ * ═══ اللي بيتعرض، ومنين ═══
  *
- * الـ CSS بيخفي الـ overlay بالكامل على html[data-tier="low"]، والسكربت في
- * <head> بيحدّد الـ tier قبل أول paint. يعني زائر الموبايل **عمره ما يشوف
- * الشاشة السودا** — أول paint هو الـ hero نفسه. ده أكبر مكسب في الـ FCP
- * والـ Speed Index في الملف كله.
+ *  · الشريط         → حالة الـ DOM + نسبة الصور اللي خلصت تحميل
+ *  · الساعة         → وقت الزائر الحقيقي بتوقيت UTC
+ *  · سطر CLIENT     → navigator.connection / hardwareConcurrency /
+ *                     deviceMemory + الـ tier اللي useDeviceTier حسبه
+ *  · سطور الإقلاع   → ثوابت من الـ CV (شوف التعليق تحت)
  *
- * الـ overlay لسه بيترندر في الـ HTML (نفس markup السيرفر والمتصفح، مفيش
- * hydration mismatch) — الـ CSS بس هو اللي بيقرر يوريه ولا لأ.
+ * سطر الـ CLIENT هو المفضّل عندي: المتصفح بيدّي المعلومات دي مجاناً،
+ * والموقع بيحسبها أصلاً عشان ميزانية الحركة. عرضها على شاشة بورتفوليو
+ * أمن معلومات بتقول للزائر "أنا شايف الجهاز اللي بتتفرّج منه" — وده
+ * صادق تماماً وفي نفس الوقت الغمزة الصح للمجال.
+ *
+ * لو حسّيت إنها زيادة، امسح <ClientLine /> وسطر الاستدعاء بتاعها. مفيش
+ * حاجة تانية بتعتمد عليها.
+ *
+ * ═══ حاجة مهمة عن السلوك ═══
+ *
+ * الشاشة دي **عمرها ما بتأخّر المحتوى**. الـ MAX_VISIBLE_MS سقف مطلق:
+ * لو أي صورة علّقت، الشاشة بتتشال والزائر بيكمّل.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, m } from "framer-motion";
 import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import styles from "./sensei_loader.module.css";
 
-const BOOT_LINES = [
-  "INITIALIZING SYSTEMS",
-  "LOADING BUSHIDO PROTOCOL",
-  "CALIBRATING DRIFT ANGLE",
-  "ENGINE CHECK — ALL CLEAR",
-  "BOOST PRESSURE NOMINAL",
-  "SENSEI READY",
+/*
+ * سطور الإقلاع. كل سطر ليه عتبة: مبيظهرش غير لما التقدّم الحقيقي يعدّيها.
+ *
+ * القيم دي منسوخة من config/skills.ts و config/certifications.ts و
+ * config/cases.ts — **مش مستوردة منهم**.
+ *
+ * السبب: الملفين دول ٩ كيلوبايت مع بعض، والملف ده client component على
+ * المسار الحرج للصفحة الرئيسية. استيرادهم كان هيحزّم الـ ٩ كيلوبايت في
+ * bundle كل زائر عشان نقرا سبع سطور.
+ *
+ * التنازل: لو غيّرت شهادة أو مهارة هناك، غيّرها هنا كمان.
+ */
+const BOOT_SEQUENCE = [
+  { at: 0,  tag: "init", label: "console",      value: "SOC-01 · online" },
+  { at: 10, tag: "load", label: "operator",     value: "Ahmed Emad Nasr" },
+  { at: 24, tag: "load", label: "role",         value: "SOC / DFIR Engineer" },
+  { at: 38, tag: "load", label: "siem stack",   value: "Wazuh · ELK · Splunk" },
+  { at: 52, tag: "load", label: "credentials",  value: "eJPT v2 · CCNA · RH124" },
+  { at: 66, tag: "sync", label: "case library", value: "38 reports indexed" },
+  { at: 80, tag: "sync", label: "att&ck map",   value: "tactics mapped" },
+  { at: 94, tag: "ok",   label: "session",      value: "established" },
 ] as const;
 
+/*
+ * كلمة الحالة جنب الشريط. مربوطة بالمرحلة الحقيقية — مش قايمة كلمات
+ * بتتقلب على مؤقّت. كل واحدة بتوصف الحاجة اللي المتصفح بيعملها فعلاً
+ * عند النسبة دي.
+ */
+function phaseLabel(progress: number): string {
+  if (progress < 35) return "parsing dom";
+  if (progress < 99) return "loading media";
+  return "ready";
+}
+
 /** أقل وقت ظهور — بيمنع ومضة فريم واحد وبس. */
-const MIN_VISIBLE_MS = 250;
+const MIN_VISIBLE_MS = 400;
 /** السقف المطلق: عمرنا ما نحبس الزائر، حتى لو مصدر علّق. */
-const MAX_VISIBLE_MS = 1500;
-/** لازم يساوي مدة الـ transition في .leaving داخل الـ CSS. */
-const EXIT_MS = 420;
+const MAX_VISIBLE_MS = 4000;
+/** كل قد إيه نعيد حساب النسبة. ٨ مرات في الثانية كفاية للعين وأرخص من rAF. */
+const POLL_MS = 120;
+
+/* ═══ العلامة ═══
+ * حروف بلوك ٥ صفوف. مولّدة مش مكتوبة بالإيد — المحاذاة مضمونة.
+ * بتختفي تحت 640px، مفيش مساحة ليها هناك. */
+const WORDMARK = [
+  "███ ███ █ █ ██  ███",
+  "  █ █ █ ███ █ █ █ █",
+  " ██ █ █ ███ █ █ ███",
+  "  █ █ █ █ █ █ █ █ █",
+  "███ ███ █ █ ██  █ █",
+] as const;
+
+/*
+ * النسبة الحقيقية من إشارتين المتصفح بيديهم مجاناً:
+ *
+ *   · حالة الـ parser — ٣٥٪. "loading" يعني الـ HTML لسه بيتقرا.
+ *   · نسبة الصور اللي خلصت — ٦٥٪. دي الحتة اللي بتاخد وقت فعلاً،
+ *     وهي كمان اللي حدث `load` بيستناها.
+ *
+ * الوزن مش عشوائي: الشريط بيمشي بنفس إيقاع الحاجة اللي الزائر مستنيها.
+ * ولو الصفحة من الكاش، النسبة بتقفز لـ ١٠٠ على طول والشاشة بتختفي.
+ */
+function computeProgress(): number {
+  const domReady = document.readyState !== "loading" ? 35 : 0;
+
+  const images = document.images;
+  if (!images.length) return domReady + 65;
+
+  let complete = 0;
+  for (let i = 0; i < images.length; i++) {
+    if (images[i].complete) complete++;
+  }
+  return domReady + Math.round((complete / images.length) * 65);
+}
+
+/* ═══ ساعة الجلسة ═══
+ *
+ * مكوّن منفصل عن قصد: هو الوحيد اللي بيعمل re-render كل ثانية، فلمّا
+ * يبقى لوحده الـ re-render ده بيلمس <span> واحد بدل الشاشة كلها.
+ *
+ * والقيمة الابتدائية "--:--:--" مش تجميل: `new Date()` وقت الـ render
+ * بيدي نتيجة مختلفة على السيرفر وعلى المتصفح، وده hydration mismatch
+ * مضمون. الوقت الحقيقي بيتكتب في الـ effect بعد الـ mount.
+ */
+function SessionClock() {
+  const [time, setTime] = useState("--:--:--");
+
+  useEffect(() => {
+    const tick = () => setTime(new Date().toISOString().slice(11, 19));
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return <span className={styles.clock}>{time}Z</span>;
+}
+
+/* ═══ بصمة العميل ═══
+ *
+ * كلها من واجهات المتصفح القياسية. مفيش تتبّع ومفيش حاجة بتتبعت لأي
+ * مكان — الأرقام دي بتتحسب في المتصفح، بتتعرض، وبتموت مع الشاشة.
+ *
+ * deviceMemory و connection موجودين في Chromium بس. اللي مش متاح
+ * بيتشال من السطر بدل ما يتعرض "unknown" — سطر ناقص أنضف من سطر
+ * بيعترف إنه مش عارف.
+ */
+function ClientLine({ tier }: { tier: string }) {
+  const [facts, setFacts] = useState<string[]>([]);
+
+  useEffect(() => {
+    const nav = navigator as Navigator & {
+      deviceMemory?: number;
+      connection?: { effectiveType?: string };
+    };
+
+    const parts: string[] = [];
+    const net = nav.connection?.effectiveType;
+    if (net) parts.push(net);
+    if (nav.hardwareConcurrency) parts.push(`${nav.hardwareConcurrency} cores`);
+    if (nav.deviceMemory) parts.push(`${nav.deviceMemory}gb`);
+    parts.push(`${window.innerWidth}×${window.innerHeight}`);
+    parts.push(`tier:${tier}`);
+
+    setFacts(parts);
+  }, [tier]);
+
+  // قبل الـ mount مفيش حاجة تتعرض — نفس الـ markup على السيرفر والمتصفح.
+  if (!facts.length) return null;
+
+  return (
+    <p className={styles.logLine} data-tag="scan">
+      <span className={styles.logTag}>scan</span>
+      <span className={styles.logLabel}>client</span>
+      <span className={styles.logDots} />
+      <span className={styles.logValue}>{facts.join(" · ")}</span>
+    </p>
+  );
+}
 
 export default function LoadingScreen() {
-  const [phase, setPhase] = useState<"visible" | "leaving" | "gone">("visible");
-  const [currentLine, setCurrentLine] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
   const tier = useDeviceTier();
   const reduced = tier === "low";
 
+  // الـ ref بيمنع الشريط يرجع لورا لو صورة جديدة اتضافت وغيّرت المقام.
+  // شريط تقدّم بينقص بيبان زي باج حتى لو الرقم صح.
+  const peak = useRef(0);
+
   useEffect(() => {
     const mountedAt = performance.now();
-    let exitTimer: number | undefined;
     let minTimer: number | undefined;
 
-    const start = () => {
-      const elapsed = performance.now() - mountedAt;
-      minTimer = window.setTimeout(() => {
-        setPhase("leaving");
-        exitTimer = window.setTimeout(() => setPhase("gone"), EXIT_MS);
-      }, Math.max(0, MIN_VISIBLE_MS - elapsed));
+    const tick = () => {
+      const next = Math.max(peak.current, computeProgress());
+      peak.current = next;
+      setProgress(next);
     };
 
-    /*
-     * `readyState === "loading"` معناه إن الـ parser لسه شغّال.
-     * أي حاجة غير كده ("interactive" أو "complete") معناها إن الـ DOM جاهز
-     * والمحتوى اللي وراه اتعرض — مفيش سبب نستنى الصور اللي تحت الطية.
-     */
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", start, { once: true });
+    const poll = window.setInterval(tick, POLL_MS);
+    tick();
+
+    const dismiss = () => {
+      // `load` ضرب، يعني كل حاجة خلصت فعلاً — ١٠٠٪ حقيقية مش مجاملة.
+      peak.current = 100;
+      setProgress(100);
+
+      const elapsed = performance.now() - mountedAt;
+      minTimer = window.setTimeout(
+        () => setLoading(false),
+        Math.max(0, MIN_VISIBLE_MS - elapsed),
+      );
+    };
+
+    if (document.readyState === "complete") {
+      dismiss();
     } else {
-      start();
+      window.addEventListener("load", dismiss, { once: true });
     }
 
-    // مخرج طوارئ — القديم كان ممكن يفضل معلّق للأبد لو `load` معضربش.
-    const hardStop = window.setTimeout(() => setPhase("gone"), MAX_VISIBLE_MS);
+    // مخرج طوارئ — من غيره صورة واحدة معلّقة بتحبس الزائر للأبد.
+    const hardStop = window.setTimeout(() => setLoading(false), MAX_VISIBLE_MS);
 
     return () => {
-      document.removeEventListener("DOMContentLoaded", start);
+      window.clearInterval(poll);
+      window.removeEventListener("load", dismiss);
       if (minTimer !== undefined) window.clearTimeout(minTimer);
-      if (exitTimer !== undefined) window.clearTimeout(exitTimer);
       window.clearTimeout(hardStop);
     };
   }, []);
 
-  // شريط الإقلاع: شغل من غير فايدة بعد ما يختفي، ومتخطّى على الأجهزة الضعيفة.
-  useEffect(() => {
-    if (phase !== "visible" || reduced) return;
-    const id = window.setInterval(
-      () => setCurrentLine((prev) => (prev + 1) % BOOT_LINES.length),
-      350,
-    );
-    return () => window.clearInterval(id);
-  }, [phase, reduced]);
-
-  if (phase === "gone") return null;
+  const visibleLines = BOOT_SEQUENCE.filter((line) => progress >= line.at);
+  const clamped = Math.min(100, progress);
+  const pct = String(clamped).padStart(3, "0");
 
   return (
-    <div
-      className={`${styles.loader} ${phase === "leaving" ? styles.leaving : ""}`}
-      role="status"
-      /* aria-live كان "polite" حوالين ticker بيغيّر النص كل 350ms — قارئ
-         الشاشة كان هيقرا ست سطور إقلاع قبل ما الزائر يوصل لأي محتوى.
-         الـ overlay بيعرّف نفسه مرة واحدة بـ aria-label. */
-      aria-live="off"
-      aria-label="Loading"
-    >
-      {/* تلات طبقات بتغطي الشاشة كلها. زخرفة بحتة — قواعد الـ tier في
-          الـ CSS بتشيلها على الأجهزة الضعيفة. */}
-      {!reduced && (
-        <>
-          <div className={styles.speedLines} data-decorative="true" aria-hidden="true" />
-          <div className={styles.neuralGrid} data-decorative="true" aria-hidden="true" />
-          <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
-        </>
+    <AnimatePresence>
+      {loading && (
+        <m.div
+          initial={{ opacity: 1 }}
+          exit={reduced ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
+          transition={{ duration: reduced ? 0.2 : 0.5, ease: [0.76, 0, 0.24, 1] }}
+          className={styles.loader}
+          role="status"
+          /* aria-live كان "polite" حوالين ticker بيغيّر النص كل ٣٥٠ms —
+             قارئ الشاشة كان هيقرا ست سطور إقلاع قبل ما الزائر يوصل لأي
+             محتوى. الـ overlay بيعرّف نفسه مرة واحدة بـ aria-label. */
+          aria-live="off"
+          aria-label="Loading"
+        >
+          {/* طبقات بتغطي الشاشة كلها. زخرفة بحتة — قواعد الـ tier في
+              globals.css بتشيلها على الأجهزة الضعيفة. */}
+          {!reduced && (
+            <>
+              <div className={styles.speedLines} data-decorative="true" aria-hidden="true" />
+              <div className={styles.neuralGrid} data-decorative="true" aria-hidden="true" />
+              <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
+            </>
+          )}
+
+          <div className={styles.cornerTopLeft} aria-hidden="true" />
+          <div className={styles.cornerTopRight} aria-hidden="true" />
+          <div className={styles.cornerBottomLeft} aria-hidden="true" />
+          <div className={styles.cornerBottomRight} aria-hidden="true" />
+
+          {/* ── نافذة الكونسول ────────────────────────────────────── */}
+          <div className={styles.console} aria-hidden="true">
+            {/* شريط العنوان */}
+            <div className={styles.consoleBar}>
+              <span className={styles.consoleDots}>
+                <i /><i /><i />
+              </span>
+              <span className={styles.consolePath}>3omda@soc-01: ~/portfolio</span>
+              <SessionClock />
+              <span className={styles.consoleBadge}>師</span>
+            </div>
+
+            {/* العلامة */}
+            <div className={styles.wordmark}>
+              {WORDMARK.map((row, i) => (
+                <span key={i} className={styles.wordmarkRow}>{row}</span>
+              ))}
+              <span className={styles.wordmarkTag}>セキュリティ・アナリスト</span>
+            </div>
+
+            {/* السجل */}
+            <div className={styles.consoleBody}>
+              {visibleLines.map((line) => (
+                <p key={line.label} className={styles.logLine} data-tag={line.tag}>
+                  <span className={styles.logTag}>{line.tag}</span>
+                  <span className={styles.logLabel}>{line.label}</span>
+                  <span className={styles.logDots} />
+                  <span className={styles.logValue}>{line.value}</span>
+                </p>
+              ))}
+
+              {progress >= 45 && <ClientLine tier={tier} />}
+
+              {progress < 100 && (
+                <p className={styles.logLine} data-tag="run">
+                  <span className={styles.logTag}>run</span>
+                  <span className={styles.logCaret}>▍</span>
+                </p>
+              )}
+            </div>
+
+            {/* ── الشريط ───────────────────────────────────────────
+                الجزء المتحرك transform: scaleX() — خاصية compositor،
+                يعني مفيش layout ولا paint في كل تحديث. الشبكة اللي
+                بتقسّمه لبلوكات طبقة gradient ثابتة فوقه. */}
+            <div className={styles.progressWrap}>
+              <span className={styles.progressPhase}>{phaseLabel(clamped)}</span>
+              <div className={styles.progressTrack}>
+                <div
+                  className={styles.progressFill}
+                  style={{ transform: `scaleX(${clamped / 100})` }}
+                />
+                <div className={styles.progressGrid} />
+              </div>
+              <span className={styles.progressPct}>{pct}%</span>
+            </div>
+          </div>
+
+          <div className={styles.sideLabelLeft}>SEN-001</div>
+          <div className={styles.sideLabelRight}>武士道</div>
+        </m.div>
       )}
-
-      <div className={styles.cornerTopLeft} aria-hidden="true" />
-      <div className={styles.cornerTopRight} aria-hidden="true" />
-      <div className={styles.cornerBottomLeft} aria-hidden="true" />
-      <div className={styles.cornerBottomRight} aria-hidden="true" />
-
-      <div className={styles.emblem} aria-hidden="true">
-        {/* كانت تلات حلقات framer-motion لا نهائية منفصلة (دوران، نبض حجم،
-            نبض شفافية) كل واحدة اشتراك animation frame لوحدها. بقت دوران
-            واحد بـ CSS — نفس الفكرة، صفر جافاسكريبت. */}
-        <div className={styles.outerRing} data-decorative="true" />
-        <div className={styles.innerRing} />
-        <div className={styles.symbolWrap}>
-          <span className={styles.symbol}>師</span>
-        </div>
-      </div>
-
-      <div className={styles.bootText} aria-hidden="true">
-        <div className={styles.bootLineRow}>
-          <div className={styles.bootLine} />
-          <span className={styles.bootLineText}>
-            {reduced ? "LOADING" : BOOT_LINES[currentLine]}
-          </span>
-          <div className={styles.bootLine} />
-        </div>
-        {/* كان <h2>. الـ overlay ده بيتشحن جوه الـ HTML المصدّر، يعني
-            "The Samurai Way." كان أول عنوان يقابل أي crawler على كل صفحة —
-            فوق العنوان الحقيقي. ده زخرفة، فبقى <p>. */}
-        <p className={styles.title}>
-          The Samurai <span className={styles.titleAccent}>Way.</span>
-        </p>
-      </div>
-
-      <div className={styles.progressBar} aria-hidden="true">
-        <div className={styles.progressFill} data-decorative="true" />
-      </div>
-
-      <div className={styles.sideLabelLeft}>SEN-001</div>
-      <div className={styles.sideLabelRight}>武士道</div>
-    </div>
+    </AnimatePresence>
   );
 }
