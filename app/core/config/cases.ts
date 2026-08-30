@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "defensive-security-trends": Array.from({ length: 4 }, (_, i) => `Assets/Cases/Defensive_Security_Trends/Screenshot (${195 + i}).webp`),
   "report-writing-soc-l2": Array.from({ length: 5 }, (_, i) => `Assets/Cases/Report_Writing_SOC_L2/Screenshot (${190 + i}).webp`),
   "soc-l2-alert-triage": Array.from({ length: 5 }, (_, i) => `Assets/Cases/SOC_L2_Alert_Triage/Screenshot (${185 + i}).webp`),
   "offensive-security-intro": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Offensive_Security_Intro/Screenshot (${166 + i}).webp`),
@@ -916,6 +917,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-08-30",
     screenshots: Array.from({ length: 5 }, (_, i) => `Assets/Cases/Report_Writing_SOC_L2/Screenshot (${190 + i}).webp`),
     image: "Assets/Cases/Report_Writing_SOC_L2/Screenshot (194).webp",
+  },
+  {
+    id: "defensive-security-trends",
+    title: "Defensive Security Trends & SOC Level-Up",
+    description: "Completed the Defensive Security Trends room on TryHackMe, officially earning the 'SOC Level-Up' badge. Explored modern defensive strategies, emerging cybersecurity trends, and the mindset required for transitioning into a SOC L2 analyst role.",
+    platform: "TryHackMe",
+    type: "Achievement",
+    category: "Defensive Security",
+    difficulty: "Easy",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["TryHackMe", "Defensive Security", "SOC L2", "Security Trends", "Achievement"],
+    tools: ["Security Concepts"],
+    skillsGained: ["Threat Landscape Awareness", "Modern Defensive Strategies", "SOC L2 Fundamentals"],
+    readTime: 5,
+    date: "2026-08-30",
+    screenshots: Array.from({ length: 4 }, (_, i) => `Assets/Cases/Defensive_Security_Trends/Screenshot (${195 + i}).webp`),
+    image: "Assets/Cases/Defensive_Security_Trends/Screenshot (198).webp",
   },
 ] as const;
 
