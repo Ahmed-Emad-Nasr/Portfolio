@@ -77,12 +77,12 @@ export const metadata: Metadata = {
    *
    * favicon.ico في app/ بيتلقط تلقائياً. الباقي لازم يتكتب.
    */
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/Assets/art-gallery/Images/logo/3omda.webp",
-  },
-  manifest: "/manifest.webmanifest",
+icons: {
+  icon: "favicon.ico",
+  shortcut: "favicon.ico",
+  apple: "Assets/art-gallery/Images/logo/3omda.webp",
+},
+manifest: "manifest.webmanifest",
   title: {
     default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
     template: "%s | Ahmed Emad Nasr",
