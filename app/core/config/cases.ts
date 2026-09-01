@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "monitoring-active-directory": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Monitoring_Active_Directory/${i + 1}.webp`),
   "defensive-security-trends": Array.from({ length: 4 }, (_, i) => `Assets/Cases/Defensive_Security_Trends/Screenshot (${195 + i}).webp`),
   "report-writing-soc-l2": Array.from({ length: 5 }, (_, i) => `Assets/Cases/Report_Writing_SOC_L2/Screenshot (${190 + i}).webp`),
   "soc-l2-alert-triage": Array.from({ length: 5 }, (_, i) => `Assets/Cases/SOC_L2_Alert_Triage/Screenshot (${185 + i}).webp`),
@@ -934,6 +935,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-08-30",
     screenshots: Array.from({ length: 4 }, (_, i) => `Assets/Cases/Defensive_Security_Trends/Screenshot (${195 + i}).webp`),
     image: "Assets/Cases/Defensive_Security_Trends/Screenshot (198).webp",
+  },
+  {
+    id: "monitoring-active-directory",
+    title: "Monitoring Active Directory Walkthrough",
+    description: "Completed the Monitoring Active Directory room on TryHackMe. Investigated high-volume AD logs using Splunk to detect anomalies. Configured Windows Audit Policies using auditpol, analyzed authentication events (TGT requests, Logon types), and tracked account/group modifications during a simulated employee onboarding scenario.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "SOC Analysis",
+    difficulty: "Medium",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["TryHackMe", "SOC", "Active Directory", "Splunk", "Audit Policy", "Event Logs"],
+    tools: ["Splunk", "auditpol"],
+    skillsGained: ["Active Directory Monitoring", "Splunk Search Processing Language (SPL)", "Log Analysis", "Baseline Activity Analysis"],
+    readTime: 12,
+    date: "2026-09-01",
+    screenshots: Array.from({ length: 10 }, (_, i) => `Assets/Cases/Monitoring_Active_Directory/${i + 1}.webp`),
+    image: "Assets/Cases/Monitoring_Active_Directory/6.webp",
   },
 ] as const;
 
