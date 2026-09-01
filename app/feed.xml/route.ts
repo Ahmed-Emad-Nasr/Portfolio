@@ -2,10 +2,10 @@
  * feed.xml/route.ts
  * Author: Ahmed Emad Nasr
  *
- * RSS feed للـ cases. بيطلع كملف ثابت وقت الـ build.
+ * An RSS feed for the cases. Emitted as a static file at build time.
  *
- * "force-static" مش اختياري هنا: مع output: "export" الـ route handler لازم
- * يبقى static بالكامل، فأي حاجة ديناميكية هتكسر الـ build.
+ * "force-static" is not optional here: with output: "export" a route
+ * handler has to be fully static, so anything dynamic breaks the build.
  */
 
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
@@ -13,7 +13,7 @@ import { absoluteUrl, caseUrl } from "@/app/core/config/site";
 
 export const dynamic = "force-static";
 
-/** أي & أو < في عنوان أو وصف بيكسر الـ XML لو معملتش escape */
+/** An & or a < in a title or description breaks the XML unless escaped */
 const escapeXml = (value: string): string =>
   value
     .replace(/&/g, "&amp;")

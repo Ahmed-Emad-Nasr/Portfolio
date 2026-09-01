@@ -8,13 +8,13 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 /*
- * الملف ده كان بيستورد 18 أيقونة من تلات حزم @fortawesome. الحزم دي
- * (المحرّك + الـ core + الأيقونات) كانت بتضيف 94 كيلوبايت للـ bundle
- * الأساسي عشان ترسم 38 أيقونة ثابتة.
+ * This file used to import 18 icons from three @fortawesome packages. Those
+ * packages (the engine + the core + the icon sets) were adding 94KB to the
+ * main bundle in order to draw 38 static icons.
  *
- * دلوقتي الخرايط دي بتخزّن **اسم** الأيقونة، والـ <Icon> بيقرا مسار الـ
- * SVG من جدول مولّد (core/icons/icon-data.ts). نفس الشكل بالظبط، من غير
- * أي مكتبة وقت التشغيل.
+ * These maps now store the icon's **name**, and <Icon> reads the SVG path
+ * from a generated table (core/icons/icon-data.ts). Identical output, with
+ * no runtime library at all.
  */
 import type { IconName } from "@/app/core/icons/icon-data";
 
@@ -279,12 +279,12 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
 // -----------------------------------------------------------------------------
 
 /*
- * الترتيب هنا هو ترتيب الـ nav وترتيب الـ scrollspy وترتيب اختصارات
- * "g + حرف" في الـ command palette — مصدر واحد للتلاتة.
+ * The order here is the nav order, the scrollspy order and the order of the
+ * "g + letter" shortcuts in the command palette — one source for all three.
  *
- * اتضاف: Coverage (خريطة ATT&CK) و Contact (قسم الفورم الجديد). قبل كده
- * كان فيه JSON-LD في layout.tsx و page.tsx بيشاور على "#Contact" ومفيش
- * أي طريقة في الـ nav توصّلك له.
+ * Added: Coverage (the ATT&CK map) and Contact (the new form section).
+ * Previously the JSON-LD in layout.tsx and page.tsx pointed at "#Contact"
+ * with no way to reach it from the nav at all.
  */
 const SECTION_ICONS: Record<string, IconName> = {
   Home:           "faHome",

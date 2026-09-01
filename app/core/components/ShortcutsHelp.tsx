@@ -52,7 +52,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className={styles.overlay}
+      data-fx="overlay"
       role="dialog"
       aria-modal="true"
       aria-label="Keyboard shortcuts"

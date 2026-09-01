@@ -2,31 +2,35 @@
  * core/config/skills.ts
  * Author: Ahmed Emad Nasr
  *
- * تصنيف المهارات من الـ CV. الموقع كان بيعرض المهارات كتاجات متناثرة جوه
- * كل خبرة وكل case بس — مفيش مكان واحد يقول "ده اللي بشتغل بيه".
+ * The skill taxonomy from the CV. The site used to show skills only as tags
+ * scattered inside individual roles and cases — there was no single place
+ * saying "this is what I work with".
  *
- * فايدة إنها داتا مش JSX: كل مجموعة ليها `evidence` — الـ id بتاع الـ cases
- * اللي بتثبت المهارة دي. ده بيحوّل قايمة مهارات (ادّعاء) لشبكة أدلة
- * (إثبات). ابدأ بربط اللي واثق منه، والباقي بيتعرض عادي من غير لينكات.
+ * The advantage of it being data rather than JSX: each group carries
+ * `evidence` — the ids of the cases that demonstrate that skill. That turns
+ * a skills list (a claim) into an evidence graph (a demonstration). Start by
+ * linking the ones you are confident about; the rest render normally without
+ * links.
  *
- * الـ ids لازم تطابق `caseEvidenceLibrary[].id` في config/cases.ts.
+ * The ids must match `caseEvidenceLibrary[].id` in config/cases.ts.
  */
 
 export type SkillGroup = {
   id: string;
-  /** اسم المجموعة زي ما هو في الـ CV */
+  /** Group name exactly as it appears in the CV */
   label: string;
   items: readonly string[];
   /*
-   * الـ cases اللي بتثبت المجموعة دي.
+   * The cases that demonstrate this group.
    *
-   * الـ label متكتوب هنا بدل ما يتجاب من caseEvidenceLibrary عن قصد:
-   * الكومبوننت اللي بيعرض المهارات client component، فأي import لمكتبة
-   * الـ cases كان بيحزّم 42 كيلوبايت من داتا البلوج في bundle الصفحة
-   * الرئيسية عشان يقرا 13 عنوان. النسخ المحدود هنا أرخص بكتير.
+   * The label is written out here rather than looked up from
+   * caseEvidenceLibrary on purpose: the component that renders skills is a
+   * client component, so importing the case library would have bundled
+   * 42KB of blog data into the home page just to read 13 titles. This
+   * small amount of duplication is far cheaper.
    *
-   * الـ id لازم يطابق caseEvidenceLibrary[].id — لو غيّرت id في cases.ts
-   * غيّره هنا، اللينك هيبقى 404 من غير كده.
+   * The id must match caseEvidenceLibrary[].id — if you change an id in
+   * cases.ts, change it here too, or the link becomes a 404.
    */
   evidence?: readonly { id: string; label: string }[];
 };

@@ -1,16 +1,17 @@
 /*
  * core/icons/Icon.tsx
  *
- * بديل <FontAwesomeIcon /> — نفس النتيجة البصرية، من غير الـ 94 كيلوبايت
- * بتاعة محرّك FontAwesome (شوف التعليق في icon-data.ts).
+ * A replacement for <FontAwesomeIcon /> — the same visual result without
+ * FontAwesome's 94KB engine (see the comment in icon-data.ts).
  *
- * Server Component عن قصد: مفيش "use client". الأيقونة SVG ثابت مفيهوش
- * أي تفاعل، فمفيش سبب تتحمّل في المتصفح — بتترندر لـ markup وقت الـ build
- * وخلاص. (لو استوردها client component، بتشتغل جوّاه عادي — بس ساعتها
- * الجدول بيتحزم معاه.)
+ * Deliberately a Server Component: no "use client". An icon is a static SVG
+ * with no interactivity, so there is no reason for it to load in the
+ * browser — it renders to markup at build time and that is the end of it.
+ * (If a client component imports it, it works there normally — but then the
+ * table gets bundled with it.)
  *
- * الأبعاد بتيجي من `1em` عشان الأيقونة تتبع حجم الخط بتاع اللي حواليها،
- * زي FontAwesome بالظبط.
+ * Dimensions come from `1em` so the icon follows the font size of whatever
+ * surrounds it, exactly like FontAwesome.
  */
 
 import { ICONS, type IconName } from "./icon-data";
@@ -18,7 +19,7 @@ import { ICONS, type IconName } from "./icon-data";
 type IconProps = {
   name: IconName;
   className?: string;
-  /** لو الأيقونة معناها مهم، اكتب هنا نص بديل — غير كده بتتخفي عن قارئ الشاشة */
+  /** If the icon carries meaning, put alternative text here — otherwise it is hidden from screen readers */
   title?: string;
 };
 
@@ -30,13 +31,14 @@ export default function Icon({ name, className, title }: IconProps) {
       className={className}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${width} ${height}`}
-      /* fill="currentColor" بيخلي الأيقونة تاخد لون النص المحيط بيها من
-         غير أي قاعدة CSS إضافية — نفس سلوك FontAwesome. */
+      /* fill="currentColor" makes the icon take the colour of the surrounding
+         text with no extra CSS rule — the same behaviour as FontAwesome. */
       fill="currentColor"
       width="1em"
       height="1em"
-      /* الأيقونات هنا كلها زخرفية بجانب نص مكتوب. لو واحدة منها هي المعنى
-         الوحيد، مرّر title وهي بتتحوّل لـ role="img" باسم. */
+      /* Every icon here is decorative, sitting next to written text. If one of
+         them is the only carrier of meaning, pass title and it becomes
+         role="img" with a name. */
       role={title ? "img" : undefined}
       aria-hidden={title ? undefined : true}
       aria-label={title}

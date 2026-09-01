@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, type TouchEvent } from "react";
+import { useCallback, useEffect, useRef, type CSSProperties, type TouchEvent } from "react";
 import styles from "../page.module.css";
 import type { GalleryState } from "../blog-types";
 
@@ -34,7 +34,7 @@ export default function BlogGalleryModal({ gallery, currentShot, setGallery, goG
   if (!gallery || !currentShot) return null;
 
   return (
-    <div className={styles.galleryOverlay} onClick={() => setGallery(null)}>
+    <div className={styles.galleryOverlay} data-fx="overlay" style={{ "--scrim": "rgba(0, 0, 0, 0.95)" } as CSSProperties} onClick={() => setGallery(null)}>
       <div className={styles.galleryDialog} onClick={(e) => e.stopPropagation()}>
         <div className={styles.galleryHeader}>
           <h3 className={styles.galleryTitle}>{gallery.title}</h3>

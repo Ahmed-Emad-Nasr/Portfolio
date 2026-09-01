@@ -1,17 +1,17 @@
 /*
- * core/config/youtube.ts
+ * Part of splitting up portfolio.ts (which was 70KB in a single module).
+ * Everything here moved across verbatim — no change to the data itself,
+ * only the split.
  *
- * جزء من تقسيم portfolio.ts (كان 70KB في موديول واحد). كل حاجة هنا اتنقلت
- * زي ما هي بالحرف — مفيش أي تعديل في الداتا نفسها، التقسيم بس.
+ * Why? layout.tsx imported knowledgeEducationItems from the big file, and
+ * that dragged all 38 cases, every screenshot and every YouTube video into
+ * the same module graph — on every page, including the ones that need none
+ * of it. Relying on tree-shaking to separate them works in theory, but with
+ * one module holding everything it is a bet rather than a guarantee.
+ * Separate files make the separation real.
  *
- * ليه؟ layout.tsx كان بيعمل import لـ knowledgeEducationItems من الملف
- * الكبير، فبيجرّ معاه في نفس الـ module graph كل الـ 38 case وكل الـ
- * screenshots وكل فيديوهات اليوتيوب — على كل صفحة، حتى اللي مش محتاجاها.
- * الاعتماد على الـ tree-shaking عشان يفصلهم شغّال نظرياً، بس مع موديول واحد
- * فيه كل حاجة هو رهان مش ضمانة. الملفات المنفصلة بتخلي الفصل حقيقي.
- *
- * portfolio.ts لسه موجود كـ barrel بيعيد التصدير، فأي import قديم شغّال زي
- * ما هو ومفيش حاجة اتكسرت.
+ * portfolio.ts still exists as a re-exporting barrel, so every existing
+ * import keeps working and nothing broke.
  */
 
 import type {
@@ -24,8 +24,8 @@ import type {
 // YouTube (from youtube.ts)
 // -----------------------------------------------------------------------------
 
-// اتنقل لـ shared.ts (شوف التعليق هناك). بيتعاد تصديره من هنا عشان أي
-// import قديم يفضل شغّال.
+// Moved to shared.ts (see the comment there). Re-exported from here so any
+// existing import keeps working.
 export { YOUTUBE_CHANNEL_URL } from "./shared";
 
 export const blogYoutubeVideos: BlogYoutubeVideo[] = [

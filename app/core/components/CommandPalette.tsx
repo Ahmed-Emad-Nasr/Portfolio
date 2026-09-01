@@ -359,7 +359,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className={styles.overlay}
+      data-fx="overlay" data-overlay="top"
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"

@@ -1,16 +1,17 @@
 /*
  * blog/blog-utils.ts — RE-EXPORT SHIM
  *
- * الملف ده كان نسخة كاملة تانية من normalizePublicHref و getThumbnail و
- * formatDate — بالحرف، بما فيها `dateFormatter` و `dateCache` تانيين.
+ * This file used to be a second, complete copy of normalizePublicHref,
+ * getThumbnail and formatDate — verbatim, including a second
+ * `dateFormatter` and `dateCache`.
  *
- * يعني كان فيه كاشين منفصلين لنفس التواريخ في الذاكرة، وأي تعديل على
- * منطق المسارات لازم يتعمل في مكانين وإلا الصفحتين يفترقوا في السلوك من غير
- * ما حد ياخد باله.
+ * So there were two separate caches for the same dates in memory, and any
+ * change to the path logic had to be made in two places or the two pages
+ * would quietly diverge in behaviour.
  *
- * دلوقتي المصدر واحد: core/config/shared.ts. الملف ده فضل موجود عشان
- * الـ imports الحالية (CaseArticle، page-client، Terminal، CommandPalette)
- * تفضل شغالة من غير تغيير.
+ * There is one source now: core/config/shared.ts. This file remains so the
+ * existing imports (CaseArticle, page-client, Terminal, CommandPalette)
+ * keep working unchanged.
  */
 
 export {

@@ -122,7 +122,7 @@
   justify-content: center;
   align-items: center;
   gap: clamp(2.5rem, 4vw, 5rem);
-  max-width: 1440px;
+  max-width: 144rem;
   width: 100%;
   min-height: 92vh;
   padding: 1.2rem 1.5rem;
@@ -134,7 +134,7 @@
 .homeContent {
   transform: translate3d(calc(var(--parallax-x) * -0.35), calc(var(--parallax-y) * -0.35), 0);
   transition: transform var(--motion-normal) var(--motion-ease);
-  max-width: 950px;
+  max-width: 95rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -319,7 +319,7 @@
   color: #fff;
   line-height: 1.5;
   margin-bottom: 1.2rem;
-  max-width: 700px;
+  max-width: 70rem;
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.58s;
 }
@@ -330,7 +330,7 @@
   margin-bottom: 2rem;
   text-align: left;
   line-height: 1.7;
-  max-width: 680px;
+  max-width: 68rem;
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.7s;
 }
@@ -427,7 +427,7 @@
   position: relative;
   flex: 0 0 auto;
   width: 100%;
-  max-width: 560px;
+  max-width: 56rem;
   aspect-ratio: 1 / 1;
   animation: heroImageIn 1.3s var(--motion-ease) both;
   animation-delay: 0.15s;
@@ -710,7 +710,7 @@
     text-align: center;
     gap: 3rem;
   }
-  .homeImg { margin-top: 7rem; max-width: 420px; }
+  .homeImg { margin-top: 7rem; max-width: 42rem; }
   .homeContent { max-width: 100%; transform: none; align-items: center; text-align: center; }
   .homeContent h1 { font-size: clamp(3rem, 10vw, 4.6rem); }
   .tagline, .homeContent p { max-width: 100%; text-align: center; margin-left: auto; margin-right: auto; }
@@ -723,7 +723,7 @@
 @media (max-width: 600px) {
   .home { padding: 0.9rem; }
   .container { padding: 1.5rem 1rem; gap: 1.5rem; }
-  .homeImg { max-width: 300px; }
+  .homeImg { max-width: 30rem; }
   .homeContent h1 { font-size: clamp(2.6rem, 13vw, 3.4rem); }
   .typingText { font-size: clamp(1.4rem, 6.5vw, 1.9rem); }
   .homeContent p, .tagline { font-size: 1.05rem; }
@@ -735,7 +735,7 @@
   .homeButton .btn, .btnEmail { width: 100%; justify-content: center; }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 42rem) {
   .home { padding: 0.75rem; }
   .container { padding: 1.2rem 0.8rem; }
   .homeContent h1 { font-size: clamp(2.2rem, 14vw, 2.8rem); }

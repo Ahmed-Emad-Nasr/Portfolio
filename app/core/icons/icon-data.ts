@@ -1,23 +1,23 @@
 /*
- * core/icons/icon-data.ts — مولّد، متعدّلش بإيدك
+ * core/icons/icon-data.ts — GENERATED, DO NOT EDIT BY HAND
  * ═══════════════════════════════════════════════════════════════════════
  *
- * مسارات SVG للأيقونات المستخدمة في الموقع، متستخرجة من حزم
- * @fortawesome وقت التطوير.
+ * SVG paths for the icons used on the site, extracted from the @fortawesome
+ * packages at development time.
  *
- * ليه بنعمل كده بدل ما نستخدم الحزم مباشرة؟
+ * Why do this instead of using the packages directly?
  *
- * `@fortawesome/react-fontawesome` + `fontawesome-svg-core` + حزم
- * الأيقونات كانوا بيضيفوا **94 كيلوبايت** للـ bundle الأساسي (غير مضغوطة).
- * الأيقونات المستخدمة فعلاً 38 أيقونة، مسارات كلها مجتمعة **21 كيلوبايت**.
- * الباقي كان: محرّك الأيقونات، نظام الـ layers والـ transforms والـ masks،
- * الـ DOM watcher، والـ CSS injection — وكلها مش مستخدمة هنا: الموقع
- * بيرندر أيقونة ثابتة وخلاص.
+ * `@fortawesome/react-fontawesome` + `fontawesome-svg-core` + the icon
+ * packages were adding **94KB** to the main bundle (uncompressed). The
+ * icons actually used number 38, and all their paths together come to
+ * **21KB**. The rest was: the icon engine, the layers/transforms/masks
+ * system, the DOM watcher and the CSS injection — none of which is used
+ * here, because the site renders a static icon and nothing more.
  *
- * إزاي تضيف أيقونة جديدة:
- *   1. زوّد اسمها في مصفوفتي S (solid) أو B (brands) في سكربت التوليد.
- *   2. شغّل السكربت وحط الناتج مكان الجدول اللي تحت.
- * السكربت في scripts/generate-icons.cjs
+ * To add a new icon:
+ *   1. Add its name to the S (solid) or B (brands) array in the generator.
+ *   2. Run the generator and paste the output over the table below.
+ * The generator is scripts/generate-icons.cjs
  */
 
 export type IconGlyph = readonly [width: number, height: number, path: string];

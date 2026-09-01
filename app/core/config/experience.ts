@@ -1,17 +1,17 @@
 /*
- * core/config/experience.ts
+ * Part of splitting up portfolio.ts (which was 70KB in a single module).
+ * Everything here moved across verbatim — no change to the data itself,
+ * only the split.
  *
- * جزء من تقسيم portfolio.ts (كان 70KB في موديول واحد). كل حاجة هنا اتنقلت
- * زي ما هي بالحرف — مفيش أي تعديل في الداتا نفسها، التقسيم بس.
+ * Why? layout.tsx imported knowledgeEducationItems from the big file, and
+ * that dragged all 38 cases, every screenshot and every YouTube video into
+ * the same module graph — on every page, including the ones that need none
+ * of it. Relying on tree-shaking to separate them works in theory, but with
+ * one module holding everything it is a bet rather than a guarantee.
+ * Separate files make the separation real.
  *
- * ليه؟ layout.tsx كان بيعمل import لـ knowledgeEducationItems من الملف
- * الكبير، فبيجرّ معاه في نفس الـ module graph كل الـ 38 case وكل الـ
- * screenshots وكل فيديوهات اليوتيوب — على كل صفحة، حتى اللي مش محتاجاها.
- * الاعتماد على الـ tree-shaking عشان يفصلهم شغّال نظرياً، بس مع موديول واحد
- * فيه كل حاجة هو رهان مش ضمانة. الملفات المنفصلة بتخلي الفصل حقيقي.
- *
- * portfolio.ts لسه موجود كـ barrel بيعيد التصدير، فأي import قديم شغّال زي
- * ما هو ومفيش حاجة اتكسرت.
+ * portfolio.ts still exists as a re-exporting barrel, so every existing
+ * import keeps working and nothing broke.
  */
 
 /// -----------------------------------------------------------------------------
@@ -19,17 +19,18 @@
 // -----------------------------------------------------------------------------
 
 /*
- * `kind` مضاف عشان صفحة /cv تقدر تفصل الخبرات عن التعليم. قبل كده الفرق
- * الوحيد كان إن عناصر التعليم مالهاش subTagHyperlink لشركة — استنتاج هش
- * كان هيقع أول ما تضيف عنصر جديد.
+ * `kind` was added so the /cv page can separate experience from education.
+ * Previously the only difference was that education items had no
+ * subTagHyperlink for a company — a fragile inference that would have
+ * broken the first time you added a new item.
  *
- * الـ timeline على الصفحة الرئيسية مبيستخدمهاش دلوقتي، بس هي متاحة لو
- * حبيت تفصلهم بصرياً بعدين.
+ * The home page timeline does not use it yet, but it is there if you want
+ * to separate them visually later.
  */
 export const knowledgeEducationItems = [
   {
-    // مضاف من الـ CV — الدور ده كان ناقص من الموقع خالص، وهو أحدث دور
-    // تدريسي عندك ولسه مستمر.
+    // Added from the CV — this role was missing from the site entirely, and it
+    // is your most recent teaching role and still ongoing.
     tag: "Cybersecurity Instructor (Part-Time)",
     kind: "work" as const,
     subTag: "National Telecommunication Institute (NTI)",

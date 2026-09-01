@@ -2,27 +2,28 @@
  * core/config/achievements.ts
  * Author: Ahmed Emad Nasr
  *
- * قسم "Awards & Achievements" كان موجود في الـ CV ومش موجود على الموقع
- * خالص. ده أغرب فرق بين الاتنين: الأرقام دي (Top 1% على TryHackMe،
- * 44 من 450 في CTF، الأول على 250 مدرّب) هي أقوى حاجة عندك لحد لسه في
- * بداية مشواره — دليل تنافسي من طرف تالت، مش وصف ذاتي.
+ * The "Awards & Achievements" section existed in the CV and was absent from
+ * the site entirely. That is the strangest gap between the two: these
+ * numbers (Top 1% on TryHackMe, 44th of 450 in a CTF, first among 250
+ * trainees) are the strongest thing someone early in their career has —
+ * third-party competitive evidence rather than self-description.
  *
- * محطوطة كداتا مش كـ JSX عشان تقدر تتفلتر وتتحوّل لـ JSON-LD وتتقرا من
- * الـ command palette من غير تكرار.
+ * Stored as data rather than JSX so it can be filtered, turned into JSON-LD
+ * and read by the command palette without being repeated.
  */
 
 export type AchievementKind = "rank" | "award" | "community";
 
 export type Achievement = {
   id: string;
-  /** الإنجاز نفسه في سطر — الرقم الأول عشان العين تمسكه */
+  /** The achievement itself in one line — the number first, so the eye catches it */
   title: string;
-  /** الجهة أو المنصة */
+  /** The organisation or platform */
   context: string;
   kind: AchievementKind;
-  /** السنة لو معروفة — سيبها فاضية لو الإنجاز مستمر */
+  /** The year, if known — leave it empty for an ongoing achievement */
   year?: number;
-  /** رابط إثبات: بروفايل، إعلان نتيجة، صفحة القناة */
+  /** A proof link: a profile, a results announcement, a channel page */
   proofUrl?: string;
 };
 
@@ -32,7 +33,7 @@ export const achievements: readonly Achievement[] = [
     title: "Top 1% globally",
     context: "TryHackMe",
     kind: "rank",
-    // proofUrl: "https://tryhackme.com/p/…",  ← ضيف بروفايلك، ده بيتحقق فوراً
+    // proofUrl: "https://tryhackme.com/p/…",  ← add your profile; this verifies instantly
   },
   {
     id: "gdg-best-instructor",

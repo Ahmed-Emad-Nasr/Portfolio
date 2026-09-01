@@ -66,7 +66,8 @@
 
 .brandText {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 20px;
+  /* rem, not px, so the header shrinks with --ui-scale like everything else */
+  font-size: 2rem;
   font-weight: 900;
   color: #ffffff;
   letter-spacing: -0.5px;
@@ -91,7 +92,7 @@
   gap: 6px;
   padding: 6px 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #888888;
   text-transform: uppercase;

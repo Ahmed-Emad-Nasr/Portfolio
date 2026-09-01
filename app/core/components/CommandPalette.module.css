@@ -53,17 +53,6 @@
 }
 
 /* ── Overlay and panel ──────────────────────────────────────────────────── */
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: clamp(1rem, 10vh, 9rem) 1rem 1rem;
-  background: rgba(0, 0, 0, 0.82);
-}
-
 .panel {
   width: min(680px, 100%);
   max-height: min(70vh, 620px);

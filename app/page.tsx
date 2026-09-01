@@ -7,12 +7,12 @@
 
 import type { Metadata } from "next";
 import MainClient from "./page-client";
-// Server Component. رندره هنا معناه إن مكتبة الـ cases (42KB) بتفضل وقت
-// الـ build ومبتوصلش لمتصفح الزائر — لو page-client استورده كان هيبقى
-// client component تلقائياً وتتحزم الداتا معاه.
+// Server Component. Rendering it here means the case library (42KB) stays
+// at build time and never reaches the visitor's browser — had page-client
+// imported it, it would have become a client component and bundled the data.
 import AttackMatrix from "./components/attack/attack-matrix";
-// نفس السبب: Server Component بيقرا certifications + skills + achievements،
-// فالداتا بتفضل وقت الـ build ومبتوصلش لمتصفح الزائر.
+// Same reason: a Server Component reads certifications + skills + achievements,
+// so the data stays at build time and never reaches the visitor's browser.
 import Credentials from "./components/credentials/credentials";
 
 export const metadata: Metadata = {
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   },
 };
 
-// تحويل البيانات إلى نص مرة واحدة فقط في الذاكرة لتوفير معالجة السيرفر
+// Serialise the data once, in memory, to save the work on every render
 const STRUCTURED_DATA_JSON = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
@@ -86,7 +86,7 @@ export default function Main() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} // استخدام النص الجاهز مباشرة
+        dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} // Use the prepared string directly
       />
       <MainClient coverage={<AttackMatrix />} credentials={<Credentials />} />
     </>

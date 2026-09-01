@@ -11,7 +11,7 @@
  * All lazy, so it takes no bytes from the main bundle.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { normalizePublicHref } from "@/app/blog/blog-utils";
@@ -250,7 +250,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className={styles.overlay}
+      data-fx="overlay" style={{ "--scrim": "rgba(0, 0, 0, 0.88)" } as CSSProperties}
       role="dialog"
       aria-modal="true"
       aria-label="Terminal"

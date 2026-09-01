@@ -2,43 +2,45 @@
  * core/config/site.ts
  * Author: Ahmed Emad Nasr
  *
- * مصدر واحد للعناوين المطلقة (absolute URLs) اللي بتتكتب في الـ sitemap
- * والـ RSS والـ canonical و OG tags.
+ * One source for the absolute URLs written into the sitemap, the RSS feed,
+ * the canonical tags and the OG tags.
  *
- * ⚠️ الـ TRAILING_SLASH لازم يطابق `trailingSlash` في next.config.mjs.
- * لو الاتنين مش متطابقين، هيحصل التالي: الـ sitemap بيقول لجوجل
- * /blog/case-x والموقع بيوديه على /blog/case-x/ — فجوجل بيشوف عنوانين
- * مختلفين لنفس الصفحة ويقسّم ترتيبها بينهم.
+ * ⚠️ TRAILING_SLASH must match `trailingSlash` in next.config.mjs.
+ * If they disagree, this happens: the sitemap tells Google /blog/case-x and
+ * the site redirects to /blog/case-x/ — so Google sees two different URLs
+ * for one page and splits its ranking between them.
  *
- * إزاي تعرف؟ افتح next.config.mjs:
- *   trailingSlash: true   → سيبها true (الـ build بيطلع blog/case-x/index.html)
- *   مش موجودة أو false    → غيّرها لـ false (الـ build بيطلع blog/case-x.html)
+ * How to tell? Open next.config.mjs:
+ *   trailingSlash: true   → leave this true (the build emits blog/case-x/index.html)
+ *   absent or false       → set this false (the build emits blog/case-x.html)
  */
 
 export const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
 
 /*
- * كان true، والموقع المنشور بيرد على /Portfolio/blog **من غير** سلاش —
- * وnext.config.mjs مفيهوش trailingSlash. النتيجة إن الـ sitemap و og:url
- * و JSON-LD @id و روابط الـ RSS كلهم كانوا بيقولوا عناوين بسلاش، بينما
- * الـ canonical واللينكات الحقيقية في الصفحة من غيره.
+ * This was true, and the deployed site answers /Portfolio/blog **without**
+ * a slash — and next.config.mjs has no trailingSlash. The result was that
+ * the sitemap, og:url, the JSON-LD @id and the RSS links all stated URLs
+ * with a trailing slash, while the canonical tag and the real in-page links
+ * had none.
  *
- * يعني كنت بتقدّم لجوجل عنوانين مختلفين لنفس الصفحة، والعنوان اللي في
- * الـ sitemap مش هو اللي بيفتح.
+ * So you were presenting Google with two different URLs for the same page,
+ * and the one in the sitemap was not the one that opens.
  *
- * ده مش موضوع مسارات — ده SEO. لو غيّرت رأيك وحطيت trailingSlash: true
- * في next.config.mjs، رجّعها true هنا عشان يفضلوا متطابقين.
+ * This is not a path detail — it is SEO. If you change your mind and set
+ * trailingSlash: true in next.config.mjs, set this back to true so the two
+ * stay in agreement.
  */
 export const TRAILING_SLASH = false;
 
-/** بيحوّل مسار داخلي لعنوان مطلق بالشكل الصح للـ crawlers */
+/** Turns an internal path into an absolute URL in the form crawlers expect */
 export const absoluteUrl = (path: string): string => {
   if (/^https?:\/\//i.test(path)) return path;
 
   const normalized = path.startsWith("/") ? path : `/${path}`;
   const url = `${SITE_BASE_URL}${normalized}`;
 
-  // الملفات (فيها امتداد) مبتاخدش سلاش في آخرها أبداً
+  // Files (anything with an extension) never take a trailing slash
   const isFile = /\.[a-z0-9]+$/i.test(normalized);
   if (isFile || normalized === "/") return url;
 
@@ -46,5 +48,5 @@ export const absoluteUrl = (path: string): string => {
   return url.endsWith("/") ? url.slice(0, -1) : url;
 };
 
-/** عنوان صفحة الـ case — المكان الوحيد اللي الشكل ده متعرّف فيه */
+/** A case page's URL — the only place this shape is defined */
 export const caseUrl = (id: string): string => absoluteUrl(`/blog/${id}`);

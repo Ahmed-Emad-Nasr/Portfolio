@@ -33,6 +33,39 @@
    and nothing consumes it, it is not a token — it is a note, and notes
    belong in comments. */
 :root {
+  /*
+   * ── UI SCALE ──────────────────────────────────────────────────────────
+   *
+   * ONE NUMBER CONTROLS THE SIZE OF THE WHOLE SITE.
+   *
+   * Every dimension in this project is expressed in rem, and rem resolves
+   * against the root font-size below. Multiplying that one value scales
+   * type, padding, gaps, radii and component widths together — so the
+   * design keeps its exact proportions and only gets smaller.
+   *
+   * This is why it works as a single knob: the primitives in sections 14
+   * to 17 removed the hand-written px and per-file scales that used to sit
+   * outside the token system. Before that, changing this would have shrunk
+   * some things and left others behind.
+   *
+   *   1     the original size
+   *   0.9   the current default — about 10% tighter
+   *   0.85  noticeably compact
+   *
+   * What 0.9 actually produces on desktop:
+   *   body text        16px → 14.4px
+   *   section title    35px → 31.5px
+   *   card padding     25px → 22.5px
+   *   timeline rail  1160px → 1044px
+   *
+   * Do not go far below 0.85 without checking the smallest text on the
+   * site: the micro-labels are 1.2rem, which is already only 10.8px here.
+   *
+   * Mobile carries its own value: phones are already tight, and shrinking
+   * body text below ~14px costs readability rather than buying space.
+   */
+  --ui-scale: 0.9;
+
   /* Core palette */
   --background: #000000;
   --foreground: #ffffff;
@@ -133,7 +166,7 @@
   --label-tracking: 0.14em;
 
   /* Tokens shared by experience-section and sensei-projects */
-  --container-max-width: 1500px;
+  --container-max-width: 150rem;
   --container-pad-x: 5.25%;
   --title-underline-thin: 1px;
   --title-underline-thick: 3px;
@@ -176,7 +209,9 @@
 }
 
 html {
-  font-size: 62.5%;
+  /* 62.5% makes 1rem = 10px, which is what every rem value in this project
+     assumes. --ui-scale then trims that uniformly. */
+  font-size: calc(62.5% * var(--ui-scale));
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
@@ -324,7 +359,7 @@ section {
   padding: 7.1rem 5.25% 5.9rem;
   position: relative;
   width: 100%;
-  max-width: 1280px;
+  max-width: 128rem;
   margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
   z-index: 1;
   contain: layout style;
@@ -398,7 +433,7 @@ time,
 }
 
 @media (max-width: 360px) {
-  html { font-size: 56.25%; }
+  html { font-size: calc(56.25% * var(--ui-scale)); }
   section {
     width: calc(100% - 1.2rem);
     padding-left: 1rem;
@@ -407,11 +442,11 @@ time,
 }
 
 @media (min-width: 1800px) {
-  html { font-size: 68.75%; }
+  html { font-size: calc(68.75% * var(--ui-scale)); }
   section {
     padding-left: 8%;
     padding-right: 8%;
-    max-width: 1536px;
+    max-width: 153.6rem;
     margin-inline: auto;
   }
 }
@@ -1247,7 +1282,10 @@ html [data-fx="section-title"]::after {
 /* The vertical line behind the experience and projects timelines. */
 html [data-fx="timeline"] {
   position: relative;
-  max-width: 1160px;
+  /* rem so the rail narrows with --ui-scale — a px width here would have
+     left the cards shrinking inside a box that stayed the same size, which
+     only widens the empty margins. */
+  max-width: 116rem;
   margin: 0 auto;
   padding: 2rem 0;
 }
@@ -1370,6 +1408,10 @@ html [data-fx="field"]:focus-visible { outline: none; }
  */
 @media (max-width: 991px) {
   :root {
+    /* Phones and small tablets are already tight. Trimming type here the
+       way the desktop does would push body text under ~14px, which costs
+       readability rather than buying usable space. */
+    --ui-scale: 0.96;
     --section-pad: 5rem 0 4rem;
     --section-head-gap: 4rem;
     --title-size: 2.2rem;
@@ -1546,4 +1588,57 @@ html [data-fx="btn"][data-btn-edge="dashed"] { border-style: dashed; }
 
 @media (prefers-reduced-motion: reduce) {
   html [data-fx="btn"] { transition: none; }
+}
+
+/*--------- 18. Modal overlay ---------*/
+/*
+ * ══ THE SINGLE SOURCE FOR EVERY LAYER THAT OPENS OVER THE PAGE ══
+ *
+ * Four overlays, four copies of the same seven declarations, four different
+ * scrim opacities and one hardcoded z-index that bypassed the token system
+ * entirely:
+ *
+ *   CommandPalette .overlay    rgba(0,0,0,.82)  z var(--z-modal)  top-aligned
+ *   ShortcutsHelp  .overlay    rgba(0,0,0,.85)  z var(--z-modal)  centred
+ *   Terminal       .overlay    rgba(0,0,0,.88)  z var(--z-modal)  centred
+ *   blog .galleryOverlay       rgba(0,0,0,.95)  z 9999            centred
+ *
+ * That 9999 was the real problem: --z-modal is 2000 and --z-progress is
+ * 3000, so the gallery was sitting above the scroll progress bar while the
+ * other three sat below it. Same kind of element, two different stacking
+ * behaviours, decided by a number someone typed once.
+ *
+ * ── Usage ──
+ *
+ *   <div data-fx="overlay">                    centred, default scrim
+ *   <div data-fx="overlay" data-overlay="top"> aligned to the top (palette)
+ *
+ * Scrim depth is a token, so a specific overlay can go darker without
+ * restating the layout:
+ *
+ *   <div data-fx="overlay" style={{ "--scrim": "rgba(0,0,0,.95)" }}>
+ */
+
+:root {
+  --scrim: rgba(0, 0, 0, 0.85);
+  --overlay-pad: clamp(1rem, 4vh, 3rem);
+}
+
+html [data-fx="overlay"] {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--overlay-pad);
+  background: var(--scrim);
+}
+
+/* The command palette hangs from the top rather than centring: the results
+   list changes height as you type, and a centred panel would slide up and
+   down under the cursor while you read it. */
+html [data-fx="overlay"][data-overlay="top"] {
+  align-items: flex-start;
+  --overlay-pad: clamp(1rem, 10vh, 9rem) 1rem 1rem;
 }

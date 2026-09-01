@@ -2,26 +2,29 @@
  * core/config/start-here.ts
  * Author: Ahmed Emad Nasr
  *
- * مكتبة فيها 38 تقرير بتشلّ اللي فاتحها. الزائر — غالباً حد بيراجع طلبك
- * وعنده خمس دقايق — بيبص على الحيطة، مبيعرفش يبدأ منين، ويقفل.
+ * A library of 38 reports paralyses whoever opens it. The visitor — most
+ * likely someone reviewing your application with five minutes to spare —
+ * looks at the wall, cannot tell where to begin, and closes it.
  *
- * التلاتة دول مختارين عشان يغطّوا تلات قدرات مختلفة: كتابة قواعد كشف،
- * تحقيق DFIR كامل، وتحليل malware. مش أطول التقارير ولا أحدثها — أوضح
- * تلاتة بيوصّلوا "ده اللي بعرف أعمله".
+ * These three are chosen to cover three different capabilities: writing
+ * detection rules, a full DFIR investigation, and malware analysis. Not the
+ * longest reports and not the newest — the three clearest ones that convey
+ * "this is what I can do".
  *
- * ⚠️ راجع الاختيار والأسباب. أنا مشوفتش الـ PDFs، فالاختيار مبني على
- * العناوين والتاجات — إنت اللي عارف أنهي تقرير فعلاً بيمثّلك.
+ * ⚠️ Review the selection and the reasons. I have not read the PDFs, so the
+ * choice is based on titles and tags — you are the one who knows which
+ * report actually represents you.
  *
- * الـ id لازم يطابق caseEvidenceLibrary[].id في config/cases.ts.
+ * The ids must match caseEvidenceLibrary[].id in config/cases.ts.
  */
 
 export type StartHereEntry = {
   id: string;
-  /** اسم قصير للعرض — مش لازم يكون عنوان التقرير الكامل */
+  /** A short display name — it need not be the report's full title */
   label: string;
-  /** ليه ده أول حاجة تتقري — سطر واحد، بصيغة "إيه اللي هتشوفه" */
+  /** Why this is the first thing to read — one line, phrased as "what you will see" */
   why: string;
-  /** وقت القراءة التقريبي */
+  /** Approximate reading time */
   minutes: number;
 };
 

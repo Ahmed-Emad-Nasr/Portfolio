@@ -48,8 +48,8 @@ const ArtGallerySection = dynamic(
 const KanjiDivider = dynamic(
   () => import("@/app/core/components/KanjiDivider"),
 );
-// الفورم فيه state وfetch، فمنطقي يتأجّل — بس الـ markup بيتولّد وقت الـ
-// build زي الباقي (مفيش ssr: false).
+// The form has state and a fetch, so deferring it makes sense — but the
+// markup is still generated at build time like the rest (no ssr: false).
 const ContactSection = dynamic(
   () => import("@/app/components/contact/contact-section"),
 );
@@ -57,16 +57,16 @@ const ContactSection = dynamic(
 const MAIN_STYLE: React.CSSProperties = { position: "relative" };
 
 /*
- * `coverage` بييجي جاهز من page.tsx (Server Component). السبب في التعليق
- * اللي فوق الـ import هناك: خريطة ATT&CK بتقرا مكتبة الـ cases كاملة،
- * واستيرادها من هنا كان هيحوّلها لـ client component ويحزّم الـ 42 كيلوبايت
- * دي في bundle الصفحة الرئيسية.
+ * `coverage` arrives ready from page.tsx (a Server Component). The reason is
+ * in the comment above the import there: the ATT&CK map reads the entire
+ * case library, and importing it from here would have turned it into a
+ * client component and bundled those 42KB into the home page.
  */
 type MainClientProps = {
   coverage: ReactNode;
-  /* نفس سبب `coverage`: credentials.tsx بيقرا certifications + skills +
-     achievements (~11.7 كيلوبايت). استيراده من شجرة الـ client كان
-     بيحزّم الداتا دي في bundle الصفحة الرئيسية. */
+  /* Same reason as `coverage`: credentials.tsx reads certifications + skills
+     + achievements (~11.7KB). Importing it from the client tree bundled
+     that data into the home page. */
   credentials: ReactNode;
 };
 

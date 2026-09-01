@@ -1,20 +1,20 @@
 /*
  * core/config/portfolio.ts — BARREL
  *
- * الملف ده كان 70 كيلوبايت من الداتا في موديول واحد: الخبرات + المشاريع +
- * اليوتيوب + الـ 38 case بكل الـ screenshots. أي ملف بيعمل import منه بيدخل
- * الـ module graph كله معاه.
+ * This file used to be 70KB of data in a single module: experience +
+ * projects + YouTube + all 38 cases with every screenshot. Any file
+ * importing from it pulled the entire module graph along with it.
  *
- * دلوقتي الداتا اتقسمت على خمس ملفات، والملف ده بقى بيعيد تصديرها بس عشان
- * أي import قديم يفضل شغّال.
+ * The data is split across five files now, and this one only re-exports so
+ * that existing imports keep working.
  *
- * ⭐ للكود الجديد: استورد من الملف المحدد مباشرة، مش من هنا.
+ * ⭐ For new code: import from the specific file, not from here.
  *
  *    import { knowledgeEducationItems } from "@/app/core/config/experience";
  *    import { caseEvidenceLibrary }     from "@/app/core/config/cases";
  *
- * الـ barrel بيخلي الـ tree-shaking هو اللي بيحدد إيه اللي هيوصل للـ bundle،
- * والاستيراد المباشر بيخلي الموضوع مضمون مش متروك للـ bundler.
+ * A barrel leaves it to tree-shaking to decide what reaches the bundle;
+ * importing directly makes it certain rather than up to the bundler.
  */
 
 export * from "./shared";

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
-// مطلوبة مع output: "export" — زي sitemap.ts و robots.ts بالظبط.
-// من غيرها next build بيفشل وقت "Collecting page data" بـ:
+// Required with output: "export" — exactly like sitemap.ts and robots.ts.
+// Without it, next build fails during "Collecting page data" with:
 //   "export const dynamic = force-static/revalidate not configured
 //    on route /manifest.webmanifest with output: export"
 export const dynamic = "force-static";
@@ -9,13 +9,14 @@ export const dynamic = "force-static";
 /*
  * manifest.ts
  *
- * الـ metadata في layout.tsx فيها `appleWebApp: { capable: true }` — يعني
- * الموقع بيعلن إنه قابل للتثبيت على الشاشة الرئيسية. من غير manifest
- * كان الإعلان ده ناقص: أندرويد مبيعرضش خيار التثبيت خالص، وiOS بياخد
- * screenshot للصفحة ويستخدمه كأيقونة.
+ * The metadata in layout.tsx contains `appleWebApp: { capable: true }` —
+ * the site declares itself installable to the home screen. Without a
+ * manifest that declaration was incomplete: Android showed no install
+ * option at all, and iOS took a screenshot of the page and used it as the
+ * icon.
  *
- * Next بيولّد /manifest.webmanifest من الملف ده وقت الـ build، وبيضيف
- * الـ basePath للمسارات لوحده.
+ * Next generates /manifest.webmanifest from this file at build time, and
+ * prefixes the paths with the basePath on its own.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -28,13 +29,13 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#000000",
     theme_color: "#000000",
     /*
-     * المقاسات اللي أندرويد بيطلبها هي 192 و512. الصورة دي مربعة
-     * (560×560) فبتشتغل كأيقونة، بس مش بالمقاس المثالي.
+     * The sizes Android asks for are 192 and 512. This image is square
+     * (560×560) so it works as an icon, but it is not the ideal size.
      *
-     * ⭐ لو عايز أيقونة مظبوطة: صدّر 192 و512 وحطهم في
-     *   public/Assets/icons/ وغيّر المسارات هنا. الـ purpose: "maskable"
-     *   بيحتاج هامش آمن حوالين اللوجو (20% من كل ناحية) عشان أندرويد
-     *   بيقص الأيقونة لدايرة على بعض الأجهزة.
+     * ⭐ For a proper icon: export 192 and 512, put them in
+     *   public/Assets/icons/ and change the paths here. purpose:
+     *   "maskable" needs a safe margin around the logo (20% on each side)
+     *   because Android crops the icon to a circle on some devices.
      */
     icons: [
       {

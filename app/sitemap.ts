@@ -2,20 +2,22 @@
  * sitemap.ts
  * Author: Ahmed Emad Nasr
  *
- * بيطلع /sitemap.xml وقت الـ build (متوافق مع output: "export").
+ * Emits /sitemap.xml at build time (compatible with output: "export").
  *
- * الروابط absolute ومكتوبة بالكامل عن قصد: الموقع متسضاف تحت /Portfolio،
- * والـ sitemap لازم يبقى فيه URLs كاملة مش نسبية.
+ * The URLs are absolute and written out in full on purpose: the site is
+ * hosted under /Portfolio, and a sitemap has to contain complete URLs, not
+ * relative ones.
  *
- * فيه نوعين من الروابط: صفحة كل case، والـ PDF بتاعها. جوجل بيفهرس الـ PDF
- * كمستند مستقل، فالاتنين بيدّوا نتايج بحث مختلفة.
+ * There are two kinds of entry: each case's page, and its PDF. Google
+ * indexes the PDF as a separate document, so the two produce different
+ * search results.
  */
 
 import type { MetadataRoute } from "next";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { absoluteUrl, caseUrl } from "@/app/core/config/site";
 
-// مطلوبة مع output: "export" — زي robots.ts بالظبط.
+// Required with output: "export" — exactly like robots.ts.
 export const dynamic = "force-static";
 
 const parseDate = (value?: string): Date => {
@@ -25,7 +27,7 @@ const parseDate = (value?: string): Date => {
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // آخر تاريخ في المكتبة = آخر تحديث حقيقي للبلوج
+  // The most recent date in the library = the blog's real last update
   const latestCaseDate = caseEvidenceLibrary.reduce<Date>((latest, item) => {
     const date = parseDate(item.date);
     return date > latest ? date : latest;
@@ -45,9 +47,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      // صفحة الـ CV بـ HTML. أولوية أعلى من الـ PDF: جوجل بيفهرس الصفحة
-      // أحسن، وأنظمة الـ ATS بتقراها أحسن، وهي بتتبني من نفس الـ config
-      // بتاع الموقع فمستحيل تبقى قديمة.
+      // The HTML CV page. Higher priority than the PDF: Google indexes the page
+      // better, ATS systems read it better, and it is built from the same site
+      // config so it cannot go stale.
       url: absoluteUrl("/cv"),
       lastModified: latestCaseDate,
       changeFrequency: "monthly",
@@ -59,7 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    // صفحة كل case
+    // One entry per case page
     ...caseEvidenceLibrary.map((item) => ({
       url: caseUrl(item.id),
       lastModified: parseDate(item.date),
@@ -67,11 +69,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     /*
-     * والـ PDF نفسه — للحالات اللي ليها PDF بس.
+     * And the PDF itself — only for the cases that have one.
      *
-     * `.filter(Boolean)` مش تفصيلة: قبل كده الـ sitemap كان بيقدّم لجوجل
-     * ست ملفات PDF مش موجودة. وsitemap فيه عناوين بترجّع 404 بيقلّل ثقة
-     * محرك البحث في باقي العناوين اللي فيه.
+     * `.filter(Boolean)` is not a detail: the sitemap was previously
+     * offering Google six PDF files that do not exist. A sitemap containing
+     * URLs that return 404 reduces the search engine's confidence in the
+     * rest of the URLs in it.
      */
     ...caseEvidenceLibrary
       .filter((item): item is typeof item & { href: string } => Boolean(item.href))

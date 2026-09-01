@@ -274,10 +274,9 @@
 /* =========================================
    7. GALLERY OVERLAY (HUD STYLE)
    ========================================= */
-.galleryOverlay {
-  position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 2rem;
-  background: rgba(0, 0, 0, 0.95); animation: fadeIn 0.3s ease both;
-}
+/* Layout comes from [data-fx="overlay"] in globals.css section 18; only the
+   entrance animation is specific to the gallery. */
+.galleryOverlay { animation: fadeIn 0.3s ease both; }
 
 .galleryDialog {
   width: min(1200px, 100%); max-height: 90vh; border-radius: var(--radius-card);

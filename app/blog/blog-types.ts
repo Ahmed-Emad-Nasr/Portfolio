@@ -1,12 +1,12 @@
 /*
  * blog/blog-types.ts — RE-EXPORT SHIM
  *
- * نفس القصة بتاعة blog-utils: الأنواع دي كانت متعرّفة هنا وفي
- * core/config/portfolio.ts في نفس الوقت. تعريفين لنفس النوع معناها إن أي
- * حقل بيتضاف في واحد وميتضافش في التاني بيعدّي من غير ما TypeScript يزعّق —
- * لحد ما القيمة توصل للـ runtime ناقصة.
+ * The same story as blog-utils: these types were defined here and in
+ * core/config/portfolio.ts at the same time. Two definitions of one type
+ * means a field added to one and not the other passes without TypeScript
+ * complaining — until the value arrives at runtime incomplete.
  *
- * المصدر الوحيد بقى core/config/shared.ts.
+ * The single source is core/config/shared.ts now.
  */
 
 export type {
