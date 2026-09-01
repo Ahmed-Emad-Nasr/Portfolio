@@ -118,7 +118,7 @@ const Credentials = memo(function Credentials() {
                 ))}
               </ul>
               {group.evidence && group.evidence.length > 0 && (
-                <ul className={styles.evidenceList}>
+                <ul className={styles.evidenceList} data-links="inline">
                   {group.evidence.map((item) => (
                     <li key={item.id}>
                       <Link href={`/blog/${item.id}`}>{item.label}</Link>

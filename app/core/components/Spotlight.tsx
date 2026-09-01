@@ -1,33 +1,36 @@
 "use client";
 
 /*
- * Spotlight.tsx — بقعة ضوء بتتبع الماوس فوق شبكة كروت
+ * Spotlight.tsx — a spotlight that follows the cursor across a card grid
  * Author: Ahmed Emad Nasr
  *
- * ده المكوّن الوحيد في الحزمة اللي بيكلّف حاجة فعلاً. باقي التفاعلات
- * CSS خالص. قرّرت أكتبه لأنه أوضح تأثير "الموقع بيرد عليك" موجود، وممكن
- * يتعمل رخيص لو اتكتب صح — بس لازم تعرف بتدفع إيه.
+ * This is the only component in the set that genuinely costs something.
+ * Every other interaction is pure CSS. I wrote it because it is the
+ * clearest "the site is responding to you" effect there is, and it can be
+ * made cheap if written correctly — but you should know what you are
+ * paying.
  *
- * ═══ التكلفة ═══
+ * ═══ THE COST ═══
  *
- *   · listener واحد على الحاوية (مش على كل كارت) — event delegation
- *   · rAF throttle: كتابة واحدة لكل فريم مهما كان عدد أحداث الماوس
- *   · بيكتب متغيّرين CSS بس — مفيش حساب تخطيط، مفيش قراءة من الـ DOM
- *     أثناء الحركة (المقاسات بتتقاس مرة واحدة وبتتخزّن)
- *   · الرسم: radial-gradient على الكارت اللي تحت الماوس بس
+ *   · one listener on the container (not one per card) — event delegation
+ *   · rAF throttle: one write per frame no matter how many mouse events
+ *   · it writes two CSS variables and nothing else — no layout maths, no
+ *     DOM reads during the motion (dimensions are measured once and cached)
+ *   · painting: a radial-gradient on the card under the cursor only
  *
- * الرسم ده حقيقي ومش مجاني. على ديسكتوب مش هتحسه. عشان كده المكوّن
- * بيرجع null على أي جهاز لمسي أو أي جهاز مش "high" — يعني كل
- * التليفونات والتابلت وأي لابتوب ضعيف عمره ما هيحمّل ولا سطر منه.
+ * That paint is real and it is not free. On desktop you will not feel it.
+ * Which is why the component returns null on any touch device and any tier
+ * that is not "high" — every phone, every tablet and every weak laptop
+ * never loads a line of it.
  *
- * ═══ الاستخدام ═══
+ * ═══ USAGE ═══
  *
  *   <Spotlight className={styles.grid}>
  *     <article data-fx="card">…</article>
  *     <article data-fx="card">…</article>
  *   </Spotlight>
  *
- * محتاج القواعد اللي في _PATCHES/3-spotlight.md.
+ * Requires the rules in _PATCHES/3-spotlight.md.
  */
 
 import React, { useEffect, useRef } from "react";
@@ -36,6 +39,13 @@ import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 type SpotlightProps = {
   children: React.ReactNode;
   className?: string;
+  /*
+   * React.HTMLAttributes does not include data-* attributes. TypeScript only
+   * waives unknown data-* props on intrinsic elements (<div>), not on custom
+   * components — so without this the callers passing data-fx="timeline" would
+   * fail `npm run type-check`.
+   */
+  [key: `data-${string}`]: string | undefined;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "className" | "children">;
 
 export default function Spotlight({ children, className, ...rest }: SpotlightProps) {
@@ -46,8 +56,9 @@ export default function Spotlight({ children, className, ...rest }: SpotlightPro
     const root = ref.current;
     if (!root) return;
 
-    // الشرط ده هو اللي بيخلي المكوّن آمن. أي جهاز لمسي أو مش قوي
-    // بيخرج هنا ومبيسجّلش أي listener.
+    // This condition is what makes the component safe. Any touch device, or
+// any device that is not powerful,
+    // bails out here and registers no listener at all.
     if (tier !== "high") return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -58,11 +69,12 @@ export default function Spotlight({ children, className, ...rest }: SpotlightPro
     let target: HTMLElement | null = null;
 
     /*
-     * الكتابة بتحصل جوه rAF مش جوه الـ handler.
+     * The write happens inside rAF, not inside the handler.
      *
-     * pointermove بيضرب لحد ١٢٠ مرة في الثانية على شاشة 120Hz. من
-     * غير الـ throttle ده كنا هنكتب على الـ DOM أكتر من عدد الفريمات
-     * اللي بتترسم أصلاً — شغل بيتلغي قبل ما يبان.
+     * pointermove fires up to 120 times a second on a 120Hz display.
+     * Without this throttle we would be writing to the DOM more often
+     * than frames are actually painted — work that is discarded before
+     * it can be seen.
      */
     const flush = () => {
       frame = 0;
@@ -77,7 +89,7 @@ export default function Spotlight({ children, className, ...rest }: SpotlightPro
       );
 
       if (card !== target) {
-        // نضّف الكارت اللي خرجنا منه، وإلا بيفضل مولّع
+        // Clear the card we just left, or it stays lit
         target?.removeAttribute("data-spot");
         target = card;
         target?.setAttribute("data-spot", "on");
@@ -86,11 +98,12 @@ export default function Spotlight({ children, className, ...rest }: SpotlightPro
       if (!card) return;
 
       /*
-       * getBoundingClientRect بيجبر المتصفح يحسب التخطيط. استدعاؤه
-       * هنا مقبول لأنه بيحصل مرة لكل فريم على عنصر واحد — مش في لوب.
+       * getBoundingClientRect forces the browser to calculate layout.
+       * Calling it here is acceptable because it happens once per frame
+       * on a single element — not in a loop.
        *
-       * الحفظ في cache كان هيبقى غلط: الكارت بيتحرك 4px لفوق عند
-       * الـ hover، والمقاسات المحفوظة كانت هتبقى قديمة.
+       * Caching would be wrong: the card lifts 4px on hover, and the
+       * cached dimensions would be stale.
        */
       const rect = card.getBoundingClientRect();
       pendingX = event.clientX - rect.left;
@@ -108,8 +121,8 @@ export default function Spotlight({ children, className, ...rest }: SpotlightPro
       }
     };
 
-    // passive: true بيقول للمتصفح إن الـ handler مش هيعمل
-    // preventDefault، فمش محتاج يستناه قبل ما يكمّل scroll.
+    // passive: true tells the browser the handler will not call
+    // preventDefault, so it need not wait before continuing the scroll.
     root.addEventListener("pointermove", onMove, { passive: true });
     root.addEventListener("pointerleave", onLeave, { passive: true });
 

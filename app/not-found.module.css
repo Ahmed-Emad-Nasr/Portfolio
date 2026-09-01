@@ -1,7 +1,7 @@
 /*
  * not-found.module.css
  *
- * ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px.
+ * ⚠️ Scale: html { font-size: 62.5% } → 1rem = 10px.
  */
 
 .page {
@@ -37,20 +37,6 @@
 
 .actions { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 5rem; }
 
-.primary, .secondary {
-  font-family: var(--font-mono);
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: 1.2rem 2.4rem;
-  border-radius: var(--radius-button, 2px);
-}
-.primary { background: var(--main-color); color: #fff; }
-.primary:hover { opacity: 0.88; }
-.secondary { border: 1px solid rgba(255, 255, 255, 0.22); color: var(--text-muted); }
-.secondary:hover, .secondary:focus-visible { color: var(--accent-color); border-color: currentColor; }
-.primary:focus-visible, .secondary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .suggestTitle {
   font-family: var(--font-mono);
@@ -70,10 +56,8 @@
   font-weight: 700;
   font-size: var(--text-md);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   align-self: start;
 }
-.suggestList a:hover, .suggestList a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
 .suggestWhy { color: var(--text-dim); font-size: var(--text-sm); line-height: 1.6; }
 
 .report { margin: 5rem 0 0; font-size: var(--text-sm); color: var(--text-dim); line-height: 1.7; }

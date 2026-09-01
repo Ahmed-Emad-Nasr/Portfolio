@@ -4,46 +4,52 @@
  * ScrollProgress.tsx
  * Author: Ahmed Emad Nasr
  *
- * شريط تقدّم مقسّم على أقسام الصفحة — قاعد فوق الخط الأحمر بتاع الهيدر
- * بالظبط (نفس الـ 2px) فمش بيزوّد أي مساحة في الـ layout.
+ * A progress bar segmented by the page's sections — sitting exactly on the
+ * header's red rule (the same 2px), so it adds no layout space at all.
  *
- * ليه مقسّم؟ الشريط المتصل بيقول "إنت فين في الصفحة" بس. المقسّم بيقول كمان
- * "إنت في أنهي قسم وفاضلك قد إيه فيه" — وعرض كل جزء متناسب مع طول القسم
- * الحقيقي، فالشكل نفسه بيوصّل معلومة عن بنية الصفحة.
+ * Why segmented? A continuous bar only says "where you are in the page". A
+ * segmented one also says "which section you are in and how much of it is
+ * left" — and each segment's width is proportional to that section's real
+ * length, so the shape itself carries information about the page structure.
  *
- * قرارات مقصودة عشان الأداء:
- * 1. صفر re-render أثناء الـ scroll. كل الحسابات بتتكتب على الـ DOM مباشرة
- *    عن طريق refs، زي ما الهيدر عامل بالظبط مع classList.toggle.
- * 2. rAF throttle + passive listener، فالـ scroll thread مبيتقفلش.
- * 3. transform: scaleX() بس — مفيش width animation يسبّب layout/paint كل فريم.
- * 4. ResizeObserver على الـ body: الأقسام الـ dynamic بتزوّد ارتفاع الصفحة
- *    بعد الـ hydration، ومن غيره النِسب بتفضل غلط لحد أول scroll.
- * 5. لو أي قسم مش موجود في الـ DOM، بيتوزّع التقسيم بالتساوي بدل ما يقع.
+ * Deliberate performance decisions:
+ * 1. Zero re-renders during scroll. Every calculation is written straight
+ *    to the DOM through refs, exactly as the header does with
+ *    classList.toggle.
+ * 2. rAF throttle + passive listener, so the scroll thread is never blocked.
+ * 3. transform: scaleX() only — no width animation causing layout/paint
+ *    every frame.
+ * 4. ResizeObserver on the body: dynamic sections add page height after
+ *    hydration, and without it the proportions stay wrong until the first
+ *    scroll.
+ * 5. If a section is missing from the DOM, the split falls back to equal
+ *    widths rather than breaking.
  *
- * شغّال مع Lenis من غير أي wiring: الـ root mode بيعمل scroll حقيقي على الـ
- * window، فالـ scroll event بيتبعت عادي.
+ * Works with Lenis with no wiring: root mode performs a real scroll on the
+ * window, so the scroll event fires normally.
  */
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./ScrollProgress.module.css";
 
-// نفس الـ IDs المستخدمة في الـ scroll spy — مصدر واحد للحقيقة
+// The same IDs the scroll spy uses — one source of truth
 const PORTFOLIO_SECTIONS = ["Home", "Experience", "Projects", "Certifications", "Coverage", "Contact"] as const;
 const BLOG_SECTIONS = ["blog-pdfs-title", "youtube-hub-title"] as const;
-// صفحة الـ case مفيهاش أقسام — شريط واحد متصل على طول الصفحة.
-// (أول جزء دايماً بيبدأ من 0 وآخر جزء بينتهي عند آخر الصفحة، فجزء واحد
-//  معناه بالظبط شريط تقدّم عادي.)
+// The case page has no sections — a single continuous bar across the page.
+// (The first segment always starts at 0 and the last ends at the bottom
+//  of the page, so one segment is exactly an ordinary progress bar.)
 const CASE_SECTIONS = ["case-body"] as const;
 
-/** مسافة أمان فوق القسم عشان الجزء يخلص قبل ما القسم يختفي تحت الهيدر */
+/** Safety margin above a section, so its segment completes before the
+    section disappears under the header */
 const HEADER_OFFSET = 80;
 
 export default function ScrollProgress() {
   const pathname = usePathname();
 
-  // المصفوفتين ثوابت على مستوى الموديول، فالمرجع ثابت والـ effect مبيعيدش
-  // نفسه كل render.
+  // Both arrays are module-level constants, so the reference is stable and
+  // the effect does not re-run on every render.
   const ids = pathname.startsWith("/blog/")
     ? CASE_SECTIONS
     : pathname.startsWith("/blog")
@@ -67,10 +73,10 @@ export default function ScrollProgress() {
       const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
 
       const starts = ids.map((id, i) => {
-        // أول جزء لازم يبدأ من فوق خالص، مش من مكان قسم Home
+        // The first segment has to start at the very top, not at the Home section
         if (i === 0) return 0;
         const el = document.getElementById(id);
-        if (!el) return (maxScroll / ids.length) * i; // fallback: توزيع متساوي
+        if (!el) return (maxScroll / ids.length) * i; // fallback: equal distribution
         const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
         return Math.min(maxScroll, Math.max(0, top));
       });
@@ -80,7 +86,7 @@ export default function ScrollProgress() {
         end: i === starts.length - 1 ? maxScroll : Math.max(start + 1, starts[i + 1]),
       }));
 
-      // عرض كل جزء متناسب مع طول القسم الفعلي
+      // Each segment's width is proportional to the section's actual length
       for (let i = 0; i < ranges.length; i++) {
         const seg = segs[i];
         if (!seg) continue;
@@ -134,8 +140,8 @@ export default function ScrollProgress() {
     };
   }, [ids]);
 
-  // aria-hidden عن قصد: العنصر زخرفي بحت، والـ screen reader عنده معلومة
-  // الموضع أصلاً. تحديث aria-valuenow كل فريم = spam مش أكتر.
+  // aria-hidden deliberately: the element is purely decorative, and the
+  // screen reader already has the position. Updating aria-valuenow every frame is spam.
   return (
     <div className={styles.track} aria-hidden="true">
       {ids.map((id, i) => (

@@ -1,6 +1,6 @@
 /*
  * BlogFilterBar.module.css
- * نفس لغة كروت البلوج: حواف حادة، مونوسبيس، دهبي للأرقام.
+ * The same language as the blog cards: sharp edges, monospace, gold numbers.
  */
 
 .bar {
@@ -11,10 +11,10 @@
   padding: 1.8rem;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 2px solid var(--main-color, #ff003c);
+  border-left: 2px solid var(--main-color);
 }
 
-/* ── البحث ──────────────────────────────────────────────────────────────── */
+/* ── Search ─────────────────────────────────────────────────────────────── */
 .searchRow {
   display: flex;
   align-items: center;
@@ -24,56 +24,35 @@
 }
 
 .prompt {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--main-color, #ff003c);
-}
-
-.input {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
-  /* 16px على الأقل عشان iOS ميعملش zoom تلقائي */
-  font-size: 16px;
-  letter-spacing: 0.5px;
-}
-
-.input::placeholder {
-  color: #5a5a5a;
-}
-
-.input:focus-visible {
-  outline: none;
+  color: var(--main-color);
 }
 
 .searchRow:focus-within {
-  border-bottom-color: var(--accent-color, #ffd700);
+  border-bottom-color: var(--accent-color);
 }
 
 .reset {
   flex-shrink: 0;
   padding: 6px 12px;
   background: transparent;
-  border: 1px solid rgba(var(--main-color-rgb, 188, 0, 45), 0.5);
-  color: var(--main-color, #ff003c);
+  border: 1px solid rgba(var(--main-color-rgb), 0.5);
+  color: var(--main-color);
   cursor: pointer;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .reset:hover {
-  background: rgba(var(--main-color-rgb, 188, 0, 45), 0.15);
+  background: rgba(var(--main-color-rgb), 0.15);
   color: #ffffff;
 }
 
-/* ── الـ chips ──────────────────────────────────────────────────────────── */
+/* ── Chips ──────────────────────────────────────────────────────────────── */
 .facetGroup {
   display: flex;
   flex-wrap: wrap;
@@ -83,7 +62,7 @@
 
 .facetLabel {
   margin-right: 0.4rem;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 2px;
@@ -96,41 +75,34 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  /* الحد الأدنى للمس على الموبايل */
+  /* Minimum touch target on mobile */
   min-height: 34px;
   padding: 5px 11px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: #b8b8b8;
   cursor: pointer;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.15rem;
   letter-spacing: 0.5px;
-  transition: color var(--motion-fast, 280ms) ease, border-color var(--motion-fast, 280ms) ease;
+  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 
 .toolChip::before {
   content: ">_ ";
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
 }
 
 .chip:hover,
 .toolChip:hover {
   color: #ffffff;
-  border-color: rgba(var(--accent-color-rgb, 255, 215, 0), 0.5);
+  border-color: rgba(var(--accent-color-rgb), 0.5);
 }
 
 .chipActive {
-  background: rgba(var(--accent-color-rgb, 255, 215, 0), 0.12);
-  border-color: var(--accent-color, #ffd700);
+  background: rgba(var(--accent-color-rgb), 0.12);
+  border-color: var(--accent-color);
   color: #ffffff;
-}
-
-.chip:focus-visible,
-.toolChip:focus-visible,
-.reset:focus-visible {
-  outline: 2px solid var(--accent-color, #ffd700);
-  outline-offset: 3px;
 }
 
 .count {
@@ -139,19 +111,19 @@
 }
 
 .chipActive .count {
-  color: var(--accent-color, #ffd700);
+  color: var(--accent-color);
 }
 
-/* ── عدّاد النتائج ──────────────────────────────────────────────────────── */
+/* ── Result counter ─────────────────────────────────────────────────────── */
 .status {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.1rem;
-  color: var(--text-muted, #d8d6cc);
+  color: var(--text-muted);
 }
 
 .status::before {
   content: "// ";
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
 }
 
 @media (max-width: 768px) {

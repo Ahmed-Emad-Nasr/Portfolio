@@ -43,9 +43,9 @@ export default function NotFound() {
         </p>
 
         <nav className={styles.actions} aria-label="Main destinations">
-          <Link href="/" className={styles.primary}>Portfolio</Link>
-          <Link href="/blog" className={styles.secondary}>Case library</Link>
-          <Link href="/cv" className={styles.secondary}>CV</Link>
+          <Link href="/" data-fx="btn" data-btn="solid">Portfolio</Link>
+          <Link href="/blog" data-fx="btn" data-btn="outline">Case library</Link>
+          <Link href="/cv" data-fx="btn" data-btn="outline">CV</Link>
         </nav>
 
         {SUGGESTIONS.length > 0 && (
@@ -53,7 +53,7 @@ export default function NotFound() {
             <h2 className={styles.suggestTitle} id="nf-suggest">
               Or start with one of these
             </h2>
-            <ul className={styles.suggestList}>
+            <ul className={styles.suggestList} data-links="inline">
               {SUGGESTIONS.map((entry) => (
                 <li key={entry.id}>
                   <Link href={`/blog/${entry.id}`}>{entry.label}</Link>

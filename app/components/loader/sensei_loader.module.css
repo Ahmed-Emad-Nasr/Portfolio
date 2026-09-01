@@ -1,13 +1,15 @@
 /*
  * sensei_loader.module.css — SOC console boot
  *
- * الخلفيات الأربعة (speedLines / neuralGrid / scanlines / الأركان) زي ما
- * هي بالحرف من النسخة القديمة. الجديد هو نافذة الكونسول والشريط.
+ * The four backgrounds (speedLines / neuralGrid / scanlines / the corners)
+ * are carried over verbatim from the previous version. What is new is the
+ * console window and the progress bar.
  *
- * قاعدة أساسية في الملف ده: أي حاجة بتتحرك مع التقدّم بتتحرك بـ
- * transform أو opacity بس. دول الخاصيتين اللي المتصفح بيعالجهم على الـ
- * compositor من غير layout ولا paint — مهم هنا تحديداً لأن ده بيحصل في
- * نفس اللحظة اللي المتصفح بيفك فيها ضغط الصور ويعمل parse للـ JS.
+ * Ground rule for this file: anything that moves with progress moves via
+ * transform or opacity only. Those are the two properties the browser
+ * handles on the compositor with no layout and no paint — which matters
+ * here in particular, because all of this happens at the same moment the
+ * browser is decoding images and parsing JS.
  */
 
 .loader {
@@ -22,7 +24,7 @@
   background: var(--bg-color);
 }
 
-/* ── الخلفيات الزخرفية ─────────────────────────────────────────────── */
+/* ── Decorative backgrounds ────────────────────────────────────────── */
 
 .speedLines,
 .neuralGrid,
@@ -84,7 +86,7 @@
 .cornerBottomLeft { bottom: 2.4rem; left: 2.4rem; border-width: 0 0 2px 2px; }
 .cornerBottomRight { bottom: 2.4rem; right: 2.4rem; border-width: 0 2px 2px 0; }
 
-/* ── نافذة الكونسول ────────────────────────────────────────────────── */
+/* ── Console window ────────────────────────────────────────────────── */
 
 .console {
   position: relative;
@@ -93,9 +95,9 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.35);
   background: rgba(0, 0, 0, 0.72);
   font-family: var(--font-mono);
-  /* الشكل المشطوف من الركن — نفس لغة الـ trapezoid بتاعة الهيدر.
-     clip-path أرخص من border-radius هنا لأن مفيش anti-aliasing على
-     منحنى، والشكل ثابت مبيتحركش. */
+  /* The chamfered corner — the same trapezoid language as the header.
+     clip-path is cheaper than border-radius here because there is no
+     anti-aliasing along a curve, and the shape never moves. */
   clip-path: polygon(
     0 0, calc(100% - 1.4rem) 0, 100% 1.4rem,
     100% 100%, 1.4rem 100%, 0 calc(100% - 1.4rem)
@@ -143,9 +145,10 @@
   flex-shrink: 0;
 }
 
-/* ساعة الجلسة — وقت الزائر الحقيقي بتوقيت UTC.
-   tabular-nums ضروري: من غيرها الشريط بيهتز كل ثانية لأن "1" أضيق
-   من "8"، والساعة قاعدة جنب نص متغيّر أصلاً. */
+/* Session clock — the visitor's real time, in UTC.
+   tabular-nums is required: without it the bar jitters every second because
+   "1" is narrower than "8", and the clock already sits next to changing
+   text. */
 .clock {
   flex-shrink: 0;
   font-size: 1.05rem;
@@ -154,9 +157,9 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── العلامة ────────────────────────────────────────────────────────
-   حروف بلوك بالـ monospace. `pre` عشان المسافات المتعددة متتاكلش —
-   ده اللي بيخلي الحروف تتحاذى فوق بعض. */
+/* ── Wordmark ───────────────────────────────────────────────────────
+   Block letters in monospace. `pre` so runs of spaces are preserved — that
+   is what keeps the glyphs aligned above one another. */
 .wordmark {
   padding: 1.6rem 1.4rem 0.4rem;
   display: flex;
@@ -171,7 +174,8 @@
   line-height: 1;
   letter-spacing: 0.12em;
   color: var(--main-color);
-  /* التدرّج بيدي الحروف عمق من غير أي طبقة زيادة — أرخص من ظل. */
+  /* The gradient gives the letters depth with no extra layer — cheaper than
+   a shadow. */
   background: linear-gradient(180deg, var(--main-color), rgba(var(--accent-color-rgb), 0.55));
   -webkit-background-clip: text;
   background-clip: text;
@@ -188,15 +192,16 @@
 
 .consoleBody {
   /*
-   * ارتفاع ثابت + overflow: hidden + justify-content: flex-end.
+   * Fixed height + overflow: hidden + justify-content: flex-end.
    *
-   * التلاتة مع بعض بيدّوا سلوك الترمينال الحقيقي: السطور الجديدة بتيجي
-   * من تحت والقديمة بتخرج من فوق. والأهم إن الصندوق **عمره ما يكبر** —
-   * لو كان بيكبر مع كل سطر كان الشريط والصفحة كلها هيقفزوا سبع مرات
-   * أثناء التحميل، وده CLS في أسوأ لحظة ممكنة.
+   * The three together produce real terminal behaviour: new lines arrive
+   * from the bottom and old ones leave through the top. More importantly
+   * the box **never grows** — if it grew with each line, the bar and the
+   * whole page would jump seven times during loading, which is CLS at the
+   * worst possible moment.
    *
-   * على الموبايل السطر بيتكسر لسطرين، فالسطور القديمة بتخرج أسرع —
-   * وده مقبول: آخر سطرين هما اللي فيهم المعلومة الجديدة.
+   * On mobile a line wraps to two, so old lines leave sooner — which is
+   * fine: the last two lines are the ones carrying new information.
    */
   height: 17rem;
   overflow: hidden;
@@ -215,8 +220,8 @@
   font-size: 1.15rem;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.75);
-  /* السطر بيدخل بـ opacity + translate بس — الاتنين على الـ compositor.
-     مفيش height animation عشان مفيش reflow. */
+  /* A line enters on opacity + translate only — both on the compositor.
+     No height animation, so no reflow. */
   animation: logIn 220ms var(--motion-ease) both;
 }
 
@@ -238,8 +243,9 @@
 .logLine[data-tag="ok"] .logTag { color: var(--accent-color); }
 .logLine[data-tag="run"] .logTag { color: rgba(255, 255, 255, 0.35); }
 .logLine[data-tag="scan"] .logTag { color: var(--main-light); }
-/* بصمة العميل نص فنّي — بيتعرض بلون أهدى من قيم الـ CV اللي فوقه
-   عشان مايسحبش العين عن اللي المفروض الزائر يقراه. */
+/* The client fingerprint is flavour text — rendered in a quieter colour
+   than the CV values above it so it does not pull the eye away from what
+   the visitor is meant to read. */
 .logLine[data-tag="scan"] .logValue {
   color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
@@ -250,8 +256,9 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* النقط اللي بتملا المسافة بين الاسم والقيمة — سطر واحد CSS بدل ما
-   تتكتب نقط في الـ JSX وتتغير مع كل عرض شاشة. */
+/* The dots that fill the gap between a name and its value — one line of
+   CSS instead of literal dots in the JSX that would need adjusting at
+   every viewport width. */
 .logDots {
   flex: 1;
   min-width: 1.5rem;
@@ -276,7 +283,7 @@
   50%, 100% { opacity: 0; }
 }
 
-/* ── الشريط ────────────────────────────────────────────────────────── */
+/* ── Progress bar ──────────────────────────────────────────────────── */
 
 .progressWrap {
   display: flex;
@@ -296,11 +303,13 @@
 }
 
 /*
- * الجزء الممتلئ. عرضه 100٪ دايماً والتحديث بيحصل على scaleX من الـ JSX.
+ * The filled portion. It is always 100% wide and the update happens on
+ * scaleX from the JSX.
  *
- * ليه مش `width: X%`؟ لأن تغيير العرض بيجبر layout ثم paint ثم composite
- * في كل تحديث — تمن مرات في الثانية، في نفس اللحظة اللي المتصفح بيحمّل
- * فيها الصفحة. `transform` بيتعامل معاه الـ compositor لوحده.
+ * Why not `width: X%`? Because changing width forces layout, then paint,
+ * then composite on every update — eight times a second, at the exact
+ * moment the browser is loading the page. `transform` is handled by the
+ * compositor on its own.
  */
 .progressFill {
   position: absolute;
@@ -311,8 +320,9 @@
   transition: transform 180ms linear;
 }
 
-/* الشبكة اللي بتقسّم الشريط لبلوكات. طبقة ثابتة فوق الممتلئ — مبتتحركش
-   فمبتكلّفش حاجة، والنتيجة شكل الشريط المقسّم بتاع الترمينال. */
+/* The grid that divides the bar into blocks. A static layer above the fill —
+   it never moves, so it costs nothing, and the result is the segmented
+   terminal bar. */
 .progressGrid {
   position: absolute;
   inset: 0;
@@ -326,8 +336,8 @@
   );
 }
 
-/* كلمة الحالة — بتوصف الحاجة اللي المتصفح بيعملها فعلاً عند النسبة دي.
-   عرض ثابت عشان الشريط مايتزحلقش لما الكلمة تتغيّر. */
+/* The status word — it describes what the browser is actually doing at that
+   percentage. Fixed width so the bar does not shift when the word changes. */
 .progressPhase {
   flex-shrink: 0;
   width: 9.5rem;
@@ -345,12 +355,12 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--accent-color);
-  /* الأرقام بعرض ثابت — من غير كده الشريط بيهتز يمين وشمال وهو بيعدّ
-     لأن "1" أضيق من "8". */
+  /* Fixed-width digits — without them the bar shivers left and right as it
+     counts, because "1" is narrower than "8". */
   font-variant-numeric: tabular-nums;
 }
 
-/* ── اللافتات الجانبية ─────────────────────────────────────────────── */
+/* ── Side banners ──────────────────────────────────────────────────── */
 
 .sideLabelLeft,
 .sideLabelRight {
@@ -359,7 +369,8 @@
   font-size: 0.9rem;
   font-family: var(--font-mono);
   font-weight: 700;
-  /* a11y: 0.38 مش 0.2 — ده نص مقروء لثانية، مش زخرفة خالصة */
+  /* a11y: 0.38 rather than 0.2 — this is text someone reads for a second,
+   not pure decoration */
   color: rgba(255, 255, 255, 0.38);
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -373,20 +384,21 @@
   to { background-position: 240px 0; }
 }
 
-/* ── الموبايل ──────────────────────────────────────────────────────── */
+/* ── Mobile ────────────────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
   .console { width: calc(100vw - 3.2rem); }
 
-  /* العلامة ٤٦ حرف عرض — على شاشة تليفون بتتكسر لسطرين وتبقى شخبطة.
-     الـ 師 في شريط العنوان بيحمل نفس المعنى في مساحة أصغر. */
+  /* The wordmark is 46 characters wide — on a phone it wraps to two lines and
+     turns into a scribble. The 師 in the title bar carries the same meaning
+     in less space. */
   .wordmark { display: none; }
 
-  /* المسار الكامل مالوش مكان جنب الساعة */
+  /* The full path has nowhere to go next to the clock */
   .consolePath { font-size: 1rem; }
   .clock { font-size: 0.95rem; }
 
-  /* الشريط بياخد كل العرض؛ كلمة الحالة بتنزل تحته */
+  /* The bar takes the full width; the status word drops below it */
   .progressWrap { flex-wrap: wrap; }
   .progressPhase { order: 3; width: auto; flex: 1; }
   .progressTrack { flex-basis: 100%; order: 1; }
@@ -400,8 +412,8 @@
   .logLine {
     font-size: 1.05rem;
     gap: 0.6rem;
-    /* على شاشة ضيقة السطر بـ ٤ أعمدة بيتكسر وحش. القيمة بتنزل تحت
-       الاسم، والنقط بتختفي لأن مبقاش فيه مسافة تتملى. */
+    /* On a narrow screen a four-column row wraps badly. The value moves below
+       the name, and the dots disappear because there is no gap left to fill. */
     flex-wrap: wrap;
   }
 
@@ -422,9 +434,10 @@
   .sideLabelRight { bottom: 1.6rem; }
 }
 
-/* لابتوب قصير أو تليفون في وضع أفقي: الكونسول كله (شريط + علامة +
-   ٧ سطور + الشريط) بيوصل ٣٣rem. تحت ٧٢٠px ارتفاع بيبدأ يزاحم حواف
-   الشاشة، فبنقلّل السجل بدل ما نقص من العلامة. */
+/* A short laptop or a phone in landscape: the whole console (title bar +
+   wordmark + 7 lines + the bar) reaches 33rem. Below 720px of height it
+   starts crowding the screen edges, so the log shrinks rather than the
+   wordmark. */
 @media (max-height: 720px) {
   .wordmark { padding-top: 1rem; padding-bottom: 0; }
   .consoleBody { height: 13rem; }
@@ -436,26 +449,27 @@
 }
 
 @media (max-width: 380px) {
-  /* أقل من كده الأركان بتزاحم الكونسول */
+  /* Below this the corners crowd the console */
   .cornerBottomLeft,
   .cornerBottomRight { display: none; }
 }
 
-/* ── التفضيلات ─────────────────────────────────────────────────────── */
+/* ── Preferences ───────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .speedLines { animation: none; }
   .logLine { animation: none; }
   .logCaret { animation: none; opacity: 1; }
-  /* الشريط لسه بيتحرك — ده مؤشر حالة حقيقي، مش زخرفة. بس من غير
-     تنعيم، بيقفز للقيمة الجديدة على طول. */
+  /* The bar still moves — it is a real status indicator, not decoration.
+     But with no smoothing: it jumps straight to the new value. */
   .progressFill { transition: none; }
 }
 
 @media (forced-colors: active) {
   .loader { background: Canvas; }
-  /* background-clip: text بيخلي الحروف شفافة — في الوضع ده التدرّج
-     بيتشال والحروف بتختفي خالص. نرجّعها لون صريح. */
+  /* background-clip: text makes the glyphs transparent — in this mode the
+     gradient is removed and the letters would vanish entirely. Give them an
+     explicit colour back. */
   .wordmarkRow {
     -webkit-text-fill-color: CanvasText;
     background: none;

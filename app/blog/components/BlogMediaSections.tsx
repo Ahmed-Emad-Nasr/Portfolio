@@ -39,7 +39,7 @@ export default function BlogMediaSections({
             <p>All channel videos appear here in one place.</p>
           </div>
           <div className={styles.youtubeHubActions}>
-            <a href={youtubeChannelUrl} target="_blank" rel="noopener noreferrer" className={`${styles.primaryAction} ${styles.channelAction}`}>Open YouTube Channel</a>
+            <a href={youtubeChannelUrl} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" className={styles.channelAction}>Open YouTube Channel</a>
           </div>
 
           {!filteredChannelVideos.length ? (
@@ -63,7 +63,7 @@ export default function BlogMediaSections({
                       <h3>{video.title}</h3>
                       {video.publishedAt && <p className={styles.videoDate}>{formatDate(video.publishedAt)}</p>}
                     </div>
-                    <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" className={styles.playlistAction}>Watch on YouTube</a>
+                    <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost">Watch on YouTube</a>
                   </article>
                 ))}
               </div>
@@ -89,7 +89,7 @@ export default function BlogMediaSections({
                         <h3>{playlist.title}</h3>
                         {playlist.description && <p className={styles.playlistDescription}>{playlist.description}</p>}
                       </div>
-                      <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" className={styles.playlistAction}>Open Playlist</a>
+                      <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost">Open Playlist</a>
                     </article>
                   ))}
                 </div>

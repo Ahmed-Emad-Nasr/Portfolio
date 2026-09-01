@@ -74,18 +74,18 @@ export default function ContactSection() {
   };
 
   return (
-    <section className={styles.section} id="Contact" aria-label="Contact">
+    <section data-fx="section" data-section="auto" id="Contact" aria-label="Contact">
       {/* نفس هيكل الهيدر المتوسّط بتاع باقي السكاشن — كان محاذي لليسار
           وشكله كإنه جاي من موقع تاني. */}
-      <div className={styles["header-section"]}>
-        <SectionHeader japaneseText="連絡" englishText="Contact" titleClassName={styles.title} />
+      <div data-fx="section-head">
+        <SectionHeader japaneseText="連絡" englishText="Contact" />
         <p className={styles.lede}>
           Open to SOC, incident response, and DFIR roles, and to security
           training work. Fastest reply is by email.
         </p>
       </div>
 
-      <div className={styles.container} data-form={FORMSPREE_ENDPOINT ? "on" : "off"}>
+      <div className={styles.grid} data-fx="container" data-form={FORMSPREE_ENDPOINT ? "on" : "off"}>
         <div className={styles.intro}>
           <ul className={styles.direct}>
             <li>

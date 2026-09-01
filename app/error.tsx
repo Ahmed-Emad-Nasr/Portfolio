@@ -51,11 +51,11 @@ export default function Error({
         <nav className={styles.actions} aria-label="Recovery options">
           {/* reset بيحاول يرندر الجزء اللي وقع تاني من غير reload كامل —
               أغلب الأخطاء العابرة بتتحل بيه. */}
-          <button type="button" className={styles.primary} onClick={reset}>
+          <button type="button" data-fx="btn" data-btn="solid" onClick={reset}>
             Try again
           </button>
-          <Link href="/" className={styles.secondary}>Portfolio</Link>
-          <Link href="/blog" className={styles.secondary}>Case library</Link>
+          <Link href="/" data-fx="btn" data-btn="outline">Portfolio</Link>
+          <Link href="/blog" data-fx="btn" data-btn="outline">Case library</Link>
         </nav>
 
         {/* digest هو الهاش اللي Next بيولّده للخطأ. بيتعرض عشان لو حد

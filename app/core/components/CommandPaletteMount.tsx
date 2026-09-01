@@ -4,19 +4,20 @@
  * CommandPaletteMount.tsx
  * Author: Ahmed Emad Nasr
  *
- * المضيف الوحيد لكل الطبقات اللي بتفتح فوق الموقع: الـ command palette،
- * ورقة الاختصارات، والترمينال.
+ * The single host for every layer that opens over the site: the command
+ * palette, the shortcuts sheet, and the terminal.
  *
- * ليه كلهم في مكوّن واحد؟ عشان يبقى فيه listener واحد للكيبورد على الـ window
- * بدل تلاتة يتزاحموا على نفس الأزرار. وكل الأجزاء التقيلة dynamic — يعني
- * الصفحة بتحمّل بيهم صفر بايت لحد ما المستخدم يطلب واحد فعلاً.
+ * Why put them in one component? So there is one keyboard listener on the
+ * window instead of three competing for the same keys. And every heavy part
+ * is dynamic — the page ships zero bytes for them until the user actually
+ * asks for one.
  *
- * الاختصارات:
- *   Ctrl/⌘ + K   الـ palette
- *   /            الـ palette (لو مش بتكتب في خانة)
- *   ?            ورقة الاختصارات
- *   g ثم h/e/p/c/b/t   تنقّل سريع
- *   تكتب "3omda" في أي حتة → الترمينال
+ * Shortcuts:
+ *   Ctrl/⌘ + K   the palette
+ *   /            the palette (when not typing in a field)
+ *   ?            the shortcuts sheet
+ *   g then h/e/p/c/b/t   quick navigation
+ *   type "3omda" anywhere → the terminal
  */
 
 import dynamic from "next/dynamic";
@@ -30,14 +31,14 @@ const Terminal = dynamic(() => import("./Terminal"), { ssr: false });
 
 type Overlay = "palette" | "shortcuts" | "terminal" | null;
 
-/** بنتجاهل الاختصارات لو المستخدم بيكتب في خانة */
+/** Ignore shortcuts while the user is typing in a field */
 const isTypingTarget = (target: EventTarget | null): boolean => {
   if (!(target instanceof HTMLElement)) return false;
   const tag = target.tagName;
   return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable;
 };
 
-/** g + الحرف ده → القسم ده */
+/** g + this letter → this section */
 const GO_TO_SECTION: Record<string, string> = {
   h: "Home",
   e: "Experience",
@@ -54,7 +55,8 @@ export default function CommandPaletteMount() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // refs مش state: دول بيتغيّروا مع كل ضغطة زرار ومحدش محتاج re-render بسببهم
+  // refs, not state: these change on every keypress and nobody needs a
+// re-render because of them
   const pendingG = useRef(false);
   const gTimer = useRef<number | undefined>(undefined);
   const secretBuffer = useRef("");
@@ -63,7 +65,7 @@ export default function CommandPaletteMount() {
 
   const goToSection = useCallback(
     (id: string) => {
-      // على البلوج الأقسام دي مش موجودة، فبنروح للصفحة الرئيسية الأول
+      // These sections do not exist on the blog, so go to the home page first
       if (pathname !== "/") {
         router.push(`/#${id}`);
         return;
@@ -86,7 +88,7 @@ export default function CommandPaletteMount() {
     const onKey = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
 
-      // Ctrl+K شغال حتى وإنت بتكتب — ده المتعارف عليه في كل التطبيقات
+      // Ctrl+K works even while typing — that is the convention everywhere
       if ((e.ctrlKey || e.metaKey) && key === "k") {
         e.preventDefault();
         setOverlay((current) => (current === "palette" ? null : "palette"));
@@ -96,7 +98,7 @@ export default function CommandPaletteMount() {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (isTypingTarget(e.target)) return;
 
-      // ── الكلمة السرية ──────────────────────────────────────────────────
+      // ── The secret word ────────────────────────────────────────────────
       if (key.length === 1) {
         secretBuffer.current = (secretBuffer.current + key).slice(-SECRET.length);
         if (secretBuffer.current === SECRET) {
@@ -107,7 +109,7 @@ export default function CommandPaletteMount() {
         }
       }
 
-      // ── تسلسل g + حرف ──────────────────────────────────────────────────
+      // ── g + letter sequence ────────────────────────────────────────────
       if (pendingG.current) {
         pendingG.current = false;
         window.clearTimeout(gTimer.current);
@@ -127,12 +129,13 @@ export default function CommandPaletteMount() {
           goToSection(GO_TO_SECTION[key]);
           return;
         }
-        // أي حرف تاني: نسيبه يعدّي عادي
+        // Any other key: let it through normally
       }
 
       if (key === "g") {
         pendingG.current = true;
-        // ثانية واحدة كفاية: بعد كده الـ g بتبقى ضغطة قديمة مش بداية تسلسل
+        // One second is enough: after that the g is an old keypress, not the
+// start of a sequence
         window.clearTimeout(gTimer.current);
         gTimer.current = window.setTimeout(() => {
           pendingG.current = false;
@@ -152,8 +155,9 @@ export default function CommandPaletteMount() {
       }
     };
 
-    // الـ palette بيفتح الترمينال أو الاختصارات عن طريق الأحداث دي — أنضف من
-    // تمرير callbacks لجوّه مكوّن lazy
+    // The palette opens the terminal or the shortcuts sheet through these
+// events — cleaner than
+    // passing callbacks into a lazy component
     const openTerminal = () => setOverlay("terminal");
     const openShortcuts = () => setOverlay("shortcuts");
 
@@ -171,8 +175,8 @@ export default function CommandPaletteMount() {
 
   return (
     <>
-      {/* الزرار ده هو الطريقة الوحيدة لفتح الـ palette على الموبايل، وعلى
-          الديسكتوب بيعرّف الناس إن الاختصار موجود أصلاً. */}
+      {/* This button is the only way to open the palette on mobile, and on
+          desktop it tells people the shortcut exists at all. */}
       {overlay === null && (
         <button
           type="button"

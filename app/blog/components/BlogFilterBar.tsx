@@ -55,7 +55,7 @@ function BlogFilterBar({
         </span>
         <input
           type="search"
-          className={styles.input}
+          data-fx="field"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search cases, tools, tags…"

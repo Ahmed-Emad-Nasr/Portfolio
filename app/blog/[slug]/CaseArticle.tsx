@@ -194,11 +194,11 @@ export default function CaseArticle({
                 href={normalizePublicHref(item.href)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={blogStyles.viewAction}
+                data-fx="btn" data-btn="ghost" data-tone="accent"
               >
                 View PDF
               </a>
-              <a href={normalizePublicHref(item.href)} download className={blogStyles.downloadAction}>
+              <a href={normalizePublicHref(item.href)} download data-fx="btn" data-btn="ghost" data-tone="main">
                 Download
               </a>
             </>
@@ -207,7 +207,7 @@ export default function CaseArticle({
             <button
               type="button"
               onClick={() => openGallery(0)}
-              className={`${blogStyles.galleryOpenAction} ${blogStyles.viewAction}`}
+              data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed"
             >
               View All Screenshots
             </button>
@@ -286,7 +286,7 @@ export default function CaseArticle({
                 </li>
               ))}
             </ul>
-            <p className={styles.attackNote}>
+            <p className={styles.attackNote} data-links="inline">
               <Link href="/#Coverage">See the full coverage map →</Link>
             </p>
           </section>

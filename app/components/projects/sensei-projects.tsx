@@ -138,10 +138,10 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
           </div>
 
           <div className={styles["project-actions"]}>
-            <a href={liveUrl} target="_blank" rel="noopener noreferrer" className={`${styles["action-btn"]} ${styles["primary-action"]}`} aria-label={`Open live project for ${repo.name}`}>
+            <a href={liveUrl} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="main" className={styles.grow} aria-label={`Open live project for ${repo.name}`}>
               <Icon name="faCirclePlay" /> Live
             </a>
-            <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className={styles["action-btn"]} aria-label={`Open source code for ${repo.name}`}>
+            <a href={repo.html_url} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" className={styles.grow} aria-label={`Open source code for ${repo.name}`}>
               <Icon name="faCode" /> Code
             </a>
           </div>
@@ -158,13 +158,13 @@ const SenseiProjects = memo(function SenseiProjects() {
   const repos = staticProjectFallback as unknown as GitHubRepository[];
 
   return (
-    <section className={styles["section-projects"]} id="Projects">
-      <div className={styles.container}>
-        <div className={styles["header-section"]}>
-          <SectionHeader japaneseText="計画" englishText="Projects" titleClassName={styles.title} />
+    <section data-fx="section" id="Projects">
+      <div data-fx="container">
+        <div data-fx="section-head">
+          <SectionHeader japaneseText="計画" englishText="Projects" />
         </div>
 
-        <Spotlight className={styles["projects-timeline"]} aria-label="Projects Timeline">
+        <Spotlight data-fx="timeline" aria-label="Projects Timeline">
           {repos.map((repo, index) => (
             <ProjectItem key={repo.id} repo={repo} isRight={index % 2 !== 0} />
           ))}

@@ -83,11 +83,11 @@ export default function BlogPdfLibrarySection({
             <div className={styles.cardActions}>
               {leadCase.href && (
                 <>
-                  <a href={normalizeHref(leadCase.href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
-                  <a href={normalizeHref(leadCase.href)} download className={styles.downloadAction}>Download</a>
+                  <a href={normalizeHref(leadCase.href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">View PDF</a>
+                  <a href={normalizeHref(leadCase.href)} download data-fx="btn" data-btn="ghost" data-tone="main">Download</a>
                 </>
               )}
-              <button type="button" onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)} className={`${styles.galleryOpenAction} ${styles.viewAction}`}>
+              <button type="button" onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)} data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed">
                 View All Screenshots
               </button>
             </div>

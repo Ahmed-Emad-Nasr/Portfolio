@@ -1,9 +1,9 @@
 /*
  * ScrollProgress.module.css
  *
- * الـ track مالوش خلفية عن قصد — الخط الأحمر (#ff003c) اللي في
- * .header::before هو نفسه الـ track. الشريط بيمشي فوقه، فالنتيجة خط واحد
- * بيتلوّن تدريجياً بدل خطين فوق بعض.
+ * The track deliberately has no background — the red line in .header::before
+ * (var(--main-color)) IS the track. The bar runs over it, so the result is a
+ * single line filling with colour rather than two lines stacked.
  */
 
 .track {
@@ -13,8 +13,8 @@
   right: 0;
   height: 2px;
   display: flex;
-  gap: 3px; /* الفواصل بين الأقسام — المعلومة الوحيدة اللي الشريط بيضيفها */
-  z-index: var(--z-progress, 3000);
+  gap: 3px; /* The section boundaries — the only information the bar adds */
+  z-index: var(--z-progress);
   pointer-events: none;
   background: transparent;
   contain: layout style;
@@ -34,23 +34,24 @@
   height: 100%;
   transform: scaleX(0);
   transform-origin: 0 50%;
-  background: var(--accent-color, #ffd700);
+  background: var(--accent-color);
   will-change: transform;
 }
 
-/* القسم اللي إنت فيه دلوقتي: أبيض + glow خفيف عشان يبان عن اللي فاتوا */
+/* The section you are in right now: white with a faint glow so it reads
+   apart from the ones behind it */
 .segment[data-state="active"] .fill {
-  background: linear-gradient(90deg, var(--accent-color, #ffd700) 0%, #ffffff 100%);
-  box-shadow: 0 0 8px rgba(var(--accent-color-rgb, 255, 215, 0), 0.5);
+  background: linear-gradient(90deg, var(--accent-color) 0%, #ffffff 100%);
+  box-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.5);
 }
 
-/* الأقسام اللي خلصت: دهبي مطفي، موجودة بس مش بتسحب العين */
+/* Sections already passed: muted gold, present but not pulling the eye */
 .segment[data-state="done"] .fill {
   opacity: 0.45;
 }
 
-/* الأجهزة الضعيفة: من غير glow. box-shadow على عنصر ثابت فوق الشاشة بيكلّف
-   repaint في كل فريم على GPU ضعيف. */
+/* Low-end devices: no glow. box-shadow on an element fixed over the
+   viewport costs a repaint every frame on a weak GPU. */
 :global(html[data-tier="low"]) .segment[data-state="active"] .fill {
   box-shadow: none;
 }

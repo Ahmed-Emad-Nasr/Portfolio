@@ -4,8 +4,8 @@
  * ShortcutsHelp.tsx
  * Author: Ahmed Emad Nasr
  *
- * ورقة الاختصارات اللي بتفتح بـ "?" — نفس الفكرة اللي في GitHub وGmail.
- * lazy زي الباقي، فمش بتاخد أي بايت لحد ما حد يطلبها.
+ * The shortcuts sheet that opens with "?" — the same idea GitHub and Gmail
+ * use. Lazy like the rest, so it costs nothing until someone asks for it.
  */
 
 import { useEffect, useRef } from "react";

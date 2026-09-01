@@ -4,11 +4,11 @@
  * Terminal.tsx
  * Author: Ahmed Emad Nasr
  *
- * ترمينال صغير بيتفتح لما تكتب "3omda" في أي حتة في الموقع (أو من الـ palette).
- * مش لعبة على الفاضي — هو طريقة تانية تتصفح بيها نفس المحتوى: ls بيوريك
- * الـ cases، open بيفتح واحدة، cat cv بينزّل الـ CV.
+ * A small terminal that opens when you type "3omda" anywhere on the site
+ * (or from the palette). Not a gimmick — it is another way to browse the
+ * same content: ls shows the cases, open opens one, cat cv downloads the CV.
  *
- * كله lazy، فمش بياخد أي بايت من الـ bundle الأساسي.
+ * All lazy, so it takes no bytes from the main bundle.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
@@ -24,7 +24,7 @@ const BANNER = [
   'Type "help" for commands, "exit" to close.',
 ];
 
-/** أقصى عدد سطور محفوظة — من غيره الـ DOM بيكبر من غير سقف */
+/** Maximum number of lines kept — without it the DOM grows unbounded */
 const MAX_LINES = 300;
 
 export default function Terminal({ onClose }: { onClose: () => void }) {
@@ -133,7 +133,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             break;
           }
 
-          // بيقبل رقم من الليستة أو الـ id نفسه
+          // Accepts either a number from the list or the id itself
           const byIndex = Number.parseInt(arg, 10);
           const target = Number.isNaN(byIndex)
             ? cases.find((c) => c.id === arg)
@@ -200,7 +200,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
     [cases, onClose, print, printAll, router],
   );
 
-  // ── focus + قفل السكرول ─────────────────────────────────────────────────
+  // ── focus + scroll lock ─────────────────────────────────────────────────
   useEffect(() => {
     inputRef.current?.focus();
     const prev = document.body.style.overflow;
@@ -210,7 +210,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
     };
   }, []);
 
-  // الشاشة تفضل نازلة على آخر سطر
+  // Keep the view pinned to the last line
   useEffect(() => {
     const body = bodyRef.current;
     if (body) body.scrollTop = body.scrollHeight;
@@ -230,7 +230,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    // ArrowUp/Down بيتنقلوا في الأوامر السابقة، زي أي shell
+    // ArrowUp/Down move through previous commands, like any shell
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (!history.length) return;

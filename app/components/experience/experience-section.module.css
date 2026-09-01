@@ -1,47 +1,6 @@
-/*
- * File: experience-section.module.css
- * MINIMALIST CYBERPUNK EDITION
- * (adapted 1:1 from صحبي's design — same layout, nodes, card, motion tokens)
- *
- * NOTE: this file expects the following CSS custom properties to exist
- * (usually defined in globals.css / :root). If your theme already exposes
- * different names (e.g. --primary instead of --main-color), either rename
- * the vars below or add a couple of aliases in globals.css:
- *
- *   --main-color, --main-color-rgb
- *   --accent-color, --accent-color-rgb
- *   --bg-color, --text-color, --text-muted
- *   --radius-card
- *   --motion-fast, --motion-normal, --motion-ease
- */
-
-.section-education { min-height: 100vh; min-height: 100dvh; padding: 8rem 0 6rem; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 1px 1200px; }
-.header-section { text-align: center; margin-bottom: 6rem; }
 
 
-
-/* Sharp Title */
-.title { position: relative; font-weight: 800; font-size: 3.5rem; color: var(--text-color); letter-spacing: 2px; text-transform: uppercase; display: inline-block; padding-bottom: 2rem; }
-.title::before, .title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
-.title::before { width: 100%; height: var(--title-underline-thin, 1px); background: rgba(var(--main-color-rgb), var(--title-underline-opacity, 0.3)); }
-.title::after { width: var(--title-underline-width, 40%); height: var(--title-underline-thick, 3px); background: var(--main-color); }
-
-.container { margin: 0 auto; padding: 0 var(--container-pad-x, 5.25%); max-width: var(--container-max-width, 1500px); }
-
-/* --- 1. Static Cyber Timeline (Optimized) --- */
-.time-line { position: relative; max-width: 1160px; margin: 0 auto; padding: 2rem 0; }
-.time-line::after {
-  content: "";
-  position: absolute;
-  width: var(--timeline-line-width, 2px);
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(var(--main-color-rgb), var(--timeline-line-opacity, 0.2));
-}
-
-.timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; margin-bottom: var(--space-lg, 3.2rem); }
+.timeline-container { padding: 1.5rem 3rem; position: relative; width: 50%; z-index: 2; margin-bottom: var(--space-lg); }
 .timeline-container.left { left: 0; }
 .timeline-container.right { left: 50%; }
 
@@ -49,10 +8,10 @@
 .timeline-container::after {
   content: "";
   position: absolute;
-  width: var(--diamond-node-size, 14px);
-  height: var(--diamond-node-size, 14px);
+  width: var(--diamond-node-size);
+  height: var(--diamond-node-size);
   background: var(--bg-color);
-  border: var(--diamond-border-width, 2px) solid var(--accent-color);
+  border: var(--diamond-border-width) solid var(--accent-color);
   top: 5.5rem;
   z-index: 3;
   transform: rotate(45deg);
@@ -70,7 +29,7 @@
 }
 
 /* --- 3. Minimalist Cyber Card --- */
-/* الشكل كله من html [data-fx="card"] في globals.css */
+/* All appearance comes from html [data-fx="card"] in globals.css */
 .content { text-align: left; }
 
 /* Heading levels moved down one step (h2->h3, h3->h4) so the page outline
@@ -88,14 +47,12 @@
    so people tabbing through the page (or using a switch/screen reader) see it */
 .tag h4:focus-within { color: var(--accent-color); }
 .tag h4:focus-within .linkIcon { opacity: 1; transform: translateX(0); }
-.tag h4 a:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; border-radius: 2px; }
 
 /* Replaces the inline style object that was allocated on every render of
    every timeline row. Same three declarations, now cacheable by the browser. */
 .subTagLink { cursor: pointer; color: inherit; text-decoration: none; }
 
 /* Description intro line (Ahmed's `description` field) */
-
 
 .desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; color: var(--text-muted); font-size: 1.4rem; line-height: 1.6; }
 .desc-list li { margin-bottom: 0.8rem; }
@@ -104,10 +61,8 @@
 
 /* Japanese role tag (Ahmed's `japaneseRole` field) */
 
-
-
 /* --- 4. Terminal Skill Badges --- */
-.skillTags { display: flex; flex-wrap: wrap; gap: var(--space-xs, 0.8rem); margin-top: var(--space-md, 1.8rem); }
+.skillTags { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-md); }
 .skillTag {
   padding: 0.4rem 0.8rem;
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
@@ -122,7 +77,7 @@
 .skillTag::before { content: "> "; opacity: 0.5; color: var(--main-color); }
 .skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); border-color: var(--main-color); }
 
-.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: var(--space-md, 2rem); padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: var(--space-xs, 0.6rem); }
+.date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: var(--space-md); padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: var(--space-xs); }
 .experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: var(--font-mono); }
 .date-range { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; color: var(--text-muted); font-family: var(--font-mono); }
 
@@ -135,16 +90,14 @@
 
 /* === Mobile Overrides === */
 @media (max-width: 991px) {
-  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; margin-bottom: var(--space-md, 2.2rem); }
+  .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; margin-bottom: var(--space-md); }
   .timeline-container.left, .timeline-container.right { left: 0; }
-  .time-line::after { left: 2rem; }
   .timeline-container.left::after, .timeline-container.right::after { left: 1.3rem; right: auto; }
   .date-details { align-items: flex-start; }
 }
 @media (max-width: 430px) {
-  .title { font-size: 2.5rem; }
 
-  .timeline-container { padding-left: 4rem; margin-bottom: var(--space-sm, 1.6rem); }
+  .timeline-container { padding-left: 4rem; margin-bottom: var(--space-sm); }
   .desc-list { font-size: 1.3rem; }
 }
 @media (max-width: 360px) {

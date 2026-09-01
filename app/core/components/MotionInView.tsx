@@ -3,33 +3,35 @@
 /*
  * MotionInView.tsx — TRIMMED
  *
- * الملف ده كان بيصدّر كومبوننت `MotionInView` كامل (variants، viewport
- * animation، كل حاجة) + `motionVariants` + `AnimatePresence` معاد تصديره.
- * دلوقتي مفيش حد بيستخدم أي واحد منهم: كل استخدام اتنقل لـ Reveal/
- * RevealGroup (CSS بالكامل، observer مشترك — شوف Reveal.tsx)، وده الكومنت
- * اللي كان موجود في sensei-art.tsx كان بيقوله صراحة: "الغلاف MotionInView
- * اتشال من هنا". آخر مكان كان بيستخدمه اتشال، بس الملف نفسه فضل زي ما هو.
+ * This file used to export a full `MotionInView` component (variants,
+ * viewport animation, the lot) plus `motionVariants` and a re-exported
+ * `AnimatePresence`. Nothing uses any of them now: every usage moved to
+ * Reveal/RevealGroup (pure CSS, one shared observer — see Reveal.tsx), and
+ * the comment already sitting in sensei-art.tsx said so outright: "the
+ * MotionInView wrapper was removed from here". The last consumer went away;
+ * the file did not.
  *
- * اللي فضل فعليًا مستخدم هو `MotionProvider` بس، اللي بيتركّب مرة واحدة في
- * layout.tsx ويوفّر framer-motion features لأي `m.*` تحته (استخدامه
- * الوحيد دلوقتي: sensei_loader.tsx). مسحت الباقي عشان الملف يعبّر عن
- * الواقع، مش عن حالة قديمة.
+ * What is genuinely still in use is `MotionProvider` alone, mounted once in
+ * layout.tsx to supply framer-motion features to any `m.*` beneath it (its
+ * only consumer today: sensei_loader.tsx). The rest is deleted so the file
+ * describes the present rather than a previous state.
  */
 
 import React from "react";
 import { LazyMotion } from "framer-motion";
 
 /*
- * `domAnimation` كان static import، فالـ ~25KB بتاعته كانت جزء من الـ bundle
- * الأساسي على كل صفحة — بما فيها صفحات البلوج اللي أنيميشناتها أقل.
+ * `domAnimation` was a static import, so its ~25KB were part of the main
+ * bundle on every page — including the blog pages, which animate less.
  *
- * LazyMotion بيقبل دالة بترجّع Promise، فالحزمة بتتحمّل بعد الـ paint الأول
- * بدل ما تتأخّره. الـ m.* components بترندر بحالتها الابتدائية لحد ما توصل،
- * وده بالظبط اللي بيحصل دلوقتي برضه أثناء تحميل الـ bundle — الفرق إن
- * المحتوى بيتعرض أسرع.
+ * LazyMotion accepts a function returning a Promise, so the package loads
+ * after first paint instead of delaying it. The m.* components render in
+ * their initial state until it arrives, which is exactly what happens today
+ * anyway while the bundle loads — the difference is that the content shows
+ * sooner.
  *
- * الدالة بره الكومبوننت عن قصد: لو اتعرّفت جوّه، كل render كان هيبعت
- * مرجع جديد وLazyMotion هيعيد التحميل.
+ * The function lives outside the component deliberately: defined inside, it
+ * would be a new reference on every render and LazyMotion would reload.
  */
 const loadDomAnimation = () =>
   import("framer-motion").then((mod) => mod.domAnimation);

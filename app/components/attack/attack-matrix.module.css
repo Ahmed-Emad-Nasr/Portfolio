@@ -1,55 +1,21 @@
 /*
  * attack-matrix.module.css
  *
- * ⚠️ ملحوظة عن المقياس — دي كانت سبب إن كل النصوص طلعت صغيرة جداً:
+ * ⚠️ A note on scale — this was why every piece of text came out tiny:
  *
- *     globals.css فيه  html { font-size: 62.5% }  →  1rem = 10px مش 16px
+ *     globals.css sets  html { font-size: 62.5% }  →  1rem = 10px, not 16px
  *
- * يعني `font-size: 0.8rem` بتطلع **8 بكسل** مش 13. وده اللي كان حاصل في
- * كل الملف ده.
+ * So `font-size: 0.8rem` renders at **8 pixels**, not 13. That was happening
+ * throughout this file.
  *
- * وglobals.css فيه توكنز جاهزة للمقاسات مكنتش بستخدمها:
+ * And globals.css already had size tokens that were going unused:
  *     --text-sm 1.4rem · --text-base 1.6rem · --text-md 1.8rem
  *     --text-lg 2.0rem · --text-xl 2.2rem   · --text-2xl 2.8rem
  *     --space-xs … --space-xl
  *
- * الملف كله اتعاد كتابته على التوكنز دي، فبقى مطابق لباقي الموقع بدل ما
- * يبقى ليه مقياس خاص بيه.
+ * The whole file was rewritten on those tokens, so it now matches the rest
+ * of the site instead of carrying a private scale.
  */
-
-.section {
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding: 8rem 0 6rem;
-  position: relative;
-  z-index: 1;
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 1200px;
-}
-
-.container {
-  margin: 0 auto;
-  padding: 0 var(--container-pad-x, 5.25%);
-  max-width: var(--container-max-width, 1500px);
-}
-
-.header-section { text-align: center; margin-bottom: 5rem; }
-
-/* مطابق بالحرف لـ .title في Projects و Experience */
-.title {
-  position: relative;
-  font-weight: 800;
-  font-size: 2.6rem;
-  color: var(--text-color);
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  display: inline-block;
-  padding-bottom: 1.6rem;
-}
-.title::before,
-.title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
-.title::before { width: 100%; height: 1px; background: rgba(var(--main-color-rgb), 0.3); }
-.title::after { width: 40%; height: 3px; background: var(--main-color); }
 
 .lede {
   color: var(--text-muted);
@@ -67,13 +33,6 @@
   margin: 3.2rem 0 0;
 }
 .stat { margin: 0; }
-.stat dt {
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
 .stat dd {
   margin: 0.6rem 0 0;
   font-size: 3.4rem;
@@ -84,8 +43,9 @@
 }
 
 /*
- * أعمدة بتلف على سطور بدل scroller أفقي (اللي كان بيقص آخر عمودين ويطلّع
- * شريط تمرير رمادي بتاع النظام في نص التصميم).
+ * Columns wrap onto new rows instead of using a horizontal scroller (which
+ * clipped the last two columns and dropped a grey system scrollbar into the
+ * middle of the design).
  */
 .matrix {
   display: grid;
@@ -120,25 +80,17 @@
   cursor: pointer;
   list-style: none;
   border: 1px solid rgba(var(--main-color-rgb), calc(0.2 + var(--depth, 0) * 0.45));
-  border-radius: var(--radius-card-sm, 6px);
-  /* شدة الخلفية = عدد التقارير، فالتغطية العميقة بتبان بنظرة واحدة */
+  border-radius: var(--radius-card-sm);
+  /* Background intensity = number of reports, so deep coverage reads at a glance */
   background: rgba(var(--main-color-rgb), calc(0.05 + var(--depth, 0) * 0.2));
-  transition: border-color var(--motion-fast, 150ms) ease,
-              background var(--motion-fast, 150ms) ease;
+  transition: border-color var(--motion-fast) ease,
+              background var(--motion-fast) ease;
 }
 .cellSummary::-webkit-details-marker { display: none; }
 .cellSummary::marker { content: ""; }
 .cellSummary:hover {
   border-color: var(--accent-color);
   background: rgba(var(--main-color-rgb), calc(0.13 + var(--depth, 0) * 0.2));
-}
-.cellSummary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
-
-.techniqueId {
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  color: var(--accent-color);
-  font-variant-numeric: tabular-nums;
 }
 .techniqueName {
   font-size: var(--text-sm);
@@ -159,7 +111,7 @@
   padding: 1rem 1.2rem 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-top: 0;
-  border-radius: 0 0 var(--radius-card-sm, 6px) var(--radius-card-sm, 6px);
+  border-radius: 0 0 var(--radius-card-sm) var(--radius-card-sm);
 }
 .evidence li { margin-bottom: 0.7rem; }
 .evidence li:last-child { margin-bottom: 0; }
@@ -170,12 +122,8 @@
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
-.evidence a:hover,
-.evidence a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
 
 @media (max-width: 991px) {
-  .section { padding: 5rem 0 4rem; }
-  .title { font-size: 2.2rem; }
   .stats { gap: var(--space-md); }
   .stat dd { font-size: 2.8rem; }
   .matrix { grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); }

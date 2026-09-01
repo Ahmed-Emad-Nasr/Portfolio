@@ -2,42 +2,45 @@
  * globals.css — Premium Cyber & SOC Theme
  * @author Ahmed Emad Nasr
  *
- * ═══ إيه اللي اتشال في التنضيف ده ═══
+ * ═══ WHAT THIS CLEANUP REMOVED ═══
  *
- *  · ٤٧ متغيّر CSS معرّف ومحدش بيقراه (٤٢٪ من نظام التوكنز كله)
- *  · ١١ كلاس utility عام (.katana-card و.glow-red و.text-stroke …) —
- *    ولا واحد فيهم مكتوب في أي JSX في الموقع
- *  · .skeleton-shimmer — متعرّف ومتعمله gating في ميزانية الحركة، ومش
- *    مستخدم في أي حتة
- *  · ١٦ تصريح `box-shadow: none` — دول أثر عملية شيل الـ glow: الشخص
- *    كتب `none` مكان القيمة بدل ما يمسح السطر
- *  · محدد `*` عالمي بـ !important للـ backdrop-filter — اتشال لصالح
- *    التوكن نفسه (شوف قسم ٩)
+ *  · 47 CSS custom properties that were defined and never read
+ *    (42% of the entire token system)
+ *  · 11 global utility classes (.katana-card, .glow-red, .text-stroke …) —
+ *    not one of them appears in any JSX in the site
+ *  · .skeleton-shimmer — defined and gated in the motion budget, and
+ *    used nowhere
+ *  · 16 `box-shadow: none` declarations — leftovers from removing the
+ *    glow effect: the value was replaced with `none` instead of deleting
+ *    the line
+ *  · a global `*` selector with !important for backdrop-filter — dropped
+ *    in favour of gating the token itself (see section 9)
  *
- * ═══ إيه اللي اتصلّح ═══
+ * ═══ WHAT THIS CLEANUP FIXED ═══
  *
- *  · content-visibility كانت شغّالة على الـ hero (قسم ٦)
- *  · قاعدة الـ mid tier كانت بتساوي كل الأنيميشن الزخرفي على مدة واحدة
- *  · --motion-slow كان بيتكتب في ٣ أماكن وبيتقرا في صفر
+ *  · content-visibility was active on the hero (section 6)
+ *  · the mid-tier rule flattened every decorative animation to one duration
+ *  · --motion-slow was written in 3 places and read in zero
  *
- * ملاحظة على الحجم: التعليقات دي بتتشال بالكامل في build الإنتاج
- * (Next بيـminify الـ CSS). التنضيف هنا بيقلّل عدد **القواعد** اللي
- * المتصفح بيمرّ عليها في كل style recalculation — ده اللي بيتقاس، مش
- * حجم الملف في الريبو.
+ * A note on file size: these comments are stripped entirely from the
+ * production build (Next minifies the CSS). What the cleanup reduces is
+ * the number of **rules** the browser walks on every style recalculation —
+ * that is the thing that gets measured, not the byte count in the repo.
  **/
 
-/*--------- 1. التوكنز ---------*/
-/* كل توكن هنا مقروء في مكان واحد على الأقل. لو ضفت واحد جديد ومحدش
-   بيستخدمه، هو مش توكن — هو ملاحظة، ومكانها التعليقات. */
+/*--------- 1. Tokens ---------*/
+/* Every token here is read in at least one place. If you add a new one
+   and nothing consumes it, it is not a token — it is a note, and notes
+   belong in comments. */
 :root {
-  /* الألوان الأساسية */
+  /* Core palette */
   --background: #000000;
   --foreground: #ffffff;
   --primary: #bc002d;
   --accent: #ffd700;
   --tertiary: #00d2ef;
 
-  /* أسماء بديلة بيستخدمها الكود الحالي */
+  /* Aliases the existing code already uses */
   --bg-color: var(--background);
   --bg-gradient: none;
   --text-color: var(--foreground);
@@ -53,56 +56,83 @@
   --accent-color-rgb: 255, 215, 0;
   --accent-light: #fff0a6;
 
+  --text-faint: #5a5a5a;
+
   --danger: #ff2d55;
   --danger-rgb: 255, 45, 85;
 
+  /* The one-pixel divider used all over the site. It was written literally
+     as rgba(255, 255, 255, 0.22) in a dozen places, and as 0.08 / 0.15 in
+     a few others where the same thing was meant. */
+  --hairline: rgba(255, 255, 255, 0.22);
+
   --surface-card-border: rgba(var(--main-color-rgb), 0.18);
 
-  /* الخطوط */
+  /* Typefaces */
   --font-body: var(--font-overlock), "Overlock", sans-serif;
   --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace,
     "SF Mono", Menlo, Consolas, monospace;
-  /* Overlock مفيهوش ولا حرف ياباني. من غير الـ stack ده كل نص ياباني
-     بيرجع لأي خط CJK موجود على الجهاز — Yu Gothic على ويندوز، Hiragino
-     على ماك، Noto على أندرويد. تلات أشكال مختلفة لنفس الهوية.
-     لو عايز تحكّم كامل: Noto Sans JP بـ next/font/local من subset فيه
-     الحروف المستخدمة بس (هي معدودة وثابتة) — ~20KB بدل ~1.5MB. */
+  /* Overlock contains no Japanese glyphs. Without this stack every piece
+     of Japanese text falls back to whatever CJK font the device happens to
+     have — Yu Gothic on Windows, Hiragino on macOS, Noto on Android. Three
+     different looks for one identity.
+     For full control: Noto Sans JP via next/font/local, subset to the
+     glyphs actually used (a small, fixed set) — ~20KB instead of ~1.5MB. */
   --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
     "Noto Sans JP", "Noto Sans CJK JP", Meiryo, sans-serif;
 
-  /* الأنصاف والحواف */
+  /* Radii */
   --radius-card: 14px;
   --radius-card-sm: 8px;
   --radius-button: 2px;
   --radius-pill: 999px;
 
-  /* مقاييس النص — html بـ 62.5% يعني 1rem = 10px */
+  /* Type scale — html at 62.5% means 1rem = 10px */
+  --text-xs: 1.2rem;
   --text-sm: 1.4rem;
   --text-base: 1.6rem;
   --text-md: 1.8rem;
   --text-lg: 2.0rem;
   --text-xl: 2.2rem;
 
-  /* الحركة */
+  /* Motion */
   --motion-fast: 280ms;
   --motion-normal: 650ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* تايمنج الـ ticker بتاع المسميات في الـ hero */
+  /* Timing for the role ticker in the hero */
   --typing-cursor: 0.9s;
   --typing-typing: 16s;
   --typing-words: 16s;
   --typing-textDrift: 6.5s;
 
-  /* المسافات — clamp عشان تصغر بالتدريج على الشاشات الضيقة
-     بدل ما تختفي فجأة عند breakpoint */
+  /* Spacing — clamp so it shrinks gradually on narrow screens instead
+     of collapsing all at once at a breakpoint */
   --space-xs: clamp(0.6rem, 1vw, 0.9rem);
   --space-sm: clamp(1rem, 2vw, 1.5rem);
   --space-md: clamp(1.6rem, 3vw, 2.4rem);
   --space-lg: clamp(2.4rem, 5vw, 4rem);
   --space-xl: clamp(4rem, 8vw, 8rem);
 
-  /* توكنز مشتركة بين experience-section و sensei-projects */
+  /* Section shell — see section 16 */
+  --section-pad: 8rem 0 6rem;
+  --section-reserve: 1px 1200px;
+  --section-head-gap: 5rem;
+
+  /* Section title — two sizes existed in the wild, so both are tokens.
+     The small one was used by attack / contact / projects, the large one
+     by experience / art_gallery. */
+  --title-size: 2.6rem;
+  --title-tracking: 1.6px;
+  --title-gap: 1.6rem;
+  --title-size-lg: 3.5rem;
+  --title-tracking-lg: 2px;
+  --title-gap-lg: 2rem;
+
+  /* Micro-label: mono, uppercase, wide tracking */
+  --label-tracking: 0.14em;
+
+  /* Tokens shared by experience-section and sensei-projects */
   --container-max-width: 1500px;
   --container-pad-x: 5.25%;
   --title-underline-thin: 1px;
@@ -114,22 +144,22 @@
   --diamond-node-size: 14px;
   --diamond-border-width: 2px;
 
-  /* طبقات z — الأربعة المستخدمة بس */
+  /* z layers — only the four that are actually used */
   --z-sticky: 200;
   --z-navbar: 1500;
   --z-modal: 2000;
   --z-progress: 3000;
 
-  /* الـ blur — المصدر الوحيد لكل سطح زجاجي في الموقع.
-     تغييره هنا بيغيّر كل حتة، وده بالظبط اللي بيخلّي قسم ٩ ينفع
-     يشتغل من غير محدد عالمي بـ !important. */
+  /* Blur — the single source for every glass surface on the site.
+     Changing it here changes everywhere, and that is exactly what lets
+     section 9 work without a global !important selector. */
   --ui-blur: 4px;
   --card-blur: 4px;
 
   color-scheme: dark;
 }
 
-/*--------- 2. الأساس ---------*/
+/*--------- 2. Base ---------*/
 *,
 *::before,
 *::after {
@@ -166,9 +196,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* background-attachment: fixed بيجبر المتصفح يعيد رسم الخلفية في كل فريم
-   scroll — مصدر jank معروف على سفاري وكروم الموبايل تحديداً. والشكل
-   نفسه مبيبانش على شاشة تليفون أصلاً. */
+/* background-attachment: fixed forces the browser to repaint the
+   background on every scroll frame — a well known source of jank on
+   Safari and mobile Chrome in particular. And the effect itself is
+   invisible on a phone screen anyway. */
 @media (max-width: 991px), (hover: none) {
   body { background-attachment: scroll; }
 }
@@ -186,7 +217,7 @@ svg {
   height: auto;
 }
 
-/*--------- 3. العناصر التفاعلية ---------*/
+/*--------- 3. Interactive elements ---------*/
 :where(a, button, input, textarea, select, summary) {
   transition: transform var(--motion-fast) var(--motion-ease),
               opacity var(--motion-fast) var(--motion-ease);
@@ -222,13 +253,26 @@ button:disabled {
   cursor: not-allowed;
 }
 
-:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+/*
+ * THE focus ring for the whole site.
+ *
+ * This was previously written with :where(), which has zero specificity —
+ * so any module class with its own :focus-visible rule beat it, and 14 of
+ * them had been written by hand (in two slightly different variants: one
+ * with var(--accent-color), one with var(--accent-color)).
+ *
+ * :is() takes the highest specificity of its arguments, and [tabindex] is
+ * an attribute selector (0,1,0). With the `html` prefix that makes this
+ * rule (0,1,1) — it outranks any single class in a module file, which is
+ * what lets those 14 hand-written copies be deleted outright.
+ */
+html :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 3px;
   border-radius: var(--radius-card-sm);
 }
 
-/*--------- 4. الوصولية ---------*/
+/*--------- 4. Accessibility ---------*/
 .skip-link {
   position: absolute;
   left: 1rem;
@@ -246,7 +290,7 @@ button:disabled {
 
 .skip-link:focus-visible { transform: translateY(1rem); }
 
-/*--------- 5. الطباعة والتخطيط ---------*/
+/*--------- 5. Typography and layout ---------*/
 p,
 li {
   color: var(--text-muted);
@@ -256,13 +300,14 @@ li {
 
 main { position: relative; }
 
-/* text-wrap: balance بيوزّع كلمات العنوان على السطور بالتساوي بدل ما
-   يسيب كلمة وحيدة في آخر سطر — أوضح فرق بيبان على الموبايل.
-   pretty بيعمل نفس الحاجة للفقرات بتكلفة أقل. */
+/* text-wrap: balance distributes the words of a heading evenly across
+   its lines instead of leaving a single orphan on the last one — the
+   difference is most visible on mobile.
+   pretty does the same thing for paragraphs at a lower cost. */
 h1, h2, h3, h4 { text-wrap: balance; }
 p { text-wrap: pretty; }
 
-/* الياباني بيتقرا أوضح بمسافة سطور أوسع شوية من اللاتيني */
+/* Japanese reads more clearly with slightly looser leading than Latin */
 [lang="ja"],
 :lang(ja) {
   font-family: var(--font-jp);
@@ -274,7 +319,7 @@ p { text-wrap: pretty; }
   color: #fff;
 }
 
-/*--------- 6. تخطيط الأقسام ---------*/
+/*--------- 6. Section layout ---------*/
 section {
   padding: 7.1rem 5.25% 5.9rem;
   position: relative;
@@ -288,18 +333,20 @@ section {
 }
 
 /*
- * إصلاح: الـ hero لازم يترسم في أول pass.
+ * Fix: the hero has to paint on the first pass.
  *
- * `section` بيشمل <section id="Home"> — اللي جواه صورة الـ LCP بالظبط.
- * `content-visibility: auto` بيقول للمتصفح "أجّل حساب وlayout وpaint
- * العنصر ده". على حاجة تحت الطية ده مكسب. على حاجة **فوق** الطية هو
- * عقوبة مباشرة: كروم بيأجّل الـ subtree لخطوة render تانية ومبيحسبش
- * LCP لمحتوى جوه subtree متخطّى.
+ * `section` matches <section id="Home"> — which contains the LCP image
+ * itself. `content-visibility: auto` tells the browser "skip style,
+ * layout and paint for this element". Below the fold that is a win.
+ * **Above** the fold it is a direct penalty: Chrome defers the subtree
+ * to a later render step and does not count LCP for content inside a
+ * skipped subtree.
  *
- * وكمان الـ 900px المحجوزة أقل من ارتفاع الـ hero الفعلي على تليفون
- * (min-height: auto تحت 992px) — يعني CLS من غير سبب.
+ * On top of that, the 900px placeholder is shorter than the hero's real
+ * height on a phone (min-height: auto below 992px) — so it introduced
+ * CLS for no reason.
  *
- * :where() بيخلّي الوزن صفر فمبيزاحمش أي قاعدة تانية.
+ * :where() keeps the specificity at zero so it never fights another rule.
  */
 section:where(#Home) {
   content-visibility: visible;
@@ -307,21 +354,23 @@ section:where(#Home) {
   contain: none;
 }
 
-/* الوصول لقسم من بره (لينك #Contact، زرار الرجوع، الـ command palette)
-   بيتجاهل حساب ارتفاع الهيدر اللي في الجافاسكريبت، فالعنوان بيتقص تحت
-   الهيدر الثابت. scroll-margin بيصلّح كل الحالات دي من غير أي كود. */
+/* Reaching a section from outside (a #Contact link, the back button, the
+   command palette) bypasses the JavaScript header-height calculation, so
+   the heading ends up clipped under the fixed header. scroll-margin fixes
+   every one of those cases with no code at all. */
 section[id],
 #main-content {
   scroll-margin-top: 6rem;
 }
 
-/* الأرقام المتناسبة بتخلي العواميد ترقص: "111" أضيق من "999".
-   بيبان في الإحصائيات والتواريخ والعدّادات.
+/* Proportional figures make columns dance: "111" is narrower than "999".
+   It shows up in stats, dates and counters.
 
-   ملاحظة: المحددات دي كانت [class*="stat"] وأخواتها — بحث نصّي جزئي
-   على كل عنصر في الصفحة، وده من أبطأ أنواع المحددات، وكمان هش لأن
-   CSS Modules بيهاش أسماء الكلاسات. <time> عنصر حقيقي، والباقي
-   بيتحدّد بـ data attribute صريح: زوّد data-nums على أي عنصر عايزه. */
+   Note: these selectors used to be [class*="stat"] and friends — partial
+   substring matching against every element on the page, which is one of
+   the slowest selector types, and fragile too because CSS Modules hashes
+   class names. <time> is a real element, and everything else opts in via
+   an explicit data attribute: add data-nums to anything that needs it. */
 time,
 [data-nums] {
   font-variant-numeric: tabular-nums;
@@ -367,7 +416,7 @@ time,
   }
 }
 
-/*--------- 8. تفضيلات المستخدم ---------*/
+/*--------- 8. User preferences ---------*/
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -379,8 +428,8 @@ time,
   }
   html { scroll-behavior: auto !important; }
 
-  /* المؤشر المخصص بيتتبع الماوس وبيعيد الرسم كل فريم — بالظبط نوع
-     الحركة اللي التفضيل ده موجود عشانه. */
+  /* The custom cursor tracks the mouse and repaints every frame — exactly
+     the kind of motion this preference exists for. */
   body[data-custom-cursor="true"],
   body[data-custom-cursor="true"] :where(a, button, input, textarea, select, summary) {
     cursor: auto;
@@ -416,37 +465,39 @@ time,
   :root { --card-blur: 0px; --ui-blur: 0px; }
 }
 
-/*--------- 9. ميزانية الحركة حسب الجهاز ---------*/
+/*--------- 9. Per-device motion budget ---------*/
 /*
- * data-tier بيتكتب على <html> بسكربت inline في <head> — قبل أول paint.
- * القواعد دي شغّالة من أول فريم، وبصفر جافاسكريبت في المسار الحرج.
+ * data-tier is written onto <html> by an inline script in <head> — before
+ * first paint. These rules are live from the very first frame, with zero
+ * JavaScript in the critical path.
  *
- * الفلسفة: كل حاجة زخرفية عليها data-decorative="true" في الـ JSX.
- * ده بيخلّي القرار "إيه اللي ممكن يتشال" بيتاخد في المكوّن — مكانه
- * الصح — والـ CSS هنا بينفّذ بس.
+ * The philosophy: anything decorative carries data-decorative="true" in
+ * the JSX. That puts the "what is safe to drop" decision in the component,
+ * where it belongs, and leaves the CSS here to do nothing but enforce it.
  */
 
-/* --- LOW: صفر حركة زخرفية، صفر blur --- */
+/* --- LOW: zero decorative motion, zero blur --- */
 html[data-tier="low"] [data-decorative="true"] {
-  /* display: none بيشيل الرسم والطبقة على الـ compositor مع بعض.
-     animation: none كان بيشيل الحركة وبيسيب الطبقة عايشة. */
+  /* display: none removes the paint and the compositor layer together.
+     animation: none removed the motion and left the layer alive. */
   display: none !important;
 }
 
 html[data-tier="low"] {
-  /* التوكنز دي هي كل الـ blur في الموقع — أربع تصريحات بتقراهم.
-     تصفيرهم هنا بيقفل الـ backdrop-filter في كل حتة من غير أي محدد
-     عالمي بـ !important، واللي كان بيجبر إعادة حساب الأنماط على كل
-     عنصر في الصفحة. */
+  /* These tokens are every blur on the site — four declarations read
+     them. Zeroing them here switches off backdrop-filter everywhere
+     without any global !important selector, which used to force a style
+     recalculation on every element on the page. */
   --card-blur: 0px;
   --ui-blur: 0px;
-  /* eases قصيرة: كل transition طويلة بتخلي طبقة الـ compositor عايشة
-     مدة أطول، وعلى شاشة تليفون الفرق البصري صفر تقريباً. */
+  /* Short eases: every long transition keeps a compositor layer alive
+     for longer, and on a phone screen the visual difference is close to
+     nothing. */
   --motion-fast: 140ms;
   --motion-normal: 220ms;
 }
 
-/* --- MID: نفس الشخصية، بتكلفة أقل --- */
+/* --- MID: same character, lower cost --- */
 html[data-tier="mid"] {
   --card-blur: 2px;
   --ui-blur: 2px;
@@ -454,20 +505,21 @@ html[data-tier="mid"] {
 }
 
 /*
- * إصلاح: القاعدة القديمة كانت
+ * Fix: the old rule was
  *     animation-duration: calc(var(--anim-slow) * 1.5) !important
- * وده مكانش بيبطّأ الأنيميشن — كان **بيساوي كل الأنيميشن الزخرفي على
- * 6 ثواني**، مهما كانت مدته الأصلية. نبضة الـ badge (1.6s) والحلقة
- * الدوّارة (25s) والـ particles (4s) كلهم كانوا بيبقوا نفس المدة،
- * فالتزامن اللي التصميم قايم عليه كان بيتكسر.
+ * which did not slow the animations down — it **flattened every
+ * decorative animation to 6 seconds**, whatever its original duration.
+ * The badge pulse (1.6s), the rotating ring (25s) and the particles (4s)
+ * all ended up identical, which broke the timing relationships the
+ * design was built on.
  *
- * animation-play-state هو الأداة الصح هنا: بيوقف الحركة من غير ما
- * يلمس المدد. والإيقاف بيحصل لما العنصر يخرج من الشاشة — القاعدة
- * الموجودة في sensei-home.module.css بتغطّي ده فعلاً.
+ * animation-play-state is the right tool here: it pauses motion without
+ * touching any duration. The pause happens when the element leaves the
+ * viewport — the rule already in sensei-home.module.css covers that.
  */
 
-/* احتياطي: لو الجافاسكريبت اتعطّل تماماً والسكربت معملش تصنيف،
-   التليفون ياخد الميزانية المنخفضة بدل الكاملة. */
+/* Fallback: if JavaScript is disabled outright and the script never
+   classified the device, phones get the low budget rather than the full one. */
 html:not([data-tier]) [data-decorative="true"] {
   display: none !important;
 }
@@ -476,39 +528,40 @@ html:not([data-tier]) {
   --ui-blur: 0px;
 }
 
-/* سقف صريح للحركة على التليفونات — بيمسك الحاجات اللي مش عليها
-   data-decorative فمش داخلة في الـ gating فوق. */
+/* An explicit motion ceiling for phones — this catches anything that is
+   not marked data-decorative and therefore misses the gating above. */
 @media (pointer: coarse) and (max-width: 900px) {
   /*
-   * ملاحظة: كان هنا `* { will-change: auto !important }`.
+   * Note: this used to be `* { will-change: auto !important }`.
    *
-   * الفكرة كانت صح — طبقة compositor دايمة بتخصم من نفس ميزانية الـ GPU
-   * اللي الـ scroll بيتنافس عليها. بس الموقع كله فيه **تلات** تصريحات
-   * will-change، اتنين منهم في المؤشر المخصص (ديسكتوب بس، عمره ما
-   * بيتركّب على الموبايل) والتالت transform بس. يعني المحدد العالمي كان
-   * بيجبر إعادة حساب أنماط على كل عنصر في الصفحة عشان يلغي تصريح واحد
-   * غير ضار. راجع التلاتة بإيدك بدل ده.
+   * The intent was right — a permanent compositor layer eats into the same
+   * GPU budget scrolling competes for. But the whole site contains
+   * **three** will-change declarations: two in the custom cursor (desktop
+   * only, never mounted on mobile) and one that is transform alone. So the
+   * global selector was forcing a style recalculation on every element on
+   * the page in order to undo a single harmless declaration. Review those
+   * three by hand instead.
    */
 
-  /* الـ tap highlight الأزرق بتاع أندرويد بيقطع الهوية الحمرا/الذهبية */
+  /* Android's blue tap highlight cuts against the red/gold identity */
   a, button, [role="button"] {
     -webkit-tap-highlight-color: rgba(var(--main-color-rgb), 0.18);
   }
 }
 
-/*--------- 10. شريط التمرير ---------*/
+/*--------- 10. Scrollbar ---------*/
 /*
- * الشريط بيتعمله ستايل مرتين لأن المتصفحات اتقسمت:
- *   · فايرفوكس        → scrollbar-width / scrollbar-color (معياري، تحكّم محدود)
- *   · كروم/سفاري/إيدج → ::-webkit-scrollbar (غير معياري، تحكّم كامل)
+ * The scrollbar is styled twice because the browsers split:
+ *   · Firefox           → scrollbar-width / scrollbar-color (standard, limited control)
+ *   · Chrome/Safari/Edge → ::-webkit-scrollbar (non-standard, full control)
  *
- * القيمتين مضبوطين على نفس اللون. قبل كده كانوا مختلفين، فالموقع كان
- * بيبان بشكلين حسب المتصفح.
+ * Both are tuned to the same colour. They used to differ, so the site
+ * looked like two different sites depending on the browser.
  *
- * القاعدة القديمة كانت `border: 3px solid var(--bg-color)` على thumb
- * عرضه 10px — يعني 6 بكسل بيتاكلوا والباقي 4 بكسل أحمر باهت. الحيلة
- * هنا `border: 2px solid transparent` + `background-clip: padding-box`:
- * الهامش بيسيب الـ track يبان من تحته بدل ما يرسم فوقه.
+ * The old rule was `border: 3px solid var(--bg-color)` on a 10px thumb —
+ * 6 pixels eaten, leaving 4 pixels of washed-out red. The trick here is
+ * `border: 2px solid transparent` + `background-clip: padding-box`: the
+ * border lets the track show through underneath instead of painting over it.
  */
 html {
   scrollbar-width: thin;
@@ -517,8 +570,9 @@ html {
 
 :where(*)::-webkit-scrollbar { width: 12px; height: 12px; }
 
-/* خطوط أفقية خفيفة تدّي إحساس المسطرة + خط عمودي أحمر على الحافة.
-   التدرّجات ثابتة مبتتحركش، فالمتصفح بيرسمها مرة وبيكاشها. */
+/* Faint horizontal rules for a ruler feel + a red vertical line on the
+   edge. The gradients are static, so the browser paints them once and
+   caches the result. */
 :where(*)::-webkit-scrollbar-track {
   background:
     linear-gradient(90deg, rgba(var(--main-color-rgb), 0.35) 0 1px, transparent 1px),
@@ -526,7 +580,8 @@ html {
     rgba(255, 255, 255, 0.03);
 }
 
-/* تدرّج أحمر ← ذهبي + شرطتين بيضتين في النص، زي مقبض في واجهة HUD */
+/* Red → gold gradient with two white notches in the middle, like a grip
+   in a HUD */
 :where(*)::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   background:
@@ -556,17 +611,18 @@ html {
   background-clip: padding-box;
 }
 
-/* الحالة المضغوطة — من غيرها مفيش أي رد فعل وقت السحب */
+/* The pressed state — without it there is no feedback at all while dragging */
 :where(*)::-webkit-scrollbar-thumb:active {
   background: var(--accent-color);
   background-clip: padding-box;
 }
 
-/* المربع بين الشريط الرأسي والأفقي — افتراضياً أبيض على ويندوز */
+/* The square where the vertical and horizontal bars meet — white by
+   default on Windows */
 :where(*)::-webkit-scrollbar-corner { background: var(--bg-color); }
 
-/* الأجهزة الضعيفة: شريط مسطّح بلون واحد. التدرّجات التلاتة بتترسم من
-   جديد في كل فريم الـ thumb بيتحرك فيه. */
+/* Low-end devices: a flat single-colour bar. The three gradients repaint
+   on every frame the thumb moves through. */
 html[data-tier="low"] ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.04);
 }
@@ -575,10 +631,11 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
   background-clip: padding-box;
 }
 
-/*--------- 11. الطباعة ---------*/
-/* بورتفوليو بيتطبع فعلاً: حد بيعمل Save as PDF ويبعته لزميله، أو
-   بيطبعه قبل إنترفيو. من غير القواعد دي بيطلع خلفية سودا وكل
-   اللينكات نص من غير عناوين. */
+/*--------- 11. Print ---------*/
+/* A portfolio really does get printed: someone hits Save as PDF and sends
+   it to a colleague, or prints it before an interview. Without these rules
+   it comes out with a black background and every link reduced to text with
+   no destination. */
 @media print {
   :root {
     --bg-color: #fff;
@@ -601,7 +658,7 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
     display: none !important;
   }
 
-  /* من غير ده الصفحة المطبوعة فيها كلمات ملهاش معنى زي "Verify" */
+  /* Without this the printed page is full of meaningless words like "Verify" */
   a[href^="http"]::after {
     content: " (" attr(href) ")";
     font-size: 0.75em;
@@ -612,22 +669,23 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
   h1, h2, h3, h4 { break-after: avoid; }
   section { break-inside: auto; }
 
-  /* content-visibility بتخفي المحتوى اللي بره الشاشة عن الطابعة كمان */
+  /* content-visibility hides offscreen content from the printer too */
   * { content-visibility: visible !important; }
 }
 
-/*--------- 12. ظهور العناصر مع الـ scroll ---------*/
+/*--------- 12. Scroll reveal ---------*/
 /*
- * الحركة دي هي نفس `fadeInUp` بتاعة الـ hero بالظبط — نفس المسافة، نفس
- * الـ easing، نفس منطق التأخير المتدرّج. الفرق إنها بقت متاحة لكل الموقع
- * بدل ما تكون مكتوبة بالإيد في sensei-home.module.css.
+ * This is exactly the hero's `fadeInUp` — same distance, same easing, same
+ * stagger logic. The difference is that it is now available site-wide
+ * instead of being hand-written inside sensei-home.module.css.
  *
- * كلها `opacity` و`transform` بس — الخاصيتين الوحيدتين اللي المتصفح
- * بيحرّكهم على الـ compositor من غير layout ولا paint. ده السبب إن
- * الأنيميشن ده مجاني فعلاً على الموبايل، مش تفضيل جمالي.
+ * It is `opacity` and `transform` only — the two properties the browser
+ * animates on the compositor with no layout and no paint. That is why this
+ * animation is genuinely free on mobile, rather than an aesthetic
+ * indulgence.
  *
- * الجافاسكريبت (Reveal.tsx) دوره حاجة واحدة: يغيّر data-reveal من
- * "pending" لـ "in" مرة واحدة لما العنصر يدخل الشاشة.
+ * The JavaScript (Reveal.tsx) does exactly one thing: flip data-reveal
+ * from "pending" to "in" once, when the element enters the viewport.
  */
 
 :root {
@@ -638,9 +696,10 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
 }
 
 /*
- * الحالة الابتدائية مشروطة بـ html[data-tier] عن قصد: الـ attribute ده
- * بيتكتب بسكربت inline في <head> قبل أول paint. لو الجافاسكريبت مقفول
- * تماماً، الشرط مبيتحققش والمحتوى بيتعرض عادي.
+ * The initial state is deliberately scoped to html[data-tier]: that
+ * attribute is written by an inline script in <head> before first paint.
+ * If JavaScript is off entirely the condition never matches and the
+ * content renders normally.
  */
 html[data-tier] [data-reveal="pending"] { opacity: 0; }
 
@@ -649,13 +708,15 @@ html[data-tier] [data-reveal="pending"][data-reveal-variant="down"]  { transform
 html[data-tier] [data-reveal="pending"][data-reveal-variant="left"]  { transform: translate3d(calc(var(--reveal-distance) * -1), 0, 0); }
 html[data-tier] [data-reveal="pending"][data-reveal-variant="right"] { transform: translate3d(var(--reveal-distance), 0, 0); }
 html[data-tier] [data-reveal="pending"][data-reveal-variant="scale"] { transform: scale(0.96); }
-/* "fade" مالوش transform — opacity بس. أرخص واحدة، وهي الصح لأي حاجة
-   جوه عنصر بيتحرك أصلاً (transform جوه transform بيعمل تداخل). */
+/* "fade" has no transform — opacity only. It is the cheapest variant, and
+   the correct one for anything already inside a moving element (a
+   transform inside a transform compounds). */
 
 /*
- * `transform: none` مش `translate3d(0,0,0)`: الأولانية بتسيب المتصفح
- * يفك الطبقة بعد ما الحركة تخلص. التانية بتخلّي العنصر محتفظ بطبقة
- * compositor للأبد — وعلى صفحة فيها 50 عنصر ده 50 طبقة عايشة.
+ * `transform: none`, not `translate3d(0,0,0)`: the former lets the browser
+ * discard the layer once the animation finishes. The latter keeps the
+ * element on a compositor layer forever — and on a page with 50 elements
+ * that is 50 live layers.
  */
 html[data-tier] [data-reveal="in"] {
   opacity: 1;
@@ -665,27 +726,29 @@ html[data-tier] [data-reveal="in"] {
     transform var(--reveal-duration) var(--motion-ease) var(--reveal-delay);
 }
 
-/* التدرّج داخل المجموعات — CSS بالكامل، مفيش مؤقّتات جافاسكريبت.
-   RevealGroup بيحط --i على كل ابن والحساب هنا. */
+/* Stagger inside a group — pure CSS, no JavaScript timers.
+   RevealGroup sets --i on each child and the arithmetic happens here. */
 html[data-tier] [data-reveal-group="true"] > * {
   transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
 }
 
-/* سقف للتدرّج. من غيره قايمة 50 عنصر × 60ms = 3 ثواني قبل ما آخر واحد
-   يبان — الزائر بيبقى وصل تحت والعناصر لسه بتظهر. */
+/* A ceiling on the stagger. Without it a 50-item list means 50 × 60ms =
+   3 seconds before the last one appears — the visitor has already scrolled
+   past while items are still fading in. */
 html[data-tier] [data-reveal-group="true"] > *:nth-child(n + 13) {
   transition-delay: calc(12 * var(--reveal-stagger));
 }
 
 /*
- * الشبكة الأمنية.
+ * The safety net.
  *
- * opacity: 0 بتتكتب في الـ HTML من السيرفر. لو الـ bundle فشل يتحمّل
- * لأي سبب — chunk مكسور، شبكة قطعت — الموقع كان هيفضل مخفي بالكامل.
+ * opacity: 0 is written into the server-rendered HTML. If the bundle fails
+ * to load for any reason — a broken chunk, a dropped connection — the site
+ * would have stayed completely invisible.
  *
- * القاعدة دي بتظهر كل حاجة بعد 4 ثواني طول ما الجافاسكريبت مقالش إنه
- * اشتغل. أول ما Reveal يعمل mount بيحط data-reveal-ready على <html>،
- * فالقاعدة بتبطّل تطابق ومبتضربش أبداً في الحالة الطبيعية.
+ * This rule reveals everything after 4 seconds for as long as JavaScript
+ * has not reported in. The moment Reveal mounts it sets data-reveal-ready
+ * on <html>, the rule stops matching, and it never fires in the normal case.
  */
 html[data-tier]:not([data-reveal-ready]) [data-reveal="pending"] {
   animation: revealSafety 1ms linear 4s forwards;
@@ -696,9 +759,11 @@ html[data-tier]:not([data-reveal-ready]) [data-reveal="pending"] {
 }
 
 /*
- * التليفونات كلها tier="low". بس الظهور مش زخرفة — هو الفرق بين صفحة
- * بتتبني قدام الزائر وصفحة بتظهر فجأة. فبدل ما نقفله: opacity بس ومدة
- * أقصر ومن غير تدرّج. opacity أرخص خاصية ممكن تتحرك أصلاً.
+ * Every phone is tier="low". But the reveal is not decoration — it is the
+ * difference between a page that assembles itself in front of the visitor
+ * and one that snaps into existence. So rather than switching it off:
+ * opacity only, shorter duration, no stagger. opacity is the cheapest
+ * property there is to animate.
  */
 html[data-tier="low"] [data-reveal="pending"] { transform: none; }
 html[data-tier="low"] [data-reveal="in"] { transition: opacity 280ms linear; }
@@ -707,7 +772,7 @@ html[data-tier="low"] [data-reveal-group="true"] > *:nth-child(n + 13) {
   transition-delay: 0ms;
 }
 
-/* reduced-motion: مفيش حركة خالص. مش نسخة أسرع — مفيش. */
+/* reduced-motion: no motion at all. Not a faster version — none. */
 @media (prefers-reduced-motion: reduce) {
   html[data-tier] [data-reveal="pending"],
   html[data-tier] [data-reveal="in"] {
@@ -718,12 +783,13 @@ html[data-tier="low"] [data-reveal-group="true"] > *:nth-child(n + 13) {
   }
 }
 
-/*--------- 13. لمعة الزراير ---------*/
+/*--------- 13. Button sheen ---------*/
 /*
- * قاعدة `button` في قسم 3 فيها position/overflow/z-index. التلاتة دول
- * ملهمش أي معنى لوحدهم — overflow: hidden على زرار مفيهوش حاجة بتخرج
- * بره، وz-index: 1 من غير عنصر يزاحمه. ده تجهيز لـ pseudo-element
- * اتخطّط ومحصلش. تمامه هنا.
+ * The `button` rule in section 3 carries position/overflow/z-index. On
+ * their own those three mean nothing — overflow: hidden on a button with
+ * nothing overflowing, z-index: 1 with nothing to stack against. They were
+ * groundwork for a pseudo-element that was planned and never written.
+ * Here it is.
  */
 button::before {
   content: "";
@@ -743,39 +809,41 @@ button::before {
 
 button:hover:not(:disabled)::before { transform: translateX(100%); }
 
-/* الأجهزة اللمسية مفيهاش hover — اللمعة كانت هتتعلّق في نص الحركة بعد
-   أول ضغطة وتفضل واقفة هناك. */
+/* Touch devices have no hover — the sheen would freeze mid-sweep after
+   the first tap and stay parked there. */
 @media (hover: none) { button::before { display: none; } }
 html[data-tier="low"] button::before { display: none; }
 
-/*--------- 14. الكارت ---------*/
+/*--------- 14. Card ---------*/
 /*
- * ══ المصدر الوحيد لشكل أي كارت في الموقع ══
+ * ══ THE SINGLE SOURCE FOR EVERY CARD ON THE SITE ══
  *
- * قبل كده كان كل قسم بيعرّف كارته من الأول. خمس معالجات مختلفة، كلها
- * بتحاول توصل لنفس الشكل بقيم مختلفة:
+ * Each section used to define its card from scratch. Five different
+ * treatments, all reaching for the same look with different values:
  *
- *   .single-project   حدود .05 + خط 2px فوق (شفاف→أحمر)  bg 10,10,10,.6   padding 2.5rem
- *   .content          حدود .05 + خط 3px شمال (أحمر باهت)  bg 10,10,10,.6   padding 2.5rem
- *   .pdfCard وإخواته  حدود .05 + خط 3px شمال (أحمر باهت)  bg 10,10,10,.6   padding 2.5rem
- *   .relatedCard/.card حدود .08 + خط 2px شمال (أحمر صريح) bg 255,255,255,.015  padding 1.8rem
- *   .art_pic          حدود .05 + مفيش لمسة لون            bg 10,10,10,.6   padding 0.6rem
+ *   .single-project    border .05 + 2px top rule (transparent→red)   bg 10,10,10,.6      padding 2.5rem
+ *   .content           border .05 + 3px left rule (washed red)       bg 10,10,10,.6      padding 2.5rem
+ *   .pdfCard & friends border .05 + 3px left rule (washed red)       bg 10,10,10,.6      padding 2.5rem
+ *   .relatedCard/.card border .08 + 2px left rule (full red)         bg 255,255,255,.015 padding 1.8rem
+ *   .art_pic           border .05 + no colour accent                 bg 10,10,10,.6      padding 0.6rem
  *
- * دلوقتي كلهم من هنا. ملفات الـ modules مبقاش فيها ولا تصريح حدود ولا
- * خلفية ولا نصف قطر ولا padding ولا hover للكارت نفسه — بس التخطيط
- * الداخلي، وده اللي بيفرق فعلاً بين كارت مشروع وكارت صورة.
+ * They all come from here now. The module files no longer contain a single
+ * border, background, radius, padding or hover declaration for the card
+ * itself — only its internal layout, which is the part that genuinely
+ * differs between a project card and an image card.
  *
- * ── الاستخدام ──
+ * ── Usage ──
  *
- *   <article data-fx="card">                    الافتراضي (padding 2.5rem)
- *   <article data-fx="card" data-card="compact"> أضيق (1.8rem)
- *   <article data-fx="card" data-card="tight">   إطار حوالين صورة (0.6rem)
+ *   <article data-fx="card">                     default (padding 2.5rem)
+ *   <article data-fx="card" data-card="compact"> tighter (1.8rem)
+ *   <article data-fx="card" data-card="tight">   frame around an image (0.6rem)
  *
- * ── ليه `html [data-fx="card"]` مش `[data-fx="card"]` ──
+ * ── Why `html [data-fx="card"]` and not `[data-fx="card"]` ──
  *
- * المحدد بـ attribute لوحده وزنه (0,1,0) — نفس وزن أي كلاس في ملفات
- * الـ modules. فاللي بيكسب كان بيبقى حسب ترتيب تحميل الـ CSS، وده مش
- * مضمون في Next. زيادة `html` بتخلّيه (0,1,1) فبيكسب دايماً.
+ * A bare attribute selector has specificity (0,1,0) — the same weight as
+ * any class in a module file. Which one wins then comes down to CSS load
+ * order, and that is not guaranteed in Next. Adding `html` makes it
+ * (0,1,1), so it always wins.
  */
 
 :root {
@@ -792,8 +860,8 @@ html[data-tier="low"] button::before { display: none; }
 
 html [data-fx="card"] {
   position: relative;
-  /* بيقص الخط العلوي عند الزوايا المدوّرة — من غيره بيطلع مربع
-     برّه المنحنى */
+  /* Clips the top rule at the rounded corners — without it the rule
+     renders as a square poking outside the curve */
   overflow: hidden;
   padding: var(--card-pad);
   background: var(--card-bg);
@@ -809,11 +877,12 @@ html [data-fx="card"][data-card="compact"] { padding: var(--card-pad-compact); }
 html [data-fx="card"][data-card="tight"]   { padding: var(--card-pad-tight); }
 
 /*
- * الخط الأحمر فوق.
+ * The red rule along the top.
  *
- * على ::before مش border-top-color: الـ pseudo-element بيترسم بـ
- * transform: scaleX (خاصية compositor، مجانية)، بينما تغيير لون الحدود
- * بيسبب paint. والمكسب الجانبي إن الخط "بيترسم" بدل ما يظهر فجأة.
+ * On ::before rather than border-top-color: the pseudo-element is drawn
+ * with transform: scaleX (a compositor property, free), whereas changing a
+ * border colour causes a paint. The side benefit is that the rule "draws
+ * itself" instead of appearing all at once.
  */
 html [data-fx="card"]::before {
   content: "";
@@ -828,7 +897,8 @@ html [data-fx="card"]::before {
   z-index: 2;
 }
 
-/* اللمعة. زاوية 105 درجة عشان تعدّي مايلة زي انعكاس ضوء حقيقي. */
+/* The sheen. 105 degrees so it sweeps at an angle, like a real light
+   reflection. */
 html [data-fx="card"]::after {
   content: "";
   position: absolute;
@@ -860,11 +930,12 @@ html [data-fx="card"] :is(img, [data-fx-media]) {
 }
 
 /*
- * لوحة المفاتيح.
+ * Keyboard.
  *
- * من غير ده الزائر اللي بيتنقّل بالـ Tab مبيشوفش أي رد فعل — الكارت
- * بيبقى تفاعلي للماوس بس. وده كان الحال في كل كارت في الموقع ما عدا
- * .single-project اللي كان عنده :focus-within للأيقونة بس.
+ * Without this a visitor tabbing through gets no feedback at all — the
+ * card is interactive for the mouse only. That was the situation for every
+ * card on the site except .single-project, which had :focus-within on the
+ * icon alone.
  */
 html [data-fx="card"]:focus-within {
   background: var(--card-bg-hover);
@@ -872,13 +943,13 @@ html [data-fx="card"]:focus-within {
 }
 html [data-fx="card"]:focus-within::before { transform: scaleX(1); }
 
-/* الكروت اللي هي نفسها لينك محتاجة حلقة فوكس، مش تغيير لون بس */
+/* Cards that are themselves links need a focus ring, not just a colour shift */
 html a[data-fx="card"]:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 3px;
 }
 
-/* اللمس: مفيش hover على التليفون، فالكارت كان هيفضل ميت. */
+/* Touch: there is no hover on a phone, so the card would have stayed dead. */
 @media (hover: none) {
   html [data-fx="card"]:active {
     transform: scale(0.985);
@@ -899,7 +970,7 @@ html[data-tier="low"] [data-fx="card"]:hover :is(img, [data-fx-media]) { transfo
   html [data-fx="card"] :is(img, [data-fx-media]) { transition: none; animation: none; }
   html [data-fx="card"]:hover { transform: none; }
   html [data-fx="card"]::after { display: none; }
-  /* الخط الأحمر بيفضل بيظهر — ده معلومة (إنت واقف على إيه) مش زخرفة */
+  /* The red rule still appears — it is information (where you are), not decoration */
 }
 
 @media (max-width: 768px) {
@@ -916,18 +987,20 @@ html[data-tier="low"] [data-fx="card"]:hover :is(img, [data-fx-media]) { transfo
   }
 }
 
-/*--------- 14b. بقعة الضوء (اختياري) ---------*/
+/*--------- 14b. Spotlight (optional) ---------*/
 /*
- * القواعد دي بتشتغل مع <Spotlight> بس — وهو مش مركّب في أي حتة دلوقتي.
- * سايبها عشان لو قررت تستخدمه تبقى جاهزة.
+ * These rules only apply together with <Spotlight>. Kept here so they are
+ * ready if you decide to use it more widely.
  *
- * التدرّج بيركب على نفس ::after بتاع اللمعة، فاللمعة بتتلغي على الكارت
- * اللي تحت الماوس. الاتنين مايشتغلوش مع بعض: لمعة بتعدّي وبقعة بتتبع
- * الماوس في نفس اللحظة بتبقى زحمة.
+ * The gradient rides on the same ::after as the sheen, so the sheen is
+ * cancelled on whichever card is under the cursor. The two do not work
+ * together: a sweep passing through while a spotlight tracks the mouse at
+ * the same moment is just noise.
  *
- * ⚠️ ده الحاجة الوحيدة في الملف اللي بتكلّف رسم: radial-gradient بموضع
- * متغيّر = إعادة رسم الكارت في كل فريم الماوس بيتحرك فيه. المكوّن
- * بيخرج بدري على أي جهاز لمسي وأي tier مش "high".
+ * ⚠️ This is the one thing in the file that costs a paint: a
+ * radial-gradient at a moving position means repainting the card on every
+ * frame the mouse moves through it. The component bails out early on any
+ * touch device and on any tier that is not "high".
  */
 html [data-fx="card"][data-spot="on"]::after {
   background: radial-gradient(
@@ -939,11 +1012,12 @@ html [data-fx="card"][data-spot="on"]::after {
   transition: opacity 200ms linear;
 }
 
-/*--------- 15. تفاعلات صغيرة ---------*/
+/*--------- 15. Micro-interactions ---------*/
 
-/* الخط تحت اللينكات: بيترسم من الشمال وبيتمسح ناحية اليمين، فبيحس إنه
-   بيعدّي مش بيظهر ويختفي. transform مش text-decoration — الأخيرة
-   بتسبب layout. */
+/* The link underline: it draws in from the left and wipes out to the
+   right, so it reads as passing through rather than appearing and
+   disappearing. transform, not text-decoration — the latter causes
+   layout. */
 [data-fx="link"] { position: relative; display: inline-block; }
 
 [data-fx="link"]::after {
@@ -965,7 +1039,8 @@ html [data-fx="card"][data-spot="on"]::after {
   transform-origin: left;
 }
 
-/* السهم في لينكات "شوف أكتر" — حركة 3px بس، بتدّي إحساس الاتجاه */
+/* The arrow in "see more" links — a 3px move, just enough to suggest
+   direction */
 [data-fx="arrow"] {
   display: inline-block;
   transition: transform var(--motion-fast) var(--motion-ease);
@@ -974,7 +1049,7 @@ html [data-fx="card"][data-spot="on"]::after {
 :is(a, button):hover [data-fx="arrow"],
 :is(a, button):focus-visible [data-fx="arrow"] { transform: translateX(3px); }
 
-/* التاجات والشيبس — الموقع مليان بيهم وكلهم كانوا ساكنين */
+/* Tags and chips — the site is full of them and every one was inert */
 [data-fx="tag"] {
   transition:
     transform var(--motion-fast) var(--motion-ease),
@@ -993,13 +1068,14 @@ html [data-fx="card"][data-spot="on"]::after {
 [data-fx="tag"]:active { transform: scale(0.94); transition-duration: 80ms; }
 
 /*
- * رد فعل الضغط على كل حاجة تفاعلية.
+ * Press feedback on everything interactive.
  *
- * أرخص حاجة في الملف وأكترهم إحساساً. على الموبايل مفيش hover خالص —
- * الزائر بيلمس والموقع بيسكت. الانكماش ده بيحوّل الإحساس من "ضغطت
- * ومستني" لـ "ضغطت وحصل حاجة". 40 ملي ثانية.
+ * The cheapest thing in this file and the one you feel the most. On mobile
+ * there is no hover at all — the visitor taps and the site says nothing.
+ * This shrink turns "I pressed it and I'm waiting" into "I pressed it and
+ * something happened". 40 milliseconds.
  *
- * :where() بيخلي الوزن صفر فمبيزاحمش أي قاعدة موضعية.
+ * :where() keeps specificity at zero so it never fights a local rule.
  */
 :where(a, button, [role="button"], summary) {
   transition: transform 120ms var(--motion-ease);
@@ -1009,7 +1085,7 @@ html [data-fx="card"][data-spot="on"]::after {
   transform: scale(0.97);
 }
 
-/* حقول الإدخال — الحقل بيرتفع شوية عند الفوكس */
+/* Form fields — the field lifts slightly on focus */
 :where(input, textarea, select) {
   transition:
     transform var(--motion-fast) var(--motion-ease),
@@ -1019,7 +1095,7 @@ html [data-fx="card"][data-spot="on"]::after {
 
 :where(input, textarea):focus-visible { transform: translateY(-1px); }
 
-/* أيقونات السوشيال */
+/* Social icons */
 [data-fx="social"] { transition: transform var(--motion-fast) var(--motion-ease); }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1038,7 +1114,436 @@ html[data-tier="low"] :where([data-fx="tag"], [data-fx="social"]):hover {
   :where(a, button, [role="button"], summary),
   :where(input, textarea, select) { transition: none; }
   :where(a, button, [role="button"], summary):active { transform: none; }
-  /* الخط تحت اللينك بيفضل بيظهر — ده معلومة مش زخرفة */
+  /* The link underline still appears — that is information, not decoration */
   [data-fx="link"]:hover::after,
   [data-fx="link"]:focus-visible::after { transform: scaleX(1); }
+}
+
+/*--------- 16. Layout and content primitives ---------*/
+/*
+ * ══ SAME IDEA AS SECTION 14, APPLIED TO THE REST OF THE SITE ══
+ *
+ * Section 14 made the card look come from exactly one place. Every family
+ * below was in the same state the card was in: written out by hand in
+ * three to fourteen different module files, drifting apart a little each
+ * time someone touched one of them.
+ *
+ * What was actually duplicated, measured across the 24 module files:
+ *
+ *   focus ring        14 blocks, in 2 variants   → fixed in section 3
+ *   section title      5 identical copies        → [data-fx="section-title"]
+ *   section shell      3 identical copies        → [data-fx="section"]
+ *   container          3 identical copies        → [data-fx="container"]
+ *   section head       3 copies                  → [data-fx="section-head"]
+ *   inline link        6 copies                  → [data-fx="linkline"]
+ *   micro-label        3 identical copies        → [data-fx="label"]
+ *   timeline rail      2 identical copies        → [data-fx="timeline"]
+ *   text field         2 identical copies        → [data-fx="field"]
+ *   mono id            2 copies                  → [data-fx="id"]
+ *
+ * Every rule here is `html [data-fx="…"]` for the same reason section 14
+ * is: (0,1,1) beats any single class in a module file regardless of CSS
+ * load order.
+ *
+ * The rule for module files is unchanged from section 14: they keep
+ * internal layout (grid, gap, order, what goes where) and hold no
+ * appearance declarations for anything that has a primitive here.
+ */
+
+/* ── Section shell ───────────────────────────────────────────────────── */
+/*
+ * The element selector `section` in section 6 handles the page-level
+ * rhythm. This handles the full-height sections that opt in, which had
+ * their own padding and their own content-visibility reservation.
+ *
+ * data-section="auto" drops the min-height — contact-section was the one
+ * that never wanted it, and it also reserves less vertical space.
+ */
+html [data-fx="section"] {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--section-pad);
+  content-visibility: auto;
+  contain-intrinsic-size: var(--section-reserve);
+}
+
+html [data-fx="section"][data-section="auto"] {
+  min-height: 0;
+  --section-pad: 8rem 0 9rem;
+  --section-reserve: 1px 900px;
+}
+
+/* ── Container ───────────────────────────────────────────────────────── */
+html [data-fx="container"] {
+  margin: 0 auto;
+  max-width: var(--container-max-width);
+  padding: 0 var(--container-pad-x);
+}
+
+/* The gallery runs edge to edge and pads itself internally */
+html [data-fx="container"][data-container="full"] {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+/* ── Section head ────────────────────────────────────────────────────── */
+html [data-fx="section-head"] {
+  text-align: center;
+  margin-bottom: var(--section-head-gap);
+}
+
+/* ── Section title ───────────────────────────────────────────────────── */
+/*
+ * Two horizontal rules stacked at the bottom edge: a full-width hairline
+ * and a shorter, thicker red one centred on top of it.
+ *
+ * Both pseudo-elements share the positioning block, so the two size
+ * variants only need to change type metrics — the underline geometry is
+ * driven by the --title-underline-* tokens from section 1 and is identical
+ * either way.
+ */
+html [data-fx="section-title"] {
+  position: relative;
+  display: inline-block;
+  color: var(--text-color);
+  font-weight: 800;
+  font-size: var(--title-size);
+  letter-spacing: var(--title-tracking);
+  text-transform: uppercase;
+  padding-bottom: var(--title-gap);
+}
+
+html [data-fx="section-title"][data-title="lg"] {
+  font-size: var(--title-size-lg);
+  letter-spacing: var(--title-tracking-lg);
+  padding-bottom: var(--title-gap-lg);
+}
+
+html [data-fx="section-title"]::before,
+html [data-fx="section-title"]::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+html [data-fx="section-title"]::before {
+  width: 100%;
+  height: var(--title-underline-thin);
+  background: rgba(var(--main-color-rgb), var(--title-underline-opacity));
+}
+
+html [data-fx="section-title"]::after {
+  width: var(--title-underline-width);
+  height: var(--title-underline-thick);
+  background: var(--main-color);
+}
+
+/* ── Timeline rail ───────────────────────────────────────────────────── */
+/* The vertical line behind the experience and projects timelines. */
+html [data-fx="timeline"] {
+  position: relative;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+html [data-fx="timeline"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--timeline-line-width);
+  background: rgba(var(--main-color-rgb), var(--timeline-line-opacity));
+}
+
+/* ── Micro-label ─────────────────────────────────────────────────────── */
+/* The small mono uppercase caption above a value: <dt>, form labels, the
+   caption over a stat. */
+html [data-fx="label"] {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── Mono identifier ─────────────────────────────────────────────────── */
+/* Technique IDs, case IDs — anything that reads as a reference code.
+   tabular-nums so a column of them lines up. */
+html [data-fx="id"] {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--accent-color);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Inline link ─────────────────────────────────────────────────────── */
+/*
+ * A link inside a paragraph, distinct from [data-fx="link"] in section 15.
+ * That one animates an underline in on hover for standalone links; this
+ * one is always underlined because it sits inside running text, where an
+ * invisible link is an accessibility problem, not a style choice.
+ */
+html [data-fx="linkline"] {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline);
+  transition:
+    color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
+}
+
+html [data-fx="linkline"]:hover,
+html [data-fx="linkline"]:focus-visible {
+  color: var(--accent-color);
+  border-bottom-color: currentColor;
+}
+
+/*
+ * Scoped variant. Most of the inline links on this site are not marked up
+ * one by one — they are every <a> inside a list or a paragraph
+ * (.evidenceList a, .suggestList a, .contact a, .org a, .attackNote a).
+ * Marking the container once beats adding an attribute to every anchor.
+ *
+ * The originals had drifted: .evidenceList used --text-dim with a 0.18
+ * border, everything else used --text-muted with 0.22, and cv's .org a and
+ * a.dates changed colour on hover but not the underline. They are one
+ * treatment now.
+ */
+html [data-links="inline"] a {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline);
+  transition:
+    color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
+}
+
+html [data-links="inline"] a:hover,
+html [data-links="inline"] a:focus-visible {
+  color: var(--accent-color);
+  border-bottom-color: currentColor;
+}
+
+/* ── Text field ──────────────────────────────────────────────────────── */
+/*
+ * A bare input that sits inside a styled row — the row owns the border and
+ * the focus state, the input owns nothing but its text. Used by the blog
+ * filter bar and the command palette, which had identical copies.
+ */
+html [data-fx="field"] {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  /* At least 16px, or iOS zooms the page in on focus */
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+html [data-fx="field"]::placeholder { color: var(--text-faint); }
+
+/* The row owns the focus indication, so the input suppresses its own */
+html [data-fx="field"]:focus-visible { outline: none; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+/*
+ * These values are the ones the five modules already used — collected here
+ * and reconciled. The drift that got collapsed, for the record:
+ *
+ *   title (md)  attack 2.2rem @991 · contact 2.2rem @900 · projects 2.1rem @430
+ *   title (lg)  art 3rem @991, 2.6rem @430 · experience 2.5rem @430
+ *   section pad attack 5rem 0 4rem @991 · contact 5rem 0 6rem @900
+ *
+ * Contact's larger bottom padding was the one real difference, and it is
+ * kept — as part of data-section="auto", which contact already carries.
+ */
+@media (max-width: 991px) {
+  :root {
+    --section-pad: 5rem 0 4rem;
+    --section-head-gap: 4rem;
+    --title-size: 2.2rem;
+    --title-size-lg: 3rem;
+  }
+  html [data-fx="section"][data-section="auto"] { --section-pad: 5rem 0 6rem; }
+
+  /* The rail moves off centre and runs down the left edge — the two-column
+     timeline collapses to a single column at this width. */
+  html [data-fx="timeline"] { padding: 1rem 0; }
+  html [data-fx="timeline"]::after { left: 2rem; }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --section-head-gap: 3rem;
+    --title-size: 2.1rem;
+    --title-size-lg: 2.5rem;
+    --title-tracking-lg: 1.6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html [data-fx="linkline"] { transition: none; }
+}
+
+/*--------- 17. Buttons and actions ---------*/
+/*
+ * ══ THE SINGLE SOURCE FOR EVERY ACTION CONTROL ══
+ *
+ * Six different button treatments existed across five files. Two of them
+ * (cv and not-found) were byte-identical apart from padding; the other four
+ * were the same idea — mono, uppercase, a thin border, a tinted hover — at
+ * four slightly different sizes and border opacities:
+ *
+ *   cv .primaryAction/.secondaryAction   1.3rem  · pad 1.1rem 2.2rem
+ *   not-found .primary/.secondary        1.3rem  · pad 1.2rem 2.4rem   (same rules)
+ *   blog .primaryAction/.cardActions a   1.2rem  · border .15 · 44px min
+ *   projects .action-btn                 1.05rem · border .10 · 44px min
+ *   art .primaryAction                   1.3rem  · border main-color
+ *   home .btn                            0.92rem · no border (kept — it is
+ *                                        the hero CTA and has its own shape)
+ *
+ * The base below is shared. Everything that genuinely differs is a variant:
+ *
+ *   data-btn="solid"    filled with the main colour
+ *   data-btn="outline"  hairline border, muted text        (the cv/404 pair)
+ *   data-btn="ghost"    faint border, transparent          (blog/projects)
+ *
+ *   data-tone="main"    red border and text
+ *   data-tone="accent"  gold border and text
+ *
+ * home's .btn is deliberately NOT converted: it is clipped to a trapezoid,
+ * lifts 4px on hover and animates its icon. That is a distinct control, not
+ * a drifted copy of this one.
+ */
+
+:root {
+  --btn-size: 1.3rem;
+  --btn-pad: 1.1rem 2.2rem;
+  --btn-tracking: 0.1em;
+  --btn-border: rgba(255, 255, 255, 0.15);
+  --btn-radius: var(--radius-button);
+  /* Minimum comfortable tap target on a touch screen. */
+  --tap-min: 44px;
+}
+
+html [data-fx="btn"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  padding: var(--btn-pad);
+  border-radius: var(--btn-radius);
+  font-family: var(--font-mono);
+  font-size: var(--btn-size);
+  letter-spacing: var(--btn-tracking);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    opacity var(--motion-fast) var(--motion-ease);
+}
+
+/* ── solid ───────────────────────────────────────────────────────────── */
+html [data-fx="btn"][data-btn="solid"] {
+  background: var(--main-color);
+  color: var(--text-bright);
+  border: 1px solid var(--main-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"][data-btn="solid"]:hover { opacity: 0.88; }
+}
+
+/* ── outline ─────────────────────────────────────────────────────────── */
+html [data-fx="btn"][data-btn="outline"] {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--text-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"][data-btn="outline"]:hover {
+    color: var(--accent-color);
+    border-color: currentColor;
+  }
+}
+
+html [data-fx="btn"][data-btn="outline"]:focus-visible {
+  color: var(--accent-color);
+  border-color: currentColor;
+}
+
+/* ── ghost ───────────────────────────────────────────────────────────── */
+/*
+ * The compact action that sits in a card footer. Smaller type than the
+ * outline variant, and a fainter border, because several of these sit side
+ * by side and a full-strength border reads as a grid.
+ */
+html [data-fx="btn"][data-btn="ghost"] {
+  --btn-size: 1.2rem;
+  --btn-pad: 0.6rem 1.4rem;
+  --btn-tracking: 1px;
+  background: transparent;
+  border: 1px solid var(--btn-border);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"][data-btn="ghost"]:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(var(--accent-color-rgb), 0.05);
+  }
+}
+
+/* ── tones ───────────────────────────────────────────────────────────── */
+/*
+ * A tone recolours whichever variant it is applied to. It does not carry
+ * geometry — that stays with data-btn — which is what stopped the previous
+ * copies from being combinable.
+ */
+html [data-fx="btn"][data-tone="main"] {
+  border-color: rgba(var(--main-color-rgb), 0.4);
+  color: var(--main-color);
+}
+
+html [data-fx="btn"][data-tone="accent"] {
+  border-color: rgba(var(--accent-color-rgb), 0.4);
+  color: var(--accent-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"][data-tone="main"]:hover {
+    border-color: var(--main-color);
+    background: rgba(var(--main-color-rgb), 0.12);
+    color: var(--text-bright);
+  }
+  html [data-fx="btn"][data-tone="accent"]:hover {
+    border-color: var(--accent-color);
+    background: rgba(var(--accent-color-rgb), 0.12);
+    color: var(--text-bright);
+  }
+}
+
+/* A dashed edge marks an action that opens something in place (a gallery)
+   rather than navigating away. */
+html [data-fx="btn"][data-btn-edge="dashed"] { border-style: dashed; }
+
+@media (prefers-reduced-motion: reduce) {
+  html [data-fx="btn"] { transition: none; }
 }

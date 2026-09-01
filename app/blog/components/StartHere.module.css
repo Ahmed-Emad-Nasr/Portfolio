@@ -1,17 +1,17 @@
 /*
  * StartHere.module.css
  *
- * ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px. اتعاد كتابته على
- * توكنز الموقع.
+ * ⚠️ Scale: html { font-size: 62.5% } → 1rem = 10px. Rewritten on the site
+ * tokens.
  */
 
 .section {
   margin: 0 auto 6rem;
-  padding: 0 var(--container-pad-x, 5.25%);
-  max-width: var(--container-max-width, 1500px);
+  padding: 0 var(--container-pad-x);
+  max-width: var(--container-max-width);
 }
 
-/* عنوان الصفحة — صفحة البلوج كانت من غير <h1> خالص */
+/* Page title — the blog page had no <h1> at all */
 .pageTitle {
   font-size: clamp(3.2rem, 5vw, 4.6rem);
   font-weight: 900;

@@ -4,15 +4,17 @@
  * ServiceWorkerRegister.tsx
  * Author: Ahmed Emad Nasr
  *
- * بيسجّل public/sw.js بعد الـ load، مش قبلها — تسجيل الـ SW شغلانة إضافية
- * على المتصفح، وأول 3 ثواني من عمر الصفحة أهم حاجة فيهم LCP، مش أوفلاين.
+ * Registers public/sw.js after load, not before — registering a SW is extra
+ * work for the browser, and the most important thing in the first 3 seconds
+ * of a page's life is LCP, not offline support.
  *
- * `normalizePublicHref` هي نفس الدالة اللي كل مسارات الأصول في الموقع
- * بتعدّي منها، فـ /sw.js بياخد basePath الصح (`/Portfolio` وقت production)
- * من غير ما نكرر المنطق هنا.
+ * `normalizePublicHref` is the same function every asset path on the site
+ * goes through, so /sw.js gets the right basePath (`/Portfolio` in
+ * production) without repeating the logic here.
  *
- * مفيش تسجيل في development: الـ SW بيكاش نسخة من الصفحة، وده بالظبط
- * عكس اللي محتاجه وإنت بتـ dev — كل تعديل هيتخبى ورا نسخة قديمة متخزّنة.
+ * No registration in development: a SW caches a copy of the page, which is
+ * the exact opposite of what you want while developing — every change would
+ * hide behind a stale cached copy.
  */
 
 import { useEffect } from "react";
@@ -25,8 +27,8 @@ export default function ServiceWorkerRegister() {
 
     const register = () => {
       navigator.serviceWorker.register(normalizePublicHref("sw.js")).catch(() => {
-        // الأوفلاين progressive enhancement مش شرط أساسي — فشل التسجيل
-        // (متصفح قديم، إعدادات خصوصية..إلخ) مايوقفش حاجة تانية في الموقع.
+        // Offline is progressive enhancement, not a requirement — a failed registration
+        // (old browser, privacy settings, and so on) stops nothing else on the site.
       });
     };
 

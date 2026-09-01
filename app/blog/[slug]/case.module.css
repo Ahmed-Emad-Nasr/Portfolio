@@ -1,44 +1,36 @@
 /*
  * blog/[slug]/case.module.css
- * صفحة القراءة: عمود واحد ضيّق. عرض السطر محدود بـ ch مش بـ px عشان يفضل
- * مريح للقراءة مهما كان حجم الخط.
+ * The reading page: a single narrow column. Line length is capped in ch
+ * rather than px so it stays comfortable at any font size.
  */
 
 .page {
   position: relative;
   min-height: 100vh;
   padding: clamp(6rem, 12vh, 10rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vh, 8rem);
-  background: var(--background, #000000);
+  background: var(--background);
 }
 
-/* ── شريط التنقّل ────────────────────────────────────────────────────────── */
+/* ── Navigation bar ─────────────────────────────────────────────────────── */
 .bar {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   max-width: 80ch;
   margin: 0 auto 2.5rem;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.15rem;
 }
 
 .backLink {
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
   text-decoration: none;
 }
 
 .backLink:hover {
-  color: var(--accent-color, #ffd700);
+  color: var(--accent-color);
   text-decoration: underline;
   text-underline-offset: 4px;
-}
-
-.backLink:focus-visible,
-.shot:focus-visible,
-.sibling:focus-visible,
-.copyAction:focus-visible {
-  outline: 2px solid var(--accent-color, #ffd700);
-  outline-offset: 3px;
 }
 
 .barSep {
@@ -46,12 +38,12 @@
 }
 
 .barCurrent {
-  color: var(--text-muted, #d8d6cc);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* ── جسم المقال ─────────────────────────────────────────────────────────── */
+/* ── Article body ───────────────────────────────────────────────────────── */
 .article {
   max-width: 80ch;
   margin: 0 auto;
@@ -63,11 +55,11 @@
 }
 
 .kicker {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.1rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
 }
 
 .kicker::before {
@@ -77,17 +69,17 @@
 
 .title {
   margin-top: 1rem;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: clamp(2.4rem, 5vw, 3.6rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.5px;
-  color: var(--foreground, #ffffff);
+  color: var(--foreground);
 }
 
 .platform {
   margin-top: 0.8rem;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -97,7 +89,7 @@
   margin: 2.5rem 0;
   font-size: 1.6rem;
   line-height: 1.7;
-  color: var(--text-muted, #d8d6cc);
+  color: var(--text-muted);
 }
 
 .copyAction {
@@ -106,15 +98,15 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #b8b8b8;
   cursor: pointer;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .copyAction:hover {
-  border-color: var(--accent-color, #ffd700);
-  color: var(--accent-color, #ffd700);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .copied {
@@ -122,7 +114,7 @@
   color: #00ff88;
 }
 
-/* ── التفاصيل ───────────────────────────────────────────────────────────── */
+/* ── Details ────────────────────────────────────────────────────────────── */
 .facts {
   display: grid;
   gap: 2.5rem;
@@ -132,7 +124,7 @@
 }
 
 .factTitle {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 2px;
@@ -140,7 +132,7 @@
   color: #5a5a5a;
 }
 
-/* ── السكرين شوتس ───────────────────────────────────────────────────────── */
+/* ── Screenshots ────────────────────────────────────────────────────────── */
 .shots {
   margin-top: 3.5rem;
   padding-top: 2.5rem;
@@ -167,12 +159,12 @@
 .shot img {
   object-fit: cover;
   filter: grayscale(50%) contrast(1.1);
-  transition: filter var(--motion-fast, 280ms) var(--motion-ease, ease),
-    transform var(--motion-fast, 280ms) var(--motion-ease, ease);
+  transition: filter var(--motion-fast) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
 }
 
 .shot:hover {
-  border-color: var(--accent-color, #ffd700);
+  border-color: var(--accent-color);
 }
 
 .shot:hover img {
@@ -180,7 +172,7 @@
   transform: scale(1.03);
 }
 
-/* ── السابق / التالي ────────────────────────────────────────────────────── */
+/* ── Previous / next ────────────────────────────────────────────────────── */
 .siblings {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -197,11 +189,11 @@
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
-  transition: border-color var(--motion-fast, 280ms) ease;
+  transition: border-color var(--motion-fast) ease;
 }
 
 .sibling:hover {
-  border-color: var(--main-color, #bc002d);
+  border-color: var(--main-color);
 }
 
 .siblingNext {
@@ -209,17 +201,17 @@
 }
 
 .siblingLabel {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.1rem;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
 }
 
 .siblingTitle {
   font-size: 1.35rem;
   line-height: 1.4;
-  color: var(--text-muted, #d8d6cc);
+  color: var(--text-muted);
 }
 
 .sibling:hover .siblingTitle {
@@ -242,8 +234,8 @@
 }
 
 /* ── ATT&CK techniques ─────────────────────────────────────────────────────
-   ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px. الكتلة دي اتعادت
-   كتابتها على توكنز الموقع (--text-sm / --text-base / --text-md). */
+   ⚠️ Scale: html { font-size: 62.5% } → 1rem = 10px. This block was
+   rewritten on the site tokens (--text-sm / --text-base / --text-md). */
 
 .attack { margin-top: 4.5rem; }
 
@@ -262,7 +254,7 @@
   gap: 0.9rem;
   padding: 0.8rem 1.3rem;
   border: 1px solid rgba(var(--main-color-rgb), 0.35);
-  border-radius: var(--radius-card-sm, 6px);
+  border-radius: var(--radius-card-sm);
   background: rgba(var(--main-color-rgb), 0.07);
 }
 
@@ -275,19 +267,10 @@
 .attackName { font-size: var(--text-sm); color: var(--text-color); }
 
 .attackNote { margin: 0; font-size: var(--text-sm); }
-.attackNote a {
-  color: var(--text-muted);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-}
-.attackNote a:hover, .attackNote a:focus-visible {
-  color: var(--accent-color);
-  border-bottom-color: currentColor;
-}
-
 /* ── Related reports ───────────────────────────────────────────────────────
-   مرتّبة بالتكنيكات المشتركة أولاً، مش بالتاريخ ولا عشوائي. أي تقرير مالوش
-   تقاطع حقيقي مبيظهرش — مقترحات عشوائية بتعلّم الزائر يتجاهل القسم. */
+   Ordered by shared techniques first, not by date and not at random. A
+   report with no real overlap does not appear — arbitrary suggestions teach
+   the visitor to ignore the section. */
 
 .related { margin-top: 4.5rem; }
 

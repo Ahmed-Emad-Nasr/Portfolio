@@ -4,11 +4,12 @@
  * BackToTop.tsx
  * Author: Ahmed Emad Nasr
  *
- * زرار الرجوع لفوق. بيظهر بعد ما تعدّي ٨٠٪ من ارتفاع الشاشة — يعني مش
- * بيزاحم الـ hero وإنت لسه فوق.
+ * The back-to-top button. It appears once you are past 80% of the viewport
+ * height, so it does not crowd the hero while you are still at the top.
  *
- * زي باقي حاجات الـ scroll في المشروع: صفر re-render. الإظهار والإخفاء
- * بيتم بـ classList.toggle جوه rAF، مش بـ useState.
+ * Like everything else scroll-related in this project: zero re-renders.
+ * Showing and hiding happens through classList.toggle inside rAF, not
+ * useState.
  */
 
 import { useEffect, useRef } from "react";
@@ -42,8 +43,9 @@ export default function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    // Lenis بيلفّ window.scrollTo لما يكون root، فالحركة بتطلع smooth لوحدها.
-    // لو المستخدم طالب تقليل الحركة بنقفز على طول.
+    // Lenis wraps window.scrollTo when it runs in root mode, so the motion
+// comes out smooth on its own.
+    // If the user asked for reduced motion we jump straight there.
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
   };

@@ -150,8 +150,8 @@
   margin-bottom: 2.2rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(var(--ui-blur, 4px));
-  backdrop-filter: blur(var(--ui-blur, 4px));
+  -webkit-backdrop-filter: blur(var(--ui-blur));
+  backdrop-filter: blur(var(--ui-blur));
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.1s;
 }
@@ -162,7 +162,7 @@
   animation: pulseDot 1.6s ease-in-out infinite;
 }
 .badgeText {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.28em;
@@ -218,7 +218,7 @@
   position: relative;
   color: var(--main-color);
   padding-right: 8px;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
 }
 
 .typingHighlight::before {
@@ -263,8 +263,8 @@
   margin-bottom: 2.4rem;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.02);
-  -webkit-backdrop-filter: blur(var(--ui-blur, 4px));
-  backdrop-filter: blur(var(--ui-blur, 4px));
+  -webkit-backdrop-filter: blur(var(--ui-blur));
+  backdrop-filter: blur(var(--ui-blur));
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.46s;
 }
@@ -281,7 +281,7 @@
   background: var(--main-color);
 }
 .specHeaderLabel {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
@@ -299,7 +299,7 @@
   gap: 0.4rem;
 }
 .specItem span:first-child {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -307,7 +307,7 @@
   color: var(--accent-color);
 }
 .specItem span:last-child {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -337,8 +337,8 @@
 
 .socialIcon {
   display: flex;
-  gap: var(--space-sm, 1.3rem);
-  margin-bottom: var(--space-lg, 2.4rem);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
   flex-wrap: wrap;
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.94s;
@@ -364,14 +364,14 @@
 
 .homeButton {
   display: flex;
-  gap: var(--space-sm, 1.1rem);
+  gap: var(--space-sm);
   flex-wrap: wrap;
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 1.06s;
 }
 .btn {
   display: inline-flex; align-items: center; gap: 0.9rem; padding: 1.3rem 2.8rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.92rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
   transition: transform var(--motion-normal) var(--motion-ease), background var(--motion-normal) var(--motion-ease), color var(--motion-normal) var(--motion-ease);
   cursor: pointer; text-decoration: none; box-shadow: none;
@@ -392,10 +392,6 @@
   color: #111;
 }
 .cvBtn:hover svg { animation: pdfPulse 1.15s ease-in-out infinite; }
-
-
-
-
 
 .btnProjects {
   background: rgba(255, 255, 255, 0.03);
@@ -424,16 +420,6 @@
   transition: transform var(--motion-fast) var(--motion-ease);
 }
 .btn:hover::before { transform: rotate(24deg) translateX(265%); }
-
-.btn:focus-visible,
-.btnEmail:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-}
-.socialIcon a:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-}
 
 /* ───────────────── Hero image / HUD portrait ───────────────── */
 
@@ -520,7 +506,7 @@
   z-index: 4;
 }
 .hudLine {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -529,7 +515,7 @@
 /* a11y: nudged up from 0.28 → 0.4 so this still reads as decorative HUD
    flavor text without dropping below a readable contrast level */
 .hudDim { color: rgba(255, 255, 255, 0.4); }
-.hudAccent { color: rgba(var(--accent-color-rgb, 255, 255, 255), 0.5); }
+.hudAccent { color: rgba(var(--accent-color-rgb), 0.5); }
 
 .imageButton {
   position: absolute;
@@ -575,7 +561,7 @@
   justify-content: center;
   gap: 0.5rem;
   background: rgba(0, 0, 0, 0.4);
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -616,7 +602,7 @@
   background: rgba(var(--main-color-rgb), 0.4);
 }
 .quoteText {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.35em;
@@ -631,9 +617,9 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* بتستخدمها .ringOuter (25s) و .ringInner (20s عكسي).
-   كانت بتستخدمها .spinner كمان — الكلاس دي اتشالت مع زرار تحميل الـ CV،
-   بس الحلقتين لسه محتاجينها. */
+/* Used by .ringOuter (25s) and .ringInner (20s, reversed).
+   .spinner used it too — that class went away with the CV download button,
+   but the two rings still need it. */
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @keyframes heroImageIn {
@@ -655,7 +641,6 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
 }
-
 
 /* ───────────────── Motion / input preferences ───────────────── */
 

@@ -86,7 +86,7 @@
 
 .brand {
   color: #e1004f;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.34em;
   letter-spacing: 0.35em;

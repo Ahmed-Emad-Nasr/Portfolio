@@ -8,13 +8,13 @@
   top: 0;
   left: 0;
   right: 0;
-  width: 100%; /* ممتد بعرض الصفحة بالكامل من الحافة للحافة */
+  width: 100%; /* Spans the full page width, edge to edge */
   z-index: var(--z-navbar);
   transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
-  padding-top: 2px; /* مساحة للخط الأحمر العلوي الحاد */
+  padding-top: 2px; /* Room for the sharp red rule along the top */
 }
 
-/* الخط الأحمر المستمر على كامل عرض الشاشة */
+/* The continuous red rule across the full screen width */
 .header::before {
   content: '';
   position: absolute;
@@ -22,11 +22,11 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: #ff003c;
+  background: var(--main-color);
   z-index: 10;
 }
 
-/* الحاوية الخارجية للمضلع الممتد (الـ Border الرمادي الرفيع) */
+/* Outer container for the full-width polygon (the thin grey border) */
 .headerInner {
   position: relative;
   display: flex;
@@ -34,26 +34,26 @@
   justify-content: space-between;
   height: 56px;
   background: rgba(255, 255, 255, 0.08);
-  /* قص الأطراف السفلية فقط لإنشاء الـ Trapezoid على كامل الشاشة */
+  /* Clip only the bottom corners, forming a full-width trapezoid */
   -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
   clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
 }
 
-/* الحاوية الداخلية للمحتوى */
+/* Inner container for the content */
 .headerContent {
   position: absolute;
   inset: 1px;
   top: 0;
-  background: var(--bg-color, #000000);
+  background: var(--bg-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4rem; /* مسافة داخلية مريحة لتوزيع العناصر */
+  padding: 0 4rem; /* Comfortable inner spacing to distribute the items */
   -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
   clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
 }
 
-/* تأثير عند عمل Scroll لزيادة عمق اللون الأسود */
+/* Deepens the black as the page scrolls */
 .scrolled .headerContent {
   background: #000000;
 }
@@ -74,7 +74,7 @@
 }
 
 .brandDot {
-  color: #ff003c;
+  color: var(--main-color);
   font-weight: 900;
 }
 
@@ -90,7 +90,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
   color: #888888;
@@ -107,7 +107,7 @@
   transition: opacity var(--motion-fast) ease;
 }
 
-/* تأثير الـ Hover والـ Active النظيف تماماً للمينيمال ثيم */
+/* Clean hover and active states for the minimalist theme */
 .navbar a:hover, 
 .navbar a.active {
   color: #ffffff;
@@ -116,7 +116,7 @@
 .navbar a:hover svg,
 .navbar a.active svg {
   opacity: 1;
-  color: #ff003c;
+  color: var(--main-color);
 }
 
 /* ── MOBILE MENU ─────────────────────────────────────────────────────────── */
@@ -161,10 +161,11 @@
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* إلغاء قصّ الترابيزويد على الموبايل: كان بيقصّ قائمة الموبايل بالكامل
-     لأنها بتظهر تحت الهيدر (top: 100%) وهي لسه ابن للعنصر المقصوص،
-     فبتتقصّ برا نطاق القصّ. وكمان كان بيقصّ حواف اللوجو وزرار الهامبرجر
-     لأن الـ padding (24px) كان أصغر من مسافة القصّ (34px). */
+  /* Drop the trapezoid clip on mobile: it was clipping the entire mobile menu,
+     because the menu appears below the header (top: 100%) while still being a
+     child of the clipped element, so it fell outside the clip region. It was
+     also shaving the logo and the hamburger button, because the padding (24px)
+     was smaller than the clip inset (34px). */
   .headerInner,
   .headerContent {
     -webkit-clip-path: none;
@@ -176,7 +177,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--bg-color, #000000);
+    background: var(--bg-color);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     flex-direction: column;
     padding: 15px;
@@ -202,10 +203,10 @@
   .menuIcon { display: flex; }
 }
 
-/* فاصل بصري بين مجموعات اللينكات في الـ nav.
-   هيدر البلوج بيستخدم .navDivider في الـ JSX، والكلاس ده مكانش موجود في
-   أي واحد من ملفي الهيدر — يعني الـ span كان بيترندر بـ class="undefined"
-   من غير أي ستايل. */
+/* Visual divider between groups of nav links.
+   The blog header uses .navDivider in its JSX, and the class existed in
+   neither header file — so the span was rendering with class="undefined"
+   and no styling at all. */
 .navDivider {
   width: 1px;
   height: 12px;

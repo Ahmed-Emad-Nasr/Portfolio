@@ -155,17 +155,17 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         )}
 
         <div className={styles.cardActions}>
-          <Link href={detailPath} className={styles.primaryAction}>Open case</Link>
+          <Link href={detailPath} data-fx="btn" data-btn="ghost">Open case</Link>
           {/* مش كل case ليه PDF — ستة منهم أدلتهم صور بس. قبل كده الزراير
               كانت بتتعرض دايماً وبتودّي على 404. */}
           {href && (
             <>
-              <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" className={styles.viewAction}>View PDF</a>
-              <a href={normalizeHref(href)} download className={styles.downloadAction}>Download</a>
+              <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">View PDF</a>
+              <a href={normalizeHref(href)} download data-fx="btn" data-btn="ghost" data-tone="main">Download</a>
             </>
           )}
           {hasScreenshots && (
-            <button type="button" onClick={() => onOpenGallery(title, screenshots, 0)} className={`${styles.galleryOpenAction} ${styles.viewAction}`}>
+            <button type="button" onClick={() => onOpenGallery(title, screenshots, 0)} data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed">
               View All Screenshots
             </button>
           )}

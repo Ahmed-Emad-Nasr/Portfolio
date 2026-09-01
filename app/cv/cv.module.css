@@ -1,12 +1,14 @@
 /*
  * cv.module.css
  *
- * ⚠️ المقياس: globals.css فيه html { font-size: 62.5% } → 1rem = 10px.
- * الملف كان مكتوب على أساس 16px، فالصفحة كلها طلعت بحوالي 60% من حجمها،
- * والورقة نفسها طلعت 520 بكسل عرض بدل 830.
+ * ⚠️ Scale: globals.css sets html { font-size: 62.5% } → 1rem = 10px.
+ * This file was written assuming 16px, so the whole page rendered at about
+ * 60% of its intended size, and the sheet itself came out 520 pixels wide
+ * instead of 830.
  *
- * الصفحة دي متصمّمة تتقرا وتتطبع، مش تبهر: مفيش أنيميشن ولا زخرفة.
- * قواعد @media print في globals.css بتحوّلها لورقة نضيفة لوحدها.
+ * This page is designed to be read and printed, not to impress: no
+ * animation, no decoration. The @media print rules in globals.css turn it
+ * into a clean sheet on their own.
  */
 
 .page {
@@ -15,7 +17,7 @@
   background: var(--bg-color);
 }
 
-/* ~90 حرف في السطر — أوسع من كده مبيتقراش */
+/* ~90 characters per line — wider than that stops being readable */
 .sheet { max-width: 86rem; margin: 0 auto; }
 
 /* ── Header ─────────────────────────────────────────────────────────────── */
@@ -50,27 +52,8 @@
   font-size: var(--text-base);
   color: var(--text-muted);
 }
-.contact a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
-.contact a:hover, .contact a:focus-visible { color: var(--accent-color); border-bottom-color: currentColor; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 2.6rem; }
-
-.primaryAction,
-.secondaryAction {
-  font-family: var(--font-mono);
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: 1.1rem 2.2rem;
-  border-radius: var(--radius-button, 2px);
-}
-.primaryAction { background: var(--main-color); color: #fff; }
-.primaryAction:hover { opacity: 0.88; }
-.secondaryAction { border: 1px solid rgba(255, 255, 255, 0.22); color: var(--text-muted); }
-.secondaryAction:hover, .secondaryAction:focus-visible { color: var(--accent-color); border-color: currentColor; }
-.primaryAction:focus-visible,
-.secondaryAction:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .summary {
   margin: 3.2rem 0 0;
@@ -122,12 +105,8 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-a.dates { text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
-a.dates:hover, a.dates:focus-visible { color: var(--accent-color); }
 
 .org { margin: 0.5rem 0 1.1rem; font-size: var(--text-base); color: var(--text-muted); }
-.org a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
-.org a:hover, .org a:focus-visible { color: var(--accent-color); }
 
 .bullets { margin: 0; padding-left: 2rem; }
 .bullets li {
@@ -178,9 +157,10 @@ a.dates:hover, a.dates:focus-visible { color: var(--accent-color); }
 }
 
 /*
- * الطباعة: globals.css بيعمل الأساسي (خلفية بيضا، نص أسود، إخفاء الزخرفة،
- * طباعة عناوين اللينكات). هنا التعديلات الخاصة بالصفحة دي بس — بالـ pt
- * لأن ده وحدة الورق، ومش متأثرة بالـ 62.5%.
+ * Printing: globals.css handles the basics (white background, black text,
+ * hiding decoration, printing link destinations). What is here is only the
+ * page-specific adjustments — in pt, because that is the unit of paper and
+ * it is unaffected by the 62.5% root size.
  */
 @media print {
   .page { padding: 0; min-height: 0; }

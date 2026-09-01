@@ -1,14 +1,15 @@
 /*
  * CommandPalette.module.css
- * لغة الترمينال: مونوسبيس، حواف حادة، prompt أحمر، خلفية سودة صافية.
+ * Terminal language: monospace, sharp edges, a red prompt, a plain black
+ * background.
  */
 
-/* ── الزرار الصغير اللي بيفتح الـ palette ────────────────────────────────── */
+/* ── The small button that opens the palette ────────────────────────────── */
 .trigger {
   position: fixed;
   left: clamp(1.2rem, 3vw, 2.5rem);
   bottom: clamp(1.2rem, 3vw, 2.5rem);
-  z-index: var(--z-sticky, 200);
+  z-index: var(--z-sticky);
 
   display: flex;
   align-items: center;
@@ -24,17 +25,12 @@
   -webkit-clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
   clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
 
-  transition: color var(--motion-fast, 280ms) ease, border-color var(--motion-fast, 280ms) ease;
+  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 
 .trigger:hover {
   color: #ffffff;
-  border-color: var(--main-color, #bc002d);
-}
-
-.trigger:focus-visible {
-  outline: 2px solid var(--accent-color, #ffd700);
-  outline-offset: 3px;
+  border-color: var(--main-color);
 }
 
 .trigger svg {
@@ -43,24 +39,24 @@
 }
 
 .triggerHint {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 1px;
 }
 
-/* على الموبايل الاختصار مالوش لازمة — الأيقونة بس */
+/* On mobile the shortcut hint is pointless — icon only */
 @media (max-width: 768px) {
   .triggerHint {
     display: none;
   }
 }
 
-/* ── الـ overlay والـ panel ──────────────────────────────────────────────── */
+/* ── Overlay and panel ──────────────────────────────────────────────────── */
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--z-modal, 2000);
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -76,11 +72,11 @@
 
   background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-top: 2px solid var(--main-color, #ff003c);
+  border-top: 2px solid var(--main-color);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
 }
 
-/* ── خانة البحث ─────────────────────────────────────────────────────────── */
+/* ── Search field ───────────────────────────────────────────────────────── */
 .searchRow {
   display: flex;
   align-items: center;
@@ -90,27 +86,10 @@
 }
 
 .prompt {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 16px;
   font-weight: 700;
-  color: var(--main-color, #ff003c);
-}
-
-.input {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
-  /* 16px على الأقل عشان iOS ميعملش zoom تلقائي عند الكتابة */
-  font-size: 16px;
-  letter-spacing: 0.5px;
-}
-
-.input::placeholder {
-  color: #5a5a5a;
+  color: var(--main-color);
 }
 
 .escKey {
@@ -120,17 +99,17 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: #888888;
   cursor: pointer;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 1px;
 }
 
 .escKey:hover {
   color: #ffffff;
-  border-color: var(--main-color, #bc002d);
+  border-color: var(--main-color);
 }
 
-/* ── النتائج ────────────────────────────────────────────────────────────── */
+/* ── Results ────────────────────────────────────────────────────────────── */
 .list {
   flex: 1;
   overflow-y: auto;
@@ -146,7 +125,7 @@
 
 .groupLabel {
   margin: 12px 16px 6px;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -170,13 +149,13 @@
 }
 
 .rowActive {
-  background: rgba(var(--main-color-rgb, 188, 0, 45), 0.12);
-  border-left-color: var(--main-color, #ff003c);
+  background: rgba(var(--main-color-rgb), 0.12);
+  border-left-color: var(--main-color);
   color: #ffffff;
 }
 
 .row:focus-visible {
-  outline: 2px solid var(--accent-color, #ffd700);
+  outline: 2px solid var(--accent-color);
   outline-offset: -2px;
 }
 
@@ -192,7 +171,7 @@
 
 .rowHint {
   flex-shrink: 0;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -200,7 +179,7 @@
 }
 
 .rowActive .rowHint {
-  color: var(--accent-color, #ffd700);
+  color: var(--accent-color);
 }
 
 .empty {
@@ -210,14 +189,14 @@
   text-align: center;
 }
 
-/* ── الفوتر ─────────────────────────────────────────────────────────────── */
+/* ── Footer ─────────────────────────────────────────────────────────────── */
 .footer {
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 10px 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -226,7 +205,7 @@
 
 .footerCount {
   margin-left: auto;
-  color: var(--accent-color, #ffd700);
+  color: var(--accent-color);
 }
 
 @media (max-width: 768px) {

@@ -45,28 +45,28 @@ const MAX_DEPTH = Math.max(
 
 export default function AttackMatrix() {
   return (
-    <section className={styles.section} id="Coverage" aria-label="MITRE ATT&CK coverage">
-      <div className={styles.container}>
+    <section data-fx="section" id="Coverage" aria-label="MITRE ATT&CK coverage">
+      <div data-fx="container">
         {/* نفس هيكل الهيدر المستخدم في Experience و Projects و Certifications:
             عنوان متوسّط بالخط الأحمر تحته. القسم كان بهيدر محاذي لليسار
             وشكله كإنه من موقع تاني. */}
-        <div className={styles["header-section"]}>
-          <SectionHeader japaneseText="戦術地図" englishText="ATT&CK Coverage" titleClassName={styles.title} />
+        <div data-fx="section-head">
+          <SectionHeader japaneseText="戦術地図" englishText="ATT&CK Coverage" />
           <p className={styles.lede}>
             Every technique below is backed by a published report in the case
             library. Open a technique to see the evidence.
           </p>
           <dl className={styles.stats}>
             <div className={styles.stat}>
-              <dt>Techniques</dt>
+              <dt data-fx="label">Techniques</dt>
               <dd>{COVERED_TECHNIQUES}</dd>
             </div>
             <div className={styles.stat}>
-              <dt>Tactics</dt>
+              <dt data-fx="label">Tactics</dt>
               <dd>{COVERAGE.length}</dd>
             </div>
             <div className={styles.stat}>
-              <dt>Reports</dt>
+              <dt data-fx="label">Reports</dt>
               <dd>{caseEvidenceLibrary.length}</dd>
             </div>
           </dl>
@@ -89,7 +89,7 @@ export default function AttackMatrix() {
                       // واحدة: فين التغطية عميقة وفين سطحية.
                       style={{ "--depth": caseIds.length / MAX_DEPTH } as React.CSSProperties}
                     >
-                      <span className={styles.techniqueId}>{technique.id}</span>
+                      <span data-fx="id">{technique.id}</span>
                       <span className={styles.techniqueName}>{technique.name}</span>
                       <span className={styles.count} aria-label={`${caseIds.length} reports`}>
                         {caseIds.length}

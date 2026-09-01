@@ -1,35 +1,9 @@
 /*
  * contact-section.module.css
  *
- * ⚠️ المقياس: html { font-size: 62.5% } → 1rem = 10px. الملف اتعاد كتابته
- * على توكنز الموقع بدل مقياس خاص بيه.
+ * ⚠️ Scale: html { font-size: 62.5% } → 1rem = 10px. Rewritten on the site
+ * tokens rather than a scale of its own.
  */
-
-.section {
-  padding: 8rem 0 9rem;
-  position: relative;
-  z-index: 1;
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 900px;
-}
-
-.header-section { text-align: center; margin-bottom: 5rem; }
-
-/* مطابق بالحرف لـ .title في Projects و Experience */
-.title {
-  position: relative;
-  font-weight: 800;
-  font-size: 2.6rem;
-  color: var(--text-color);
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  display: inline-block;
-  padding-bottom: 1.6rem;
-}
-.title::before,
-.title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
-.title::before { width: 100%; height: 1px; background: rgba(var(--main-color-rgb), 0.3); }
-.title::after { width: 40%; height: 3px; background: var(--main-color); }
 
 .lede {
   color: var(--text-muted);
@@ -39,10 +13,9 @@
   line-height: 1.7;
 }
 
-.container {
-  margin: 0 auto;
-  padding: 0 var(--container-pad-x, 5.25%);
-  max-width: var(--container-max-width, 1500px);
+/* Layout only — the width and horizontal padding come from
+   [data-fx="container"] in globals.css section 16. */
+.grid {
   display: grid;
   grid-template-columns: minmax(0, 34rem) minmax(0, 52rem);
   justify-content: center;
@@ -50,8 +23,9 @@
   align-items: start;
 }
 
-/* لما الفورم مقفول، العمود التاني كان بيفضل فاضي والقسم يبان مكسور */
-.container[data-form="off"] { grid-template-columns: minmax(0, 46rem); }
+/* With the form switched off the second column stayed empty and the section
+   looked broken */
+.grid[data-form="off"] { grid-template-columns: minmax(0, 46rem); }
 
 .intro { min-width: 0; }
 
@@ -65,22 +39,11 @@
   border-bottom: 1px solid transparent;
   font-size: var(--text-md);
 }
-.direct a:hover, .direct a:focus-visible {
-  color: var(--accent-color);
-  border-bottom-color: currentColor;
-}
 .direct svg { color: var(--main-color); width: 1.1em; flex-shrink: 0; }
 
 .form { display: grid; gap: 1.8rem; min-width: 0; }
 
 .field { display: grid; gap: 0.7rem; }
-.field label {
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
 .field input,
 .field textarea {
   font-family: inherit;
@@ -88,7 +51,7 @@
   color: var(--text-bright);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius-card-sm, 6px);
+  border-radius: var(--radius-card-sm);
   padding: 1.3rem 1.5rem;
   width: 100%;
   resize: vertical;
@@ -100,7 +63,7 @@
   border-color: transparent;
 }
 
-/* مخفي بالـ CSS مش بـ type="hidden" — البوتات بتتجاهل الـ hidden */
+/* Hidden in CSS rather than with type="hidden" — bots skip hidden inputs */
 .honeypot {
   position: absolute;
   left: -9999px;
@@ -120,20 +83,20 @@
   color: var(--text-bright);
   background: var(--main-color);
   border: 0;
-  border-radius: var(--radius-button, 2px);
+  border-radius: var(--radius-button);
   padding: 1.4rem 2.8rem;
   cursor: pointer;
-  transition: opacity var(--motion-fast, 150ms) ease;
+  transition: opacity var(--motion-fast) ease;
 }
 .submit:hover:not(:disabled) { opacity: 0.88; }
 .submit:disabled { opacity: 0.55; cursor: progress; }
-.submit:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
 
 .status { margin: 0; min-height: 2.2rem; font-size: var(--text-sm); }
 .ok { color: #4ade80; display: inline-flex; align-items: center; gap: 0.7rem; }
-.err { color: var(--main-light, #ff2d78); display: inline-flex; align-items: center; gap: 0.7rem; }
+.err { color: var(--main-light); display: inline-flex; align-items: center; gap: 0.7rem; }
 
-/* ملاحظة للمطوّر مش للزائر — كانت صندوق متقطّع كبير في مكان الفورم */
+/* A note for the developer, not the visitor — this used to be a large dashed
+   box sitting where the form should be */
 .disabled {
   margin: 2.8rem 0 0;
   font-size: 1.2rem;
@@ -144,10 +107,8 @@
 .disabled code { font-family: var(--font-mono); font-size: 1.2rem; }
 
 @media (max-width: 900px) {
-  .section { padding: 5rem 0 6rem; }
-  .title { font-size: 2.2rem; }
   .container,
-  .container[data-form="off"] { grid-template-columns: minmax(0, 1fr); gap: 4rem; max-width: 52rem; }
+  .grid[data-form="off"] { grid-template-columns: minmax(0, 1fr); gap: 4rem; max-width: 52rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

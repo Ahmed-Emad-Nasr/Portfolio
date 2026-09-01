@@ -1,58 +1,62 @@
 "use client";
 
 /*
- * Reveal.tsx — ظهور العناصر مع الـ scroll، بـ CSS بالكامل
+ * Reveal.tsx — scroll reveal, entirely in CSS
  * Author: Ahmed Emad Nasr
  *
- * بديل لـ MotionInView. نفس النتيجة البصرية، بتكلفة مختلفة تماماً.
+ * A replacement for MotionInView. The same visual result at a completely
+ * different cost.
  *
- * ═══ ليه ═══
+ * ═══ WHY ═══
  *
- * `whileInView` بتاعة framer-motion بتعمل **IntersectionObserver لكل
- * عنصر**، وكل عنصر كمان بيشترك في محرّك الأنيميشن وبيتحرّك من
- * الجافاسكريبت فريم بفريم. الموقع فيه ٣٥ استخدام، ومعرض الأعمال لوحده
- * بيرندر لحد ٥٠ عنصر — يعني ٥٠ observer و٥٠ اشتراك في المحرّك، وكلهم
- * بيشتغلوا على الـ main thread أثناء الـ scroll.
+ * framer-motion's `whileInView` creates **an IntersectionObserver per
+ * element**, and each element also subscribes to the animation engine and
+ * is moved from JavaScript frame by frame. The site had 35 usages, and the
+ * gallery alone renders up to 50 items — 50 observers and 50 engine
+ * subscriptions, all running on the main thread during scroll.
  *
- * الملف ده بيستخدم:
- *   · **observer واحد** للصفحة كلها، مشترك بين كل العناصر
- *   · CSS `animation` للحركة نفسها — بتتنفّذ على الـ compositor
+ * This file uses:
+ *   · **one observer** for the whole page, shared by every element
+ *   · CSS `animation` for the motion itself — run on the compositor
  *
- * دور الجافاسكريبت اتقلّص لحاجة واحدة: يغيّر attribute مرة واحدة لما
- * العنصر يدخل الشاشة. بعدها المتصفح بيكمّل لوحده. صفر شغل لكل فريم.
+ * JavaScript's job shrinks to one thing: flip an attribute once, when the
+ * element enters the viewport. After that the browser takes over. Zero
+ * per-frame work.
  *
- * والحركة نفسها هي نفس `fadeInUp` بتاعة الـ hero — نفس المسافة (24px)،
- * نفس الـ easing (--motion-ease)، نفس منطق التأخير المتدرّج. الفرق إنها
- * بقت متاحة لكل الموقع بدل ما تكون مكتوبة بالإيد في sensei-home.module.css.
+ * And the motion is the hero's `fadeInUp` — same distance (24px), same
+ * easing (--motion-ease), same stagger logic. The difference is that it is
+ * now available site-wide instead of hand-written in sensei-home.module.css.
  *
- * ═══ ليه opacity و transform بس ═══
+ * ═══ WHY ONLY opacity AND transform ═══
  *
- * دول الخاصيتين الوحيدتين اللي المتصفح بيحرّكهم على الـ compositor من
- * غير layout ولا paint. أي حاجة تانية — height، margin، filter، حتى
- * background-color — بتجبر إعادة حساب في كل فريم.
+ * They are the only two properties the browser animates on the compositor
+ * with no layout and no paint. Anything else — height, margin, filter, even
+ * background-color — forces a recalculation every frame.
  *
- * القاعدة دي مش تفضيل، هي السبب إن الأنيميشن ده مجاني فعلاً على
- * الموبايل.
+ * That rule is not a preference; it is the reason this animation is
+ * genuinely free on mobile.
  */
 
 import React, { memo, useEffect, useRef } from "react";
 
 export type RevealVariant =
-  | "up"      // الافتراضي — نفس fadeInUp بتاع الـ hero
+  | "up"      // The default — the hero's fadeInUp
   | "down"
   | "left"
   | "right"
-  | "fade"    // opacity بس — أرخص واحدة
+  | "fade"    // opacity only — the cheapest one
   | "scale";
 
-/* ═══ الـ observer المشترك ═══
+/* ═══ The shared observer ═══
  *
- * واحد للصفحة كلها. بيتعمل عند أول استخدام وبيفضل موجود — إنشاء
- * observer وتدميره مع كل mount أغلى من إن واحد يفضل عايش.
+ * One for the whole page. Created on first use and kept — creating and
+ * tearing down an observer on every mount costs more than leaving one
+ * alive.
  *
- * `rootMargin` السالب من تحت معناه إن العنصر بيتحسب "ظاهر" لما يبقى
- * داخل الشاشة بـ ١٢٪ من ارتفاعها، مش أول ما يلمس الحافة. من غير ده
- * الحركة بتخلص قبل ما الزائر يبص على العنصر.
+ * The negative `rootMargin` at the bottom means an element counts as
+ * "visible" once it is 12% of the viewport height inside, rather than the
+ * instant it touches the edge. Without it the animation finishes before
+ * the visitor has looked at the element.
  */
 let sharedObserver: IntersectionObserver | null = null;
 
@@ -63,9 +67,9 @@ function getObserver(): IntersectionObserver {
         if (!entry.isIntersecting) continue;
         const el = entry.target as HTMLElement;
         el.dataset.reveal = "in";
-        // مرة واحدة وبس. `once: false` كان معناه إن كل عنصر بيعيد
-        // الحركة كل ما يرجع للشاشة — يعني شغل أنيميشن مستمر طول الـ
-        // scroll على صفحة طويلة.
+        // Once and only once. `once: false` meant every element replayed
+        // its animation each time it re-entered the viewport — continuous
+        // animation work for the whole scroll on a long page.
         observer.unobserve(el);
       }
     },
@@ -75,17 +79,19 @@ function getObserver(): IntersectionObserver {
 }
 
 /*
- * بيقول للـ CSS إن الجافاسكريبت اشتغل.
+ * Tells the CSS that JavaScript is running.
  *
- * الحالة الابتدائية (opacity: 0) بتتكتب في الـ HTML من السيرفر. لو
- * الـ bundle فشل يتحمّل لأي سبب، الموقع كان هيفضل **مخفي بالكامل**.
+ * The initial state (opacity: 0) is written into the server-rendered HTML.
+ * If the bundle failed to load for any reason, the site would have stayed
+ * **completely hidden**.
  *
- * الشبكة الأمنية في الـ CSS: طول ما `data-reveal-ready` مش موجودة على
- * <html>، فيه أنيميشن بيظهر كل حاجة بعد ٤ ثواني. أول ما المكوّن ده
- * يشتغل بيحط الـ attribute، فالقاعدة دي بتبطّل تطابق ومبتضربش أبداً.
+ * The CSS safety net: for as long as `data-reveal-ready` is absent from
+ * <html>, an animation reveals everything after 4 seconds. The moment this
+ * component runs it sets the attribute, the rule stops matching, and it
+ * never fires.
  *
- * يعني: الجافاسكريبت شغّال → ظهور مع الـ scroll. اتعطّل → كل حاجة
- * بتبان لوحدها. مفيش حالة الموقع بيفضل فاضي فيها.
+ * So: JavaScript running → scroll reveal. JavaScript broken → everything
+ * appears on its own. There is no state in which the site stays empty.
  */
 function markReady() {
   document.documentElement.dataset.revealReady = "1";
@@ -96,10 +102,17 @@ type RevealProps = {
   className?: string;
   style?: React.CSSProperties;
   variant?: RevealVariant;
-  /** تأخير بالملي ثانية قبل ما الحركة تبدأ */
+  /** Delay in milliseconds before the animation starts */
   delay?: number;
-  /** العنصر اللي هيترندر. div افتراضياً — استخدم li/section حسب المكان. */
+  /** Which element to render. Defaults to div — use li/section as the
+      surrounding markup requires. */
   as?: "div" | "section" | "article" | "li" | "header" | "figure";
+  /*
+   * React.HTMLAttributes has no data-* members, and TypeScript only waives
+   * unknown data-* props on intrinsic elements — not on custom components.
+   * Without this, callers passing data-fx would fail `npm run type-check`.
+   */
+  [key: `data-${string}`]: string | undefined;
 } & Omit<React.HTMLAttributes<HTMLElement>, "style">;
 
 const Reveal = memo(function Reveal({
@@ -120,9 +133,9 @@ const Reveal = memo(function Reveal({
     if (!el) return;
 
     /*
-     * `data-tier` بيتكتب على <html> بسكربت inline في <head> قبل أول
-     * paint. لو مش موجود يبقى السكربت اتعطّل — نعرض المحتوى على طول
-     * بدل ما نراهن على أنيميشن.
+     * `data-tier` is written onto <html> by an inline script in <head>
+     * before first paint. If it is absent the script failed — show the
+     * content immediately rather than betting on an animation.
      */
     const tier = document.documentElement.dataset.tier;
     if (!tier) {
@@ -157,16 +170,16 @@ export default Reveal;
 
 /* ═══ RevealGroup ═══
  *
- * لما يبقى عندك قايمة، الغلط الشائع إنك تلف كل عنصر في <Reveal> لوحده —
- * معرض الأعمال كده بيبقى ٥٠ عنصر في الـ observer.
+ * With a list, the common mistake is wrapping each item in its own
+ * <Reveal> — which puts 50 elements from the gallery into the observer.
  *
- * ده بيراقب **الحاوية بس**، والأبناء بيتأخّروا واحد ورا التاني بـ CSS
- * عن طريق متغيّر --i. يعني observer entry واحد بدل خمسين، ونفس الشكل
- * المتدرّج بالظبط.
+ * This watches **the container only**, and the children stagger one after
+ * another in CSS through the --i variable. One observer entry instead of
+ * fifty, and exactly the same staggered look.
  *
- * الـ `staggerMs` بيتحدّد بسقف: ٥٠ عنصر × ٦٠ms = ٣ ثواني قبل ما آخر
- * واحد يبان. الـ CSS بيقفل التدرّج بعد العنصر الـ ١٢ عشان القوائم
- * الطويلة متبقاش انتظار.
+ * `staggerMs` is capped: 50 items × 60ms = 3 seconds before the last one
+ * appears. The CSS stops the stagger after the 12th child so long lists do
+ * not turn into a wait.
  */
 export const RevealGroup = memo(function RevealGroup({
   children,

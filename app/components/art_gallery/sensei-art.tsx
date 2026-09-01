@@ -98,9 +98,9 @@ const SenseiArt = memo(function SenseiArt({ credentials }: SenseiArtProps) {
 
   return (
     <section className={styles["art-gallery-section"]} id="Certifications">
-      <div className={styles.container}>
-        <Reveal className={styles["header-section"]} variant="up">
-          <h2 className={styles.title}>
+      <div data-fx="container" data-container="full">
+        <Reveal data-fx="section-head" variant="up">
+          <h2 data-fx="section-title" data-title="lg" className={styles.title}>
             <span lang="ja">認定資格 •</span><span lang="en"> Certifications</span>
           </h2>
         </Reveal>
@@ -123,7 +123,7 @@ const SenseiArt = memo(function SenseiArt({ credentials }: SenseiArtProps) {
             <Reveal className={styles.galleryActions} variant="fade" delay={100}>
               <button
                 type="button"
-                className={styles.primaryAction}
+                data-fx="btn" data-btn="ghost" data-tone="main"
                 onClick={() => setVisibleCount((n) => Math.min(GALLERY_IMAGES.length, n + 3))}
               >
                 Show more

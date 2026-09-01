@@ -1,18 +1,19 @@
 /*
  * BlogCard.module.css
- * إضافات الـ deep link بس — باقي ستايل الكارت في page.module.css زي ما هو.
+ * Deep-link additions only — the rest of the card styling stays in
+ * page.module.css.
  */
 
-/* الهيدر ثابت فوق، فبدون المسافة دي الـ #case-... بيوقف تحت الهيدر
-   والعنوان بيبقى مقصوص. */
+/* The header is fixed at the top, so without this offset #case-... lands
+   under it and the title is clipped. */
 .anchor {
   scroll-margin-top: 90px;
 }
 
-/* لمعة سريعة على الكارت اللي جاي من لينك مباشر — عشان عينك تلاقيه
-   في وسط باقي الكروت */
+/* A quick flash on the card arriving from a direct link — so your eye finds
+   it among the rest */
 .anchor:target {
-  animation: caseTargetFlash 1.6s var(--motion-ease, ease) 1;
+  animation: caseTargetFlash 1.6s var(--motion-ease) 1;
 }
 
 @keyframes caseTargetFlash {
@@ -21,10 +22,10 @@
     box-shadow: none;
   }
   20% {
-    box-shadow: inset 3px 0 0 var(--accent-color, #ffd700);
+    box-shadow: inset 3px 0 0 var(--accent-color);
   }
   80% {
-    box-shadow: inset 3px 0 0 var(--accent-color, #ffd700);
+    box-shadow: inset 3px 0 0 var(--accent-color);
   }
 }
 
@@ -34,8 +35,8 @@
 }
 
 .copyAction.copyAction:hover {
-  border-color: var(--accent-color, #ffd700);
-  color: var(--accent-color, #ffd700);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .copied.copied {
@@ -46,6 +47,6 @@
 @media (prefers-reduced-motion: reduce) {
   .anchor:target {
     animation: none;
-    box-shadow: inset 3px 0 0 var(--accent-color, #ffd700);
+    box-shadow: inset 3px 0 0 var(--accent-color);
   }
 }

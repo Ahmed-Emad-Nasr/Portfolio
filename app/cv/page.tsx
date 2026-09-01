@@ -79,7 +79,7 @@ export default function CvPage() {
           <h1 className={styles.name}>{CV_CONTACT.name}</h1>
           <p className={styles.headline}>{CV_CONTACT.headline}</p>
 
-          <ul className={styles.contact}>
+          <ul className={styles.contact} data-links="inline">
             <li>{CV_CONTACT.location}</li>
             <li><a href={`mailto:${CV_CONTACT.email}`}>{CV_CONTACT.email}</a></li>
             <li><a href={`tel:${CV_CONTACT.phone.replace(/\s/g, "")}`}>{CV_CONTACT.phone}</a></li>
@@ -90,10 +90,10 @@ export default function CvPage() {
           {/* data-print="hide" بيخفيها وقت الطباعة — مفيش معنى لزرار
               "Download" على ورقة مطبوعة */}
           <div className={styles.actions} data-print="hide">
-            <a className={styles.primaryAction} href={normalizePublicHref(CV_PDF_HREF)} download>
+            <a data-fx="btn" data-btn="solid" href={normalizePublicHref(CV_PDF_HREF)} download>
               Download PDF
             </a>
-            <Link className={styles.secondaryAction} href="/">
+            <Link data-fx="btn" data-btn="outline" href="/">
               Back to portfolio
             </Link>
           </div>
@@ -112,7 +112,7 @@ export default function CvPage() {
                   {dateRange(item.startDate, "endDate" in item ? item.endDate : undefined)}
                 </span>
               </div>
-              <p className={styles.org}>
+              <p className={styles.org} data-links="inline">
                 <OrgName name={item.subTag} href={item.subTagHyperlink} />
               </p>
               <ul className={styles.bullets}>
@@ -133,7 +133,7 @@ export default function CvPage() {
                   {dateRange(item.startDate, "endDate" in item ? item.endDate : undefined)}
                 </span>
               </div>
-              <p className={styles.org}>{item.subTag}</p>
+              <p className={styles.org} data-links="inline">{item.subTag}</p>
               <ul className={styles.bullets}>
                 {toBullets(item.desc).map((line) => <li key={line}>{line}</li>)}
               </ul>
@@ -154,11 +154,11 @@ export default function CvPage() {
               <div key={repo.id} className={styles.entry}>
                 <div className={styles.entryHead}>
                   <h3 className={styles.role}>{repo.name.replace(/-/g, " ")}</h3>
-                  <a className={styles.dates} href={repo.html_url} target="_blank" rel="noopener noreferrer">
+                  <a className={styles.dates} data-fx="linkline" href={repo.html_url} target="_blank" rel="noopener noreferrer">
                     GitHub
                   </a>
                 </div>
-                <p className={styles.org}>{repo.topics.slice(0, 6).join(" · ")}</p>
+                <p className={styles.org} data-links="inline">{repo.topics.slice(0, 6).join(" · ")}</p>
                 <ul className={styles.bullets}>
                   {bullets.map((line) => <li key={line}>{line}</li>)}
                 </ul>

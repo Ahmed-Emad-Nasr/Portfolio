@@ -4,15 +4,16 @@
  * CommandPalette.tsx
  * Author: Ahmed Emad Nasr
  *
- * الـ palette نفسه. بيتحمّل lazy من CommandPaletteMount، فكل الاستيرادات
- * التقيلة هنا (portfolio.ts) مش بتدخل الـ bundle الأساسي.
+ * The palette itself. It is lazy-loaded from CommandPaletteMount, so all
+ * the heavy imports here (portfolio.ts) stay out of the main bundle.
  *
- * الأوامر بتتبني مرة واحدة على مستوى الموديول (ثابتة)، والحاجات اللي
- * بتعتمد على الصفحة الحالية بتتحسب في useMemo.
+ * The commands are built once at module level (they are constant), and the
+ * parts that depend on the current page are computed in useMemo.
  *
- * البحث: subsequence matching بسيط مع ترتيب بالأولوية —
- * تطابق حرفي في البداية > تطابق حرفي في النص > حروف متفرقة بالترتيب.
- * كفاية تماماً لعدد أوامر بالعشرات، ومن غير أي مكتبة زيادة.
+ * Search: simple subsequence matching with priority ordering —
+ * a literal match at the start > a literal match anywhere > scattered
+ * characters in order. More than enough for a few dozen commands, and with
+ * no extra library.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
@@ -29,7 +30,7 @@ type Command = {
   label: string;
   hint?: string;
   group: CommandGroup;
-  /** كلمات إضافية للبحث مش ظاهرة في الواجهة */
+  /** Extra search terms that are not shown in the UI */
   keywords?: string;
   run: (ctx: CommandContext) => void;
 };
@@ -43,7 +44,7 @@ type CommandContext = {
 const EMAIL = "ahmed.em.nasr@gmail.com";
 const CV_HREF = "Assets/cv/AhmedEmadNasr_CV.pdf";
 
-// ─── الأوامر الثابتة ─────────────────────────────────────────────────────────
+// ─── Static commands ─────────────────────────────────────────────────────────
 
 const PORTFOLIO_SECTIONS: { id: string; label: string }[] = [
   { id: "Home", label: "Home" },
@@ -154,7 +155,7 @@ const ACTION_COMMANDS: Command[] = [
   },
 ];
 
-// كل case بيوديك على صفحته المستقلة
+// Each case leads to its own page
 const CASE_COMMANDS: Command[] = caseEvidenceLibrary.map((item) => ({
   id: `case-${item.id}`,
   label: item.title,
@@ -166,11 +167,11 @@ const CASE_COMMANDS: Command[] = caseEvidenceLibrary.map((item) => ({
   run: (ctx) => ctx.goToRoute(`/blog/${item.id}`),
 }));
 
-// ─── البحث ───────────────────────────────────────────────────────────────────
+// ─── Search ──────────────────────────────────────────────────────────────────
 
 /**
- * بيرجّع درجة تطابق، و -1 لو مفيش تطابق أصلاً.
- * أعلى درجة = أول النتايج.
+ * Returns a match score, or -1 when there is no match at all.
+ * A higher score sorts earlier.
  */
 const score = (haystack: string, needle: string): number => {
   if (!needle) return 0;
@@ -181,7 +182,7 @@ const score = (haystack: string, needle: string): number => {
   if (idx === 0) return 1000;
   if (idx > 0) return 500 - Math.min(idx, 400);
 
-  // fallback: الحروف بالترتيب من غير ما تكون ورا بعض
+  // fallback: the characters in order, but not necessarily adjacent
   let pos = 0;
   for (let i = 0; i < needle.length; i++) {
     pos = h.indexOf(needle[i], pos);
@@ -193,7 +194,7 @@ const score = (haystack: string, needle: string): number => {
 
 const GROUP_ORDER: CommandGroup[] = ["Navigate", "Cases", "Actions", "Links"];
 
-// ─── المكوّن ─────────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 
 export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const router = useRouter();
@@ -207,7 +208,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const listRef = useRef<HTMLUListElement>(null);
   const restoreFocusTo = useRef<HTMLElement | null>(null);
 
-  // ── السياق اللي الأوامر بتشتغل بيه ──────────────────────────────────────
+  // ── The context the commands operate in ─────────────────────────────────
   const goToSection = useCallback((id: string) => {
     const target = document.getElementById(id);
     if (!target) return;
@@ -226,7 +227,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     [goToSection, goToRoute, onClose],
   );
 
-  // ── بناء الأوامر حسب الصفحة الحالية ─────────────────────────────────────
+  // ── Build the commands for the current page ─────────────────────────────
   const commands = useMemo<Command[]>(() => {
     const sections = isBlog ? BLOG_SECTIONS : PORTFOLIO_SECTIONS;
 
@@ -261,7 +262,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     return [...nav, ...CASE_COMMANDS, ...ACTION_COMMANDS, ...LINK_COMMANDS];
   }, [isBlog]);
 
-  // ── الفلترة والترتيب ────────────────────────────────────────────────────
+  // ── Filter and sort ─────────────────────────────────────────────────────
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase();
 
@@ -285,10 +286,10 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
       .map((s) => s.cmd);
   }, [commands, query]);
 
-  // كل ما البحث يتغير نرجع لأول نتيجة
+  // Reset to the first result whenever the query changes
   useEffect(() => setActiveIndex(0), [query]);
 
-  // ── فتح/قفل: focus + قفل السكرول ────────────────────────────────────────
+  // ── Open/close: focus + scroll lock ─────────────────────────────────────
   useEffect(() => {
     restoreFocusTo.current = document.activeElement as HTMLElement | null;
     inputRef.current?.focus();
@@ -306,13 +307,13 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     (cmd: Command | undefined) => {
       if (!cmd) return;
       onClose();
-      // بنقفل الأول عشان الـ scroll lock يترفع قبل أي حركة scroll
+      // Close first, so the scroll lock lifts before any scrolling happens
       requestAnimationFrame(() => cmd.run(ctx));
     },
     [ctx, onClose],
   );
 
-  // ── الكيبورد ────────────────────────────────────────────────────────────
+  // ── Keyboard ────────────────────────────────────────────────────────────
   const onKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Escape") {
       e.preventDefault();
@@ -345,7 +346,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     }
   };
 
-  // العنصر النشط يفضل ظاهر أثناء التنقل بالكيبورد
+  // Keep the active item visible while navigating by keyboard
   useEffect(() => {
     const list = listRef.current;
     if (!list) return;
@@ -353,7 +354,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     el?.scrollIntoView({ block: "nearest" });
   }, [activeIndex]);
 
-  // ترويسة المجموعة بتتكتب مرة واحدة عند أول عنصر فيها
+  // The group heading is written once, at the first item in that group
   let lastGroup: CommandGroup | null = null;
 
   return (
@@ -373,7 +374,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
           </span>
           <input
             ref={inputRef}
-            className={styles.input}
+            data-fx="field"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search sections, cases, links…"

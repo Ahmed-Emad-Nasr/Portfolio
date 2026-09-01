@@ -1,13 +1,14 @@
 /*
  * BackToTop.module.css
- * نفس لغة الهيدر: زاوية مقصوصة، مونوسبيس، أحمر على أسود.
+ * The same language as the header: a chamfered corner, monospace, red on
+ * black.
  */
 
 .button {
   position: fixed;
   right: clamp(1.2rem, 3vw, 2.5rem);
   bottom: clamp(1.2rem, 3vw, 2.5rem);
-  z-index: var(--z-sticky, 200);
+  z-index: var(--z-sticky);
 
   display: flex;
   flex-direction: column;
@@ -15,7 +16,7 @@
   justify-content: center;
   gap: 2px;
 
-  /* الحد الأدنى للمس (44px) حتى لو الشكل أصغر */
+  /* Minimum touch target (44px) even where the visible shape is smaller */
   min-width: 46px;
   min-height: 46px;
   padding: 8px 10px;
@@ -25,19 +26,19 @@
   color: #888888;
   cursor: pointer;
 
-  /* نفس قصّة الترابيزويد بتاعة الهيدر بس على الزاوية اليمين تحت */
+  /* The header's trapezoid cut, applied to the bottom-right corner */
   -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
 
   opacity: 0;
-  visibility: hidden; /* بيشيله من الـ tab order وهو مخفي */
+  visibility: hidden; /* Takes it out of the tab order while it is hidden */
   transform: translateY(8px);
   transition:
-    opacity var(--motion-fast, 280ms) ease,
-    transform var(--motion-fast, 280ms) ease,
-    color var(--motion-fast, 280ms) ease,
-    border-color var(--motion-fast, 280ms) ease,
-    visibility 0s linear var(--motion-fast, 280ms);
+    opacity var(--motion-fast) ease,
+    transform var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    visibility 0s linear var(--motion-fast);
 }
 
 .visible {
@@ -45,35 +46,30 @@
   visibility: visible;
   transform: translateY(0);
   transition:
-    opacity var(--motion-fast, 280ms) ease,
-    transform var(--motion-fast, 280ms) ease,
-    color var(--motion-fast, 280ms) ease,
-    border-color var(--motion-fast, 280ms) ease,
+    opacity var(--motion-fast) ease,
+    transform var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
     visibility 0s linear 0s;
 }
 
 .button:hover {
   color: #ffffff;
-  border-color: var(--main-color, #bc002d);
-}
-
-.button:focus-visible {
-  outline: 2px solid var(--accent-color, #ffd700);
-  outline-offset: 3px;
+  border-color: var(--main-color);
 }
 
 .arrow {
   font-size: 14px;
   line-height: 1;
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
 }
 
 .button:hover .arrow {
-  color: var(--accent-color, #ffd700);
+  color: var(--accent-color);
 }
 
 .label {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 1px;

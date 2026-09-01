@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--z-modal, 2000);
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +15,7 @@
   overflow-y: auto;
   background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-top: 2px solid var(--main-color, #ff003c);
+  border-top: 2px solid var(--main-color);
 }
 
 .head {
@@ -27,7 +27,7 @@
 }
 
 .title {
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1.5rem;
   letter-spacing: 1px;
   color: #ffffff;
@@ -35,7 +35,7 @@
 
 .title::before {
   content: "// ";
-  color: var(--main-color, #ff003c);
+  color: var(--main-color);
 }
 
 .close {
@@ -44,19 +44,14 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: #888888;
   cursor: pointer;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1rem;
   letter-spacing: 1px;
 }
 
 .close:hover {
   color: #ffffff;
-  border-color: var(--main-color, #bc002d);
-}
-
-.close:focus-visible {
-  outline: 2px solid var(--accent-color, #ffd700);
-  outline-offset: 3px;
+  border-color: var(--main-color);
 }
 
 .groups {
@@ -67,7 +62,7 @@
 
 .groupTitle {
   margin-bottom: 0.8rem;
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 2px;
@@ -98,14 +93,14 @@
   padding: 3px 7px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  color: var(--accent-color, #ffd700);
-  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  color: var(--accent-color);
+  font-family: var(--font-mono);
   font-size: 1.05rem;
 }
 
 .label {
   font-size: 1.3rem;
-  color: var(--text-muted, #d8d6cc);
+  color: var(--text-muted);
 }
 
 @media (max-width: 640px) {

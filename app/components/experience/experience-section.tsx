@@ -101,13 +101,13 @@ TimelineItem.displayName = "TimelineItem";
 
 function ExperienceSection() {
   return (
-    <section className={styles["section-education"]} id="Experience">
-      <div className={styles.container}>
-        <div className={styles["header-section"]}>
-          <SectionHeader japaneseText="経験" englishText="Experience" titleClassName={styles.title} />
+    <section data-fx="section" id="Experience">
+      <div data-fx="container">
+        <div data-fx="section-head">
+          <SectionHeader japaneseText="経験" englishText="Experience" size="lg" />
         </div>
         
-        <Spotlight className={styles["time-line"]}>
+        <Spotlight data-fx="timeline">
           {knowledgeEducationItems.map((item: TimelineEntry, index) => (
             <TimelineItem
               // key={index} breaks React's reconciliation the moment an entry
