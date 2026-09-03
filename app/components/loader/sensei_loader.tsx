@@ -294,8 +294,27 @@ export default function LoadingScreen() {
   if (phase === null) return null;
 
   return (
-    <div
+    <>
+      {/* الإعلان الوحيد. اللودر نفسه aria-hidden، فده اللي بيتقال:
+          جملة واحدة، مرة واحدة. aria-live="polite" معناها إن القارئ
+          يستنى لحد ما يخلص اللي بيقوله بدل ما يقاطع. */}
+      <p className="sr-only" role="status">
+        {phase === "out" ? "Site loaded" : "Loading site"}
+      </p>
+      <div
       className={styles.loader}
+      /*
+       * ── الوصولية ──────────────────────────────────────────────────────
+       *
+       * اللودر بيغطي الشاشة كلها وجواه زخرفة كتير: SEN-001، 武士道، سطور
+       * الشعار، مسار الكونسول، الساعة. قارئ الشاشة كان بيقرا ده كله بصوت
+       * عالي قبل ما المستخدم يوصل لأي محتوى حقيقي.
+       *
+       * aria-hidden بيشيل الزخرفة من شجرة الوصولية من غير ما يلمس الشكل،
+       * والسطر الوحيد اللي بيتقال بقى في العنصر اللي تحت — جملة واحدة
+       * بدل شاشة كاملة.
+       */
+      aria-hidden="true"
       /* The exit is a CSS transition keyed on this attribute — see
          .loader[data-state="out"] in the module. data-reduced picks the
          opacity-only variant on low-tier devices. */
@@ -383,6 +402,7 @@ export default function LoadingScreen() {
 
       <div className={styles.sideLabelLeft}>SEN-001</div>
       <div className={styles.sideLabelRight} lang="ja">武士道</div>
-    </div>
+      </div>
+    </>
   );
 }

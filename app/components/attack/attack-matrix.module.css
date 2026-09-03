@@ -123,7 +123,7 @@
   border-bottom: 1px solid transparent;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   .stats { gap: var(--space-md); }
   .stat dd { font-size: 2.8rem; }
   .matrix { grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }

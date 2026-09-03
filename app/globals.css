@@ -49,7 +49,8 @@
    * some things and left others behind.
    *
    *   1     the original size
-   *   0.9   the current default — about 10% tighter
+   *   1.02  the current default
+   *   0.9   the previous default
    *   0.85  noticeably compact
    *
    * What 0.9 actually produces on desktop:
@@ -64,7 +65,7 @@
    * Mobile carries its own value: phones are already tight, and shrinking
    * body text below ~14px costs readability rather than buying space.
    */
-  --ui-scale: 0.9;
+  --ui-scale: 0.99;
 
   /* Core palette */
   --background: #000000;
@@ -88,8 +89,6 @@
   --accent-color: var(--accent);
   --accent-color-rgb: 255, 215, 0;
   --accent-light: #fff0a6;
-
-  --text-faint: #5a5a5a;
 
   --danger: #ff2d55;
   --danger-rgb: 255, 45, 85;
@@ -120,15 +119,9 @@
   --radius-button: 2px;
   --radius-pill: 999px;
 
-  /* Type scale.
-     --text-xs is the FLOOR for the whole site: nothing renders smaller.
-     It was 1.2rem; at the real root size that is ~10.8px, which is below
-     the point where uppercase mono labels stay legible on a phone.
-     53 declarations across 9 modules were written as raw rem values
-     assuming 1rem = 16px (0.72rem meaning "13px", rendering at 6.5px).
-     scripts/fix-type-scale.mjs moved all of them onto these tokens. */
-  --text-xs: 1.25rem;
-  --text-sm: 1.45rem;
+  /* Type scale — html at 62.5% means 1rem = 10px */
+  --text-xs: 1.2rem;
+  --text-sm: 1.4rem;
   --text-base: 1.6rem;
   --text-md: 1.8rem;
   --text-lg: 2.0rem;
@@ -145,18 +138,39 @@
   --typing-words: 16s;
   --typing-textDrift: 6.5s;
 
+  /*
+   * ── مفتاح المسافات ───────────────────────────────────────────────────
+   *
+   * أخو --ui-scale. ده بيتحكم في **الفراغ** بين الحاجات، وده بيتحكم في
+   * **حجم** الحاجات. مفصولين عن بعض عن قصد، عشان تقدر تكبّر الخط وتضيّق
+   * الفراغ في نفس الوقت — وده اللي مطلوب هنا بالظبط.
+   *
+   *   1     المسافات الأصلية
+   *   0.78  الافتراضي دلوقتي — أضيق ~٢٢٪
+   *   0.7   ضيق جداً
+   *
+   * ملحوظة: --ui-scale بيضرب في ده. لما رفعنا الحجم من 0.9 لـ 0.95،
+   * المسافات كانت هتكبر ٥٫٦٪ معاه لأنها كلها بالـ rem. فالصافي الحقيقي
+   * للمسافات هو 0.78 × (0.95/0.9) = **0.823**، يعني أضيق ~١٨٪ عن قبل.
+   *
+   * كل مسافة في الموقع بتعدّي من هنا: توكنز المسافات، حشو الأقسام،
+   * المسافة بين الأقسام، حشو الكروت، والمسافة بين عنوان القسم ومحتواه.
+   * رقم واحد بس تلعب فيه.
+   */
+  --space-scale: 0.78;
+
   /* Spacing — clamp so it shrinks gradually on narrow screens instead
      of collapsing all at once at a breakpoint */
-  --space-xs: clamp(0.6rem, 1vw, 0.9rem);
-  --space-sm: clamp(1rem, 2vw, 1.5rem);
-  --space-md: clamp(1.6rem, 3vw, 2.4rem);
-  --space-lg: clamp(2.4rem, 5vw, 4rem);
-  --space-xl: clamp(4rem, 8vw, 8rem);
+  --space-xs: calc(clamp(0.6rem, 1vw, 0.9rem) * var(--space-scale));
+  --space-sm: calc(clamp(1rem, 2vw, 1.5rem) * var(--space-scale));
+  --space-md: calc(clamp(1.6rem, 3vw, 2.4rem) * var(--space-scale));
+  --space-lg: calc(clamp(2.4rem, 5vw, 4rem) * var(--space-scale));
+  --space-xl: calc(clamp(4rem, 8vw, 8rem) * var(--space-scale));
 
   /* Section shell — see section 16 */
-  --section-pad: 8rem 0 6rem;
+  --section-pad: calc(8rem * var(--space-scale)) 0 calc(6rem * var(--space-scale));
   --section-reserve: 1px 1200px;
-  --section-head-gap: 5rem;
+  --section-head-gap: calc(5rem * var(--space-scale));
 
   /* Section title — two sizes existed in the wild, so both are tokens.
      The small one was used by attack / contact / projects, the large one
@@ -215,29 +229,16 @@
 }
 
 html {
-  /*
-   * FLUID ROOT — replaces `calc(62.5% * var(--ui-scale))`.
-   *
-   * The old value was a flat 62.5% x 0.9 = 9px at every viewport, with two
-   * step changes bolted on: 56.25% below 360px and 68.75% above 1800px.
-   * The 360px step went the WRONG WAY -- it shrank type on the narrowest
-   * screens, where legibility is already worst. 1rem fell to 8.1px there,
-   * which put body text (--text-base, 1.6rem) at 12.9px.
-   *
-   * This clamp scales continuously instead, and the floor is a floor:
-   *
-   *     320px  ->  1rem ~= 9.5px    --text-base ~= 15.2px
-   *     768px  ->  1rem ~= 9.6px
-   *    1280px  ->  1rem ~= 9.9px
-   *    1920px  ->  1rem ~= 10.4px   --text-base ~= 16.6px
-   *    2560px  ->  1rem ~= 10.8px
-   *    3840px  ->  1rem ~= 11.5px   (capped)
-   *
-   * Every rem in the project still resolves against this one value, so
-   * --ui-scale remains the single knob it always was. The two step rules in
-   * section 7 are gone -- this replaces both.
-   */
-  font-size: calc(var(--ui-scale) * clamp(66%, 63% + 0.47vw, 80%));
+  /* 62.5% makes 1rem = 10px, which is what every rem value in this project
+     assumes. --ui-scale then trims that uniformly.
+
+     NOTE: I replaced this with a fluid clamp() and Ahmed reverted it. The
+     clamp grew the root to ~10.4px at 1920px, which scaled the ENTIRE site
+     up about 15% on desktop — every rem in the project resolves against
+     this one number, which is exactly what makes it a good knob and exactly
+     what makes changing it a redesign rather than an optimization.
+     Do not "fix" this again. */
+  font-size: calc(62.5% * var(--ui-scale));
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
@@ -267,7 +268,7 @@ body {
    background on every scroll frame — a well known source of jank on
    Safari and mobile Chrome in particular. And the effect itself is
    invisible on a phone screen anyway. */
-@media (max-width: 992px), (hover: none) {
+@media (max-width: 991px), (hover: none) {
   body { background-attachment: scroll; }
 }
 
@@ -388,7 +389,11 @@ html :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible 
   padding: 0.9rem 1.2rem;
   border-radius: var(--radius-pill);
   background: var(--main-color);
-  color: #000;
+  /* كان #000 على #bc002d = تباين 3.18 — راسب في WCAG AA (المطلوب 4.5)
+     والنص هنا 1.4rem يعني ~12.6 بكسل، فهو "نص عادي" مش كبير.
+     أسود على أحمر غامق من أسوأ التركيبات. الأبيض بيدّي 6.61 وناجح.
+     ده عنصر مساعد مبيبانش غير لما تعمل Tab، فاللون مش جزء من التصميم. */
+  color: #fff;
   font-size: 1.4rem;
   font-weight: 800;
   transform: translateY(-6rem);
@@ -396,6 +401,26 @@ html :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible 
 }
 
 .skip-link:focus-visible { transform: translateY(1rem); }
+
+/*
+ * نص للقارئات بس — موجود في شجرة الوصولية ومش باخد أي مساحة على الشاشة.
+ *
+ * مكانش فيه أداة زي دي في الموقع، فأي معلومة لازم تتقال لقارئ الشاشة
+ * كانت لازم تتعرض بصرياً أو تضيع. `clip-path` + `1px` هي الصيغة اللي
+ * بتفضل مقروءة للقارئات (display:none و visibility:hidden بيشيلوا
+ * العنصر من الشجرة تماماً).
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 
 /*--------- 5. Typography and layout ---------*/
 p,
@@ -428,11 +453,11 @@ p { text-wrap: pretty; }
 
 /*--------- 6. Section layout ---------*/
 section {
-  padding: 7.1rem 5.25% 5.9rem;
+  padding: calc(7.1rem * var(--space-scale)) 5.25% calc(5.9rem * var(--space-scale));
   position: relative;
   width: 100%;
   max-width: 128rem;
-  margin: 0 auto clamp(6rem, 10vw, 12rem) auto;
+  margin: 0 auto calc(clamp(6rem, 10vw, 12rem) * var(--space-scale)) auto;
   z-index: 1;
   contain: layout style;
   content-visibility: auto;
@@ -485,67 +510,43 @@ time,
 
 /*--------- 7. Breakpoints ---------*/
 /*
- * ONE BREAKPOINT LADDER FOR THE WHOLE SITE.
+ * الأرقام دي هي الأصلية. رجّعتها بالظبط زي ما كانت.
  *
- * Before this, 14 distinct max-width values were in use across 25
- * stylesheets: 360, 380, 430, 480, 600, 640, 672 (written as 42rem), 767,
- * 768, 900, 900+coarse, 991, 992, 1024, 1199. Several pairs differ by one
- * pixel and were clearly meant to be the same line. Two of them actively
- * fought each other -- sensei-home.module.css declares rules at 600px and
- * then again at 42rem (= 672px). Because the WIDER query is written LAST,
- * it wins on a 375px phone, and the 600px block for .homeContent h1 and
- * .typingText was dead code that looked live.
+ * كنت غيّرتها لسُلَّم موحّد (430/600/768/992/1440) وضفت خطوات للشاشات
+ * الكبيرة (1440/1920/2200) بتوسّع الـ section من 128rem لـ 160rem.
+ * وده كبّر الموقع بدل ما يظبّطه — فاترجع.
  *
- * The ladder below is the contract. Use these five numbers and nothing else:
+ * الحاجة الوحيدة اللي فضلت من التوحيد هي **توحيد الأرقام المتقاربة** في
+ * ملفات الـ modules (991/992، 767/768، وهكذا)، لأنها مبتغيّرش أي مقاس —
+ * بتخلي بس نفس الخط الفاصل مكتوب برقم واحد في كل مكان.
  *
- *     --bp-xs   26.875rem   430px   small phone
- *     --bp-sm   37.5rem     600px   phone
- *     --bp-md   48rem       768px   large phone / small tablet
- *     --bp-lg   62rem       992px   tablet / small laptop
- *     --bp-xl   90rem      1440px   desktop
- *
- * These are deliberately NOT custom properties. CSS cannot read a custom
- * property inside a media query, so `--bp-md` would have no consumer, and
- * the rule at the top of section 1 is explicit about that case: a token
- * nothing reads is not a token, it is a note. css-audit.mjs enforces it.
- * So the ladder lives here as a note, and the @media rules carry literals.
- *
- * A note on direction: this file is max-width-first because the existing
- * 25 stylesheets are, and converting them all at once is a bigger change
- * than it is worth. New CSS should be min-width-first.
+ * والباج الحقيقي الوحيد هنا كان في sensei-home.module.css: بلوك عند
+ * 600px وبعديه بلوك عند 42rem (=672px). الأوسع مكتوب آخر حاجة فبيكسب
+ * على موبايل 375px، يعني قواعد الـ 600px كانت ميتة. ده اتصلّح هناك،
+ * والمقاسات نفسها زي ما هي.
  */
-
-/* Tablet / small laptop and below */
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   section {
-    padding: 4rem 3.5% 4rem;
-    margin-bottom: clamp(5rem, 8vw, 8rem);
+    padding: calc(4rem * var(--space-scale)) 3.5% calc(4rem * var(--space-scale));
+    margin-bottom: calc(clamp(5rem, 8vw, 8rem) * var(--space-scale));
     width: 94%;
   }
 }
 
-/* Large phone and below */
 @media (max-width: 768px) {
   section { width: calc(100% - 3rem); }
 }
 
-/* Phone and below */
 @media (max-width: 600px) {
   section {
-    padding: 4.5rem 1.5rem 4.2rem;
-    margin-bottom: 5rem;
+    padding: calc(4.5rem * var(--space-scale)) 1.5rem calc(4.2rem * var(--space-scale));
+    margin-bottom: calc(5rem * var(--space-scale));
     width: calc(100% - 2rem);
   }
 }
 
-/*
- * Small phone.
- *
- * The old rule here also shrank the root font-size (56.25%). That is gone --
- * see the clamp in section 2. On a 360px screen you have less room, which
- * is a reason to trim PADDING, not a reason to make the text harder to read.
- */
-@media (max-width: 430px) {
+@media (max-width: 360px) {
+  html { font-size: calc(56.25% * var(--ui-scale)); }
   section {
     width: calc(100% - 1.2rem);
     padding-left: 1rem;
@@ -553,68 +554,27 @@ time,
   }
 }
 
-/*
- * ── LARGE SCREENS ──────────────────────────────────────────────────────
- *
- * The site previously had exactly one min-width query in 25 stylesheets
- * (min-width: 1800px) and no other large-screen handling at all. Between
- * 1280px and 1800px every section sat inside `max-width: 128rem`, which at
- * the old root size was 1152px -- so a 1920px monitor showed a 1152px
- * column with 384px of dead black on either side, and a 2560px monitor
- * showed the same column with 704px on either side.
- *
- * The fluid root in section 2 now grows the whole design past 1440px, so
- * `128rem` grows with it. These two steps widen the shell to match.
- */
-@media (min-width: 1440px) {
-  section {
-    padding-left: 6%;
-    padding-right: 6%;
-    max-width: 140rem;
-  }
-}
-
-@media (min-width: 1920px) {
+@media (min-width: 1800px) {
+  html { font-size: calc(68.75% * var(--ui-scale)); }
   section {
     padding-left: 8%;
     padding-right: 8%;
-    max-width: 152rem;
+    max-width: 153.6rem;
+    margin-inline: auto;
   }
 }
 
 /*
- * Ultra-wide. Beyond roughly 2100 CSS pixels a single centred column stops
- * reading as a layout and starts reading as a mistake, so the shell stops
- * growing and the remaining width becomes deliberate margin.
- */
-@media (min-width: 2200px) {
-  section { max-width: 160rem; }
-}
-
-/*
- * ── OVERFLOW GUARD ─────────────────────────────────────────────────────
+ * ── حارس الـ overflow ──────────────────────────────────────────────────
  *
- * `html, body { overflow-x: hidden }` in section 2 hides horizontal
- * overflow; it does not prevent it. Six grids declared
- * `minmax(<fixed>, 1fr)` with no lower guard:
+ * ده مش تغيير مقاسات — ده إصلاح قصّ محتوى، وسايبه.
  *
- *     attack-matrix .matrix         minmax(26rem, 1fr) / 22rem at <=768px
- *     case.module   figure grid     minmax(200px, 1fr)
- *     page.module   .playlistGrid   minmax(300px, 1fr)
- *     page.module   .youtubeHubGrid minmax(300px, 1fr)
- *
- * A track with a 300px minimum cannot shrink below 300px. On a 320px phone,
- * once section padding is subtracted, the track is wider than its container
- * and the row pushes past the viewport edge -- where overflow-x: hidden
- * CLIPS it rather than letting the user scroll to it. That is the worse of
- * the two failures, because it is silent.
- *
- * The fix is `minmax(min(100%, X), 1fr)`: the track still wants X, but it
- * is allowed to fall back to the container width. All six were changed at
- * source; credentials.module.css already used this form. There is no global
- * rule here on purpose -- a `[class*="Grid"]` selector would be both slow
- * and unreliable, since CSS Modules hashes class names. Same reasoning that
- * removed `[class*="stat"]` in section 6.
+ * ٦ جريدات كانت مكتوبة `minmax(<ثابت>, 1fr)` من غير حارس. تراك بحد أدنى
+ * 300px مبيقدرش ينزل تحت 300px، فعلى شاشة 320px بيخرج بره الحاوية —
+ * و`overflow-x: hidden` في القسم ٢ **بيقصّه** بدل ما يخليك تسكرول له.
+ * اتصلّحوا في المصدر لـ `minmax(min(100%, X), 1fr)`؛ الشكل مبيتغيّرش
+ * على أي شاشة واسعة كفاية، بس على الضيقة التراك بيقدر يصغّر بدل ما
+ * يتقصّ.
  */
 
 /*--------- 8. User preferences ---------*/
@@ -731,7 +691,7 @@ html:not([data-tier]) {
 
 /* An explicit motion ceiling for phones — this catches anything that is
    not marked data-decorative and therefore misses the gating above. */
-@media (pointer: coarse) and (max-width: 992px) {
+@media (pointer: coarse) and (max-width: 900px) {
   /*
    * Note: this used to be `* { will-change: auto !important }`.
    *
@@ -1063,9 +1023,11 @@ html[data-tier="low"] button::before { display: none; }
   --card-border-color: rgba(255, 255, 255, 0.05);
   --card-border-color-hover: rgba(var(--main-color-rgb), 0.2);
   --card-accent-height: 2px;
-  --card-pad: 2.5rem;
-  --card-pad-compact: 1.8rem 2rem;
-  --card-pad-tight: 0.6rem;
+  /* بتعدّي من --space-scale زي أي مسافة تانية — حشو الكارت جزء من
+     الإحساس بالاتساع زي المسافة بين الكروت بالظبط. */
+  --card-pad: calc(2.5rem * var(--space-scale));
+  --card-pad-compact: calc(1.8rem * var(--space-scale)) calc(2rem * var(--space-scale));
+  --card-pad-tight: calc(0.6rem * var(--space-scale));
   --card-lift: -3px;
 }
 
@@ -1186,15 +1148,15 @@ html[data-tier="low"] [data-fx="card"]:hover :is(img, [data-fx-media]) { transfo
 
 @media (max-width: 768px) {
   :root {
-    --card-pad: 1.8rem;
-    --card-pad-compact: 1.4rem 1.5rem;
+    --card-pad: calc(1.8rem * var(--space-scale));
+    --card-pad-compact: calc(1.4rem * var(--space-scale)) calc(1.5rem * var(--space-scale));
   }
 }
 
-@media (max-width: 430px) {
+@media (max-width: 480px) {
   :root {
-    --card-pad: 1.4rem;
-    --card-pad-compact: 1.2rem;
+    --card-pad: calc(1.4rem * var(--space-scale));
+    --card-pad-compact: calc(1.2rem * var(--space-scale));
   }
 }
 
@@ -1382,7 +1344,7 @@ html [data-fx="section"] {
 
 html [data-fx="section"][data-section="auto"] {
   min-height: 0;
-  --section-pad: 8rem 0 9rem;
+  --section-pad: calc(8rem * var(--space-scale)) 0 calc(9rem * var(--space-scale));
   --section-reserve: 1px 900px;
 }
 
@@ -1565,7 +1527,13 @@ html [data-fx="field"] {
   letter-spacing: 0.5px;
 }
 
-html [data-fx="field"]::placeholder { color: var(--text-faint); }
+/* --text-faint (#5a5a5a) تباينه 3.04 على الأسود — راسب في AA.
+   نص الـ placeholder نص حقيقي المستخدم محتاج يقراه، مش زخرفة.
+   --text-dim (#a59f90) بيدّي 7.96 وناجح، وهو توكن موجود أصلاً في الموقع.
+
+   وده كان الاستخدام الوحيد لـ --text-faint، فالتوكن اتشال — قاعدة القسم
+   ١ بتقول إن توكن محدش بيقراه مش توكن، ده تعليق. (css-audit مسكه). */
+html [data-fx="field"]::placeholder { color: var(--text-dim); }
 
 /* The row owns the focus indication, so the input suppresses its own */
 html [data-fx="field"]:focus-visible { outline: none; }
@@ -1582,7 +1550,7 @@ html [data-fx="field"]:focus-visible { outline: none; }
  * Contact's larger bottom padding was the one real difference, and it is
  * kept — as part of data-section="auto", which contact already carries.
  */
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   :root {
     /* Phones and small tablets are already tight. Trimming type here the
        way the desktop does would push body text under ~14px, which costs

@@ -162,13 +162,13 @@
 .caseSpotlightTag {
   display: inline-flex; align-self: flex-start; margin-bottom: 0.8rem; padding: 0.3em 0.8em;
   border-radius: 2px; border: 1px solid var(--accent-color); color: var(--accent-color);
-  font-family: var(--font-mono); font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 2px;
+  font-family: var(--font-mono); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px;
 }
 .caseSpotlightTag::before { content: "★ "; }
 .caseSpotlightBody h3 {
   font-size: 2.4rem; font-family: var(--font-mono); color: #fff; letter-spacing: 0.5px; line-height: 1.25;
 }
-.caseSpotlightBody > p { margin-top: 0.8rem; color: var(--text-muted); font-size: var(--text-sm); line-height: 1.6; }
+.caseSpotlightBody > p { margin-top: 0.8rem; color: var(--text-muted); font-size: 1.15rem; line-height: 1.6; }
 .caseSpotlightMedia {
   position: relative; aspect-ratio: 16 / 10; border-radius: calc(var(--radius-card) - 4px); overflow: hidden;
   border: 1px solid rgba(var(--accent-color-rgb), 0.3); background: #000; display: block;
@@ -179,7 +179,7 @@
    5. TERMINAL BADGES & TYPOGRAPHY
    ========================================= */
 .badge {
-  display: inline-flex; padding: 0.2em 0.6em; border-radius: 2px; font-size: var(--text-sm);
+  display: inline-flex; padding: 0.2em 0.6em; border-radius: 2px; font-size: 1.1rem;
   font-family: var(--font-mono); font-weight: 600; margin-right: 0.6em; margin-bottom: 0.6em;
   background: transparent; color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.15);
   text-transform: uppercase; letter-spacing: 1px;
@@ -190,7 +190,7 @@
 .difficulty-hard   { border-color: rgba(255, 0, 60, 0.4)   !important; color: var(--main-color) !important; }
 
 .caseCardHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.shotCount { font-size: var(--text-sm); color: var(--accent-color); font-family: var(--font-mono); }
+.shotCount { font-size: 1.1rem; color: var(--accent-color); font-family: var(--font-mono); }
 .shotCount::before { content: "[ "; opacity: 0.5; }
 .shotCount::after { content: " ]"; opacity: 0.5; }
 
@@ -198,25 +198,25 @@
 .pdfCard:hover .cardTitle { color: var(--accent-color); text-decoration: underline dotted; text-underline-offset: 6px; }
 
 .cardDescription, .videoDate, .playlistDescription {
-  margin-top: 0.6rem; color: var(--text-muted); font-size: var(--text-sm); line-height: 1.6; font-family: var(--font-body);
+  margin-top: 0.6rem; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-body);
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
 .cardDescriptionExpanded {
-  margin-top: 0.6rem; color: var(--text-muted); font-size: var(--text-sm); line-height: 1.6; font-family: var(--font-body);
+  margin-top: 0.6rem; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-body);
 }
 .descToggle {
   margin-top: 0.4rem; padding: 0; border: 0; background: transparent; cursor: pointer;
-  color: var(--accent-color); font-family: var(--font-mono); font-size: var(--text-sm);
+  color: var(--accent-color); font-family: var(--font-mono); font-size: 1rem;
   text-transform: uppercase; letter-spacing: 1px; text-decoration: underline dotted; text-underline-offset: 4px;
 }
-.cardPlatform { margin-top: 1rem; color: rgba(255, 255, 255, 0.55); font-size: var(--text-sm); font-family: var(--font-mono); text-transform: uppercase; }
+.cardPlatform { margin-top: 1rem; color: rgba(255, 255, 255, 0.55); font-size: 1.1rem; font-family: var(--font-mono); text-transform: uppercase; }
 
 .caseMetadata { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
 .tagsListInline, .toolsListCompact, .skillsListCompact { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.2rem; }
 .tagButtonSmall, .toolButtonSmall, .skillButtonSmall {
   padding: 0.4rem 0.8rem; border-radius: 2px; border: 1px solid transparent;
-  background: transparent; color: rgba(255, 255, 255, 0.62); font-size: var(--text-sm); font-family: var(--font-mono);
+  background: transparent; color: rgba(255, 255, 255, 0.62); font-size: 1.1rem; font-family: var(--font-mono);
 }
 .toolButtonSmall::before { content: ">_ "; color: var(--main-color); }
 .tagButtonSmall::before { content: "#"; color: var(--accent-color); }
@@ -229,14 +229,14 @@
 .skillButtonSmall::before { content: "✓ "; color: #00ff88; }
 .moreSkillsBadge {
   display: inline-flex; align-items: center; padding: 0.4rem 0.8rem; border-radius: 2px;
-  border: 1px dashed rgba(0, 255, 136, 0.3); color: #6fffbf; font-size: var(--text-sm); font-family: var(--font-mono);
+  border: 1px dashed rgba(0, 255, 136, 0.3); color: #6fffbf; font-size: 1.1rem; font-family: var(--font-mono);
 }
 
 /* "+N more" overflow badges — previously used in markup with no matching CSS */
 .moreTagsBadge, .moreToolsBadge {
   display: inline-flex; align-items: center; padding: 0.4rem 0.8rem; border-radius: 2px;
   border: 1px dashed rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.55);
-  font-size: var(--text-sm); font-family: var(--font-mono);
+  font-size: 1.1rem; font-family: var(--font-mono);
 }
 
 /* =========================================
@@ -346,7 +346,7 @@
 /* =========================================
    9. RESPONSIVE
    ========================================= */
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .page { padding: 8rem 4% 5rem; }
   .playlistGrid, .youtubeHubGrid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
   .insightStrip { grid-template-columns: repeat(2, 1fr); }
@@ -367,7 +367,7 @@
 }
 
 /* Mobile-specific readability fixes */
-@media (max-width: 430px) {
+@media (max-width: 480px) {
   /* Cards: make titles wrap nicely on small screens */
 
   .cardTitle {
@@ -382,7 +382,7 @@
     hyphens: auto;
   }
 
-  .cardDescription, .videoDate, .playlistDescription { font-size: var(--text-sm); }
+  .cardDescription, .videoDate, .playlistDescription { font-size: 1rem; }
   .caseSpotlightMedia { display: none; }
   .pdfGrid { gap: 1.2rem; }
 }

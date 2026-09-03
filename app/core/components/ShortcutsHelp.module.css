@@ -34,7 +34,7 @@
   color: #888888;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: 1rem;
   letter-spacing: 1px;
 }
 
@@ -58,7 +58,7 @@
 .groupTitle {
   margin-bottom: 0.8rem;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -90,7 +90,7 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: var(--accent-color);
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: 1.05rem;
 }
 
 .label {
@@ -98,7 +98,7 @@
   color: var(--text-muted);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .keys {
     min-width: 92px;
   }

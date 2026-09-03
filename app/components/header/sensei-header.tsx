@@ -15,8 +15,6 @@ const getShortLabel = (section: string) => {
     case "experience": return "EXP";
     case "projects": case "work": return "WORK";
     case "certifications": case "cert": return "CERT";
-    case "coverage": return "ATT&CK";
-    case "contact": case "mail": return "MAIL";
     default: return section.toUpperCase();
   }
 };

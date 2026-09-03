@@ -88,7 +88,7 @@
   opacity: 0.8;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .cursorRing {
     width: 4.4rem;
     height: 4.4rem;

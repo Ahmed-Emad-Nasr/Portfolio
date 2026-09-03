@@ -42,8 +42,6 @@ const GO_TO_SECTION: Record<string, string> = {
   e: "Experience",
   p: "Projects",
   c: "Certifications",
-  a: "Coverage",   // ATT&CK
-  m: "Contact",    // mail
 };
 
 const SECRET = "3omda";

@@ -19,7 +19,7 @@
   max-width: 80ch;
   margin: 0 auto 2.5rem;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: 1.15rem;
 }
 
 .backLink {
@@ -56,7 +56,7 @@
 
 .kicker {
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: 1.1rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--main-color);
@@ -217,7 +217,7 @@
 
 .siblingLabel {
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: 1.1rem;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--main-color);
@@ -233,7 +233,7 @@
   color: #ffffff;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .siblings {
     grid-template-columns: 1fr;
   }
@@ -281,7 +281,6 @@
 }
 .attackName { font-size: var(--text-sm); color: var(--text-color); }
 
-.attackNote { margin: 0; font-size: var(--text-sm); }
 /* ── Related reports ───────────────────────────────────────────────────────
    Ordered by shared techniques first, not by date and not at random. A
    report with no real overlap does not appear — arbitrary suggestions teach

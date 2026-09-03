@@ -286,9 +286,6 @@ export default function CaseArticle({
                 </li>
               ))}
             </ul>
-            <p className={styles.attackNote} data-links="inline">
-              <Link href="/#Coverage">See the full coverage map →</Link>
-            </p>
           </section>
         )}
 

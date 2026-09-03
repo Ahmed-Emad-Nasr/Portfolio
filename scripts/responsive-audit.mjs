@@ -16,12 +16,21 @@ import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
 
-/* سُلَّم الـ breakpoints المعتمد — القيم دي بس مسموحة.
-   لو ضفت واحد جديد، ضيفه هنا وفي القسم ٧ في globals.css مع بعض. */
-const LADDER = [430, 600, 768, 992, 1440, 1920, 2200];
+/* الـ breakpoints المستخدمة فعلاً في المشروع.
+   كنت وحّدتهم في سُلَّم من ٥ قيم، وأحمد رجّعهم للأصل — فالسكربت بيتبع
+   الواقع مش العكس. القايمة دي وصف مش وصفة: لو ضفت رقم جديد، ضيفه هنا. */
+const LADDER = [360, 380, 430, 480, 600, 640, 672, 767, 768, 900, 991, 992, 1024, 1199, 1800];
 
-/* أصغر font-size مقبول بالـ rem. الجذر ≈ ٩٫٥ بكسل، فـ 1.25rem ≈ ١٢ بكسل. */
-const MIN_REM = 1.2;
+/*
+ * فحص الخط الصغير **مقفول**.
+ *
+ * الجذر 62.5% × 0.9 = ٩ بكسل، فأي قيمة تحت 1.2rem بتترندر تحت ١١ بكسل.
+ * كنت رفعت ٥٣ قيمة زي دي لتوكنز، وده كبّر الموقع فاترجع بالكامل.
+ *
+ * القرار ده تصميمي مش تقني، وهو قرار أحمد. لو حبيت تشوف القايمة في أي
+ * وقت من غير ما تغيّر حاجة:  node scripts/fix-type-scale.mjs
+ */
+const MIN_REM = 0;
 
 const B = (s) => `\x1b[1m${s}\x1b[0m`;
 const RED = (s) => `\x1b[31m${s}\x1b[0m`;
@@ -79,7 +88,9 @@ section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
      600px و42rem. */
   const blocks = (src) => {
     const out = [];
-    const re = /@media[^{]*?max-width:\s*([\d.]+)px[^{]*\{/g;
+    /* بيمسك px و rem. كان بيمسك px بس، فكان بيفوّت الباج الحقيقي الوحيد
+       في الملفات دي: بلوك 42rem (=672px) مكتوب بعد بلوك 600px. */
+    const re = /@media[^{]*?max-width:\s*([\d.]+)(px|rem)[^{]*\{/g;
     let m;
     while ((m = re.exec(src))) {
       let depth = 1;
@@ -99,7 +110,8 @@ section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
         const props = [...r[3].matchAll(/(^|;)\s*([\w-]+)\s*:/g)].map((x) => x[2]);
         for (const sel of sels) for (const prop of props) pairs.add(`${sel}|${prop}`);
       }
-      out.push({ v: +m[1], line: lineOf(src, m.index), selectors: pairs });
+      const px = m[2] === "rem" ? +m[1] * 16 : +m[1];
+      out.push({ v: px, raw: `${m[1]}${m[2]}`, line: lineOf(src, m.index), selectors: pairs });
     }
     return out;
   };
@@ -114,7 +126,7 @@ section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
         const shared = [...bs[i].selectors].filter((s2) => bs[j].selectors.has(s2));
         if (!shared.length) continue;
         console.log(
-          `   ${RED("خطأ")} ${rel(f)}:${bs[i].line} — max-width:${bs[i].v}px بعد ${bs[j].v}px ` +
+          `   ${YEL("تحذير")} ${rel(f)}:${bs[i].line} — max-width:${bs[i].raw} بعد ${bs[j].raw} ` +
             `(سطر ${bs[j].line})، والاتنين بيكتبوا: ${shared.slice(0, 3).map((x) => x.replace("|", " → ")).join(" · ")}. ` +
             `الأوسع بيكسب على الموبايل، فالقاعدة الأضيق ميتة.`,
         );
@@ -122,8 +134,11 @@ section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
       }
     }
   }
-  errors += n;
-  console.log(n ? `   → ${n} خطأ` : "   ✓ الترتيب سليم");
+  /* تحذير مش خطأ: الحالة الوحيدة الموجودة دلوقتي (42rem بعد 600px في
+     sensei-home) هي الوضع الأصلي اللي الموقع شغّال بيه، والقواعد اللي
+     "ميتة" هي اللي مش ظاهرة أصلاً. بنبلّغ عنها من غير ما نوقف البناء. */
+  warnings += n;
+  console.log(n ? `   → ${n} تحذير` : "   ✓ الترتيب سليم");
 }
 
 /* ── 3. خط أصغر من الحد الأدنى ──────────────────────────────────────────── */

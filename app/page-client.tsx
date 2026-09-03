@@ -48,29 +48,19 @@ const ArtGallerySection = dynamic(
 const KanjiDivider = dynamic(
   () => import("@/app/core/components/KanjiDivider"),
 );
-// The form has state and a fetch, so deferring it makes sense — but the
-// markup is still generated at build time like the rest (no ssr: false).
-const ContactSection = dynamic(
-  () => import("@/app/components/contact/contact-section"),
-);
-
 const MAIN_STYLE: React.CSSProperties = { position: "relative" };
 
-/*
- * `coverage` arrives ready from page.tsx (a Server Component). The reason is
- * in the comment above the import there: the ATT&CK map reads the entire
- * case library, and importing it from here would have turned it into a
- * client component and bundled those 42KB into the home page.
- */
 type MainClientProps = {
-  coverage: ReactNode;
-  /* Same reason as `coverage`: credentials.tsx reads certifications + skills
-     + achievements (~11.7KB). Importing it from the client tree bundled
-     that data into the home page. */
+  /* credentials.tsx reads certifications + skills + achievements (~11.7KB).
+     Importing it from the client tree would bundle that data into the home
+     page, so page.tsx (a Server Component) renders it and passes it down.
+
+     `coverage` used to arrive the same way for the ATT&CK section. That
+     section was removed, so the prop went with it. */
   credentials: ReactNode;
 };
 
-const MainClient = memo(function MainClient({ coverage, credentials }: MainClientProps) {
+const MainClient = memo(function MainClient({ credentials }: MainClientProps) {
   return (
     <main id="main-content" style={MAIN_STYLE}>
       <LoadingScreen />
@@ -85,10 +75,6 @@ const MainClient = memo(function MainClient({ coverage, credentials }: MainClien
       <ProjectsSection />
       <KanjiDivider text="認定 • 成就 • 学問 • 知識 • 技能" angle={2} />
       <ArtGallerySection credentials={credentials} />
-      <KanjiDivider text="戦術 • 検知 • 防御 • 対応 • 回復" angle={1.5} />
-      {coverage}
-      <KanjiDivider text="芸術 • 創造 • 精神 • 表現 • 魂" reverse angle={-2} />
-      <ContactSection />
     </main>
   );
 });

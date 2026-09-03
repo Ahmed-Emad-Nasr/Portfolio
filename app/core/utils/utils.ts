@@ -282,17 +282,15 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
  * The order here is the nav order, the scrollspy order and the order of the
  * "g + letter" shortcuts in the command palette — one source for all three.
  *
- * Added: Coverage (the ATT&CK map) and Contact (the new form section).
- * Previously the JSON-LD in layout.tsx and page.tsx pointed at "#Contact"
- * with no way to reach it from the nav at all.
+ * Coverage (ATT&CK) و Contact كانوا هنا واتشالوا مع أقسامهم من الصفحة.
+ * لو رجّعت أي قسم منهم، ضيف سطره هنا تاني — ده المصدر الوحيد للنav
+ * والـ scrollspy واختصارات "g + حرف" مع بعض.
  */
 const SECTION_ICONS: Record<string, IconName> = {
   Home:           "faHome",
   Experience:     "faBook",
   Projects:       "faFolder",
   Certifications: "faCertificate",
-  Coverage:       "faShieldHalved",
-  Contact:        "faEnvelope",
 };
 
 const SPY_SECTIONS = Object.keys(SECTION_ICONS).map((label) => ({ label, elementId: label }));

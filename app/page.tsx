@@ -7,11 +7,7 @@
 
 import type { Metadata } from "next";
 import MainClient from "./page-client";
-// Server Component. Rendering it here means the case library (42KB) stays
-// at build time and never reaches the visitor's browser — had page-client
-// imported it, it would have become a client component and bundled the data.
-import AttackMatrix from "./components/attack/attack-matrix";
-// Same reason: a Server Component reads certifications + skills + achievements,
+// Server Component: reads certifications + skills + achievements,
 // so the data stays at build time and never reaches the visitor's browser.
 import Credentials from "./components/credentials/credentials";
 
@@ -76,7 +72,8 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       },
       areaServed: "Worldwide",
       serviceType: ["SOC Monitoring", "Incident Response", "Threat Hunting", "Security Training", "Digital Forensics"],
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact",
+      /* كان #Contact — القسم اتشال، والـ anchor بقى ميت. */
+      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     },
   ],
 });
@@ -88,7 +85,7 @@ export default function Main() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} // Use the prepared string directly
       />
-      <MainClient coverage={<AttackMatrix />} credentials={<Credentials />} />
+      <MainClient credentials={<Credentials />} />
     </>
   );
 }

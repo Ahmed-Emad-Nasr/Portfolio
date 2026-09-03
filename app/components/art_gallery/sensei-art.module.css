@@ -81,15 +81,15 @@
 /* Action Button */
 
 /* === Responsive Overrides === */
-@media (max-width: 1440px) { 
+@media (max-width: 1199px) { 
   .Gallery { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
   .art-gallery-content { padding: 0 3rem 5%; } 
 }
-@media (max-width: 992px) { 
+@media (max-width: 991px) { 
   .Gallery { grid-template-columns: repeat(2, 1fr); } 
   .art-gallery-content { padding: 0 2rem 5%; } 
 }
-@media (max-width: 768px) { 
+@media (max-width: 767px) { 
   .art-gallery-section { min-height: auto; margin-top: clamp(18rem, 36vh, 40rem) !important; }
   .Gallery { grid-template-columns: 1fr; gap: 20px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 

@@ -81,7 +81,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .card { grid-template-columns: auto minmax(0, 1fr); row-gap: 0.8rem; gap: 1.4rem; }
   .minutes { grid-column: 2; justify-self: start; }
   .pageLede { margin-bottom: 3.5rem; }

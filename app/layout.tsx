@@ -258,8 +258,9 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       "@type": "BreadcrumbList",
       "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#breadcrumbs",
       itemListElement: [
+        /* اتشال عنصر Contact — القسم مبقاش موجود، وbreadcrumb بيشاور على
+           anchor ميت بيبوظ الـ rich result في نتايج البحث. */
         { "@type": "ListItem", position: 1, name: "Home", item: "https://ahmed-emad-nasr.github.io/Portfolio/" },
-        { "@type": "ListItem", position: 2, name: "Contact", item: "https://ahmed-emad-nasr.github.io/Portfolio/#Contact" },
       ],
     },
     {

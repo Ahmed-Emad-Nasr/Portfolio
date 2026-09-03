@@ -106,7 +106,7 @@
 }
 .disabled code { font-family: var(--font-mono); font-size: 1.2rem; }
 
-@media (max-width: 992px) {
+@media (max-width: 900px) {
   .container,
   .grid[data-form="off"] { grid-template-columns: minmax(0, 1fr); gap: 4rem; max-width: 52rem; }
 }
