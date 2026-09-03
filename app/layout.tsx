@@ -47,22 +47,16 @@ export const viewport: Viewport = {
   initialScale: 1,
   themeColor: "#000000",
   /*
-   * viewportFit: "cover" was missing, and the metadata below sets
-   * appleWebApp.statusBarStyle = "black-translucent".
+   * viewportFit: "cover" اتجرّب واترجع.
    *
-   * Those two go together. "black-translucent" tells iOS to draw the status
-   * bar ON TOP of the page instead of above it — which is the look this site
-   * wants — but without viewport-fit=cover the viewport still stops at the
-   * safe area, so in an installed PWA you get a black band at the top and
-   * the effect never appears. Set one without the other and you have paid
-   * for a feature you do not get.
+   * الفكرة كانت إنه يشتغل مع appleWebApp.statusBarStyle =
+   * "black-translucent" فتمتد الصفحة تحت الـ notch. بس ده بيغيّر أبعاد
+   * الـ viewport على الموبايل، وده الجزء اللي فيه مخاطرة حقيقية مقابل
+   * مكسب بيبان في الـ PWA المثبّتة بس.
    *
-   * With cover, the page really does extend under the notch and the home
-   * indicator, so anything fixed or full-bleed has to respect
-   * env(safe-area-inset-*). Section 2 of globals.css handles the body and
-   * the fixed UI; the loader handles its own.
+   * لو حبيت ترجّعه بعدين، رجّعه لوحده وجرّب اللمس على تليفون حقيقي قبل
+   * ما تضيف أي حاجة تانية معاه.
    */
-  viewportFit: "cover",
   /* Deliberately NOT set: maximumScale / userScalable. Locking zoom breaks
      WCAG 1.4.4 and is the single most common accessibility failure on
      portfolio sites. Pinch-zoom stays available. */

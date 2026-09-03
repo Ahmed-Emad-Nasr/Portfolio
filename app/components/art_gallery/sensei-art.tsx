@@ -99,14 +99,15 @@ const SenseiArt = memo(function SenseiArt({ credentials }: SenseiArtProps) {
   return (
     <section className={styles["art-gallery-section"]} id="Certifications">
       <div data-fx="container" data-container="full">
-        <Reveal data-fx="section-head" variant="up">
-          <h2 data-fx="section-title" data-title="lg" className={styles.title}>
-            <span lang="ja">認定資格 •</span><span lang="en"> Certifications</span>
-          </h2>
-        </Reveal>
+        {/*
+          العنوان الكبير «認定資格 • Certifications» كان هنا واتشال.
 
-        {/* الشهادات والإنجازات والمهارات كبيانات مقروءة، فوق حيطة الصور.
-            حيطة الصور لوحدها كانت بتقول "عندي حاجات" من غير ما تقول إيه. */}
+          كان بيكرر نفس الكلمة مرتين ورا بعض: عنوان القسم الكبير، وتحته
+          على طول <h3>Certifications</h3> بتاع أول بلوك في credentials.
+
+          الشهادات والإنجازات والمهارات كبيانات مقروءة، فوق حيطة الصور.
+          حيطة الصور لوحدها كانت بتقول "عندي حاجات" من غير ما تقول إيه.
+        */}
         {credentials}
 
         <div className={styles["art-gallery-content"]}>

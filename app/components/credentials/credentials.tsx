@@ -41,13 +41,22 @@ import { skillGroups, languages } from "@/app/core/config/skills";
 import styles from "./credentials.module.css";
 
 const Credentials = memo(function Credentials() {
+  /*
+   * العناوين التلاتة دي كانت <h3> تحت <h2> بتاع القسم («認定資格 •
+   * Certifications»). العنوان الكبير ده اتشال لأنه كان بيكرر كلمة
+   * "Certifications" مرتين ورا بعض.
+   *
+   * فبقت <h2>. لو سابناها <h3> كان القسم هيبقى فيه h3 من غير h2 فوقها —
+   * قفزة في مستويات العناوين، وقارئ الشاشة بيقرا شجرة العناوين عشان
+   * يتنقّل، فالقفزة بتخليه يدوّر على قسم مش موجود.
+   */
   return (
     <div className={styles.wrap}>
       {/* ── Certifications ───────────────────────────────────────────── */}
       <section className={styles.block} aria-labelledby="credentials-certs">
-        <h3 className={styles.blockTitle} id="credentials-certs">
+        <h2 className={styles.blockTitle} id="credentials-certs">
           Certifications
-        </h3>
+        </h2>
         <ul className={styles.certList}>
           {certifications.map((cert) => (
             <li key={cert.id} className={styles.cert}>
@@ -78,9 +87,9 @@ const Credentials = memo(function Credentials() {
 
       {/* ── Achievements ─────────────────────────────────────────────── */}
       <section className={styles.block} aria-labelledby="credentials-awards">
-        <h3 className={styles.blockTitle} id="credentials-awards">
+        <h2 className={styles.blockTitle} id="credentials-awards">
           Awards &amp; Rankings
-        </h3>
+        </h2>
         <ul className={styles.awardList}>
           {achievements.map((item) => (
             <li key={item.id} className={styles.award} data-kind={item.kind}>
@@ -102,9 +111,9 @@ const Credentials = memo(function Credentials() {
 
       {/* ── Skills, linked to the reports that prove them ─────────────── */}
       <section className={styles.block} aria-labelledby="credentials-skills">
-        <h3 className={styles.blockTitle} id="credentials-skills">
+        <h2 className={styles.blockTitle} id="credentials-skills">
           Skills
-        </h3>
+        </h2>
         <p className={styles.skillsNote}>
           Where a report demonstrates the skill, it is linked directly.
         </p>

@@ -131,6 +131,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         lerp: tier === "mid" ? 0.075 : 0.045,
         wheelMultiplier: 0.85,
         smoothWheel: true,
+
         /*
          * لينكات الـ hash (#Contact، #Projects، اللينكات جوه المقالات).
          * Lenis عنده تعامل جاهز معاها وكان مقفول — يعني أي <a href="#x">
@@ -143,9 +144,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       }}
     >
       <LenisGsapBridge />
-      {/* الكيبورد. Lenis بيمسك العجلة بس، وبيحط
-          `scroll-behavior: auto !important` على <html> — فمن غير ده
-          الأسهم وPage Down بيقفّزوا أخشن من موقع من غير smooth scroll. */}
+      {/* الكيبورد. Lenis بيمسك العجلة واللمس بس، مفيش تعامل مع
+          الكيبورد فيه — فمن غير ده الأسهم وPage Down بيقفّزوا. */}
       <KeyboardScroll />
       {children}
     </ReactLenis>

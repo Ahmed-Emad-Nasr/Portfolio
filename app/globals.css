@@ -49,7 +49,7 @@
    * some things and left others behind.
    *
    *   1     the original size
-   *   1.02  the current default
+   *   0.95  the current default
    *   0.9   the previous default
    *   0.85  noticeably compact
    *
@@ -65,7 +65,7 @@
    * Mobile carries its own value: phones are already tight, and shrinking
    * body text below ~14px costs readability rather than buying space.
    */
-  --ui-scale: 0.99;
+  --ui-scale: 0.98;
 
   /* Core palette */
   --background: #000000;
@@ -256,13 +256,19 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Overscrolling past the top or bottom on iOS and Android reveals the
-     browser's own background — white — behind a site that is pure black.
-     `none` removes the bounce; the page is a single scroll container, so
-     nothing here depends on the chaining it also disables. */
-  overscroll-behavior-y: none;
 }
+
+/*
+ * كان هنا `overscroll-behavior-y: none` على الـ body عشان يمنع الأبيض
+ * اللي بيبان لما تسحب لبرّه أول/آخر الصفحة. اتشال.
+ *
+ * السبب: `html` و `body` الاتنين عليهم `overflow-x: hidden`، وده بيخلي
+ * تحديد عنصر السكرول الفعلي يختلف بين المتصفحات. و overscroll-behavior
+ * على body في التركيبة دي ليها تاريخ إنها تتداخل مع السكرول باللمس.
+ *
+ * المكسب كان تجميلي بحت (شريط أبيض بيبان لجزء من الثانية)، والخطر إن
+ * الصفحة متسكرولش على تليفون. الميزان مش متعادل.
+ */
 
 /* background-attachment: fixed forces the browser to repaint the
    background on every scroll frame — a well known source of jank on
@@ -273,44 +279,11 @@ body {
 }
 
 /*
- * ── SAFE AREAS ─────────────────────────────────────────────────────────
- *
- * `viewportFit: "cover"` in layout.tsx lets the page extend under the notch,
- * the rounded corners and the home indicator. That is what makes
- * appleWebApp.statusBarStyle = "black-translucent" actually work, but it
- * means anything pinned to a screen edge now needs to say so.
- *
- * The background is a flat colour edge to edge — that part is meant to run
- * under the insets. Only interactive things pinned to an edge get pushed in:
- *
- *   · the site header      (fixed, top: 0)
- *   · the back-to-top button (fixed, bottom/right)
- *   · the mobile nav drawer  (fixed, inset: 0)
- *   · the loader             (handles its own — see its module)
- *
- * ScrollProgress is deliberately excluded: it is a 2px decorative rule with
- * pointer-events: none, and it reads better running the full width.
- *
- * env() resolves to 0px everywhere it is not supported, so there is no
- * fallback to write and nothing changes on a device without insets.
+ * كل قواعد الـ safe-area اتشالت مع viewportFit: "cover".
+ * من غير cover الـ viewport بيقف عند المنطقة الآمنة أصلاً، فالـ insets
+ * كلها بترجع 0px والقواعد دي مش بتعمل حاجة غير إنها تزوّد قواعد المتصفح
+ * بيمر عليها.
  */
-:where(header, [data-fx="header"]) {
-  padding-top: env(safe-area-inset-top);
-}
-
-body {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
-
-/*
- * Landscape on a notched phone puts the notch on one SIDE, where it would
- * eat into a fixed bottom-right control. Applied only where it matters.
- */
-:where([data-fx="floating"]) {
-  margin-right: env(safe-area-inset-right);
-  margin-bottom: env(safe-area-inset-bottom);
-}
 
 body[data-custom-cursor="true"],
 body[data-custom-cursor="true"] :where(a, button, input, textarea, select, summary) {
@@ -1485,7 +1458,7 @@ html [data-fx="linkline"]:focus-visible {
 /*
  * Scoped variant. Most of the inline links on this site are not marked up
  * one by one — they are every <a> inside a list or a paragraph
- * (.evidenceList a, .suggestList a, .contact a, .org a, .attackNote a).
+ * (.evidenceList a, .suggestList a, .contact a, .org a).
  * Marking the container once beats adding an attribute to every anchor.
  *
  * The originals had drifted: .evidenceList used --text-dim with a 0.18
