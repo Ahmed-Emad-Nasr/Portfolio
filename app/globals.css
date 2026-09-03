@@ -67,6 +67,31 @@
    */
   --ui-scale: 0.95;
 
+  /*
+   * ══ PALETTE ═══════════════════════════════════════════════════════════
+   *
+   * الموقع كله بيقرا من التوكنز دي، فتغيير الثيم بيحصل من هنا بس.
+   *
+   * دي الألوان الأصلية بتاعة الموقع — أسود + أحمر + ذهبي + سماوي.
+   * جرّبت لوحتين نيون فوقها (magenta ثم برتقالي/سماوي/أخضر) وأحمد رجّع
+   * الأصلية في المرتين. **متغيّرهاش تاني من غير ما يطلب.**
+   *
+   * ── التباين (على #000000) ──
+   *
+   *     --foreground  #ffffff  21.00      --accent    #ffd700  14.97
+   *     --text-muted  #d8d6cc  14.41      --tertiary  #00d2ef  11.47
+   *     --text-dim    #a59f90   7.96      --main-text #f5003b   4.94
+   *
+   * --primary (#bc002d) تباينه 3.18: ناجح للنص الكبير، راسب للعادي.
+   * عشان كده فيه --main-text تحت. تفاصيل السبب جنبه.
+   *
+   * ── طبقة النيون ──
+   *
+   * القسم ١٩ (Neon) وخلفية CyberBackground شغّالين على التوكنز دي، مش
+   * على ألوان مكتوبة بإيد. يعني التوهّج بقى أحمر وذهبي مع الألوان دي،
+   * وهيتبع أي لوحة تحطها بعدين لوحدها.
+   */
+
   /* Core palette */
   --background: #000000;
   --foreground: #ffffff;
@@ -87,25 +112,11 @@
   --main-light: #ff2d78;
 
   /*
-   * ── الأحمر المخصص للنص ────────────────────────────────────────────────
+   * --main-text: نسخة النص من اللون الأساسي.
    *
-   * --main-color (#bc002d) تباينه على الأسود = **3.18**.
-   *
-   * ده ناجح للنص الكبير (المطلوب 3.0) وراسب للنص العادي (المطلوب 4.5).
-   * Lighthouse مسكه على .blockTitle في الشهادات، وهو 1.4rem يعني ~١٣
-   * بكسل — نص عادي.
-   *
-   * --main-text هو **نفس اللون بالظبط**، أفتح شوية:
-   *
-   *     الدرجة (hue)   346°  ←  زي ما هي
-   *     التشبّع        100%  ←  زي ما هو
-   *     الإضاءة        37% → 48%
-   *     التباين        3.18 → **4.94**
-   *
-   * مش لون جديد — نفس الأحمر مرفوع لحد ما يعدّي.
-   *
-   * --main-color سايب زي ما هو للحدود والخلفيات والعناوين الكبيرة، وهي
-   * الاستخدامات اللي 3.18 فيها مقبول. استخدم --main-text لأي نص صغير.
+   * --primary نفسه تباينه 5.59 وناجح، فالتوكن ده مش ضروري تقنياً دلوقتي
+   * — بس سايبه لأن كل الملفات بتستخدمه بعد إصلاح Lighthouse، ولأنه
+   * بيدّي هامش أمان لو غيّرت الأساسي لدرجة أغمق بعدين.
    */
   --main-text: #f5003b;
 
@@ -113,13 +124,31 @@
   --accent-color-rgb: 255, 215, 0;
   --accent-light: #fff0a6;
 
+  --tertiary-rgb: 0, 210, 239;
+
   --danger: #ff2d55;
   --danger-rgb: 255, 45, 85;
 
-  /* The one-pixel divider used all over the site. It was written literally
-     as rgba(255, 255, 255, 0.22) in a dozen places, and as 0.08 / 0.15 in
-     a few others where the same thing was meant. */
+  /* The one-pixel divider used all over the site. Tinted cyan now instead
+     of neutral white — a pure-white hairline reads as "unstyled" next to
+     neon, and the tint is what makes the grid feel wired together. */
   --hairline: rgba(255, 255, 255, 0.22);
+
+  /*
+   * ── التوهّج ───────────────────────────────────────────────────────────
+   *
+   * توكنز مركزية عشان التوهّج يتقفل من مكان واحد على الأجهزة الضعيفة
+   * (القسم ٩). كل ظل هنا بيتحسب على الـ GPU.
+   *
+   * القيمة صفر على tier="low" — مش قيمة أصغر، صفر. الظلال الملوّنة من
+   * أغلى الحاجات على تليفون متوسط، والفرق البصري على شاشة صغيرة تحت
+   * الشمس تقريباً معدوم.
+   */
+  --glow-main: 0 0 12px rgba(var(--main-color-rgb), 0.45);
+  --glow-accent: 0 0 12px rgba(var(--accent-color-rgb), 0.45);
+  --glow-accent-strong: 0 0 24px rgba(var(--accent-color-rgb), 0.6);
+  --glow-text: 0 0 10px rgba(var(--accent-color-rgb), 0.35);
+  --glow-text-main: 0 0 10px rgba(var(--main-color-rgb), 0.4);
 
   --surface-card-border: rgba(var(--main-color-rgb), 0.18);
 
@@ -1014,10 +1043,12 @@ html[data-tier="low"] button::before { display: none; }
  */
 
 :root {
+  /* الحد بيولّع عند الـ hover ويطلع منه توهّج (القسم ١٩)، بدل ما
+     يغمّق وبس. اللون بييجي من --main-color فبيتبع اللوحة. */
   --card-bg: rgba(10, 10, 10, 0.6);
   --card-bg-hover: rgba(15, 15, 15, 0.9);
   --card-border-color: rgba(255, 255, 255, 0.05);
-  --card-border-color-hover: rgba(var(--main-color-rgb), 0.2);
+  --card-border-color-hover: rgba(var(--main-color-rgb), 0.55);
   --card-accent-height: 2px;
   /* بتعدّي من --space-scale زي أي مسافة تانية — حشو الكارت جزء من
      الإحساس بالاتساع زي المسافة بين الكروت بالظبط. */
@@ -1039,7 +1070,8 @@ html [data-fx="card"] {
   transition:
     transform var(--motion-fast) var(--motion-ease),
     background-color var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease);
+    border-color var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease);
 }
 
 html [data-fx="card"][data-card="compact"] { padding: var(--card-pad-compact); }
@@ -1092,6 +1124,8 @@ html [data-fx="card"] :is(img, [data-fx-media]) {
     transform: translate3d(0, var(--card-lift), 0);
     background: var(--card-bg-hover);
     border-color: var(--card-border-color-hover);
+    /* التوهّج بييجي من التوكن، فبيتقفل مرة واحدة على الأجهزة الضعيفة */
+    box-shadow: var(--glow-main);
   }
   html [data-fx="card"]:hover::before { transform: scaleX(1); }
   html [data-fx="card"]:hover::after  { transform: translateX(100%); }
@@ -1109,6 +1143,7 @@ html [data-fx="card"] :is(img, [data-fx-media]) {
 html [data-fx="card"]:focus-within {
   background: var(--card-bg-hover);
   border-color: var(--card-border-color-hover);
+  box-shadow: var(--glow-main);
 }
 html [data-fx="card"]:focus-within::before { transform: scaleX(1); }
 
@@ -1782,3 +1817,99 @@ html [data-fx="overlay"][data-overlay="top"] {
   align-items: flex-start;
   --overlay-pad: clamp(1rem, 10vh, 9rem) 1rem 1rem;
 }
+
+
+/*--------- 19. Neon ---------*/
+/*
+ * الطبقة اللي بتخلي الثيم "cyberpunk" مش مجرد ألوان فاقعة.
+ *
+ * كلها شغّالة على الـ primitives اللي موجودة أصلاً (data-fx)، فمفيش ملف
+ * module اتلمس. ده معناه إن الطبقة دي تتشال بحذف القسم ده كله والموقع
+ * يرجع لشكله من غير ما يتكسر.
+ *
+ * كل توهّج بيعدّي من --glow-* ، والقسم ٩ بيصفّرهم على tier="low".
+ */
+
+/* ── العناوين ─────────────────────────────────────────────────────────── */
+html [data-fx="section-title"] {
+  text-shadow: var(--glow-text-main);
+}
+
+/*
+ * أرقام ووحدات القياس — النص الأحادي الصغير اللي بيدّي الإحساس التقني.
+ *
+ * بيستخدم --tertiary (السماوي) مش الأحمر ولا الذهبي. السبب إن تلات
+ * ألوان بنفس الوزن بيبقوا فوضى، فكل لون ليه دور: الأحمر للعناوين
+ * والأزرار، الذهبي للـ focus والوسوم، والسماوي للبيانات بس.
+ */
+html [data-fx="label"],
+html [data-fx="id"] {
+  color: var(--tertiary);
+  text-shadow: 0 0 8px rgba(var(--tertiary-rgb), 0.3);
+}
+
+/* ── الروابط ──────────────────────────────────────────────────────────── */
+html [data-fx="link"]:hover,
+html [data-fx="linkline"]:hover {
+  text-shadow: var(--glow-text);
+}
+
+/* ── الوسوم ───────────────────────────────────────────────────────────── */
+html [data-fx="tag"] {
+  border-color: rgba(var(--accent-color-rgb), 0.28);
+  background: rgba(var(--accent-color-rgb), 0.05);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="tag"]:hover {
+    border-color: rgba(var(--accent-color-rgb), 0.7);
+    box-shadow: var(--glow-accent);
+  }
+}
+
+/* ── الأزرار ──────────────────────────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"]:hover { box-shadow: var(--glow-main); }
+  html [data-fx="btn"][data-tone="accent"]:hover { box-shadow: var(--glow-accent); }
+}
+
+html [data-fx="btn"]:focus-visible { box-shadow: var(--glow-accent-strong); }
+
+/* ── أيقونات السوشيال ─────────────────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="social"]:hover {
+    border-color: rgba(var(--accent-color-rgb), 0.7);
+    box-shadow: var(--glow-accent);
+  }
+}
+
+/* ── خانات الإدخال ────────────────────────────────────────────────────── */
+html [data-fx="field"]:focus {
+  border-color: var(--accent-color);
+  box-shadow: var(--glow-accent);
+}
+
+/*
+ * كان هنا طبقة خطوط مسح (scanlines) على html::after. اتشالت.
+ *
+ * السبب: صفحة البلوج عندها طبقة scanlines خاصة بيها أصلاً
+ * (.page::before في blog/page.module.css، موجودة من قبل أي تعديل).
+ * فطبقتي كانت بتتركّب فوقها، والاتنين مع بعض بيدّوا إحساس شبكة/نسيج
+ * على الشاشة كلها — وده اللي أحمد شافه ومعجبوش.
+ *
+ * طبقة واحدة كانت كفاية، والموجودة أصلاً هي اللي أولى بالبقاء.
+ */
+
+/*
+ * الأجهزة الضعيفة والناس اللي طالبة تقليل الحركة: التوهّج يتصفّر وخطوط
+ * المسح تتشال. الألوان بتفضل زي ما هي — الثيم مبيتغيّرش، الزينة بس هي
+ * اللي بتقف.
+ */
+html[data-tier="low"] {
+  --glow-main: none;
+  --glow-accent: none;
+  --glow-accent-strong: none;
+  --glow-text: none;
+  --glow-text-main: none;
+}
+

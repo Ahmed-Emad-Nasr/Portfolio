@@ -96,21 +96,14 @@
   align-items: center;
 }
 
-.scanlines {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.03;
-  filter: grayscale(100%);
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.6) 2px,
-    rgba(255, 255, 255, 0.6) 4px
-  );
-}
+/*
+ * كان هنا `.scanlines` — طبقة خطوط أفقية متكررة كل ٤ بكسل بتغطي الهيرو
+ * كله. اتشالت بناءً على طلب أحمد.
+ *
+ * الشفافية كانت 0.03 وهي رقم صغير، بس الخطوط بتتكرر كل ٤ بكسل على
+ * الشاشة كلها — فالعين بتقراها كنسيج/شبكة مش كتفصيلة. وده اللي كان
+ * مضايقه في الهوم بعد ما شلنا الطبقات التانية.
+ */
 
 /* ───────────────── Layout ───────────────── */
 
@@ -450,7 +443,7 @@
   height: 80%;
   border-radius: 50%;
   opacity: 0.08;
-  background: radial-gradient(circle, #bc002d 0%, #bc002d 40%, transparent 70%);
+  background: radial-gradient(circle, var(--main-color) 0%, var(--main-color) 40%, transparent 70%);
 }
 
 .ringOuter {

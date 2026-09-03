@@ -58,7 +58,7 @@
 
 /* Deepens the black as the page scrolls */
 .scrolled .headerContent {
-  background: #000000;
+  background: var(--bg-color);
 }
 
 /* ── BRAND LOGO ──────────────────────────────────────────────────────────── */

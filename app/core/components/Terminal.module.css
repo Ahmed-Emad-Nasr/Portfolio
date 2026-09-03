@@ -3,7 +3,7 @@
   flex-direction: column;
   width: min(760px, 100%);
   height: min(520px, 80vh);
-  background: #050505;
+  background: var(--bg-color);
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
 }

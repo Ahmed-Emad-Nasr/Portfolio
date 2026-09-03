@@ -171,7 +171,7 @@
 .caseSpotlightBody > p { margin-top: 0.8rem; color: var(--text-muted); font-size: 1.15rem; line-height: 1.6; }
 .caseSpotlightMedia {
   position: relative; aspect-ratio: 16 / 10; border-radius: calc(var(--radius-card) - 4px); overflow: hidden;
-  border: 1px solid rgba(var(--accent-color-rgb), 0.3); background: #000; display: block;
+  border: 1px solid rgba(var(--accent-color-rgb), 0.3); background: var(--bg-color); display: block;
 }
 .caseSpotlightMedia img { object-fit: cover; }
 
@@ -186,7 +186,7 @@
 }
 
 .difficulty-easy   { border-color: rgba(0, 255, 136, 0.4) !important; color: #00ff88 !important; }
-.difficulty-medium { border-color: rgba(255, 215, 0, 0.4)  !important; color: #ffd700 !important; }
+.difficulty-medium { border-color: rgba(var(--accent-color-rgb), 0.4)  !important; color: var(--accent-color) !important; }
 .difficulty-hard   { border-color: rgba(255, 0, 60, 0.4)   !important; color: var(--main-text) !important; }
 
 .caseCardHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
@@ -244,7 +244,7 @@
    ========================================= */
 .primaryShot, .shotThumb, .playlistFrame, .videoFrame {
   position: relative; border-radius: calc(var(--radius-card) - 6px); overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1); background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1); background: var(--bg-color);
   cursor: pointer; aspect-ratio: 16 / 9; transition: border-color var(--motion-fast) var(--motion-ease);
 }
 
@@ -307,7 +307,7 @@
 
 .galleryImageWrap {
   position: relative; min-height: 60vh; border-radius: calc(var(--radius-card) - 4px); overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05); background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.05); background: var(--bg-color);
 }
 .galleryImageWrap img { width: 100%; height: 100%; object-fit: contain; }
 

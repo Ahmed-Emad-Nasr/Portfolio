@@ -21,6 +21,7 @@ import { SmoothScroll } from "./components/smooth-scroll";
 // this file is one (it exports `metadata`). The call moved into CursorMount,
 // which is a Client Component. Same deferred-chunk benefit, legal placement.
 import CursorMount from "./components/cursor-mount";
+import CyberBackground from "./core/components/CyberBackground";
 // شريط تقدّم القراءة — مركّب هنا مرة واحدة عشان يشتغل على البورتفوليو
 // والبلوج مع بعض، من غير تكرار في كل page-client.
 import ScrollProgress from "./core/components/ScrollProgress";
@@ -332,6 +333,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       */}
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
+
+        {/* الخلفية المتحركة. Server Component — صفر جافاسكريبت للمتصفح،
+            والحركة كلها transform/opacity على الـ GPU. أول عنصر في الـ
+            body عشان يفضل ورا كل حاجة. */}
+        <CyberBackground />
 
         <ScrollProgress />
         

@@ -2,7 +2,9 @@ import { defineConfig } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 
 export default defineConfig([
-  { ignores: [".venv/**"] },
+    /* .next و out مخرجات بناء — فحصها بيبطّئ الـ lint وبيطلّع أخطاء
+     وهمية من كود متولّد. */
+  { ignores: [".venv/**", ".next/**", "out/**", "node_modules/**"] },
   ...nextVitals,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],

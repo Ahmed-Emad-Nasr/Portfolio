@@ -130,7 +130,6 @@ const SenseiHome = memo(function SenseiHome() {
       </div>
 
       {/* Scanline overlay */}
-      <div className={styles.scanlines} data-decorative="true" aria-hidden="true" />
 
       <div className={styles.container}>
         <div className={styles.homeImg}>

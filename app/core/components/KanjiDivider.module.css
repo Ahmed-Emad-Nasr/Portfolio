@@ -17,7 +17,7 @@
 
   background-image: repeating-linear-gradient(
     45deg,
-    #ffd700 0px, #ffd700 10px,
+    var(--accent-color) 0px, var(--accent-color) 10px,
     #080808 10px, #080808 20px
   );
   background-size: 28px 28px;
@@ -85,7 +85,7 @@
 }
 
 .brand {
-  color: #e1004f;
+  color: var(--main-text);
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.34em;
