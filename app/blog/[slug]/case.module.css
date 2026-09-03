@@ -19,7 +19,7 @@
   max-width: 80ch;
   margin: 0 auto 2.5rem;
   font-family: var(--font-mono);
-  font-size: 1.15rem;
+  font-size: var(--text-sm);
 }
 
 .backLink {
@@ -56,7 +56,7 @@
 
 .kicker {
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: var(--text-sm);
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--main-color);
@@ -123,6 +123,12 @@
   border-top: 1px dashed rgba(255, 255, 255, 0.12);
 }
 
+/* One fact column inside the .facts grid. Referenced twice in
+   CaseArticle.tsx and never defined — both <div>s rendered
+   class="undefined". .facts supplies the grid and the gap, so this is just
+   the block that groups a title with its list. */
+.factBlock { display: block; }
+
 .factTitle {
   font-family: var(--font-mono);
   font-size: 1.2rem;
@@ -141,7 +147,7 @@
 
 .shotGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
   gap: 1.2rem;
   margin-top: 1.5rem;
 }
@@ -159,8 +165,17 @@
 .shot img {
   object-fit: cover;
   filter: grayscale(50%) contrast(1.1);
-  transition: filter var(--motion-fast) var(--motion-ease),
-    transform var(--motion-fast) var(--motion-ease);
+  /* transform only. The filter change still happens on hover, it just is
+     not animated: transitioning `filter` repaints the whole image every
+     frame, and hover cannot fire on the touch devices paying for it. */
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shot img {
+    transition: filter var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
+  }
 }
 
 .shot:hover {
@@ -202,7 +217,7 @@
 
 .siblingLabel {
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: var(--text-sm);
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--main-color);
@@ -218,7 +233,7 @@
   color: #ffffff;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .siblings {
     grid-template-columns: 1fr;
   }

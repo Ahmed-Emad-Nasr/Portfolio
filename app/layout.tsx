@@ -17,7 +17,6 @@ import { certifications, certificationsJsonLd } from "@/app/core/config/certific
 import { achievements } from "@/app/core/config/achievements";
 import { skillGroups } from "@/app/core/config/skills";
 import { SmoothScroll } from "./components/smooth-scroll";
-import { MotionProvider } from "./core/components/MotionInView";
 // FIXED: `dynamic(..., { ssr: false })` cannot live in a Server Component, and
 // this file is one (it exports `metadata`). The call moved into CursorMount,
 // which is a Client Component. Same deferred-chunk benefit, legal placement.
@@ -47,6 +46,26 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#000000",
+  /*
+   * viewportFit: "cover" was missing, and the metadata below sets
+   * appleWebApp.statusBarStyle = "black-translucent".
+   *
+   * Those two go together. "black-translucent" tells iOS to draw the status
+   * bar ON TOP of the page instead of above it — which is the look this site
+   * wants — but without viewport-fit=cover the viewport still stops at the
+   * safe area, so in an installed PWA you get a black band at the top and
+   * the effect never appears. Set one without the other and you have paid
+   * for a feature you do not get.
+   *
+   * With cover, the page really does extend under the notch and the home
+   * indicator, so anything fixed or full-bleed has to respect
+   * env(safe-area-inset-*). Section 2 of globals.css handles the body and
+   * the fixed UI; the loader handles its own.
+   */
+  viewportFit: "cover",
+  /* Deliberately NOT set: maximumScale / userScalable. Locking zoom breaks
+     WCAG 1.4.4 and is the single most common accessibility failure on
+     portfolio sites. Pinch-zoom stays available. */
 };
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -335,15 +354,33 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
         />
         
-        {/* MotionProvider mounted ONCE here. Previously every MotionInView
-            instance created its own <LazyMotion> — dozens per page. */}
-        <MotionProvider>
-          <SmoothScroll>{children}</SmoothScroll>
-          <CursorMount />
-          <BackToTop />
-          <CommandPaletteMount />
-          <ServiceWorkerRegister />
-        </MotionProvider>
+        {/*
+          <MotionProvider> used to wrap this entire tree.
+          It is gone from here on purpose.
+
+          MotionProvider is <LazyMotion> — framer-motion's feature loader.
+          It has to sit above any `m.*` element. When it wrapped everything,
+          the motion engine was pulled onto the critical path of every page
+          load, on every device.
+
+          Its consumers were only ever two:
+
+            · custom-cursor.tsx — desktop only, already behind a dynamic
+              import and a pointer:fine check
+            · sensei_loader.tsx — one fade-and-slide exit
+
+          The loader now does that exit with a CSS transition (see
+          .loader[data-state="out"]), which leaves the cursor as the single
+          consumer. So the provider moved INSIDE CursorMount, on the far
+          side of both the touch check and the dynamic import.
+
+          Net effect: phones never download framer-motion at all.
+        */}
+        <SmoothScroll>{children}</SmoothScroll>
+        <CursorMount />
+        <BackToTop />
+        <CommandPaletteMount />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

@@ -54,6 +54,13 @@
 
 /* Description intro line (Ahmed's `description` field) */
 
+/* Wrapper around the bullet list and the skill tags. Referenced in
+   experience-section.tsx and never defined, so the <div> rendered
+   class="undefined". The children carry their own top margins; this only
+   needs to exist as a block so those margins do not collapse out of the
+   card. */
+.desc { display: flow-root; }
+
 .desc-list { margin: 1.5rem 0 0; padding-left: 1.8rem; list-style: square; color: var(--text-muted); font-size: 1.4rem; line-height: 1.6; }
 .desc-list li { margin-bottom: 0.8rem; }
 .desc-list li::marker { color: rgba(var(--accent-color-rgb), 0.5); }
@@ -68,7 +75,7 @@
   border: 1px solid rgba(var(--main-color-rgb), 0.2);
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 1.1rem;
+  font-size: var(--text-sm);
   font-family: var(--font-mono);
   transition: background-color var(--motion-fast) var(--motion-ease),
               color var(--motion-fast) var(--motion-ease),
@@ -89,7 +96,7 @@
 .proofLink:hover { background: rgba(var(--accent-color-rgb), 0.1); border-color: var(--accent-color); }
 
 /* === Mobile Overrides === */
-@media (max-width: 991px) {
+@media (max-width: 992px) {
   .timeline-container { width: 100%; padding-left: 5rem; padding-right: 0; margin-bottom: var(--space-md); }
   .timeline-container.left, .timeline-container.right { left: 0; }
   .timeline-container.left::after, .timeline-container.right::after { left: 1.3rem; right: auto; }
@@ -100,7 +107,7 @@
   .timeline-container { padding-left: 4rem; margin-bottom: var(--space-sm); }
   .desc-list { font-size: 1.3rem; }
 }
-@media (max-width: 360px) {
+@media (max-width: 430px) {
   .timeline-container { padding-left: 3.4rem; }
 
   .tag h3 { font-size: 1.9rem; }

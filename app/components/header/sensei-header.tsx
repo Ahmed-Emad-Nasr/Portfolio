@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useHeader } from "@/app/core/utils/utils";
 import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-header.module.css";
+import { scrollToElement } from "@/app/core/utils/scroll";
 
 // دالة لمطابقة المسميات المختصرة
 const getShortLabel = (section: string) => {
@@ -54,13 +55,10 @@ export default function SenseiHeader() {
     const target = document.getElementById(section);
     if (!target) return;
     
-    const doScroll = () => {
-      const headerH = headerRef.current?.offsetHeight ?? 0;
-      window.scrollTo({
-        top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - 15),
-        behavior: "auto",
-      });
-    };
+    /* كان `behavior: "auto"` — قفزة فورية. النav هو أكتر حاجة بتتضغط في
+       الموقع، فكانت أوضح حتة الحركة فيها مقطوعة. scrollToElement بيحسب
+       ارتفاع الهيدر بنفسه ويعدّي من نفس محرّك العجلة. */
+    const doScroll = () => scrollToElement(target);
 
     if (isMenuOpen) {
       setIsMenuOpen(false);

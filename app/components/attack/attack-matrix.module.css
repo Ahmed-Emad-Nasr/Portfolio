@@ -49,7 +49,7 @@
  */
 .matrix {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
   gap: 3.2rem 2rem;
   align-items: start;
   max-width: 118rem;
@@ -123,10 +123,10 @@
   border-bottom: 1px solid transparent;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 992px) {
   .stats { gap: var(--space-md); }
   .stat dd { font-size: 2.8rem; }
-  .matrix { grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); }
+  .matrix { grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

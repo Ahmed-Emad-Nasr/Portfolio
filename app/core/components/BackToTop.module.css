@@ -6,8 +6,12 @@
 
 .button {
   position: fixed;
-  right: clamp(1.2rem, 3vw, 2.5rem);
-  bottom: clamp(1.2rem, 3vw, 2.5rem);
+  /* env() adds the notch/home-indicator inset on the devices that have one
+     and resolves to 0px everywhere else, so this is the same value as
+     before on a normal screen. Needed because layout.tsx now sets
+     viewportFit: "cover". */
+  right: calc(clamp(1.2rem, 3vw, 2.5rem) + env(safe-area-inset-right));
+  bottom: calc(clamp(1.2rem, 3vw, 2.5rem) + env(safe-area-inset-bottom));
   z-index: var(--z-sticky);
 
   display: flex;

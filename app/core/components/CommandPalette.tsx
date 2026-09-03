@@ -21,6 +21,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
 import { normalizePublicHref } from "@/app/blog/blog-utils";
+import { scrollToElement, scrollToTop } from "@/app/core/utils/scroll";
 import styles from "./CommandPalette.module.css";
 
 type CommandGroup = "Navigate" | "Cases" | "Links" | "Actions";
@@ -151,7 +152,7 @@ const ACTION_COMMANDS: Command[] = [
     label: "Back to top",
     group: "Actions",
     keywords: "scroll up start",
-    run: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    run: () => scrollToTop(),
   },
 ];
 
@@ -209,15 +210,10 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const restoreFocusTo = useRef<HTMLElement | null>(null);
 
   // ── The context the commands operate in ─────────────────────────────────
+  /* حساب إزاحة الهيدر كان مكرّر هنا وفي CommandPaletteMount وفي
+     الهيدرين — أربع نسخ من نفس السطرين. بقى في getHeaderOffset. */
   const goToSection = useCallback((id: string) => {
-    const target = document.getElementById(id);
-    if (!target) return;
-    const header = document.querySelector<HTMLElement>("[data-site-header='true']");
-    const offset = (header?.offsetHeight ?? 0) + 15;
-    window.scrollTo({
-      top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset),
-      behavior: "smooth",
-    });
+    scrollToElement(document.getElementById(id));
   }, []);
 
   const goToRoute = useCallback((href: string) => router.push(href), [router]);

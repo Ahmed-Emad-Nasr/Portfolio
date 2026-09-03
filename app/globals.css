@@ -120,9 +120,15 @@
   --radius-button: 2px;
   --radius-pill: 999px;
 
-  /* Type scale — html at 62.5% means 1rem = 10px */
-  --text-xs: 1.2rem;
-  --text-sm: 1.4rem;
+  /* Type scale.
+     --text-xs is the FLOOR for the whole site: nothing renders smaller.
+     It was 1.2rem; at the real root size that is ~10.8px, which is below
+     the point where uppercase mono labels stay legible on a phone.
+     53 declarations across 9 modules were written as raw rem values
+     assuming 1rem = 16px (0.72rem meaning "13px", rendering at 6.5px).
+     scripts/fix-type-scale.mjs moved all of them onto these tokens. */
+  --text-xs: 1.25rem;
+  --text-sm: 1.45rem;
   --text-base: 1.6rem;
   --text-md: 1.8rem;
   --text-lg: 2.0rem;
@@ -209,9 +215,29 @@
 }
 
 html {
-  /* 62.5% makes 1rem = 10px, which is what every rem value in this project
-     assumes. --ui-scale then trims that uniformly. */
-  font-size: calc(62.5% * var(--ui-scale));
+  /*
+   * FLUID ROOT — replaces `calc(62.5% * var(--ui-scale))`.
+   *
+   * The old value was a flat 62.5% x 0.9 = 9px at every viewport, with two
+   * step changes bolted on: 56.25% below 360px and 68.75% above 1800px.
+   * The 360px step went the WRONG WAY -- it shrank type on the narrowest
+   * screens, where legibility is already worst. 1rem fell to 8.1px there,
+   * which put body text (--text-base, 1.6rem) at 12.9px.
+   *
+   * This clamp scales continuously instead, and the floor is a floor:
+   *
+   *     320px  ->  1rem ~= 9.5px    --text-base ~= 15.2px
+   *     768px  ->  1rem ~= 9.6px
+   *    1280px  ->  1rem ~= 9.9px
+   *    1920px  ->  1rem ~= 10.4px   --text-base ~= 16.6px
+   *    2560px  ->  1rem ~= 10.8px
+   *    3840px  ->  1rem ~= 11.5px   (capped)
+   *
+   * Every rem in the project still resolves against this one value, so
+   * --ui-scale remains the single knob it always was. The two step rules in
+   * section 7 are gone -- this replaces both.
+   */
+  font-size: calc(var(--ui-scale) * clamp(66%, 63% + 0.47vw, 80%));
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
@@ -229,14 +255,60 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Overscrolling past the top or bottom on iOS and Android reveals the
+     browser's own background — white — behind a site that is pure black.
+     `none` removes the bounce; the page is a single scroll container, so
+     nothing here depends on the chaining it also disables. */
+  overscroll-behavior-y: none;
 }
 
 /* background-attachment: fixed forces the browser to repaint the
    background on every scroll frame — a well known source of jank on
    Safari and mobile Chrome in particular. And the effect itself is
    invisible on a phone screen anyway. */
-@media (max-width: 991px), (hover: none) {
+@media (max-width: 992px), (hover: none) {
   body { background-attachment: scroll; }
+}
+
+/*
+ * ── SAFE AREAS ─────────────────────────────────────────────────────────
+ *
+ * `viewportFit: "cover"` in layout.tsx lets the page extend under the notch,
+ * the rounded corners and the home indicator. That is what makes
+ * appleWebApp.statusBarStyle = "black-translucent" actually work, but it
+ * means anything pinned to a screen edge now needs to say so.
+ *
+ * The background is a flat colour edge to edge — that part is meant to run
+ * under the insets. Only interactive things pinned to an edge get pushed in:
+ *
+ *   · the site header      (fixed, top: 0)
+ *   · the back-to-top button (fixed, bottom/right)
+ *   · the mobile nav drawer  (fixed, inset: 0)
+ *   · the loader             (handles its own — see its module)
+ *
+ * ScrollProgress is deliberately excluded: it is a 2px decorative rule with
+ * pointer-events: none, and it reads better running the full width.
+ *
+ * env() resolves to 0px everywhere it is not supported, so there is no
+ * fallback to write and nothing changes on a device without insets.
+ */
+:where(header, [data-fx="header"]) {
+  padding-top: env(safe-area-inset-top);
+}
+
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/*
+ * Landscape on a notched phone puts the notch on one SIDE, where it would
+ * eat into a fixed bottom-right control. Applied only where it matters.
+ */
+:where([data-fx="floating"]) {
+  margin-right: env(safe-area-inset-right);
+  margin-bottom: env(safe-area-inset-bottom);
 }
 
 body[data-custom-cursor="true"],
@@ -412,7 +484,39 @@ time,
 }
 
 /*--------- 7. Breakpoints ---------*/
-@media (max-width: 991px) {
+/*
+ * ONE BREAKPOINT LADDER FOR THE WHOLE SITE.
+ *
+ * Before this, 14 distinct max-width values were in use across 25
+ * stylesheets: 360, 380, 430, 480, 600, 640, 672 (written as 42rem), 767,
+ * 768, 900, 900+coarse, 991, 992, 1024, 1199. Several pairs differ by one
+ * pixel and were clearly meant to be the same line. Two of them actively
+ * fought each other -- sensei-home.module.css declares rules at 600px and
+ * then again at 42rem (= 672px). Because the WIDER query is written LAST,
+ * it wins on a 375px phone, and the 600px block for .homeContent h1 and
+ * .typingText was dead code that looked live.
+ *
+ * The ladder below is the contract. Use these five numbers and nothing else:
+ *
+ *     --bp-xs   26.875rem   430px   small phone
+ *     --bp-sm   37.5rem     600px   phone
+ *     --bp-md   48rem       768px   large phone / small tablet
+ *     --bp-lg   62rem       992px   tablet / small laptop
+ *     --bp-xl   90rem      1440px   desktop
+ *
+ * These are deliberately NOT custom properties. CSS cannot read a custom
+ * property inside a media query, so `--bp-md` would have no consumer, and
+ * the rule at the top of section 1 is explicit about that case: a token
+ * nothing reads is not a token, it is a note. css-audit.mjs enforces it.
+ * So the ladder lives here as a note, and the @media rules carry literals.
+ *
+ * A note on direction: this file is max-width-first because the existing
+ * 25 stylesheets are, and converting them all at once is a bigger change
+ * than it is worth. New CSS should be min-width-first.
+ */
+
+/* Tablet / small laptop and below */
+@media (max-width: 992px) {
   section {
     padding: 4rem 3.5% 4rem;
     margin-bottom: clamp(5rem, 8vw, 8rem);
@@ -420,10 +524,12 @@ time,
   }
 }
 
+/* Large phone and below */
 @media (max-width: 768px) {
   section { width: calc(100% - 3rem); }
 }
 
+/* Phone and below */
 @media (max-width: 600px) {
   section {
     padding: 4.5rem 1.5rem 4.2rem;
@@ -432,8 +538,14 @@ time,
   }
 }
 
-@media (max-width: 360px) {
-  html { font-size: calc(56.25% * var(--ui-scale)); }
+/*
+ * Small phone.
+ *
+ * The old rule here also shrank the root font-size (56.25%). That is gone --
+ * see the clamp in section 2. On a 360px screen you have less room, which
+ * is a reason to trim PADDING, not a reason to make the text harder to read.
+ */
+@media (max-width: 430px) {
   section {
     width: calc(100% - 1.2rem);
     padding-left: 1rem;
@@ -441,15 +553,69 @@ time,
   }
 }
 
-@media (min-width: 1800px) {
-  html { font-size: calc(68.75% * var(--ui-scale)); }
+/*
+ * ── LARGE SCREENS ──────────────────────────────────────────────────────
+ *
+ * The site previously had exactly one min-width query in 25 stylesheets
+ * (min-width: 1800px) and no other large-screen handling at all. Between
+ * 1280px and 1800px every section sat inside `max-width: 128rem`, which at
+ * the old root size was 1152px -- so a 1920px monitor showed a 1152px
+ * column with 384px of dead black on either side, and a 2560px monitor
+ * showed the same column with 704px on either side.
+ *
+ * The fluid root in section 2 now grows the whole design past 1440px, so
+ * `128rem` grows with it. These two steps widen the shell to match.
+ */
+@media (min-width: 1440px) {
+  section {
+    padding-left: 6%;
+    padding-right: 6%;
+    max-width: 140rem;
+  }
+}
+
+@media (min-width: 1920px) {
   section {
     padding-left: 8%;
     padding-right: 8%;
-    max-width: 153.6rem;
-    margin-inline: auto;
+    max-width: 152rem;
   }
 }
+
+/*
+ * Ultra-wide. Beyond roughly 2100 CSS pixels a single centred column stops
+ * reading as a layout and starts reading as a mistake, so the shell stops
+ * growing and the remaining width becomes deliberate margin.
+ */
+@media (min-width: 2200px) {
+  section { max-width: 160rem; }
+}
+
+/*
+ * ── OVERFLOW GUARD ─────────────────────────────────────────────────────
+ *
+ * `html, body { overflow-x: hidden }` in section 2 hides horizontal
+ * overflow; it does not prevent it. Six grids declared
+ * `minmax(<fixed>, 1fr)` with no lower guard:
+ *
+ *     attack-matrix .matrix         minmax(26rem, 1fr) / 22rem at <=768px
+ *     case.module   figure grid     minmax(200px, 1fr)
+ *     page.module   .playlistGrid   minmax(300px, 1fr)
+ *     page.module   .youtubeHubGrid minmax(300px, 1fr)
+ *
+ * A track with a 300px minimum cannot shrink below 300px. On a 320px phone,
+ * once section padding is subtracted, the track is wider than its container
+ * and the row pushes past the viewport edge -- where overflow-x: hidden
+ * CLIPS it rather than letting the user scroll to it. That is the worse of
+ * the two failures, because it is silent.
+ *
+ * The fix is `minmax(min(100%, X), 1fr)`: the track still wants X, but it
+ * is allowed to fall back to the container width. All six were changed at
+ * source; credentials.module.css already used this form. There is no global
+ * rule here on purpose -- a `[class*="Grid"]` selector would be both slow
+ * and unreliable, since CSS Modules hashes class names. Same reasoning that
+ * removed `[class*="stat"]` in section 6.
+ */
 
 /*--------- 8. User preferences ---------*/
 @media (prefers-reduced-motion: reduce) {
@@ -565,7 +731,7 @@ html:not([data-tier]) {
 
 /* An explicit motion ceiling for phones — this catches anything that is
    not marked data-decorative and therefore misses the gating above. */
-@media (pointer: coarse) and (max-width: 900px) {
+@media (pointer: coarse) and (max-width: 992px) {
   /*
    * Note: this used to be `* { will-change: auto !important }`.
    *
@@ -725,7 +891,17 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
 
 :root {
   --reveal-distance: 24px;
-  --reveal-duration: 640ms;
+  /*
+   * 640ms -> 820ms، مربوط بتبطيء السكرول.
+   *
+   * حركة الظهور والسكرول بيتشافوا مع بعض. لما العجلة بقت تستقرّ في ~ثانية
+   * (lerp 0.045 في smooth-scroll.tsx)، الظهور بـ640ms بقى بيخلص والعنصر
+   * لسه بيتحرّك لمكانه — فبيبان كأنه "طقّ" جوه حركة ناعمة.
+   *
+   * ده المفتاح الوحيد للسرعة دي. لو حسّيتها بطيئة، رجّعها 640ms — مش
+   * محتاج تلمس أي حاجة تانية.
+   */
+  --reveal-duration: 820ms;
   --reveal-delay: 0ms;
   --reveal-stagger: 60ms;
 }
@@ -1015,7 +1191,7 @@ html[data-tier="low"] [data-fx="card"]:hover :is(img, [data-fx-media]) { transfo
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   :root {
     --card-pad: 1.4rem;
     --card-pad-compact: 1.2rem;
@@ -1406,7 +1582,7 @@ html [data-fx="field"]:focus-visible { outline: none; }
  * Contact's larger bottom padding was the one real difference, and it is
  * kept — as part of data-section="auto", which contact already carries.
  */
-@media (max-width: 991px) {
+@media (max-width: 992px) {
   :root {
     /* Phones and small tablets are already tight. Trimming type here the
        way the desktop does would push body text under ~14px, which costs

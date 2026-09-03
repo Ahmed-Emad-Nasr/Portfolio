@@ -38,6 +38,11 @@
 .actions { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 5rem; }
 
 
+/* Wrapper for the suggestion block. Was referenced in not-found.tsx and
+   never defined, so the <section> rendered class="undefined" — no spacing
+   at all between the 404 copy above it and the link list. */
+.suggest { margin-top: 4rem; }
+
 .suggestTitle {
   font-family: var(--font-mono);
   font-size: 1.3rem;

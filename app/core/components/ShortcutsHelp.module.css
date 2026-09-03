@@ -34,7 +34,7 @@
   color: #888888;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: var(--text-sm);
   letter-spacing: 1px;
 }
 
@@ -49,10 +49,16 @@
   padding: 20px;
 }
 
+/* One shortcut group inside the .groups grid. Referenced in
+   ShortcutsHelp.tsx and never defined — the <section> rendered
+   class="undefined". .groups supplies the gap, so this only needs to be a
+   block that does not collapse its own margins. */
+.group { display: block; }
+
 .groupTitle {
   margin-bottom: 0.8rem;
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -84,7 +90,7 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: var(--accent-color);
   font-family: var(--font-mono);
-  font-size: 1.05rem;
+  font-size: var(--text-sm);
 }
 
 .label {
@@ -92,7 +98,7 @@
   color: var(--text-muted);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .keys {
     min-width: 92px;
   }

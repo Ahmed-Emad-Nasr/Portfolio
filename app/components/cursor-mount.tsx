@@ -28,6 +28,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { isTouchDevice } from "@/app/core/hooks/useDeviceTier";
+import { MotionProvider } from "@/app/core/components/MotionInView";
 
 const CustomCursor = dynamic(() => import("./custom-cursor"), { ssr: false });
 
@@ -43,5 +44,20 @@ export default function CursorMount() {
   }, []);
 
   if (!enabled) return null;
-  return <CustomCursor />;
+
+  /*
+   * MotionProvider (framer-motion's <LazyMotion>) lives here rather than in
+   * layout.tsx. custom-cursor.tsx is the only remaining `m.*` consumer in
+   * the site — the loader's exit is plain CSS now — and it is desktop-only.
+   *
+   * Mounting the provider at the root meant the motion engine loaded for
+   * every visitor, including the ones this component returns null for.
+   * Here it is on the far side of both the touch check above and the
+   * dynamic import below, so it is requested only when it will be used.
+   */
+  return (
+    <MotionProvider>
+      <CustomCursor />
+    </MotionProvider>
+  );
 }

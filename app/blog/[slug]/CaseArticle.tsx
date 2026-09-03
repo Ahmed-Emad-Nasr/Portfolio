@@ -87,7 +87,7 @@ function CaseShot({
         src={normalizePublicHref(thumbFailed ? shot : getThumbnail(shot))}
         alt={`${title} — screenshot ${index + 1}`}
         fill
-        sizes="(max-width: 991px) 45vw, 24vw"
+        sizes="(max-width: 992px) 45vw, 24vw"
         loading="lazy"
         decoding="async"
         onError={() => setThumbFailed(true)}

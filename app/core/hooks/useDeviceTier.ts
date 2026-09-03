@@ -111,11 +111,6 @@ export function useDeviceTier(): DeviceTier {
   return tier;
 }
 
-/** اختصار: true لما الجهاز يستاهل يتخطّى كل الحركة الزخرفية. */
-export function useIsLowTier(): boolean {
-  return useDeviceTier() === "low";
-}
-
 /**
  * فحص متزامن للأجهزة اللمسية — للمكوّنات اللي عايزة تقرر **قبل** ما تطلب
  * chunk أصلاً (المؤشر المخصص، الـ command palette). بيرجع false على السيرفر.

@@ -23,6 +23,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { isTypingTarget, scrollToElement, scrollToTop } from "@/app/core/utils/scroll";
 import styles from "./CommandPalette.module.css";
 
 const CommandPalette = dynamic(() => import("./CommandPalette"), { ssr: false });
@@ -32,12 +33,9 @@ const Terminal = dynamic(() => import("./Terminal"), { ssr: false });
 type Overlay = "palette" | "shortcuts" | "terminal" | null;
 
 /** Ignore shortcuts while the user is typing in a field */
-const isTypingTarget = (target: EventTarget | null): boolean => {
-  if (!(target instanceof HTMLElement)) return false;
-  const tag = target.tagName;
-  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable;
-};
-
+/* isTypingTarget اتنقل لـ core/utils/scroll — KeyboardScroll محتاجه
+   بنفس الشروط بالظبط، ونسختين من "هل المستخدم بيكتب دلوقتي؟" هي
+   بالظبط نوع التكرار اللي بيفضل يتباعد لحد ما يختلفوا. */
 /** g + this letter → this section */
 const GO_TO_SECTION: Record<string, string> = {
   h: "Home",
@@ -74,12 +72,7 @@ export default function CommandPaletteMount() {
       const target = document.getElementById(id);
       if (!target) return;
 
-      const header = document.querySelector<HTMLElement>("[data-site-header='true']");
-      const offset = (header?.offsetHeight ?? 0) + 15;
-      window.scrollTo({
-        top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset),
-        behavior: "smooth",
-      });
+      scrollToElement(target);
     },
     [pathname, router],
   );
@@ -116,7 +109,7 @@ export default function CommandPaletteMount() {
 
         if (key === "t") {
           e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          scrollToTop();
           return;
         }
         if (key === "b") {

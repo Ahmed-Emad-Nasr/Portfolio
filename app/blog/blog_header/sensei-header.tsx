@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useScrollSpy } from "@/app/core/utils/utils";
 
 import Icon from "@/app/core/icons/Icon";
+import { scrollToElement } from "@/app/core/utils/scroll";
 import styles from "@/app/components/header/sensei-header.module.css";
 
 const NAV_ITEMS = [
@@ -73,13 +74,8 @@ export default function SenseiHeader() {
     const target = document.getElementById(targetId);
     if (!target) return;
 
-    const doScroll = () => {
-      const headerH = headerRef.current?.offsetHeight ?? 0;
-      window.scrollTo({
-        top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - 15),
-        behavior: "auto",
-      });
-    };
+    /* كان `behavior: "auto"` — قفزة فورية، زي الهيدر الرئيسي بالظبط. */
+    const doScroll = () => scrollToElement(target);
 
     if (isMenuOpen) { setIsMenuOpen(false); requestAnimationFrame(doScroll); }
     else doScroll();

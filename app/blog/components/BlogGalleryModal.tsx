@@ -52,7 +52,7 @@ export default function BlogGalleryModal({ gallery, currentShot, setGallery, goG
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <Image src={currentShot} alt={`${gallery.title} — screenshot ${gallery.index + 1} of ${gallery.screenshots.length}`} fill sizes="(max-width: 991px) 95vw, 78vw" loading="lazy" />
+            <Image src={currentShot} alt={`${gallery.title} — screenshot ${gallery.index + 1} of ${gallery.screenshots.length}`} fill sizes="(max-width: 992px) 95vw, 78vw" loading="lazy" />
           </a>
           <button type="button" className={styles.galleryNav} onClick={() => goGallery(1)} aria-label="Next screenshot">→</button>
         </div>

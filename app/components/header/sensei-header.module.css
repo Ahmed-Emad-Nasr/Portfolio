@@ -11,7 +11,10 @@
   width: 100%; /* Spans the full page width, edge to edge */
   z-index: var(--z-navbar);
   transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-normal) var(--motion-ease);
-  padding-top: 2px; /* Room for the sharp red rule along the top */
+  /* 2px of room for the sharp red rule along the top, plus the status-bar
+     inset on notched phones — layout.tsx sets viewportFit: "cover", so the
+     header would otherwise sit underneath the clock and the battery. */
+  padding-top: calc(2px + env(safe-area-inset-top));
 }
 
 /* The continuous red rule across the full screen width */

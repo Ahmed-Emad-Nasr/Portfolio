@@ -48,8 +48,28 @@
   width: 100%; height: auto; object-fit: cover; display: block; 
   border-radius: calc(var(--radius-card) - 4px); /* Soft, consistent with the card frame */
   cursor: pointer;
-  filter: grayscale(70%) contrast(1.2) brightness(0.8); 
-  transition: all var(--motion-normal) var(--motion-ease);
+  filter: grayscale(70%) contrast(1.2) brightness(0.8);
+  /* No transition by default.
+
+     `transition: all` was here: it watches every animatable property on the
+     element, and the only one that actually changes on hover is `filter`.
+     Naming it is the obvious fix, but it is not the whole fix — a filter
+     transition repaints the full image on the GPU on every frame, and on a
+     touch device the hover state it exists for can never fire. So the cost
+     was being paid on phones in exchange for nothing.
+
+     The transition is now opted into below, only where hover is real. */
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .galleryImg {
+    transition: filter var(--motion-normal) var(--motion-ease);
+  }
+}
+
+/* Low-tier machines skip it too — the hover still works, it just snaps. */
+:global(html[data-tier="low"]) .galleryImg {
+  transition: none;
 }
 
 .art_pic:hover .galleryImg {
@@ -61,15 +81,15 @@
 /* Action Button */
 
 /* === Responsive Overrides === */
-@media (max-width: 1199px) { 
+@media (max-width: 1440px) { 
   .Gallery { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
   .art-gallery-content { padding: 0 3rem 5%; } 
 }
-@media (max-width: 991px) { 
+@media (max-width: 992px) { 
   .Gallery { grid-template-columns: repeat(2, 1fr); } 
   .art-gallery-content { padding: 0 2rem 5%; } 
 }
-@media (max-width: 767px) { 
+@media (max-width: 768px) { 
   .art-gallery-section { min-height: auto; margin-top: clamp(18rem, 36vh, 40rem) !important; }
   .Gallery { grid-template-columns: 1fr; gap: 20px; } 
   .art-gallery-content { padding: 0 1.5rem 5%; } 

@@ -188,7 +188,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
               src={normalizeHref(primaryFailed ? primaryScreenshot : getThumbnail(primaryScreenshot))} 
               alt={`${title} — main screenshot`} 
               fill 
-              sizes="(max-width: 991px) 70vw, 40vw" 
+              sizes="(max-width: 992px) 70vw, 40vw" 
               loading="lazy"
               decoding="async" 
               onError={() => setPrimaryFailed(true)} 

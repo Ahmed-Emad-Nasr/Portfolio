@@ -42,7 +42,7 @@
   color: var(--main-color);
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -63,7 +63,7 @@
 .facetLabel {
   margin-right: 0.4rem;
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -83,7 +83,7 @@
   color: #b8b8b8;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 1.15rem;
+  font-size: var(--text-sm);
   letter-spacing: 0.5px;
   transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
@@ -106,7 +106,7 @@
 }
 
 .count {
-  font-size: 1rem;
+  font-size: var(--text-sm);
   color: #6a6a6a;
 }
 
@@ -117,7 +117,7 @@
 /* ── Result counter ─────────────────────────────────────────────────────── */
 .status {
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 

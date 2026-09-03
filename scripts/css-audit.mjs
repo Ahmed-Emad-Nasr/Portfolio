@@ -58,8 +58,34 @@ for (const m of allCode.matchAll(/\b\w*[Ss]tyles\[\s*`([\w-]*)\$\{/g)) {
   if (m[1]) dynamicPrefixes.push(m[1]);
 }
 
+/* استدعاء ديناميكي كامل: styles[line.kind] أو styles[variant] — من غير أي
+   نص ثابت نقدر نمسكه.
+
+   ده كان بيدّي false positive حقيقي: Terminal.tsx بيرندر
+   `className={styles[line.kind]}` و line.kind نوعه "in" | "out" | "err" |
+   "dim". السكربت كان بيقول إن .in و .out و .dim كلاسات ميتة، وهي شغّالة —
+   ومسحها كان هيكسر ألوان الترمينال من غير أي error.
+
+   لما ملف يحتوي على تركيب زي ده، مبنقدرش نحكم على كلاساته إحصائياً، فبنعلّم
+   الملف كله ونستثنيه من فحص الكلاسات الميتة مع ملاحظة صريحة. */
+const dynamicFiles = new Set();
+for (const f of codeFiles) {
+  const src = read(f);
+  if (/\b\w*[Ss]tyles\[\s*[A-Za-z_$][\w.$]*\s*\]/.test(src)) {
+    /* بنربط ملف الكود بملف الـ CSS اللي بيستورده */
+    for (const m of src.matchAll(/from\s+["'](\.[^"']*\.module\.css)["']/g)) {
+      dynamicFiles.add(m[1].replace(/^\.\//, ""));
+    }
+  }
+}
+
 let deadClasses = 0;
+let skippedDynamic = 0;
 for (const f of cssFiles.filter((f) => f.endsWith(".module.css"))) {
+  if ([...dynamicFiles].some((d) => f.endsWith(d.split("/").pop()))) {
+    skippedDynamic++;
+    continue;
+  }
   const names = new Set(strip(read(f)).match(/\.[A-Za-z_][\w-]*/g)?.map((s) => s.slice(1)) ?? []);
   const dead = [...names].filter(
     (n) => !usedNames.has(n) && !dynamicPrefixes.some((p) => n.startsWith(p)),
@@ -71,6 +97,11 @@ for (const f of cssFiles.filter((f) => f.endsWith(".module.css"))) {
   }
 }
 console.log(deadClasses ? `   → ${deadClasses} كلاس` : "   ✓ نضيف");
+if (skippedDynamic) {
+  console.log(
+    `   (${skippedDynamic} ملف اتخطّى — بيستخدم styles[expr] فمش ممكن يتفحص إحصائياً)`,
+  );
+}
 issues += deadClasses;
 
 /* ── 2. متغيّرات ميتة ──────────────────────────────────────────────────── */
@@ -134,7 +165,13 @@ for (const f of cssFiles) {
   const rel = relative(".", f);
 
   // transition على backdrop-filter أو filter = إعادة رسم GPU كل فريم
-  for (const m of t.matchAll(/transition:[^;]*\b(backdrop-filter|filter)\b[^;]*/g)) {
+  /* transition على filter جوه @media (hover: hover) مقبول: الجهاز اللي
+     بيدفع التكلفة هو الوحيد اللي بيشوف الأثر. بنشيل البلوكات دي قبل الفحص. */
+  const t2 = t.replace(
+    /@media\s*\(hover:\s*hover\)[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g,
+    "",
+  );
+  for (const m of t2.matchAll(/transition:[^;]*\b(backdrop-filter|filter)\b[^;]*/g)) {
     flags.push(`   ${rel}: transition على ${m[1]} — إعادة رسم GPU كل فريم`);
   }
   // backdrop-filter بقيمة ثابتة بدل التوكن = بيتخطّى ميزانية الجهاز

@@ -13,6 +13,7 @@
  */
 
 import { useEffect, useRef } from "react";
+import { scrollToTop } from "@/app/core/utils/scroll";
 import styles from "./BackToTop.module.css";
 
 export default function BackToTop() {
@@ -42,20 +43,23 @@ export default function BackToTop() {
     };
   }, []);
 
-  const scrollToTop = () => {
-    // Lenis wraps window.scrollTo when it runs in root mode, so the motion
-// comes out smooth on its own.
-    // If the user asked for reduced motion we jump straight there.
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
-  };
+  /*
+   * التعليق اللي كان هنا بيقول إن "Lenis بيلفّ window.scrollTo" — وده
+   * مش صح، Lenis مبيعملش patch للدالة دي. اللي بيحصل إنه بيزامن حالته
+   * مع الحركة الأصلية، فالزرار كان **شغّال** — بس بمنحنى المتصفح
+   * (~٣٠٠ms ثابتة) مش بحركة الموقع، فكان بيحسّ مقطوع عن باقي الصفحة.
+   *
+   * scrollToTop في core/utils/scroll بيعدّي من نفس محرّك العجلة، وبيراعي
+   * prefers-reduced-motion جوّه.
+   */
+  const handleClick = () => scrollToTop();
 
   return (
     <button
       ref={btnRef}
       type="button"
       className={styles.button}
-      onClick={scrollToTop}
+      onClick={handleClick}
       aria-label="Back to top"
     >
       <span aria-hidden="true" className={styles.arrow}>

@@ -27,7 +27,7 @@
 .windowTitle {
   flex: 1;
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: var(--text-sm);
   color: #888888;
 }
 
@@ -102,11 +102,11 @@
   font-size: 16px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .body {
     font-size: 1.2rem;
   }
   .prompt {
-    font-size: 1.1rem;
+    font-size: var(--text-sm);
   }
 }
