@@ -48,7 +48,7 @@
   font-size: 1.3rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--main-color);
+  color: var(--main-text);
   margin: 0 0 1.8rem;
   padding-bottom: 0.9rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);

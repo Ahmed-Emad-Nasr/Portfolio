@@ -78,7 +78,7 @@
   font-family: var(--font-mono);
   font-size: 16px;
   font-weight: 700;
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .escKey {
@@ -119,7 +119,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #5a5a5a;
+  color: #8a8a8a;
 }
 
 .row {
@@ -164,7 +164,7 @@
   font-size: 10px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #6a6a6a;
+  color: #8a8a8a;
 }
 
 .rowActive .rowHint {
@@ -173,7 +173,7 @@
 
 .empty {
   padding: 28px 16px;
-  color: #6a6a6a;
+  color: #8a8a8a;
   font-size: 13px;
   text-align: center;
 }
@@ -189,7 +189,7 @@
   font-size: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #5a5a5a;
+  color: #8a8a8a;
 }
 
 .footerCount {

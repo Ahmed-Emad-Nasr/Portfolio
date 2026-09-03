@@ -39,7 +39,7 @@
   border-bottom: 1px solid transparent;
   font-size: var(--text-md);
 }
-.direct svg { color: var(--main-color); width: 1.1em; flex-shrink: 0; }
+.direct svg { color: var(--main-text); width: 1.1em; flex-shrink: 0; }
 
 .form { display: grid; gap: 1.8rem; min-width: 0; }
 

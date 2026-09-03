@@ -37,7 +37,7 @@
    Selectors follow; sizes and behaviour are unchanged. */
 .tag h3 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.8rem; }
 .titleIcon { color: var(--text-muted); transition: color var(--motion-fast) ease; flex-shrink: 0; }
-.content:hover .titleIcon { color: var(--main-color); }
+.content:hover .titleIcon { color: var(--main-text); }
 
 .tag h4 { margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.8rem; }
 .linkIcon { opacity: 0; transform: translateX(-5px); transition: opacity var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease); }
@@ -81,11 +81,11 @@
               color var(--motion-fast) var(--motion-ease),
               border-color var(--motion-fast) var(--motion-ease);
 } 
-.skillTag::before { content: "> "; opacity: 0.5; color: var(--main-color); }
-.skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-color); border-color: var(--main-color); }
+.skillTag::before { content: "> "; opacity: 0.5; color: var(--main-text); }
+.skillTag:hover { background: rgba(var(--main-color-rgb), 0.1); color: var(--main-text); border-color: var(--main-color); }
 
 .date-details { display: flex; flex-direction: column; align-items: flex-end; margin-top: var(--space-md); padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); gap: var(--space-xs); }
-.experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-color); font-family: var(--font-mono); }
+.experience-time { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; font-weight: 700; color: var(--main-text); font-family: var(--font-mono); }
 .date-range { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; color: var(--text-muted); font-family: var(--font-mono); }
 
 .proofLink {

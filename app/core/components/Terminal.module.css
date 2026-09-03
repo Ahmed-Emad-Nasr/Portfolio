@@ -69,12 +69,12 @@
 }
 
 .err {
-  color: var(--main-color);
+  color: var(--main-text);
   white-space: pre-wrap;
 }
 
 .dim {
-  color: #6a6a6a;
+  color: #8a8a8a;
   white-space: pre-wrap;
 }
 

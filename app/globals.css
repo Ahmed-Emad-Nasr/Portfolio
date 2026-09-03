@@ -65,7 +65,7 @@
    * Mobile carries its own value: phones are already tight, and shrinking
    * body text below ~14px costs readability rather than buying space.
    */
-  --ui-scale: 0.98;
+  --ui-scale: 0.95;
 
   /* Core palette */
   --background: #000000;
@@ -85,6 +85,29 @@
   --main-color: var(--primary);
   --main-color-rgb: 188, 0, 45;
   --main-light: #ff2d78;
+
+  /*
+   * ── الأحمر المخصص للنص ────────────────────────────────────────────────
+   *
+   * --main-color (#bc002d) تباينه على الأسود = **3.18**.
+   *
+   * ده ناجح للنص الكبير (المطلوب 3.0) وراسب للنص العادي (المطلوب 4.5).
+   * Lighthouse مسكه على .blockTitle في الشهادات، وهو 1.4rem يعني ~١٣
+   * بكسل — نص عادي.
+   *
+   * --main-text هو **نفس اللون بالظبط**، أفتح شوية:
+   *
+   *     الدرجة (hue)   346°  ←  زي ما هي
+   *     التشبّع        100%  ←  زي ما هو
+   *     الإضاءة        37% → 48%
+   *     التباين        3.18 → **4.94**
+   *
+   * مش لون جديد — نفس الأحمر مرفوع لحد ما يعدّي.
+   *
+   * --main-color سايب زي ما هو للحدود والخلفيات والعناوين الكبيرة، وهي
+   * الاستخدامات اللي 3.18 فيها مقبول. استخدم --main-text لأي نص صغير.
+   */
+  --main-text: #f5003b;
 
   --accent-color: var(--accent);
   --accent-color-rgb: 255, 215, 0;
@@ -306,7 +329,7 @@ svg {
 
 button {
   background: rgba(var(--main-color-rgb), 0.1);
-  color: var(--main-color);
+  color: var(--main-text);
   border: 1px solid var(--surface-card-border);
   border-radius: var(--radius-card-sm);
   padding: 0.8em 1.8em;
@@ -1678,7 +1701,7 @@ html [data-fx="btn"][data-btn="ghost"] {
  */
 html [data-fx="btn"][data-tone="main"] {
   border-color: rgba(var(--main-color-rgb), 0.4);
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 html [data-fx="btn"][data-tone="accent"] {

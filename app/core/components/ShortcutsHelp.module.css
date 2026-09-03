@@ -24,7 +24,7 @@
 
 .title::before {
   content: "// ";
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .close {
@@ -62,7 +62,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #5a5a5a;
+  color: #8a8a8a;
 }
 
 .list {

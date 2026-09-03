@@ -27,7 +27,7 @@
   font-family: var(--font-mono);
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .searchRow:focus-within {
@@ -39,7 +39,7 @@
   padding: 6px 12px;
   background: transparent;
   border: 1px solid rgba(var(--main-color-rgb), 0.5);
-  color: var(--main-color);
+  color: var(--main-text);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 1.1rem;
@@ -67,7 +67,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #5a5a5a;
+  color: #8a8a8a;
 }
 
 .chip,
@@ -90,7 +90,7 @@
 
 .toolChip::before {
   content: ">_ ";
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .chip:hover,
@@ -107,7 +107,7 @@
 
 .count {
   font-size: 1rem;
-  color: #6a6a6a;
+  color: #8a8a8a;
 }
 
 .chipActive .count {
@@ -123,7 +123,7 @@
 
 .status::before {
   content: "// ";
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 @media (max-width: 768px) {

@@ -65,7 +65,7 @@
 .arrow {
   font-size: 14px;
   line-height: 1;
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .button:hover .arrow {

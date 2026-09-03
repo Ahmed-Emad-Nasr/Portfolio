@@ -23,7 +23,7 @@
 }
 
 .backLink {
-  color: var(--main-color);
+  color: var(--main-text);
   text-decoration: none;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .barSep {
-  color: #5a5a5a;
+  color: #8a8a8a;
 }
 
 .barCurrent {
@@ -59,7 +59,7 @@
   font-size: 1.1rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .kicker::before {
@@ -135,7 +135,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #5a5a5a;
+  color: #8a8a8a;
 }
 
 /* ── Screenshots ────────────────────────────────────────────────────────── */
@@ -220,7 +220,7 @@
   font-size: 1.1rem;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 .siblingTitle {

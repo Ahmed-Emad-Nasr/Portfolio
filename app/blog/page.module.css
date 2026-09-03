@@ -42,7 +42,7 @@
 /* Terminal Style Headings */
 .blockHeading { margin-bottom: 3rem; }
 .blockHeading h2 { font-size: 2.2rem; color: var(--foreground); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
-.blockHeading h2::before { content: "> "; color: var(--main-color); }
+.blockHeading h2::before { content: "> "; color: var(--main-text); }
 .blockHeading p { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.5rem; }
 
 /* Scroll blur overlay (sits between background and content) */
@@ -187,7 +187,7 @@
 
 .difficulty-easy   { border-color: rgba(0, 255, 136, 0.4) !important; color: #00ff88 !important; }
 .difficulty-medium { border-color: rgba(255, 215, 0, 0.4)  !important; color: #ffd700 !important; }
-.difficulty-hard   { border-color: rgba(255, 0, 60, 0.4)   !important; color: var(--main-color) !important; }
+.difficulty-hard   { border-color: rgba(255, 0, 60, 0.4)   !important; color: var(--main-text) !important; }
 
 .caseCardHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .shotCount { font-size: 1.1rem; color: var(--accent-color); font-family: var(--font-mono); }
@@ -218,7 +218,7 @@
   padding: 0.4rem 0.8rem; border-radius: 2px; border: 1px solid transparent;
   background: transparent; color: rgba(255, 255, 255, 0.62); font-size: 1.1rem; font-family: var(--font-mono);
 }
-.toolButtonSmall::before { content: ">_ "; color: var(--main-color); }
+.toolButtonSmall::before { content: ">_ "; color: var(--main-text); }
 .tagButtonSmall::before { content: "#"; color: var(--accent-color); }
 
 /* Skills Gained: distinct green tone so readers instantly see "what this case teaches" */
@@ -266,7 +266,7 @@
 .embedPlayButton {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   padding: 0.8rem 1.6rem; border-radius: 2px; border: 1px solid var(--main-color); background: rgba(0, 0, 0, 0.8);
-  color: var(--main-color); font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; z-index: 5;
+  color: var(--main-text); font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; z-index: 5;
   transition: background-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease);
 }
 .embedPreview:hover .embedPlayButton { background: var(--main-color); color: #000; }

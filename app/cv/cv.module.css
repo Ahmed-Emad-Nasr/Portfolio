@@ -38,7 +38,7 @@
   font-size: var(--text-base);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--main-color);
+  color: var(--main-text);
   margin: 1rem 0 2.2rem;
 }
 
@@ -72,7 +72,7 @@
   font-size: 1.4rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--main-color);
+  color: var(--main-text);
   margin: 0 0 2.4rem;
   padding-bottom: 0.9rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
@@ -115,14 +115,14 @@
   line-height: 1.7;
   margin-bottom: 0.7rem;
 }
-.bullets li::marker { color: var(--main-color); }
+.bullets li::marker { color: var(--main-text); }
 
 .coursework { margin: 2rem 0 0; font-size: var(--text-base); color: var(--text-muted); line-height: 1.7; }
 .coursework strong { color: var(--text-bright); }
 
 .plainList { margin: 0; padding-left: 2rem; }
 .plainList li { color: var(--text-muted); font-size: var(--text-base); line-height: 1.75; margin-bottom: 0.8rem; }
-.plainList li::marker { color: var(--main-color); }
+.plainList li::marker { color: var(--main-text); }
 .plainList strong { color: var(--text-bright); }
 .plainList a { color: var(--accent-color); }
 

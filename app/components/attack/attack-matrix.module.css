@@ -37,7 +37,7 @@
   margin: 0.6rem 0 0;
   font-size: 3.4rem;
   font-weight: 800;
-  color: var(--main-color);
+  color: var(--main-text);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }

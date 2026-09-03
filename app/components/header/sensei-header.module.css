@@ -78,7 +78,7 @@
 }
 
 .brandDot {
-  color: var(--main-color);
+  color: var(--main-text);
   font-weight: 900;
 }
 
@@ -120,7 +120,7 @@
 .navbar a:hover svg,
 .navbar a.active svg {
   opacity: 1;
-  color: var(--main-color);
+  color: var(--main-text);
 }
 
 /* ── MOBILE MENU ─────────────────────────────────────────────────────────── */

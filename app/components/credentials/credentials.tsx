@@ -49,6 +49,9 @@ const Credentials = memo(function Credentials() {
    * فبقت <h2>. لو سابناها <h3> كان القسم هيبقى فيه h3 من غير h2 فوقها —
    * قفزة في مستويات العناوين، وقارئ الشاشة بيقرا شجرة العناوين عشان
    * يتنقّل، فالقفزة بتخليه يدوّر على قسم مش موجود.
+   *
+   * ولنفس السبب، عناوين مجموعات المهارات تحت بقت <h3> بدل <h4>: لما دي
+   * بقت h2، الـ h4 اللي جواها بقت بتقفز مستوى كامل. Lighthouse مسكها.
    */
   return (
     <div className={styles.wrap}>
@@ -120,7 +123,7 @@ const Credentials = memo(function Credentials() {
         <div className={styles.skillGrid}>
           {skillGroups.map((group) => (
             <div key={group.id} className={styles.skillGroup}>
-              <h4 className={styles.skillLabel}>{group.label}</h4>
+              <h3 className={styles.skillLabel}>{group.label}</h3>
               <ul className={styles.skillItems}>
                 {group.items.map((item) => (
                   <li key={item} className={styles.skillItem}>{item}</li>

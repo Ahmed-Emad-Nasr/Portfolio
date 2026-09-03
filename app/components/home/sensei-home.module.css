@@ -184,7 +184,7 @@
 .homeContent h1 span {
   display: block;
 }
-.highlight { color: var(--main-color); }
+.highlight { color: var(--main-text); }
 
 /* Typing role ticker */
 .typingText {
@@ -216,7 +216,7 @@
 
 .typingHighlight {
   position: relative;
-  color: var(--main-color);
+  color: var(--main-text);
   padding-right: 8px;
   font-family: var(--font-mono);
 }
@@ -283,7 +283,11 @@
 .specHeaderLabel {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.4);
+  /* كان rgba(255,255,255,.4) — على خلفية سودا ده #666 وتباينه 3.66،
+     راسب في WCAG AA (المطلوب 4.5). النص هنا 0.78rem يعني ~٧ بكسل
+     ومتباعد الحروف، وده أصعب حاجة تتقرا مش أسهلها.
+     0.62 بيدّي #9e9e9e وتباين 7.84. */
+  color: rgba(255, 255, 255, 0.62);
   text-transform: uppercase;
   letter-spacing: 0.28em;
 }
@@ -360,7 +364,7 @@
 .iconWhatsapp:hover { color: #25d366; border-color: rgba(37, 211, 102, 0.5); }
 .iconYoutube:hover { color: #ff0000; border-color: rgba(255, 0, 0, 0.5); }
 .iconInstagram:hover { color: #e1306c; border-color: rgba(225, 48, 108, 0.5); }
-.iconGithub:hover { color: var(--main-color); border-color: rgba(var(--main-color-rgb), 0.5); }
+.iconGithub:hover { color: var(--main-text); border-color: rgba(var(--main-color-rgb), 0.5); }
 
 .homeButton {
   display: flex;
@@ -514,7 +518,7 @@
 .hudMain { color: rgba(var(--main-color-rgb), 0.65); }
 /* a11y: nudged up from 0.28 → 0.4 so this still reads as decorative HUD
    flavor text without dropping below a readable contrast level */
-.hudDim { color: rgba(255, 255, 255, 0.4); }
+.hudDim { color: rgba(255, 255, 255, 0.62); }
 .hudAccent { color: rgba(var(--accent-color-rgb), 0.5); }
 
 .imageButton {
