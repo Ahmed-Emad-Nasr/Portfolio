@@ -31,12 +31,11 @@ const nextConfig = {
     // Trimming the icon packages is the biggest single bundle win here. The old
     // config listed only react-fontawesome, which is the thin wrapper — the
     // multi-megabyte icon PACKS were left untreated.
-    optimizePackageImports: [
-      "@fortawesome/react-fontawesome",
-      "@fortawesome/free-solid-svg-icons",
-      "@fortawesome/free-brands-svg-icons",
-      "framer-motion",
-    ],
+    // كانت فيها ٣ إدخالات لحزم @fortawesome. الحزم دي مبقتش تتستورد من
+    // app/ خالص — الأيقونات اتحوّلت لجدول SVG داخلي (core/icons/icon-data.ts)
+    // والحزم فضلت مستخدمة في سكربت التوليد بس. فالإدخالات كانت بتشاور على
+    // حاجة مش في الـ bundle أصلاً ومكانتش بتعمل أي حاجة.
+    optimizePackageImports: ["framer-motion"],
     // REMOVED optimizeCss: it requires the `beasties` package (Next 15+), which
     // is NOT in your lockfile — the build fails. Re-enable after: npm i -D beasties
   },

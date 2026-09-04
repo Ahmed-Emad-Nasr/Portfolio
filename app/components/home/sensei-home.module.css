@@ -216,17 +216,41 @@
 
 .typingHighlight::before {
   content: " ";
-  animation: words var(--typing-words) infinite;
+  /* clip-path على صندوق inline سلوكه مش مضمون بين المتصفحات — الصندوق
+     المتولّد من غير أبعاد واضحة ممكن يتقص غلط. inline-block بيدّيه صندوق
+     حقيقي من غير ما يغيّر شكل سطر النص. */
+  display: inline-block;
+  /*
+   * الكشف بقى بـ clip-path مش بمستطيل معتم فوق النص.
+   *
+   * الطريقة القديمة كانت `::after` بخلفية `var(--bg-color)` بيغطي النص
+   * وعرضه بيتحرك. ودي كانت شغّالة لما الخلفية كانت سودا سادة — بس بعد
+   * ما حطينا الخلفية المتحركة، المستطيل الأسود ده بقى **بيغطي
+   * الفقاعات** ويبان كمربع أسود بيكبر ويصغر في نص الهيرو.
+   *
+   * clip-path بيقص النص نفسه، فمفيش أي لون معتم فوق الخلفية. وكمان هو
+   * خاصية بيتعامل معاها الـ compositor، على عكس `width` اللي بتجبر
+   * إعادة تخطيط عند كل خطوة.
+   */
+  animation: words var(--typing-words) infinite,
+             typingReveal var(--typing-typing) steps(14) infinite;
 }
 
+/*
+ * بقى المؤشر (الشرطة) بس — من غير خلفية.
+ *
+ * لسه بيستخدم نفس أنيميشن العرض عشان الحد الأيسر بتاعه يفضل عند حافة
+ * النص المكشوف بالظبط، ومتزامن مع الـ clip-path فوق (نفس التوقيتات
+ * ونفس steps(14)). العنصر شفاف تماماً، فاللي بيتشاف هو الشرطة بس.
+ */
 .typingHighlight::after {
   content: " ";
   position: absolute;
-  background-color: var(--bg-color);
   width: calc(100% + 8px);
   height: 100%;
-  border-left: 3px solid var(--bg-color);
+  border-left: 3px solid transparent;
   right: -2px;
+  pointer-events: none;
   animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite;
 }
 
@@ -242,9 +266,16 @@
   41%, 61% { content: "SOC/DFIR Engineer"; } 62%, 80% { content: "Malware Analyst"; }
   81%, 100% { content: "Cybersecurity Instructor"; }
 }
+/* موضع الشرطة — نفس توقيتات الكشف تحت بالظبط */
 @keyframes typing {
   10%, 15%, 30%, 35%, 50%, 55%, 70%, 75%, 90%, 95% { width: 0; }
   5%, 20%, 25%, 40%, 45%, 60%, 65%, 80%, 85% { width: calc(100% + 7px); }
+}
+
+/* كشف النص. inset(0 100% 0 0) = مخفي بالكامل، inset(0) = ظاهر بالكامل. */
+@keyframes typingReveal {
+  10%, 15%, 30%, 35%, 50%, 55%, 70%, 75%, 90%, 95% { clip-path: inset(0 -4px 0 0); }
+  5%, 20%, 25%, 40%, 45%, 60%, 65%, 80%, 85% { clip-path: inset(0 100% 0 0); }
 }
 
 @keyframes textDrift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
