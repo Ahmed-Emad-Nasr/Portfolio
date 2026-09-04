@@ -9,7 +9,9 @@
 .page {
   padding: 12rem 5% 6rem;
   font-family: var(--font-body);
-  background-color: var(--background);
+  /* حجاب شفاف بدل المعتم — الفقاعات بتبان من ورا النص. شوف
+     --page-veil في globals.css. */
+  background-color: var(--page-veil);
   color: var(--foreground);
   min-height: 100vh;
   min-height: 100dvh;

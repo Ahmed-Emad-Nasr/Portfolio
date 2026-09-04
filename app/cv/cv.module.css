@@ -14,7 +14,13 @@
 .page {
   min-height: 100vh;
   padding: 7rem 2rem 9rem;
-  background: var(--bg-color);
+  /* حجاب شفاف — الخلفية المتحركة بتبان من وراه. شوف --page-veil في
+     globals.css.
+
+     ملحوظة: الطباعة مش متأثرة. globals.css فيه
+     `@media print { body { background: #fff !important } }`
+     وهو بيغطي ده، والحجاب شفاف أصلاً فمش هيطبع أي حاجة. */
+  background: var(--page-veil);
 }
 
 /* ~90 characters per line — wider than that stops being readable */

@@ -10,7 +10,8 @@
   display: grid;
   place-items: center;
   padding: 7rem 2rem;
-  background: var(--bg-color);
+  /* حجاب شفاف — شوف --page-veil في globals.css */
+  background: var(--page-veil);
 }
 
 .inner { max-width: 72rem; width: 100%; }
