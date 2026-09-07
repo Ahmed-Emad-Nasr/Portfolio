@@ -21,6 +21,21 @@ import Spotlight from "@/app/core/components/Spotlight";
  */
 type TimelineEntry = (typeof knowledgeEducationItems)[number];
 
+/*
+ * الخط الزمني مرتّب من الأحدث للأقدم.
+ *
+ * كان بيتعرض بترتيب المصفوفة زي ما هي — والمصفوفة مش مرتّبة، فالتواريخ
+ * كانت بتظهر بترجع ورا وقدام (البكالوريوس ٢٠٢٢ واقع وسط ٢٠٢٤). الفرز
+ * هنا معناه إن إضافة عنصر جديد بتتحط في مكانها الصح تلقائياً، مهما
+ * كتبتها فين في الملف.
+ *
+ * `toSorted` مش مستخدمة عشان الدعم — `[...]` بتعمل نسخة فالمصفوفة
+ * الأصلية مبتتغيّرش (وهي `as const` أصلاً).
+ */
+const orderedTimeline: readonly TimelineEntry[] = [...knowledgeEducationItems].sort(
+  (a, b) => b.startDate.localeCompare(a.startDate),
+);
+
 type TimelineItemProps = {
   tag: string;
   desc: string;
@@ -108,14 +123,23 @@ function ExperienceSection() {
         </div>
         
         <Spotlight data-fx="timeline">
-          {knowledgeEducationItems.map((item: TimelineEntry, index) => (
+          {orderedTimeline.map((item: TimelineEntry, index) => (
             <TimelineItem
               // key={index} breaks React's reconciliation the moment an entry
               // is inserted or reordered — every item after it is treated as
               // changed. tag+startDate is stable and unique per role.
               key={`${item.tag}-${item.startDate}`}
               {...item}
-              isRight={item.isRight !== undefined ? item.isRight : index % 2 !== 0}
+              /*
+               * التبادل يمين/شمال بيتحسب من الموضع، مش من `isRight` في
+               * الداتا.
+               *
+               * كان كل عنصر بيحمل `isRight` مكتوبة بإيد — وأول ما اتضاف
+               * عنصر جديد في النص، التبادل اتكسر وبقى عنصرين على نفس
+               * الجهة. ولأن الترتيب بيتغيّر بالفرز تحت، القيمة المكتوبة
+               * مبقاش ليها معنى أصلاً.
+               */
+              isRight={index % 2 !== 0}
             />
           ))}
         </Spotlight>

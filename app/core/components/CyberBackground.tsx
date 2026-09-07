@@ -163,13 +163,35 @@ export default function CyberBackground() {
     if (!host) return;
 
     /*
-     * الفحصين دول قبل أي شغل: من غير مؤشر حقيقي مفيش تنافر أصلاً،
-     * ومن غيرهم كنا هنبني ٣٢ عنصر ونشغّل حلقة على تليفون عشان تأثير
-     * مش هيحصل.
+     * الشرط بقى الـ tier بس، مش وجود مؤشر.
+     *
+     * كان فيه فحص `(hover: hover) and (pointer: fine)` — يعني الخلفية
+     * كانت مقفولة على **كل** جهاز لمس، بما فيهم التابلت القوي. بس
+     * التنافر بالماوس هو الحاجة الوحيدة اللي محتاجة مؤشر؛ الفقاعات
+     * نفسها بتعوم عادي من غيره.
+     *
+     * فدلوقتي شغّالة على أي جهاز مش low، والتنافر بيتفعّل لوحده لو فيه
+     * مؤشر — مستمع pointermove تحت مبيتسجّلش غير لما يجيله حدث.
      */
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (document.documentElement.dataset.tier === "low") return;
+
+    /*
+     * ── حدّ الفريمات ──────────────────────────────────────────────────
+     *
+     * الحلقة كانت بتشتغل بأقصى معدّل للشاشة — ٦٠ في الثانية، وعلى شاشة
+     * 120Hz بتبقى ١٢٠. وده شغل مش محتاجينه: الفقاعات بتتحرك ببطء شديد،
+     * والفرق بين ٣٠ و٦٠ فريم عليها **مش باين للعين**.
+     *
+     * التحديد بيقلّل شغل الـ main thread للنص أو أقل، وده بيبان في
+     * البطارية على اللابتوب وفي INP.
+     *
+     * الأجهزة المتوسطة بتاخد حدّ أقل — هي اللي دخلت جديد على الخلفية
+     * بعد ما شلنا شرط المؤشر، وهي أضعف من الديسكتوب.
+     */
+    const tier = document.documentElement.dataset.tier;
+    const fpsCap = tier === "mid" ? 24 : 30;
+    const frameBudget = 1000 / fpsCap;
 
     let w = window.innerWidth;
     let h = window.innerHeight;
@@ -229,7 +251,20 @@ export default function CyberBackground() {
     let raf = 0;
     let last = performance.now();
 
+    let lastFrame = 0;
+
     const tick = (now: number) => {
+      /*
+       * التخطّي هنا مش بيوقف الحلقة — rAF لازم يفضل مجدول عشان يمسك
+       * الفريم اللي بعده. اللي بيتوفّر هو **الحساب والكتابة على الـ
+       * DOM**، وهما التكلفة الحقيقية مش الاستدعاء نفسه.
+       */
+      if (now - lastFrame < frameBudget) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+      lastFrame = now;
+
       /*
        * dt نسبة لفريم ٦٠ هرتز، ومحدودة بـ 3.
        *

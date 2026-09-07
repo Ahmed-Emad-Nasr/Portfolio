@@ -67,8 +67,57 @@ function OrgName({ name, href }: { name?: string; href?: string }) {
   );
 }
 
+type TimelineItem = (typeof knowledgeEducationItems)[number];
+
+/*
+ * كتلة عنصر واحد في الـ CV.
+ *
+ * كانت مكرّرة حرفياً في قسمي Experience و Education، وإضافة قسم
+ * Volunteer كانت هتخليها تلات نسخ. النسخ المتطابقة دي بالظبط اللي
+ * خلّت ملف الهيدر اليتيم يقعد في المشروع شهور من غير ما حد ياخد باله.
+ *
+ * linkOrg: قسم التعليم كان بيعرض اسم الجهة كنص من غير رابط، على عكس
+ * الخبرة. حافظت على الفرق ده بدل ما أوحّده من نفسي.
+ */
+function Entry({ item, linkOrg = true }: { item: TimelineItem; linkOrg?: boolean }) {
+  return (
+    <div className={styles.entry}>
+      <div className={styles.entryHead}>
+        <h3 className={styles.role}>{item.tag}</h3>
+        <span className={styles.dates}>
+          {dateRange(item.startDate, "endDate" in item ? item.endDate : undefined)}
+        </span>
+      </div>
+      <p className={styles.org} data-links="inline">
+        {linkOrg ? (
+          <OrgName name={item.subTag} href={item.subTagHyperlink} />
+        ) : (
+          item.subTag
+        )}
+      </p>
+      <ul className={styles.bullets}>
+        {toBullets(item.desc).map((line) => <li key={line}>{line}</li>)}
+      </ul>
+    </div>
+  );
+}
+
+/** قسم كامل. مبيترندرش خالص لو مفيش عناصر — عشان مايبانش عنوان فاضي. */
+function EntrySection({ title, items }: { title: string; items: readonly TimelineItem[] }) {
+  if (items.length === 0) return null;
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>{title}</h2>
+      {items.map((item) => (
+        <Entry key={`${item.tag}-${item.startDate}`} item={item} />
+      ))}
+    </section>
+  );
+}
+
 export default function CvPage() {
   const work = knowledgeEducationItems.filter((item) => item.kind === "work");
+  const volunteer = knowledgeEducationItems.filter((item) => item.kind === "volunteer");
   const education = knowledgeEducationItems.filter((item) => item.kind === "education");
 
   return (
@@ -102,42 +151,16 @@ export default function CvPage() {
         <p className={styles.summary}>{CV_SUMMARY}</p>
 
         {/* ── Experience ─────────────────────────────────────────── */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Experience</h2>
-          {work.map((item) => (
-            <div key={`${item.tag}-${item.startDate}`} className={styles.entry}>
-              <div className={styles.entryHead}>
-                <h3 className={styles.role}>{item.tag}</h3>
-                <span className={styles.dates}>
-                  {dateRange(item.startDate, "endDate" in item ? item.endDate : undefined)}
-                </span>
-              </div>
-              <p className={styles.org} data-links="inline">
-                <OrgName name={item.subTag} href={item.subTagHyperlink} />
-              </p>
-              <ul className={styles.bullets}>
-                {toBullets(item.desc).map((line) => <li key={line}>{line}</li>)}
-              </ul>
-            </div>
-          ))}
-        </section>
+        <EntrySection title="Experience" items={work} />
+
+        {/* ── Volunteer ──────────────────────────────────────────── */}
+        <EntrySection title="Volunteer Experience" items={volunteer} />
 
         {/* ── Education ──────────────────────────────────────────── */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Education &amp; Training</h2>
           {education.map((item) => (
-            <div key={`${item.tag}-${item.startDate}`} className={styles.entry}>
-              <div className={styles.entryHead}>
-                <h3 className={styles.role}>{item.tag}</h3>
-                <span className={styles.dates}>
-                  {dateRange(item.startDate, "endDate" in item ? item.endDate : undefined)}
-                </span>
-              </div>
-              <p className={styles.org} data-links="inline">{item.subTag}</p>
-              <ul className={styles.bullets}>
-                {toBullets(item.desc).map((line) => <li key={line}>{line}</li>)}
-              </ul>
-            </div>
+            <Entry key={`${item.tag}-${item.startDate}`} item={item} linkOrg={false} />
           ))}
           <p className={styles.coursework}>
             <strong>Relevant coursework:</strong> {RELEVANT_COURSEWORK.join(" · ")}

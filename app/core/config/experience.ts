@@ -19,6 +19,18 @@
 // -----------------------------------------------------------------------------
 
 /*
+ * ⚠️ `isRight` اتشالت من كل العناصر.
+ *
+ * كانت بتحدد الجهة يمين/شمال على الخط الزمني. المشكلة إنها مكتوبة بإيد:
+ * أول ما تضيف عنصر في النص، التبادل بيتكسر وبيبقى عنصرين على نفس
+ * الجهة — وده حصل فعلاً مع "Penetration Tester".
+ *
+ * والكومبوننت دلوقتي بيرتّب العناصر بالتاريخ قبل ما يعرضها، فالجهة
+ * المكتوبة في الداتا مبقاش ليها أي معنى — الترتيب اللي بيتشاف مش ترتيب
+ * الملف. بقت بتتحسب من الموضع بعد الفرز.
+ *
+ * يعني تقدر تضيف عنصر جديد في أي مكان في الملف والباقي يتظبط لوحده.
+ *
  * `kind` was added so the /cv page can separate experience from education.
  * Previously the only difference was that education items had no
  * subTagHyperlink for a company — a fragile inference that would have
@@ -29,6 +41,18 @@
  */
 export const knowledgeEducationItems = [
   {
+    // من الـ CV — أحدث دور، وكان ناقص من الموقع تماماً.
+    tag: "Cybersecurity Instructor (Part-Time)",
+    kind: "work" as const,
+    subTag: "AMIT Learning",
+    subTagHyperlink: "https://amit-learning.com/",
+    desc: "Authored curriculum and instructed 300+ students in Networking, Linux, and Security+. • Designed and delivered practical training on defensive and offensive operations, including SOC & Pentest, IAM, and GRC.",
+    startDate: "2026-09-01",
+    showDate: true,
+    skills: ["Security Training", "Curriculum Design", "Networking", "Linux", "Security+", "GRC"],
+    certificateUrl: "https://amit-learning.com/",
+  },
+  {
     // Added from the CV — this role was missing from the site entirely, and it
     // is your most recent teaching role and still ongoing.
     tag: "Cybersecurity Instructor (Part-Time)",
@@ -36,7 +60,6 @@ export const knowledgeEducationItems = [
     subTag: "National Telecommunication Institute (NTI)",
     subTagHyperlink: "https://nti.sci.eg/",
     desc: "Instructed 42+ students across Linux, Networking, SOC Fundamentals and Penetration Testing, achieving an 85% pass rate. \u2022 Delivered 120+ hours of hands-on labs, advancing practical offensive and defensive skills.",
-    isRight: false,
     startDate: "2026-02-01",
     showDate: true,
     skills: ["Security Training", "Linux", "SOC Fundamentals", "Penetration Testing", "Curriculum Design"],
@@ -48,7 +71,6 @@ export const knowledgeEducationItems = [
     subTag: "Banque Misr",
     subTagHyperlink: "https://www.banquemisr.com/",
     desc: "Assessed 3 units against ISO 27001, PCI DSS, COBIT, and SWIFT, evaluating KPIs to identify governance and risk gaps. • Evaluated enterprise architectures spanning IAM, PAM, DAM, Cloud, AI, and DevSecOps container security. • Analyzed SIEM operations, DFIR, Malware Analysis, VAPT, Threat Intel, and Dark Web monitoring for brand protection.",
-    isRight: true,
     startDate: "2026-07-01",
     endDate: "2026-09-01",
     showDate: true,
@@ -61,7 +83,6 @@ export const knowledgeEducationItems = [
     subTag: "iSchool",
     subTagHyperlink: "https://ischool-tech.com/",
     desc: "Facilitated logistics and communication for 150+ students in weekly coding labs, improving session efficiency. • Streamlined session delivery by managing operational logistics and facilitating communication between instructors and students.",
-    isRight: false,
     startDate: "2025-07-01",
     showDate: true,
     skills: [
@@ -78,7 +99,6 @@ export const knowledgeEducationItems = [
     subTag: "Digital Egypt Pioneers Initiative (DEPI)",
     subTagHyperlink: "https://www.depi.gov.eg/",
     desc: "Triaged 150+ SOC alerts via NIST 800-61 on THM & LetsDefend, maintaining a 95%+ accuracy rate. • Designed a detection lab using Wazuh, Suricata, VirusTotal & YARA, increasing coverage by 12%. • Investigated 50+ events via log analysis & IOCs, cutting documentation time 20% with standard reports.",
-    isRight: true,
     startDate: "2025-06-01",
     endDate: "2026-06-01",
     showDate: true,
@@ -91,7 +111,6 @@ export const knowledgeEducationItems = [
     subTag: "Information Technology Institute (ITI)",
     subTagHyperlink: "https://www.iti.gov.eg/",
     desc: "Exploited 15+ vulnerabilities in CTFs, mapping privilege escalation/lateral movement to MITRE ATT&CK. • Completed all INE eJPT labs (enumeration, exploitation, pivoting) and passed the exam with a 90% score. • Performed reconnaissance, service enumeration, vulnerability validation, and post-exploitation.",
-    isRight: true,
     startDate: "2025-05-01",
     endDate: "2026-01-01",
     showDate: true,
@@ -99,12 +118,11 @@ export const knowledgeEducationItems = [
     certificateUrl: "https://www.iti.gov.eg/",
   },
   {
-    tag: "Cybersecurity Instructor (Volunteer)",
-    kind: "work" as const,
+    tag: "Cybersecurity Instructor",
+    kind: "volunteer" as const,
     subTag: "Google Developer Groups (GDG)",
     subTagHyperlink: "https://gdg.community.dev/",
     desc: "Delivered 35+ sessions to 120+ learners, earning 1st place and the Best Technical Instructor Award. • Co-designed custom training materials and practical CTF challenges for offensive & defensive concepts with Cyber Cohesion.",
-    isRight: false,
     startDate: "2024-10-01",
     endDate: "2025-10-01",
     showDate: true,
@@ -112,12 +130,24 @@ export const knowledgeEducationItems = [
     certificateUrl: "https://gdg.community.dev/",
   },
   {
+    // من الـ CV — كان ناقص من الموقع تماماً.
+    tag: "Technical Instructor & Committee Member",
+    kind: "volunteer" as const,
+    subTag: "IEEE",
+    subTagHyperlink: "https://www.ieee.org/",
+    desc: "Designed and instructed a foundational C & Python programming curriculum for 5+ teams of engineering students. • Mentored 20+ students building Arduino robotic cars.",
+    startDate: "2023-07-01",
+    endDate: "2023-12-01",
+    showDate: true,
+    skills: ["C", "Python", "Mentoring", "Curriculum Design"],
+    certificateUrl: "https://www.ieee.org/",
+  },
+  {
     tag: "Bachelor of Computer Science",
     kind: "education" as const,
     desc: "Major: Information Security & Digital Forensics | GPA: 3.78/4.0. • Ranked 5th out of 900 students.",
     subTag: "Benha University",
     subTagHyperlink: "https://www.bu.edu.eg/",
-    isRight: true,
     startDate: "2022-10-01",
     endDate: "2026-06-01",
     showDate: true,
@@ -130,7 +160,6 @@ export const knowledgeEducationItems = [
     subTag: "Information Technology Institute (ITI)",
     subTagHyperlink: "https://www.iti.gov.eg/",
     desc: "Developed foundational knowledge in networking, OS, and attack techniques. • Completed labs on reconnaissance and web security.",
-    isRight: false,
     startDate: "2024-09-01",
     endDate: "2024-11-01",
     showDate: true,
@@ -143,7 +172,6 @@ export const knowledgeEducationItems = [
     subTag: "CyberTalents",
     subTagHyperlink: "https://cybertalents.com/",
     desc: "Strengthened knowledge of attack vectors and threat detection. • Completed 20+ hands-on labs focused on defensive techniques.",
-    isRight: true,
     startDate: "2024-11-01",
     endDate: "2025-01-01",
     showDate: true,
@@ -156,7 +184,6 @@ export const knowledgeEducationItems = [
     subTag: "Huawei",
     subTagHyperlink: "https://www.huawei.com/",
     desc: "Secured virtual environments and deployed 5+ cloud-based services applying security principles.",
-    isRight: false,
     startDate: "2024-08-01",
     endDate: "2024-09-01",
     showDate: true,
@@ -169,7 +196,6 @@ export const knowledgeEducationItems = [
     subTag: "Huawei",
     subTagHyperlink: "https://www.huawei.com/",
     desc: "Analyzed enterprise network architectures, earning HCIA-Datacom V1.0 and HCIA-Cloud Computing V5.0 with a 95% score. • Configured and simulated 10+ network topologies via Huawei eNSP, validating routing/switching designs.",
-    isRight: true,
     startDate: "2023-07-01",
     endDate: "2023-09-01",
     showDate: true,

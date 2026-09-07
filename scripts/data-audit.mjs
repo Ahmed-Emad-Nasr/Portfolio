@@ -209,24 +209,25 @@ if (has("experience.ts")) {
    * (experience-section.tsx: knowledgeEducationItems.map). فترتيب الملف
    * هو الترتيب اللي بيتشاف على الشاشة.
    */
-  const dates = rows.map((r) => r.start);
-  const sorted = [...dates].sort().reverse();
-  if (dates.join() !== sorted.join()) {
-    warn("الترتيب في الملف مش تنازلي بالتاريخ — والكومبوننت بيعرض بترتيب المصفوفة من غير فرز");
-    rows.forEach((r, i) => {
-      if (r.start !== sorted[i]) console.log(`        ${r.start}  ${r.tag}`);
-    });
-  } else ok("مرتّب تنازلياً بالتاريخ");
+  /*
+   * الترتيب والتبادل بقوا بيتحسبوا في الكومبوننت
+   * (experience-section.tsx بيعمل sort بالتاريخ و index % 2 للجهة).
+   *
+   * فالفحصين اللي كانوا هنا — "المصفوفة مش مرتّبة" و"عنصرين على نفس
+   * الجهة" — بقوا بيقيسوا حاجة مبقاش ليها أثر على الشاشة. لو سبتهم
+   * كانوا هيفضلوا يبلّغوا عن مشاكل اتحلّت من أصلها.
+   *
+   * اللي فضل مهم: إن الكومبوننت **لسه** بيرتّب. لو حد شال الفرز
+   * بعدين، ترتيب الملف هيرجع يهمّ تاني.
+   */
+  const comp = readCode("../../components/experience/experience-section.tsx");
+  if (!/\.sort\(/.test(comp)) {
+    warn("الكومبوننت مبقاش بيرتّب بالتاريخ — يبقى ترتيب المصفوفة في الملف بقى مهم تاني");
+  } else ok("الكومبوننت بيرتّب بالتاريخ وبيوزّع الجهات لوحده");
 
-  /* التبادل يمين/شمال — الشكل بيعتمد عليه */
-  let breaks = 0;
-  for (let i = 1; i < rows.length; i++) {
-    if (rows[i].right && rows[i].right === rows[i - 1].right) {
-      warn(`"${rows[i].tag}" على نفس جهة اللي قبله (${rows[i].right === "true" ? "يمين" : "شمال"})`);
-      breaks++;
-    }
-  }
-  if (!breaks) ok("التبادل يمين/شمال سليم");
+  if (/isRight:/.test(src)) {
+    warn("`isRight` لسه مكتوبة في الداتا — مبقاش ليها أثر بعد الفرز، الأنضف تتشال");
+  } else ok("مفيش isRight مكتوبة بإيد");
 
   /* تواريخ مستقبلية */
   const today = new Date().toISOString().slice(0, 10);
