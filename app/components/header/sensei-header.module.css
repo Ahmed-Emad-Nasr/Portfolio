@@ -30,36 +30,78 @@
 }
 
 /* Outer container for the full-width polygon (the thin grey border) */
+/*
+ * ══ الهيدر الزجاجي ═══════════════════════════════════════════════════════
+ *
+ * الشكل القديم كان **شبه منحرف** (clip-path) وجواه طبقتين:
+ *
+ *   .headerInner    خلفية بيضا بشفافية 0.08  ← الطبقة "الزجاجية"
+ *   .headerContent  background: var(--bg-color)  ← **أسود معتم فوقها**
+ *
+ * الطبقة التانية كانت بتغطي الأولى بالكامل، فالزجاج مكانش بيبان أصلاً.
+ * وعند السكرول كان بيبقى معتم أكتر — عكس الاتجاه المطلوب.
+ *
+ * دلوقتي بنفس لغة الكارت بالظبط:
+ *   · نفس الشفافية والحدود (--card-bg / --card-border-color)
+ *   · نفس نصف القطر (--radius-card)
+ *   · backdrop-filter من --ui-blur — وده متقيّد بالـ tier، يعني بيتقفل
+ *     تلقائياً على الأجهزة الضعيفة زي أي blur في الموقع
+ *
+ * والشبه المنحرف اتشال: الكارت مستطيل بزوايا دايرية، والهيدر بقى زيه.
+ */
 .headerInner {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* الارتفاع الكلي (56 + الهامش + الحد) معرّف في --header-height
+     في globals.css، واللي scroll-margin بتقرا منه. */
   height: 56px;
-  background: rgba(255, 255, 255, 0.08);
-  /* Clip only the bottom corners, forming a full-width trapezoid */
-  -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 35px 100%);
+
+  /* نفس زجاج الكارت */
+  background: var(--card-bg);
+  border: 1px solid var(--card-border-color);
+  border-radius: var(--radius-card);
+  -webkit-backdrop-filter: blur(var(--ui-blur)) saturate(130%);
+  backdrop-filter: blur(var(--ui-blur)) saturate(130%);
+
+  /*
+   * بيطفو بعيد عن حواف الشاشة زي أي كارت، مش لاصق من الطرفين.
+   * ده اللي بيخلّي الخلفية المتحركة تعدّي من حواليه فيبان زجاج فعلاً.
+   */
+  margin: 0.9rem clamp(1rem, 4vw, 3rem) 0;
+
+  transition:
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
 }
 
-/* Inner container for the content */
+/*
+ * عند السكرول بيغمق **شوية** بس — مش بيتحوّل لمعتم.
+ *
+ * الغرض إن النص يفضل مقروء لما محتوى فاتح يعدّي تحته، مش إننا نلغي
+ * الشفافية. نفس اللي بيحصل للكارت عند الـ hover.
+ */
+.scrolled .headerInner {
+  background: var(--card-bg-hover);
+  border-color: rgba(var(--main-color-rgb), 0.28);
+}
+
 .headerContent {
-  position: absolute;
-  inset: 1px;
-  top: 0;
-  background: var(--bg-color);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4rem; /* Comfortable inner spacing to distribute the items */
-  -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 34px 100%);
+  width: 100%;
+  height: 100%;
+  padding: 0 clamp(1.5rem, 3vw, 3rem);
+  /* مفيش background هنا عن قصد — الزجاج في .headerInner، وأي خلفية هنا
+     هتغطيه (وده بالظبط اللي كان بيحصل قبل كده). */
 }
 
+
 /* Deepens the black as the page scrolls */
-.scrolled .headerContent {
-  background: var(--bg-color);
-}
+
 
 /* ── BRAND LOGO ──────────────────────────────────────────────────────────── */
 .brand {
@@ -165,24 +207,32 @@
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* Drop the trapezoid clip on mobile: it was clipping the entire mobile menu,
-     because the menu appears below the header (top: 100%) while still being a
-     child of the clipped element, so it fell outside the clip region. It was
-     also shaving the logo and the hamburger button, because the padding (24px)
-     was smaller than the clip inset (34px). */
-  .headerInner,
-  .headerContent {
-    -webkit-clip-path: none;
-    clip-path: none;
-  }
+  /*
+   * القاعدة اللي كانت هنا كانت بتلغي الـ clip-path على الموبايل، لأن
+   * الشبه المنحرف كان بيقص قايمة الموبايل كلها (بتظهر تحت الهيدر لكن
+   * لسه ابن للعنصر المقصوص) وكان بياكل من اللوجو وزرار القايمة.
+   *
+   * الـ clip-path اتشال من الأساس دلوقتي، فالقاعدة مبقاش ليها لازمة.
+   */
+  .headerInner { margin: 0.6rem 0.8rem 0; }
   .headerContent { padding: 0 1.5rem; }
   .navbar {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--bg-color);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    /*
+     * قايمة الموبايل بتفضل شبه معتمة عن قصد: هي بتغطي محتوى الصفحة
+     * وقت ما تكون مفتوحة، والنص فيها لازم يفضل مقروء فوق أي حاجة
+     * بتعدّي تحتها. --card-bg-hover هو نفس الدرجة اللي الكارت بياخدها
+     * عند الـ hover.
+     */
+    background: var(--card-bg-hover);
+    -webkit-backdrop-filter: blur(var(--ui-blur));
+    backdrop-filter: blur(var(--ui-blur));
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--radius-card);
+    margin-top: 0.5rem;
     flex-direction: column;
     padding: 15px;
     gap: 10px;

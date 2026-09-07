@@ -199,10 +199,52 @@
   --text-lg: 2.0rem;
   --text-xl: 2.2rem;
 
-  /* Motion */
-  --motion-fast: 280ms;
-  --motion-normal: 650ms;
-  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /*
+   * ══ الحركة — منحنى سينمائي ══════════════════════════════════════════
+   *
+   * ── الفكرة الأساسية: المنحنى مش المدة ──
+   *
+   * "بطيء زي الأيفون" مش معناه تضرب كل المدد في ٢. لو عملت كده الموقع
+   * بيحسّ **تقيل** مش سينمائي — الفرق إن الحركة اللي بتبدأ بطيء بتبان
+   * كأن الجهاز واقف، والحركة اللي بتبدأ سريع وبتستقرّ ببطء بتبان
+   * كأنها ليها وزن.
+   *
+   * منحنى أبل بيحط أغلب الوقت في **النهاية**: انطلاقة فورية، وبعدين
+   * انزلاقة طويلة بتهدى لحد ما تقف. عشان كده الحركة بتحسّ فخمة وسريعة
+   * في نفس الوقت.
+   *
+   *     cubic-bezier(0.32, 0.72, 0, 1)
+   *                   │     │    │  └── تنتهي عند السرعة صفر تماماً
+   *                   │     │    └───── مفيش تسارع في الآخر خالص
+   *                   └─────┴────────── تنطلق بسرعة من أول فريم
+   *
+   * القديم كان `cubic-bezier(0.22, 1, 0.36, 1)` — قريب، بس بيوصل
+   * لسرعته القصوى بدري أوي فبيبان مندفع. الجديد بيوزّع أنعم.
+   *
+   * ── المدد: ليه مش كلهم اتضاعفوا ──
+   *
+   * فيه توتر حقيقي هنا لازم يتحلّ:
+   *
+   *   · حركة **الدخول** (عنصر بيظهر، صفحة بتتحرك) → البطء بيبقى فخامة
+   *   · حركة **الاستجابة** (hover، ضغطة، focus) → البطء بيبقى عطل
+   *
+   * زرار بياخد ٦٠٠ms عشان يرد على الماوس بيحسّ إن الموقع واقف، مش
+   * سينمائي. أبل نفسها بتخلي ردود الفعل تحت ٣٠٠ms والانتقالات فوقها.
+   *
+   * فـ --motion-fast (٨١ استخدام، أغلبها hover وfocus) اترفع شوية بس،
+   * و --motion-normal (١٣ استخدام، كلها انتقالات وحركة عناصر) اتوسّع.
+   */
+  --motion-fast: 380ms;
+  --motion-normal: 900ms;
+  --motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /*
+   * منحنى للحركات اللي بتدخل وتخرج (مش رد فعل).
+   *
+   * expo-out: بيبدأ من أقصى سرعة وبيقف بهدوء شديد. أنسب للظهور والاختفاء
+   * من --motion-ease لأنه مالوش أي تسارع في البداية خالص.
+   */
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Timing for the role ticker in the hero */
   --typing-cursor: 0.9s;
@@ -314,7 +356,7 @@ html {
   overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto;
-  scroll-padding-top: clamp(7rem, 10vh, 10rem);
+  scroll-padding-top: var(--scroll-offset);
   background-color: var(--bg-color);
 }
 
@@ -537,7 +579,7 @@ section:where(#Home) {
    every one of those cases with no code at all. */
 section[id],
 #main-content {
-  scroll-margin-top: 6rem;
+  scroll-margin-top: var(--scroll-offset);
 }
 
 /* Proportional figures make columns dance: "111" is narrower than "999".
@@ -696,18 +738,28 @@ html[data-tier="low"] {
      recalculation on every element on the page. */
   --card-blur: 0px;
   --ui-blur: 0px;
-  /* Short eases: every long transition keeps a compositor layer alive
-     for longer, and on a phone screen the visual difference is close to
-     nothing. */
-  --motion-fast: 140ms;
-  --motion-normal: 220ms;
+  /*
+   * الأجهزة الضعيفة بتفضل بحركة قصيرة، **وده مقصود مش سهو**.
+   *
+   * كل transition طويل بيبقي طبقة compositor حية لمدة أطول، والفرق
+   * البصري على شاشة ٦ بوصة تحت الشمس قريب من الصفر. والأهم: الحركة
+   * البطيئة على جهاز بطيء بتبان **متقطّعة** مش سينمائية — وده أسوأ من
+   * حركة قصيرة نظيفة.
+   *
+   * رفعتهم شوية عن القديم (140/220) عشان ياخدوا من الطابع الجديد من غير
+   * ما يدفعوا تمنه.
+   */
+  --motion-fast: 200ms;
+  --motion-normal: 340ms;
 }
 
 /* --- MID: same character, lower cost --- */
 html[data-tier="mid"] {
   --card-blur: 2px;
   --ui-blur: 2px;
-  --motion-normal: 380ms;
+  /* وسط بين الطابع السينمائي الكامل (900ms) والقصير (340ms) */
+  --motion-fast: 300ms;
+  --motion-normal: 600ms;
 }
 
 /*
@@ -907,20 +959,38 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
  */
 
 :root {
-  --reveal-distance: 24px;
   /*
-   * 640ms -> 820ms، مربوط بتبطيء السكرول.
+   * مسافة أطول: ٢٤ → ٣٤ بكسل.
    *
-   * حركة الظهور والسكرول بيتشافوا مع بعض. لما العجلة بقت تستقرّ في ~ثانية
-   * (lerp 0.045 في smooth-scroll.tsx)، الظهور بـ640ms بقى بيخلص والعنصر
-   * لسه بيتحرّك لمكانه — فبيبان كأنه "طقّ" جوه حركة ناعمة.
-   *
-   * ده المفتاح الوحيد للسرعة دي. لو حسّيتها بطيئة، رجّعها 640ms — مش
-   * محتاج تلمس أي حاجة تانية.
+   * مع مدة أطول، المسافة القصيرة بتخلي الحركة تبان بطيئة من غير ما تبان
+   * إنها ماشية — العين بتحتاج تشوف مسافة عشان تحسّ بالانزلاق. المسافة
+   * والمدة لازم يكبروا مع بعض وإلا الحركة بتبان لزجة.
    */
-  --reveal-duration: 820ms;
+  --reveal-distance: 34px;
+
+  /*
+   * 820ms → 1150ms.
+   *
+   * دي أطول حركة في الموقع عن قصد: ظهور العناصر مع السكرول هو اللي
+   * بيدّي الإحساس السينمائي أكتر من أي حاجة تانية، وهو **مش رد فعل** —
+   * المستخدم مش مستني نتيجة، فالبطء هنا مكسب صافي.
+   *
+   * وبتستخدم --motion-ease-out (expo) مش --motion-ease: الظهور مالوش
+   * بداية بطيئة، بيدخل من أقصى سرعة ويستقرّ.
+   *
+   * مفتاح واحد. حسّيتها بطيئة؟ رجّعها 820ms وبس.
+   */
+  --reveal-duration: 1150ms;
   --reveal-delay: 0ms;
-  --reveal-stagger: 60ms;
+
+  /*
+   * التتابع بين العناصر: 60 → 90ms.
+   *
+   * ده اللي بيخلي الشبكة تتكشف عنصر ورا التاني بدل ما تظهر دفعة واحدة.
+   * مع مدة أطول، التتابع القصير بيخلي العناصر تتداخل ويضيع الإحساس
+   * بالترتيب.
+   */
+  --reveal-stagger: 90ms;
 }
 
 /*
@@ -950,8 +1020,8 @@ html[data-tier] [data-reveal="in"] {
   opacity: 1;
   transform: none;
   transition:
-    opacity var(--reveal-duration) var(--motion-ease) var(--reveal-delay),
-    transform var(--reveal-duration) var(--motion-ease) var(--reveal-delay);
+    opacity var(--reveal-duration) var(--motion-ease-out) var(--reveal-delay),
+    transform var(--reveal-duration) var(--motion-ease-out) var(--reveal-delay);
 }
 
 /* Stagger inside a group — pure CSS, no JavaScript timers.
@@ -1125,7 +1195,7 @@ html [data-fx="card"]::before {
   background: linear-gradient(90deg, var(--main-color), var(--accent-color));
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 380ms var(--motion-ease);
+  transition: transform var(--motion-fast) var(--motion-ease);
   pointer-events: none;
   z-index: 2;
 }
@@ -1266,7 +1336,7 @@ html [data-fx="card"][data-spot="on"]::after {
   background: currentColor;
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 320ms var(--motion-ease);
+  transition: transform var(--motion-fast) var(--motion-ease);
 }
 
 [data-fx="link"]:hover::after,
@@ -1312,6 +1382,15 @@ html [data-fx="card"][data-spot="on"]::after {
  * something happened". 40 milliseconds.
  *
  * :where() keeps specificity at zero so it never fights a local rule.
+ */
+/*
+ * رد فعل الضغط — **بيفضل 120ms عن قصد، ومش بيتبع --motion-fast.**
+ *
+ * ده مش انتقال، ده لمسة. المستخدم ضغط ومستني الجهاز يقول له "وصلتني".
+ * أي تأخير هنا فوق ~150ms بيتقرا كـ **عطل** مش كفخامة — نفس السبب اللي
+ * خلّى أبل تسيب ردود فعل الضغط فورية حتى في أنعم انتقالاتها.
+ *
+ * لو ربطته بـ --motion-fast (380ms) الزراير كلها هتحسّ إنها بتتأخّر.
  */
 :where(a, button, [role="button"], summary) {
   transition: transform 120ms var(--motion-ease);

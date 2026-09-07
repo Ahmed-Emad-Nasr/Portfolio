@@ -1,0 +1,63 @@
+/* SiteFooter.module.css — تذييل بسيط، الغرض منه الوصول للصفحات القانونية */
+
+.footer {
+  position: relative;
+  z-index: 1;                 /* فوق الخلفية المتحركة */
+  border-top: 1px solid var(--hairline);
+  padding: var(--space-md) clamp(1.5rem, 5vw, 4rem);
+  margin-top: var(--space-lg);
+}
+
+.inner {
+  max-width: 128rem;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.copy {
+  margin: 0;
+  font-family: var(--font-mono);
+  /* --text-dim تباينه 7.96 على الأسود — ناجح في WCAG AA */
+  color: var(--text-dim);
+  font-size: var(--text-sm);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.links a {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  /*
+   * مساحة لمس ٤٤ بكسل — إرشاد WCAG 2.5.8 للهدف المؤشِّر.
+   * padding رأسي مع inline-flex بدل ما نكبّر الخط.
+   */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.links a:hover,
+.links a:focus-visible {
+  color: var(--main-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+  .inner { justify-content: center; text-align: center; }
+}
+
+/* التذييل مالهوش لازمة في النسخة المطبوعة */
+@media print {
+  .footer { display: none; }
+}

@@ -1,0 +1,100 @@
+/*
+ * legal.module.css — صفحات الخصوصية والشروط.
+ *
+ * ملف واحد للاتنين: نفس التخطيط بالظبط، ونسختين متطابقتين ٩٠٪ هما اللي
+ * خلّونا نمسح ملف هيدر يتيم قبل كده.
+ *
+ * التخطيط مقصود يبقى بسيط: نص قانوني بيتقرا، مش بيتزوّق.
+ */
+
+.page {
+  min-height: 100vh;
+  padding: clamp(9rem, 14vh, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(5rem, 8vh, 8rem);
+  /* نفس حجاب باقي الصفحات عشان الخلفية المتحركة تفضل باينة */
+  background: var(--page-veil);
+}
+
+/* ~75 حرف في السطر — أوسع من كده القراية بتتعب */
+.sheet {
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: var(--space-md);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.title {
+  font-size: var(--title-size);
+  line-height: 1.15;
+  margin: 0 0 var(--space-xs);
+}
+
+.updated {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-lg);
+}
+
+/*
+ * ملخص فوق النص القانوني.
+ *
+ * الغرض منه إن الزائر يعرف الخلاصة في سطرين من غير ما يقرا الصفحة كلها.
+ * ده مش بديل عن النص — النص تحت هو المرجع.
+ */
+.summary {
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--main-color);
+  border-radius: var(--radius-card-sm);
+  padding: var(--card-pad);
+  margin-bottom: var(--space-lg);
+  background: rgba(var(--main-color-rgb), 0.04);
+}
+
+.summary p { margin: 0 0 var(--space-xs); }
+.summary p:last-child { margin-bottom: 0; }
+
+.section { margin-bottom: var(--space-lg); }
+
+.section h2 {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--main-text);
+  margin: 0 0 var(--space-sm);
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.section h3 {
+  font-size: var(--text-base);
+  margin: var(--space-md) 0 var(--space-xs);
+}
+
+.section p,
+.section li { max-width: 72ch; }
+
+.section ul {
+  margin: var(--space-xs) 0 0;
+  padding-left: 2rem;
+  list-style: square;
+}
+
+.section li { margin-bottom: 0.7rem; }
+.section li::marker { color: rgba(var(--main-color-rgb), 0.55); }
+
+.section a {
+  color: var(--main-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .page { padding-left: 1.5rem; padding-right: 1.5rem; }
+}

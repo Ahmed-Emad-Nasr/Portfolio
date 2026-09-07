@@ -7,7 +7,9 @@
 /* The header is fixed at the top, so without this offset #case-... lands
    under it and the title is clipped. */
 .anchor {
-  scroll-margin-top: 90px;
+  /* كان 90px مكتوبة بإيد. بقت من --scroll-offset في globals.css عشان
+     تتبع ارتفاع الهيدر لو اتغيّر. */
+  scroll-margin-top: var(--scroll-offset);
 }
 
 /* A quick flash on the card arriving from a direct link — so your eye finds

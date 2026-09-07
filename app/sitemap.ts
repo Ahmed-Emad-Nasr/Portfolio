@@ -56,6 +56,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      /* الصفحات القانونية — أولوية منخفضة: مقصود يتفهرسوا عشان يكونوا
+         قابلين للإيجاد، مش عشان يتنافسوا مع المحتوى في نتايج البحث. */
+      url: absoluteUrl("/privacy"),
+      lastModified: latestCaseDate,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: absoluteUrl("/terms"),
+      lastModified: latestCaseDate,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
       url: absoluteUrl("/Assets/cv/AhmedEmadNasr_CV.pdf"),
       lastModified: latestCaseDate,
       changeFrequency: "monthly",

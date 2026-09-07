@@ -91,8 +91,15 @@ type ScrollOpts = {
  */
 export const EASE_OUT_EXPO = (t: number): number => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
+/*
+ * ملحوظة: المنحنى ده هو نفسه --motion-ease-out في globals.css
+ * (cubic-bezier(0.16, 1, 0.3, 1) تقريب للـ expo-out). الاتنين لازم
+ * يفضلوا متطابقين — السكرول والظهور بيتشافوا مع بعض، ولو اتنين منحنى
+ * مختلف الحركة بتبان متنافرة.
+ */
+
 /** المدة الافتراضية لأي قفزة برمجية (زرار، اختصار، لينك في النav). */
-export const SCROLL_DURATION = 1.6;
+export const SCROLL_DURATION = 2.1;
 
 /** حرّك الصفحة لإحداثي رأسي معيّن. */
 export function scrollToY(top: number, opts: ScrollOpts = {}): void {

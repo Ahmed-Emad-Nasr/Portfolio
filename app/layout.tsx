@@ -22,6 +22,7 @@ import { SmoothScroll } from "./components/smooth-scroll";
 // which is a Client Component. Same deferred-chunk benefit, legal placement.
 import CursorMount from "./components/cursor-mount";
 import CyberBackground from "./core/components/CyberBackground";
+import SiteFooter from "./core/components/SiteFooter";
 // شريط تقدّم القراءة — مركّب هنا مرة واحدة عشان يشتغل على البورتفوليو
 // والبلوج مع بعض، من غير تكرار في كل page-client.
 import ScrollProgress from "./core/components/ScrollProgress";
@@ -377,7 +378,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
           Net effect: phones never download framer-motion at all.
         */}
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          {children}
+          {/* تذييل لكل الصفحات — من غيره صفحتي الخصوصية والشروط مش
+              هيبقى ليهم أي لينك في الموقع ومحدش هيوصلهم بالتصفح. */}
+          <SiteFooter />
+        </SmoothScroll>
         <CursorMount />
         <BackToTop />
         <CommandPaletteMount />

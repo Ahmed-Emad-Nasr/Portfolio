@@ -995,3 +995,40 @@ for (const item of caseEvidenceLibrary) {
   }
   seen.add(item.id);
 }
+
+/*
+ * ── أعداد محسوبة ──────────────────────────────────────────────────────
+ *
+ * الأعداد دي كانت مكتوبة بإيد في مكانين وبقيمتين مختلفتين:
+ *
+ *   StartHere.tsx  →  caseEvidenceLibrary.length = 42 "investigation reports"
+ *   cv.ts          →  "Published 38 investigation reports"
+ *
+ * الاتنين مش دقيقين:
+ *
+ *   · الـ 42 بيعدّ **كل** حاجة في المكتبة على إنها "تقرير تحقيق" — بما
+ *     فيها ٦ write-ups و٥ مشيات (walkthroughs) وعنصر نوعه "Achievement".
+ *   · الـ 38 مش مطابق لأي عدّة في الداتا أصلاً.
+ *
+ * العدّ الحقيقي:
+ *
+ *     42  إجمالي العناصر في المكتبة
+ *     32  اللي ليهم ملف PDF
+ *     30  اللي نوعها تقرير فعلاً   ← ده "investigation reports"
+ *
+ * دلوقتي الرقمين بيتحسبوا من الداتا، فمستحيل يقدموا أو يتناقضوا.
+ */
+const REPORT_TYPES = new Set([
+  "PDF Report",
+  "DOCX & PDF Report",
+  "PDF & DOCX Report",
+  "Report",
+]);
+
+/** إجمالي العناصر المنشورة في المكتبة (تقارير + write-ups + مشيات) */
+export const publishedCaseCount = caseEvidenceLibrary.length;
+
+/** اللي نوعها تقرير تحقيق فعلاً — أضيق وأدق من العدد الكلي */
+export const investigationReportCount = caseEvidenceLibrary.filter((c) =>
+  REPORT_TYPES.has(c.type),
+).length;

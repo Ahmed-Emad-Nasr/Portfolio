@@ -7,7 +7,11 @@
 
 import Link from "next/link";
 import { startHere } from "@/app/core/config/start-here";
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
+import {
+  caseEvidenceLibrary,
+  publishedCaseCount,
+  investigationReportCount,
+} from "@/app/core/config/cases";
 import styles from "./StartHere.module.css";
 
 /*
@@ -36,7 +40,11 @@ export default function StartHere() {
       */}
       <h1 className={styles.pageTitle}>Cybersecurity Case Library</h1>
       <p className={styles.pageLede}>
-        {caseEvidenceLibrary.length} published investigation reports — SOC
+        {/* الرقمين محسوبين من الداتا في cases.ts. كان مكتوب
+            "{caseEvidenceLibrary.length} published investigation reports"
+            وده بيعدّ الـ write-ups والمشيات كتقارير تحقيق. */}
+        {publishedCaseCount} published cases — {investigationReportCount} full
+        investigation reports, plus write-ups and walkthroughs across SOC
         incidents, DFIR, malware analysis, and detection engineering.
       </p>
 

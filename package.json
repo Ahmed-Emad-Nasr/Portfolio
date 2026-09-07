@@ -13,7 +13,7 @@
         "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
         "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
         "audit": "npm audit --omit=dev",
-        "verify": "npm run lint && npm run type-check && npm run check:css && npm run check:responsive && npm run check:assets && npm run build && npm run check:links",
+        "verify": "npm run lint && npm run type-check && npm run check:css && npm run check:data && npm run check:responsive && npm run check:assets && npm run build && npm run check:links",
         "icons": "node scripts/generate-icons.cjs",
         "check:assets": "node scripts/check-assets.mjs",
         "check:links": "node scripts/check-links.mjs",
@@ -21,7 +21,9 @@
         "check:responsive": "node scripts/responsive-audit.mjs",
         "check:css": "node scripts/css-audit.mjs",
         "fix:type-scale": "node scripts/fix-type-scale.mjs",
-        "check:dead": "node scripts/dead-code.mjs"
+        "check:dead": "node scripts/dead-code.mjs",
+        "check:contrast": "node scripts/contrast-audit.mjs",
+        "check:data": "node scripts/data-audit.mjs"
     },
     "dependencies": {
         "framer-motion": "^12.38.0",
