@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "os-command-injection-simple": Array.from({ length: 8 }, (_, i) => `Assets/Cases/OS_Command_Injection_Simple/Screenshot (${309 + i}).webp`),
   "information-disclosure-module": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Information_Disclosure_Module/${i + 1}.webp`),
   "idor-live-chat": [
     "Assets/Cases/IDOR/Screenshot (283).webp",
@@ -1012,6 +1013,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
       "Assets/Cases/IDOR/Screenshot (293).webp"
     ],
     image: "Assets/Cases/IDOR/Screenshot (293).webp",
+  },
+  {
+    id: "os-command-injection-simple",
+    title: "OS Command Injection, Simple Case",
+    description: "Completed the 'OS command injection, simple case' lab on PortSwigger. Exploited a command injection vulnerability within the product stock checker feature. By intercepting the stock check request using Burp Suite and injecting the OS command 'whoami' into the 'storeId' parameter, successfully executed arbitrary commands on the server and retrieved the current user's name to solve the lab.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Easy",
+    tags: ["PortSwigger", "Web Security", "OS Command Injection", "Burp Suite", "RCE"],
+    tools: ["Burp Suite"],
+    skillsGained: ["Command Injection Exploitation", "Parameter Manipulation", "Payload Crafting"],
+    readTime: 8,
+    date: "2026-10-04",
+    screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/OS_Command_Injection_Simple/Screenshot (${309 + i}).webp`),
+    image: "Assets/Cases/OS_Command_Injection_Simple/Screenshot (316).webp",
   },
 ] as const;
 
