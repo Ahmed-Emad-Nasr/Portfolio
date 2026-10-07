@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "intro-to-antivirus": Array.from({ length: 3 }, (_, i) => `Assets/Cases/Intro_to_Antivirus/Screenshot (${319 + i}).webp`),
   "os-command-injection-simple": Array.from({ length: 8 }, (_, i) => `Assets/Cases/OS_Command_Injection_Simple/Screenshot (${309 + i}).webp`),
   "information-disclosure-module": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Information_Disclosure_Module/${i + 1}.webp`),
   "idor-live-chat": [
@@ -1029,6 +1030,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-04",
     screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/OS_Command_Injection_Simple/Screenshot (${309 + i}).webp`),
     image: "Assets/Cases/OS_Command_Injection_Simple/Screenshot (316).webp",
+  },
+  {
+    id: "intro-to-antivirus",
+    title: "Introduction to Antivirus Walkthrough",
+    description: "Completed the Introduction to Antivirus room on TryHackMe. Explored foundational antivirus concepts, including signature-based detection, and utilized practical tools like sigtool to generate MD5 hashes and strings to extract human-readable text from malicious binaries.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "Malware Analysis",
+    difficulty: "Easy",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["TryHackMe", "Antivirus", "Malware Analysis", "sigtool", "strings", "Windows"],
+    tools: ["sigtool", "strings", "Command Prompt"],
+    skillsGained: ["Binary Analysis", "Signature Detection", "Hash Generation", "Static Analysis Basics"],
+    readTime: 8,
+    date: "2026-10-07",
+    screenshots: Array.from({ length: 3 }, (_, i) => `Assets/Cases/Intro_to_Antivirus/Screenshot (${319 + i}).webp`),
+    image: "Assets/Cases/Intro_to_Antivirus/Screenshot (321).webp",
   },
 ] as const;
 
