@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "intro-to-digital-forensics": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Intro_to_Digital_Forensics/Screenshot (${1 + i}).webp`),
   "intro-to-antivirus": Array.from({ length: 3 }, (_, i) => `Assets/Cases/Intro_to_Antivirus/Screenshot (${319 + i}).webp`),
   "os-command-injection-simple": Array.from({ length: 8 }, (_, i) => `Assets/Cases/OS_Command_Injection_Simple/Screenshot (${309 + i}).webp`),
   "information-disclosure-module": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Information_Disclosure_Module/${i + 1}.webp`),
@@ -1047,6 +1048,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-07",
     screenshots: Array.from({ length: 3 }, (_, i) => `Assets/Cases/Intro_to_Antivirus/Screenshot (${319 + i}).webp`),
     image: "Assets/Cases/Intro_to_Antivirus/Screenshot (321).webp",
+  },
+  {
+    id: "intro-to-digital-forensics",
+    title: "Intro to Digital Forensics Walkthrough",
+    description: "Completed the Intro to Digital Forensics room on TryHackMe. Explored the core digital forensics process and chain of custody principles. Conducted practical metadata analysis using exiftool and pdfinfo to extract hidden EXIF data, author details, and GPS coordinates from images and documents.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "Digital Forensics",
+    difficulty: "Easy",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["TryHackMe", "Digital Forensics", "Metadata", "EXIF", "exiftool", "pdfinfo"],
+    tools: ["exiftool", "pdfinfo", "Linux"],
+    skillsGained: ["Forensic Process", "Chain of Custody", "Metadata Extraction", "GPS Coordinate Analysis"],
+    readTime: 8,
+    date: "2026-10-11",
+    screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/Intro_to_Digital_Forensics/Screenshot (${1 + i}).webp`),
+    image: "Assets/Cases/Intro_to_Digital_Forensics/Screenshot (1).webp",
   },
 ] as const;
 
