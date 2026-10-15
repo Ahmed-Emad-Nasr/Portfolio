@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "legal-considerations-dfir": Array.from({ length: 56 }, (_, i) => `Assets/Cases/Legal_Considerations_DFIR/Screenshot (${13 + i}).webp`),
   "intro-to-digital-forensics": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Intro_to_Digital_Forensics/Screenshot (${1 + i}).webp`),
   "intro-to-antivirus": Array.from({ length: 3 }, (_, i) => `Assets/Cases/Intro_to_Antivirus/Screenshot (${319 + i}).webp`),
   "os-command-injection-simple": Array.from({ length: 8 }, (_, i) => `Assets/Cases/OS_Command_Injection_Simple/Screenshot (${309 + i}).webp`),
@@ -1065,6 +1066,23 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-11",
     screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/Intro_to_Digital_Forensics/Screenshot (${1 + i}).webp`),
     image: "Assets/Cases/Intro_to_Digital_Forensics/Screenshot (1).webp",
+  },
+  {
+    id: "legal-considerations-dfir",
+    title: "Legal Considerations in DFIR Walkthrough",
+    description: "Completed the Legal Considerations in DFIR room on TryHackMe. Conducted an incident response investigation focusing on legal and corporate policy compliance. Analyzed OTRS ticketing data, reviewed Acceptable Use Policies (AUP), and investigated email communications within a simulated corporate environment to identify a Person of Interest (POI). Extracted and verified evidence integrity using SHA1 hashes and established a clear Chain of Custody for IIS logs and OST files.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "DFIR",
+    difficulty: "Medium",
+    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    tags: ["TryHackMe", "DFIR", "Incident Response", "Legal Compliance", "Chain of Custody", "Hash Verification"],
+    tools: ["Outlook", "Windows Forensics", "OTRS Ticket Analysis", "Hash Calc"],
+    skillsGained: ["Corporate Incident Response", "Evidence Integrity Verification", "Chain of Custody", "Legal Procedures in DFIR"],
+    readTime: 12,
+    date: "2026-10-15",
+    screenshots: Array.from({ length: 56 }, (_, i) => `Assets/Cases/Legal_Considerations_DFIR/Screenshot (${13 + i}).webp`),
+    image: "Assets/Cases/Legal_Considerations_DFIR/Screenshot (68).webp",
   },
 ] as const;
 
