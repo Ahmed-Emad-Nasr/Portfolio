@@ -1082,7 +1082,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     readTime: 12,
     date: "2026-10-15",
     screenshots: Array.from({ length: 56 }, (_, i) => `Assets/Cases/Legal_Considerations_DFIR/Screenshot (${13 + i}).webp`),
-    image: "Assets/Cases/Legal_Considerations_DFIR/Screenshot (68).webp",
+    image: "Assets/Cases/Legal_Considerations_DFIR/Screenshot (13).webp",
   },
 ] as const;
 
