@@ -78,11 +78,14 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
-  "owasp-juice-shop": Array.from({ length: 83 }, (_, i) => `Assets/Cases/OWASP Juice Shop/Screenshot (${1 + i}).webp`),
+ "owasp-juice-shop": Array.from({ length: 83 }, (_, i) => `Assets/Cases/OWASP Juice Shop/Screenshot (${1 + i}).webp`),
   "web-shell-content-type-bypass": Array.from({ length: 15 }, (_, i) => `Assets/Cases/Lab Web shell upload via Content-Type restriction bypass/Screenshot (${134 + i}).webp`),
   "user-role-request-parameter": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Lab User role controlled by request parameter/Screenshot (${158 + i}).webp`),
   "user-role-modified-profile": Array.from({ length: 14 }, (_, i) => `Assets/Cases/Lab User role can be modified in user profile/Screenshot (${168 + i}).webp`),
-  "user-id-unpredictable": Array.from({ length: 21 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (${189 + i}).webp`),
+  "user-id-unpredictable": [
+    ...Array.from({ length: 12 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (${189 + i}).webp`),
+    ...Array.from({ length: 5 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (${205 + i}).webp`)
+  ],
   "user-id-password-disclosure": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter with password disclosure/Screenshot (${210 + i}).webp`),
   "user-id-data-leakage": Array.from({ length: 4 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter with data leakage in redirect/Screenshot (${201 + i}).webp`),
   "user-id-controlled": Array.from({ length: 7 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter/Screenshot (${182 + i}).webp`),
@@ -1097,7 +1100,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     screenshots: Array.from({ length: 56 }, (_, i) => `Assets/Cases/Legal_Considerations_DFIR/Screenshot (${13 + i}).webp`),
     image: "Assets/Cases/Legal_Considerations_DFIR/Screenshot (13).webp",
   },
-  {
+ {
     id: "owasp-juice-shop",
     title: "OWASP Juice Shop Penetration Testing",
     description: "Comprehensive penetration testing and vulnerability assessment of the OWASP Juice Shop application. Identified and exploited vulnerabilities across the OWASP Top 10, including SQLi, XSS, Broken Access Control, and sensitive data exposure.",
@@ -1105,7 +1108,6 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Web Security",
     difficulty: "Medium",
-    // مفيش PDF للـ case ده — أدلته صور بس
     tags: ["OWASP Top 10", "Web Security", "SQLi", "XSS", "IDOR", "Burp Suite"],
     tools: ["Burp Suite", "Browser DevTools"],
     skillsGained: ["Vulnerability Assessment", "Exploitation", "Security Auditing"],
@@ -1175,7 +1177,10 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["IDOR Exploitation", "Data Leakage Analysis"],
     readTime: 10,
     date: "2026-10-19",
-    screenshots: Array.from({ length: 21 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (${189 + i}).webp`),
+    screenshots: [
+      ...Array.from({ length: 12 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (${189 + i}).webp`),
+      ...Array.from({ length: 5 }, (_, i) => `Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (${205 + i}).webp`)
+    ],
     image: "Assets/Cases/Lab User ID controlled by request parameter, with unpredictable user IDs/Screenshot (189).webp",
   },
   {
