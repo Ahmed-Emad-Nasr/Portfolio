@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "oauth-implicit-flow-bypass": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (${343 + i}).webp`),
   "jwt-flawed-signature": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (${326 + i}).webp`),
   "jwt-unverified-signature": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via unverified signature/Screenshot (${299 + i}).webp`),
   "xxe-ssrf-aws-metadata": Array.from({ length: 14 }, (_, i) => `Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (${285 + i}).webp`),
@@ -1497,6 +1498,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-20",
     screenshots: Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (${326 + i}).webp`),
     image: "Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (328).webp", // صورة تعديل خوارزمية التشفير لـ none كغلاف
+  },
+  {
+    id: "oauth-implicit-flow-bypass",
+    title: "Authentication Bypass via OAuth Implicit Flow",
+    description: "Successfully bypassed authentication by exploiting a flawed implementation of the OAuth 2.0 implicit grant type. Discovered that the client application insecurely relies on user-controllable parameters (email and username) sent from the browser to establish a session, rather than verifying the token with the OAuth provider. By intercepting the /authenticate request and modifying these parameters to target another user, I successfully hijacked their account.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Medium",
+    tags: ["OAuth 2.0", "Authentication Bypass", "Logic Flaw", "PortSwigger", "Burp Suite"],
+    tools: ["Burp Suite Repeater", "Burp Suite Proxy"],
+    skillsGained: ["OAuth Vulnerability Analysis", "Authentication Bypass", "API Parameter Tampering"],
+    readTime: 6,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (${343 + i}).webp`),
+    image: "Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (348).webp", // صورة تعديل الريكوست في Repeater كغلاف
   },
 ] as const;
 
