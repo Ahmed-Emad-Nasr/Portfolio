@@ -78,6 +78,8 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "jwt-flawed-signature": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (${326 + i}).webp`),
+  "jwt-unverified-signature": Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via unverified signature/Screenshot (${299 + i}).webp`),
   "xxe-ssrf-aws-metadata": Array.from({ length: 14 }, (_, i) => `Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (${285 + i}).webp`),
   "xxe-retrieve-files": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Lab Exploiting XXE using external entities to retrieve files/Screenshot (${275 + i}).webp`),
   "dom-xss-jquery-href": Array.from({ length: 6 }, (_, i) => `Assets/Cases/Lab DOM XSS in jQuery anchor href attribute sink using location.search source/Screenshot (${269 + i}).webp`),
@@ -1463,6 +1465,38 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-20",
     screenshots: Array.from({ length: 14 }, (_, i) => `Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (${285 + i}).webp`),
     image: "Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (297).webp", // صورة اللي فيها مفاتيح AWS كغلاف
+  },
+  {
+    id: "jwt-unverified-signature",
+    title: "JWT Authentication Bypass via Unverified Signature",
+    description: "Successfully bypassed authentication by exploiting a flaw in how the application handles JSON Web Tokens (JWT). Identified that the server fails to verify the token's cryptographic signature. Decoded the JWT payload, manipulated the 'sub' (subject) claim from a standard user to 'administrator', and re-encoded the token. By submitting the forged token, I gained full administrative access to the application.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Medium",
+    tags: ["JWT", "Authentication Bypass", "Cryptography Flaws", "PortSwigger"],
+    tools: ["Burp Suite", "Base64 Encoder/Decoder"],
+    skillsGained: ["JWT Manipulation", "Authentication Bypass", "Session Management Exploitation"],
+    readTime: 6,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via unverified signature/Screenshot (${299 + i}).webp`),
+    image: "Assets/Cases/Lab JWT authentication bypass via unverified signature/Screenshot (308).webp", // صورة تعديل الـ Request في Burp كغلاف
+  },
+  {
+    id: "jwt-flawed-signature",
+    title: "JWT Authentication Bypass via Flawed Signature Verification",
+    description: "Successfully exploited a flawed JWT signature verification mechanism (known as the 'alg=none' attack). Identified that the server blindly trusts the 'alg' header parameter. Modified the JWT header to set the algorithm to 'none', altered the payload to elevate privileges to 'administrator', and removed the signature entirely. By submitting this stripped token, I bypassed authentication controls and gained full administrative access.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Medium",
+    tags: ["JWT", "Authentication Bypass", "alg=none", "Cryptography Flaws", "PortSwigger"],
+    tools: ["Burp Suite", "JWT Editor"],
+    skillsGained: ["JWT Manipulation", "Algorithm Confusion Attacks", "Authentication Bypass"],
+    readTime: 6,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 16 }, (_, i) => `Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (${326 + i}).webp`),
+    image: "Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (328).webp", // صورة تعديل خوارزمية التشفير لـ none كغلاف
   },
 ] as const;
 
