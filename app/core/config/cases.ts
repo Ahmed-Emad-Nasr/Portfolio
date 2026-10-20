@@ -78,6 +78,8 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "xxe-ssrf-aws-metadata": Array.from({ length: 14 }, (_, i) => `Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (${285 + i}).webp`),
+  "xxe-retrieve-files": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Lab Exploiting XXE using external entities to retrieve files/Screenshot (${275 + i}).webp`),
   "dom-xss-jquery-href": Array.from({ length: 6 }, (_, i) => `Assets/Cases/Lab DOM XSS in jQuery anchor href attribute sink using location.search source/Screenshot (${269 + i}).webp`),
   "dom-xss-innerhtml-sink": Array.from({ length: 7 }, (_, i) => `Assets/Cases/Lab DOM XSS in innerHTML sink using source location.search/Screenshot (${262 + i}).webp`),
   "dom-xss-document-write": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Lab DOM XSS in document.write sink using source location.search/Screenshot (${253 + i}).webp`),
@@ -1429,6 +1431,38 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-20",
     screenshots: Array.from({ length: 6 }, (_, i) => `Assets/Cases/Lab DOM XSS in jQuery anchor href attribute sink using location.search source/Screenshot (${269 + i}).webp`),
     image: "Assets/Cases/Lab DOM XSS in jQuery anchor href attribute sink using location.search source/Screenshot (273).webp", // صورة الـ URL Payload كغلاف
+  },
+  {
+    id: "xxe-retrieve-files",
+    title: "Exploiting XXE to Retrieve Files",
+    description: "Successfully identified and exploited an XML External Entity (XXE) injection vulnerability within the application's stock check feature. Intercepted the XML-based request and injected a malicious DOCTYPE definition containing an external entity designed to read the /etc/passwd file. By referencing this entity in the productId field, the server disclosed sensitive local files in its response.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Easy",
+    tags: ["XXE", "XML Injection", "Information Disclosure", "PortSwigger", "Burp Suite"],
+    tools: ["Burp Suite Repeater"],
+    skillsGained: ["XXE Identification", "External Entity Injection", "XML Payload Crafting"],
+    readTime: 5,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 10 }, (_, i) => `Assets/Cases/Lab Exploiting XXE using external entities to retrieve files/Screenshot (${275 + i}).webp`),
+    image: "Assets/Cases/Lab Exploiting XXE using external entities to retrieve files/Screenshot (283).webp", // صورة الـ Response اللي فيه /etc/passwd كغلاف
+  },
+  {
+    id: "xxe-ssrf-aws-metadata",
+    title: "Exploiting XXE to Perform SSRF Attacks (AWS Metadata)",
+    description: "Identified an XML External Entity (XXE) vulnerability and escalated it into a Server-Side Request Forgery (SSRF) attack. By crafting a malicious XML payload using an external entity, I forced the server to make HTTP requests to the AWS EC2 instance metadata endpoint (http://169.254.169.254/). Successfully navigated the metadata directory structure to extract highly sensitive IAM security credentials, including the AWS Access Key, Secret Access Key, and Session Token.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Medium",
+    tags: ["XXE", "SSRF", "Cloud Security", "AWS", "PortSwigger", "Burp Suite"],
+    tools: ["Burp Suite Repeater"],
+    skillsGained: ["XXE-to-SSRF Escalation", "Cloud Metadata Exploitation (AWS)", "IAM Credential Theft"],
+    readTime: 8,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 14 }, (_, i) => `Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (${285 + i}).webp`),
+    image: "Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (297).webp", // صورة اللي فيها مفاتيح AWS كغلاف
   },
 ] as const;
 
