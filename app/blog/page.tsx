@@ -7,7 +7,7 @@ import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/con
 import type { PdfResource } from "./blog-types";
 import type { Facet } from "./components/BlogFilterBar";
 
-const SITE_BASE_URL = "https://ae-nasr.github.io/Portfolio";
+const SITE_BASE_URL = "https://ahmed-emad-nasr.github.io/Portfolio";
 
 const toAbsoluteAssetUrl = (href: string): string => {
   if (/^https?:\/\//i.test(href)) return href;
@@ -159,7 +159,7 @@ const casesStructuredData = {
     sameAs: [
       "https://linkedin.com/in/ahmed-emad-nasr/", // LinkedIn URL updated to match the CV
       "https://x.com/0x3omda",
-      "https://github.com/AE-Nasr"
+      "https://github.com/Ahmed-Emad-Nasr"
     ],
   },
   /* Cases without a PDF are excluded here: a DigitalDocument without a contentUrl

@@ -1,19 +1,19 @@
 # .github/workflows/verify.yml
 #
-# بيشغّل نفس فحوصات `npm run verify` على كل push و pull request.
+# Runs the same checks as `npm run verify` on every push and pull request.
 #
-# ليه ده مهم؟ لأن أغلب المشاكل اللي وصلت للإنتاج في المشروع ده مكانتش
-# أخطاء منطق — كانت لينكات وأصول مكسورة: id فيه مسافات، كارت بيلينك على
-# صفحة متولّدتش، مسار أصل اتغيّر في الكود ومااتغيرش على القرص. الأنواع
-# دي كلها بتعدّي من TypeScript ومن next build بنجاح.
+# Why does this matter? Because most of the problems that reached production in this project weren't
+# logic errors — they were broken links and assets: an id with spaces, a card linking to
+# a page that was never generated, an asset path changed in code but not on disk. All of
+# these pass TypeScript and next build successfully.
 #
-# ── ملحوظة عن تصميم الملف ده ─────────────────────────────────────────────
-# النسخة الأولى كانت بتوقف عند أول خطوة تفشل. ودي غلطة: إنت بتستنى دقيقة
-# عشان تعرف مشكلة واحدة، تصلّحها، تـpush، تستنى تاني... لخطأ تاني كان
-# ممكن تعرفه من نفس الـ run.
+# ── A note on how this file is designed ───────────────────────────────────
+# The first version stopped at the first failing step. That was a mistake: you wait a minute
+# to learn about one problem, fix it, push, wait again... for a second error you could
+# have learned about in the same run.
 #
-# دلوقتي كل الفحوصات بتشتغل بـ `if: always()`، وفيه خطوة أخيرة بتجمع
-# النتايج وتفشل لو أي واحدة وقعت. run واحد = كل المشاكل مرة واحدة.
+# Now every check runs with `if: always()`, and a final step collects
+# the results and fails if any of them failed. One run = every problem at once.
 
 name: Verify
 
@@ -21,7 +21,7 @@ on:
   push:
     branches: [master, main]
   pull_request:
-  workflow_dispatch:   # عشان تقدر تشغّله بإيدك من تاب Actions
+  workflow_dispatch:   # so you can run it manually from the Actions tab
 
 jobs:
   verify:
@@ -48,7 +48,7 @@ jobs:
             exit 1
           }
 
-      # ── من هنا: كل فحص بيشتغل حتى لو اللي قبله وقع ──────────────────────
+      # ── From here on: every check runs even if the previous one failed ────
 
       - name: Lint
         id: lint
@@ -60,9 +60,27 @@ jobs:
         if: always() && steps.install.outcome == 'success'
         run: npm run type-check
 
-      # بيتأكد إن كل مسار Assets/ في الـ config موجود فعلاً في public/.
-      # بيمسك: مجلد اتغيّر اسمه، PDF مش مرفوع، صورة اتمسحت، واختلاف
-      # حروف كابيتال/سمول (شغّال على ويندوز وبيقع على GitHub Pages).
+      # The three static audits that `npm run verify` runs and this workflow
+      # used to skip: CSS (dead classes/tokens, duplicate files, expensive
+      # properties), cross-file data integrity, and responsive rules.
+      - name: CSS audit
+        id: css
+        if: always() && steps.install.outcome == 'success'
+        run: npm run check:css
+
+      - name: Data audit
+        id: data
+        if: always() && steps.install.outcome == 'success'
+        run: npm run check:data
+
+      - name: Responsive audit
+        id: responsive
+        if: always() && steps.install.outcome == 'success'
+        run: npm run check:responsive
+
+      # Confirms every Assets/ path in the config actually exists in public/.
+      # Catches: a renamed folder, a PDF never uploaded, a deleted image, and
+      # upper/lower-case mismatches (works on Windows, breaks on GitHub Pages).
       - name: Check assets exist in public/
         id: assets
         if: always() && steps.install.outcome == 'success'
@@ -73,7 +91,7 @@ jobs:
         if: always() && steps.install.outcome == 'success'
         run: npm run build
 
-      # بيزحف على out/ ويتأكد إن كل لينك داخلي بيوصل لملف موجود
+      # Crawls out/ and confirms every internal link resolves to an existing file
       - name: Check internal links
         id: links
         if: always() && steps.build.outcome == 'success'
@@ -87,7 +105,7 @@ jobs:
           path: out/
           retention-days: 5
 
-      # ── ملخّص: كل النتايج في مكان واحد ──────────────────────────────────
+      # ── Summary: every result in one place ────────────────────────────────
       - name: Summary
         if: always()
         run: |
@@ -100,6 +118,9 @@ jobs:
             echo "|---|---|"
             echo "| Lint | $(status '${{ steps.lint.outcome }}') |"
             echo "| Type check | $(status '${{ steps.types.outcome }}') |"
+            echo "| CSS audit | $(status '${{ steps.css.outcome }}') |"
+            echo "| Data audit | $(status '${{ steps.data.outcome }}') |"
+            echo "| Responsive audit | $(status '${{ steps.responsive.outcome }}') |"
             echo "| Assets exist in public/ | $(status '${{ steps.assets.outcome }}') |"
             echo "| Build | $(status '${{ steps.build.outcome }}') |"
             echo "| Internal links | $(status '${{ steps.links.outcome }}') |"
@@ -107,8 +128,10 @@ jobs:
             echo "Open the failing step above for the full output."
           } >> "$GITHUB_STEP_SUMMARY"
 
-          # تفشل لو أي فحص وقع
+          # Fail if any check failed
           for r in '${{ steps.lint.outcome }}' '${{ steps.types.outcome }}' \
+                   '${{ steps.css.outcome }}' '${{ steps.data.outcome }}' \
+                   '${{ steps.responsive.outcome }}' \
                    '${{ steps.assets.outcome }}' '${{ steps.build.outcome }}' \
                    '${{ steps.links.outcome }}'; do
             [ "$r" = "failure" ] && exit 1
