@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "basic-ssrf-local-server": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Basic SSRF against the local server/Screenshot (${219 + i}).webp`),
  "owasp-juice-shop": Array.from({ length: 83 }, (_, i) => `Assets/Cases/OWASP Juice Shop/Screenshot (${1 + i}).webp`),
   "web-shell-content-type-bypass": Array.from({ length: 15 }, (_, i) => `Assets/Cases/Lab Web shell upload via Content-Type restriction bypass/Screenshot (${134 + i}).webp`),
   "user-role-request-parameter": Array.from({ length: 10 }, (_, i) => `Assets/Cases/Lab User role controlled by request parameter/Screenshot (${158 + i}).webp`),
@@ -1310,6 +1311,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-19",
     screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/Lab Blind OS command injection with output redirection/Screenshot (${90 + i}).webp`),
     image: "Assets/Cases/Lab Blind OS command injection with output redirection/Screenshot (90).webp",
+  },
+  {
+    id: "basic-ssrf-local-server",
+    title: "Basic SSRF Against the Local Server",
+    description: "Exploited a Server-Side Request Forgery (SSRF) vulnerability where an application's stock check feature blindly trusted user input. Modified the stockApi parameter to target the loopback address, successfully bypassing access controls to reach the administrative interface and delete a target user account.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Easy",
+    tags: ["SSRF", "Access Control Bypass", "PortSwigger", "Burp Suite"],
+    tools: ["Burp Suite"],
+    skillsGained: ["SSRF Identification", "Loopback Exploitation", "Parameter Tampering"],
+    readTime: 5,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Basic SSRF against the local server/Screenshot (${219 + i}).webp`),
+    image: "Assets/Cases/Lab Basic SSRF against the local server/Screenshot (226).webp", // صورة حل اللاب كغلاف
   },
 ] as const;
 
