@@ -1,13 +1,13 @@
 /*
  * scripts/generate-icons.cjs
  *
- * بيطلّع app/core/icons/icon-data.ts من حزم @fortawesome.
+ * Generates app/core/icons/icon-data.ts from the @fortawesome packages.
  *
- * شغّله لما تضيف أيقونة جديدة:
+ * Run it when you add a new icon:
  *   node scripts/generate-icons.cjs
  *
- * الحزم دي devDependencies بالنسبة للسكربت ده — الموقع نفسه مش بيستوردها
- * وقت التشغيل، فمفيش منها ولا بايت في الـ bundle.
+ * These packages are devDependencies as far as this script is concerned — the site itself doesn't import them
+ * at runtime, so not a single byte of them ends up in the bundle.
  */
 
 const fs = require("fs");
@@ -43,8 +43,8 @@ for (const [names, pack, label] of [[SOLID, solid, "solid"], [BRANDS, brands, "b
 }
 
 const out = `/*
- * core/icons/icon-data.ts — مولّد، متعدّلش بإيدك
- * شغّل: node scripts/generate-icons.cjs
+ * core/icons/icon-data.ts — generated, don't edit by hand
+ * Run: node scripts/generate-icons.cjs
  */
 
 export type IconGlyph = readonly [width: number, height: number, path: string];

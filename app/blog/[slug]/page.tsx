@@ -2,13 +2,13 @@
  * blog/[slug]/page.tsx
  * Author: Ahmed Emad Nasr
  *
- * صفحة مستقلة لكل case. الفايدة الحقيقية مش الشكل — الفايدة إن كل تقرير بقى
- * ليه URL حقيقي وعنوان و OG image خاصين بيه، فلما تبعت لينك case في لينكدإن
- * أو لحد في إنترفيو بيبان بالصورة والعنوان بتوعه هو، مش عنوان البلوج كله.
- * وكمان جوجل بيفهرسه كصفحة لوحده بدل ما يكون جزء من صفحة واحدة كبيرة.
+ * A standalone page for every case. The real benefit isn't the look — it's that every report now has
+ * its own real URL, title and OG image, so when you send a case link on LinkedIn
+ * or to someone in an interview it shows up with its own image and title, not the whole blog's title.
+ * Google also indexes it as a page of its own instead of being part of one big page.
  *
- * كله static: generateStaticParams بتطلع الـ 38 صفحة وقت الـ build، متوافق
- * مع output: "export".
+ * Everything is static: generateStaticParams produces the 38 pages at build time, compatible
+ * with output: "export".
  */
 
 import type { Metadata } from "next";
@@ -20,30 +20,30 @@ import { caseAttackMapping, TECHNIQUES } from "@/app/core/config/attack";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
 
-// dynamicParams = false: أي slug مش في القايمة بيبقى 404 وقت الـ build بدل ما
-// يحاول يعمل render وقت التشغيل (اللي مش موجود أصلاً في static export).
+// dynamicParams = false: any slug not in the list becomes a 404 at build time instead of
+// trying to render at runtime (which doesn't exist in a static export anyway).
 export const dynamicParams = false;
 
 
 /*
- * تفاصيل إضافية بتتحسب هنا (Server Component) وبتتبعت جاهزة للكومبوننت —
- * فمفيش منها ولا بايت في bundle المتصفح.
+ * Extra details are computed here (Server Component) and passed ready-made to the component —
+ * so not a single byte of them ends up in the browser bundle.
  */
 
 const TECHNIQUE_BY_ID = new Map(TECHNIQUES.map((t) => [t.id, t]));
 
-/** تكنيكات ATT&CK بتاعة الـ case ده، بالاسم الكامل */
+/** This case's ATT&CK techniques, with full names */
 const techniquesFor = (caseId: string) =>
   (caseAttackMapping[caseId] ?? [])
     .map((id) => TECHNIQUE_BY_ID.get(id))
     .filter((t): t is NonNullable<typeof t> => Boolean(t));
 
 /*
- * تقارير قريبة من التقرير ده.
+ * Reports related to this one.
  *
- * الترتيب: تكنيكات ATT&CK مشتركة أولاً (ده أقوى إشارة على التشابه
- * الحقيقي)، وبعدها الأدوات المشتركة، وبعدها نفس التصنيف. أي case معندوش
- * أي تقاطع مبيظهرش خالص — "مقترحات" عشوائية أسوأ من مفيش مقترحات.
+ * Ordering: shared ATT&CK techniques first (the strongest signal of real
+ * similarity), then shared tools, then the same category. Any case with no
+ * overlap at all doesn't appear — random "suggestions" are worse than no suggestions.
  */
 const relatedTo = (item: (typeof caseEvidenceLibrary)[number], limit = 3) => {
   const myTechniques = new Set(caseAttackMapping[item.id] ?? []);
@@ -61,7 +61,7 @@ const relatedTo = (item: (typeof caseEvidenceLibrary)[number], limit = 3) => {
         title: other.title,
         category: other.category,
         readTime: other.readTime,
-        // الأوزان: تكنيك مشترك أثقل من أداة مشتركة بكتير
+        // Weights: a shared technique counts far more than a shared tool
         score: sharedTechniques * 5 + sharedTools * 2 + sameCategory,
         sharedTechniques,
       };
@@ -85,7 +85,7 @@ export async function generateMetadata({
 
   if (!item) return { title: "Case not found" };
 
-  // أول سكرين شوت هو صورة المشاركة — أنسب بكتير من اللوجو العام
+  // The first screenshot is the share image — far more fitting than the generic logo
   const shots = caseScreenshotsByEvidenceId[item.id] ?? [];
   const ogImage = absoluteUrl(item.image ?? shots[0] ?? "Assets/art-gallery/Images/logo/3omda.webp");
   const title = `${item.title} | Ahmed Emad Nasr`;
@@ -120,7 +120,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
 
   const screenshots = [...(caseScreenshotsByEvidenceId[item.id] ?? [])];
 
-  // ترتيب المكتبة هو نفسه ترتيب السابق/التالي — عشان التنقل يبقى متوقع
+  // The library order is the previous/next order too — so navigation is predictable
   const index = caseEvidenceLibrary.findIndex((c) => c.id === item.id);
   const previous = index > 0 ? caseEvidenceLibrary[index - 1] : null;
   const next = index < caseEvidenceLibrary.length - 1 ? caseEvidenceLibrary[index + 1] : null;
@@ -143,8 +143,8 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         publisher: { "@type": "Person", name: "Ahmed Emad Nasr" },
         mainEntityOfPage: caseUrl(item.id),
         image: screenshots.slice(0, 3).map((shot) => absoluteUrl(shot)),
-        /* associatedMedia بيتحط بس لو فيه PDF فعلاً — الحالات اللي أدلتها
-           صور بس مبتدّعيش وجود مستند. */
+        /* associatedMedia is only set if there is actually a PDF — image-only
+           cases don't claim a document exists. */
         ...(item.href
           ? {
               associatedMedia: {

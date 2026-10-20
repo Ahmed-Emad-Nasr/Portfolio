@@ -1,40 +1,40 @@
 /*
  * CyberBackground.module.css
  *
- * الشكل بس. الحركة كلها في الـ .tsx — الحلقة بتكتب `transform` على كل
- * فقاعة كل فريم، فمفيش keyframes هنا.
+ * Appearance only. All the motion lives in the .tsx — the loop writes `transform` on every
+ * bubble every frame, so there are no keyframes here.
  */
 
 .bg {
   position: fixed;
   inset: 0;
   /*
-   * ورا كل حاجة. الأقسام عليها z-index: 1 في globals.css، فـ 0 هنا
-   * بيحطها تحتيهم من غير ما نحتاج قيمة سالبة (السالب بيخرج العنصر برّه
-   * سياق التكديس بتاع الـ body وبيختفي تحت خلفيته).
+   * Behind everything. Sections have z-index: 1 in globals.css, so 0 here
+   * puts it beneath them without needing a negative value (a negative value takes the element out of
+   * the body's stacking context and it disappears under its background).
    */
   z-index: 0;
   overflow: hidden;
-  /* الطبقة دي عمرها ما تاخد ضغطة ولا لمسة */
+  /* This layer never receives a click or a touch */
   pointer-events: none;
 }
 
 /*
- * الفقاعة.
+ * The bubble.
  *
- * `top: 0; left: 0` والموضع الحقيقي كله من الـ transform. ده مقصود:
- * الحلقة بتكتب translate3d بس، ولو كان فيه left/top متغيّرين كل فريم
- * كان المتصفح هيعمل إعادة تخطيط كاملة لكل عنصر في كل فريم.
+ * `top: 0; left: 0` and the real position comes entirely from the transform. That's intentional:
+ * the loop only writes translate3d, and if left/top changed every frame
+ * the browser would do a full re-layout for every element on every frame.
  *
- * تدرّج شعاعي مش لون سادة: اللون الصريح بيدّي دايرة مصمتة شكلها زي
- * الملصق، والتدرّج بيدّي كرة ليها ضوء داخلي وحافة بتذوب في السواد.
+ * A radial gradient, not a solid colour: a flat colour gives a solid disc that looks like
+ * a sticker, while the gradient gives a sphere with an inner glow and an edge that melts into the black.
  *
- * مفيش filter: blur() — التدرّج بيدّي نفس نعومة الحافة وهو أرخص بكتير.
- * الـ blur بيتحسب على كل بكسل كل فريم، وعلى ٣٢ عنصر بيتحركوا فعلياً
- * كل فريم ده بيوجع حتى على كارت شاشة كويس.
+ * No filter: blur() — the gradient gives the same edge softness and is far cheaper.
+ * Blur is computed on every pixel every frame, and on 32 elements actually moving
+ * every frame that hurts even on a good GPU.
  *
- * اللون من --main-color-rgb، فلو غيّرت لوحة الموقع الفقاعات بتتبعها
- * لوحدها. مفيش لون مكتوب بإيد هنا.
+ * The colour comes from --main-color-rgb, so if you change the site palette the bubbles follow
+ * automatically. No hard-coded colour here.
  */
 .bubble {
   position: absolute;
@@ -42,16 +42,16 @@
   left: 0;
   border-radius: 50%;
   /*
-   * تدرّج طويل جداً بدل حافة واضحة.
+   * A very long gradient instead of a hard edge.
    *
-   * ده اللي بيدّي شكل البلوب الناعم في الصورة المرجعية. المفتاح إن
-   * الشفافية تنزل بالتدريج على طول نصف القطر كله — لو التدرّج قصير
-   * والحافة قريبة من ٧٠٪، الشكل بيرجع دايرة واضحة مهما خفّفت اللون.
+   * This is what gives the soft-blob look of the reference image. The key is that
+   * opacity falls off gradually across the whole radius — if the gradient is short
+   * and the edge is near 70%, the shape turns back into a clear circle no matter how much you lighten the colour.
    *
-   * ومفيش filter: blur() عن قصد. الـ blur بيدّي نفس النتيجة بالظبط
-   * تقريباً، لكنه بيتحسب على كل بكسل في العنصر **كل فريم** — وهنا فيه
-   * ٣٢ عنصر بيتحركوا فعلياً كل فريم. التدرّج بيترسم مرة واحدة وبيتحرك
-   * بعدها على الـ GPU مجاناً.
+   * And deliberately no filter: blur(). Blur gives almost exactly the same
+   * result, but it's computed on every pixel of the element **every frame** — and here there are
+   * 32 elements actually moving every frame. The gradient is painted once and then
+   * moves on the GPU for free.
    */
   background: radial-gradient(
     circle at 42% 38%,
@@ -63,49 +63,49 @@
   );
 
   /*
-   * will-change هنا **صح** — على عكس النسخة اللي فاتت.
+   * will-change is **correct** here — unlike the previous version.
    *
-   * هناك الفقاعات كانت بتتحرك بـ CSS animation، والمتصفح بيرفع أي عنصر
-   * عليه أنيميشن transform لطبقته لوحده، فـ will-change كانت تكرار.
+   * There the bubbles moved with a CSS animation, and the browser promotes any element
+   * with a transform animation to its own layer, so will-change was redundant.
    *
-   * هنا الحركة بتيجي من جافاسكريبت بيكتب transform كل فريم. المتصفح
-   * مبيعرفش ده مقدماً، فمن غير التصريح ده بيفضل يرقّي وينزّل الطبقة
-   * على حسب الحركة — وده بيدّي رعشة. التصريح بيحجز الطبقة مرة واحدة.
+   * Here the motion comes from JavaScript writing transform every frame. The browser
+   * doesn't know that in advance, so without this hint it keeps promoting and demoting the layer
+   * depending on the motion — which causes jitter. The hint reserves the layer once.
    *
-   * ٣٢ طبقة رقم مقبول. الحد ده هو السبب إن COUNT في الـ .tsx ٣٢ مش ٢٠٠.
+   * 32 layers is an acceptable number. That limit is why COUNT in the .tsx is 32, not 200.
    */
   will-change: transform;
 }
 
 /*
- * ملحوظة على الأجهزة الضعيفة:
+ * Note on weak devices:
  *
- * مفيش قاعدة `display: none` هنا زي النسخة اللي فاتت، ومش نسيان —
- * الكومبوننت نفسه بيخرج بدري على tier="low" وعلى prefers-reduced-motion
- * وعلى أي جهاز من غير مؤشر حقيقي، فالفقاعات مبتتبنيش من الأساس.
+ * There's no `display: none` rule here like in the previous version, and that's not an oversight —
+ * the component itself exits early on tier="low" and on prefers-reduced-motion,
+ * so the bubbles are never built in the first place.
  *
- * ده أحسن من الإخفاء بالـ CSS: هناك العناصر بتفضل في الشجرة والمتصفح
- * بيفضل يحسب أنماطها. هنا مفيش عناصر أصلاً، ومفيش حلقة شغّالة.
+ * That's better than hiding with CSS: there the elements stay in the tree and the browser
+ * keeps computing their styles. Here there are no elements at all, and no loop running.
  */
 
 
-/* الحاوية اللي الحلقة بتبني الفقاعات جواها */
+/* The container the loop builds the bubbles into */
 .field {
   position: absolute;
   inset: 0;
 }
 
-/* ── الشُهُب ───────────────────────────────────────────────────────────
+/* ── Meteors ───────────────────────────────────────────────────────────
  *
- * كل شهاب نقطة صغيرة مضيئة ورا ذيل متدرّج. الـ ::before هو الذيل.
+ * Each meteor is a small glowing dot with a gradient tail behind it. ::before is the tail.
  *
- * الحيلة إن العنصر بيتلفّ الأول (rotate) وبعدين بيتحرك على محور Y —
- * فالحركة بتطلع مايلة على طول المحور الملفوف، والذيل بيفضل واقع ورا
- * الرأس بالظبط من غير أي حساب.
+ * The trick is that the element is rotated first and then moved along its axis —
+ * so the motion comes out slanted along the rotated axis, and the tail stays exactly behind
+ * the head without any math.
  *
- * CSS بحت، صفر جافاسكريبت. ودي حاجة تنفع تتعمل بالـ CSS لأن الشهاب
- * مسار ثابت مبيتفاعلش مع حاجة — على عكس الفقاعات اللي محتاجة تحس
- * بالمؤشر.
+ * Pure CSS, zero JavaScript. This can be done in CSS because a meteor is
+ * a fixed path that doesn't react to anything — unlike the bubbles, which need to sense
+ * the pointer.
  */
 .meteors {
   position: absolute;
@@ -113,21 +113,21 @@
 }
 
 /*
- * ── الاتجاه ──
+ * ── Direction ──
  *
- * الزاوية بتيجي لكل شهاب لوحده من الـ JSX في `--angle`، فمش كلهم مايلين
- * بنفس الشكل: فيه اللي بيعدّي أفقي من اليمين، وفيه اللي طالع من تحت
- * لفوق، وفيه المايل.
+ * The angle comes per meteor from the JSX in `--angle`, so they aren't all slanted
+ * the same way: some cross horizontally from the right, some rise from the bottom
+ * to the top, some are diagonal.
  *
- * الحركة على محور X **بعد** اللف، فالزاوية هي اتجاه الحركة مباشرة.
+ * The motion is on the X axis **after** the rotation, so the angle is the direction of travel directly.
  *
- * أول نسخة كتبتها كانت `rotate(215deg)` مع `translateY(+1400px)` — وهي
- * الوصفة المنتشرة في أمثلة الشُهُب على النت، وهي غلط: الإزاحة بتتحسب في
- * الإحداثيات بعد اللف، فـ (0, 1400) كانت بتتحوّل لـ y = -1147، يعني
- * الشهاب بيتحرك **لفوق** وهو أصلاً بيبدأ فوق الشاشة. عمره ما بان.
+ * The first version was `rotate(215deg)` with `translateY(+1400px)` — which is
+ * the recipe found in most meteor examples online, and it's wrong: the offset is computed in
+ * the post-rotation coordinates, so (0, 1400) became y = -1147, meaning
+ * the meteor moved **upward** while already starting above the screen. It was never visible.
  *
- * الحركة على X بتحل ده وبتدّي فايدة تانية: الذيل مرسوم على محور X
- * السالب، فبيقع ورا الراس بالظبط في **أي** زاوية من غير أي حساب.
+ * Moving on X fixes that and has another benefit: the tail is drawn on the negative X
+ * axis, so it sits exactly behind the head at **any** angle without any math.
  */
 .meteor {
   position: absolute;
@@ -142,7 +142,7 @@
   opacity: 0;
 }
 
-/* الذيل — على محور X السالب، يعني ورا الراس دايماً */
+/* The tail — on the negative X axis, i.e. always behind the head */
 .meteor::before {
   content: "";
   position: absolute;
@@ -155,8 +155,8 @@
 }
 
 /*
- * var() جوه keyframes بتشتغل عادي — بتتحسب وقت حساب القيمة، فكل شهاب
- * بياخد زاويته من الـ inline style وبيتحرك في اتجاهه.
+ * var() inside keyframes works fine — it's resolved at computed-value time, so every meteor
+ * takes its angle from the inline style and moves in its own direction.
  */
 @keyframes meteor {
   0% {
@@ -165,20 +165,20 @@
   }
   5% { opacity: 1; }
   /*
-   * بيختفي عند ٧٤٪ من مساره مش ١٠٠٪. من غير ده بيوصل حافة الشاشة وهو
-   * لسه واضح وبيتقص فجأة، والعين بتمسك القص فوراً.
+   * Fades out at 74% of its path, not 100%. Without that it reaches the screen edge while
+   * still clearly visible and gets clipped abruptly, and the eye catches the clip immediately.
    */
   74% { opacity: 1; }
   100% {
     /*
-     * 130vmax مش بكسل.
+     * 130vmax, not pixels.
      *
-     * نقطة البداية بتتحسب بالـ vmax كمان (65vmax عكس الاتجاه من نص
-     * الشاشة)، فلازم المسافة تكون بنفس الوحدة. لو سبناها بالبكسل، على
-     * شاشة 4K نقطة البداية بتبعد أكتر والمسافة تفضل زي ما هي — فالشهاب
-     * ميوصلش الشاشة أصلاً.
+     * The start point is also computed in vmax (65vmax back from the centre of
+     * the screen), so the distance has to use the same unit. If we left it in pixels, on
+     * a 4K screen the start point moves further away while the distance stays the same — so the meteor
+     * never reaches the screen at all.
      *
-     * 130 = ٦٥ للوصول لنص الشاشة + ٦٥ للخروج من الناحية التانية.
+     * 130 = 65 to reach the centre of the screen + 65 to exit the other side.
      */
     transform: rotate(var(--angle, 135deg)) translate3d(130vmax, 0, 0);
     opacity: 0;
@@ -186,24 +186,24 @@
 }
 
 /*
- * الشُهُب بتتقفل على الأجهزة الضعيفة ومع تقليل الحركة.
+ * Meteors are disabled on weak devices and with reduced motion.
  *
- * لاحظ إن دي محتاجة قواعد CSS صريحة — على عكس الفقاعات اللي الكومبوننت
- * بيمنع بناءها من الأساس. السبب إن الشُهُب بترندر في الـ JSX مباشرة
- * (CSS بحت، من غير حلقة)، فبتوصل للصفحة حتى لو الـ effect خرج بدري.
+ * Note that this needs explicit CSS rules — unlike the bubbles, which the component
+ * prevents from being built in the first place. The reason is that the meteors are rendered directly in the JSX
+ * (pure CSS, no loop), so they reach the page even if the effect exits early.
  */
 :global(html[data-tier="low"]) .meteors {
   display: none;
 }
 
 /*
- * القاعدة اللي كانت هنا كانت بتقفل الشُهُب على **أي** جهاز لمس
- * (`hover: none`, `pointer: coarse`) — عشان الفقاعات كانت مقفولة هناك
- * كمان، فشهاب من غير فقاعات كان بيبان نص خلفية.
+ * The rule that used to be here disabled the meteors on **any** touch device
+ * (`hover: none`, `pointer: coarse`) — because the bubbles were disabled there
+ * too, and meteors without bubbles looked like half a background.
  *
- * دلوقتي الفقاعات بتشتغل على أي جهاز مش low، فالشُهُب لازم تتبعها.
- * التحديد بقى الـ tier بس — نفس شرط الفقاعات بالظبط، والاتنين بيتقفلوا
- * مع بعض.
+ * Now the bubbles run on any device that isn't low, so the meteors must follow.
+ * The condition is now the tier only — exactly the same condition as the bubbles, and both are disabled
+ * together.
  */
 
 @media (prefers-reduced-motion: reduce) {

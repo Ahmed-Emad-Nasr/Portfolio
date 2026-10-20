@@ -4,9 +4,9 @@
  * blog/[slug]/CaseArticle.tsx
  * Author: Ahmed Emad Nasr
  *
- * جسم صفحة الـ case. client component لأنه محتاج معرض الصور والنسخ، بس
- * كل النص بيتعمله prerender عادي في الـ HTML — يعني جوجل والـ OG crawlers
- * بيشوفوا المحتوى كامل من غير JS.
+ * The body of the case page. A client component because it needs the image gallery and copy, but
+ * all the text is prerendered normally into the HTML — so Google and OG crawlers
+ * see the full content without JS.
  */
 
 import Image from "next/image";
@@ -38,8 +38,8 @@ type CaseItem = {
 
 type Sibling = { id: string; title: string } | null;
 
-/* بتتحسب في page.tsx (Server Component) وبتوصل جاهزة — الكومبوننت ده
-   client، فأي import لـ attack.ts أو cases.ts هنا كان هيتحزم في المتصفح. */
+/* Computed in page.tsx (Server Component) and delivered ready-made — this component is
+   client, so any import of attack.ts or cases.ts here would be bundled into the browser. */
 type Technique = { id: string; name: string; tactic: string };
 type Related = {
   id: string;
@@ -50,16 +50,16 @@ type Related = {
 };
 
 /*
- * getThumbnail() بيحوّل "1.webp" لـ "1-thumb.webp" — بيفترض إن كل صورة
- * ليها نسخة مصغّرة على القرص. والافتراض ده مش صحيح لكل الـ cases: سكربت
- * فحص اللينكات لقى تسع صور في case واحد بيدوّروا على -thumb مش موجود،
- * فشبكة الأدلة كانت بتعرض مربعات مكسورة.
+ * getThumbnail() turns "1.webp" into "1-thumb.webp" — it assumes every image
+ * has a thumbnail on disk. That assumption isn't true for every case: the link-check
+ * script found nine images in one case looking for a -thumb that doesn't exist,
+ * so the evidence grid showed broken tiles.
  *
- * BlogCard عنده الحماية دي أصلاً (بيرجع للصورة الكاملة عند الخطأ)، بس
- * صفحة الـ case مكانش عندها. الكومبوننت ده بيوحّد السلوك.
+ * BlogCard already has this protection (it falls back to the full image on error), but
+ * the case page didn't. This component unifies the behaviour.
  *
- * لاحظ إن الـ state لازم يبقى جوه كومبوننت لكل صورة — لو كان في الأب،
- * فشل صورة واحدة كان هيخلي كل الصور ترجع للحجم الكامل.
+ * Note that the state must live in a per-image component — if it were in the parent,
+ * one failing image would make every image fall back to full size.
  */
 function CaseShot({
   shot,
@@ -137,7 +137,7 @@ export default function CaseArticle({
     try {
       await navigator.clipboard.writeText(url);
     } catch {
-      // clipboard API محتاج secure context — الـ fallback ده بيشتغل في أي مكان
+      // The clipboard API needs a secure context — this fallback works anywhere
       const field = document.createElement("textarea");
       field.value = url;
       field.setAttribute("readonly", "");
@@ -157,8 +157,8 @@ export default function CaseArticle({
 
   return (
     <main id="main-content" className={styles.page}>
-      {/* شريط تنقّل خاص بالصفحة دي: هيدر البلوج العادي بيـscroll لأقسام
-          مش موجودة هنا، فبيبقى أزرار ميتة. */}
+      {/* A navigation bar specific to this page: the regular blog header scrolls to sections
+          that don't exist here, so it would be dead buttons. */}
       <nav className={styles.bar} aria-label="Breadcrumb">
         <Link href="/blog" className={styles.backLink}>
           ← All cases
@@ -186,8 +186,8 @@ export default function CaseArticle({
         <p className={styles.summary}>{item.description}</p>
 
         <div className={blogStyles.cardActions}>
-          {/* الـ case ده ممكن يكون أدلته صور بس. لما مفيش PDF، مفيش زراير —
-              أحسن من زرار بيودّي على 404. */}
+          {/* This case may have image-only evidence. When there's no PDF, there are no buttons —
+              better than a button that leads to a 404. */}
           {item.href && (
             <>
               <a
@@ -244,7 +244,7 @@ export default function CaseArticle({
             <h2 className={styles.factTitle}>Tags</h2>
             <div className={blogStyles.tagsListInline}>
               {item.tags.map((tag) => (
-                // اللينك بيرجّعك للمكتبة وهي مفلترة على الأداة/التاج ده
+                // The link takes you back to the library filtered on this tool/tag
                 <Link key={tag} href={`/blog?q=${encodeURIComponent(tag)}`} className={blogStyles.tagButtonSmall}>
                   {tag}
                 </Link>

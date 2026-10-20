@@ -1,18 +1,18 @@
 /*
  * app/not-found.tsx
  *
- * الموقع كان بيستخدم صفحة 404 الافتراضية بتاعة Next — النص الأسود الصغير
- * اللي في نص شاشة فاضية.
+ * The site used to use Next's default 404 page — the small black text
+ * in the middle of an empty screen.
  *
- * ودي مش صفحة هامشية هنا: GitHub Pages بيرجّع `404.html` لأي مسار مش
- * موجود، يعني دي الصفحة اللي بيشوفها أي حد جاي من لينك قديم، أو من عنوان
- * فيه خطأ مطبعي، أو من عنوان اتغيّر (زي اللي حصل بالظبط مع
- * /blog/soc-analyst-cv). وفي الحالات دي الزائر غالباً حد بيدوّر على شغلك
- * — أسوأ حاجة تقدمهاله هي طريق مسدود.
+ * And this isn't a marginal page here: GitHub Pages returns `404.html` for any path that
+ * doesn't exist, so this is the page anyone sees coming from an old link, from a URL
+ * with a typo, or from a URL that changed (exactly what happened with
+ * /blog/soc-analyst-cv). In those cases the visitor is usually someone looking for your work
+ * — the worst thing you can give them is a dead end.
  *
- * الصفحة دي بتديله طرق فعلية يكمّل بيها.
+ * This page gives them real ways to continue.
  *
- * Server Component: صفر جافاسكريبت.
+ * Server Component: zero JavaScript.
  */
 
 import Link from "next/link";
@@ -23,7 +23,7 @@ import styles from "./not-found.module.css";
 
 export const metadata: Metadata = {
   title: "Page not found — Ahmed Emad Nasr",
-  // noindex: مفيش فايدة من فهرسة صفحة خطأ
+  // noindex: there's no point indexing an error page
   robots: { index: false, follow: true },
 };
 

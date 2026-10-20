@@ -23,23 +23,23 @@ import { SmoothScroll } from "./components/smooth-scroll";
 import CursorMount from "./components/cursor-mount";
 import CyberBackground from "./core/components/CyberBackground";
 import SiteFooter from "./core/components/SiteFooter";
-// شريط تقدّم القراءة — مركّب هنا مرة واحدة عشان يشتغل على البورتفوليو
-// والبلوج مع بعض، من غير تكرار في كل page-client.
+// Reading-progress bar — mounted here once so it works on the portfolio
+// and the blog alike, without repeating it in every page-client.
 import ScrollProgress from "./core/components/ScrollProgress";
 import BackToTop from "./core/components/BackToTop";
-// الـ palette نفسه بيتحمّل lazy جوه المكوّن ده — مفيش أي كود منه في الـ
-// bundle الأساسي لحد أول Ctrl+K.
+// The palette itself is lazy-loaded inside this component — none of its code is in the
+// main bundle until the first Ctrl+K.
 import CommandPaletteMount from "./core/components/CommandPaletteMount";
-// بيسجّل public/sw.js بعد الـ load، production بس. الموقع فعلاً بيعلن
-// نفسه installable في manifest.ts — من غيره التثبيت شكل من غير caching حقيقي.
+// Registers public/sw.js after load, production only. The site already declares
+// itself installable in manifest.ts — without this, installing would be cosmetic with no real caching.
 import ServiceWorkerRegister from "./core/components/ServiceWorkerRegister";
-// مقفول لحد ما NEXT_PUBLIC_PLAUSIBLE_DOMAIN يتحط — شوف الكومنت جوه
-// Analytics.tsx. من غير المتغيّر ده الكومبوننت بيرجع null.
+// Disabled until NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set — see the comment inside
+// Analytics.tsx. Without that variable the component returns null.
 import Analytics from "./core/components/Analytics";
-// سكربت صغير بيتنفّذ في <head> قبل أول paint ويكتب data-tier على <html>.
-// من غيره الـ CSS gating (html[data-tier="low"]) مكانش بيشتغل غير بعد الـ
-// hydration — يعني كل الأنيميشن التقيل بيتحمّل ثمنه بالكامل بالظبط في
-// النافذة اللي الـ LCP والـ TBT بيتقاسوا فيها.
+// A tiny script that runs in <head> before first paint and writes data-tier on <html>.
+// Without it the CSS gating (html[data-tier="low"]) only kicked in after
+// hydration — so all the heavy animation paid its full cost exactly in
+// the window where LCP and TBT are measured.
 import { DEVICE_TIER_SCRIPT } from "./core/hooks/useDeviceTier";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -49,15 +49,15 @@ export const viewport: Viewport = {
   initialScale: 1,
   themeColor: "#000000",
   /*
-   * viewportFit: "cover" اتجرّب واترجع.
+   * viewportFit: "cover" was tried and reverted.
    *
-   * الفكرة كانت إنه يشتغل مع appleWebApp.statusBarStyle =
-   * "black-translucent" فتمتد الصفحة تحت الـ notch. بس ده بيغيّر أبعاد
-   * الـ viewport على الموبايل، وده الجزء اللي فيه مخاطرة حقيقية مقابل
-   * مكسب بيبان في الـ PWA المثبّتة بس.
+   * The idea was for it to work with appleWebApp.statusBarStyle =
+   * "black-translucent" so the page extends under the notch. But that changes the dimensions of
+   * the viewport on mobile, which is the part carrying real risk in exchange for
+   * a gain that only shows in the installed PWA.
    *
-   * لو حبيت ترجّعه بعدين، رجّعه لوحده وجرّب اللمس على تليفون حقيقي قبل
-   * ما تضيف أي حاجة تانية معاه.
+   * If you want to bring it back later, bring it back on its own and test touch on a real phone before
+   * adding anything else with it.
    */
   /* Deliberately NOT set: maximumScale / userScalable. Locking zoom breaks
      WCAG 1.4.4 and is the single most common accessibility failure on
@@ -74,23 +74,23 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Ahmed Portfolio",
     /*
-     * كان "/Assets/…" — مسار من الجذر.
+     * This was "/Assets/…" — a root-relative path.
      *
-     * Next بيضيف الـ basePath تلقائياً لصور openGraph و twitter (بيعملها
-     * resolve مقابل metadataBase)، بس **مش** لـ startupImage. فسكربت فحص
-     * اللينكات لقى ده آخر عنوان في الموقع كله طالع من غير /Portfolio
-     * قدامه — يعني أيقونة شاشة البداية على iOS كانت 404.
+     * Next adds the basePath automatically for openGraph and twitter images (it
+     * resolves them against metadataBase), but **not** for startupImage. So the link
+     * check found this to be the last URL on the whole site missing /Portfolio
+     * in front of it — meaning the iOS splash-screen icon was a 404.
      *
-     * عنوان مطلق كامل، زي صور الـ OG في page.tsx بالظبط.
+     * A full absolute URL, exactly like the OG images in page.tsx.
      */
     startupImage: ["https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
   },
   /*
-   * الـ metadata كانت فيها appleWebApp.capable = true من غير أي أيقونة —
-   * يعني الموقع بيقول لـ iOS "أنا قابل للتثبيت" وبعدين مبيديش أيقونة،
-   * فالنظام بياخد screenshot للصفحة ويستخدمه كأيقونة.
+   * The metadata had appleWebApp.capable = true without any icon —
+   * so the site told iOS "I'm installable" and then provided no icon,
+   * and the OS took a screenshot of the page and used it as the icon.
    *
-   * favicon.ico في app/ بيتلقط تلقائياً. الباقي لازم يتكتب.
+   * favicon.ico in app/ is picked up automatically. The rest has to be declared.
    */
 icons: {
   icon: "favicon.ico",
@@ -166,19 +166,19 @@ const overlock = Overlock({
 });
 
 /*
- * JetBrains Mono — كان ناقص تماماً.
+ * JetBrains Mono — it was missing entirely.
  *
- * globals.css فيه `--font-mono: "JetBrains Mono", monospace` ومفيش أي حاجة
- * بتحمّل الخط ده. عدّيت على الـ CSS: **70 تصريح** بيطلبه — الـ HUD بتاع
- * الـ hero، وعناوين التكتيكات، وشارات المشاريع، والترمينال، والـ command
- * palette، وكل التواريخ والأرقام.
+ * globals.css has `--font-mono: "JetBrains Mono", monospace` and nothing
+ * loaded that font. Going through the CSS: **70 declarations** request it — the hero
+ * HUD, the tactic headings, the project badges, the terminal, the command
+ * palette, and every date and number.
  *
- * كل واحدة فيهم كانت بترجع للـ monospace بتاع النظام: Courier New على
- * ويندوز، Menlo على ماك، Roboto Mono على أندرويد. يعني الحتة اللي الهوية
- * البصرية كلها قايمة عليها كانت بتتعرض بتلات خطوط مختلفة حسب جهاز الزائر —
- * وعلى ويندوز، وهو أغلب الزوار، بـ Courier New.
+ * Every one of them fell back to the system monospace: Courier New on
+ * Windows, Menlo on macOS, Roboto Mono on Android. So the part the whole visual
+ * identity rests on was rendered in three different fonts depending on the visitor's device —
+ * and on Windows, which is most visitors, in Courier New.
  *
- * وزنين بس (400 للنص، 700 للـ labels) عشان مانزوّدش الحمل.
+ * Only two weights (400 for text, 700 for labels) to avoid adding load.
  */
 const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "700"],
@@ -186,12 +186,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   display: "swap",
   /*
-   * next/font بيعمل <link rel="preload"> لكل ملف خط بشكل افتراضي. مع
-   * Overlock بتلات أوزان + JetBrains بوزنين ده خمس طلبات بأولوية عالية
-   * بتتنافس مع صورة الـ LCP على نفس نافذة الاتصال المحدودة.
+   * next/font adds a <link rel="preload"> for every font file by default. With
+   * Overlock at three weights + JetBrains at two, that's five high-priority requests
+   * competing with the LCP image for the same limited connection window.
    *
-   * JetBrains Mono مش في أي نص فوق الطية له وزن في القياس — هو للـ HUD
-   * والـ labels والترمينال. display: swap بيخلّيه يتبدّل لما يوصل.
+   * JetBrains Mono isn't used in any above-the-fold text that matters for the metric — it's for the HUD,
+   * the labels and the terminal. display: swap lets it swap in when it arrives.
    */
   preload: false,
 });
@@ -210,13 +210,13 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       url: "https://ae-nasr.github.io/Portfolio/",
       image: "https://ae-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
       jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
-      /* knowsAbout هو الحقل اللي جوجل بيستخدمه لفهم مجال الشخص. المهارات
-         كانت متناثرة كتاجات في الـ JSX ومحدش مصدّرها كبيانات — دلوقتي
-         مصدر واحد في config/skills.ts بيغذّي العرض والـ JSON-LD مع بعض. */
+      /* knowsAbout is the field Google uses to understand a person's domain. The skills
+         were scattered as tags in the JSX and nobody exported them as data — now
+         a single source in config/skills.ts feeds both the display and the JSON-LD. */
       knowsAbout: skillGroups.flatMap((group) => group.items),
-      /* الشهادات كانت 74 صورة، صفر منها مفهوم لأي crawler. */
+      /* The certifications used to be 74 images, none of them understandable to any crawler. */
       hasCredential: certificationsJsonLd("https://ae-nasr.github.io/Portfolio/#person"),
-      /* قسم الجوايز كان في الـ CV ومش موجود على الموقع بأي شكل. */
+      /* The awards section was in the CV and not on the site in any form. */
       award: achievements.map((item) => `${item.title} — ${item.context}`),
       description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
       email: "mailto:ahmed.em.nasr@gmail.com",
@@ -254,8 +254,8 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       "@type": "BreadcrumbList",
       "@id": "https://ae-nasr.github.io/Portfolio/#breadcrumbs",
       itemListElement: [
-        /* اتشال عنصر Contact — القسم مبقاش موجود، وbreadcrumb بيشاور على
-           anchor ميت بيبوظ الـ rich result في نتايج البحث. */
+        /* Removed the Contact item — the section no longer exists, and a breadcrumb pointing at
+           a dead anchor breaks the rich result in search results. */
         { "@type": "ListItem", position: 1, name: "Home", item: "https://ae-nasr.github.io/Portfolio/" },
       ],
     },
@@ -294,9 +294,9 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    /* suppressHydrationWarning: السكربت تحت بيضيف data-tier على <html> قبل
-       ما React يعمل hydrate. من غير ده React بيشتكي من attribute مش موجود
-       في الـ markup اللي جه من السيرفر. نفس نمط next-themes. */
+    /* suppressHydrationWarning: the script below adds data-tier on <html> before
+       React hydrates. Without this React complains about an attribute that isn't
+       in the markup that came from the server. Same pattern as next-themes. */
     <html
       lang="en"
       dir="ltr"
@@ -305,39 +305,39 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head>
         {/*
-          بيتنفّذ فوراً — قبل الـ CSS ما يترسم وقبل أي bundle. بيصنّف
-          الجهاز ويكتب data-tier="low|mid|high" على <html>.
+          Runs immediately — before the CSS is painted and before any bundle. It classifies
+          the device and writes data-tier="low|mid|high" on <html>.
 
-          globals.css فيه بالفعل ميزانية حركة كاملة معلّقة على
-          html[data-tier="low"]. المشكلة كانت إن اللي بيكتب الـ attribute
-          ده هو useEffect — يعني مبيشتغلش غير بعد ما الـ bundle يتحمّل
-          ويعمل hydrate. النتيجة: التليفون بيدفع تكلفة الحركة الكاملة في
-          أول 2–3 ثواني بالظبط، وبعدين يقفلها.
+          globals.css already has a full motion budget hanging off
+          html[data-tier="low"]. The problem was that the thing writing that attribute
+          was a useEffect — so it only ran after the bundle loaded
+          and hydrated. Result: the phone paid the cost of full motion in
+          exactly the first 2–3 seconds, and then turned it off.
         */}
         <script dangerouslySetInnerHTML={{ __html: DEVICE_TIER_SCRIPT }} />
       </head>
       {/*
-        الـ <head> اليدوي اتشال بالكامل. كان فيه سطرين:
+        The manual <head> was removed entirely. It had two lines:
 
         1. <link rel="preload" as="image" href=".../My_Logo.webp">
-           بيعمل preload للملف الغلط — صورة الـ LCP هي 3omda.webp في
-           sensei-home.tsx، مش اللوجو. يعني كان بيحجز اتصال لصورة مش على
-           المسار الحرج ويأخّر اللي عليه. الصورة الصح بقت `priority`،
-           وNext بيولّد الـ preload الصح بالمسار الصح.
+           preloaded the wrong file — the LCP image is 3omda.webp in
+           sensei-home.tsx, not the logo. So it reserved a connection for an image not on
+           the critical path and delayed the one that was. The right image is now `priority`,
+           and Next generates the correct preload with the correct path.
 
         2. <link rel="icon" href="/Assets/art-gallery/Images/logo/3omda.webp">
-           مسار مكتوب بإيد **من غير basePath**. سكربت فحص اللينكات أكّد
-           ده: العنوان ده هو الوحيد في الموقع كله اللي طالع من غير
-           /Portfolio قدامه — يعني 404 على كل تحميل صفحة، على كل صفحة.
-           و`app/favicon.ico` موجود وNext بيحقنه أوتوماتيك بالمسار الصح،
-           فالسطر ده كان تعريف تاني متعارض ومكسور في نفس الوقت.
+           a hand-written path **without basePath**. The link check confirmed
+           it: this URL was the only one on the whole site missing
+           /Portfolio in front of it — so a 404 on every page load, on every page.
+           And `app/favicon.ico` exists and Next injects it automatically with the correct path,
+           so this line was a second, conflicting and broken definition at the same time.
       */}
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
 
-        {/* الخلفية المتحركة. Server Component — صفر جافاسكريبت للمتصفح،
-            والحركة كلها transform/opacity على الـ GPU. أول عنصر في الـ
-            body عشان يفضل ورا كل حاجة. */}
+        {/* The animated background. Server Component — zero JavaScript for the browser,
+            and all motion is transform/opacity on the GPU. First element in the
+            body so it stays behind everything. */}
         <CyberBackground />
 
         <ScrollProgress />
@@ -380,8 +380,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         */}
         <SmoothScroll>
           {children}
-          {/* تذييل لكل الصفحات — من غيره صفحتي الخصوصية والشروط مش
-              هيبقى ليهم أي لينك في الموقع ومحدش هيوصلهم بالتصفح. */}
+          {/* Footer for every page — without it the privacy and terms pages wouldn't
+              have any link on the site and nobody would reach them by browsing. */}
           <SiteFooter />
         </SmoothScroll>
         <CursorMount />

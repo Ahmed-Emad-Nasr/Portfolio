@@ -31,16 +31,16 @@ import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import { registerLenis, EASE_OUT_EXPO, SCROLL_DURATION } from "@/app/core/utils/scroll";
 import KeyboardScroll from "@/app/core/components/KeyboardScroll";
 
-/* ── ظبط سرعة السكرول من هنا ── (العجلة + الـ touchpad) */
+/* ── Tune scroll speed here ── (wheel + touchpad) */
 const WHEEL_LERP = 0.1;
 const WHEEL_MULTIPLIER = 1;
 
 /**
  * Lives INSIDE <ReactLenis>, so useLenis() can actually reach the context.
- * Renders nothing — كل شغلها إنها تسجّل الـ instance عشان الأزرار
- * واللينكات (scrollToElement/scrollToTop في core/utils/scroll) تعدّي من
- * نفس المحرّك اللي العجلة بتعدّي منه، بدل ما كل واحد فيهم ينده
- * window.scrollTo بمنحنى المتصفح الثابت لوحده.
+ * Renders nothing — its only job is to register the instance so that buttons
+ * and links (scrollToElement/scrollToTop in core/utils/scroll) go through
+ * the same engine the wheel goes through, instead of each of them calling
+ * window.scrollTo with the browser's fixed curve on its own.
  */
 function LenisRegister() {
   const lenis = useLenis();
@@ -59,10 +59,10 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   // On weak hardware native scrolling beats any JS-driven easing. Bailing out
   // here also means Lenis never attaches its wheel/touch listeners at all.
   if (tier === "low") {
-    /* Lenis مش بيتركّب هنا، بس الكيبورد لسه محتاج يشتغل: من غير Lenis
-       مفيش `scroll-behavior: auto !important`، فـ scrollToY بيرجع لحركة
-       المتصفح الأصلية — وهي بتشتغل على الـ compositor، يعني أرخص من أي
-       حاجة نكتبها. نفس المفاتيح، نفس الإحساس، صفر جافاسكريبت للحركة. */
+    /* Lenis isn't mounted here, but the keyboard still needs to work: without Lenis
+       there's no `scroll-behavior: auto !important`, so scrollToY falls back to the browser's
+       native motion — which runs on the compositor, so it's cheaper than anything
+       we could write. Same keys, same feel, zero JavaScript for the motion. */
     return (
       <>
         <KeyboardScroll />
@@ -76,28 +76,28 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       root
       options={{
         /*
-         * سرعة سكرول العجلة والـ touchpad (الاتنين بيعدّوا من هنا).
+         * Wheel and touchpad scroll speed (both go through here).
          *
-         * lerp = نسبة المسافة المتبقية اللي بتتقطع كل فريم. أعلى = أسرع.
-         * Lenis بيستخدم lerp أو duration، مش الاتنين — فـ lerp لوحده كفاية.
+         * lerp = the fraction of the remaining distance covered each frame. Higher = faster.
+         * Lenis uses either lerp or duration, not both — so lerp alone is enough.
          *
-         * wheelMultiplier = مسافة كل "نقرة" عجلة أو حركة إصبعين على الـ
-         * touchpad. 1 = المسافة الطبيعية، أقل = أبطأ، أكتر = أسرع.
+         * wheelMultiplier = the distance of each wheel "click" or two-finger swipe on the
+         * touchpad. 1 = normal distance, lower = slower, higher = faster.
          *
-         * القيم اللي كانت قبل كده: lerp 0.032 (high) / 0.06 (mid) و
-         * wheelMultiplier 0.72 — دي كانت مقصودة بطيئة. القيم الجديدة هي
-         * الـ defaults بتاعة Lenis نفسها (lerp 0.1, wheelMultiplier 1)،
-         * ولو لسه عايزها أسرع زوّد الرقمين، ولو عايزها أبطأ نزّلهم.
+         * The previous values: lerp 0.032 (high) / 0.06 (mid) and
+         * wheelMultiplier 0.72 — those were deliberately slow. The new values are
+         * Lenis's own defaults (lerp 0.1, wheelMultiplier 1),
+         * and if you still want it faster increase both numbers, or decrease them for slower.
          */
         lerp: WHEEL_LERP,
         wheelMultiplier: WHEEL_MULTIPLIER,
         smoothWheel: true,
 
         /*
-         * لينكات الـ hash (#Contact، #Projects، اللينكات جوه المقالات).
-         * Lenis عنده تعامل جاهز معاها وكان مقفول — يعني أي <a href="#x">
-         * في الموقع كان بيقفّز. بننفس المدة والمنحنى بتوع باقي الحركات
-         * عشان الإحساس يفضل واحد.
+         * Hash links (#Contact, #Projects, links inside articles).
+         * Lenis has built-in handling for them and it was disabled — meaning any <a href="#x">
+         * on the site jumped. We use the same duration and curve as the other motions
+         * so the feel stays consistent.
          */
         anchors: { duration: SCROLL_DURATION, easing: EASE_OUT_EXPO },
         // Never hijack touch scrolling — it breaks momentum and feels laggy.
@@ -105,8 +105,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       }}
     >
       <LenisRegister />
-      {/* الكيبورد. Lenis بيمسك العجلة واللمس بس، مفيش تعامل مع
-          الكيبورد فيه — فمن غير ده الأسهم وPage Down بيقفّزوا. */}
+      {/* The keyboard. Lenis only handles the wheel and touch, it has no keyboard
+          handling — so without this, the arrows and Page Down jump. */}
       <KeyboardScroll />
       {children}
     </ReactLenis>

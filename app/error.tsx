@@ -1,18 +1,18 @@
 "use client";
 
 /*
- * error.tsx — حدود الأخطاء على مستوى المسار
+ * error.tsx — route-level error boundary
  *
- * الموقع كان فيه not-found.tsx وبس. يعني لو أي client component رمى
- * exception — والموقع فيه 28 منهم — الزائر كان بيشوف **صفحة بيضا فاضية**:
- * مفيش رسالة، مفيش زرار رجوع، مفيش حتى إشارة إن حاجة غلط حصلت.
+ * The site only had not-found.tsx. So if any client component threw an
+ * exception — and the site has 28 of them — the visitor saw **a blank white page**:
+ * no message, no back button, not even a hint that something went wrong.
  *
- * App Router بيدوّر على الملف ده تلقائياً. لازم يكون client component
- * (شرط من Next) وبياخد `reset` عشان يحاول يرندر الجزء اللي وقع تاني من
- * غير reload كامل.
+ * The App Router looks for this file automatically. It must be a client component
+ * (a Next requirement) and it receives `reset` to try re-rendering the part that crashed without
+ * a full reload.
  *
- * بيعيد استخدام not-found.module.css عشان الصفحتين يبقوا بنفس الشكل —
- * مفيش سبب لملف CSS تاني لصفحة بنفس التخطيط بالظبط.
+ * It reuses not-found.module.css so both pages look the same —
+ * there's no reason for another CSS file for a page with exactly the same layout.
  */
 
 import { useEffect } from "react";
@@ -28,11 +28,11 @@ export default function Error({
 }) {
   useEffect(() => {
     /*
-     * الموقع مصدَّر ثابت على GitHub Pages — مفيش سيرفر يستقبل تقارير
-     * الأخطاء. الـ console هو المكان الوحيد المتاح، وهو كفاية: لو حد
-     * بلّغك عن مشكلة تقدر تقوله يفتحه.
+     * The site is a static export on GitHub Pages — there's no server to receive error
+     * reports. The console is the only place available, and it's enough: if someone
+     * reports a problem you can ask them to open it.
      *
-     * لو ضفت خدمة مراقبة بعدين (Sentry مثلاً)، مكانها هنا.
+     * If you add a monitoring service later (Sentry, for example), it goes here.
      */
     console.error("[portfolio] unhandled error:", error);
   }, [error]);
@@ -49,8 +49,8 @@ export default function Error({
         </p>
 
         <nav className={styles.actions} aria-label="Recovery options">
-          {/* reset بيحاول يرندر الجزء اللي وقع تاني من غير reload كامل —
-              أغلب الأخطاء العابرة بتتحل بيه. */}
+          {/* reset tries to re-render the part that crashed without a full reload —
+              most transient errors are resolved by it. */}
           <button type="button" data-fx="btn" data-btn="solid" onClick={reset}>
             Try again
           </button>
@@ -58,8 +58,8 @@ export default function Error({
           <Link href="/blog" data-fx="btn" data-btn="outline">Case library</Link>
         </nav>
 
-        {/* digest هو الهاش اللي Next بيولّده للخطأ. بيتعرض عشان لو حد
-            بلّغك عن مشكلة يقدر يديك الرقم ده بدل وصف مبهم. */}
+        {/* digest is the hash Next generates for the error. It's shown so that if someone
+            reports a problem they can give you this number instead of a vague description. */}
         {error.digest && (
           <p className={styles.report}>Error reference: {error.digest}</p>
         )}

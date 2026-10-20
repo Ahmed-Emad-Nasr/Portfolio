@@ -16,8 +16,8 @@ type BlogPdfLibrarySectionProps = {
   normalizeHref: (href: string) => string;
   leadCase: PdfResource | null;
   leadCaseSpotlightImage: string | null;
-  /* NEW: شريط الفلترة بيتحقن كـ node بدل ما القسم ده يعرف حاجة عن حالة
-     الفلاتر — القسم فضل غبي وبيعرض بس، والحالة كلها في page-client. */
+  /* NEW: the filter bar is injected as a node instead of this section knowing anything about the filter
+     state — the section stays dumb and only renders, and all the state lives in page-client. */
   filterBar?: React.ReactNode;
   isFiltering?: boolean;
   onResetFilters?: () => void;
@@ -113,7 +113,7 @@ export default function BlogPdfLibrarySection({
         ))}
       </div>
 
-      {/* الحالة الفاضية بتقول للمستخدم يعمل إيه، مش بس إن مفيش نتايج */}
+      {/* The empty state tells the user what to do, not just that there are no results */}
       {visiblePdfCards.length === 0 && (
         <p className={styles.emptyState}>
           No case matches these filters.{" "}

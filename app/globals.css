@@ -70,26 +70,26 @@
   /*
    * ══ PALETTE ═══════════════════════════════════════════════════════════
    *
-   * الموقع كله بيقرا من التوكنز دي، فتغيير الثيم بيحصل من هنا بس.
+   * The whole site reads from these tokens, so theme changes happen here only.
    *
-   * دي الألوان الأصلية بتاعة الموقع — أسود + أحمر + ذهبي + سماوي.
-   * جرّبت لوحتين نيون فوقها (magenta ثم برتقالي/سماوي/أخضر) وأحمد رجّع
-   * الأصلية في المرتين. **متغيّرهاش تاني من غير ما يطلب.**
+   * These are the site's original colours — black + red + gold + cyan.
+   * Two neon palettes were tried on top (magenta, then orange/cyan/green) and the originals
+   * were restored both times. **Don't change them again unless asked.**
    *
-   * ── التباين (على #000000) ──
+   * ── Contrast (on #000000) ──
    *
    *     --foreground  #ffffff  21.00      --accent    #ffd700  14.97
    *     --text-muted  #d8d6cc  14.41      --tertiary  #00d2ef  11.47
    *     --text-dim    #a59f90   7.96      --main-text #f5003b   4.94
    *
-   * --primary (#bc002d) تباينه 3.18: ناجح للنص الكبير، راسب للعادي.
-   * عشان كده فيه --main-text تحت. تفاصيل السبب جنبه.
+   * --primary (#bc002d) has a contrast of 3.18: passes for large text, fails for normal text.
+   * That's why there's a --main-text below. The reasoning is next to it.
    *
-   * ── طبقة النيون ──
+   * ── Neon layer ──
    *
-   * القسم ١٩ (Neon) وخلفية CyberBackground شغّالين على التوكنز دي، مش
-   * على ألوان مكتوبة بإيد. يعني التوهّج بقى أحمر وذهبي مع الألوان دي،
-   * وهيتبع أي لوحة تحطها بعدين لوحدها.
+   * Section 19 (Neon) and the CyberBackground backdrop run on these tokens, not
+   * on hand-written colours. So the glow is now red and gold with these colours,
+   * and it will follow any palette you set later automatically.
    */
 
   /* Core palette */
@@ -112,11 +112,11 @@
   --main-light: #ff2d78;
 
   /*
-   * --main-text: نسخة النص من اللون الأساسي.
+   * --main-text: the text variant of the primary colour.
    *
-   * --primary نفسه تباينه 5.59 وناجح، فالتوكن ده مش ضروري تقنياً دلوقتي
-   * — بس سايبه لأن كل الملفات بتستخدمه بعد إصلاح Lighthouse، ولأنه
-   * بيدّي هامش أمان لو غيّرت الأساسي لدرجة أغمق بعدين.
+   * --primary itself has a contrast of 5.59 and passes, so this token isn't technically necessary right now
+   * — but it's kept because every file uses it after the Lighthouse fix, and because it
+   * gives a safety margin if you change the primary to a darker shade later.
    */
   --main-text: #f5003b;
 
@@ -135,34 +135,34 @@
   --hairline: rgba(255, 255, 255, 0.22);
 
   /*
-   * ── حجاب الصفحات النصية ────────────────────────────────────────────────
+   * ── Text-page veil ─────────────────────────────────────────────────────
    *
-   * صفحات البلوج والمقالات كانت خلفيتها `var(--background)` صريحة، وهي
-   * لون معتم بالكامل — فكانت بتغطي الفقاعات والشُهُب تماماً. الخلفية
-   * المتحركة كانت بتبان على الصفحة الرئيسية بس.
+   * The blog and article pages used to have an explicit `var(--background)`, which is
+   * a fully opaque colour — so it completely covered the bubbles and meteors. The animated
+   * background was only visible on the home page.
    *
-   * الحل مش إني أشيل الخلفية خالص: دي صفحات نص طويل للقراية، وفقاعات
-   * بتتحرك ورا الكلام مباشرةً بتتعب العين وبتقلّل التباين الفعلي.
+   * The fix isn't to remove the background entirely: these are long-form reading pages, and bubbles
+   * moving directly behind the text strain the eyes and reduce effective contrast.
    *
-   * فبدل المعتم الكامل، حجاب أسود شفاف: الفقاعات بتبان من وراه لكن
-   * مكتومة، والنص بيفضل على خلفية شبه سودا ثابتة.
+   * So instead of fully opaque, a translucent black veil: the bubbles show through it but
+   * muted, and the text stays on a steady near-black background.
    *
-   *   0.55  الافتراضي — الفقاعات باينة وهادية
-   *   0.75  أهدى، النص أوضح
-   *   0.35  الفقاعات واضحة زي الصفحة الرئيسية
-   *   1     يرجع معتم بالكامل (الفقاعات تختفي زي الأول)
+   *   0.55  the default — bubbles visible and calm
+   *   0.75  calmer, text clearer
+   *   0.35  bubbles as visible as on the home page
+   *   1     back to fully opaque (bubbles disappear like before)
    */
   --page-veil: rgba(0, 0, 0, 0.55);
 
   /*
-   * ── التوهّج ───────────────────────────────────────────────────────────
+   * ── Glow ──────────────────────────────────────────────────────────────
    *
-   * توكنز مركزية عشان التوهّج يتقفل من مكان واحد على الأجهزة الضعيفة
-   * (القسم ٩). كل ظل هنا بيتحسب على الـ GPU.
+   * Central tokens so the glow can be turned off from one place on weak devices
+   * (section 9). Every shadow here is computed on the GPU.
    *
-   * القيمة صفر على tier="low" — مش قيمة أصغر، صفر. الظلال الملوّنة من
-   * أغلى الحاجات على تليفون متوسط، والفرق البصري على شاشة صغيرة تحت
-   * الشمس تقريباً معدوم.
+   * The value is zero on tier="low" — not a smaller value, zero. Coloured shadows are among
+   * the most expensive things on a mid-range phone, and the visual difference on a small screen in
+   * sunlight is practically nil.
    */
   --glow-main: 0 0 12px rgba(var(--main-color-rgb), 0.45);
   --glow-accent: 0 0 12px rgba(var(--accent-color-rgb), 0.45);
@@ -200,49 +200,49 @@
   --text-xl: 2.2rem;
 
   /*
-   * ══ الحركة — منحنى سينمائي ══════════════════════════════════════════
+   * ══ Motion — a cinematic curve ═══════════════════════════════════════
    *
-   * ── الفكرة الأساسية: المنحنى مش المدة ──
+   * ── The core idea: the curve, not the duration ──
    *
-   * "بطيء زي الأيفون" مش معناه تضرب كل المدد في ٢. لو عملت كده الموقع
-   * بيحسّ **تقيل** مش سينمائي — الفرق إن الحركة اللي بتبدأ بطيء بتبان
-   * كأن الجهاز واقف، والحركة اللي بتبدأ سريع وبتستقرّ ببطء بتبان
-   * كأنها ليها وزن.
+   * "Slow like the iPhone" doesn't mean multiplying every duration by 2. Do that and the site
+   * feels **heavy**, not cinematic — the difference is that motion that starts slow looks
+   * as if the device is stuck, while motion that starts fast and settles slowly looks
+   * like it has weight.
    *
-   * منحنى أبل بيحط أغلب الوقت في **النهاية**: انطلاقة فورية، وبعدين
-   * انزلاقة طويلة بتهدى لحد ما تقف. عشان كده الحركة بتحسّ فخمة وسريعة
-   * في نفس الوقت.
+   * Apple's curve puts most of the time at **the end**: an instant launch, then
+   * a long glide that eases until it stops. That's why the motion feels luxurious and fast
+   * at the same time.
    *
    *     cubic-bezier(0.32, 0.72, 0, 1)
-   *                   │     │    │  └── تنتهي عند السرعة صفر تماماً
-   *                   │     │    └───── مفيش تسارع في الآخر خالص
-   *                   └─────┴────────── تنطلق بسرعة من أول فريم
+   *                   │     │    │  └── ends at exactly zero velocity
+   *                   │     │    └───── no acceleration at the end at all
+   *                   └─────┴────────── launches fast from the first frame
    *
-   * القديم كان `cubic-bezier(0.22, 1, 0.36, 1)` — قريب، بس بيوصل
-   * لسرعته القصوى بدري أوي فبيبان مندفع. الجديد بيوزّع أنعم.
+   * The old one was `cubic-bezier(0.22, 1, 0.36, 1)` — close, but it reaches
+   * its top speed too early so it looks abrupt. The new one distributes more smoothly.
    *
-   * ── المدد: ليه مش كلهم اتضاعفوا ──
+   * ── Durations: why they weren't all doubled ──
    *
-   * فيه توتر حقيقي هنا لازم يتحلّ:
+   * There's a real tension here that needs resolving:
    *
-   *   · حركة **الدخول** (عنصر بيظهر، صفحة بتتحرك) → البطء بيبقى فخامة
-   *   · حركة **الاستجابة** (hover، ضغطة، focus) → البطء بيبقى عطل
+   *   · **Entrance** motion (an element appearing, a page moving) → slowness reads as luxury
+   *   · **Response** motion (hover, press, focus) → slowness reads as a fault
    *
-   * زرار بياخد ٦٠٠ms عشان يرد على الماوس بيحسّ إن الموقع واقف، مش
-   * سينمائي. أبل نفسها بتخلي ردود الفعل تحت ٣٠٠ms والانتقالات فوقها.
+   * A button that takes 600ms to respond to the mouse feels like the site is frozen, not
+   * cinematic. Apple itself keeps feedback under 300ms and transitions above it.
    *
-   * فـ --motion-fast (٨١ استخدام، أغلبها hover وfocus) اترفع شوية بس،
-   * و --motion-normal (١٣ استخدام، كلها انتقالات وحركة عناصر) اتوسّع.
+   * So --motion-fast (81 uses, mostly hover and focus) was raised only slightly,
+   * and --motion-normal (13 uses, all transitions and element motion) was widened.
    */
   --motion-fast: 380ms;
   --motion-normal: 900ms;
   --motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
   /*
-   * منحنى للحركات اللي بتدخل وتخرج (مش رد فعل).
+   * A curve for motion that enters and exits (not feedback).
    *
-   * expo-out: بيبدأ من أقصى سرعة وبيقف بهدوء شديد. أنسب للظهور والاختفاء
-   * من --motion-ease لأنه مالوش أي تسارع في البداية خالص.
+   * expo-out: starts at top speed and stops very gently. Better suited to appearing and disappearing
+   * than --motion-ease because it has no acceleration at the start at all.
    */
   --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -253,23 +253,23 @@
   --typing-textDrift: 6.5s;
 
   /*
-   * ── مفتاح المسافات ───────────────────────────────────────────────────
+   * ── Spacing knob ─────────────────────────────────────────────────────
    *
-   * أخو --ui-scale. ده بيتحكم في **الفراغ** بين الحاجات، وده بيتحكم في
-   * **حجم** الحاجات. مفصولين عن بعض عن قصد، عشان تقدر تكبّر الخط وتضيّق
-   * الفراغ في نفس الوقت — وده اللي مطلوب هنا بالظبط.
+   * The sibling of --ui-scale. This one controls the **space** between things, that one controls
+   * the **size** of things. They're separated on purpose, so you can enlarge the type and tighten
+   * the spacing at the same time — which is exactly what's needed here.
    *
-   *   1     المسافات الأصلية
-   *   0.78  الافتراضي دلوقتي — أضيق ~٢٢٪
-   *   0.7   ضيق جداً
+   *   1     the original spacing
+   *   0.78  the current default — ~22% tighter
+   *   0.7   very tight
    *
-   * ملحوظة: --ui-scale بيضرب في ده. لما رفعنا الحجم من 0.9 لـ 0.95،
-   * المسافات كانت هتكبر ٥٫٦٪ معاه لأنها كلها بالـ rem. فالصافي الحقيقي
-   * للمسافات هو 0.78 × (0.95/0.9) = **0.823**، يعني أضيق ~١٨٪ عن قبل.
+   * Note: --ui-scale multiplies into this. When the size was raised from 0.9 to 0.95,
+   * the spacing would have grown 5.6% with it because it's all in rem. So the real net
+   * spacing is 0.78 × (0.95/0.9) = **0.823**, i.e. ~18% tighter than before.
    *
-   * كل مسافة في الموقع بتعدّي من هنا: توكنز المسافات، حشو الأقسام،
-   * المسافة بين الأقسام، حشو الكروت، والمسافة بين عنوان القسم ومحتواه.
-   * رقم واحد بس تلعب فيه.
+   * Every spacing on the site goes through here: spacing tokens, section padding,
+   * the gap between sections, card padding, and the gap between a section title and its content.
+   * Just one number to play with.
    */
   --space-scale: 0.78;
 
@@ -373,15 +373,15 @@ body {
 }
 
 /*
- * كان هنا `overscroll-behavior-y: none` على الـ body عشان يمنع الأبيض
- * اللي بيبان لما تسحب لبرّه أول/آخر الصفحة. اتشال.
+ * There used to be `overscroll-behavior-y: none` on the body here to prevent the white
+ * that shows when you pull past the top/bottom of the page. It was removed.
  *
- * السبب: `html` و `body` الاتنين عليهم `overflow-x: hidden`، وده بيخلي
- * تحديد عنصر السكرول الفعلي يختلف بين المتصفحات. و overscroll-behavior
- * على body في التركيبة دي ليها تاريخ إنها تتداخل مع السكرول باللمس.
+ * Reason: `html` and `body` both have `overflow-x: hidden`, which makes
+ * determining the actual scroll element differ between browsers. And overscroll-behavior
+ * on body in that combination has a history of interfering with touch scrolling.
  *
- * المكسب كان تجميلي بحت (شريط أبيض بيبان لجزء من الثانية)، والخطر إن
- * الصفحة متسكرولش على تليفون. الميزان مش متعادل.
+ * The gain was purely cosmetic (a white strip visible for a fraction of a second), and the risk was that
+ * the page wouldn't scroll on a phone. The trade-off isn't balanced.
  */
 
 /* background-attachment: fixed forces the browser to repaint the
@@ -393,10 +393,10 @@ body {
 }
 
 /*
- * كل قواعد الـ safe-area اتشالت مع viewportFit: "cover".
- * من غير cover الـ viewport بيقف عند المنطقة الآمنة أصلاً، فالـ insets
- * كلها بترجع 0px والقواعد دي مش بتعمل حاجة غير إنها تزوّد قواعد المتصفح
- * بيمر عليها.
+ * All the safe-area rules were removed along with viewportFit: "cover".
+ * Without cover the viewport already stops at the safe area, so the insets
+ * all resolve to 0px and these rules do nothing except add more rules for the browser
+ * to walk through.
  */
 
 body[data-custom-cursor="true"],
@@ -476,10 +476,10 @@ html :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible 
   padding: 0.9rem 1.2rem;
   border-radius: var(--radius-pill);
   background: var(--main-color);
-  /* كان #000 على #bc002d = تباين 3.18 — راسب في WCAG AA (المطلوب 4.5)
-     والنص هنا 1.4rem يعني ~12.6 بكسل، فهو "نص عادي" مش كبير.
-     أسود على أحمر غامق من أسوأ التركيبات. الأبيض بيدّي 6.61 وناجح.
-     ده عنصر مساعد مبيبانش غير لما تعمل Tab، فاللون مش جزء من التصميم. */
+  /* It was #000 on #bc002d = contrast 3.18 — fails WCAG AA (4.5 required)
+     and the text here is 1.4rem, i.e. ~12.6px, so it's "normal text", not large.
+     Black on dark red is one of the worst combinations. White gives 6.61 and passes.
+     This is a helper element that only appears when you press Tab, so its colour isn't part of the design. */
   color: #fff;
   font-size: 1.4rem;
   font-weight: 800;
@@ -490,12 +490,12 @@ html :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible 
 .skip-link:focus-visible { transform: translateY(1rem); }
 
 /*
- * نص للقارئات بس — موجود في شجرة الوصولية ومش باخد أي مساحة على الشاشة.
+ * Screen-reader-only text — present in the accessibility tree and takes no space on screen.
  *
- * مكانش فيه أداة زي دي في الموقع، فأي معلومة لازم تتقال لقارئ الشاشة
- * كانت لازم تتعرض بصرياً أو تضيع. `clip-path` + `1px` هي الصيغة اللي
- * بتفضل مقروءة للقارئات (display:none و visibility:hidden بيشيلوا
- * العنصر من الشجرة تماماً).
+ * There was no utility like this on the site, so any information that had to be read to a screen reader
+ * had to be shown visually or be lost. `clip-path` + `1px` is the form that
+ * stays readable for screen readers (display:none and visibility:hidden remove
+ * the element from the tree entirely).
  */
 .sr-only {
   position: absolute;
@@ -597,20 +597,20 @@ time,
 
 /*--------- 7. Breakpoints ---------*/
 /*
- * الأرقام دي هي الأصلية. رجّعتها بالظبط زي ما كانت.
+ * These values are the originals. Restored exactly as they were.
  *
- * كنت غيّرتها لسُلَّم موحّد (430/600/768/992/1440) وضفت خطوات للشاشات
- * الكبيرة (1440/1920/2200) بتوسّع الـ section من 128rem لـ 160rem.
- * وده كبّر الموقع بدل ما يظبّطه — فاترجع.
+ * They had been changed to a unified ladder (430/600/768/992/1440) with extra steps for
+ * large screens (1440/1920/2200) widening the section from 128rem to 160rem.
+ * That enlarged the site instead of fixing it — so it was reverted.
  *
- * الحاجة الوحيدة اللي فضلت من التوحيد هي **توحيد الأرقام المتقاربة** في
- * ملفات الـ modules (991/992، 767/768، وهكذا)، لأنها مبتغيّرش أي مقاس —
- * بتخلي بس نفس الخط الفاصل مكتوب برقم واحد في كل مكان.
+ * The only thing kept from the unification is **merging near-identical values** in
+ * the module files (991/992, 767/768, and so on), because they don't change any size —
+ * they just make the same breakpoint written as a single number everywhere.
  *
- * والباج الحقيقي الوحيد هنا كان في sensei-home.module.css: بلوك عند
- * 600px وبعديه بلوك عند 42rem (=672px). الأوسع مكتوب آخر حاجة فبيكسب
- * على موبايل 375px، يعني قواعد الـ 600px كانت ميتة. ده اتصلّح هناك،
- * والمقاسات نفسها زي ما هي.
+ * And the only real bug here was in sensei-home.module.css: a block at
+ * 600px followed by a block at 42rem (=672px). The wider one is written last so it wins
+ * on a 375px phone, meaning the 600px rules were dead. That was fixed there,
+ * and the sizes themselves are unchanged.
  */
 @media (max-width: 991px) {
   section {
@@ -652,16 +652,16 @@ time,
 }
 
 /*
- * ── حارس الـ overflow ──────────────────────────────────────────────────
+ * ── Overflow guard ─────────────────────────────────────────────────────
  *
- * ده مش تغيير مقاسات — ده إصلاح قصّ محتوى، وسايبه.
+ * This isn't a size change — it's a content-clipping fix, and it stays.
  *
- * ٦ جريدات كانت مكتوبة `minmax(<ثابت>, 1fr)` من غير حارس. تراك بحد أدنى
- * 300px مبيقدرش ينزل تحت 300px، فعلى شاشة 320px بيخرج بره الحاوية —
- * و`overflow-x: hidden` في القسم ٢ **بيقصّه** بدل ما يخليك تسكرول له.
- * اتصلّحوا في المصدر لـ `minmax(min(100%, X), 1fr)`؛ الشكل مبيتغيّرش
- * على أي شاشة واسعة كفاية، بس على الضيقة التراك بيقدر يصغّر بدل ما
- * يتقصّ.
+ * 6 grids were written as `minmax(<fixed>, 1fr)` without a guard. A track with a minimum of
+ * 300px can't shrink below 300px, so on a 320px screen it overflows its container —
+ * and `overflow-x: hidden` in section 2 **clips** it instead of letting you scroll to it.
+ * They were fixed at the source to `minmax(min(100%, X), 1fr)`; the layout doesn't change
+ * on any sufficiently wide screen, but on narrow ones the track can shrink instead of
+ * being clipped.
  */
 
 /*--------- 8. User preferences ---------*/
@@ -739,15 +739,15 @@ html[data-tier="low"] {
   --card-blur: 0px;
   --ui-blur: 0px;
   /*
-   * الأجهزة الضعيفة بتفضل بحركة قصيرة، **وده مقصود مش سهو**.
+   * Weak devices keep short motion, **and that's intentional, not an oversight**.
    *
-   * كل transition طويل بيبقي طبقة compositor حية لمدة أطول، والفرق
-   * البصري على شاشة ٦ بوصة تحت الشمس قريب من الصفر. والأهم: الحركة
-   * البطيئة على جهاز بطيء بتبان **متقطّعة** مش سينمائية — وده أسوأ من
-   * حركة قصيرة نظيفة.
+   * Every long transition keeps a compositor layer alive longer, and the visual
+   * difference on a 6-inch screen in sunlight is close to zero. More importantly: slow
+   * motion on a slow device looks **choppy**, not cinematic — which is worse than
+   * short, clean motion.
    *
-   * رفعتهم شوية عن القديم (140/220) عشان ياخدوا من الطابع الجديد من غير
-   * ما يدفعوا تمنه.
+   * They were raised slightly from the old values (140/220) to pick up some of the new character without
+   * paying its price.
    */
   --motion-fast: 200ms;
   --motion-normal: 340ms;
@@ -757,7 +757,7 @@ html[data-tier="low"] {
 html[data-tier="mid"] {
   --card-blur: 2px;
   --ui-blur: 2px;
-  /* وسط بين الطابع السينمائي الكامل (900ms) والقصير (340ms) */
+  /* Midway between the full cinematic feel (900ms) and the short one (340ms) */
   --motion-fast: 300ms;
   --motion-normal: 600ms;
 }
@@ -899,15 +899,15 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
     --bg-color: #fff;
     --background: #fff;
     /*
-     * لازم يتعرّف هنا.
+     * It must be defined here.
      *
-     * أغلفة الصفحات (الـ CV والبلوج و404) بقت بتستخدم --page-veil بدل
-     * اللون المعتم عشان الخلفية المتحركة تبان من وراها. القيمة العادية
-     * `rgba(0,0,0,0.55)` — يعني من غير السطر ده، صفحة الـ CV كانت
-     * هتتطبع وعليها طبقة سودا ٥٥٪ فوق الورق.
+     * The page wrappers (the CV, the blog and 404) now use --page-veil instead of
+     * an opaque colour so the animated background shows through. The normal value is
+     * `rgba(0,0,0,0.55)` — so without this line, the CV page would have
+     * printed with a 55% black layer over the paper.
      *
-     * الخلفية المتحركة نفسها مش محتاجة قاعدة: عليها aria-hidden="true"
-     * والقاعدة تحت بتخفي كل ده في الطباعة.
+     * The animated background itself doesn't need a rule: it has aria-hidden="true"
+     * and the rule below hides all of that in print.
      */
     --page-veil: #fff;
     --text-color: #000;
@@ -939,8 +939,13 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
   h1, h2, h3, h4 { break-after: avoid; }
   section { break-inside: auto; }
 
-  /* content-visibility hides offscreen content from the printer too */
-  * { content-visibility: visible !important; }
+  /* content-visibility hides offscreen content from the printer too.
+     Only sections opt into content-visibility: auto (globals.css section 6,
+     [data-fx="section"], and the section-level module classes), so the reset
+     targets those instead of every element on the page. The decorative
+     KanjiDivider also uses it, but it is aria-hidden and already hidden above. */
+  section,
+  [data-fx="section"] { content-visibility: visible !important; }
 }
 
 /*--------- 12. Scroll reveal ---------*/
@@ -960,35 +965,35 @@ html[data-tier="low"] ::-webkit-scrollbar-thumb {
 
 :root {
   /*
-   * مسافة أطول: ٢٤ → ٣٤ بكسل.
+   * A longer distance: 24 → 34px.
    *
-   * مع مدة أطول، المسافة القصيرة بتخلي الحركة تبان بطيئة من غير ما تبان
-   * إنها ماشية — العين بتحتاج تشوف مسافة عشان تحسّ بالانزلاق. المسافة
-   * والمدة لازم يكبروا مع بعض وإلا الحركة بتبان لزجة.
+   * With a longer duration, a short distance makes the motion look slow without looking like
+   * it's moving — the eye needs to see distance to feel the glide. Distance
+   * and duration must grow together, or the motion looks sluggish.
    */
   --reveal-distance: 34px;
 
   /*
    * 820ms → 1150ms.
    *
-   * دي أطول حركة في الموقع عن قصد: ظهور العناصر مع السكرول هو اللي
-   * بيدّي الإحساس السينمائي أكتر من أي حاجة تانية، وهو **مش رد فعل** —
-   * المستخدم مش مستني نتيجة، فالبطء هنا مكسب صافي.
+   * This is the longest motion on the site on purpose: elements revealing on scroll are what
+   * give the cinematic feel more than anything else, and it's **not feedback** —
+   * the user isn't waiting for a result, so slowness here is a pure gain.
    *
-   * وبتستخدم --motion-ease-out (expo) مش --motion-ease: الظهور مالوش
-   * بداية بطيئة، بيدخل من أقصى سرعة ويستقرّ.
+   * And it uses --motion-ease-out (expo), not --motion-ease: a reveal has no
+   * slow start, it enters at top speed and settles.
    *
-   * مفتاح واحد. حسّيتها بطيئة؟ رجّعها 820ms وبس.
+   * One knob. Feels slow? Set it back to 820ms and that's it.
    */
   --reveal-duration: 1150ms;
   --reveal-delay: 0ms;
 
   /*
-   * التتابع بين العناصر: 60 → 90ms.
+   * Stagger between elements: 60 → 90ms.
    *
-   * ده اللي بيخلي الشبكة تتكشف عنصر ورا التاني بدل ما تظهر دفعة واحدة.
-   * مع مدة أطول، التتابع القصير بيخلي العناصر تتداخل ويضيع الإحساس
-   * بالترتيب.
+   * This is what makes a grid reveal one element after another instead of appearing all at once.
+   * With a longer duration, a short stagger makes the elements overlap and the sense
+   * of order is lost.
    */
   --reveal-stagger: 90ms;
 }
@@ -1145,15 +1150,15 @@ html[data-tier="low"] button::before { display: none; }
  */
 
 :root {
-  /* الحد بيولّع عند الـ hover ويطلع منه توهّج (القسم ١٩)، بدل ما
-     يغمّق وبس. اللون بييجي من --main-color فبيتبع اللوحة. */
+  /* The border lights up on hover and emits a glow (section 19), instead of just
+     darkening. The colour comes from --main-color so it follows the palette. */
   --card-bg: rgba(10, 10, 10, 0.6);
   --card-bg-hover: rgba(15, 15, 15, 0.9);
   --card-border-color: rgba(255, 255, 255, 0.05);
   --card-border-color-hover: rgba(var(--main-color-rgb), 0.55);
   --card-accent-height: 2px;
-  /* بتعدّي من --space-scale زي أي مسافة تانية — حشو الكارت جزء من
-     الإحساس بالاتساع زي المسافة بين الكروت بالظبط. */
+  /* Goes through --space-scale like any other spacing — card padding is part of
+     the sense of spaciousness, exactly like the gap between cards. */
   --card-pad: calc(2.5rem * var(--space-scale));
   --card-pad-compact: calc(1.8rem * var(--space-scale)) calc(2rem * var(--space-scale));
   --card-pad-tight: calc(0.6rem * var(--space-scale));
@@ -1226,7 +1231,7 @@ html [data-fx="card"] :is(img, [data-fx-media]) {
     transform: translate3d(0, var(--card-lift), 0);
     background: var(--card-bg-hover);
     border-color: var(--card-border-color-hover);
-    /* التوهّج بييجي من التوكن، فبيتقفل مرة واحدة على الأجهزة الضعيفة */
+    /* The glow comes from the token, so it's turned off once on weak devices */
     box-shadow: var(--glow-main);
   }
   html [data-fx="card"]:hover::before { transform: scaleX(1); }
@@ -1384,13 +1389,13 @@ html [data-fx="card"][data-spot="on"]::after {
  * :where() keeps specificity at zero so it never fights a local rule.
  */
 /*
- * رد فعل الضغط — **بيفضل 120ms عن قصد، ومش بيتبع --motion-fast.**
+ * Press feedback — **stays at 120ms on purpose, and doesn't follow --motion-fast.**
  *
- * ده مش انتقال، ده لمسة. المستخدم ضغط ومستني الجهاز يقول له "وصلتني".
- * أي تأخير هنا فوق ~150ms بيتقرا كـ **عطل** مش كفخامة — نفس السبب اللي
- * خلّى أبل تسيب ردود فعل الضغط فورية حتى في أنعم انتقالاتها.
+ * This isn't a transition, it's a touch. The user pressed and is waiting for the device to say "got it".
+ * Any delay here above ~150ms reads as a **fault**, not as luxury — the same reason
+ * Apple keeps press feedback instant even in its smoothest transitions.
  *
- * لو ربطته بـ --motion-fast (380ms) الزراير كلها هتحسّ إنها بتتأخّر.
+ * If you tied it to --motion-fast (380ms) every button would feel like it's lagging.
  */
 :where(a, button, [role="button"], summary) {
   transition: transform 120ms var(--motion-ease);
@@ -1669,12 +1674,12 @@ html [data-fx="field"] {
   letter-spacing: 0.5px;
 }
 
-/* --text-faint (#5a5a5a) تباينه 3.04 على الأسود — راسب في AA.
-   نص الـ placeholder نص حقيقي المستخدم محتاج يقراه، مش زخرفة.
-   --text-dim (#a59f90) بيدّي 7.96 وناجح، وهو توكن موجود أصلاً في الموقع.
+/* --text-faint (#5a5a5a) has a contrast of 3.04 on black — fails AA.
+   Placeholder text is real text the user needs to read, not decoration.
+   --text-dim (#a59f90) gives 7.96 and passes, and it's a token that already exists on the site.
 
-   وده كان الاستخدام الوحيد لـ --text-faint، فالتوكن اتشال — قاعدة القسم
-   ١ بتقول إن توكن محدش بيقراه مش توكن، ده تعليق. (css-audit مسكه). */
+   And that was the only use of --text-faint, so the token was removed — the section 1
+   rule says a token nobody reads isn't a token, it's a comment. (css-audit caught it.) */
 html [data-fx="field"]::placeholder { color: var(--text-dim); }
 
 /* The row owns the focus indication, so the input suppresses its own */
@@ -1932,26 +1937,26 @@ html [data-fx="overlay"][data-overlay="top"] {
 
 /*--------- 19. Neon ---------*/
 /*
- * الطبقة اللي بتخلي الثيم "cyberpunk" مش مجرد ألوان فاقعة.
+ * The layer that makes the theme "cyberpunk" rather than just loud colours.
  *
- * كلها شغّالة على الـ primitives اللي موجودة أصلاً (data-fx)، فمفيش ملف
- * module اتلمس. ده معناه إن الطبقة دي تتشال بحذف القسم ده كله والموقع
- * يرجع لشكله من غير ما يتكسر.
+ * It all runs on primitives that already exist (data-fx), so no
+ * module file was touched. That means this layer can be removed by deleting this whole section and the site
+ * returns to its previous look without breaking.
  *
- * كل توهّج بيعدّي من --glow-* ، والقسم ٩ بيصفّرهم على tier="low".
+ * Every glow goes through --glow-*, and section 9 zeroes them on tier="low".
  */
 
-/* ── العناوين ─────────────────────────────────────────────────────────── */
+/* ── Headings ──────────────────────────────────────────────────────────── */
 html [data-fx="section-title"] {
   text-shadow: var(--glow-text-main);
 }
 
 /*
- * أرقام ووحدات القياس — النص الأحادي الصغير اللي بيدّي الإحساس التقني.
+ * Numbers and units — the small monospace text that gives the technical feel.
  *
- * بيستخدم --tertiary (السماوي) مش الأحمر ولا الذهبي. السبب إن تلات
- * ألوان بنفس الوزن بيبقوا فوضى، فكل لون ليه دور: الأحمر للعناوين
- * والأزرار، الذهبي للـ focus والوسوم، والسماوي للبيانات بس.
+ * Uses --tertiary (cyan), not red or gold. The reason is that three
+ * colours of equal weight become chaos, so each colour has a role: red for headings
+ * and buttons, gold for focus and tags, and cyan for data only.
  */
 html [data-fx="label"],
 html [data-fx="id"] {
@@ -1959,13 +1964,13 @@ html [data-fx="id"] {
   text-shadow: 0 0 8px rgba(var(--tertiary-rgb), 0.3);
 }
 
-/* ── الروابط ──────────────────────────────────────────────────────────── */
+/* ── Links ─────────────────────────────────────────────────────────────── */
 html [data-fx="link"]:hover,
 html [data-fx="linkline"]:hover {
   text-shadow: var(--glow-text);
 }
 
-/* ── الوسوم ───────────────────────────────────────────────────────────── */
+/* ── Tags ──────────────────────────────────────────────────────────────── */
 html [data-fx="tag"] {
   border-color: rgba(var(--accent-color-rgb), 0.28);
   background: rgba(var(--accent-color-rgb), 0.05);
@@ -1978,7 +1983,7 @@ html [data-fx="tag"] {
   }
 }
 
-/* ── الأزرار ──────────────────────────────────────────────────────────── */
+/* ── Buttons ───────────────────────────────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
   html [data-fx="btn"]:hover { box-shadow: var(--glow-main); }
   html [data-fx="btn"][data-tone="accent"]:hover { box-shadow: var(--glow-accent); }
@@ -1986,7 +1991,7 @@ html [data-fx="tag"] {
 
 html [data-fx="btn"]:focus-visible { box-shadow: var(--glow-accent-strong); }
 
-/* ── أيقونات السوشيال ─────────────────────────────────────────────────── */
+/* ── Social icons ──────────────────────────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
   html [data-fx="social"]:hover {
     border-color: rgba(var(--accent-color-rgb), 0.7);
@@ -1994,27 +1999,27 @@ html [data-fx="btn"]:focus-visible { box-shadow: var(--glow-accent-strong); }
   }
 }
 
-/* ── خانات الإدخال ────────────────────────────────────────────────────── */
+/* ── Input fields ──────────────────────────────────────────────────────── */
 html [data-fx="field"]:focus {
   border-color: var(--accent-color);
   box-shadow: var(--glow-accent);
 }
 
 /*
- * كان هنا طبقة خطوط مسح (scanlines) على html::after. اتشالت.
+ * There used to be a scanline layer on html::after here. It was removed.
  *
- * السبب: صفحة البلوج عندها طبقة scanlines خاصة بيها أصلاً
- * (.page::before في blog/page.module.css، موجودة من قبل أي تعديل).
- * فطبقتي كانت بتتركّب فوقها، والاتنين مع بعض بيدّوا إحساس شبكة/نسيج
- * على الشاشة كلها — وده اللي أحمد شافه ومعجبوش.
+ * Reason: the blog page already has its own scanline layer
+ * (.page::before in blog/page.module.css, present before any changes).
+ * So the extra layer stacked on top of it, and together the two gave a grid/texture feel
+ * across the whole screen — which didn't look right.
  *
- * طبقة واحدة كانت كفاية، والموجودة أصلاً هي اللي أولى بالبقاء.
+ * One layer was enough, and the one that already existed deserves to stay.
  */
 
 /*
- * الأجهزة الضعيفة والناس اللي طالبة تقليل الحركة: التوهّج يتصفّر وخطوط
- * المسح تتشال. الألوان بتفضل زي ما هي — الثيم مبيتغيّرش، الزينة بس هي
- * اللي بتقف.
+ * Weak devices and people who prefer reduced motion: the glow is zeroed and the scanlines
+ * are removed. The colours stay the same — the theme doesn't change, only the decoration
+ * stops.
  */
 html[data-tier="low"] {
   --glow-main: none;

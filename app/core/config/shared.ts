@@ -1,17 +1,17 @@
 /*
  * core/config/shared.ts
  *
- * جزء من تقسيم portfolio.ts (كان 70KB في موديول واحد). كل حاجة هنا اتنقلت
- * زي ما هي بالحرف — مفيش أي تعديل في الداتا نفسها، التقسيم بس.
+ * Part of the portfolio.ts split (it used to be 70KB in a single module). Everything here was moved
+ * verbatim — no change to the data itself, only the split.
  *
- * ليه؟ layout.tsx كان بيعمل import لـ knowledgeEducationItems من الملف
- * الكبير، فبيجرّ معاه في نفس الـ module graph كل الـ 38 case وكل الـ
- * screenshots وكل فيديوهات اليوتيوب — على كل صفحة، حتى اللي مش محتاجاها.
- * الاعتماد على الـ tree-shaking عشان يفصلهم شغّال نظرياً، بس مع موديول واحد
- * فيه كل حاجة هو رهان مش ضمانة. الملفات المنفصلة بتخلي الفصل حقيقي.
+ * Why? layout.tsx imported knowledgeEducationItems from the big file,
+ * which pulled all 38 cases, all the screenshots and all the YouTube videos
+ * into the same module graph — on every page, even the ones that don't need them.
+ * Relying on tree-shaking to separate them works in theory, but with a single module
+ * containing everything it's a bet, not a guarantee. Separate files make the split real.
  *
- * portfolio.ts لسه موجود كـ barrel بيعيد التصدير، فأي import قديم شغّال زي
- * ما هو ومفيش حاجة اتكسرت.
+ * portfolio.ts still exists as a re-exporting barrel, so any old import works as
+ * before and nothing broke.
  */
 
 export type PdfResource = {
@@ -23,15 +23,15 @@ export type PdfResource = {
   category?: string;
   difficulty?: string;
   /*
-   * مسار ملف الـ PDF — **اختياري**.
+   * Path to the PDF file — **optional**.
    *
-   * مش كل case ليه تقرير مكتوب. ستة منهم أدلتهم صور بس. قبل كده الحقل ده
-   * كان مطلوب، فالستة دول كان لازم يكون ليهم مسار — والمسار كان بيشاور
-   * على ملف مش موجود، وزراير "View PDF" و"Download" بتوديك على 404.
+   * Not every case has a written report. Six of them have image-only evidence. Previously this field
+   * was required, so those six had to have a path — and the path pointed
+   * at a file that didn't exist, so the "View PDF" and "Download" buttons led to a 404.
    *
-   * لما يكون مش موجود: الزراير مبتتعرضش، والـ case مبيدخلش الـ sitemap
-   * كملف، والـ structured data مبتدّعيش وجود PDF. الحالة الطبيعية بقت
-   * "مفيش تقرير" مش "تقرير مكسور".
+   * When it's absent: the buttons aren't shown, the case isn't added to the sitemap
+   * as a file, and the structured data doesn't claim a PDF exists. The normal state is now
+   * "no report", not "broken report".
    */
   href?: string;
   tags?: readonly string[];
@@ -40,16 +40,16 @@ export type PdfResource = {
   readTime?: number;
   date?: string;
   /*
-   * صفحة التفاصيل بتاعة العنصر ده.
+   * The detail page for this item.
    *
-   * الافتراضي `/blog/{id}` — وده صح لكل الـ cases لأن generateStaticParams
-   * بيولّد صفحة لكل id في caseEvidenceLibrary.
+   * Defaults to `/blog/{id}` — which is correct for every case, because generateStaticParams
+   * generates a page for every id in caseEvidenceLibrary.
    *
-   * بس مكتبة البلوج بيتحقن فيها عنصر **مش** case: كارت الـ CV بـ id
-   * "soc-analyst-cv". مفيش صفحة بتتولّد ليه، فزرار "Open case" كان بيودّي
-   * على /blog/soc-analyst-cv → 404 على الموقع المنشور.
+   * But the blog library also gets an item injected that is **not** a case: the CV card with id
+   * "soc-analyst-cv". No page is generated for it, so the "Open case" button led
+   * to /blog/soc-analyst-cv → 404 on the published site.
    *
-   * الحقل ده بيخلي أي عنصر يقول صفحته فين صراحةً بدل ما نفترض.
+   * This field lets any item state its page explicitly instead of us assuming.
    */
   detailHref?: string;
 };
@@ -85,11 +85,11 @@ export type CaseEvidence = {
   category: string;
   difficulty: string;
   /*
-   * مسار الـ PDF — **اختياري**، زي PdfResource فوق وللسبب نفسه: ستة
-   * cases أدلتهم صور بس ومفيش لهم تقرير مكتوب.
+   * PDF path — **optional**, like PdfResource above and for the same reason: six
+   * cases have image-only evidence and no written report.
    *
-   * النوعين لازم يفضلوا متطابقين في النقطة دي، لأن caseEvidenceLibrary
-   * بيتحقن في blogPdfResources وبيترندر بنفس الكومبوننت.
+   * The two types must stay in sync on this point, because caseEvidenceLibrary
+   * is injected into blogPdfResources and rendered by the same component.
    */
   href?: string;
   tags: readonly string[];
@@ -170,12 +170,12 @@ export const formatDate = (value: string): string => {
 };
 
 /*
- * ثابت مش داتا — بس مكانه كان جوه config/youtube.ts جنب مصفوفات الفيديوهات
- * والـ playlists. النتيجة إن sensei-home.tsx اللي محتاج السطر ده بس كان
- * بيجرّ موديول اليوتيوب كله معاه للصفحة الرئيسية: 40 كيلوبايت من داتا
- * البلوج على صفحة مش بتعرض ولا فيديو.
+ * A constant, not data — but it used to live in config/youtube.ts next to the video
+ * and playlist arrays. As a result sensei-home.tsx, which only needs this one line,
+ * pulled the whole YouTube module onto the home page: 40 KB of blog
+ * data on a page that doesn't show a single video.
  *
- * ده بالظبط السبب اللي خلّى تقسيم portfolio.ts ضروري: الـ tree-shaking
- * مبيشيلش موديول كامل عشان إنت واخد منه ثابت واحد.
+ * That's exactly why the portfolio.ts split was necessary: tree-shaking
+ * doesn't drop a whole module just because you only take one constant from it.
  */
 export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@AhmedEmad-0x3omda";

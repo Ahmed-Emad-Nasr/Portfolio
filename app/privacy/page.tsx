@@ -1,15 +1,15 @@
 /*
- * app/privacy/page.tsx — سياسة الخصوصية
+ * app/privacy/page.tsx — Privacy Policy
  *
- * Server Component. النص كله ثابت ومبني وقت الـ build.
+ * Server Component. All the text is static and built at build time.
  *
- * ⚠️ الصفحة دي بتوصف سلوك الموقع الفعلي. الحقائق جاية من
- * core/config/legal.ts عشان متتكتبش مرتين — لو غيّرت الكود (فعّلت
- * تحليلات، ضفت فورم، ضفت تضمين) غيّر هناك والصفحة بتتحدّث لوحدها.
+ * ⚠️ This page describes the site's actual behaviour. The facts come from
+ * core/config/legal.ts so they're not written twice — if you change the code (enable
+ * analytics, add a form, add an embed) change it there and the page updates by itself.
  *
- * ⚠️ ودي **مش استشارة قانونية**. النص مكتوب على أساس الوضع الفعلي
- * للموقع، بس لو الموقع اتحوّل لنشاط تجاري أو بقى بيجمع بيانات، لازم
- * محامي يراجع.
+ * ⚠️ And this is **not legal advice**. The text is written based on the site's actual
+ * state, but if the site becomes a business or starts collecting data, a
+ * lawyer must review it.
  */
 
 import type { Metadata } from "next";

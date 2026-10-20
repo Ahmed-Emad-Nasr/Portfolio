@@ -44,13 +44,13 @@ export default function BackToTop() {
   }, []);
 
   /*
-   * التعليق اللي كان هنا بيقول إن "Lenis بيلفّ window.scrollTo" — وده
-   * مش صح، Lenis مبيعملش patch للدالة دي. اللي بيحصل إنه بيزامن حالته
-   * مع الحركة الأصلية، فالزرار كان **شغّال** — بس بمنحنى المتصفح
-   * (~٣٠٠ms ثابتة) مش بحركة الموقع، فكان بيحسّ مقطوع عن باقي الصفحة.
+   * The comment that used to be here said "Lenis wraps window.scrollTo" — which
+   * isn't true, Lenis doesn't patch that function. What happens is that it syncs its state
+   * with the native motion, so the button **worked** — but with the browser's curve
+   * (a fixed ~300ms), not the site's motion, so it felt disconnected from the rest of the page.
    *
-   * scrollToTop في core/utils/scroll بيعدّي من نفس محرّك العجلة، وبيراعي
-   * prefers-reduced-motion جوّه.
+   * scrollToTop in core/utils/scroll goes through the same engine as the wheel, and respects
+   * prefers-reduced-motion internally.
    */
   const handleClick = () => scrollToTop();
 

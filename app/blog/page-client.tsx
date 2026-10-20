@@ -23,16 +23,16 @@ const KanjiDivider = dynamic(() => import("@/app/core/components/KanjiDivider"))
 const BlogGalleryModal = dynamic(() => import("./components/BlogGalleryModal"), { ssr: false });
 
 /*
- * `startHere` بييجي جاهز مرندر من page.tsx (Server Component). لو الملف ده
- * استورد الكومبوننت مباشرة كان هيبقى client component ويحزّم مكتبة الـ
- * cases في bundle المتصفح — نفس السبب اللي خلّى خريطة ATT&CK تتبعت كـ prop
- * في الصفحة الرئيسية.
+ * `startHere` arrives pre-rendered from page.tsx (a Server Component). If this file
+ * imported the component directly it would become a client component and bundle the case
+ * library into the browser bundle — the same reason the ATT&CK map is passed as a prop
+ * on the home page.
  *
- * sortedPdfs / searchIndex / categoryFacets / toolFacets وأرقام العداد
- * التلاتة كلها محسوبة في page.tsx وقت الـ build دلوقتي — قبل كده كانت
- * بتتحسب هنا (في المتصفح) مع كل تحميل صفحة. caseScreenshotsByEvidenceId
- * لسه مستوردة هنا مباشرة لأن الجاليري محتاج مسارات الصور الفعلية وقت
- * التفاعل، مش مجرد أرقام.
+ * sortedPdfs / searchIndex / categoryFacets / toolFacets and the three counter
+ * numbers are all computed in page.tsx at build time now — previously they were
+ * computed here (in the browser) on every page load. caseScreenshotsByEvidenceId
+ * is still imported here directly because the gallery needs the actual image paths at
+ * interaction time, not just numbers.
  */
 type BlogPageClientProps = {
   startHere?: React.ReactNode;
@@ -61,13 +61,13 @@ export default function BlogPageClient({
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
 
-  // ── حالة الفلترة ────────────────────────────────────────────────────────
+  // ── Filter state ────────────────────────────────────────────────────────
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeTools, setActiveTools] = useState<string[]>([]);
 
-  // useDeferredValue: الكتابة في الخانة تفضل فورية حتى لو إعادة رسم الكروت
-  // اتأخرت فريم أو اتنين. أرخص وأدق من debounce يدوي.
+  // useDeferredValue: typing in the field stays instant even if re-rendering the cards
+  // lags by a frame or two. Cheaper and more accurate than a manual debounce.
   const deferredQuery = useDeferredValue(query);
 
   const isFiltering =
@@ -79,13 +79,13 @@ export default function BlogPageClient({
     const needle = deferredQuery.trim().toLowerCase();
 
     return sortedPdfs.filter((item) => {
-      // الـ CV مش case — بيختفي أول ما تبدأ تفلتر عشان مياخدش مكان نتيجة
+      // The CV isn't a case — it disappears as soon as you start filtering so it doesn't take a result slot
       if (item.id === cvResourceId) return false;
 
       if (needle && !(searchIndex[item.id] ?? "").includes(needle)) return false;
       if (activeCategory && item.category !== activeCategory) return false;
 
-      // OR جوه نفس الفلتر: "وريني اللي فيه Wazuh أو Volatility"
+      // OR within the same filter: "show me the ones with Wazuh or Volatility"
       if (activeTools.length > 0) {
         const tools = item.tools ?? [];
         if (!activeTools.some((tool) => tools.includes(tool))) return false;
@@ -95,11 +95,11 @@ export default function BlogPageClient({
     });
   }, [sortedPdfs, isFiltering, deferredQuery, activeCategory, activeTools, searchIndex, cvResourceId]);
 
-  // ── مزامنة الفلاتر مع الـ URL ───────────────────────────────────────────
-  // مش بنستخدم useSearchParams / router.replace عن قصد: الأولى بتفرض Suspense
-  // boundary وبتخرج الصفحة من الـ static export الكامل، والتانية بتعمل
-  // re-render للشجرة كلها مع كل حرف. history.replaceState بيعمل نفس الشغل
-  // من غير أي واحدة منهم.
+  // ── Sync filters with the URL ───────────────────────────────────────────
+  // We deliberately don't use useSearchParams / router.replace: the former forces a Suspense
+  // boundary and takes the page out of the full static export, and the latter
+  // re-renders the whole tree on every keystroke. history.replaceState does the same job
+  // without either of those.
   const filtersHydrated = useRef(false);
 
   useEffect(() => {
@@ -111,12 +111,12 @@ export default function BlogPageClient({
       setActiveTools(tools ? tools.split(",").filter(Boolean) : []);
     };
 
-    // بنقرا بعد الـ mount مش أثناء الـ render: الـ HTML المبني على السيرفر
-    // مفيهوش فلاتر، فلو بدأنا بحالة مفلترة كان هيحصل hydration mismatch.
+    // We read after mount, not during render: the HTML built on the server
+    // has no filters, so starting from a filtered state would cause a hydration mismatch.
     readFromUrl();
     filtersHydrated.current = true;
 
-    // زرار الرجوع في المتصفح لازم يرجّع الفلاتر اللي كانت
+    // The browser's back button must restore the filters that were active
     window.addEventListener("popstate", readFromUrl);
     return () => window.removeEventListener("popstate", readFromUrl);
   }, []);
@@ -124,8 +124,8 @@ export default function BlogPageClient({
   useEffect(() => {
     if (!filtersHydrated.current) return;
 
-    // debounce: Safari بيحدّد عدد نداءات replaceState في الدقيقة، والكتابة مع
-    // كل حرف بتوصل للحد ده بسهولة.
+    // debounce: Safari limits the number of replaceState calls per minute, and writing on
+    // every keystroke easily hits that limit.
     const timer = window.setTimeout(() => {
       const params = new URLSearchParams();
       if (query.trim()) params.set("q", query.trim());
@@ -188,9 +188,9 @@ export default function BlogPageClient({
   }, []);
 
   // ── Deep link (#case-<id>) ──────────────────────────────────────────────
-  // المتصفح بيحاول يقفز على الهاش قبل ما الكروت تتركّب، فبيفشل بصمت.
-  // بنعيد المحاولة لحد ما العنصر يبان، وبنوقف بعد ٢ ثانية بالظبط بدل ما
-  // نفضل ندوّر على لينك بايظ للأبد.
+  // The browser tries to jump to the hash before the cards are mounted, so it silently fails.
+  // We retry until the element appears, and stop after exactly 2 seconds instead of
+  // searching for a broken link forever.
   const hashTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export default function BlogPageClient({
       if (cancelled) return;
       const el = document.getElementById(hash.slice(1));
       if (el) {
-        // الـ offset بتاع الهيدر متظبط بـ scroll-margin-top في BlogCard.module.css
+        // The header offset is handled by scroll-margin-top in BlogCard.module.css
         el.scrollIntoView({ block: "start", behavior: "auto" });
         return;
       }
@@ -225,8 +225,8 @@ export default function BlogPageClient({
       <LoadingScreen />
       <AppBar />
       
-      {/* مسار قراءة قصير قبل المكتبة الكاملة: 38 تقرير في ليستة واحدة
-          بتشلّ اللي فاتحها، وأغلب اللي بيفتح الصفحة دي عنده خمس دقايق. */}
+      {/* A short reading path before the full library: 38 reports in a single list
+          overwhelm whoever opens it, and most people opening this page have five minutes. */}
       {startHere}
 
       <BlogPdfLibrarySection

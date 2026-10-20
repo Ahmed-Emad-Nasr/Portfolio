@@ -1,29 +1,29 @@
 /*
  * scripts/generate-hero-sizes.mjs
  *
- * بيولّد نسخ متعدّدة المقاسات من صورة الـ hero.
+ * Generates multi-size variants of the hero image.
  *
- * ═══ ليه ═══
+ * ═══ Why ═══
  *
- * الموقع مصدَّر بـ output: "export" وشغّال على GitHub Pages، يعني
- * `images.unoptimized: true` إجباري. ووقتها <Image> بتاعة Next بترندر
- * <img> عادي **من غير srcset** — الـ prop اسمها `sizes` بتبقى موجودة
- * في الكود ومالهاش أي أثر، لأن مفيش صور بمقاسات تانية أصلاً عشان يختار
- * من بينها.
+ * The site is exported with output: "export" and hosted on GitHub Pages, so
+ * `images.unoptimized: true` is mandatory. In that mode Next's <Image> renders
+ * a plain <img> **without srcset** — the `sizes` prop is present
+ * in the code but has no effect, because there are no other image sizes to choose
+ * from.
  *
- * النتيجة: تليفون بشاشة 360px بيحمّل نفس الملف بالظبط اللي بيتحمّل على
- * شاشة 4K. الصورة دي هي عنصر الـ LCP، يعني ده بيدخل مباشرة في الدرجة.
+ * Result: a phone with a 360px screen downloads exactly the same file as a
+ * 4K screen. This image is the LCP element, so it feeds directly into the score.
  *
- * ═══ التشغيل ═══
+ * ═══ Usage ═══
  *
  *   npm i -D sharp
  *   node scripts/generate-hero-sizes.mjs
  *
- * بيقرا:  public/Assets/art-gallery/Images/logo/3omda.webp
- * بيكتب:  3omda-320.webp / 3omda-420.webp / 3omda-560.webp / 3omda-840.webp
- *         (جنب الأصل، فالأصل بيفضل شغّال كـ fallback وكصورة الـ OG)
+ * Reads:   public/Assets/art-gallery/Images/logo/3omda.webp
+ * Writes:  3omda-320.webp / 3omda-420.webp / 3omda-560.webp / 3omda-840.webp
+ *          (next to the original, so the original still works as a fallback and as the OG image)
  *
- * شغّله مرة واحدة بعد أي تغيير في الصورة الأصلية، والناتج بيتعمله commit.
+ * Run it once after any change to the original image, and commit the output.
  */
 
 import sharp from "sharp";
@@ -32,33 +32,33 @@ import { dirname, join } from "node:path";
 
 const SOURCE = "public/Assets/art-gallery/Images/logo/3omda.webp";
 
-/* 320 و420 بيغطّوا كل التليفونات تقريباً (عرض الصورة = 80vw تحت 968px).
-   560 هو المقاس المعروض على الديسكتوب. 840 للشاشات بكثافة 1.5x. */
+/* 320 and 420 cover almost every phone (image width = 80vw below 968px).
+   560 is the size shown on desktop. 840 for 1.5x density screens. */
 const WIDTHS = [320, 420, 560, 840];
 
-/* quality 78 على WebP بيبقى بصرياً مطابق تقريباً عند المقاسات دي وبيوفّر
-   حوالي 35% مقارنةً بـ 90. effort: 6 بيبطّأ البناء وبيصغّر الملف — والبناء
-   بيحصل مرة واحدة، فده الاتجاه الصح للمقايضة. */
+/* quality 78 on WebP is visually near-identical at these sizes and saves
+   about 35% compared to 90. effort: 6 slows the build and shrinks the file — and the build
+   happens once, so that's the right direction for the trade-off. */
 const QUALITY = 78;
 
 async function main() {
   try {
     await stat(SOURCE);
   } catch {
-    console.error(`[hero-sizes] مش لاقي الأصل: ${SOURCE}`);
-    console.error("[hero-sizes] شغّل السكربت من جذر المشروع.");
+    console.error(`[hero-sizes] source not found: ${SOURCE}`);
+    console.error("[hero-sizes] run the script from the project root.");
     process.exit(1);
   }
 
   const meta = await sharp(SOURCE).metadata();
-  console.log(`[hero-sizes] الأصل: ${meta.width}×${meta.height}`);
+  console.log(`[hero-sizes] source: ${meta.width}×${meta.height}`);
 
   await mkdir(dirname(SOURCE), { recursive: true });
 
   for (const width of WIDTHS) {
-    // متكبّرش صورة أصغر من المطلوب — ده بيزوّد البايتس من غير أي تفاصيل.
+    // Don't upscale an image smaller than requested — it adds bytes without adding detail.
     if (meta.width && width > meta.width) {
-      console.log(`[hero-sizes] تخطّي ${width}px — أكبر من الأصل`);
+      console.log(`[hero-sizes] skipping ${width}px — larger than the source`);
       continue;
     }
 
@@ -71,10 +71,10 @@ async function main() {
     console.log(`[hero-sizes] ${out} — ${(info.size / 1024).toFixed(1)} KB`);
   }
 
-  console.log("[hero-sizes] تمام. حدّث srcSet في sensei-home.tsx لو غيّرت المقاسات.");
+  console.log("[hero-sizes] done. Update srcSet in sensei-home.tsx if you changed the sizes.");
 }
 
 main().catch((err) => {
-  console.error("[hero-sizes] فشل:", err);
+  console.error("[hero-sizes] failed:", err);
   process.exit(1);
 });

@@ -14,12 +14,12 @@
 .page {
   min-height: 100vh;
   padding: 7rem 2rem 9rem;
-  /* حجاب شفاف — الخلفية المتحركة بتبان من وراه. شوف --page-veil في
+  /* A translucent veil — the animated background shows through it. See --page-veil in
      globals.css.
 
-     ملحوظة: الطباعة مش متأثرة. globals.css فيه
+     Note: printing isn't affected. globals.css has
      `@media print { body { background: #fff !important } }`
-     وهو بيغطي ده، والحجاب شفاف أصلاً فمش هيطبع أي حاجة. */
+     which covers this, and the veil is translucent anyway so it won't print anything. */
   background: var(--page-veil);
 }
 

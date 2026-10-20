@@ -1,18 +1,18 @@
 /*
- * app/cv/page.tsx — صفحة الـ CV بـ HTML
+ * app/cv/page.tsx — the CV page in HTML
  *
- * ليه صفحة أصلاً وإحنا عندنا PDF؟
+ * Why a page at all when we already have a PDF?
  *
- *  1. **أنظمة الـ ATS بتقرا HTML أحسن بكتير من PDF.** أغلب أنظمة التوظيف
- *     بتفشل في استخراج النص من PDF متعدد الأعمدة أو فيه أيقونات، وبتطلّع
- *     منه خليط مبعثر. الـ HTML بيتقرا كما هو.
- *  2. **جوجل بيفهرسها كصفحة.** الـ PDF بيتفهرس بس بترتيب أقل وبتجربة أسوأ.
- *  3. **الموبايل.** حد بيفتح لينك من لينكدإن مش هيقعد يزوّم في PDF.
- *  4. **مستحيل تبقى قديمة.** الصفحة بتتبني من نفس الـ config بتاع الموقع،
- *     فأي رقم بتغيّره بيتغيّر في الاتنين. النسخة المطبوعة من الصفحة دي
- *     (Ctrl+P) بتديك PDF متطابق مع الموقع تلقائياً.
+ *  1. **ATS systems read HTML far better than PDF.** Most applicant-tracking systems
+ *     fail to extract text from a multi-column PDF or one with icons, and produce
+ *     a scrambled mix. HTML is read as-is.
+ *  2. **Google indexes it as a page.** A PDF gets indexed, but ranks lower and with a worse experience.
+ *  3. **Mobile.** Someone opening a link from LinkedIn won't sit and zoom into a PDF.
+ *  4. **It can never go stale.** The page is built from the same config as the site,
+ *     so any number you change changes in both. The printed version of this page
+ *     (Ctrl+P) gives you a PDF that automatically matches the site.
  *
- * Server Component: كل الداتا بتتقري وقت الـ build والزائر بياخد HTML بس.
+ * Server Component: all the data is read at build time and the visitor gets HTML only.
  */
 
 import type { Metadata } from "next";
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
 };
 
-/** الـ desc في experience.ts سطر واحد مفصول بـ "•" — بيتحوّل لنقط هنا */
+/** The desc in experience.ts is a single line separated by "•" — it's turned into bullets here */
 const toBullets = (desc: string): string[] =>
   desc.split("•").map((part) => part.trim()).filter(Boolean);
 
@@ -53,10 +53,10 @@ const dateRange = (start: string, end?: string): string =>
   `${formatDate(start)} — ${end ? formatDate(end) : "Present"}`;
 
 /*
- * كل عنصر في knowledgeEducationItems عنده subTagHyperlink دلوقتي، فـ
- * TypeScript بيضيّق الفرع التاني بتاع `item.subTagHyperlink ? … : …` لـ
- * never ويرفض المشروع. الدالة دي بتفصل القرار عن التضييق، وبتفضل صح لو
- * ضفت بعدين عنصر من غير رابط.
+ * Every item in knowledgeEducationItems now has a subTagHyperlink, so
+ * TypeScript narrows the second branch of `item.subTagHyperlink ? … : …` to
+ * never and rejects the project. This function separates the decision from the narrowing, and stays correct if
+ * an item without a link is added later.
  */
 function OrgName({ name, href }: { name?: string; href?: string }) {
   if (!name) return null;
@@ -70,14 +70,14 @@ function OrgName({ name, href }: { name?: string; href?: string }) {
 type TimelineItem = (typeof knowledgeEducationItems)[number];
 
 /*
- * كتلة عنصر واحد في الـ CV.
+ * The block for a single CV item.
  *
- * كانت مكرّرة حرفياً في قسمي Experience و Education، وإضافة قسم
- * Volunteer كانت هتخليها تلات نسخ. النسخ المتطابقة دي بالظبط اللي
- * خلّت ملف الهيدر اليتيم يقعد في المشروع شهور من غير ما حد ياخد باله.
+ * It was duplicated verbatim in the Experience and Education sections, and adding a
+ * Volunteer section would have made it three copies. Identical copies like these are exactly what
+ * let the orphaned header file sit in the project for months without anyone noticing.
  *
- * linkOrg: قسم التعليم كان بيعرض اسم الجهة كنص من غير رابط، على عكس
- * الخبرة. حافظت على الفرق ده بدل ما أوحّده من نفسي.
+ * linkOrg: the education section showed the organisation name as text without a link, unlike
+ * experience. That difference was preserved rather than unified unilaterally.
  */
 function Entry({ item, linkOrg = true }: { item: TimelineItem; linkOrg?: boolean }) {
   return (
@@ -102,7 +102,7 @@ function Entry({ item, linkOrg = true }: { item: TimelineItem; linkOrg?: boolean
   );
 }
 
-/** قسم كامل. مبيترندرش خالص لو مفيش عناصر — عشان مايبانش عنوان فاضي. */
+/** A complete section. Not rendered at all if there are no items — so no empty heading appears. */
 function EntrySection({ title, items }: { title: string; items: readonly TimelineItem[] }) {
   if (items.length === 0) return null;
   return (
@@ -136,8 +136,8 @@ export default function CvPage() {
             <li><a href={CV_CONTACT.github.href} target="_blank" rel="noopener noreferrer">{CV_CONTACT.github.label}</a></li>
           </ul>
 
-          {/* data-print="hide" بيخفيها وقت الطباعة — مفيش معنى لزرار
-              "Download" على ورقة مطبوعة */}
+          {/* data-print="hide" hides it when printing — there's no point in a
+              "Download" button on a printed page */}
           <div className={styles.actions} data-print="hide">
             <a data-fx="btn" data-btn="solid" href={normalizePublicHref(CV_PDF_HREF)} download>
               Download PDF

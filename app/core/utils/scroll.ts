@@ -1,51 +1,51 @@
 /*
  * core/utils/scroll.ts
  *
- * ═══ ليه الملف ده موجود ═══
+ * ═══ Why this file exists ═══
  *
- * الموقع فيه ٦ أماكن بتنادي `window.scrollTo` بنفسها:
+ * The site has 6 places that call `window.scrollTo` themselves:
  *
- *   header/sensei-header.tsx        behavior: "auto"    ← قفزة صريحة
- *   blog_header/sensei-header.tsx   behavior: "auto"    ← قفزة صريحة
+ *   header/sensei-header.tsx        behavior: "auto"    ← explicit jump
+ *   blog_header/sensei-header.tsx   behavior: "auto"    ← explicit jump
  *   CommandPalette.tsx (×2)         behavior: "smooth"
  *   CommandPaletteMount.tsx (×2)    behavior: "smooth"
  *   BackToTop.tsx                   behavior: "smooth"
  *
- * دول **بيشتغلوا** — Lenis مبيكسرهمش. راجعت مصدر lenis@1.3.23:
- * `onNativeScroll` بيلاقي إن `isScrolling` مش شغّال بحركة منه، فبيزامن
- * حالته الداخلية مع الموضع الحقيقي (`animatedScroll = targetScroll =
- * actualScroll`) ويعلّم نفسه `isScrolling = "native"`. يعني بيمشي ورا
- * المتصفح بدل ما يحاربه.
+ * These **work** — Lenis doesn't break them. Checked against the lenis@1.3.23 source:
+ * `onNativeScroll` sees that `isScrolling` wasn't triggered by Lenis itself, so it syncs
+ * its internal state with the real position (`animatedScroll = targetScroll =
+ * actualScroll`) and marks itself `isScrolling = "native"`. So it follows
+ * the browser instead of fighting it.
  *
- * (وملف lenis.css في الإصدار ده **مفيهوش** `scroll-behavior: auto
- * !important` — القاعدة دي كانت في إصدارات أقدم. لو قريت الكلام ده في
- * حتة تانية، اتأكد من إصدارك الأول.)
+ * (And lenis.css in this version does **not** contain `scroll-behavior: auto
+ * !important` — that rule was in older versions. If you read that claim
+ * somewhere else, check your version first.)
  *
- * ═══ فالمشكلة الحقيقية إيه ═══
+ * ═══ So what's the real problem ═══
  *
- * مش إنهم بيقعوا. المشكلة إن الموقع فيه **حركتين مختلفتين**:
+ * Not that they break. The problem is that the site has **two different motions**:
  *
- *   العجلة   →  Lenis, lerp 0.045     — بطيئة، بتستقرّ في ~ثانية
- *   الأزرار  →  smooth بتاع المتصفح   — منحنى ثابت، ~٣٠٠ms، مش قابل
- *                                        للتعديل خالص
- *   النav    →  قفزة فورية
+ *   Wheel    →  Lenis, lerp 0.045       — slow, settles in ~1 second
+ *   Buttons  →  the browser's smooth    — fixed curve, ~300ms, not
+ *                                          adjustable at all
+ *   Nav      →  instant jump
  *
- * فالصفحة بتنزل على مهلها تحت إيدك، وبعدين تضغط زرار فتـ"طقّ". تلات
- * إحساسات مختلفة في موقع واحد.
+ * So the page glides down slowly under your hand, then you press a button and it "snaps". Three
+ * different feels on one site.
  *
- * ومفيش طريقة تظبط بيها الحركة الأصلية بتاعة المتصفح — مفيش duration ولا
- * easing في مواصفات `scrollTo`. الطريقة الوحيدة للتحكم إنك تعدّي من
- * محرّك واحد.
+ * And there's no way to tune the browser's native motion — there's no duration or
+ * easing in the `scrollTo` spec. The only way to control it is to go through
+ * a single engine.
  *
- * الملف ده هو المصدر الواحد. أي حاجة عايزة تحرّك الصفحة بتعدّي من هنا،
- * وهو بيقرر: Lenis لو موجود، وإلا الحركة الأصلية بتاعة المتصفح.
+ * This file is that single source. Anything that wants to move the page goes through here,
+ * and it decides: Lenis if present, otherwise the browser's native motion.
  */
 
 import type Lenis from "lenis";
 
-/* الـ instance بيتسجّل من LenisGsapBridge جوه <ReactLenis>. بيفضل null
-   على السيرفر، وعلى الأجهزة الضعيفة (tier="low" مبيركّبش Lenis أصلاً) —
-   وفي الحالتين الدوال تحت بترجع للسلوك الأصلي. */
+/* The instance is registered by LenisGsapBridge inside <ReactLenis>. It stays null
+   on the server, and on weak devices (tier="low" never mounts Lenis) —
+   and in both cases the functions below fall back to native behaviour. */
 let lenis: Lenis | null = null;
 
 export function registerLenis(instance: Lenis | null): void {
@@ -62,11 +62,11 @@ export function prefersReducedMotion(): boolean {
 }
 
 /**
- * ارتفاع الهيدر الثابت + مساحة تنفّس.
+ * Height of the fixed header + breathing room.
  *
- * الهيدر `position: fixed`، فأي هدف بيتزحلق ليه لازم يطرح ارتفاعه وإلا
- * العنوان بيتخبّى تحته. الرقم بيتقرا من الـ DOM مش ثابت مكتوب، لأن
- * الارتفاع بيتغيّر مع --ui-scale ومع الـ breakpoints.
+ * The header is `position: fixed`, so any scroll target must subtract its height or
+ * the heading ends up hidden underneath it. The number is read from the DOM, not hard-coded, because
+ * the height changes with --ui-scale and with the breakpoints.
  */
 export function getHeaderOffset(): number {
   if (typeof document === "undefined") return 0;
@@ -75,33 +75,33 @@ export function getHeaderOffset(): number {
 }
 
 type ScrollOpts = {
-  /** ثواني. بيتتجاهل لو المستخدم طالب تقليل الحركة. */
+  /** Seconds. Ignored if the user prefers reduced motion. */
   duration?: number;
   offset?: number;
-  /** يقفز على طول من غير أي حركة. */
+  /** Jump instantly without any motion. */
   immediate?: boolean;
 };
 
 /*
- * منحنى التنعيم الافتراضي — expo-out.
+ * The default easing curve — expo-out.
  *
- * بيبدأ سريع وبيقف بهدوء شديد. ده المهم هنا: النهاية البطيئة هي اللي
- * بتدّي إحساس إن الصفحة "بتستقرّ" مش بتفرمل، وبتدّي الصور اللي تحت
- * الطية وقت تخلص تحميل قبل ما تبقى في منتصف الشاشة.
+ * Starts fast and stops very gently. That's what matters here: the slow ending is what
+ * gives the feeling that the page "settles" rather than brakes, and it gives the images below
+ * the fold time to finish loading before they reach the middle of the screen.
  */
 export const EASE_OUT_EXPO = (t: number): number => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
 /*
- * ملحوظة: المنحنى ده هو نفسه --motion-ease-out في globals.css
- * (cubic-bezier(0.16, 1, 0.3, 1) تقريب للـ expo-out). الاتنين لازم
- * يفضلوا متطابقين — السكرول والظهور بيتشافوا مع بعض، ولو اتنين منحنى
- * مختلف الحركة بتبان متنافرة.
+ * Note: this curve is the same as --motion-ease-out in globals.css
+ * (cubic-bezier(0.16, 1, 0.3, 1) approximates expo-out). The two must
+ * stay in sync — scrolling and reveals are seen together, and with two different
+ * curves the motion looks disjointed.
  */
 
-/** المدة الافتراضية لأي قفزة برمجية (زرار، اختصار، لينك في النav). */
+/** Default duration for any programmatic jump (button, shortcut, nav link). */
 export const SCROLL_DURATION = 2.1;
 
-/** حرّك الصفحة لإحداثي رأسي معيّن. */
+/** Scroll the page to a given vertical coordinate. */
 export function scrollToY(top: number, opts: ScrollOpts = {}): void {
   if (typeof window === "undefined") return;
 
@@ -114,37 +114,37 @@ export function scrollToY(top: number, opts: ScrollOpts = {}): void {
       duration: opts.duration ?? SCROLL_DURATION,
       easing: EASE_OUT_EXPO,
       offset: opts.offset ?? 0,
-      /* لو المستخدم لمس العجلة في النص، سيبه — القفزة البرمجية مش أهم من
-         نيّته. من غير ده الصفحة بتحارب صباعه. */
+      /* If the user touches the wheel mid-way, let them — a programmatic jump isn't more important than
+         their intent. Without this the page fights their finger. */
       lock: false,
     });
     return;
   }
 
-  /* مفيش Lenis: الجهاز ضعيف أو الـ tier منع تركيبه. الحركة الأصلية بتاعة
-     المتصفح هي الصح هنا — بتشتغل على الـ compositor، يعني أرخص من أي
-     حاجة نكتبها بجافاسكريبت. مفيش تحكم في مدتها، بس على جهاز ضعيف ده
-     مش عيب — ده المطلوب. */
+  /* No Lenis: the device is weak or the tier prevented mounting it. The browser's native
+     motion is the right call here — it runs on the compositor, so it's cheaper than anything
+     we could write in JavaScript. There's no control over its duration, but on a weak device that's
+     not a flaw — it's the goal. */
   window.scrollTo({ top: target, behavior: immediate ? "auto" : "smooth" });
 }
 
-/** حرّك الصفحة لعنصر، مع مراعاة الهيدر الثابت. */
+/** Scroll the page to an element, accounting for the fixed header. */
 export function scrollToElement(el: Element | null, opts: ScrollOpts = {}): void {
   if (!el || typeof window === "undefined") return;
   const top = window.scrollY + el.getBoundingClientRect().top - getHeaderOffset();
   scrollToY(top, opts);
 }
 
-/** حرّك الصفحة لأول الصفحة. */
+/** Scroll to the top of the page. */
 export function scrollToTop(opts: ScrollOpts = {}): void {
   scrollToY(0, opts);
 }
 
 /**
- * هل الـ focus دلوقتي في حاجة بتكتب فيها؟
+ * Is focus currently in something you type into?
  *
- * أي اختصار كيبورد لازم يعدّي من هنا الأول. من غيره سهم لتحت جوه خانة
- * بحث بيحرّك الصفحة بدل ما يحرّك المؤشر — وده بيكسر الخانة تماماً.
+ * Every keyboard shortcut must check this first. Without it, the down arrow inside a search
+ * field scrolls the page instead of moving the caret — which breaks the field completely.
  */
 export function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -158,12 +158,12 @@ export function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 /**
- * هل العنصر ده (أو أي أب ليه) بيسكرول جوّه نفسه؟
+ * Does this element (or any ancestor) scroll internally?
  *
- * الترمينال والـ command palette ومودال المعرض كلهم عندهم مناطق بتسكرول
- * لوحدها (`overflow-y: auto` + `overscroll-behavior: contain`). لو
- * اختصارات الكيبورد خطفت السهم جوّاهم، القوايم دي مش هتسكرول خالص
- * والصفحة اللي وراها هي اللي هتتحرّك.
+ * The terminal, the command palette and the gallery modal all have regions that scroll
+ * on their own (`overflow-y: auto` + `overscroll-behavior: contain`). If
+ * keyboard shortcuts hijacked the arrow keys inside them, those lists wouldn't scroll at all
+ * and the page behind them would move instead.
  */
 export function isInScrollableRegion(target: EventTarget | null): boolean {
   let node = target instanceof HTMLElement ? target : null;

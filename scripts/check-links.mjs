@@ -1,15 +1,15 @@
 /*
  * scripts/check-links.mjs
  *
- * بيزحف على `out/` بعد الـ build وبيتأكد إن كل لينك داخلي بيوصل لملف
- * موجود فعلاً.
+ * Crawls `out/` after the build and checks that every internal link resolves to a file
+ * that actually exists.
  *
- * الفحص ده كان هيمسك الخطأين اللي وصلوا للإنتاج:
- *  - /blog/soc-analyst-cv — كارت بيلينك على صفحة generateStaticParams
- *    مبيولّدهاش
- *  - أي مسار أصل اتغيّر في الكود ومااتغيرش على القرص
+ * This check would have caught the two bugs that reached production:
+ *  - /blog/soc-analyst-cv — a card linking to a page generateStaticParams
+ *    doesn't generate
+ *  - any asset path changed in code but not on disk
  *
- * تشغيل:  npm run build && node scripts/check-links.mjs
+ * Run:  npm run build && node scripts/check-links.mjs
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
@@ -24,7 +24,7 @@ if (!existsSync(OUT)) {
   process.exit(1);
 }
 
-/* لازم يطابق basePath بتاع next.config.mjs. لو غيّرته، غيّره هنا. */
+/* Must match basePath in next.config.mjs. If you change it, change it here. */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "/Portfolio";
 
 const files = [];
@@ -37,7 +37,7 @@ const walk = (dir) => {
 };
 walk(OUT);
 
-/** كل عنوان يقدر الموقع يخدمه */
+/** Every URL the site can serve */
 const servable = new Set();
 for (const f of files) {
   const rel = "/" + relative(OUT, f).split(/[\\/]/).join("/");
@@ -50,14 +50,14 @@ for (const f of files) {
 
 const broken = new Map();
 /*
- * الـ thumbnails حالة خاصة.
+ * Thumbnails are a special case.
  *
- * getThumbnail() بيولّد "X-thumb.webp" لكل صورة. لو الملف مش موجود،
- * الكومبوننتس بترجع للصورة الكاملة — فالصفحة شغالة والزائر مش شايف حاجة
- * مكسورة. مجرد إن المتصفح بيحمّل صورة أكبر من اللازم.
+ * getThumbnail() generates "X-thumb.webp" for every image. If the file is missing,
+ * components fall back to the full image — so the page works and the visitor sees nothing
+ * broken. The browser just downloads a larger image than necessary.
  *
- * لو حسبناها أخطاء، الـ CI هيفضل أحمر على حاجة مش كاسرة — وأي فحص بيفضل
- * أحمر بيتجاهل. فبتتعد تحذير، والعدد بيتعرض عشان تعرف حجم المشكلة.
+ * If we counted them as errors, CI would stay red over something non-breaking — and any check that stays
+ * red gets ignored. So they count as warnings, and the count is shown so you know the size of the problem.
  */
 const missingThumbs = new Map();
 let checkedLinks = 0;
@@ -67,12 +67,12 @@ for (const f of files.filter((f) => f.endsWith(".html"))) {
   const from = relative(OUT, f);
 
   for (const [, href] of html.matchAll(/(?:href|src)="(\/[^"#?]*)"/g)) {
-    // الـ chunks بتاعة Next اسمها بيتولّد، مش محتاجة فحص
+    // Next's chunks have generated names, no need to check them
     if (href.startsWith("/_next/")) continue;
 
     checkedLinks++;
 
-    // شيل الـ basePath عشان نقارن بمسارات out/
+    // Strip the basePath so we can compare against paths in out/
     const path = href.startsWith(BASE_PATH) ? href.slice(BASE_PATH.length) || "/" : href;
     const trimmed = path.replace(/\/$/, "") || "/";
 

@@ -4,35 +4,35 @@
  * sensei_loader.tsx — SOC console boot v2
  * Author: Ahmed Emad Nasr
  *
- * ═══ الفكرة ═══
+ * ═══ The idea ═══
  *
- * الشاشة دي أول حاجة أي حد بيشوفها، وأغلبهم recruiters. فبدل ما تبقى
- * spinner بيقول "استنى"، بقت أول معلومة عنك: كونسول SOC بيقلع.
+ * This screen is the first thing anyone sees, and most of them are recruiters. So instead of being
+ * a spinner that says "wait", it became the first fact about you: a SOC console booting up.
  *
- * والقاعدة اللي الملف كله ماشي عليها: **كل رقم على الشاشة دي حقيقي.**
- * مفيش عدّاد وهمي ولا شريط بيتحرك على مؤقّت. لو مفيش مصدر حقيقي
- * للمعلومة، مبتتعرضش.
+ * And the rule the whole file follows: **every number on this screen is real.**
+ * No fake counter and no bar moving on a timer. If there's no real source
+ * for a piece of information, it isn't shown.
  *
- * ═══ اللي بيتعرض، ومنين ═══
+ * ═══ What's shown, and where it comes from ═══
  *
- *  · الشريط         → حالة الـ DOM + نسبة الصور اللي خلصت تحميل
- *  · الساعة         → وقت الزائر الحقيقي بتوقيت UTC
- *  · سطر CLIENT     → navigator.connection / hardwareConcurrency /
- *                     deviceMemory + الـ tier اللي useDeviceTier حسبه
- *  · سطور الإقلاع   → ثوابت من الـ CV (شوف التعليق تحت)
+ *  · The bar          → DOM state + the share of images that have finished loading
+ *  · The clock        → the visitor's real time in UTC
+ *  · CLIENT line      → navigator.connection / hardwareConcurrency /
+ *                       deviceMemory + the tier computed by useDeviceTier
+ *  · Boot lines       → constants from the CV (see the comment below)
  *
- * سطر الـ CLIENT هو المفضّل عندي: المتصفح بيدّي المعلومات دي مجاناً،
- * والموقع بيحسبها أصلاً عشان ميزانية الحركة. عرضها على شاشة بورتفوليو
- * أمن معلومات بتقول للزائر "أنا شايف الجهاز اللي بتتفرّج منه" — وده
- * صادق تماماً وفي نفس الوقت الغمزة الصح للمجال.
+ * The CLIENT line is my favourite: the browser provides this information for free,
+ * and the site already computes it for the motion budget. Showing it on the boot screen of a security
+ * portfolio tells the visitor "I can see the device you're browsing from" — which is
+ * completely honest and at the same time the right wink for the field.
  *
- * لو حسّيت إنها زيادة، امسح <ClientLine /> وسطر الاستدعاء بتاعها. مفيش
- * حاجة تانية بتعتمد عليها.
+ * If it feels like too much, delete <ClientLine /> and the line that renders it. Nothing
+ * else depends on it.
  *
- * ═══ حاجة مهمة عن السلوك ═══
+ * ═══ An important note about behaviour ═══
  *
- * الشاشة دي **عمرها ما بتأخّر المحتوى**. الـ MAX_VISIBLE_MS سقف مطلق:
- * لو أي صورة علّقت، الشاشة بتتشال والزائر بيكمّل.
+ * This screen **never delays the content**. MAX_VISIBLE_MS is a hard ceiling:
+ * if any image hangs, the screen is removed and the visitor carries on.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -40,16 +40,16 @@ import { useDeviceTier } from "@/app/core/hooks/useDeviceTier";
 import styles from "./sensei_loader.module.css";
 
 /*
- * سطور الإقلاع. كل سطر ليه عتبة: مبيظهرش غير لما التقدّم الحقيقي يعدّيها.
+ * Boot lines. Each line has a threshold: it only appears once real progress passes it.
  *
- * القيم دي منسوخة من config/skills.ts و config/certifications.ts و
- * config/cases.ts — **مش مستوردة منهم**.
+ * These values are copied from config/skills.ts, config/certifications.ts and
+ * config/cases.ts — **not imported from them**.
  *
- * السبب: الملفين دول ٩ كيلوبايت مع بعض، والملف ده client component على
- * المسار الحرج للصفحة الرئيسية. استيرادهم كان هيحزّم الـ ٩ كيلوبايت في
- * bundle كل زائر عشان نقرا سبع سطور.
+ * Reason: those files are 9 KB together, and this file is a client component on
+ * the home page's critical path. Importing them would bundle those 9 KB into
+ * every visitor's bundle just to read seven lines.
  *
- * التنازل: لو غيّرت شهادة أو مهارة هناك، غيّرها هنا كمان.
+ * The trade-off: if you change a certification or skill there, change it here too.
  */
 const BOOT_SEQUENCE = [
   { at: 0,  tag: "init", label: "console",      value: "SOC-01 · online" },
@@ -63,9 +63,9 @@ const BOOT_SEQUENCE = [
 ] as const;
 
 /*
- * كلمة الحالة جنب الشريط. مربوطة بالمرحلة الحقيقية — مش قايمة كلمات
- * بتتقلب على مؤقّت. كل واحدة بتوصف الحاجة اللي المتصفح بيعملها فعلاً
- * عند النسبة دي.
+ * The status word next to the bar. Tied to the real phase — not a list of words
+ * cycling on a timer. Each one describes what the browser is actually doing
+ * at that percentage.
  */
 function phaseLabel(progress: number): string {
   if (progress < 35) return "parsing dom";
@@ -73,16 +73,16 @@ function phaseLabel(progress: number): string {
   return "ready";
 }
 
-/** أقل وقت ظهور — بيمنع ومضة فريم واحد وبس. */
+/** Minimum display time — prevents a single-frame flash. */
 const MIN_VISIBLE_MS = 400;
-/** السقف المطلق: عمرنا ما نحبس الزائر، حتى لو مصدر علّق. */
+/** Hard ceiling: we never trap the visitor, even if a resource hangs. */
 const MAX_VISIBLE_MS = 4000;
-/** كل قد إيه نعيد حساب النسبة. ٨ مرات في الثانية كفاية للعين وأرخص من rAF. */
+/** How often to recompute the percentage. 8 times a second is enough for the eye and cheaper than rAF. */
 const POLL_MS = 120;
 
-/* ═══ العلامة ═══
- * حروف بلوك ٥ صفوف. مولّدة مش مكتوبة بالإيد — المحاذاة مضمونة.
- * بتختفي تحت 640px، مفيش مساحة ليها هناك. */
+/* ═══ The mark ═══
+ * 5-row block letters. Generated, not hand-written — alignment is guaranteed.
+ * Hidden below 640px, there's no room for it there. */
 const WORDMARK = [
   "███ ███ █ █ ██  ███",
   "  █ █ █ ███ █ █ █ █",
@@ -92,14 +92,14 @@ const WORDMARK = [
 ] as const;
 
 /*
- * النسبة الحقيقية من إشارتين المتصفح بيديهم مجاناً:
+ * The real percentage from two signals the browser gives for free:
  *
- *   · حالة الـ parser — ٣٥٪. "loading" يعني الـ HTML لسه بيتقرا.
- *   · نسبة الصور اللي خلصت — ٦٥٪. دي الحتة اللي بتاخد وقت فعلاً،
- *     وهي كمان اللي حدث `load` بيستناها.
+ *   · Parser state — 35%. "loading" means the HTML is still being parsed.
+ *   · Share of images finished — 65%. This is the part that actually takes time,
+ *     and it's also what the `load` event waits for.
  *
- * الوزن مش عشوائي: الشريط بيمشي بنفس إيقاع الحاجة اللي الزائر مستنيها.
- * ولو الصفحة من الكاش، النسبة بتقفز لـ ١٠٠ على طول والشاشة بتختفي.
+ * The weighting isn't arbitrary: the bar moves at the same pace as the thing the visitor is waiting for.
+ * And if the page comes from cache, the percentage jumps straight to 100 and the screen disappears.
  */
 function computeProgress(): number {
   const domReady = document.readyState !== "loading" ? 35 : 0;
@@ -114,14 +114,14 @@ function computeProgress(): number {
   return domReady + Math.round((complete / images.length) * 65);
 }
 
-/* ═══ ساعة الجلسة ═══
+/* ═══ Session clock ═══
  *
- * مكوّن منفصل عن قصد: هو الوحيد اللي بيعمل re-render كل ثانية، فلمّا
- * يبقى لوحده الـ re-render ده بيلمس <span> واحد بدل الشاشة كلها.
+ * A separate component on purpose: it's the only one that re-renders every second, so being
+ * on its own, that re-render touches a single <span> instead of the whole screen.
  *
- * والقيمة الابتدائية "--:--:--" مش تجميل: `new Date()` وقت الـ render
- * بيدي نتيجة مختلفة على السيرفر وعلى المتصفح، وده hydration mismatch
- * مضمون. الوقت الحقيقي بيتكتب في الـ effect بعد الـ mount.
+ * And the initial "--:--:--" value isn't cosmetic: `new Date()` at render time
+ * gives a different result on the server and in the browser, which is a guaranteed
+ * hydration mismatch. The real time is written in the effect after mount.
  */
 function SessionClock() {
   const [time, setTime] = useState("--:--:--");
@@ -136,14 +136,14 @@ function SessionClock() {
   return <span className={styles.clock}>{time}Z</span>;
 }
 
-/* ═══ بصمة العميل ═══
+/* ═══ Client fingerprint ═══
  *
- * كلها من واجهات المتصفح القياسية. مفيش تتبّع ومفيش حاجة بتتبعت لأي
- * مكان — الأرقام دي بتتحسب في المتصفح، بتتعرض، وبتموت مع الشاشة.
+ * All from standard browser APIs. No tracking and nothing is sent
+ * anywhere — these numbers are computed in the browser, displayed, and die with the screen.
  *
- * deviceMemory و connection موجودين في Chromium بس. اللي مش متاح
- * بيتشال من السطر بدل ما يتعرض "unknown" — سطر ناقص أنضف من سطر
- * بيعترف إنه مش عارف.
+ * deviceMemory and connection exist in Chromium only. Whatever isn't available
+ * is dropped from the line instead of showing "unknown" — a shorter line is cleaner than a line
+ * admitting it doesn't know.
  */
 function ClientLine({ tier }: { tier: string }) {
   const [facts, setFacts] = useState<string[]>([]);
@@ -165,7 +165,7 @@ function ClientLine({ tier }: { tier: string }) {
     setFacts(parts);
   }, [tier]);
 
-  // قبل الـ mount مفيش حاجة تتعرض — نفس الـ markup على السيرفر والمتصفح.
+  // Before mount nothing is shown — same markup on the server and in the browser.
   if (!facts.length) return null;
 
   return (
@@ -226,8 +226,8 @@ export default function LoadingScreen() {
     reducedRef.current = reduced;
   }, [reduced]);
 
-  // الـ ref بيمنع الشريط يرجع لورا لو صورة جديدة اتضافت وغيّرت المقام.
-  // شريط تقدّم بينقص بيبان زي باج حتى لو الرقم صح.
+  // The ref prevents the bar from going backwards if a new image is added and changes the denominator.
+  // A progress bar that decreases looks like a bug even if the number is correct.
   const peak = useRef(0);
 
   useEffect(() => {
@@ -258,7 +258,7 @@ export default function LoadingScreen() {
     tick();
 
     const dismiss = () => {
-      // `load` ضرب، يعني كل حاجة خلصت فعلاً — ١٠٠٪ حقيقية مش مجاملة.
+      // `load` fired, so everything has actually finished — a real 100%, not a courtesy one.
       peak.current = 100;
       setProgress(100);
 
@@ -275,7 +275,7 @@ export default function LoadingScreen() {
       window.addEventListener("load", dismiss, { once: true });
     }
 
-    // مخرج طوارئ — من غيره صورة واحدة معلّقة بتحبس الزائر للأبد.
+    // Emergency exit — without it a single hanging image would trap the visitor forever.
     const hardStop = window.setTimeout(leave, MAX_VISIBLE_MS);
 
     return () => {
@@ -295,24 +295,24 @@ export default function LoadingScreen() {
 
   return (
     <>
-      {/* الإعلان الوحيد. اللودر نفسه aria-hidden، فده اللي بيتقال:
-          جملة واحدة، مرة واحدة. aria-live="polite" معناها إن القارئ
-          يستنى لحد ما يخلص اللي بيقوله بدل ما يقاطع. */}
+      {/* The only announcement. The loader itself is aria-hidden, so this is what gets read:
+          one sentence, once. aria-live="polite" means the reader
+          waits until it finishes what it's saying instead of interrupting. */}
       <p className="sr-only" role="status">
         {phase === "out" ? "Site loaded" : "Loading site"}
       </p>
       <div
       className={styles.loader}
       /*
-       * ── الوصولية ──────────────────────────────────────────────────────
+       * ── Accessibility ─────────────────────────────────────────────────
        *
-       * اللودر بيغطي الشاشة كلها وجواه زخرفة كتير: SEN-001، 武士道، سطور
-       * الشعار، مسار الكونسول، الساعة. قارئ الشاشة كان بيقرا ده كله بصوت
-       * عالي قبل ما المستخدم يوصل لأي محتوى حقيقي.
+       * The loader covers the whole screen and contains a lot of decoration: SEN-001, 武士道, the
+       * logo lines, the console path, the clock. The screen reader used to read all of that out
+       * loud before the user reached any real content.
        *
-       * aria-hidden بيشيل الزخرفة من شجرة الوصولية من غير ما يلمس الشكل،
-       * والسطر الوحيد اللي بيتقال بقى في العنصر اللي تحت — جملة واحدة
-       * بدل شاشة كاملة.
+       * aria-hidden removes the decoration from the accessibility tree without touching the visuals,
+       * and the only line that gets read now lives in the element below — one sentence
+       * instead of a whole screen.
        */
       aria-hidden="true"
       /* The exit is a CSS transition keyed on this attribute — see
@@ -321,14 +321,14 @@ export default function LoadingScreen() {
       data-state={phase}
       data-reduced={reduced ? "true" : undefined}
       role="status"
-      /* aria-live كان "polite" حوالين ticker بيغيّر النص كل ٣٥٠ms —
-         قارئ الشاشة كان هيقرا ست سطور إقلاع قبل ما الزائر يوصل لأي
-         محتوى. الـ overlay بيعرّف نفسه مرة واحدة بـ aria-label. */
+      /* aria-live used to be "polite" around a ticker that changed its text every 350ms —
+         the screen reader would have read six boot lines before the visitor reached any
+         content. The overlay identifies itself once via aria-label. */
       aria-live="off"
       aria-label="Loading"
     >
-      {/* طبقات بتغطي الشاشة كلها. زخرفة بحتة — قواعد الـ tier في
-          globals.css بتشيلها على الأجهزة الضعيفة. */}
+      {/* Full-screen layers. Pure decoration — the tier rules in
+          globals.css remove them on weak devices. */}
       {!reduced && (
         <>
           <div className={styles.speedLines} data-decorative="true" aria-hidden="true" />
@@ -342,9 +342,9 @@ export default function LoadingScreen() {
       <div className={styles.cornerBottomLeft} aria-hidden="true" />
       <div className={styles.cornerBottomRight} aria-hidden="true" />
 
-      {/* ── نافذة الكونسول ────────────────────────────────────── */}
+      {/* ── Console window ────────────────────────────────────── */}
       <div className={styles.console} aria-hidden="true">
-        {/* شريط العنوان */}
+        {/* Title bar */}
         <div className={styles.consoleBar}>
           <span className={styles.consoleDots}>
             <i /><i /><i />
@@ -354,7 +354,7 @@ export default function LoadingScreen() {
           <span className={styles.consoleBadge} lang="ja">師</span>
         </div>
 
-        {/* العلامة */}
+        {/* The mark */}
         <div className={styles.wordmark}>
           {WORDMARK.map((row, i) => (
             <span key={i} className={styles.wordmarkRow}>{row}</span>
@@ -362,7 +362,7 @@ export default function LoadingScreen() {
           <span className={styles.wordmarkTag} lang="ja">セキュリティ・アナリスト</span>
         </div>
 
-        {/* السجل */}
+        {/* The log */}
         <div className={styles.consoleBody}>
           {visibleLines.map((line) => (
             <p key={line.label} className={styles.logLine} data-tag={line.tag}>
@@ -383,10 +383,10 @@ export default function LoadingScreen() {
           )}
         </div>
 
-        {/* ── الشريط ───────────────────────────────────────────
-            الجزء المتحرك transform: scaleX() — خاصية compositor،
-            يعني مفيش layout ولا paint في كل تحديث. الشبكة اللي
-            بتقسّمه لبلوكات طبقة gradient ثابتة فوقه. */}
+        {/* ── The bar ──────────────────────────────────────────
+            The moving part is transform: scaleX() — a compositor property,
+            so no layout or paint on each update. The grid that
+            splits it into blocks is a static gradient layer on top. */}
         <div className={styles.progressWrap}>
           <span className={styles.progressPhase}>{phaseLabel(clamped)}</span>
           <div className={styles.progressTrack}>

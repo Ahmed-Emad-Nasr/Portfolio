@@ -56,8 +56,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      /* الصفحات القانونية — أولوية منخفضة: مقصود يتفهرسوا عشان يكونوا
-         قابلين للإيجاد، مش عشان يتنافسوا مع المحتوى في نتايج البحث. */
+      /* The legal pages — low priority: they're meant to be indexed so they can be
+         found, not to compete with the content in search results. */
       url: absoluteUrl("/privacy"),
       lastModified: latestCaseDate,
       changeFrequency: "yearly",

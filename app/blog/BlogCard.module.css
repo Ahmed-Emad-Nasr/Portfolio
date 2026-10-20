@@ -7,8 +7,8 @@
 /* The header is fixed at the top, so without this offset #case-... lands
    under it and the title is clipped. */
 .anchor {
-  /* كان 90px مكتوبة بإيد. بقت من --scroll-offset في globals.css عشان
-     تتبع ارتفاع الهيدر لو اتغيّر. */
+  /* It was a hand-written 90px. It now comes from --scroll-offset in globals.css so it
+     follows the header height if that changes. */
   scroll-margin-top: var(--scroll-offset);
 }
 

@@ -1,17 +1,17 @@
 /*
  * core/config/cases.ts
  *
- * جزء من تقسيم portfolio.ts (كان 70KB في موديول واحد). كل حاجة هنا اتنقلت
- * زي ما هي بالحرف — مفيش أي تعديل في الداتا نفسها، التقسيم بس.
+ * Part of the portfolio.ts split (it used to be 70KB in a single module). Everything here was moved
+ * verbatim — no change to the data itself, only the split.
  *
- * ليه؟ layout.tsx كان بيعمل import لـ knowledgeEducationItems من الملف
- * الكبير، فبيجرّ معاه في نفس الـ module graph كل الـ 38 case وكل الـ
- * screenshots وكل فيديوهات اليوتيوب — على كل صفحة، حتى اللي مش محتاجاها.
- * الاعتماد على الـ tree-shaking عشان يفصلهم شغّال نظرياً، بس مع موديول واحد
- * فيه كل حاجة هو رهان مش ضمانة. الملفات المنفصلة بتخلي الفصل حقيقي.
+ * Why? layout.tsx imported knowledgeEducationItems from the big file,
+ * which pulled all 38 cases, all the screenshots and all the YouTube videos
+ * into the same module graph — on every page, even the ones that don't need them.
+ * Relying on tree-shaking to separate them works in theory, but with a single module
+ * containing everything it's a bet, not a guarantee. Separate files make the split real.
  *
- * portfolio.ts لسه موجود كـ barrel بيعيد التصدير، فأي import قديم شغّال زي
- * ما هو ومفيش حاجة اتكسرت.
+ * portfolio.ts still exists as a re-exporting barrel, so any old import works as
+ * before and nothing broke.
  */
 
 import type { CaseStudyHighlight, CaseEvidence } from "./shared";
@@ -123,14 +123,14 @@ export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "easy-peasy-ctf-writeup": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Easy_Peasy/Screenshot (${62 + i}).webp`),
   "simple-ctf-writeup": Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
   "ecir-registry-forensics": Array.from({ length: 14 }, (_, i) => `Assets/Cases/AhmedEmad_RegistryForencics_eCIR/${i + 1}.webp`),
-  /* الـ id اتغيّر لـ 3omda-custom-detection-rules، بس **المجلد على القرص
-     لسه اسمه بمسافات**. المسار هنا لازم يفضل مطابق للملفات الفعلية في
-     public/ وإلا الصور والـ PDF يعملوا 404.
+  /* The id was changed to 3omda-custom-detection-rules, but **the folder on disk
+     still has spaces in its name**. The path here must stay in sync with the actual files in
+     public/ or the images and the PDF will 404.
 
-     لو حابب تنضّفه: غيّر اسم المجلد في public/Assets/Cases/ لـ
-     3omda-custom-detection-rules وبعدين ظبّط السطور دي. مش مستعجل —
-     المسافات في مسار أصل بتشتغل عادي، المشكلة كانت في الـ id بس لأنه
-     بيتحوّل لمسار صفحة. */
+     To clean it up: rename the folder in public/Assets/Cases/ to
+     3omda-custom-detection-rules and then adjust these lines. Not urgent —
+     spaces in an asset path work fine; the problem was only the id, because it
+     becomes a page path. */
   "3omda-custom-detection-rules": Array.from({ length: 9 }, (_, i) => `Assets/Cases/3omda custom detection rules/${i + 1}.webp`),
   "penetration-testing-life-cycle": Array.from({ length: 4 }, (_, i) => `Assets/Cases/penetration-testing-life-cycle/${i + 1}.webp`),
   autopsy: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Autopsy/${i + 1}.webp`),
@@ -181,12 +181,12 @@ export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
   "hidden-backdoor-report": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Hidden Backdoor/Screenshot (${50 + i}).webp`),
   "malware-analysis-wannacry": [
     ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.webp`),
-/* التسلسل ده كان Array.from({ length: 24 }, … 343 + i) — بيفترض إن
-       الأرقام متتابعة من غير فجوات. بس Screenshot (349) و (353) مش
-       موجودين على القرص، فصورتين من كل عرض للـ case ده كانوا مكسورين.
+/* This sequence used to be Array.from({ length: 24 }, … 343 + i) — which assumes the
+       numbers are consecutive with no gaps. But Screenshot (349) and (353) don't
+       exist on disk, so two images in every view of this case were broken.
 
-       الأرقام مكتوبة صريحة دلوقتي: أطول، بس بتوصف الموجود فعلاً بدل ما
-       تفترض. لو ضفت الصورتين الناقصين، رجّع الـ Array.from. */
+       The numbers are now listed explicitly: longer, but they describe what actually exists instead of
+       assuming. If you add the two missing images, bring back the Array.from. */
     ...[343, 344, 345, 346, 347, 348, 350, 351, 352, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366].map((n) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${n}).webp`),
   ],
   "wifi-cracking-walkthrough": ["Assets/Cases/Wifi Cracking/1.webp", "Assets/Cases/Wifi Cracking/2.webp"],
@@ -337,17 +337,17 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-03-01",
     screenshots: [
       ...Array.from({ length: 38 }, (_, i) => `Assets/Cases/Malware Analysis and Prevention Strategy/${i + 1}.webp`),
-  /* التسلسل ده كان Array.from({ length: 24 }, … 343 + i) — بيفترض إن
-       الأرقام متتابعة من غير فجوات. بس Screenshot (349) و (353) مش
-       موجودين على القرص، فصورتين من كل عرض للـ case ده كانوا مكسورين.
+  /* This sequence used to be Array.from({ length: 24 }, … 343 + i) — which assumes the
+       numbers are consecutive with no gaps. But Screenshot (349) and (353) don't
+       exist on disk, so two images in every view of this case were broken.
 
-       الأرقام مكتوبة صريحة دلوقتي: أطول، بس بتوصف الموجود فعلاً بدل ما
-       تفترض. لو ضفت الصورتين الناقصين، رجّع الـ Array.from. */
+       The numbers are now listed explicitly: longer, but they describe what actually exists instead of
+       assuming. If you add the two missing images, bring back the Array.from. */
     ...[343, 344, 345, 346, 347, 348, 350, 351, 352, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366].map((n) => `Assets/Cases/Malware Analysis and Prevention Strategy/Screenshot (${n}).webp`),
     ],
-    /* كان "/ 21.webp" — مسافة زايدة قبل الرقم. الملف على القرص اسمه
-       "21.webp"، فصورة الغلاف بتاعة الـ case ده كانت 404. سكربت فحص
-       الأصول هو اللي مسكها. */
+    /* This was "/ 21.webp" — an extra space before the number. The file on disk is named
+       "21.webp", so this case's cover image was a 404. The asset-check
+       script caught it. */
     image: "Assets/Cases/Malware Analysis and Prevention Strategy/21.webp",
   },
   {
@@ -424,7 +424,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Cloud Security",
     difficulty: "Hard",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["AWS", "GuardDuty", "Threat Detection", "Security Monitoring"],
     tools: ["Amazon GuardDuty", "AWS Console"],
     skillsGained: ["Continuous Monitoring", "Alert Triage", "Cloud Threat Detection"],
@@ -618,16 +618,16 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-04-21",
     screenshots: [
       /*
-       * كانت ليستة يدوية من Screenshot (1) لـ (15) — والملفات دي مش موجودة.
+       * This used to be a hand-written list from Screenshot (1) to (15) — and those files don't exist.
        *
-       * السبب إن نفس الـ case معرّف في مكانين بترقيمين مختلفين:
+       * The reason is that the same case is defined in two places with two different numberings:
        *   caseScreenshotsByEvidenceId  →  Screenshot (135) … (146)
-       *   الليستة دي                    →  Screenshot (1)   … (15)
+       *   this list                     →  Screenshot (1)   … (15)
        *
-       * والملفات الحقيقية هي 135–146. يعني شبكة الصور في صفحة الـ case
-       * كانت بتعرض 15 صورة مكسورة.
+       * and the real files are 135–146. So the image grid on the case page
+       * was showing 15 broken images.
        *
-       * دلوقتي بتستخدم نفس التعبير بالظبط، فمستحيل الاتنين يفترقوا تاني.
+       * It now uses exactly the same expression, so the two can never drift apart again.
        */
       ...Array.from({ length: 12 }, (_, i) => `Assets/Cases/Serpent Stealer/Screenshot (${135 + i}).webp`),
     ],
@@ -839,16 +839,16 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Penetration Testing",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "CTF", "SQL Injection", "Privilege Escalation", "CVE-2019-9053"],
     tools: ["Exploit-DB", "Python", "SSH", "Vim"],
     skillsGained: ["Vulnerability Exploitation", "Password Cracking", "Linux Privilege Escalation"],
     readTime: 15,
     date: "2026-08-19",
-    /* كان .png — والملفات على القرص .webp، ونفس الـ case في
-       caseScreenshotsByEvidenceId (سطر 85) مكتوب .webp صح. نفس غلطة
-       Serpent Stealer: الـ case معرّف مرتين واتنينهم اختلفوا. النتيجة إن
-       شبكة الأدلة في صفحة الـ case كانت بتعرض 11 صورة مكسورة. */
+    /* This was .png — while the files on disk are .webp, and the same case in
+       caseScreenshotsByEvidenceId (line 85) is correctly written as .webp. Same mistake as
+       Serpent Stealer: the case is defined twice and the two diverged. The result was that
+       the evidence grid on the case page showed 11 broken images. */
     screenshots: Array.from({ length: 11 }, (_, i) => `Assets/Cases/Simple_CTF/Screenshot (${49 + i}).webp`),
     image: "Assets/Cases/Simple_CTF/Screenshot (49).webp",
   },
@@ -860,7 +860,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Penetration Testing",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "CTF", "Enumeration", "Gobuster", "Cryptography", "CyberChef"],
     tools: ["Nmap", "Gobuster", "CyberChef"],
     skillsGained: ["Port Scanning", "Web Enumeration", "Encoding/Decoding Analysis", "Source Code Inspection"],
@@ -877,7 +877,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Write-up",
     category: "Penetration Testing",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "CTF", "FTP", "Brute Force", "Hydra", "Privilege Escalation", "GTFOBins"],
     tools: ["Nmap", "Hydra", "SSH", "Tar"],
     skillsGained: ["Service Enumeration", "Password Brute-forcing", "Linux Privilege Escalation"],
@@ -894,7 +894,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Access Security",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "IAM", "Access Control", "RBAC", "MAC", "Authentication", "SSO"],
     tools: ["Security Principles", "Identity Management"],
     skillsGained: ["Identity & Access Management", "Access Control Modeling", "Authentication Mechanisms", "Threat Mitigation"],
@@ -911,7 +911,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Web Security",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش. 
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "Web Security", "Dirb", "Directory Brute-forcing"],
     tools: ["Dirb", "Terminal"],
     skillsGained: ["Web Enumeration", "Vulnerability Discovery", "Hidden Page Exploitation"],
@@ -945,7 +945,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "SOC Analysis",
     difficulty: "Medium",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "SOC", "Tier 2", "Report Writing", "Incident Response", "DFIR"],
     tools: ["Documentation", "Executive Summaries"],
     skillsGained: ["Technical Writing", "Incident Reporting", "C-Level Communication", "DFIR Handovers"],
@@ -962,7 +962,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Achievement",
     category: "Defensive Security",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "Defensive Security", "SOC L2", "Security Trends", "Achievement"],
     tools: ["Security Concepts"],
     skillsGained: ["Threat Landscape Awareness", "Modern Defensive Strategies", "SOC L2 Fundamentals"],
@@ -979,7 +979,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "SOC Analysis",
     difficulty: "Medium",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "SOC", "Active Directory", "Splunk", "Audit Policy", "Event Logs"],
     tools: ["Splunk", "auditpol"],
     skillsGained: ["Active Directory Monitoring", "Splunk Search Processing Language (SPL)", "Log Analysis", "Baseline Activity Analysis"],
@@ -996,7 +996,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Module Walkthrough",
     category: "Web Security",
     difficulty: "Medium",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["PortSwigger", "Web Security", "Information Disclosure", "Git", "Burp Suite", "Authentication Bypass", "Source Code Disclosure"],
     tools: ["Burp Suite", "Git Cola", "wget", "Browser DevTools"],
     skillsGained: ["Git Repository Analysis", "Sensitive Data Exposure Identification", "Access Control Bypass", "Directory Enumeration", "HTTP Header Manipulation"],
@@ -1013,7 +1013,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Web Security",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["PortSwigger", "Web Security", "IDOR", "Access Control", "Burp Suite", "Information Disclosure"],
     tools: ["Burp Suite"],
     skillsGained: ["IDOR Exploitation", "Parameter Manipulation", "Access Control Vulnerabilities"],
@@ -1058,7 +1058,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Malware Analysis",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "Antivirus", "Malware Analysis", "sigtool", "strings", "Windows"],
     tools: ["sigtool", "strings", "Command Prompt"],
     skillsGained: ["Binary Analysis", "Signature Detection", "Hash Generation", "Static Analysis Basics"],
@@ -1075,7 +1075,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "Digital Forensics",
     difficulty: "Easy",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "Digital Forensics", "Metadata", "EXIF", "exiftool", "pdfinfo"],
     tools: ["exiftool", "pdfinfo", "Linux"],
     skillsGained: ["Forensic Process", "Chain of Custody", "Metadata Extraction", "GPS Coordinate Analysis"],
@@ -1092,7 +1092,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     type: "Walkthrough",
     category: "DFIR",
     difficulty: "Medium",
-    // مفيش PDF للـ case ده — أدلته صور بس، فالزراير مبتتعرضش.
+    // No PDF for this case — its evidence is images only, so the buttons aren't shown.
     tags: ["TryHackMe", "DFIR", "Incident Response", "Legal Compliance", "Chain of Custody", "Hash Verification"],
     tools: ["Outlook", "Windows Forensics", "OTRS Ticket Analysis", "Hash Calc"],
     skillsGained: ["Corporate Incident Response", "Evidence Integrity Verification", "Chain of Custody", "Legal Procedures in DFIR"],
@@ -1326,28 +1326,28 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     readTime: 5,
     date: "2026-10-20",
     screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Basic SSRF against the local server/Screenshot (${219 + i}).webp`),
-    image: "Assets/Cases/Lab Basic SSRF against the local server/Screenshot (226).webp", // صورة حل اللاب كغلاف
+    image: "Assets/Cases/Lab Basic SSRF against the local server/Screenshot (226).webp", // the lab solution screenshot as the cover
   },
 ] as const;
 
 /*
  * ═══════════════════════════════════════════════════════════════════════
- * حارس وقت الـ build: كل id لازم يكون صالح كـ URL
+ * Build-time guard: every id must be URL-safe
  * ═══════════════════════════════════════════════════════════════════════
  *
- * الـ id بيتحوّل مباشرة لمسار الصفحة (`/blog/{id}`) وبيترجّع من
- * generateStaticParams. الـ id اللي كان اسمه "3omda custom detection rules"
- * — بمسافات — كان بيكسّر الصفحة بالخطأ ده:
+ * The id becomes the page path directly (`/blog/{id}`) and is returned from
+ * generateStaticParams. The id that used to be "3omda custom detection rules"
+ * — with spaces — broke the page with this error:
  *
  *     Page "/blog/[slug]/page" is missing param "/blog/[slug]"
  *     in "generateStaticParams()", which is required with "output: export"
  *
- * السبب إن اللينك في الصفحة بيتعمله encode (`%20`) والـ param الراجع من
- * generateStaticParams فيه مسافات فعلية، فالراوتر مش بيلاقي تطابق.
+ * The cause is that the link on the page gets encoded (`%20`) while the param returned from
+ * generateStaticParams contains literal spaces, so the router finds no match.
  *
- * الفحص ده بيفشّل الـ build فوراً برسالة واضحة بدل ما تكتشف المشكلة من
- * صفحة 404 في المتصفح. بيتنفذ وقت الـ build بس (الملف ده بيتقري في
- * Server Components)، فتكلفته صفر على الزائر.
+ * This check fails the build immediately with a clear message instead of you discovering the problem from
+ * a 404 page in the browser. It only runs at build time (this file is read in
+ * Server Components), so it costs the visitor nothing.
  */
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -1365,33 +1365,33 @@ for (const item of caseEvidenceLibrary) {
 const seen = new Set<string>();
 for (const item of caseEvidenceLibrary) {
   if (seen.has(item.id)) {
-    // ids مكررة معناها إن صفحة بتتكتب فوق التانية وقت الـ export
+    // Duplicate ids mean one page overwrites another during export
     throw new Error(`[cases.ts] Duplicate case id "${item.id}".`);
   }
   seen.add(item.id);
 }
 
 /*
- * ── أعداد محسوبة ──────────────────────────────────────────────────────
+ * ── Computed counts ───────────────────────────────────────────────────
  *
- * الأعداد دي كانت مكتوبة بإيد في مكانين وبقيمتين مختلفتين:
+ * These counts used to be hand-written in two places with two different values:
  *
  *   StartHere.tsx  →  caseEvidenceLibrary.length = 42 "investigation reports"
  *   cv.ts          →  "Published 38 investigation reports"
  *
- * الاتنين مش دقيقين:
+ * Neither was accurate:
  *
- *   · الـ 42 بيعدّ **كل** حاجة في المكتبة على إنها "تقرير تحقيق" — بما
- *     فيها ٦ write-ups و٥ مشيات (walkthroughs) وعنصر نوعه "Achievement".
- *   · الـ 38 مش مطابق لأي عدّة في الداتا أصلاً.
+ *   · The 42 counts **everything** in the library as an "investigation report" — including
+ *     6 write-ups, 5 walkthroughs and one item of type "Achievement".
+ *   · The 38 doesn't match any count in the data at all.
  *
- * العدّ الحقيقي:
+ * The real count:
  *
- *     42  إجمالي العناصر في المكتبة
- *     32  اللي ليهم ملف PDF
- *     30  اللي نوعها تقرير فعلاً   ← ده "investigation reports"
+ *     42  total items in the library
+ *     32  items that have a PDF
+ *     30  items that are actually reports   ← this is "investigation reports"
  *
- * دلوقتي الرقمين بيتحسبوا من الداتا، فمستحيل يقدموا أو يتناقضوا.
+ * Both numbers are now computed from the data, so they can never go stale or contradict each other.
  */
 const REPORT_TYPES = new Set([
   "PDF Report",
@@ -1400,10 +1400,10 @@ const REPORT_TYPES = new Set([
   "Report",
 ]);
 
-/** إجمالي العناصر المنشورة في المكتبة (تقارير + write-ups + مشيات) */
+/** Total items published in the library (reports + write-ups + walkthroughs) */
 export const publishedCaseCount = caseEvidenceLibrary.length;
 
-/** اللي نوعها تقرير تحقيق فعلاً — أضيق وأدق من العدد الكلي */
+/** Items that are actually investigation reports — narrower and more accurate than the total */
 export const investigationReportCount = caseEvidenceLibrary.filter((c) =>
   REPORT_TYPES.has(c.type),
 ).length;

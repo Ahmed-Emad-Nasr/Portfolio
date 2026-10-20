@@ -2,25 +2,25 @@
  * core/config/attack.ts
  * Author: Ahmed Emad Nasr
  *
- * ربط مكتبة الـ cases بـ MITRE ATT&CK.
+ * Maps the case library onto MITRE ATT&CK.
  *
- * ليه ده أهم إضافة في الموقع كله؟ لأن 38 تقرير في ليستة = أرشيف، ونفس
- * الـ 38 معروضين على ATT&CK = **خريطة تغطية**. الفرق إن الأولى بتقول
- * "عملت حاجات كتير" والتانية بتقول "بغطّي التكتيكات دي بالتحديد وعندي
- * الدليل" — وده بالظبط شكل السؤال في أي إنترفيو SOC.
+ * Why is this the most important addition to the whole site? Because 38 reports in a list = an archive, while the same
+ * 38 laid out on ATT&CK = **a coverage map**. The difference is that the first says
+ * "I've done a lot of things" and the second says "I cover these specific tactics and I have
+ * the evidence" — which is exactly the shape of the question in any SOC interview.
  *
- * ⚠️⚠️ لازم تراجع الملف ده قبل ما تنشره ⚠️⚠️
+ * ⚠️⚠️ Review this file before publishing ⚠️⚠️
  *
- * الربط اللي تحت مستنتج من عناوين وتاجات الـ cases، مش من قراية التقارير
- * نفسها — أنا مشوفتش الـ PDFs. يعني هو نقطة بداية صح في أغلبه، بس أكيد
- * فيه تكنيكات غطّيتها ومش مكتوبة هنا، وممكن يكون فيه واحد أو اتنين مش
- * دقيقين. اقرا كل سطر وعدّله من التقرير الأصلي.
+ * The mapping below is inferred from the case titles and tags, not from reading the reports
+ * themselves — the PDFs weren't reviewed. So it's a sound starting point for the most part, but there are surely
+ * techniques covered that aren't listed here, and there may be one or two that aren't
+ * accurate. Read every line and correct it against the original report.
  *
- * خريطة تغطية غلط أسوأ من عدم وجود خريطة أصلاً: أي حد هيقراها هيفتح
- * التقرير ويقارن.
+ * A wrong coverage map is worse than no map at all: anyone who reads it will open the
+ * report and compare.
  */
 
-/** التكتيكات بترتيب Enterprise ATT&CK — ده ترتيب أعمدة المصفوفة */
+/** Tactics in Enterprise ATT&CK order — this is the column order of the matrix */
 export const ATTACK_TACTICS = [
   { id: "reconnaissance", name: "Reconnaissance" },
   { id: "initial-access", name: "Initial Access" },
@@ -40,20 +40,18 @@ export const ATTACK_TACTICS = [
 export type TacticId = (typeof ATTACK_TACTICS)[number]["id"];
 
 export type Technique = {
-  /** معرّف MITRE — T1234 أو T1234.001 */
+  /** MITRE id — T1234 or T1234.001 */
   id: string;
   name: string;
   tactic: TacticId;
 };
 
-/** التكنيكات المذكورة في الربط تحت. الاسم والتكتيك من ATT&CK Enterprise. */
+/** Techniques referenced in the mapping below. Name and tactic from ATT&CK Enterprise. */
 export const TECHNIQUES: readonly Technique[] = [
   { id: "T1595", name: "Active Scanning", tactic: "reconnaissance" },
-  { id: "T1590", name: "Gather Victim Network Information", tactic: "reconnaissance" },
   { id: "T1566", name: "Phishing", tactic: "initial-access" },
   { id: "T1190", name: "Exploit Public-Facing Application", tactic: "initial-access" },
   { id: "T1078", name: "Valid Accounts", tactic: "initial-access" },
-  { id: "T1133", name: "External Remote Services", tactic: "initial-access" },
   { id: "T1204", name: "User Execution", tactic: "execution" },
   { id: "T1059", name: "Command and Scripting Interpreter", tactic: "execution" },
   { id: "T1543", name: "Create or Modify System Process", tactic: "persistence" },
@@ -81,10 +79,10 @@ export const TECHNIQUES: readonly Technique[] = [
 ];
 
 /**
- * caseId → التكنيكات اللي التقرير بيغطيها.
+ * caseId → the techniques the report covers.
  *
- * أي case مش موجود هنا بيتعرض عادي في المكتبة، بس مش بيظهر في المصفوفة.
- * ده مقصود: أحسن ما نحط تكنيك مش متأكدين منه.
+ * Any case not listed here still shows in the library as normal, but doesn't appear in the matrix.
+ * That's intentional: better than adding a technique we're not sure about.
  */
 export const caseAttackMapping: Record<string, readonly string[]> = {
   // ── Ransomware ──────────────────────────────────────────────────────────
@@ -148,14 +146,14 @@ export type TacticCoverage = {
   tactic: (typeof ATTACK_TACTICS)[number];
   techniques: {
     technique: Technique;
-    /** ids بتاعة الـ cases اللي بتغطي التكنيك ده */
+    /** ids of the cases that cover this technique */
     caseIds: string[];
   }[];
 };
 
 /**
- * بيقلب الـ mapping (case → techniques) للاتجاه اللي المصفوفة محتاجاه
- * (tactic → technique → cases). بيتحسب مرة واحدة وقت الـ build.
+ * Inverts the mapping (case → techniques) into the direction the matrix needs
+ * (tactic → technique → cases). Computed once at build time.
  */
 export const buildCoverage = (): TacticCoverage[] => {
   const byTechnique = new Map<string, string[]>();
@@ -183,6 +181,6 @@ export const buildCoverage = (): TacticCoverage[] => {
 export const techniqueName = (id: string): string =>
   TECHNIQUE_BY_ID.get(id)?.name ?? id;
 
-/** إجمالي التكنيكات المغطّاة — بيتعرض كرقم فوق المصفوفة */
+/** Total techniques covered — shown as a number above the matrix */
 export const coveredTechniqueCount = (): number =>
   new Set(Object.values(caseAttackMapping).flat()).size;

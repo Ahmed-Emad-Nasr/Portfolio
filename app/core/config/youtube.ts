@@ -266,20 +266,21 @@ export const blogYoutubePlaylists: BlogYoutubePlaylist[] = [
     tags: ["SOC", "DFIR", "Cybersecurity"],
     videoCount: 5,
   },
-  {
-    playlistId: "PLcw8B9lEwARs",
-    title: "Attack Simulation & Security Assessment",
-    description: "Practical tutorials and methodologies for performing attack simulations and comprehensive security assessments.",
-    sourceUrl: "https://youtube.com/playlist?list=PLcw8B9lEwARs&si=gahYoIE2G_X2OwuZ",
-    tags: ["Attack Simulation", "Security Assessment", "Red Team", "Cybersecurity"],
-    videoCount: 17, 
-  },
-  {
-    playlistId: "PLLzq933rD6WE",
-    title: "SOC Environment",
-    description: "Practical tutorials and methodologies for building, configuring, and monitoring a complete Security Operations Center (SOC) environment.",
-    sourceUrl: "https://youtube.com/playlist?list=PLLzq933rD6WE&si=--gWXu7HDVYInl6v",
-    tags: ["SOC", "Blue Team", "Cybersecurity", "Network Monitoring"],
-    videoCount: 10,
-  }
+  /*
+   * Two playlists are parked here until their full ids are available:
+   *
+   *   · "Attack Simulation & Security Assessment" (17 videos)
+   *       tags: Attack Simulation, Security Assessment, Red Team, Cybersecurity
+   *   · "SOC Environment" (10 videos)
+   *       tags: SOC, Blue Team, Cybersecurity, Network Monitoring
+   *
+   * Their ids were stored truncated to 13 characters (PLcw8B9lEwARs…,
+   * PLLzq933rD6WE…). A real playlist id is "PL" + 32 characters, so both the
+   * "Open on YouTube" link and the embedded player returned an error, and
+   * `npm run check:data` failed on them.
+   *
+   * To restore them: copy the full `list=` value from each playlist's URL on
+   * YouTube and add the two entries back to this array, in the same shape as
+   * the ones above.
+   */
 ];

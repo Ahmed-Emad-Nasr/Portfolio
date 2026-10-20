@@ -10,7 +10,7 @@
   display: grid;
   place-items: center;
   padding: 7rem 2rem;
-  /* حجاب شفاف — شوف --page-veil في globals.css */
+  /* A translucent veil — see --page-veil in globals.css */
   background: var(--page-veil);
 }
 

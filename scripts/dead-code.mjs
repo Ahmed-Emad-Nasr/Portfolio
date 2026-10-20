@@ -2,10 +2,10 @@
 /*
  * dead-code.mjs
  *
- * بيدوّر على الكود اللي مفيش حاجة بتستعمله. زيرو dependencies، بيشتغل على
- * الـ AST بتاع esbuild؟ لأ — بيشتغل بـ regex على نص الملف بعد شيل
- * التعليقات والسترينجات. يعني ممكن يغلط، وكل قسم مكتوب فيه إزاي تتأكد
- * بإيدك قبل ما تمسح أي حاجة.
+ * Finds code that nothing uses. Zero dependencies. Does it run on
+ * esbuild's AST? No — it runs regexes over the file text after stripping
+ * comments and strings. So it can be wrong, and every section says how to verify
+ * by hand before you delete anything.
  *
  *   node scripts/dead-code.mjs
  */
@@ -34,7 +34,7 @@ const code = all.filter((f) => /\.tsx?$/.test(f));
 const read = (f) => readFileSync(f, "utf8");
 const rel = (f) => relative(ROOT, f);
 
-/* شيل التعليقات والسترينجات — عشان كلمة جوه تعليق متتحسبش استخدام */
+/* Strip comments and strings — so a word inside a comment doesn't count as a use */
 const clean = (s) =>
   s
     .replace(/\/\*[\s\S]*?\*\//g, " ")
@@ -49,10 +49,10 @@ const body = new Map(code.map((f) => [f, clean(read(f))]));
 let findings = 0;
 const section = (t) => console.log(`\n${B(t)}`);
 
-/* ── 1. exports مفيش حد بيستوردها ──────────────────────────────────────── */
-section("1. exports مفيش حد بيستوردها");
+/* ── 1. Exports nobody imports ─────────────────────────────────────────── */
+section("1. Exports nobody imports");
 {
-  /* أسماء بيستهلكها Next نفسه من غير import صريح */
+  /* Names Next consumes itself without an explicit import */
   const FRAMEWORK = new Set([
     "default", "metadata", "viewport", "generateStaticParams", "generateMetadata",
     "dynamic", "revalidate", "fetchCache", "runtime", "preferredRegion",
@@ -80,15 +80,15 @@ section("1. exports مفيش حد بيستوردها");
     }
   }
   for (const h of hits) console.log(`   ${YEL("?")} ${rel(h.f)} → ${h.name}`);
-  console.log(hits.length ? `   → ${hits.length}` : "   ✓ نضيف");
-  console.log(DIM("   تأكد بإيدك: الاسم ممكن يتقرا من ملف مش .ts/.tsx."));
+  console.log(hits.length ? `   → ${hits.length}` : "   ✓ clean");
+  console.log(DIM("   Verify by hand: the name may be read from a non-.ts/.tsx file."));
   findings += hits.length;
 }
 
-/* ── 2. ملفات مفيش حد بيستوردها ────────────────────────────────────────── */
-section("2. ملفات مفيش حد بيستوردها");
+/* ── 2. Files nobody imports ───────────────────────────────────────────── */
+section("2. Files nobody imports");
 {
-  /* Next بيوصل للملفات دي بالاسم/المسار، مش بـ import */
+  /* Next reaches these files by name/path, not via import */
   const ROUTE = /^(page|layout|template|loading|error|not-found|global-error|route|default|sitemap|robots|manifest|icon|apple-icon|opengraph-image)\.tsx?$/;
   const hits = [];
   for (const f of code) {
@@ -100,12 +100,12 @@ section("2. ملفات مفيش حد بيستوردها");
     if (!used) hits.push(f);
   }
   for (const f of hits) console.log(`   ${YEL("?")} ${rel(f)}`);
-  console.log(hits.length ? `   → ${hits.length}` : "   ✓ نضيف");
+  console.log(hits.length ? `   → ${hits.length}` : "   ✓ clean");
   findings += hits.length;
 }
 
-/* ── 3. ملفات CSS مفيش حد بيستوردها ────────────────────────────────────── */
-section("3. ملفات CSS مفيش حد بيستوردها");
+/* ── 3. CSS files nobody imports ───────────────────────────────────────── */
+section("3. CSS files nobody imports");
 {
   const hits = [];
   for (const f of all.filter((x) => x.endsWith(".css"))) {
@@ -114,16 +114,16 @@ section("3. ملفات CSS مفيش حد بيستوردها");
     const used = code.some((g) => src.get(g).includes(name));
     if (!used) hits.push(f);
   }
-  for (const f of hits) console.log(`   ${YEL("?")} ${rel(f)}  (يتيم)`);
-  console.log(hits.length ? `   → ${hits.length}` : "   ✓ نضيف");
+  for (const f of hits) console.log(`   ${YEL("?")} ${rel(f)}  (orphan)`);
+  console.log(hits.length ? `   → ${hits.length}` : "   ✓ clean");
   findings += hits.length;
 }
 
-/* ── 4. أيقونات معرّفة ومش مستخدمة ─────────────────────────────────────── */
-section("4. أيقونات معرّفة ومش مستخدمة");
+/* ── 4. Icons defined but not used ─────────────────────────────────────── */
+section("4. Icons defined but not used");
 {
   const iconFile = code.find((f) => f.endsWith("icon-data.ts"));
-  if (!iconFile) console.log("   (مفيش icon-data.ts)");
+  if (!iconFile) console.log("   (no icon-data.ts)");
   else {
     const defined = [...body.get(iconFile).matchAll(/^\s*(fa[A-Z][\w]*)\s*:/gm)].map((m) => m[1]);
     const everywhere = [...src.values()].join("\n");
@@ -131,19 +131,19 @@ section("4. أيقونات معرّفة ومش مستخدمة");
       (n) => (everywhere.match(new RegExp(`\\b${n}\\b`, "g")) || []).length <= 1,
     );
     for (const n of dead) console.log(`   ${YEL("?")} ${n}`);
-    console.log(dead.length ? `   → ${dead.length} من ${defined.length}` : `   ✓ كل الـ ${defined.length} مستخدمة`);
+    console.log(dead.length ? `   → ${dead.length} of ${defined.length}` : `   ✓ all ${defined.length} in use`);
     findings += dead.length;
   }
 }
 
-/* ── 5. حزم في package.json مفيش حد بيستوردها ──────────────────────────── */
-section("5. حزم مفيش حد بيستوردها");
+/* ── 5. package.json dependencies nobody imports ───────────────────────── */
+section("5. Packages nobody imports");
 {
   const pkg = JSON.parse(read(join(ROOT, "package.json")));
   const everywhere = [...src.values()].join("\n");
   const scripts = Object.values(pkg.scripts || {}).join(" ");
   const scriptSrc = walk(join(ROOT, "scripts")).map(read).join("\n");
-  /* حزم الإطار نفسه — Next بيستدعيها من جواه، مش بـ import في كودك */
+  /* Framework packages — Next pulls them in internally, not via an import in your code */
   const IMPLICIT = new Set(["react", "react-dom", "next"]);
   const hits = [];
   for (const dep of Object.keys(pkg.dependencies || {})) {
@@ -153,10 +153,10 @@ section("5. حزم مفيش حد بيستوردها");
       hits.push(dep);
   }
   for (const d of hits) console.log(`   ${YEL("?")} ${d}  (dependencies)`);
-  console.log(hits.length ? `   → ${hits.length}` : "   ✓ نضيف");
+  console.log(hits.length ? `   → ${hits.length}` : "   ✓ clean");
   findings += hits.length;
 }
 
 console.log(`\n${"─".repeat(60)}`);
-console.log(`${code.length} ملف كود · ${findings} حاجة محتاجة مراجعة\n`);
-console.log(DIM("كل ده تخمين. راجع كل سطر قبل ما تمسح.\n"));
+console.log(`${code.length} code files · ${findings} item(s) to review\n`);
+console.log(DIM("All of this is a guess. Review every line before deleting.\n"));

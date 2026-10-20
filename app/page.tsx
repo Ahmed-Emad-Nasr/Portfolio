@@ -72,7 +72,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
       },
       areaServed: "Worldwide",
       serviceType: ["SOC Monitoring", "Incident Response", "Threat Hunting", "Security Training", "Digital Forensics"],
-      /* كان #Contact — القسم اتشال، والـ anchor بقى ميت. */
+      /* This was #Contact — the section was removed, and the anchor became dead. */
       url: "https://ae-nasr.github.io/Portfolio/",
     },
   ],

@@ -4,23 +4,23 @@
  * contact-section.tsx
  * Author: Ahmed Emad Nasr
  *
- * الموقع كان مفيهوش فورم تواصل خالص — أيقونات سوشيال و mailto: بس.
- * والـ mailto: بتفشل صامتة على أي جهاز مفهوش mail client متظبط، وده أغلب
- * زوّار الموبايل: بيدوس، مفيش حاجة بتحصل، بيقفل الصفحة.
+ * The site had no contact form at all — only social icons and mailto:.
+ * And mailto: fails silently on any device without a configured mail client, which is most
+ * mobile visitors: they tap, nothing happens, they close the page.
  *
- * الغريب إن نص التوصيلة كانت معمولة أصلاً: الـ README فيه
- * NEXT_PUBLIC_FORMSPREE_ENDPOINT و NEXT_PUBLIC_TURNSTILE_SITE_KEY،
- * و layout.tsx بيحمّل سكربت Turnstile لما المفتاح موجود. الفورم نفسه بس
- * هو اللي كان ناقص.
+ * Oddly, half of the wiring was already done: the README had
+ * NEXT_PUBLIC_FORMSPREE_ENDPOINT and NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+ * and layout.tsx loads the Turnstile script when the key is present. Only the form itself
+ * was missing.
  *
- * القرارات:
- *  - Formspree مباشرة بـ fetch: static export مفيهوش سيرفر يستقبل POST.
- *  - لو المتغيّر مش موجود، الفورم مبيتعرضش أصلاً وبيتعرض مكانه طرق
- *    التواصل المباشرة. أسوأ حاجة ممكن تحصل هي فورم بيبتلع الرسايل من غير
- *    ما حد ياخد باله.
- *  - honeypot field مخفي: أرخص فلتر سبام موجود، صفر احتكاك على المستخدم.
- *  - الحالات كلها مغطّاة (idle / sending / ok / error) — مفيش زرار بيتضغط
- *    ومفيش رد فعل.
+ * Decisions:
+ *  - Formspree directly via fetch: a static export has no server to receive a POST.
+ *  - If the variable isn't set, the form isn't shown at all and the direct contact
+ *    methods are shown in its place. The worst possible outcome is a form that swallows messages without
+ *    anyone noticing.
+ *  - A hidden honeypot field: the cheapest spam filter there is, zero friction for the user.
+ *  - Every state is covered (idle / sending / ok / error) — no button that gets pressed
+ *    with no response.
  */
 
 import { useState, type FormEvent } from "react";
@@ -47,7 +47,7 @@ export default function ContactSection() {
     const form = event.currentTarget;
     const data = new FormData(form);
 
-    // Honeypot: البشر مبيشوفوش الخانة دي، البوتات بتملاها.
+    // Honeypot: humans don't see this field, bots fill it in.
     if (data.get("company")) {
       setStatus("sent");
       return;
@@ -75,8 +75,8 @@ export default function ContactSection() {
 
   return (
     <section data-fx="section" data-section="auto" id="Contact" aria-label="Contact">
-      {/* نفس هيكل الهيدر المتوسّط بتاع باقي السكاشن — كان محاذي لليسار
-          وشكله كإنه جاي من موقع تاني. */}
+      {/* Same centred header structure as the other sections — it used to be left-aligned
+          and looked like it came from another site. */}
       <div data-fx="section-head">
         <SectionHeader japaneseText="連絡" englishText="Contact" />
         <p className={styles.lede}>
@@ -109,9 +109,9 @@ export default function ContactSection() {
           </ul>
 
           {!FORMSPREE_ENDPOINT && (
-            /* ملاحظة للمطوّر، مش للزائر. كانت بتتعرض كصندوق متقطّع كبير في
-               مكان الفورم — الزائر بيقرا رسالة خطأ تقنية مالهاش معنى
-               بالنسباله، والقسم كله بيبان مكسور: نصه محتوى ونصه فراغ. */
+            /* A note for the developer, not the visitor. It used to be shown as a big dashed box in
+               place of the form — the visitor read a technical error message that meant nothing
+               to them, and the whole section looked broken: half content, half empty space. */
             <p className={styles.disabled} role="note">
               Contact form inactive — set <code>NEXT_PUBLIC_FORMSPREE_ENDPOINT</code> to enable it.
             </p>
@@ -135,8 +135,8 @@ export default function ContactSection() {
               <textarea id="contact-message" name="message" rows={5} required />
             </div>
 
-            {/* honeypot — مخفي عن البشر بالـ CSS، وعن الـ screen readers
-                بـ aria-hidden و tabIndex={-1} */}
+            {/* honeypot — hidden from humans with CSS, and from screen readers
+                with aria-hidden and tabIndex={-1} */}
             <div className={styles.honeypot} aria-hidden="true">
               <label htmlFor="contact-company">Company</label>
               <input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" />
@@ -147,8 +147,8 @@ export default function ContactSection() {
               <Icon name="faPaperPlane" aria-hidden="true" />
             </button>
 
-            {/* aria-live عشان اللي بيستخدم screen reader يسمع النتيجة —
-                من غيرها الفورم بيتبعت في صمت تام بالنسباله. */}
+            {/* aria-live so screen-reader users hear the result —
+                without it the form submits in complete silence for them. */}
             <p className={styles.status} role="status" aria-live="polite">
               {status === "sent" && (
                 <span className={styles.ok}>

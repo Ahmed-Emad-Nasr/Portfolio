@@ -3,26 +3,26 @@
 /*
  * cursor-mount.tsx
  *
- * موجود عشان يشيل الـ dynamic import اللي فيه ssr: false.
+ * Exists to hold the dynamic import with ssr: false.
  *
- * ليه: `next/dynamic` بـ `ssr: false` ممنوع جوه Server Component،
- * وapp/layout.tsx **هو** Server Component (بيصدّر `metadata`، وده حاجة
- * الـ Server Components بس اللي بتعملها). حطّه هنا، ورا حاجز "use client"،
- * هو النمط المدعوم.
+ * Why: `next/dynamic` with `ssr: false` isn't allowed inside a Server Component,
+ * and app/layout.tsx **is** a Server Component (it exports `metadata`, which is something
+ * only Server Components can do). Putting it here, behind a "use client" boundary,
+ * is the supported pattern.
  *
- * ═══ التعديل ═══
+ * ═══ The change ═══
  *
- * `dynamic()` بيبدأ تحميل الـ chunk أول ما المكوّن يترندر — يعني على
- * التليفون الـ chunk كان بيتحمّل بالكامل وبعدين المكوّن يقرا
- * matchMedia("(pointer: fine)") جوّه ويرجع من غير ما يعمل حاجة.
+ * `dynamic()` starts loading the chunk as soon as the component renders — so on
+ * a phone the chunk was fully downloaded and only then did the component read
+ * matchMedia("(pointer: fine)") inside and return without doing anything.
  *
- * والـ chunk ده مش صغير: useMotionValue + useSpring بيجروا محرّك الأنيميشن
- * بتاع framer-motion كله وراهم. بايتس بتتحمّل وتتفكّ وتتنفّذ على المسار
- * الحرج، على جهاز مستحيل يستخدمها.
+ * And that chunk isn't small: useMotionValue + useSpring pull in framer-motion's entire
+ * animation engine behind them. Bytes downloaded, parsed and executed on the critical
+ * path, on a device that can never use them.
  *
- * الفحص بقى **قبل** الـ import: التليفون عمره ما يطلب الملف أصلاً.
- * الـ state ضروري عشان أول render في المتصفح يطابق اللي جه من السيرفر
- * (null في الحالتين) — مفيش hydration mismatch.
+ * The check now happens **before** the import: the phone never even requests the file.
+ * The state is necessary so the first browser render matches what came from the server
+ * (null in both cases) — no hydration mismatch.
  */
 
 import dynamic from "next/dynamic";
@@ -37,8 +37,8 @@ export default function CursorMount() {
 
   useEffect(() => {
     if (isTouchDevice()) return;
-    // reduced-motion برضه بيلغيه: مؤشر بزنبرك هو بالظبط نوع الحركة اللي
-    // الإعداد ده موجود عشانها.
+    // reduced-motion also disables it: a spring-driven cursor is exactly the kind of motion
+    // that setting exists for.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     setEnabled(true);
   }, []);

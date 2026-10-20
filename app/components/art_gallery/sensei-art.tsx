@@ -16,15 +16,15 @@ import {
 // /Portfolio/Assets/... correctly. Do NOT add a leading slash here — that
 // would resolve to the domain root and 404 in production.
 /*
- * `src` كان بيشاور على Assets/art-gallery/Images/image_display/ — والمجلد
- * ده **مش موجود في public/ أصلاً**. الموجود هو image_display_thumb بس.
+ * `src` used to point at Assets/art-gallery/Images/image_display/ — and that folder
+ * **doesn't exist in public/ at all**. Only image_display_thumb exists.
  *
- * الكومبوننت بيعرض الـ thumb افتراضياً وبيرجع لـ src عند الخطأ، فالحيطة
- * شكلها سليم والمشكلة مكانتش بتبان — بس الـ fallback كان مسار ميت: أول ما
- * أي thumb يفشل، البديل بيعمل 404 كمان.
+ * The component shows the thumb by default and falls back to src on error, so the wall
+ * looked fine and the problem wasn't visible — but the fallback was a dead path: as soon as
+ * any thumb failed, the fallback returned a 404 too.
  *
- * دلوقتي الاتنين على نفس المجلد الموجود. لو رفعت الصور بالحجم الكامل
- * بعدين، رجّع مسار image_display هنا وهتشتغل على طول.
+ * Now both point at the same existing folder. If you upload the full-size images
+ * later, restore the image_display path here and it will work right away.
  */
 const GALLERY_IMAGES = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
   n: k + 1,
@@ -40,23 +40,23 @@ const ImageItem = memo(({
   style,
 }: {
   image: GalleryImage;
-  /* بييجي من RevealGroup — هو اللي بيحط --i عليه عشان التدرّج في الـ CSS */
+  /* Comes from RevealGroup — it sets --i on it for the staggering in the CSS */
   style?: React.CSSProperties;
 }) => {
   const [failed, setFailed] = useState(false);
 
   return (
     /*
-     * الغلاف MotionInView اتشال من هنا.
+     * The MotionInView wrapper was removed from here.
      *
-     * كل صورة كانت بتلف نفسها في MotionInView — يعني IntersectionObserver
-     * لكل صورة، واشتراك في محرّك framer-motion لكل صورة. المعرض بيرندر
-     * لحد 50 صورة.
+     * Every image used to wrap itself in MotionInView — meaning an IntersectionObserver
+     * per image, and a subscription to the framer-motion engine per image. The gallery renders
+     * up to 50 images.
      *
-     * دلوقتي RevealGroup على الشبكة بيراقب الحاوية بس، والتدرّج بيحصل
-     * في الـ CSS عن طريق --i. observer entry واحد بدل خمسين.
+     * Now a RevealGroup on the grid observes only the container, and the staggering happens
+     * in the CSS via --i. One observer entry instead of fifty.
      *
-     * `style` بييجي من RevealGroup — هو اللي بيحط --i عليه.
+     * `style` comes from RevealGroup — it sets --i on it.
      */
     <div className={styles.art_pic} style={style} data-fx="card" data-card="tight">
         {/* alt was the literal string "Certification" on all 74 images.
@@ -84,12 +84,12 @@ const ImageItem = memo(({
 ImageItem.displayName = "ImageItem";
 
 /*
- * `credentials` بييجي جاهز من page.tsx (Server Component).
+ * `credentials` arrives pre-rendered from page.tsx (a Server Component).
  *
- * السبب: credentials.tsx بيقرا certifications + skills + achievements
- * (~11.7 كيلوبايت). استيراده من هنا كان بيحوّله لـ client component
- * ويحزّم الداتا دي في bundle الصفحة الرئيسية. نفس النمط المستخدم مع
- * AttackMatrix بالظبط.
+ * Reason: credentials.tsx reads certifications + skills + achievements
+ * (~11.7 KB). Importing it from here would turn it into a client component
+ * and bundle that data into the home page bundle. Exactly the same pattern used with
+ * AttackMatrix.
  */
 type SenseiArtProps = { credentials?: ReactNode };
 
@@ -100,13 +100,13 @@ const SenseiArt = memo(function SenseiArt({ credentials }: SenseiArtProps) {
     <section className={styles["art-gallery-section"]} id="Certifications">
       <div data-fx="container" data-container="full">
         {/*
-          العنوان الكبير «認定資格 • Certifications» كان هنا واتشال.
+          The big «認定資格 • Certifications» heading used to be here and was removed.
 
-          كان بيكرر نفس الكلمة مرتين ورا بعض: عنوان القسم الكبير، وتحته
-          على طول <h3>Certifications</h3> بتاع أول بلوك في credentials.
+          It repeated the same word twice in a row: the big section heading, and directly below it
+          the <h3>Certifications</h3> of the first block in credentials.
 
-          الشهادات والإنجازات والمهارات كبيانات مقروءة، فوق حيطة الصور.
-          حيطة الصور لوحدها كانت بتقول "عندي حاجات" من غير ما تقول إيه.
+          Certifications, achievements and skills as readable data, above the image wall.
+          The image wall alone said "I have things" without saying what.
         */}
         {credentials}
 
@@ -120,7 +120,7 @@ const SenseiArt = memo(function SenseiArt({ credentials }: SenseiArtProps) {
           </Spotlight>
 
           {visibleCount < GALLERY_IMAGES.length && (
-            /* delay بالملي ثانية دلوقتي مش بالثواني — كان 0.1 يعني 100ms */
+            /* delay is now in milliseconds, not seconds — 0.1 used to mean 100ms */
             <Reveal className={styles.galleryActions} variant="fade" delay={100}>
               <button
                 type="button"

@@ -282,9 +282,9 @@ export function useScrollSpy({ sections, defaultSection, storageKey }: UseScroll
  * The order here is the nav order, the scrollspy order and the order of the
  * "g + letter" shortcuts in the command palette — one source for all three.
  *
- * Coverage (ATT&CK) و Contact كانوا هنا واتشالوا مع أقسامهم من الصفحة.
- * لو رجّعت أي قسم منهم، ضيف سطره هنا تاني — ده المصدر الوحيد للنav
- * والـ scrollspy واختصارات "g + حرف" مع بعض.
+ * Coverage (ATT&CK) and Contact used to be here and were removed along with their sections on the page.
+ * If you bring back either section, add its line here again — this is the single source for the nav,
+ * the scrollspy and the "g + letter" shortcuts together.
  */
 const SECTION_ICONS: Record<string, IconName> = {
   Home:           "faHome",

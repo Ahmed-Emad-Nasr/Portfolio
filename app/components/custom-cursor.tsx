@@ -9,18 +9,18 @@ export default function CustomCursor() {
   const [isEnabled, setIsEnabled] = useState(false);
   const tier = useDeviceTier();
   
-  // تجميع الـ State لتقليل الـ Re-renders
+  // Group the state to reduce re-renders
   const [state, setState] = useState({ hover: false, click: false, text: false });
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  // إعدادات زنبرك (Spring) ثابتة وخفيفة
+  // Fixed, lightweight spring settings
   const smoothX = useSpring(cursorX, { damping: 28, stiffness: 380, mass: 0.45 });
   const smoothY = useSpring(cursorY, { damping: 28, stiffness: 380, mass: 0.45 });
 
   useEffect(() => {
-    // التأكد من دعم الجهاز للماوس قبل تفعيل أي شيء
+    // Make sure the device supports a mouse before enabling anything
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     // A spring-driven cursor redraws two elements every frame the pointer
     // moves. On a weak machine that competes directly with scroll for the
@@ -69,7 +69,7 @@ export default function CustomCursor() {
     const handleDown = () => setState(p => ({ ...p, click: true }));
     const handleUp = () => setState(p => ({ ...p, click: false }));
 
-    // { passive: true } تمنع التقطيع (Jank) أثناء التمرير السريع
+    // { passive: true } prevents jank during fast scrolling
     window.addEventListener("pointermove", handleMove, { passive: true });
     window.addEventListener("mousedown", handleDown, { passive: true });
     window.addEventListener("mouseup", handleUp, { passive: true });
@@ -96,7 +96,7 @@ export default function CustomCursor() {
           y: smoothY,
           translateX: "-50%",
           translateY: "-50%",
-          opacity: text ? 0 : 1, // إخفاء الدائرة عند الكتابة
+          opacity: text ? 0 : 1, // hide the circle while over text
         }}
         animate={{
           scale: click ? 0.65 : hover ? 1.5 : 1,

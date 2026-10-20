@@ -27,22 +27,22 @@ const buildCaseStudy = (repo: GitHubRepository) => {
     ? `Implemented with ${repo.topics.slice(0, 2).join(" + ")}${repo.language ? ` using ${repo.language}` : ""}.`
     : `Implemented secure workflow${repo.language ? ` using ${repo.language}` : ""}.`;
   /*
-   * كان: `Open-source impact: ${stars} stars • ${forks} forks • ${watchers} watchers.`
+   * It was: `Open-source impact: ${stars} stars • ${forks} forks • ${watchers} watchers.`
    *
-   * كل الأرقام في config/projects.ts مكتوبة صفر بالإيد (ما عدا
-   * Threat-Intelligence-Tool بـ 10) — لأن الـ GitHub fetch اتشال في نسخة
-   * سابقة والسطر فضل. النتيجة إن الموقع كان بيعلن على 6 مشاريع من 7:
+   * Every number in config/projects.ts is a hand-written zero (except
+   * Threat-Intelligence-Tool at 10) — because the GitHub fetch was removed in an
+   * earlier version and the line stayed. The result was that the site announced on 6 of 7 projects:
    *
    *     "Open-source impact: 0 stars • 0 forks • 0 watchers."
    *
-   * يعني السطر اللي المفروض يبيع الشغل كان بيقول إن الشغل ملوش تأثير.
+   * So the line that was supposed to sell the work was saying the work had no impact.
    *
-   * دلوقتي السطر بيتعرض بس لما يكون فيه رقم حقيقي يستاهل. غير كده بيتقال
-   * إيه اللي اتعمل بدل إيه اللي اتقاس — وده الصح لمشروع لسه جديد.
+   * Now the line is only shown when there's a real number worth showing. Otherwise it states
+   * what was done instead of what was measured — which is right for a project that's still new.
    *
-   * ⭐ لو عايز الأرقام الحقيقية: هات الداتا من GitHub API في GitHub Action
-   *    وقت الـ build واكتبها في config/projects.ts. مفيش داعي لأي fetch
-   *    من المتصفح.
+   * ⭐ If you want the real numbers: fetch the data from the GitHub API in a GitHub Action
+   *    at build time and write it into config/projects.ts. No need for any fetch
+   *    from the browser.
    */
   const engagement = repo.stargazers_count + repo.forks_count;
   const result = engagement > 0
@@ -92,10 +92,10 @@ const ProjectItem = memo<ProjectItemProps>(({ repo, isRight }) => {
             ))}
           </ul>
 
-          {/* الشارات دي كانت بتتعرض دايماً، والأرقام في config/projects.ts
-              كلها أصفار — فالموقع كان بيطبع "0 ⭐ 0 🍴 0 👁" على 6 مشاريع
-              من 7. صفر معروض بيقرا كـ "محدش مهتم"؛ الشارة الغايبة بتقرا
-              كـ "الرقم مش مهم هنا". الشارة بتظهر بس لما فيها رقم فعلاً. */}
+          {/* These badges used to be shown always, and the numbers in config/projects.ts
+              are all zeros — so the site printed "0 ⭐ 0 🍴 0 👁" on 6 projects
+              out of 7. A displayed zero reads as "nobody cares"; a missing badge reads
+              as "the number doesn't matter here". The badge only appears when it actually has a number. */}
           <div className={styles["stats-container"]}>
             {repo.stargazers_count > 0 && (
               <span className={styles["stat-badge"]} aria-label={`${repo.stargazers_count} stars`}>

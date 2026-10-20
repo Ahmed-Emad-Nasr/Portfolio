@@ -1,36 +1,36 @@
 /*
- * Server Component عن قصد — مفيش "use client".
+ * A Server Component on purpose — no "use client".
  *
- * الملف ده فيه صفر hooks وصفر handlers وصفر استخدام لـ window/document.
- * عرض HTML ثابت وبس. ومع ذلك كان عليه "use client"، يعني كان بيحزّم
- * الداتا اللي بيستوردها في bundle الصفحة الرئيسية:
+ * This file has zero hooks, zero handlers and zero use of window/document.
+ * Static HTML rendering only. Yet it had "use client", which meant it bundled
+ * the data it imports into the home page bundle:
  *
- *     certifications.ts   5,191 بايت
- *     skills.ts           4,140 بايت
- *     achievements.ts     2,426 بايت
+ *     certifications.ts   5,191 bytes
+ *     skills.ts           4,140 bytes
+ *     achievements.ts     2,426 bytes
  *
- * ~11.7 كيلوبايت بتتحمّل على كل زائر عشان يترسم markup اتولّد وقت الـ
- * build أصلاً. كـ server component الرقم بيبقى صفر.
+ * ~11.7 KB downloaded by every visitor to render markup that was already generated at
+ * build time. As a server component that number becomes zero.
  *
- * عشان كده page.tsx بيرندره ويبعته كـ prop لحد ما يوصل sensei-art —
- * أي حاجة client component بيستوردها بتبقى client تلقائياً.
+ * That's why page.tsx renders it and passes it down as a prop until it reaches sensei-art —
+ * anything a client component imports automatically becomes client code.
  */
 
 /*
  * credentials.tsx
  * Author: Ahmed Emad Nasr
  *
- * تلات حاجات كانت في الـ CV ومش موجودة على الموقع خالص:
+ * Three things that were in the CV and not on the site at all:
  *
- *  1. الشهادات كبيانات — كانت 74 صورة من غير أسماء ولا جهات ولا سنين.
- *  2. الإنجازات — Top 1% على TryHackMe، الأول على 250 مدرّب، 44/450 في
- *     CTF. دي أقوى حاجة في الـ CV كله لأنها تقييم من طرف تالت مش وصف ذاتي،
- *     وماكانتش على الموقع بأي شكل.
- *  3. تصنيف المهارات — كانت تاجات متناثرة جوه كل خبرة وكل case، من غير
- *     مكان واحد يقول "ده اللي بشتغل بيه".
+ *  1. Certifications as data — they were 74 images with no names, issuers or years.
+ *  2. Achievements — Top 1% on TryHackMe, first out of 250 trainees, 44/450 in
+ *     a CTF. These are the strongest things in the whole CV because they're third-party assessments, not self-description,
+ *     and they weren't on the site in any form.
+ *  3. Skill categories — they were tags scattered inside every experience entry and every case, with no
+ *     single place saying "this is what I work with".
  *
- * الكومبوننت ده بيتركّب جوه قسم Certifications الموجود، فوق حيطة الصور —
- * فمفيش id جديد ولا تغيير في الـ nav ولا في الـ scrollspy.
+ * This component mounts inside the existing Certifications section, above the image wall —
+ * so there's no new id and no change to the nav or the scrollspy.
  */
 
 import { memo } from "react";
@@ -42,16 +42,16 @@ import styles from "./credentials.module.css";
 
 const Credentials = memo(function Credentials() {
   /*
-   * العناوين التلاتة دي كانت <h3> تحت <h2> بتاع القسم («認定資格 •
-   * Certifications»). العنوان الكبير ده اتشال لأنه كان بيكرر كلمة
-   * "Certifications" مرتين ورا بعض.
+   * These three headings used to be <h3> under the section's <h2> («認定資格 •
+   * Certifications»). That big heading was removed because it repeated the word
+   * "Certifications" twice in a row.
    *
-   * فبقت <h2>. لو سابناها <h3> كان القسم هيبقى فيه h3 من غير h2 فوقها —
-   * قفزة في مستويات العناوين، وقارئ الشاشة بيقرا شجرة العناوين عشان
-   * يتنقّل، فالقفزة بتخليه يدوّر على قسم مش موجود.
+   * So they became <h2>. Had they stayed <h3>, the section would have had an h3 with no h2 above it —
+   * a skipped heading level, and screen readers read the heading tree to
+   * navigate, so the jump makes them look for a section that doesn't exist.
    *
-   * ولنفس السبب، عناوين مجموعات المهارات تحت بقت <h3> بدل <h4>: لما دي
-   * بقت h2، الـ h4 اللي جواها بقت بتقفز مستوى كامل. Lighthouse مسكها.
+   * For the same reason, the skill-group headings below became <h3> instead of <h4>: once these
+   * became h2, the h4 inside them skipped a whole level. Lighthouse caught it.
    */
   return (
     <div className={styles.wrap}>
@@ -79,8 +79,8 @@ const Credentials = memo(function Credentials() {
                   Verify
                 </a>
               ) : (
-                /* مفيش رابط تحقّق = مفيش ادّعاء بإنه متحقق منه. أحسن من
-                   زرار Verify بيروح على صورة. */
+                /* No verification link = no claim that it's verified. Better than
+                   a Verify button that goes to an image. */
                 <span className={styles.verifyMissing} aria-hidden="true" />
               )}
             </li>

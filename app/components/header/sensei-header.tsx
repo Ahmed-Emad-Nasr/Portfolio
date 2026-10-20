@@ -8,7 +8,7 @@ import Icon from "@/app/core/icons/Icon";
 import styles from "./sensei-header.module.css";
 import { scrollToElement } from "@/app/core/utils/scroll";
 
-// دالة لمطابقة المسميات المختصرة
+// Maps short labels to their full names
 const getShortLabel = (section: string) => {
   switch (section.toLowerCase()) {
     case "home": return "HOME";
@@ -24,10 +24,10 @@ export default function SenseiHeader() {
   const headerRef = useRef<HTMLElement>(null);
   const { isMenuOpen, activeSection, toggleMenu, sectionIcons, setActiveSection, setIsMenuOpen } = useHeader();
 
-  // التحقق مما إذا كان المستخدم داخل صفحة البلوج
+  // Check whether the user is on the blog page
   const isBlog = pathname === "/blog" || pathname.startsWith("/blog/");
 
-  // ── Scroll Event Handler (تغيير كلاس الهيدر عند السكرول بدون رندر إضافي) ──
+  // ── Scroll Event Handler (toggles the header class on scroll without an extra render) ──
   useEffect(() => {
     let raf = 0;
     const tick = () => {
@@ -40,7 +40,7 @@ export default function SenseiHeader() {
     return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
 
-  // ── قفل السكرول في الموبايل عند فتح القائمة ──────────────────────────────
+  // ── Lock scrolling on mobile while the menu is open ──────────────────────
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -53,9 +53,9 @@ export default function SenseiHeader() {
     const target = document.getElementById(section);
     if (!target) return;
     
-    /* رجعت قفزة فورية بطلب صريح — بدل السكرول الناعم اللي كان هنا.
-       scrollToElement لسه بتحسب ارتفاع الهيدر الثابت، بس immediate:true
-       بيتخطى محرك Lenis ويقفز على طول. */
+    /* Back to an instant jump, as explicitly requested — instead of the smooth scroll that was here.
+       scrollToElement still accounts for the fixed header height, but immediate:true
+       bypasses the Lenis engine and jumps straight there. */
     const doScroll = () => scrollToElement(target, { immediate: true });
 
     if (isMenuOpen) {
@@ -72,14 +72,14 @@ export default function SenseiHeader() {
         <div className={styles.headerInner}>
           <div className={styles.headerContent}>
             
-            {/* جهة اليسار: الـ Logo الجديد AE */}
+            {/* Left side: the new AE logo */}
             <div className={styles.brand}>
               <span className={styles.brandText}>
                 AE<span className={styles.brandDot}>.</span>
               </span>
             </div>
 
-            {/* القائمة الموحدة الصافية بعرض الصفحة */}
+            {/* The clean unified full-width menu */}
             <nav
               id="main-navigation"
               className={isMenuOpen ? `${styles.navbar} ${styles.active}` : styles.navbar}
@@ -98,13 +98,13 @@ export default function SenseiHeader() {
                 </a>
               ))}
 
-              {/* زرار البلوج المظبوط */}
+              {/* The blog button */}
               <Link
                 href="/blog"
                 className={isBlog ? styles.active : undefined}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {/* أيقونة كتاب/مقال مناسبة للبلوج */}
+                {/* A book/article icon suited to the blog */}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                   <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
@@ -113,7 +113,7 @@ export default function SenseiHeader() {
               </Link>
             </nav>
 
-            {/* زر القائمة للموبايل فقط */}
+            {/* Menu button, mobile only */}
             <button
               type="button"
               className={isMenuOpen ? `${styles.menuIcon} ${styles.active}` : styles.menuIcon}
@@ -131,7 +131,7 @@ export default function SenseiHeader() {
         </div>
       </header>
 
-      {/* شاشة الخلفية للموبايل */}
+      {/* Mobile backdrop */}
       <button
         type="button"
         className={isMenuOpen ? `${styles.backdrop} ${styles.backdropActive}` : styles.backdrop}

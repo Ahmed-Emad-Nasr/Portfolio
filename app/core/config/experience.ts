@@ -19,17 +19,17 @@
 // -----------------------------------------------------------------------------
 
 /*
- * ⚠️ `isRight` اتشالت من كل العناصر.
+ * ⚠️ `isRight` was removed from every item.
  *
- * كانت بتحدد الجهة يمين/شمال على الخط الزمني. المشكلة إنها مكتوبة بإيد:
- * أول ما تضيف عنصر في النص، التبادل بيتكسر وبيبقى عنصرين على نفس
- * الجهة — وده حصل فعلاً مع "Penetration Tester".
+ * It used to set the left/right side on the timeline. The problem was that it was hand-written:
+ * as soon as you add an item in the middle, the alternation breaks and two items end up on the same
+ * side — which actually happened with "Penetration Tester".
  *
- * والكومبوننت دلوقتي بيرتّب العناصر بالتاريخ قبل ما يعرضها، فالجهة
- * المكتوبة في الداتا مبقاش ليها أي معنى — الترتيب اللي بيتشاف مش ترتيب
- * الملف. بقت بتتحسب من الموضع بعد الفرز.
+ * And the component now sorts the items by date before rendering them, so a side
+ * written in the data no longer means anything — the order on screen isn't the file
+ * order. The side is now computed from the position after sorting.
  *
- * يعني تقدر تضيف عنصر جديد في أي مكان في الملف والباقي يتظبط لوحده.
+ * So you can add a new item anywhere in the file and the rest sorts itself out.
  *
  * `kind` was added so the /cv page can separate experience from education.
  * Previously the only difference was that education items had no
@@ -41,7 +41,7 @@
  */
 export const knowledgeEducationItems = [
   {
-    // من الـ CV — أحدث دور، وكان ناقص من الموقع تماماً.
+    // From the CV — the most recent role, and it was completely missing from the site.
     tag: "Cybersecurity Instructor (Part-Time)",
     kind: "work" as const,
     subTag: "AMIT Learning",
@@ -130,7 +130,7 @@ export const knowledgeEducationItems = [
     certificateUrl: "https://gdg.community.dev/",
   },
   {
-    // من الـ CV — كان ناقص من الموقع تماماً.
+    // From the CV — it was completely missing from the site.
     tag: "Technical Instructor & Committee Member",
     kind: "volunteer" as const,
     subTag: "IEEE",

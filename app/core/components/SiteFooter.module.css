@@ -1,8 +1,8 @@
-/* SiteFooter.module.css — تذييل بسيط، الغرض منه الوصول للصفحات القانونية */
+/* SiteFooter.module.css — a simple footer whose purpose is access to the legal pages */
 
 .footer {
   position: relative;
-  z-index: 1;                 /* فوق الخلفية المتحركة */
+  z-index: 1;                 /* above the animated background */
   border-top: 1px solid var(--hairline);
   padding: var(--space-md) clamp(1.5rem, 5vw, 4rem);
   margin-top: var(--space-lg);
@@ -21,7 +21,7 @@
 .copy {
   margin: 0;
   font-family: var(--font-mono);
-  /* --text-dim تباينه 7.96 على الأسود — ناجح في WCAG AA */
+  /* --text-dim has a contrast of 7.96 on black — passes WCAG AA */
   color: var(--text-dim);
   font-size: var(--text-sm);
 }
@@ -38,8 +38,8 @@
   color: var(--text-muted);
   text-decoration: none;
   /*
-   * مساحة لمس ٤٤ بكسل — إرشاد WCAG 2.5.8 للهدف المؤشِّر.
-   * padding رأسي مع inline-flex بدل ما نكبّر الخط.
+   * A 44px touch target — WCAG 2.5.8 guidance for pointer targets.
+   * Vertical padding with inline-flex instead of enlarging the font.
    */
   display: inline-flex;
   align-items: center;
@@ -57,7 +57,7 @@
   .inner { justify-content: center; text-align: center; }
 }
 
-/* التذييل مالهوش لازمة في النسخة المطبوعة */
+/* The footer serves no purpose in the printed version */
 @media print {
   .footer { display: none; }
 }

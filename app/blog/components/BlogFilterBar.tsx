@@ -4,13 +4,13 @@
  * BlogFilterBar.tsx
  * Author: Ahmed Emad Nasr
  *
- * بحث + فلترة للـ PDF library. قبل كده كانت المكتبة قايمة ثابتة بترتيب واحد،
- * فاللي داخل يدوّر على "Wazuh" أو "Registry" لازم ينزل بعينه على الكروت كلها.
+ * Search + filtering for the PDF library. Previously the library was a static list in a single order,
+ * so anyone looking for "Wazuh" or "Registry" had to scan every card by eye.
  *
- * الفلاتر كلها في الـ URL-less client state عن قصد: الصفحة static export،
- * وأي state في الـ query string كان هيحتاج router.replace في كل ضغطة.
+ * The filters live in URL-less client state on purpose: the page is a static export,
+ * and any state in the query string would have needed router.replace on every keystroke.
  *
- * الـ chips بتوري العدد جنب كل اختيار — فالمستخدم عارف قبل ما يضغط هيلاقي كام.
+ * The chips show a count next to each option — so the user knows how many results they'll get before clicking.
  */
 
 import React from "react";
@@ -114,8 +114,8 @@ function BlogFilterBar({
         })}
       </div>
 
-      {/* aria-live: الـ screen reader بيسمع عدد النتائج وهو بيفلتر، من غير
-          ما يضطر يروح للقايمة يعدّها */}
+      {/* aria-live: screen readers hear the result count while filtering, without
+          having to go to the list and count it */}
       <p className={styles.status} role="status" aria-live="polite">
         {resultCount} of {totalCount} case(s)
         {isFiltered ? " match your filters" : " in the library"}

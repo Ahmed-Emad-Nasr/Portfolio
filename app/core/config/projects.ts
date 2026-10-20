@@ -49,7 +49,7 @@ export const projectBullets: Record<string, string[]> = {
     "Accelerated assessments by 15% via automated control mapping across 150+ frameworks (ISO, NIST, PCI DSS, GDPR).",
     "Streamlined continuous compliance by automating evidence validation from security scans and configs."
   ],
-  // من الـ CV — كان مشروع كامل غايب عن قايمة المشاريع، وهو الموقع نفسه.
+  // From the CV — a whole project that was missing from the projects list, and it's the site itself.
   "Portfolio": [
     "Developed and deployed a technical portfolio & blog, attracting 1,200+ organic visitors.",
     "Published 40+ security cases, CTFs, and complex lab solutions, earning 22+ GitHub stars from the security community."
@@ -184,7 +184,7 @@ export const staticProjectFallback = [
     license: null
   },
   {
-    // من الـ CV — repo الموقع نفسه، مبني على SITE_BASE_URL في site.ts.
+    // From the CV — the site's own repo, built from SITE_BASE_URL in site.ts.
     id: 8,
     name: "Portfolio",
     description: "Cybersecurity portfolio & technical blog built with Next.js, publishing SOC/DFIR case studies and CTF writeups.",

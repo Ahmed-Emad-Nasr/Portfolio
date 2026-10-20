@@ -210,8 +210,8 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const restoreFocusTo = useRef<HTMLElement | null>(null);
 
   // ── The context the commands operate in ─────────────────────────────────
-  /* حساب إزاحة الهيدر كان مكرّر هنا وفي CommandPaletteMount وفي
-     الهيدرين — أربع نسخ من نفس السطرين. بقى في getHeaderOffset. */
+  /* The header-offset calculation was duplicated here, in CommandPaletteMount and in
+     both headers — four copies of the same two lines. It now lives in getHeaderOffset. */
   const goToSection = useCallback((id: string) => {
     scrollToElement(document.getElementById(id));
   }, []);

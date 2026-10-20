@@ -97,12 +97,12 @@
 }
 
 /*
- * كان هنا `.scanlines` — طبقة خطوط أفقية متكررة كل ٤ بكسل بتغطي الهيرو
- * كله. اتشالت بناءً على طلب أحمد.
+ * There used to be `.scanlines` here — a layer of horizontal lines repeating every 4px covering the whole
+ * hero. It was removed on request.
  *
- * الشفافية كانت 0.03 وهي رقم صغير، بس الخطوط بتتكرر كل ٤ بكسل على
- * الشاشة كلها — فالعين بتقراها كنسيج/شبكة مش كتفصيلة. وده اللي كان
- * مضايقه في الهوم بعد ما شلنا الطبقات التانية.
+ * The opacity was 0.03, which is small, but the lines repeated every 4px across
+ * the whole screen — so the eye read them as a texture/grid rather than a detail. That's what
+ * was bothersome on the home page after the other layers were removed.
  */
 
 /* ───────────────── Layout ───────────────── */
@@ -216,32 +216,32 @@
 
 .typingHighlight::before {
   content: " ";
-  /* clip-path على صندوق inline سلوكه مش مضمون بين المتصفحات — الصندوق
-     المتولّد من غير أبعاد واضحة ممكن يتقص غلط. inline-block بيدّيه صندوق
-     حقيقي من غير ما يغيّر شكل سطر النص. */
+  /* clip-path on an inline box behaves inconsistently across browsers — a generated box
+     without clear dimensions can be clipped wrongly. inline-block gives it a real
+     box without changing the shape of the text line. */
   display: inline-block;
   /*
-   * الكشف بقى بـ clip-path مش بمستطيل معتم فوق النص.
+   * The reveal now uses clip-path instead of an opaque rectangle over the text.
    *
-   * الطريقة القديمة كانت `::after` بخلفية `var(--bg-color)` بيغطي النص
-   * وعرضه بيتحرك. ودي كانت شغّالة لما الخلفية كانت سودا سادة — بس بعد
-   * ما حطينا الخلفية المتحركة، المستطيل الأسود ده بقى **بيغطي
-   * الفقاعات** ويبان كمربع أسود بيكبر ويصغر في نص الهيرو.
+   * The old approach was an `::after` with a `var(--bg-color)` background covering the text
+   * with an animated width. That worked when the background was solid black — but after
+   * the animated background was added, that black rectangle started **covering
+   * the bubbles** and showed up as a black box growing and shrinking in the middle of the hero.
    *
-   * clip-path بيقص النص نفسه، فمفيش أي لون معتم فوق الخلفية. وكمان هو
-   * خاصية بيتعامل معاها الـ compositor، على عكس `width` اللي بتجبر
-   * إعادة تخطيط عند كل خطوة.
+   * clip-path clips the text itself, so there's no opaque colour over the background. It's also
+   * a property the compositor handles, unlike `width`, which forces
+   * a re-layout on every step.
    */
   animation: words var(--typing-words) infinite,
              typingReveal var(--typing-typing) steps(14) infinite;
 }
 
 /*
- * بقى المؤشر (الشرطة) بس — من غير خلفية.
+ * Now it's just the cursor (the bar) — without a background.
  *
- * لسه بيستخدم نفس أنيميشن العرض عشان الحد الأيسر بتاعه يفضل عند حافة
- * النص المكشوف بالظبط، ومتزامن مع الـ clip-path فوق (نفس التوقيتات
- * ونفس steps(14)). العنصر شفاف تماماً، فاللي بيتشاف هو الشرطة بس.
+ * It still uses the same width animation so its left edge stays exactly at the edge of
+ * the revealed text, in sync with the clip-path above (same timings
+ * and the same steps(14)). The element is fully transparent, so only the bar is visible.
  */
 .typingHighlight::after {
   content: " ";
@@ -266,13 +266,13 @@
   41%, 61% { content: "SOC/DFIR Engineer"; } 62%, 80% { content: "Malware Analyst"; }
   81%, 100% { content: "Cybersecurity Instructor"; }
 }
-/* موضع الشرطة — نفس توقيتات الكشف تحت بالظبط */
+/* Bar position — exactly the same timings as the reveal below */
 @keyframes typing {
   10%, 15%, 30%, 35%, 50%, 55%, 70%, 75%, 90%, 95% { width: 0; }
   5%, 20%, 25%, 40%, 45%, 60%, 65%, 80%, 85% { width: calc(100% + 7px); }
 }
 
-/* كشف النص. inset(0 100% 0 0) = مخفي بالكامل، inset(0) = ظاهر بالكامل. */
+/* Text reveal. inset(0 100% 0 0) = fully hidden, inset(0) = fully visible. */
 @keyframes typingReveal {
   10%, 15%, 30%, 35%, 50%, 55%, 70%, 75%, 90%, 95% { clip-path: inset(0 -4px 0 0); }
   5%, 20%, 25%, 40%, 45%, 60%, 65%, 80%, 85% { clip-path: inset(0 100% 0 0); }
@@ -307,10 +307,10 @@
 .specHeaderLabel {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  /* كان rgba(255,255,255,.4) — على خلفية سودا ده #666 وتباينه 3.66،
-     راسب في WCAG AA (المطلوب 4.5). النص هنا 0.78rem يعني ~٧ بكسل
-     ومتباعد الحروف، وده أصعب حاجة تتقرا مش أسهلها.
-     0.62 بيدّي #9e9e9e وتباين 7.84. */
+  /* It was rgba(255,255,255,.4) — on a black background that's #666 with a contrast of 3.66,
+     failing WCAG AA (4.5 required). The text here is 0.78rem, i.e. ~7px,
+     and letter-spaced, which makes it the hardest to read, not the easiest.
+     0.62 gives #9e9e9e and a contrast of 7.84. */
   color: rgba(255, 255, 255, 0.62);
   text-transform: uppercase;
   letter-spacing: 0.28em;
@@ -754,12 +754,17 @@
   .japaneseBg, .quote { display: none; }
 }
 
+/*
+ * The `max-width: 42rem` block below (= 672px) is wider than this one and is
+ * written after it, so on every screen this block matches, it wins for any
+ * property both blocks set. The .home padding, .container padding, h1 size and
+ * .typingText size that used to be here never applied, so they were removed —
+ * what renders on mobile is unchanged. Only the properties unique to this
+ * block are kept.
+ */
 @media (max-width: 600px) {
-  .home { padding: 0.9rem; }
-  .container { padding: 1.5rem 1rem; gap: 1.5rem; }
+  .container { gap: 1.5rem; }
   .homeImg { max-width: 30rem; }
-  .homeContent h1 { font-size: clamp(2.6rem, 13vw, 3.4rem); }
-  .typingText { font-size: clamp(1.4rem, 6.5vw, 1.9rem); }
   .homeContent p, .tagline { font-size: 1.05rem; }
   /* a11y: 4.4rem = 44px, the minimum comfortable tap-target size on touch screens */
   .socialIcon a { width: 4.4rem; height: 4.4rem; font-size: 1.2rem; }

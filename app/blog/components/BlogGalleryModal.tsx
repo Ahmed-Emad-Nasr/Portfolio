@@ -8,7 +8,7 @@ import type { GalleryState } from "../blog-types";
 export default function BlogGalleryModal({ gallery, currentShot, setGallery, goGallery }: any) {
   const touchStartXRef = useRef<number | null>(null);
 
-  // اختصارات الكيبورد فقط (خفيف جداً)
+  // Keyboard shortcuts only (very lightweight)
   useEffect(() => {
     if (!gallery) return;
     const handleKeyDown = (e: KeyboardEvent) => {

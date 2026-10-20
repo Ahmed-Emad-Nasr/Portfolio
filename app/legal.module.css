@@ -1,20 +1,20 @@
 /*
- * legal.module.css — صفحات الخصوصية والشروط.
+ * legal.module.css — the privacy and terms pages.
  *
- * ملف واحد للاتنين: نفس التخطيط بالظبط، ونسختين متطابقتين ٩٠٪ هما اللي
- * خلّونا نمسح ملف هيدر يتيم قبل كده.
+ * One file for both: exactly the same layout, and two 90%-identical copies are what
+ * led to deleting an orphaned header file before.
  *
- * التخطيط مقصود يبقى بسيط: نص قانوني بيتقرا، مش بيتزوّق.
+ * The layout is meant to be simple: legal text to be read, not decorated.
  */
 
 .page {
   min-height: 100vh;
   padding: clamp(9rem, 14vh, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(5rem, 8vh, 8rem);
-  /* نفس حجاب باقي الصفحات عشان الخلفية المتحركة تفضل باينة */
+  /* Same veil as the other pages so the animated background stays visible */
   background: var(--page-veil);
 }
 
-/* ~75 حرف في السطر — أوسع من كده القراية بتتعب */
+/* ~75 characters per line — any wider and reading gets tiring */
 .sheet {
   max-width: 78rem;
   margin: 0 auto;
@@ -42,10 +42,10 @@
 }
 
 /*
- * ملخص فوق النص القانوني.
+ * A summary above the legal text.
  *
- * الغرض منه إن الزائر يعرف الخلاصة في سطرين من غير ما يقرا الصفحة كلها.
- * ده مش بديل عن النص — النص تحت هو المرجع.
+ * Its purpose is to let the visitor get the gist in two lines without reading the whole page.
+ * It's not a substitute for the text — the text below is the reference.
  */
 .summary {
   border: 1px solid var(--hairline);

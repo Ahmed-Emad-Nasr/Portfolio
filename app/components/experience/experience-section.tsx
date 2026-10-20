@@ -22,15 +22,15 @@ import Spotlight from "@/app/core/components/Spotlight";
 type TimelineEntry = (typeof knowledgeEducationItems)[number];
 
 /*
- * الخط الزمني مرتّب من الأحدث للأقدم.
+ * The timeline is ordered newest to oldest.
  *
- * كان بيتعرض بترتيب المصفوفة زي ما هي — والمصفوفة مش مرتّبة، فالتواريخ
- * كانت بتظهر بترجع ورا وقدام (البكالوريوس ٢٠٢٢ واقع وسط ٢٠٢٤). الفرز
- * هنا معناه إن إضافة عنصر جديد بتتحط في مكانها الصح تلقائياً، مهما
- * كتبتها فين في الملف.
+ * It used to render in array order as-is — and the array isn't sorted, so the dates
+ * jumped back and forth (the 2022 bachelor's sitting in the middle of 2024). Sorting
+ * here means a newly added item lands in the right place automatically, wherever
+ * you write it in the file.
  *
- * `toSorted` مش مستخدمة عشان الدعم — `[...]` بتعمل نسخة فالمصفوفة
- * الأصلية مبتتغيّرش (وهي `as const` أصلاً).
+ * `toSorted` isn't used for support reasons — `[...]` makes a copy so the original
+ * array isn't mutated (and it's `as const` anyway).
  */
 const orderedTimeline: readonly TimelineEntry[] = [...knowledgeEducationItems].sort(
   (a, b) => b.startDate.localeCompare(a.startDate),
@@ -131,13 +131,13 @@ function ExperienceSection() {
               key={`${item.tag}-${item.startDate}`}
               {...item}
               /*
-               * التبادل يمين/شمال بيتحسب من الموضع، مش من `isRight` في
-               * الداتا.
+               * The left/right alternation is computed from the position, not from `isRight` in
+               * the data.
                *
-               * كان كل عنصر بيحمل `isRight` مكتوبة بإيد — وأول ما اتضاف
-               * عنصر جديد في النص، التبادل اتكسر وبقى عنصرين على نفس
-               * الجهة. ولأن الترتيب بيتغيّر بالفرز تحت، القيمة المكتوبة
-               * مبقاش ليها معنى أصلاً.
+               * Every item used to carry a hand-written `isRight` — and as soon as a new item
+               * was added in the middle, the alternation broke and two items ended up on the same
+               * side. And since the order changes with the sort below, the hard-coded value
+               * no longer meant anything anyway.
                */
               isRight={index % 2 !== 0}
             />

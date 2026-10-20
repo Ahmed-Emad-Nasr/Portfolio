@@ -2,13 +2,13 @@
 /*
  * responsive-audit.mjs
  *
- * فحص الـ responsive. أخوه الصغير لـ css-audit.mjs، ومن غير أي dependency
- * بردو. بيمسك أنواع الباجات اللي الفحص البصري بيفوّتها لأنها بتظهر على
- * مقاسات أو أجهزة مش موجودة قدامك وقت الشغل.
+ * Responsive audit. The little sibling of css-audit.mjs, also with zero
+ * dependencies. Catches the kinds of bugs visual checks miss because they only show up on
+ * sizes or devices you don't have in front of you while working.
  *
  *   node scripts/responsive-audit.mjs
  *
- * بيرجع exit code 1 لو فيه أي خطأ (مش تحذير) — عشان يتحط في `npm run verify`.
+ * Exits with code 1 on any error (not warning) — so it can sit in `npm run verify`.
  */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -16,19 +16,19 @@ import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
 
-/* الـ breakpoints المستخدمة فعلاً في المشروع.
-   كنت وحّدتهم في سُلَّم من ٥ قيم، وأحمد رجّعهم للأصل — فالسكربت بيتبع
-   الواقع مش العكس. القايمة دي وصف مش وصفة: لو ضفت رقم جديد، ضيفه هنا. */
+/* The breakpoints actually used in the project.
+   They were once unified into a 5-step ladder and then reverted to the originals — so the script follows
+   reality, not the other way round. This list is a description, not a prescription: if you add a new value, add it here. */
 const LADDER = [360, 380, 430, 480, 600, 640, 672, 767, 768, 900, 991, 992, 1024, 1199, 1800];
 
 /*
- * فحص الخط الصغير **مقفول**.
+ * The small-font check is **disabled**.
  *
- * الجذر 62.5% × 0.9 = ٩ بكسل، فأي قيمة تحت 1.2rem بتترندر تحت ١١ بكسل.
- * كنت رفعت ٥٣ قيمة زي دي لتوكنز، وده كبّر الموقع فاترجع بالكامل.
+ * Root 62.5% × 0.9 = 9px, so any value under 1.2rem renders below 11px.
+ * 53 such values were once bumped to tokens; that made the whole site larger, so it was fully reverted.
  *
- * القرار ده تصميمي مش تقني، وهو قرار أحمد. لو حبيت تشوف القايمة في أي
- * وقت من غير ما تغيّر حاجة:  node scripts/fix-type-scale.mjs
+ * This is a design decision, not a technical one, and it's the owner's call. To see the list at any
+ * time without changing anything:  node scripts/fix-type-scale.mjs
  */
 const MIN_REM = 0;
 
@@ -55,8 +55,8 @@ let errors = 0;
 let warnings = 0;
 const section = (t) => console.log(`\n${B(t)}`);
 
-/* ── 1. breakpoints بره السُلَّم ─────────────────────────────────────────── */
-section("1. breakpoints بره السُلَّم المعتمد");
+/* ── 1. Breakpoints off the ladder ─────────────────────────────────────── */
+section("1. Breakpoints outside the approved ladder");
 {
   let n = 0;
   for (const f of cssFiles) {
@@ -65,31 +65,31 @@ section("1. breakpoints بره السُلَّم المعتمد");
       const px = m[2] === "rem" ? parseFloat(m[1]) * 16 : parseFloat(m[1]);
       if (!LADDER.includes(px)) {
         console.log(
-          `   ${RED("خطأ")} ${rel(f)}:${lineOf(src, m.index)} — ${m[1]}${m[2]}` +
+          `   ${RED("error")} ${rel(f)}:${lineOf(src, m.index)} — ${m[1]}${m[2]}` +
             (m[2] === "rem" ? ` (= ${px}px)` : "") +
-            ` · الأقرب في السُلَّم: ${LADDER.reduce((a, b) => (Math.abs(b - px) < Math.abs(a - px) ? b : a))}px`,
+            ` · nearest on the ladder: ${LADDER.reduce((a, b) => (Math.abs(b - px) < Math.abs(a - px) ? b : a))}px`,
         );
         n++;
       }
     }
   }
   errors += n;
-  console.log(n ? `   → ${n} خطأ` : "   ✓ كله على السُلَّم");
+  console.log(n ? `   → ${n} error(s)` : "   ✓ all on the ladder");
 }
 
-/* ── 2. ترتيب الـ media queries ─────────────────────────────────────────── */
-section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
+/* ── 2. Media query order ──────────────────────────────────────────────── */
+section("2. max-width order (widest must come first)");
 {
-  /* بنقارن بس الـ queries اللي بتلمس نفس المحدد فعلاً.
-     ملف زي globals.css مقسّم لـ ١٧ قسم، وكل قسم ليه breakpoints بتاعته —
-     فمقارنة كل الملف كتلة واحدة بتدّي false positives على قواعد عمرها ما
-     هتتقابل. اللي بيهم فعلاً هو: قاعدة أضيق اتغلبت بقاعدة أوسع بعديها على
-     **نفس العنصر**. ده بالظبط اللي حصل في sensei-home.module.css بين
-     600px و42rem. */
+  /* Only compare queries that actually touch the same selector.
+     A file like globals.css is split into 17 sections, each with its own breakpoints —
+     so comparing the whole file as one block gives false positives on rules that will never
+     meet. What actually matters is: a narrower rule overridden by a wider rule after it on
+     **the same element**. That's exactly what happened in sensei-home.module.css between
+     600px and 42rem. */
   const blocks = (src) => {
     const out = [];
-    /* بيمسك px و rem. كان بيمسك px بس، فكان بيفوّت الباج الحقيقي الوحيد
-       في الملفات دي: بلوك 42rem (=672px) مكتوب بعد بلوك 600px. */
+    /* Catches px and rem. It used to catch px only, so it missed the one real bug
+       in these files: a 42rem (=672px) block written after a 600px block. */
     const re = /@media[^{]*?max-width:\s*([\d.]+)(px|rem)[^{]*\{/g;
     let m;
     while ((m = re.exec(src))) {
@@ -101,9 +101,9 @@ section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
         i++;
       }
       const body = src.slice(re.lastIndex, i - 1);
-      /* بنسجّل (محدد + خاصية) مش المحدد لوحده. قاعدتين على :root بيغيّروا
-         توكنين مختلفين مش بيتعارضوا — التعارض بيبقى لما نفس المحدد يكتب
-         نفس الخاصية. */
+      /* Record (selector + property), not the selector alone. Two rules on :root that change
+         two different tokens don't conflict — a conflict is when the same selector writes
+         the same property. */
       const pairs = new Set();
       for (const r of body.matchAll(/(^|\})\s*([^{}@]+?)\s*\{([^{}]*)\}/g)) {
         const sels = r[2].split(",").map((x) => x.trim()).filter(Boolean);
@@ -122,27 +122,27 @@ section("2. ترتيب الـ max-width (لازم الأوسع الأول)");
     const bs = blocks(src);
     for (let i = 0; i < bs.length; i++) {
       for (let j = 0; j < i; j++) {
-        if (bs[i].v <= bs[j].v) continue; // الأوسع لازم يكون الأول
+        if (bs[i].v <= bs[j].v) continue; // the wider one must come first
         const shared = [...bs[i].selectors].filter((s2) => bs[j].selectors.has(s2));
         if (!shared.length) continue;
         console.log(
-          `   ${YEL("تحذير")} ${rel(f)}:${bs[i].line} — max-width:${bs[i].raw} بعد ${bs[j].raw} ` +
-            `(سطر ${bs[j].line})، والاتنين بيكتبوا: ${shared.slice(0, 3).map((x) => x.replace("|", " → ")).join(" · ")}. ` +
-            `الأوسع بيكسب على الموبايل، فالقاعدة الأضيق ميتة.`,
+          `   ${YEL("warning")} ${rel(f)}:${bs[i].line} — max-width:${bs[i].raw} after ${bs[j].raw} ` +
+            `(line ${bs[j].line}), and both write: ${shared.slice(0, 3).map((x) => x.replace("|", " → ")).join(" · ")}. ` +
+            `The wider one wins on mobile, so the narrower rule is dead.`,
         );
         n++;
       }
     }
   }
-  /* تحذير مش خطأ: الحالة الوحيدة الموجودة دلوقتي (42rem بعد 600px في
-     sensei-home) هي الوضع الأصلي اللي الموقع شغّال بيه، والقواعد اللي
-     "ميتة" هي اللي مش ظاهرة أصلاً. بنبلّغ عنها من غير ما نوقف البناء. */
+  /* A warning, not an error: the only current case (42rem after 600px in
+     sensei-home) is the original state the site ships with, and the "dead" rules
+     are ones that never show anyway. We report it without failing the build. */
   warnings += n;
-  console.log(n ? `   → ${n} تحذير` : "   ✓ الترتيب سليم");
+  console.log(n ? `   → ${n} warning(s)` : "   ✓ order is correct");
 }
 
-/* ── 3. خط أصغر من الحد الأدنى ──────────────────────────────────────────── */
-section("3. font-size تحت الحد الأدنى");
+/* ── 3. Font smaller than the minimum ──────────────────────────────────── */
+section("3. font-size below the minimum");
 {
   let n = 0;
   for (const f of cssFiles) {
@@ -153,39 +153,39 @@ section("3. font-size تحت الحد الأدنى");
       if (/(clamp|min|max)\([^)]*$/.test(before)) continue;
       if (parseFloat(m[1]) < MIN_REM) {
         console.log(
-          `   ${RED("خطأ")} ${rel(f)}:${lineOf(masked, m.index)} — ${m[1]}rem ≈ ${(parseFloat(m[1]) * 9.5).toFixed(1)}px.` +
-            ` استخدم var(--text-xs) أو أكبر. (شغّل: node scripts/fix-type-scale.mjs --write)`,
+          `   ${RED("error")} ${rel(f)}:${lineOf(masked, m.index)} — ${m[1]}rem ≈ ${(parseFloat(m[1]) * 9.5).toFixed(1)}px.` +
+            ` Use var(--text-xs) or larger. (run: node scripts/fix-type-scale.mjs --write)`,
         );
         n++;
       }
     }
   }
   errors += n;
-  console.log(n ? `   → ${n} خطأ` : "   ✓ مفيش خط تحت الحد");
+  console.log(n ? `   → ${n} error(s)` : "   ✓ no font below the minimum");
 }
 
-/* ── 4. جريد ممكن يعمل overflow ─────────────────────────────────────────── */
-section("4. minmax() من غير حارس");
+/* ── 4. Grids that can overflow ────────────────────────────────────────── */
+section("4. Unguarded minmax()");
 {
   let n = 0;
   for (const f of cssFiles) {
     const src = strip(readFileSync(f, "utf8"));
     for (const m of src.matchAll(/minmax\(\s*([\d.]+)(px|rem)/g)) {
       console.log(
-        `   ${RED("خطأ")} ${rel(f)}:${lineOf(src, m.index)} — minmax(${m[1]}${m[2]}, …)` +
-          ` مبيقدرش ينزل تحت ${m[1]}${m[2]}، فبيخرج بره الشاشة على الموبايل` +
-          ` وoverflow-x:hidden **بيقصّه** بدل ما يخليك تسكرول له.` +
-          ` الصح: minmax(min(100%, ${m[1]}${m[2]}), …)`,
+        `   ${RED("error")} ${rel(f)}:${lineOf(src, m.index)} — minmax(${m[1]}${m[2]}, …)` +
+          ` can't shrink below ${m[1]}${m[2]}, so it overflows the screen on mobile` +
+          ` and overflow-x:hidden **clips** it instead of letting you scroll to it.` +
+          ` Correct form: minmax(min(100%, ${m[1]}${m[2]}), …)`,
       );
       n++;
     }
   }
   errors += n;
-  console.log(n ? `   → ${n} خطأ` : "   ✓ كل الجريدات محمية");
+  console.log(n ? `   → ${n} error(s)` : "   ✓ all grids are guarded");
 }
 
-/* ── 5. تكلفة من غير فايدة على اللمس ────────────────────────────────────── */
-section("5. transition غالي مش متقيّد بـ hover");
+/* ── 5. Cost with no benefit on touch ──────────────────────────────────── */
+section("5. Expensive transition not gated behind hover");
 {
   let n = 0;
   for (const f of cssFiles) {
@@ -193,34 +193,34 @@ section("5. transition غالي مش متقيّد بـ hover");
     const gated = src.replace(/@media\s*\(hover:\s*hover\)[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g, "");
     for (const m of gated.matchAll(/transition:\s*(all|[^;]*\bfilter\b[^;]*)/g)) {
       console.log(
-        `   ${YEL("تحذير")} ${rel(f)}:${lineOf(gated, m.index)} — ` +
+        `   ${YEL("warning")} ${rel(f)}:${lineOf(gated, m.index)} — ` +
           (m[1] === "all"
-            ? "`transition: all` بيراقب كل خاصية. سمّي اللي بيتغيّر."
-            : "transition على filter بيعيد رسم الصورة كل فريم، والموبايل بيدفعها من غير ما يشوف الـ hover."),
+            ? "`transition: all` watches every property. Name the ones that change."
+            : "a transition on filter repaints the image every frame, and mobile pays for it without ever seeing the hover."),
       );
       n++;
     }
   }
   warnings += n;
-  console.log(n ? `   → ${n} تحذير` : "   ✓ نضيف");
+  console.log(n ? `   → ${n} warning(s)` : "   ✓ clean");
 }
 
-/* ── 6. الشاشات الكبيرة ─────────────────────────────────────────────────── */
-section("6. تغطية الشاشات الكبيرة");
+/* ── 6. Large screens ──────────────────────────────────────────────────── */
+section("6. Large-screen coverage");
 {
   const all = cssFiles.map((f) => strip(readFileSync(f, "utf8"))).join("\n");
   const mins = new Set(
     [...all.matchAll(/min-width:\s*(\d+)px/g)].map((m) => +m[1]).filter((v) => v >= 1440),
   );
   if (mins.size === 0) {
-    console.log(`   ${YEL("تحذير")} مفيش ولا min-width فوق 1440px — الشاشات الكبيرة مش متعامل معاها`);
+    console.log(`   ${YEL("warning")} no min-width above 1440px — large screens aren't handled`);
     warnings++;
   } else {
     console.log(`   ✓ ${[...mins].sort((a, b) => a - b).join("px · ")}px`);
   }
 }
 
-/* ── الخلاصة ────────────────────────────────────────────────────────────── */
+/* ── Summary ───────────────────────────────────────────────────────────── */
 console.log(`\n${"─".repeat(60)}`);
-console.log(`${cssFiles.length} ملف CSS · ${errors} خطأ · ${warnings} تحذير\n`);
+console.log(`${cssFiles.length} CSS files · ${errors} error(s) · ${warnings} warning(s)\n`);
 process.exit(errors ? 1 : 0);

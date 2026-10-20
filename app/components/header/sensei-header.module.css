@@ -31,34 +31,34 @@
 
 /* Outer container for the full-width polygon (the thin grey border) */
 /*
- * ══ الهيدر الزجاجي ═══════════════════════════════════════════════════════
+ * ══ The glass header ═════════════════════════════════════════════════════
  *
- * الشكل القديم كان **شبه منحرف** (clip-path) وجواه طبقتين:
+ * The old shape was a **trapezoid** (clip-path) with two layers inside:
  *
- *   .headerInner    خلفية بيضا بشفافية 0.08  ← الطبقة "الزجاجية"
- *   .headerContent  background: var(--bg-color)  ← **أسود معتم فوقها**
+ *   .headerInner    white background at 0.08 opacity  ← the "glass" layer
+ *   .headerContent  background: var(--bg-color)       ← **opaque black on top of it**
  *
- * الطبقة التانية كانت بتغطي الأولى بالكامل، فالزجاج مكانش بيبان أصلاً.
- * وعند السكرول كان بيبقى معتم أكتر — عكس الاتجاه المطلوب.
+ * The second layer completely covered the first, so the glass was never visible at all.
+ * And on scroll it became even more opaque — the opposite of what was wanted.
  *
- * دلوقتي بنفس لغة الكارت بالظبط:
- *   · نفس الشفافية والحدود (--card-bg / --card-border-color)
- *   · نفس نصف القطر (--radius-card)
- *   · backdrop-filter من --ui-blur — وده متقيّد بالـ tier، يعني بيتقفل
- *     تلقائياً على الأجهزة الضعيفة زي أي blur في الموقع
+ * Now it uses exactly the same language as the card:
+ *   · the same transparency and borders (--card-bg / --card-border-color)
+ *   · the same radius (--radius-card)
+ *   · backdrop-filter from --ui-blur — which is tier-gated, so it's turned off
+ *     automatically on weak devices like any blur on the site
  *
- * والشبه المنحرف اتشال: الكارت مستطيل بزوايا دايرية، والهيدر بقى زيه.
+ * And the trapezoid was removed: the card is a rectangle with rounded corners, and so is the header now.
  */
 .headerInner {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* الارتفاع الكلي (56 + الهامش + الحد) معرّف في --header-height
-     في globals.css، واللي scroll-margin بتقرا منه. */
+  /* The total height (56 + margin + border) is defined in --header-height
+     in globals.css, which scroll-margin reads from. */
   height: 56px;
 
-  /* نفس زجاج الكارت */
+  /* Same glass as the card */
   background: var(--card-bg);
   border: 1px solid var(--card-border-color);
   border-radius: var(--radius-card);
@@ -66,8 +66,8 @@
   backdrop-filter: blur(var(--ui-blur)) saturate(130%);
 
   /*
-   * بيطفو بعيد عن حواف الشاشة زي أي كارت، مش لاصق من الطرفين.
-   * ده اللي بيخلّي الخلفية المتحركة تعدّي من حواليه فيبان زجاج فعلاً.
+   * Floats away from the screen edges like any card, not stuck to both sides.
+   * That's what lets the animated background pass around it so it actually looks like glass.
    */
   margin: 0.9rem clamp(1rem, 4vw, 3rem) 0;
 
@@ -77,10 +77,10 @@
 }
 
 /*
- * عند السكرول بيغمق **شوية** بس — مش بيتحوّل لمعتم.
+ * On scroll it darkens only **slightly** — it doesn't turn opaque.
  *
- * الغرض إن النص يفضل مقروء لما محتوى فاتح يعدّي تحته، مش إننا نلغي
- * الشفافية. نفس اللي بيحصل للكارت عند الـ hover.
+ * The goal is to keep the text readable when light content passes underneath, not to cancel
+ * the transparency. The same thing happens to the card on hover.
  */
 .scrolled .headerInner {
   background: var(--card-bg-hover);
@@ -95,8 +95,8 @@
   width: 100%;
   height: 100%;
   padding: 0 clamp(1.5rem, 3vw, 3rem);
-  /* مفيش background هنا عن قصد — الزجاج في .headerInner، وأي خلفية هنا
-     هتغطيه (وده بالظبط اللي كان بيحصل قبل كده). */
+  /* No background here on purpose — the glass is on .headerInner, and any background here
+     would cover it (which is exactly what used to happen). */
 }
 
 
@@ -208,11 +208,11 @@
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   /*
-   * القاعدة اللي كانت هنا كانت بتلغي الـ clip-path على الموبايل، لأن
-   * الشبه المنحرف كان بيقص قايمة الموبايل كلها (بتظهر تحت الهيدر لكن
-   * لسه ابن للعنصر المقصوص) وكان بياكل من اللوجو وزرار القايمة.
+   * The rule that used to be here cancelled the clip-path on mobile, because
+   * the trapezoid clipped the entire mobile menu (it appears below the header but
+   * is still a child of the clipped element) and ate into the logo and the menu button.
    *
-   * الـ clip-path اتشال من الأساس دلوقتي، فالقاعدة مبقاش ليها لازمة.
+   * The clip-path has been removed entirely now, so the rule is no longer needed.
    */
   .headerInner { margin: 0.6rem 0.8rem 0; }
   .headerContent { padding: 0 1.5rem; }
@@ -222,10 +222,10 @@
     left: 0;
     right: 0;
     /*
-     * قايمة الموبايل بتفضل شبه معتمة عن قصد: هي بتغطي محتوى الصفحة
-     * وقت ما تكون مفتوحة، والنص فيها لازم يفضل مقروء فوق أي حاجة
-     * بتعدّي تحتها. --card-bg-hover هو نفس الدرجة اللي الكارت بياخدها
-     * عند الـ hover.
+     * The mobile menu stays nearly opaque on purpose: it covers the page content
+     * while it's open, and its text must stay readable over anything
+     * passing underneath. --card-bg-hover is the same shade the card gets
+     * on hover.
      */
     background: var(--card-bg-hover);
     -webkit-backdrop-filter: blur(var(--ui-blur));

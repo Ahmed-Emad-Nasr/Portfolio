@@ -1,19 +1,19 @@
 /*
  * scripts/css-audit.mjs
  *
- * فحص CSS للمشروع. صفر تبعيات — node بس.
+ * CSS audit for the project. Zero dependencies — plain node.
  *
  *   node scripts/css-audit.mjs
  *
- * بيدوّر على أربع حاجات، وكلها اتلقت فعلاً في الموقع ده مرة على الأقل:
+ * Looks for four things, each of which has actually turned up on this site at least once:
  *
- *   1. كلاسات معرّفة في .module.css ومحدش بيستخدمها
- *   2. متغيّرات CSS معرّفة ومحدش بيقراها
- *   3. ملفات CSS شبه متطابقة (الهيدر الرئيسي والبلوج كانوا 99٪ نفس الملف)
- *   4. خصائص غالية على المسار الحرج (backdrop-filter، transition عليها،
- *      محددات عالمية)
+ *   1. Classes defined in a .module.css file that nothing uses
+ *   2. CSS custom properties that are declared but never read
+ *   3. Near-identical CSS files (the main header and the blog header were 99% the same file)
+ *   4. Expensive properties on the critical path (backdrop-filter, transitions on it,
+ *      universal selectors)
  *
- * شغّله قبل أي PR. أرخص من اكتشاف إن ٤٢٪ من نظام التوكنز ميت بعد سنة.
+ * Run it before every PR. Cheaper than finding out a year later that 42% of the token system is dead.
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -43,12 +43,12 @@ const allCss = cssFiles.map((f) => strip(read(f))).join("\n");
 let issues = 0;
 const section = (title) => console.log(`\n\x1b[1m${title}\x1b[0m`);
 
-/* ── 1. كلاسات ميتة ────────────────────────────────────────────────────── */
-section("1. كلاسات معرّفة ومش مستخدمة");
+/* ── 1. Dead classes ───────────────────────────────────────────────────── */
+section("1. Classes defined but not used");
 
-/* بنجمع كل استخدام لأي متغيّر styles مهما كان اسمه (styles، anchorStyles، …)
-   وبنمسك التركيب الديناميكي styles[`x-${y}`] بإننا نتجاهل أي كلاس بادئته
-   موجودة في تركيب زي ده. */
+/* Collect every use of any styles object whatever its name (styles, anchorStyles, …)
+   and handle dynamic composition like styles[`x-${y}`] by ignoring any class whose
+   prefix appears in such a template. */
 const usedNames = new Set();
 for (const m of allCode.matchAll(/\b\w*[Ss]tyles\.(\w+)/g)) usedNames.add(m[1]);
 for (const m of allCode.matchAll(/\b\w*[Ss]tyles\[\s*[`"']([\w-]+)/g)) usedNames.add(m[1]);
@@ -58,21 +58,21 @@ for (const m of allCode.matchAll(/\b\w*[Ss]tyles\[\s*`([\w-]*)\$\{/g)) {
   if (m[1]) dynamicPrefixes.push(m[1]);
 }
 
-/* استدعاء ديناميكي كامل: styles[line.kind] أو styles[variant] — من غير أي
-   نص ثابت نقدر نمسكه.
+/* Fully dynamic lookup: styles[line.kind] or styles[variant] — no static
+   string we can catch.
 
-   ده كان بيدّي false positive حقيقي: Terminal.tsx بيرندر
-   `className={styles[line.kind]}` و line.kind نوعه "in" | "out" | "err" |
-   "dim". السكربت كان بيقول إن .in و .out و .dim كلاسات ميتة، وهي شغّالة —
-   ومسحها كان هيكسر ألوان الترمينال من غير أي error.
+   This produced a real false positive: Terminal.tsx renders
+   `className={styles[line.kind]}` and line.kind is "in" | "out" | "err" |
+   "dim". The script reported .in, .out and .dim as dead classes while they were live —
+   and deleting them would have silently broken the terminal colours.
 
-   لما ملف يحتوي على تركيب زي ده، مبنقدرش نحكم على كلاساته إحصائياً، فبنعلّم
-   الملف كله ونستثنيه من فحص الكلاسات الميتة مع ملاحظة صريحة. */
+   When a file contains a lookup like that we can't judge its classes statically, so we flag
+   the whole file and exclude it from the dead-class check with an explicit note. */
 const dynamicFiles = new Set();
 for (const f of codeFiles) {
   const src = read(f);
   if (/\b\w*[Ss]tyles\[\s*[A-Za-z_$][\w.$]*\s*\]/.test(src)) {
-    /* بنربط ملف الكود بملف الـ CSS اللي بيستورده */
+    /* Map each source file to the CSS module it imports */
     for (const m of src.matchAll(/from\s+["'](\.[^"']*\.module\.css)["']/g)) {
       dynamicFiles.add(m[1].replace(/^\.\//, ""));
     }
@@ -96,20 +96,20 @@ for (const f of cssFiles.filter((f) => f.endsWith(".module.css"))) {
     deadClasses += dead.length;
   }
 }
-console.log(deadClasses ? `   → ${deadClasses} كلاس` : "   ✓ نضيف");
+console.log(deadClasses ? `   → ${deadClasses} class(es)` : "   ✓ clean");
 if (skippedDynamic) {
   console.log(
-    `   (${skippedDynamic} ملف اتخطّى — بيستخدم styles[expr] فمش ممكن يتفحص إحصائياً)`,
+    `   (${skippedDynamic} file(s) skipped — uses styles[expr], can't be checked statically)`,
   );
 }
 issues += deadClasses;
 
-/* ── 2. متغيّرات ميتة ──────────────────────────────────────────────────── */
-section("2. متغيّرات CSS معرّفة ومش مقروءة");
+/* ── 2. Dead variables ─────────────────────────────────────────────────── */
+section("2. CSS variables declared but never read");
 
 const readVars = new Set([
   ...[...allCss.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1]),
-  // next/font بيولّد --font-* من الجافاسكريبت
+  // next/font generates --font-* from JavaScript
   ...[...allCode.matchAll(/(--font-[\w-]+)/g)].map((m) => m[1]),
 ]);
 
@@ -123,13 +123,13 @@ const deadVars = [...declared].filter(([v]) => !readVars.has(v));
 for (const [v, f] of deadVars) console.log(`   ${v}  (${relative(".", f)})`);
 console.log(
   deadVars.length
-    ? `   → ${deadVars.length} من ${declared.size} (${Math.round((deadVars.length / declared.size) * 100)}٪)`
-    : "   ✓ نضيف",
+    ? `   → ${deadVars.length} of ${declared.size} (${Math.round((deadVars.length / declared.size) * 100)}%)`
+    : "   ✓ clean",
 );
 issues += deadVars.length;
 
-/* ── 3. ملفات شبه متطابقة ──────────────────────────────────────────────── */
-section("3. ملفات CSS شبه متطابقة");
+/* ── 3. Near-identical files ───────────────────────────────────────────── */
+section("3. Near-identical CSS files");
 
 const normalized = cssFiles.map((f) => [
   f,
@@ -146,65 +146,65 @@ for (let i = 0; i < normalized.length; i++) {
     const shared = a.filter((l) => setB.has(l)).length;
     const pct = Math.round((shared / Math.max(a.length, b.length)) * 100);
     if (pct >= 70) {
-      console.log(`   ${pct}٪ متطابقين:`);
+      console.log(`   ${pct}% identical:`);
       console.log(`      ${relative(".", fa)}`);
       console.log(`      ${relative(".", fb)}`);
       dupPairs++;
     }
   }
 }
-console.log(dupPairs ? `   → ${dupPairs} زوج` : "   ✓ نضيف");
+console.log(dupPairs ? `   → ${dupPairs} pair(s)` : "   ✓ clean");
 issues += dupPairs;
 
-/* ── 4. خصائص غالية ───────────────────────────────────────────────────── */
-section("4. خصائص غالية على المسار الحرج");
+/* ── 4. Expensive properties ───────────────────────────────────────────── */
+section("4. Expensive properties on the critical path");
 
 const flags = [];
 for (const f of cssFiles) {
   const t = strip(read(f));
   const rel = relative(".", f);
 
-  // transition على backdrop-filter أو filter = إعادة رسم GPU كل فريم
-  /* transition على filter جوه @media (hover: hover) مقبول: الجهاز اللي
-     بيدفع التكلفة هو الوحيد اللي بيشوف الأثر. بنشيل البلوكات دي قبل الفحص. */
+  // transition on backdrop-filter or filter = GPU repaint every frame
+  /* A transition on filter inside @media (hover: hover) is acceptable: the device
+     paying the cost is the only one that sees the effect. Strip those blocks before checking. */
   const t2 = t.replace(
     /@media\s*\(hover:\s*hover\)[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g,
     "",
   );
   for (const m of t2.matchAll(/transition:[^;]*\b(backdrop-filter|filter)\b[^;]*/g)) {
-    flags.push(`   ${rel}: transition على ${m[1]} — إعادة رسم GPU كل فريم`);
+    flags.push(`   ${rel}: transition on ${m[1]} — GPU repaint every frame`);
   }
-  // backdrop-filter بقيمة ثابتة بدل التوكن = بيتخطّى ميزانية الجهاز
+  // backdrop-filter with a hard-coded value instead of the token = bypasses the device budget
   for (const m of t.matchAll(/backdrop-filter:\s*blur\((\d)/g)) {
     if (m[1] !== "0") {
-      flags.push(`   ${rel}: backdrop-filter بقيمة ثابتة — استخدم var(--ui-blur)`);
+      flags.push(`   ${rel}: hard-coded backdrop-filter value — use var(--ui-blur)`);
       break;
     }
   }
-  // محدد عالمي بخصائص مش وراثية
+  // universal selector with non-inherited properties
   if (/^\s*\*\s*\{/m.test(t)) {
-    flags.push(`   ${rel}: محدد \`*\` — بيتحسب على كل عنصر في الصفحة`);
+    flags.push(`   ${rel}: \`*\` selector — evaluated against every element on the page`);
   }
-  // محدد بحث نصّي جزئي — بطيء وبيتكسر مع تهشير CSS Modules
+  // partial attribute-substring selector — slow, and breaks with CSS Modules hashing
   for (const m of t.matchAll(/\[class\*=/g)) {
-    flags.push(`   ${rel}: [class*=…] — بطيء وبيتكسر مع تهشير CSS Modules`);
+    flags.push(`   ${rel}: [class*=…] — slow, and breaks with CSS Modules hashing`);
     break;
   }
-  // transition: all بيراقب كل خاصية
+  // transition: all watches every property
   if (/transition:\s*all\b/.test(t)) {
-    flags.push(`   ${rel}: transition: all — حدّد الخصائص بالاسم`);
+    flags.push(`   ${rel}: transition: all — name the properties explicitly`);
   }
 }
 for (const line of [...new Set(flags)]) console.log(line);
-console.log(flags.length ? `   → ${new Set(flags).size} تنبيه` : "   ✓ نضيف");
+console.log(flags.length ? `   → ${new Set(flags).size} warning(s)` : "   ✓ clean");
 issues += new Set(flags).size;
 
-/* ── الخلاصة ──────────────────────────────────────────────────────────── */
+/* ── Summary ───────────────────────────────────────────────────────────── */
 const bytes = cssFiles.reduce((n, f) => n + readFileSync(f).length, 0);
 console.log(`\n${"─".repeat(60)}`);
-console.log(`${cssFiles.length} ملف CSS · ${bytes.toLocaleString()} بايت · ${issues} ملاحظة`);
+console.log(`${cssFiles.length} CSS files · ${bytes.toLocaleString()} bytes · ${issues} note(s)`);
 console.log(
-  "\nملاحظة: التعليقات والمسافات بتتشال في build الإنتاج، فحجم الملف في\n" +
-  "الريبو مش مقياس أداء. اللي بيتقاس هو عدد القواعد اللي المتصفح بيمرّ\n" +
-  "عليها في كل style recalculation، وتكلفة الرسم للخصائص في القسم ٤.\n",
+  "\nNote: comments and whitespace are stripped in the production build, so file size in\n" +
+  "the repo is not a performance metric. What matters is how many rules the browser walks\n" +
+  "on every style recalculation, and the paint cost of the properties in section 4.\n",
 );

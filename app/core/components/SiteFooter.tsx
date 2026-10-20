@@ -1,16 +1,16 @@
 /*
  * SiteFooter.tsx
  *
- * Server Component — صفر جافاسكريبت.
+ * Server Component — zero JavaScript.
  *
- * ── ليه اتضاف ──
+ * ── Why it was added ──
  *
- * صفحتي الخصوصية والشروط اتعملوا، بس الموقع مكانش فيه footer خالص
- * (الوحيد كان جوه صفحة الـ CV). يعني الصفحتين كانوا هيبقوا موجودين في
- * الـ sitemap ومحدش يقدر يوصلهم بالتصفح.
+ * The privacy and terms pages were created, but the site had no footer at all
+ * (the only one was inside the CV page). So the two pages would have existed in
+ * the sitemap with nobody able to reach them by browsing.
  *
- * وثيقة قانونية مش قابلة للوصول = وثيقة مش موجودة عملياً. الغرض منها إن
- * الزائر يلاقيها، فلازم يبقى ليها لينك في كل صفحة.
+ * A legal document that can't be reached = a document that effectively doesn't exist. Its purpose is for
+ * the visitor to find it, so it must have a link on every page.
  */
 
 import Link from "next/link";
@@ -27,7 +27,7 @@ export default function SiteFooter() {
           © {year} {LEGAL_CONTACT.name}
         </p>
 
-        {/* aria-label عشان قارئ الشاشة يفرّق بينها وبين التنقّل الرئيسي */}
+        {/* aria-label so screen readers can tell it apart from the main navigation */}
         <nav className={styles.links} aria-label="Legal and contact">
           <Link href="/privacy">Privacy Policy</Link>
           <Link href="/terms">Terms of Use</Link>

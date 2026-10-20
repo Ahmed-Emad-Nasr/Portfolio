@@ -33,9 +33,9 @@ const Terminal = dynamic(() => import("./Terminal"), { ssr: false });
 type Overlay = "palette" | "shortcuts" | "terminal" | null;
 
 /** Ignore shortcuts while the user is typing in a field */
-/* isTypingTarget اتنقل لـ core/utils/scroll — KeyboardScroll محتاجه
-   بنفس الشروط بالظبط، ونسختين من "هل المستخدم بيكتب دلوقتي؟" هي
-   بالظبط نوع التكرار اللي بيفضل يتباعد لحد ما يختلفوا. */
+/* isTypingTarget moved to core/utils/scroll — KeyboardScroll needs it
+   with exactly the same conditions, and two copies of "is the user typing right now?" are
+   exactly the kind of duplication that keeps drifting until they disagree. */
 /** g + this letter → this section */
 const GO_TO_SECTION: Record<string, string> = {
   h: "Home",

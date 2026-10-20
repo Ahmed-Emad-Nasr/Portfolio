@@ -100,7 +100,7 @@ export const skillGroups: readonly SkillGroup[] = [
     items: ["Windows", "Windows Server", "Ubuntu", "Kali Linux", "Arch Linux"],
   },
   {
-    // من الـ CV — مجموعة كاملة كانت غايبة عن الموقع.
+    // From the CV — a whole group that was missing from the site.
     id: "soft",
     label: "Soft Skills",
     items: ["Analytical Thinking", "Problem Solving", "Team Collaboration", "Communication", "Adaptability", "Attention to Detail"],

@@ -73,9 +73,9 @@ const SenseiHome = memo(function SenseiHome() {
     return () => observer.disconnect();
   }, []);
 
-  /* handleDownloadClick + isDownloading اتشالوا مع زرار التحميل: مبقاش
-     فيه تحميل ملف يستنى مؤشر — اللينك بيروح على صفحة. أقل state في أكبر
-     كومبوننت على الصفحة. */
+  /* handleDownloadClick + isDownloading were removed along with the download button: there's no longer
+     a file download waiting on a spinner — the link goes to a page. Less state in the biggest
+     component on the page. */
 
   return (
     <section ref={sectionRef} className={`${styles.home} noLine noBg`} id="Home" data-in-view="true">
@@ -218,11 +218,11 @@ const SenseiHome = memo(function SenseiHome() {
           {/* Badge */}
           <div className={styles.badge}>
             <span className={styles.badgeDot} />
-            {/* lang="ja" هنا مش تجميل: الشارة دي مش aria-hidden، يعني قارئ
-                الشاشة بيقراها فعلاً. من غير الـ attribute بيحاول ينطق
-                الكاتاكانا بقواعد إنجليزية. وكمان بيخلي قاعدة :lang(ja)
-                في globals.css تدّي النص خط CJK مقصود بدل ما المتصفح
-                يختار أي خط ياباني موجود على الجهاز. */}
+            {/* lang="ja" here isn't cosmetic: this badge isn't aria-hidden, so the screen
+                reader actually reads it. Without the attribute it tries to pronounce
+                the katakana with English rules. It also lets the :lang(ja) rule
+                in globals.css give the text an intentional CJK font instead of the browser
+                picking whatever Japanese font happens to be on the device. */}
             <span className={styles.badgeText} lang="ja">セキュリティ・アナリスト</span>
           </div>
 
@@ -266,10 +266,10 @@ const SenseiHome = memo(function SenseiHome() {
             Cybersecurity professional specialized in Incident Response, SOC operations, and Digital Forensics. Experienced in SIEM tuning (Wazuh, ELK, Splunk), threat detection, and penetration testing across internship and lab environments.
           </p>
 
-          {/* الـ id="Contact" اتشال من هنا: بقى فيه قسم تواصل حقيقي بفورم
-              في آخر الصفحة شايل الـ id ده. عنصرين بنفس الـ id = HTML غير
-              صالح، والمتصفح بيروح على أول واحد — يعني اللينك كان هيوقف عند
-              أيقونات السوشيال بدل الفورم. */}
+          {/* id="Contact" was removed from here: there's now a real contact section with a form
+              at the end of the page that carries this id. Two elements with the same id = invalid
+              HTML, and the browser goes to the first one — so the link would have stopped at
+              the social icons instead of the form. */}
           <div className={styles.socialIcon}>
             <a href="https://www.linkedin.com/in/ahmed-emad-nasr/" target="_blank" rel="noopener noreferrer" className={styles.iconLinkedin} aria-label="LinkedIn">
               <Icon name="faLinkedin" />
@@ -290,16 +290,16 @@ const SenseiHome = memo(function SenseiHome() {
 
           <div className={styles.homeButton}>
             {/*
-              كان <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download>: مسار
-              نسبي بيتحل بالنسبة لعنوان الصفحة الحالية، فشغّال من
-              "/Portfolio/" وبيقع من أي مكان أعمق — ولو الملف نفسه ناقص أو
-              اتغيّر اسمه، الزائر بيوصل لـ 404 من غير أي بديل.
+              This was <a href="Assets/cv/AhmedEmadNasr_CV.pdf" download>: a relative
+              path resolved against the current page URL, so it worked from
+              "/Portfolio/" and broke from anywhere deeper — and if the file itself was missing or
+              renamed, the visitor got a 404 with no alternative.
 
-              دلوقتي بيروح على /cv: صفحة HTML بتتبني من نفس الـ config بتاع
-              الموقع، فمستحيل تبقى ناقصة أو قديمة، وفيها زرار تحميل للـ PDF
-              جوّاها. و<Link> بيتولّى الـ basePath لوحده زي لينك /blog في
-              الهيدر بالظبط — عشان كده مش بيعدّي على normalizePublicHref،
-              اللي كان هيضيف البادئة مرتين.
+              Now it goes to /cv: an HTML page built from the same config as
+              the site, so it can never be missing or stale, and it has a PDF download button
+              inside it. And <Link> handles the basePath by itself, exactly like the /blog link in
+              the header — which is why it doesn't go through normalizePublicHref,
+              which would have added the prefix twice.
             */}
             <Link href="/cv" className={`${styles.btn} ${styles.cvBtn}`}>
               View CV <Icon name="faFilePdf" />

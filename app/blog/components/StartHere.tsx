@@ -1,8 +1,8 @@
 /*
  * StartHere.tsx
  *
- * Server Component: بيقرا مكتبة الـ cases وقت الـ build عشان يتأكد إن كل
- * id في start-here.ts موجود فعلاً، والزائر بياخد HTML بس.
+ * Server Component: reads the case library at build time to make sure every
+ * id in start-here.ts actually exists, and the visitor gets HTML only.
  */
 
 import Link from "next/link";
@@ -15,9 +15,9 @@ import {
 import styles from "./StartHere.module.css";
 
 /*
- * لو حد غيّر id في cases.ts ونسي يغيّره هنا، اللينك هيبقى 404 صامت. الفلتر
- * ده بيشيل العنصر بدل ما يوديه على صفحة مكسورة — والـ build بيطبع تحذير
- * عشان تلاحظ.
+ * If someone changes an id in cases.ts and forgets to change it here, the link becomes a silent 404. This
+ * filter drops the item instead of sending it to a broken page — and the build prints a warning
+ * so you notice.
  */
 const KNOWN_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
 const ENTRIES = startHere.filter((entry) => {
@@ -32,17 +32,17 @@ export default function StartHere() {
   return (
     <section className={styles.section} aria-labelledby="start-here-title">
       {/*
-        صفحة البلوج كانت **من غير <h1> خالص** — 42 عنوان فيها وولا واحد h1.
-        ده أهم عنصر واحد في الصفحة بالنسبة لجوجل ولقارئ الشاشة: الأول
-        بيستخدمه كعنوان الصفحة في نتايج البحث، والتاني بيبدأ التصفح منه.
+        The blog page had **no <h1> at all** — 42 headings on it and not a single h1.
+        It's the single most important element on the page for Google and for screen readers: the former
+        uses it as the page title in search results, and the latter starts navigating from it.
 
-        الـ h1 هنا لأن ده أول محتوى حقيقي في الصفحة بعد الهيدر.
+        The h1 is here because this is the first real content on the page after the header.
       */}
       <h1 className={styles.pageTitle}>Cybersecurity Case Library</h1>
       <p className={styles.pageLede}>
-        {/* الرقمين محسوبين من الداتا في cases.ts. كان مكتوب
+        {/* Both numbers are computed from the data in cases.ts. It used to say
             "{caseEvidenceLibrary.length} published investigation reports"
-            وده بيعدّ الـ write-ups والمشيات كتقارير تحقيق. */}
+            which counts write-ups and walkthroughs as investigation reports. */}
         {publishedCaseCount} published cases — {investigationReportCount} full
         investigation reports, plus write-ups and walkthroughs across SOC
         incidents, DFIR, malware analysis, and detection engineering.

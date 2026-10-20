@@ -1,19 +1,19 @@
 /*
  * scripts/check-assets.mjs
  *
- * بيتأكد إن كل ملف بيشاور عليه أي config موجود فعلاً في public/.
+ * Verifies that every file referenced by any config actually exists in public/.
  *
- * ليه ده أهم فحص في المشروع؟ لأن ده بالظبط نوع الخطأ اللي مبيبانش:
- * الـ build بينجح، وTypeScript مبيزعقش، والصفحة بتفتح عادي — وصورة أو
- * PDF بيرجّع 404 لزائر واحد بس هو اللي بيدوس عليه. وإنت مش هتعرف.
+ * Why is this the most important check in the project? Because this is exactly the kind of bug that stays invisible:
+ * the build succeeds, TypeScript doesn't complain, the page opens fine — and an image or
+ * PDF returns 404 only for the one visitor who clicks it. And you'll never know.
  *
- * الأخطاء اللي كان الفحص ده هيمسكها:
- *  - اسم مجلد case اتغيّر والمسارات مااتغيرتش
- *  - PDF مش مرفوع أصلاً
- *  - صورة اتمسحت من public/
- *  - حرف كابيتال في اسم ملف (شغّال على ويندوز، بيقع على لينكس/GitHub Pages)
+ * Bugs this check would have caught:
+ *  - a case folder was renamed but the paths weren't
+ *  - a PDF was never uploaded
+ *  - an image was deleted from public/
+ *  - an uppercase letter in a file name (works on Windows, breaks on Linux/GitHub Pages)
  *
- * تشغيل:  node scripts/check-assets.mjs
+ * Run:  node scripts/check-assets.mjs
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
@@ -29,9 +29,9 @@ if (!existsSync(PUBLIC)) {
 }
 
 /*
- * بنقرا مسارات الأصول من ملفات الـ config كنص بدل ما نستوردها: الملفات
- * TypeScript، ولو استوردناها هنحتاج مترجم. الـ regex كفاية — إحنا بندوّر
- * على أي نص شكله مسار جوه Assets/.
+ * We read asset paths from the config files as text instead of importing them: the files are
+ * TypeScript, and importing them would need a compiler. A regex is enough — we're looking
+ * for any string that looks like a path inside Assets/.
  */
 const CONFIG_FILES = [
   "app/core/config/cases.ts",
@@ -47,15 +47,15 @@ const CONFIG_FILES = [
 ];
 
 /*
- * التعليقات بتتشال قبل الفحص.
+ * Comments are stripped before checking.
  *
- * من غير ده، أي تعليق بيشرح مسار بيتحسب مرجع حقيقي. النسخة الأولى بلّغت
- * عن "Assets/..." و "Assets/…" كملفات ناقصة — وهما جايين من تعليقات أنا
- * كاتبها بتشرح مسارات قديمة. ضوضاء بتغطي على المشاكل الحقيقية.
+ * Without this, any comment explaining a path counts as a real reference. The first version reported
+ * "Assets/..." and "Assets/…" as missing files — both came from comments
+ * explaining old paths. Noise that hides the real problems.
  *
- * الشيل بسيط عن قصد (مش parser كامل): بيشيل تعليقات /* … *\/ و // … لآخر
- * السطر. ممكن يشيل بالغلط "//" جوه string فيه URL، بس ده مش بيأثر — إحنا
- * بندوّر على مسارات Assets/ المحلية، مش على روابط خارجية.
+ * The stripping is deliberately simple (not a full parser): it removes /* … *\/ and // … to end of
+ * line. It may wrongly strip "//" inside a string containing a URL, but that doesn't matter — we're
+ * looking for local Assets/ paths, not external links.
  */
 const stripComments = (source) =>
   source
@@ -63,26 +63,26 @@ const stripComments = (source) =>
     .replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
 
 const ASSET_RE = /["'`](\/?Assets\/[^"'`\\$]+)["'`]/g;
-/* المسارات المبنية بـ template literal (زي `Assets/Cases/X/${i + 1}.webp`)
-   مش ممكن تتقري ثابتة — بنستخرج المجلد ونتأكد إنه موجود على الأقل. */
+/* Paths built with a template literal (like `Assets/Cases/X/${i + 1}.webp`)
+   can't be read statically — we extract the folder and at least confirm it exists. */
 const TEMPLATE_RE = /["'`](\/?Assets\/[^"'`]*?)\$\{/g;
 
 /*
- * الشكل ده بيتكرر في كل الـ config:
+ * This pattern repeats throughout the config:
  *
  *   Array.from({ length: 24 }, (_, i) => `Assets/Cases/X/Screenshot (${343 + i}).webp`)
  *
- * وفحص المجلد لوحده مبيكفيش: المجلد موجود، بس الترقيم بيفترض إن الملفات
- * متتابعة من غير فجوات — والافتراض ده اتكسر فعلاً (Screenshot 349 و 353
- * مش موجودين وسط سلسلة 343–366).
+ * Checking the folder alone isn't enough: the folder exists, but the numbering assumes the files
+ * are consecutive with no gaps — and that assumption has actually broken (Screenshot 349 and 353
+ * missing in the middle of the 343–366 series).
  *
- * فبدل ما نفحص المجلد، بنفكّ الحلقة ونفحص كل ملف بالاسم. الشكل ده مغطّي
- * الحالتين المستخدمتين: `${i + 1}` و `${BASE + i}`.
+ * So instead of checking the folder, we unroll the loop and check each file by name. This covers
+ * both forms in use: `${i + 1}` and `${BASE + i}`.
  */
 const LOOP_RE =
   /Array\.from\(\s*\{\s*length:\s*(\d+)\s*\}\s*,\s*\(_,\s*i\)\s*=>\s*`([^`]*?)\$\{\s*(?:(\d+)\s*\+\s*i|i\s*\+\s*(\d+))\s*\}([^`]*?)`/g;
 
-/** بيفكّ الحلقة لمسارات فعلية */
+/** Unrolls the loop into concrete paths */
 const expandLoop = (length, prefix, base, suffix) => {
   const out = [];
   for (let i = 0; i < length; i++) out.push(`${prefix}${base + i}${suffix}`);
@@ -90,13 +90,13 @@ const expandLoop = (length, prefix, base, suffix) => {
 };
 
 /*
- * لما ملف يبقى ناقص، أهم سؤال بعديه على طول هو: "أمال إيه اللي في المجلد؟"
+ * When a file is missing, the very next question is always: "so what IS in the folder?"
  *
- * من غير الإجابة دي، كل ملف ناقص بيتحول لرحلة يدوية: تفتح المجلد، تبص،
- * تقارن. والسكربت شايف المجلد أصلاً — فالأولى إنه يقولك.
+ * Without that answer, every missing file becomes a manual trip: open the folder, look,
+ * compare. The script already sees the folder — so it should just tell you.
  *
- * ده بيحوّل "الملف مش موجود" لـ "الملف مش موجود، واللي موجود هو دول" —
- * واللي غالباً بيوضّح على طول هل الاسم مختلف ولا الملف فعلاً ناقص.
+ * This turns "file not found" into "file not found, and here's what is there" —
+ * which usually makes it immediately clear whether the name differs or the file is really missing.
  */
 const listDir = (dir, limit = 12) => {
   const entries = [...realPaths]
@@ -111,12 +111,12 @@ const listDir = (dir, limit = 12) => {
 };
 
 const missing = [];
-/** thumbnails ناقصة — تحذير مش خطأ (فيه fallback في الكومبوننتس) */
+/** Missing thumbnails — a warning, not an error (components have a fallback) */
 const missingThumbs = new Set();
 const checkedDirs = new Set();
 let checked = 0;
 
-/** ملفات public/ كلها، بحروفها الأصلية — عشان نمسك اختلاف الـ case */
+/** All files in public/, with their original casing — to catch case mismatches */
 const realPaths = new Set();
 const walk = (dir, prefix = "") => {
   for (const entry of readdirSync(dir)) {
@@ -150,31 +150,31 @@ for (const file of CONFIG_FILES) {
   }
 
   /*
-   * الصور بتتعرض عن طريق getThumbnail() اللي بيحوّل "1.webp" لـ
-   * "1-thumb.webp". يعني كل صورة في الـ config ليها **مسارين** على
-   * الموقع، والفحص كان بيشوف واحد بس.
+   * Images are displayed through getThumbnail(), which turns "1.webp" into
+   * "1-thumb.webp". So every image in the config has **two** paths on
+   * the site, and the check used to look at only one.
    *
-   * ده اللي خلّى تسع صور مكسورة في صفحة case تعدّي من الفحص ده وتتمسك
-   * في فحص اللينكات بعد الـ build. الأولى نمسكها هنا — أسرع وأوضح.
+   * That's what let nine broken images on a case page slip past this check and only get caught
+   * by the link check after the build. Better to catch them here — faster and clearer.
    *
-   * الـ thumbnails بتتبلّغ كتحذير مش كخطأ: الكومبوننتس بترجع للصورة
-   * الكاملة لو الـ thumb مش موجود، فالصفحة بتشتغل — بس بتحمّل صورة أكبر
-   * من اللازم، وده مقصود نعرفه.
+   * Thumbnails are reported as warnings, not errors: components fall back to the full
+   * image if the thumb is missing, so the page works — but it loads a larger image
+   * than necessary, and we want to know about that.
    */
   for (const [, raw] of src.matchAll(ASSET_RE)) {
     const rel = raw.replace(/^\//, "");
     if (!/\.(webp|png|jpe?g)$/i.test(rel)) continue;
     /*
-     * getThumbnail() بيتطبّق على صور الـ cases بس — الكروت وشبكة الأدلة.
-     * اللوجو مثلاً بيتعرض بمساره المباشر ومبيمرّش عليها، فطلب نسخة مصغّرة
-     * ليه تحذير كاذب.
+     * getThumbnail() applies only to case images — the cards and the evidence grid.
+     * The logo, for example, is shown via its direct path and never goes through it, so asking for a thumbnail
+     * of it would be a false warning.
      */
     if (!rel.startsWith("Assets/Cases/")) continue;
     const thumb = rel.replace(/(\.\w+)$/, "-thumb$1");
     if (realPaths.has(rel) && !realPaths.has(thumb)) missingThumbs.add(thumb);
   }
 
-  /* الحلقات المفكوكة — كل ملف بالاسم، مش المجلد بس */
+  /* Unrolled loops — every file by name, not just the folder */
   const loopCovered = new Set();
   for (const [, len, prefix, baseA, baseB, suffix] of src.matchAll(LOOP_RE)) {
     const base = Number(baseA ?? baseB);
@@ -198,7 +198,7 @@ for (const file of CONFIG_FILES) {
 
   for (const [, raw] of src.matchAll(TEMPLATE_RE)) {
     const dir = raw.replace(/^\//, "").replace(/\/[^/]*$/, "");
-    /* اتفحص ملف ملف فوق — مفيش داعي نفحص المجلد تاني */
+    /* Already checked file by file above — no need to check the folder again */
     if (loopCovered.has(dir)) continue;
     if (!dir || checkedDirs.has(dir)) continue;
     checkedDirs.add(dir);
@@ -233,14 +233,14 @@ if (missing.length === 0) {
 }
 
 /*
- * تجميع النتايج قبل العرض.
+ * Group results before printing.
  *
- * السبب: لو مجلد case كامل ناقص، النسخة الأولى كانت هتطبع سطر لكل صورة
- * جواه — 40 سطر لمشكلة واحدة. والأسوأ إن GitHub بيعرض أول 10 annotations
- * بس، فالمهم كان ممكن يتقص.
+ * Reason: if an entire case folder is missing, the first version would print one line per image
+ * in it — 40 lines for one problem. Worse, GitHub only shows the first 10 annotations,
+ * so the important one could get cut off.
  *
- * دلوقتي: مجلد ناقص بالكامل = سطر واحد بعدد ملفاته. الملفات الشاردة
- * بتتعرض بالاسم.
+ * Now: a fully missing folder = one line with its file count. Stray files
+ * are listed by name.
  */
 const byDir = new Map();
 for (const m of missing) {
@@ -249,7 +249,7 @@ for (const m of missing) {
   byDir.get(dir).items.push(m);
 }
 
-/** مجلد يعتبر "ناقص بالكامل" لو هو نفسه مش موجود في public/ */
+/** A folder counts as "fully missing" if the folder itself doesn't exist in public/ */
 const dirMissingEntirely = (dir) => !realPaths.has(dir);
 
 const wholeDirs = [];
@@ -290,8 +290,8 @@ if (wholeDirs.length > 0) {
 
 if (strays.length > 0) {
   console.error(`── ${strays.length} individual file(s) missing ──\n`);
-  /* مجلدات اتعرض محتواها قبل كده — عشان مانكررش نفس الليستة لكل ملف
-     ناقص في نفس المجلد */
+  /* Folders whose contents were already listed — so we don't repeat the same listing for every
+     missing file in the same folder */
   const shownDirs = new Set();
 
   for (const m of strays.sort((a, b) => a.path.localeCompare(b.path))) {

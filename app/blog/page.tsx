@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import BlogPageClient from "./page-client";
-// Server Component: بيقرا مكتبة الـ cases وقت الـ build. بيتبعت كـ prop
-// عشان page-client (client component) ماستوردهوش ويجرّ الداتا للمتصفح.
+// Server Component: reads the case library at build time. It's passed as a prop
+// so that page-client (a client component) doesn't import it and drag the data into the browser.
 import StartHere from "./components/StartHere";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import type { PdfResource } from "./blog-types";
@@ -26,20 +26,20 @@ const pdfResources = [
 ];
 
 /*
- * ─── فلاتر البلوج، محسوبة هنا مرة واحدة وقت الـ build ────────────────────
+ * ─── Blog filters, computed here once at build time ──────────────────────
  *
- * كانت الحسابات دي (blogPdfResources, SEARCH_INDEX, الفلاتر، الترتيب،
- * وحارس CASE_IDS) بتتنفّذ جوه page-client.tsx — يعني في متصفح كل زائر مع
- * كل تحميل صفحة. المكتبة 38 عنصر بس فالتكلفة كانت صغيرة أصلاً، لكن نقلها
- * هنا معناه:
- *   1. حارس CASE_IDS (لو حد ضاف case من غير صفحة تفاصيل) بيوقّف الـ build
- *      لو الداتا غلط، بدل ما يرمي error في متصفح الزائر بعد النشر.
- *   2. الكود اللي بيحسب دول (helper functions زي countValues) مبيتبعتش
- *      للمتصفح خالص.
+ * These computations (blogPdfResources, SEARCH_INDEX, the filters, the ordering,
+ * and the CASE_IDS guard) used to run inside page-client.tsx — i.e. in every visitor's browser on
+ * every page load. The library is only 38 items so the cost was already small, but moving
+ * them here means:
+ *   1. The CASE_IDS guard (if someone adds a case without a detail page) stops the build
+ *      when the data is wrong, instead of throwing an error in the visitor's browser after publishing.
+ *   2. The code that computes these (helper functions like countValues) is never sent
+ *      to the browser at all.
  *
- * الحجم الفعلي اللي بيوصل للمتصفح ما بيتغيرش: BlogCard بيعرض كل حقول الـ
- * case (title, description, tags, tools...) لكل الـ 38 كارت، فالنص نفسه
- * لازم يوصل في الحالتين. اللي اتغيّر هو مكان الحساب بس، مش حجم الداتا.
+ * The actual size that reaches the browser doesn't change: BlogCard renders every field of the
+ * case (title, description, tags, tools...) for all 38 cards, so the text itself
+ * has to arrive either way. What changed is only where the computation happens, not the data size.
  */
 const wannacryId = "malware-analysis-wannacry";
 const wannacryCase = caseEvidenceLibrary.find((item) => item.id === wannacryId);
@@ -58,10 +58,10 @@ const blogPdfResources: PdfResource[] = wannacryCase
   : [cvResource, ...caseEvidenceLibrary];
 
 /*
- * حارس: أي عنصر في المكتبة لازم يكون ليه صفحة تفاصيل موجودة فعلاً — يا إما
- * لأنه case (والـ id بتاعه في caseEvidenceLibrary) يا إما لأنه محدد
- * detailHref بنفسه. دلوقتي بيتنفّذ وقت الـ build، فلو حد ضاف case ناقصها
- * الـ build نفسه بيفشل بدل ما يوصل لينك 404 صامت للموقع المنشور.
+ * Guard: every item in the library must have a detail page that actually exists — either
+ * because it's a case (and its id is in caseEvidenceLibrary) or because it specifies
+ * detailHref itself. It now runs at build time, so if someone adds an incomplete case
+ * the build itself fails instead of shipping a silent 404 link to the published site.
  */
 const CASE_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
 for (const item of blogPdfResources) {
@@ -77,9 +77,9 @@ const PDF_DATE_MS: Record<string, number> = Object.fromEntries(
   blogPdfResources.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0]),
 );
 
-// كل الكلام اللي ممكن حد يدوّر بيه على case واحدة، متجمّع في نص واحد
-// lowercase مرة واحدة وقت الـ build. البحث في المتصفح بعد كده مجرد
-// includes() على النص الجاهز ده.
+// Everything someone might search for a single case by, gathered into one
+// lowercase string once at build time. Searching in the browser afterwards is just
+// includes() on that prepared string.
 const SEARCH_INDEX: Record<string, string> = Object.fromEntries(
   blogPdfResources.map((item) => [
     item.id,
@@ -100,7 +100,7 @@ const SEARCH_INDEX: Record<string, string> = Object.fromEntries(
   ]),
 );
 
-/** عدّاد بسيط بيرجّع القيم مرتبة بالأكتر ظهوراً */
+/** A simple counter that returns values sorted by frequency */
 const countValues = (values: (string | undefined)[]): Facet[] => {
   const counts = new Map<string, number>();
   for (const value of values) {
@@ -114,13 +114,13 @@ const countValues = (values: (string | undefined)[]): Facet[] => {
 
 const CATEGORY_FACETS = countValues(caseEvidenceLibrary.map((item) => item.category));
 
-// الأدوات كتير، فبناخد الأشهر بس — قايمة chips طويلة أوي بتبقى ضوضا مش فلترة
+// There are many tools, so we take only the most common — a very long chip list is noise, not filtering
 const TOOL_FACETS = countValues(
   caseEvidenceLibrary.flatMap((item) => [...(item.tools ?? [])]),
 ).slice(0, 12);
 
-// الترتيب الافتراضي (CV، الحالة المميزة، بعدين الأحدث وباللي معاه صور
-// الأول) ثابت وما بيتغيّرش مع تفاعل الزائر، فمحسوب هنا مرة واحدة.
+// The default order (CV, the featured case, then newest and those with images
+// first) is fixed and doesn't change with visitor interaction, so it's computed here once.
 const sortedPdfs: PdfResource[] = [...blogPdfResources].sort((a, b) => {
   if (a.id === cvResource.id) return -1;
   if (b.id === cvResource.id) return 1;
@@ -155,15 +155,15 @@ const casesStructuredData = {
   publisher: {
     "@type": "Person",
     name: "Ahmed Emad Nasr",
-    jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"], // توحيد المسمى الوظيفي
+    jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"], // unified job title
     sameAs: [
-      "https://linkedin.com/in/ahmed-emad-nasr/", // تم تعديل رابط لينكدان ليتطابق مع الـ CV
+      "https://linkedin.com/in/ahmed-emad-nasr/", // LinkedIn URL updated to match the CV
       "https://x.com/0x3omda",
       "https://github.com/AE-Nasr"
     ],
   },
-  /* الحالات اللي مالهاش PDF مبتدخلش هنا: DigitalDocument من غير contentUrl
-     ادّعاء بوجود ملف مش موجود. */
+  /* Cases without a PDF are excluded here: a DigitalDocument without a contentUrl
+     claims a file exists that doesn't. */
   hasPart: pdfResources
     .filter((item): item is typeof item & { href: string } => Boolean(item.href))
     .map((item, index) => ({
@@ -228,17 +228,17 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | Blog - SOC Incident Reports & Cybersecurity Writeups",
     description:
       "Comprehensive SOC incident response reports, DFIR writeups, malware analysis, and threat hunting cases.",
-    siteName: "Ahmed Emad Nasr - SOC & Cybersecurity Analyst", // تعديل الـ SiteName
+    siteName: "Ahmed Emad Nasr - SOC & Cybersecurity Analyst", // updated siteName
     images: [
       {
         /*
-         * كان "/Assets/art-gallery/logo/logo.png" — والتعليق اللي كان هنا
-         * بيشك في المسار وهو محق: `Images/` ناقصة والامتداد غلط. الملف
-         * الحقيقي هو Images/logo/My_Logo.webp، وهو المستخدم في كل مكان
-         * تاني في المشروع.
+         * This was "/Assets/art-gallery/logo/logo.png" — and the comment that used to be here
+         * doubted the path, rightly: `Images/` was missing and the extension was wrong. The
+         * real file is Images/logo/My_Logo.webp, which is what's used everywhere
+         * else in the project.
          *
-         * النتيجة إن أي مشاركة لصفحة البلوج على لينكدإن أو تويتر أو
-         * واتساب كانت بتطلع من غير صورة.
+         * The result was that any share of the blog page on LinkedIn, Twitter or
+         * WhatsApp showed up without an image.
          */
         url: toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/3omda.webp"),
         width: 1200,
@@ -249,13 +249,13 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@0x3omda", // تم توحيد الـ Handle ليتطابق مع الـ Portfolio
+    creator: "@0x3omda", // handle unified to match the portfolio
     site: "@0x3omda",
     title: "Ahmed Emad Nasr | Blog - SOC & DFIR Reports",
     description:
       "Explore incident response cases, threat analysis, malware reverse engineering, and security investigations.",
-    /* نفس المسار الغلط بتاع og:image كان متكرر هنا كمان — أنا ظبّطت
-       الأول وفات ده. سكربت فحص الأصول مسكه. */
+    /* The same wrong og:image path was repeated here too — the first one was fixed
+       and this one was missed. The asset-check script caught it. */
     images: [toAbsoluteAssetUrl("/Assets/art-gallery/Images/logo/3omda.webp")],
   },
 };

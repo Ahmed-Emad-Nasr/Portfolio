@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File: page.module.css
  * ULTRA MINIMALIST CYBERPUNK EDITION
  */
@@ -9,8 +9,8 @@
 .page {
   padding: 12rem 5% 6rem;
   font-family: var(--font-body);
-  /* حجاب شفاف بدل المعتم — الفقاعات بتبان من ورا النص. شوف
-     --page-veil في globals.css. */
+  /* A translucent veil instead of an opaque one — the bubbles show through behind the text. See
+     --page-veil in globals.css. */
   background-color: var(--page-veil);
   color: var(--foreground);
   min-height: 100vh;

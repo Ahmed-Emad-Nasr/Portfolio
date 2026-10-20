@@ -8,7 +8,7 @@
   position: relative;
   min-height: 100vh;
   padding: clamp(6rem, 12vh, 10rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vh, 8rem);
-  /* حجاب شفاف بدل المعتم — شوف --page-veil في globals.css */
+  /* A translucent veil instead of an opaque one — see --page-veil in globals.css */
   background: var(--page-veil);
 }
 

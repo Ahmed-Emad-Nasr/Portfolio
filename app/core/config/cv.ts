@@ -47,15 +47,15 @@ export const CV_PDF_HREF = "Assets/cv/AhmedEmadNasr_CV.pdf";
  * anyone opening a CV.
  */
 /*
- * ⚠️ الرقمين محسوبين من الداتا مش مكتوبين بإيد.
+ * ⚠️ Both numbers are computed from the data, not hand-written.
  *
- * كان مكتوب "Published 38 investigation reports" — والرقم ده مش مطابق
- * لأي عدّة في cases.ts. والموقع في نفس الوقت كان بيقول 42.
+ * It used to say "Published 38 investigation reports" — and that number didn't match
+ * any count in cases.ts. Meanwhile the site was saying 42.
  *
- * دلوقتي بيتقروا من cases.ts، فلو ضفت تقرير جديد الرقم بيتحدّث في
- * الاتنين لوحده ومستحيل يتناقضوا.
+ * Now they're read from cases.ts, so if you add a new report the number updates in
+ * both places by itself and they can never contradict each other.
  *
- * عدد التكنيكات كمان بقى محسوب من attack.ts بدل ما يكون 28 مكتوبة.
+ * The technique count is also computed from attack.ts now instead of a hard-coded 28.
  */
 export const CV_SUMMARY =
   "Information Security graduate working across SOC operations, incident response, and digital forensics. " +

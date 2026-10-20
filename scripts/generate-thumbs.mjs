@@ -1,29 +1,29 @@
 /*
  * scripts/generate-thumbs.mjs
  *
- * بيولّد نسخة مصغّرة "X-thumb.webp" جنب كل صورة في public/Assets.
+ * Generates an "X-thumb.webp" thumbnail next to every image in public/Assets.
  *
- * ── ليه الملف ده موجود ────────────────────────────────────────────────────
+ * ── Why this file exists ──────────────────────────────────────────────────
  *
- * getThumbnail() في الكود بيحوّل "1.webp" لـ "1-thumb.webp"، وكل كومبوننت
- * بيعرض صورة بيمرّ عليها. **ولا صورة واحدة في مكتبة الـ cases كان ليها
- * نسخة مصغّرة — صفر من 762.**
+ * getThumbnail() in the code turns "1.webp" into "1-thumb.webp", and every component
+ * that shows an image goes through it. **Not a single image in the case library had
+ * a thumbnail — zero out of 762.**
  *
- * الكومبوننتس بترجع للصورة الكاملة لما الـ thumb مش موجود، فمحدش لاحظ:
- * الصفحة شكلها سليم. بس صفحة البلوج بتحمّل 78 صورة بالحجم الكامل (39 كارت
- * × صورتين)، وده حوالي 32 ميجا بتتقدّم للزائر كـ thumbnails.
+ * Components fall back to the full image when the thumb is missing, so nobody noticed:
+ * the page looks fine. But the blog page loads 78 full-size images (39 cards
+ * × 2 images), which is about 32 MB served to the visitor as "thumbnails".
  *
- * ── ليه sharp ─────────────────────────────────────────────────────────────
+ * ── Why sharp ─────────────────────────────────────────────────────────────
  *
- * موجود عندك في devDependencies أصلاً (Next بيستخدمه لمعالجة الصور)، فمفيش
- * حاجة جديدة تتثبّت. ومفيش داعي لسكربت Python منفصل.
+ * It's already in devDependencies (Next uses it for image processing), so there's
+ * nothing new to install. And no need for a separate Python script.
  *
- * ── التشغيل ───────────────────────────────────────────────────────────────
+ * ── Usage ─────────────────────────────────────────────────────────────────
  *
- *   npm run thumbs             بيولّد الناقص بس
- *   npm run thumbs -- --dry    بيقولك هيعمل إيه من غير ما يكتب
- *   npm run thumbs -- --force  بيعيد توليد كل حاجة
- *   npm run thumbs -- --all    يشمل PNG/JPEG وباقي المجلدات كمان
+ *   npm run thumbs             generate only what's missing
+ *   npm run thumbs -- --dry    show what it would do without writing
+ *   npm run thumbs -- --force  regenerate everything
+ *   npm run thumbs -- --all    include PNG/JPEG and the remaining folders too
  */
 
 import { readdirSync, statSync, existsSync } from "node:fs";
@@ -35,11 +35,11 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC = join(ROOT, "public");
 
 /*
- * أعرض مقاس بتتعرض بيه صورة مصغّرة في التصميم هو الكارت المميز في صفحة
- * البلوج (~40vw). عند 1920px شاشة ده حوالي 770px — بس الصورة دي بتتعرض
- * بـ object-fit داخل صندوق ثابت، فـ 640 كفاية وزيادة، وبتوفّر أكتر.
+ * The widest size a thumbnail is shown at in the design is the featured card on the
+ * blog page (~40vw). On a 1920px screen that's about 770px — but the image is shown
+ * with object-fit inside a fixed box, so 640 is more than enough and saves more.
  *
- * لو لاحظت أي صورة مصغّرة باينة مهزوزة، زوّد الرقم ده وشغّل بـ --force.
+ * If any thumbnail ever looks blurry, raise this number and run with --force.
  */
 const THUMB_WIDTH = 640;
 const THUMB_QUALITY = 72;
@@ -56,48 +56,48 @@ if (!existsSync(PUBLIC)) {
 const SOURCE_EXT = /\.(webp|png|jpe?g)$/i;
 
 /*
- * مش كل صورة في public/ محتاجة نسخة مصغّرة. اللي محتاجها هي اللي الكود
- * بيمرّرها على getThumbnail() — يعني صور الـ cases بس.
+ * Not every image in public/ needs a thumbnail. The ones that do are those the code
+ * passes through getThumbnail() — i.e. case images only.
  *
- * اللي بيتستثنى ولّيه:
+ * What's excluded and why:
  *
- *  • غير .webp — كل مسارات الصور في الـ config بـ .webp. الـ 452 ملف PNG
- *    في public/ مش مذكورين في أي كود (نسخ قديمة قاعدة جنب الـ webp)،
- *    فتوليد thumbs ليهم شغل ضايع ومساحة ضايعة.
+ *  • Non-.webp — every image path in the config is .webp. The 452 PNG files
+ *    in public/ aren't referenced by any code (old copies sitting next to the webp),
+ *    so generating thumbs for them is wasted work and wasted space.
  *
- *  • image_display_thumb/ — الجاليري بيشاور على المجلد ده مباشرة، مش عن
- *    طريق getThumbnail. الصور اللي جواه **هي** النسخ المصغّرة، فتوليد
- *    "9-thumb.webp" جوه مجلد اسمه _thumb تكرار مالوش معنى.
+ *  • image_display_thumb/ — the gallery references this folder directly, not via
+ *    getThumbnail. The images inside it **are** the thumbnails, so generating
+ *    "9-thumb.webp" inside a folder named _thumb is pointless duplication.
  *
- * `--all` بيلغي الاستثناءات دي لو احتجتها.
+ * `--all` disables these exclusions if you need it.
  */
 const ALL = args.has("--all");
 
 const shouldProcess = (relPath) => {
   if (ALL) return true;
   /*
-   * .webp و .jpeg بس.
+   * .webp and .jpeg only.
    *
-   * الـ 452 ملف PNG في public/ مش مذكورين في أي كود — نسخ قديمة قاعدة جنب
-   * الـ webp. توليد thumbs ليهم شغل ومساحة على الفاضي.
+   * The 452 PNG files in public/ aren't referenced by any code — old copies sitting next to
+   * the webp. Generating thumbs for them wastes work and space.
    *
-   * الـ .jpeg موجود لأن فيه صورة واحدة على الأقل بالامتداد ده في الـ config
-   * (Depi R4 Project/1.jpeg)، و getThumbnail بيحافظ على الامتداد.
+   * .jpeg is included because at least one image in the config uses that extension
+   * (Depi R4 Project/1.jpeg), and getThumbnail preserves the extension.
    */
   if (!/\.(webp|jpe?g)$/i.test(relPath)) return false;
   if (relPath.includes("image_display_thumb/")) return false;
   /*
-   * Assets/Cases/thumbnails/ فيه 232 صورة مصغّرة من محاولة سابقة، بأسماء
-   * مسطّحة من نوع "Folder__File.webp". الكود مبيشاورش عليها خالص — هو
-   * بيدوّر على "X-thumb.webp" جنب الصورة الأصلية.
+   * Assets/Cases/thumbnails/ holds 232 thumbnails from an earlier attempt, with
+   * flat names like "Folder__File.webp". The code never references them — it
+   * looks for "X-thumb.webp" next to the original image.
    *
-   * فهي لا بتتستخدم كمصدر (مش صور أصلية) ولا محتاجة نسخ مصغّرة لنفسها.
+   * So they're neither a source (not originals) nor in need of thumbnails themselves.
    */
   if (relPath.startsWith("Assets/Cases/thumbnails/")) return false;
   return relPath.startsWith("Assets/Cases/");
 };
 
-/** كل الصور اللي مش نسخة مصغّرة أصلاً */
+/** Every image that isn't already a thumbnail */
 const images = [];
 const walk = (dir) => {
   for (const entry of readdirSync(dir)) {
@@ -115,8 +115,8 @@ const walk = (dir) => {
 walk(PUBLIC);
 
 /*
- * getThumbnail بيحافظ على الامتداد الأصلي: "1.png" → "1-thumb.png".
- * فلازم نكتب بنفس الامتداد وإلا الكود هيدوّر على ملف مش هنعمله.
+ * getThumbnail preserves the original extension: "1.png" → "1-thumb.png".
+ * So we must write with the same extension, or the code will look for a file we never created.
  */
 const thumbPathFor = (file) => {
   const ext = extname(file);
@@ -148,7 +148,7 @@ for (const file of images) {
   try {
     const pipeline = sharp(file).resize({
       width: THUMB_WIDTH,
-      // مفيش تكبير: الصورة الأصغر من العرض ده بتتنسخ زي ما هي
+      // No upscaling: images narrower than this width are copied as-is
       withoutEnlargement: true,
     });
 

@@ -74,7 +74,7 @@ export default function SenseiHeader() {
     const target = document.getElementById(targetId);
     if (!target) return;
 
-    /* رجعت قفزة فورية بطلب صريح، زي الهيدر الرئيسي بالظبط. */
+    /* Back to an instant jump, as explicitly requested, exactly like the main header. */
     const doScroll = () => scrollToElement(target, { immediate: true });
 
     if (isMenuOpen) { setIsMenuOpen(false); requestAnimationFrame(doScroll); }
@@ -87,14 +87,14 @@ export default function SenseiHeader() {
         <div className={styles.headerInner}>
           <div className={styles.headerContent}>
 
-            {/* جهة اليسار: الـ Logo + الاسم بالعربي */}
+            {/* Left side: the logo + the name */}
             <div className={styles.brand}>
              <span className={styles.brandText}>
                 AE<span className={styles.brandDot}>.</span>
               </span>
             </div>
 
-            {/* القائمة الموحدة الصافية بعرض الصفحة */}
+            {/* The clean unified full-width menu */}
             <nav
               id="main-navigation"
               className={isMenuOpen ? `${styles.navbar} ${styles.active}` : styles.navbar}
@@ -115,7 +115,7 @@ export default function SenseiHeader() {
 
               <span className={styles.navDivider} aria-hidden="true" />
 
-              {/* رابط الرجوع للبورتفوليو */}
+              {/* Link back to the portfolio */}
               <Link
                 href="/"
                 aria-label="Back to portfolio"
@@ -126,7 +126,7 @@ export default function SenseiHeader() {
               </Link>
             </nav>
 
-            {/* زر القائمة للموبايل فقط */}
+            {/* Menu button, mobile only */}
             <button
               type="button"
               className={isMenuOpen ? `${styles.menuIcon} ${styles.active}` : styles.menuIcon}
@@ -144,7 +144,7 @@ export default function SenseiHeader() {
         </div>
       </header>
 
-      {/* شاشة الخلفية للموبايل */}
+      {/* Mobile backdrop */}
       <button
         type="button"
         className={isMenuOpen ? `${styles.backdrop} ${styles.backdropActive}` : styles.backdrop}

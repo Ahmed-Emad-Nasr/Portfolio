@@ -2,43 +2,43 @@
  * core/config/certifications.ts
  * Author: Ahmed Emad Nasr
  *
- * البيانات دي متاخدة من الـ CV. قبل كده الشهادات كانت موجودة على الموقع
- * كـ 74 صورة كلها بـ alt="Certification" — يعني:
+ * This data is taken from the CV. Previously the certifications existed on the site
+ * as 74 images all with alt="Certification" — which meant:
  *
- *  - الـ screen reader بيقول نفس الكلمة 74 مرة.
- *  - جوجل مش عارف إن دي eJPT ودي CCNA ودي RH124.
- *  - ومحدش يقدر يتحقق من أي واحدة فيهم.
+ *  - the screen reader announced the same word 74 times.
+ *  - Google couldn't tell this one is eJPT, that one CCNA, that one RH124.
+ *  - and nobody could verify any of them.
  *
- * دلوقتي الشهادات المعروفة ليها بيانات حقيقية (اسم، جهة، سنة)، بتتعرض
- * كقايمة مقروءة فوق حيطة الصور، وبتطلّع JSON-LD من نوع
+ * Now the known certifications have real data (name, issuer, year), are shown
+ * as a readable list above the image wall, and emit JSON-LD of type
  * EducationalOccupationalCredential.
  *
- * ⚠️ ناقص حاجتين منك:
- *  1. `verifyUrl` — رابط التحقّق من كل جهة (Credly / INE / Cisco / Red Hat).
- *     ده اللي بيحوّل السطر من ادّعاء لدليل.
- *  2. `galleryIndex` — رقم الصورة المقابلة في image_display/{N}.webp.
- *     مقدرش أعرفه من غير ما أشوف الصور. من غيره الشهادة بتتعرض في القايمة
- *     عادي، بس مش مربوطة بصورتها.
+ * ⚠️ Two things still need to be filled in:
+ *  1. `verifyUrl` — the verification link from each issuer (Credly / INE / Cisco / Red Hat).
+ *     That's what turns the line from a claim into evidence.
+ *  2. `galleryIndex` — the number of the matching image in image_display/{N}.webp.
+ *     It can't be determined without looking at the images. Without it the certification still shows in the list
+ *     as normal, but isn't linked to its image.
  */
 
 export type Certification = {
-  /** معرّف ثابت — بيستخدم كـ key وفي الـ JSON-LD */
+  /** Stable id — used as the key and in the JSON-LD */
   id: string;
-  /** اسم الشهادة زي ما هو مكتوب عليها */
+  /** Certification name exactly as written on it */
   name: string;
-  /** الاختصار اللي الناس بتدوّر بيه */
+  /** The abbreviation people search for */
   shortName?: string;
-  /** الجهة المانحة */
+  /** Issuing organisation */
   issuer: string;
-  /** سنة الحصول عليها */
+  /** Year obtained */
   year: number;
-  /** رابط التحقّق من الجهة نفسها */
+  /** Verification link from the issuer itself */
   verifyUrl?: string;
-  /** رقم الصورة في image_display/{N}.webp لو معروف */
+  /** Image number in image_display/{N}.webp, if known */
   galleryIndex?: number;
 };
 
-/** مرتّبة من الأحدث للأقدم — نفس ترتيب الـ CV */
+/** Ordered newest to oldest — same order as the CV */
 export const certifications: readonly Certification[] = [
   {
     id: "ejpt-v2",
@@ -69,7 +69,7 @@ export const certifications: readonly Certification[] = [
     year: 2025,
   },
   {
-    // من الـ CV — كانت غايبة عن الموقع تماماً.
+    // From the CV — it was completely missing from the site.
     id: "thm-soc-l1-l2",
     name: "SOC Level 1 & SOC Level 2 Learning Paths",
     issuer: "TryHackMe",
@@ -105,18 +105,18 @@ export const certifications: readonly Certification[] = [
 ];
 
 /*
- * العدد الكلي لصور الجاليري.
+ * Total number of gallery images.
  *
- * كان 74، والموجود فعلاً في public/…/image_display_thumb/ هو **73**
- * (1.webp لحد 73.webp). يعني الصورة رقم 74 كانت 404 على كل تحميل لقسم
- * الشهادات.
+ * It was 74, but what actually exists in public/…/image_display_thumb/ is **73**
+ * (1.webp to 73.webp). So image number 74 was a 404 on every load of the
+ * certifications section.
  *
- * لو ضفت صور جديدة، زوّد الرقم ده — وسكربت check:assets هيقولك على طول
- * لو الرقم بقى أكبر من عدد الملفات.
+ * If you add new images, increase this number — and the check:assets script will tell you immediately
+ * if the number exceeds the file count.
  */
 export const GALLERY_IMAGE_COUNT = 73;
 
-/** بحث سريع بالـ galleryIndex عشان مانلفّش على المصفوفة لكل صورة */
+/** Quick lookup by galleryIndex so we don't scan the array for every image */
 const byGalleryIndex = new Map<number, Certification>(
   certifications
     .filter((c): c is Certification & { galleryIndex: number } => c.galleryIndex !== undefined)
@@ -124,13 +124,13 @@ const byGalleryIndex = new Map<number, Certification>(
 );
 
 /**
- * النص البديل لصورة الجاليري رقم `index`.
+ * Alt text for gallery image number `index`.
  *
- * لو الصورة مربوطة بشهادة معروفة:
+ * If the image is linked to a known certification:
  *   "eJPT v2 certificate issued by INE Security"
- * لو لأ:
- *   "Certificate 12 of 74" — مش مثالي، بس كل صورة بقى ليها هوية مختلفة
- *   بدل 74 نسخة من نفس الجملة.
+ * If not:
+ *   "Certificate 12 of 74" — not ideal, but every image now has a distinct identity
+ *   instead of 74 copies of the same sentence.
  */
 export const certificationAlt = (index: number): string => {
   const cert = byGalleryIndex.get(index);
@@ -139,8 +139,8 @@ export const certificationAlt = (index: number): string => {
 };
 
 /**
- * JSON-LD لكل شهادة. جوجل بيستخدم النوع ده في نتايج البحث الخاصة
- * بالمؤهلات، والـ CV parsers بتقراه.
+ * JSON-LD for every certification. Google uses this type in search results for
+ * credentials, and CV parsers read it.
  */
 export const certificationsJsonLd = (personId: string) =>
   certifications.map((cert) => ({

@@ -2,23 +2,23 @@
 /*
  * contrast-audit.mjs
  *
- * فحص تباين WCAG على كل نص في ملفات الـ CSS.
+ * WCAG contrast audit for every text colour in the CSS files.
  *
- * ── ليه الملف ده موجود ──
+ * ── Why this file exists ──
  *
- * كان عندي فحص شبيه بيستثني العناصر اللي جواها aria-hidden، على أساس إن
- * axe بيتخطّاها. **وده كان غلط، وLighthouse كشفه.**
+ * A similar earlier check excluded elements inside aria-hidden, on the basis that
+ * axe skips them. **That was wrong, and Lighthouse caught it.**
  *
- *   aria-hidden بيخفي العنصر من **قارئ الشاشة**.
- *   التباين مش قضية قارئ شاشة — هو قضية ناس بيشوفوا بصعوبة.
+ *   aria-hidden hides an element from **screen readers**.
+ *   Contrast isn't a screen-reader issue — it's an issue for people with low vision.
  *
- * النص اللي عليه aria-hidden لسه **ظاهر على الشاشة**، فلازم يتفحص. بسبب
- * الاستثناء ده قلت "صفر راسبة" وLighthouse لقى تلاتة — كلهم من اللي
- * استثنيته.
+ * Text with aria-hidden is still **visible on screen**, so it must be checked. Because of
+ * that exclusion the old check reported "zero failures" while Lighthouse found three — all of them from
+ * the excluded set.
  *
- * الفحص ده مبيستثنيش حاجة. لو عنصر زخرفي فعلاً وعايز تعفيه، حطّه في
- * ALLOWLIST تحت **باسمه وبسبب مكتوب** — مش بقاعدة عامة تخفي حاجات
- * إنت مش شايفها.
+ * This audit excludes nothing. If an element really is decorative and you want to exempt it, put it in
+ * the ALLOWLIST below **by name with a written reason** — not with a blanket rule that hides things
+ * you can't see.
  */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -26,9 +26,9 @@ import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
 const BG = "#000000";
-const ROOT_PX = 9; // الجذر ≈ 9 بكسل (62.5% × --ui-scale)
+const ROOT_PX = 9; // root ≈ 9px (62.5% × --ui-scale)
 
-/* توكنز الألوان — لازم تفضل مطابقة لـ globals.css */
+/* Colour tokens — must stay in sync with globals.css */
 const TOKENS = {
   "--foreground": "#ffffff", "--text-color": "#ffffff", "--text-bright": "#ffffff",
   "--text-muted": "#d8d6cc", "--text-dim": "#a59f90",
@@ -38,12 +38,12 @@ const TOKENS = {
 };
 
 /*
- * إعفاءات صريحة. كل سطر لازم يبقى **باسم المحدد** ومعاه سبب.
- * مفيش "استثني كل الملف" ومفيش "استثني كل aria-hidden".
+ * Explicit exemptions. Every line must be **by selector name** with a reason.
+ * No "exempt the whole file" and no "exempt all aria-hidden".
  */
 const ALLOWLIST = new Map([
-  // مثال على الشكل المطلوب:
-  // [".foo", "سبب واضح ليه ده مقبول"],
+  // Example of the required shape:
+  // [".foo", "a clear reason why this is acceptable"],
 ]);
 
 const rel = (f) => relative(ROOT, f);
@@ -70,7 +70,7 @@ function ratio(a, b) {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
-/** أبيض بشفافية فوق أسود → رمادي مكافئ */
+/** Semi-transparent white over black → equivalent grey */
 function flattenWhite(alpha) {
   const v = Math.round(255 * alpha);
   return "#" + v.toString(16).padStart(2, "0").repeat(3);
@@ -104,9 +104,9 @@ for (const file of walk(join(ROOT, "app"))) {
     if (!hex) continue;
 
     /*
-     * الخلفية: لو نفس القاعدة بتحدد background كمان، احسب عليها مش على
-     * الأسود. من غير ده كل قاعدة hover بتقلب الخلفية لذهبي والنص لأسود
-     * بتتحسب "أسود على أسود" وتطلع راسبة وهي سليمة تماماً.
+     * Background: if the same rule also sets a background, compute against that instead of
+     * black. Without this, every hover rule that flips the background to gold and the text to black
+     * is computed as "black on black" and fails while being perfectly fine.
      */
     const bm = body.match(/(?:^|;)\s*background(?:-color)?:\s*([^;]+)/);
     const bgHere = bm ? resolve(bm[1]) : null;
@@ -115,7 +115,7 @@ for (const file of walk(join(ROOT, "app"))) {
     const fm = body.match(/font-size:\s*([\d.]+)rem/);
     const px = fm ? parseFloat(fm[1]) * ROOT_PX : null;
     const bold = /font-weight:\s*(bold|[7-9]00)/.test(body);
-    /* نص كبير = 18.66px عريض أو 24px عادي */
+    /* Large text = 18.66px bold or 24px regular */
     const large = px !== null && (px >= 24 || (bold && px >= 18.66));
     const need = large ? 3.0 : 4.5;
     const r = ratio(hex, bg);
@@ -127,16 +127,16 @@ for (const file of walk(join(ROOT, "app"))) {
 }
 
 const real = fails.filter((f) => !f.allowed);
-console.log(`\nفُحص ${checked} تصريح لون · ${real.length} راسب\n`);
+console.log(`\nChecked ${checked} colour declarations · ${real.length} failing\n`);
 for (const f of real) {
   console.log(
-    `  ✖ ${f.sel.padEnd(26)} ${f.hex}  تباين ${f.r.toFixed(2)} / ${f.need}` +
+    `  ✖ ${f.sel.padEnd(26)} ${f.hex}  contrast ${f.r.toFixed(2)} / ${f.need}` +
       `${f.px ? `  (${f.px.toFixed(1)}px)` : ""}\n     ${rel(f.file)}`,
   );
 }
 const skipped = fails.filter((f) => f.allowed);
 if (skipped.length) {
-  console.log(`\n  ${skipped.length} معفى صراحةً:`);
+  console.log(`\n  ${skipped.length} explicitly exempted:`);
   for (const f of skipped) console.log(`    ${f.sel} — ${f.allowed}`);
 }
 console.log();

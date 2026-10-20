@@ -1,18 +1,18 @@
 /*
- * app/terms/page.tsx — شروط الاستخدام
+ * app/terms/page.tsx — Terms of Use
  *
- * Server Component، نص ثابت.
+ * Server Component, static text.
  *
- * ⚠️ اسمها "Terms of Use" مش "Terms and Conditions" عن قصد.
+ * ⚠️ It's called "Terms of Use", not "Terms and Conditions", on purpose.
  *
- * "Terms and Conditions" هو الاسم المتعارف عليه لعقد بيع/خدمة — بيتكلم
- * عن الطلبات والدفع والتسليم والاسترجاع. الموقع ده مبيبيعش حاجة، فوثيقة
- * بالاسم ده هتوعد بحاجات غير موجودة وتفتح باب لالتزامات مالهاش لازمة.
+ * "Terms and Conditions" is the conventional name for a sales/service contract — it covers
+ * orders, payment, delivery and refunds. This site doesn't sell anything, so a document
+ * with that name would promise things that don't exist and open the door to unnecessary obligations.
  *
- * "Terms of Use" هو الصح لموقع محتوى: قواعد استخدام الموقع، الملكية
- * الفكرية، حدود المسؤولية.
+ * "Terms of Use" is right for a content site: rules for using the site, intellectual
+ * property, limitation of liability.
  *
- * ⚠️ مش استشارة قانونية.
+ * ⚠️ Not legal advice.
  */
 
 import type { Metadata } from "next";

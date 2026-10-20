@@ -8,8 +8,8 @@ import styles from "./page.module.css";
 import anchorStyles from "./BlogCard.module.css";
 
 interface BlogCardProps {
-  /* NEW: كان بيتبعت أصلاً جوه {...item} بس مكانش معرّف، فكان بيضيع.
-     دلوقتي هو أساس الـ deep link (#case-<id>). */
+  /* NEW: it was already being passed inside {...item} but wasn't declared, so it was lost.
+     Now it's the basis of the deep link (#case-<id>). */
   id: string;
   title: string;
   description?: string;
@@ -17,15 +17,15 @@ interface BlogCardProps {
   type: string;
   category?: string;
   difficulty?: string;
-  /** مسار الـ PDF — اختياري: الزراير بتختفي لما يكون مش موجود */
+  /** PDF path — optional: the buttons are hidden when it's absent */
   href?: string;
   tags?: readonly string[];
   tools?: readonly string[];
   skillsGained?: readonly string[];
   readTime?: number;
   date?: string;
-  /* لو مش متبعت، الكارت بيفترض /blog/{id}. الكروت اللي مش cases (زي كارت
-     الـ CV) لازم تبعته صراحةً، وإلا اللينك بيودّي على صفحة متولّدتش. */
+  /* If not passed, the card assumes /blog/{id}. Cards that aren't cases (like the
+     CV card) must pass it explicitly, or the link leads to a page that was never generated. */
   detailHref?: string;
   screenshots: string[];
   onOpenGallery: (title: string, screenshots: string[], index?: number) => void;
@@ -43,7 +43,7 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
   const secondaryScreenshot = screenshots.length > 1 ? screenshots[1] : null;
   const extraCount = Math.max(0, screenshots.length - 2);
 
-  // Fallback State خفيف جداً
+  // Very lightweight fallback state
   const [primaryFailed, setPrimaryFailed] = useState(false);
   const [secondaryFailed, setSecondaryFailed] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
@@ -54,15 +54,15 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
   useEffect(() => () => window.clearTimeout(copyTimer.current), []);
 
   const copyLink = useCallback(async () => {
-    // اللينك بيروح لصفحة الـ case المستقلة مش للأنكور: دي اللي ليها عنوان
-    // ووصف وصورة خاصين بيها، فبتبان صح لما تتبعت في أي حتة.
+    // The link goes to the standalone case page, not the anchor: that's the one with its own title,
+    // description and image, so it displays correctly when shared anywhere.
     const path = normalizeHref(detailPath);
     const url = `${window.location.origin}${TRAILING_SLASH ? `${path}/` : path}`;
 
     try {
       await navigator.clipboard.writeText(url);
     } catch {
-      // clipboard API محتاج secure context — الـ fallback ده بيشتغل في أي مكان
+      // The clipboard API needs a secure context — this fallback works anywhere
       const field = document.createElement("textarea");
       field.value = url;
       field.setAttribute("readonly", "");
@@ -115,8 +115,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         <p className={styles.cardPlatform}>{platform}</p>
 
         <div className={styles.caseMetadata}>
-          {/* FIX: لو جه difficulty مش من التلاتة اللي ليهم كلاس، الـ lookup كان
-              بيرجّع undefined والكلاس بيتكتب حرفياً "badge undefined" في الـ HTML */}
+          {/* FIX: if a difficulty came in that isn't one of the three with a class, the lookup
+              returned undefined and the class was literally written as "badge undefined" in the HTML */}
           {difficulty && (
             <span className={[styles.badge, styles[`difficulty-${difficulty.toLowerCase()}`]].filter(Boolean).join(" ")}>
               {difficulty}
@@ -156,8 +156,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
 
         <div className={styles.cardActions}>
           <Link href={detailPath} data-fx="btn" data-btn="ghost">Open case</Link>
-          {/* مش كل case ليه PDF — ستة منهم أدلتهم صور بس. قبل كده الزراير
-              كانت بتتعرض دايماً وبتودّي على 404. */}
+          {/* Not every case has a PDF — six of them have image-only evidence. Previously the buttons
+              were always shown and led to a 404. */}
           {href && (
             <>
               <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">View PDF</a>
@@ -169,8 +169,8 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
               View All Screenshots
             </button>
           )}
-          {/* NEW: لينك مباشر للكارت ده لوحده — مفيد وإنت بتبعت case معيّنة
-              في إنترفيو بدل "انزل تحت شوية" */}
+          {/* NEW: a direct link to this card alone — useful when sending a specific case
+              in an interview instead of "scroll down a bit" */}
           <button
             type="button"
             onClick={copyLink}

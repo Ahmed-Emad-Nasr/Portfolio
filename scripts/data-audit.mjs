@@ -2,21 +2,21 @@
 /*
  * data-audit.mjs
  *
- * فحص ترابط الداتا بين ملفات core/config.
+ * Cross-file data integrity audit for core/config.
  *
- * ── ليه ──
+ * ── Why ──
  *
- * الداتا متقسّمة على ١٤ ملف، والملفات بتشاور على بعض بمعرّفات نصية:
- * skills.ts بيشاور على cases، attack.ts بيشاور على cases، start-here.ts
- * كمان. **مفيش أي حاجة في TypeScript بتتأكد إن المعرّف ده موجود** — ده
- * نص، والـ compiler مبيعرفش إنه المفروض يطابق حاجة.
+ * The data is split across 14 files, and they reference each other by string ids:
+ * skills.ts points at cases, attack.ts points at cases, and so does
+ * start-here.ts. **Nothing in TypeScript checks that the id actually exists** — it's
+ * a string, and the compiler has no idea it's supposed to match anything.
  *
- * يعني لو غيّرت `id` في cases.ts، الـ build بيعدّي عادي و`tsc` بيقول صفر
- * أخطاء، والزائر بيضغط على اللينك ويلاقي 404. التعليقات في skills.ts و
- * start-here.ts و attack.ts بتحذّر من ده بالنص — والتحذير في تعليق
- * مبيمنعش حاجة.
+ * So if you change an `id` in cases.ts, the build passes, `tsc` reports zero
+ * errors, and the visitor clicks the link and gets a 404. The comments in skills.ts,
+ * start-here.ts and attack.ts warn about this in plain text — and a warning in a comment
+ * prevents nothing.
  *
- * الفحص ده بيعمل اللي التعليقات دي بتطلبه.
+ * This audit does what those comments ask for.
  *
  *   node scripts/data-audit.mjs
  */
@@ -28,11 +28,11 @@ const CONFIG = join(process.cwd(), "app/core/config");
 const read = (f) => readFileSync(join(CONFIG, f), "utf8");
 
 /*
- * نسخة من الملف بعد شيل التعليقات.
+ * A copy of the file with comments stripped.
  *
- * الفحص كان بيقرا الملف خام، فلما اتصلّح رقم في الكود وفضل مذكور في
- * تعليق بيشرح التصليح، السكربت مسك الرقم من التعليق وبلّغ عن خطأ
- * **اتصلّح خلاص**. الفحص لازم يقرا الكود بس.
+ * The audit used to read the raw file, so when a number was fixed in code but still
+ * mentioned in a comment explaining the fix, the script caught the number in the comment
+ * and reported an error that was **already fixed**. The audit must read code only.
  */
 const readCode = (f) =>
   readFileSync(join(CONFIG, f), "utf8")
@@ -47,31 +47,31 @@ const YEL = (s) => `\x1b[33m${s}\x1b[0m`;
 let errors = 0;
 let warnings = 0;
 const section = (t) => console.log(`\n${B(t)}`);
-const fail = (m) => { console.log(`   ${RED("خطأ")} ${m}`); errors++; };
-const warn = (m) => { console.log(`   ${YEL("تحذير")} ${m}`); warnings++; };
+const fail = (m) => { console.log(`   ${RED("error")} ${m}`); errors++; };
+const warn = (m) => { console.log(`   ${YEL("warning")} ${m}`); warnings++; };
 const ok = (m) => console.log(`   ✓ ${m}`);
 
-/* ── مصدر الحقيقة: معرّفات الـ cases ─────────────────────────────────── */
+/* ── Source of truth: case ids ─────────────────────────────────────────── */
 const casesSrc = read("cases.ts");
 const caseIds = new Set([...casesSrc.matchAll(/^\s{4}id:\s*"([^"]+)"/gm)].map((m) => m[1]));
 
-section(`1. مكتبة الـ cases — ${caseIds.size} تقرير`);
+section(`1. Case library — ${caseIds.size} reports`);
 {
   const all = [...casesSrc.matchAll(/^\s{4}id:\s*"([^"]+)"/gm)].map((m) => m[1]);
   const dups = all.filter((id, i) => all.indexOf(id) !== i);
-  if (dups.length) fail(`ids مكررة: ${[...new Set(dups)].join(", ")}`);
-  else ok("مفيش ids مكررة");
+  if (dups.length) fail(`duplicate ids: ${[...new Set(dups)].join(", ")}`);
+  else ok("no duplicate ids");
 }
 
-/* ── المراجع المتقاطعة ──────────────────────────────────────────────── */
-section("2. مراجع بين الملفات");
+/* ── Cross-references ──────────────────────────────────────────────────── */
+section("2. Cross-file references");
 {
   const refs = [
     /*
-     * skills.ts فيه نوعين من الـ id: معرّف المجموعة نفسها (siem, ir, …)
-     * ومعرّفات الـ evidence اللي بتشاور على cases. لازم نقرا اللي جوه
-     * evidence بس — أول نسخة من الفحص ده كانت بتقرا الاتنين وبتبلّغ عن
-     * ٨ أخطاء وهمية.
+     * skills.ts has two kinds of id: the group's own id (siem, ir, …)
+     * and the evidence ids that point at cases. We must read only what's inside
+     * evidence — the first version of this audit read both and reported
+     * 8 false errors.
      */
     ["skills.ts", "EVIDENCE_ONLY", "evidence"],
     ["start-here.ts", /^\s{4}id:\s*"([a-z0-9-]+)"/gm, "startHere"],
@@ -83,7 +83,7 @@ section("2. مراجع بين الملفات");
     const src = read(file);
     let ids;
     if (file === "skills.ts") {
-      /* بنقص بلوكات evidence: [...] الأول، وبعدين نقرا الـ ids من جواها */
+      /* Cut out the evidence: [...] blocks first, then read the ids inside them */
       ids = [];
       for (const blk of src.matchAll(/evidence:\s*\[([\s\S]*?)\]/g)) {
         ids.push(...[...blk[1].matchAll(/id:\s*"([a-z0-9-]+)"/g)].map((m) => m[1]));
@@ -95,13 +95,13 @@ section("2. مراجع بين الملفات");
       ids = [...src.matchAll(re)].map((m) => m[1]);
     }
     const missing = ids.filter((id) => !caseIds.has(id));
-    if (missing.length) { fail(`${file} (${label}) بيشاور على ids مش موجودة: ${missing.join(", ")}`); bad++; }
+    if (missing.length) { fail(`${file} (${label}) references ids that don't exist: ${missing.join(", ")}`); bad++; }
   }
-  if (!bad) ok("كل المراجع بتشاور على cases موجودة");
+  if (!bad) ok("all references point at existing cases");
 }
 
 /* ── ATT&CK ─────────────────────────────────────────────────────────── */
-section("3. ربط ATT&CK");
+section("3. ATT&CK mapping");
 let coveredTechniques = 0;
 if (has("attack.ts")) {
   const src = read("attack.ts");
@@ -111,71 +111,71 @@ if (has("attack.ts")) {
   coveredTechniques = used.size;
 
   const undef = [...used].filter((t) => !defined.has(t));
-  if (undef.length) fail(`تكنيكات مستخدمة ومش معرّفة في TECHNIQUES: ${undef.join(", ")}`);
-  else ok(`كل التكنيكات المستخدمة معرّفة (${used.size})`);
+  if (undef.length) fail(`techniques used but not defined in TECHNIQUES: ${undef.join(", ")}`);
+  else ok(`all used techniques are defined (${used.size})`);
 
   const unused = [...defined].filter((t) => !used.has(t));
-  if (unused.length) warn(`تكنيكات معرّفة ومحدش بيستخدمها — بتزوّد حجم الملف بس: ${unused.join(", ")}`);
+  if (unused.length) warn(`techniques defined but never used — they only add file size: ${unused.join(", ")}`);
 }
 
-/* ── الأرقام المكتوبة بإيد ──────────────────────────────────────────── */
-section("4. أرقام مكتوبة بإيد مقابل الداتا الحقيقية");
+/* ── Hand-written numbers ──────────────────────────────────────────────── */
+section("4. Hand-written numbers vs. the real data");
 {
   /*
-   * ده أخطر قسم. الادعاءات الرقمية عن شغلك بتتكتب بإيد في نص، والداتا
-   * بتكبر بعدين — فالرقم بيبقى قديم من غير ما حد ياخد باله. وده رقم
-   * بيتقرا في سياق توظيف.
+   * The most dangerous section. Numeric claims about your work are hand-written in text, while the data
+   * keeps growing — so the number goes stale without anyone noticing. And it's a number
+   * read in a hiring context.
    */
   if (has("cv.ts")) {
     const cv = readCode("cv.ts");
     const reports = cv.match(/Published (\d+) investigation reports/);
     if (reports && Number(reports[1]) !== caseIds.size) {
       fail(
-        `CV_SUMMARY بيقول "Published ${reports[1]} investigation reports" — ` +
-          `الحقيقة ${caseIds.size} في cases.ts`,
+        `CV_SUMMARY says "Published ${reports[1]} investigation reports" — ` +
+          `actual count is ${caseIds.size} in cases.ts`,
       );
-    } else if (reports) ok(`عدد التقارير مطابق (${caseIds.size})`);
+    } else if (reports) ok(`report count matches (${caseIds.size})`);
 
     const tech = cv.match(/covering (\d+) MITRE/);
     if (tech && coveredTechniques && Number(tech[1]) !== coveredTechniques) {
-      fail(`CV_SUMMARY بيقول "covering ${tech[1]} MITRE techniques" — الحقيقة ${coveredTechniques}`);
-    } else if (tech) ok(`عدد التكنيكات مطابق (${coveredTechniques})`);
+      fail(`CV_SUMMARY says "covering ${tech[1]} MITRE techniques" — actual count is ${coveredTechniques}`);
+    } else if (tech) ok(`technique count matches (${coveredTechniques})`);
   }
 }
 
-/* ── معرّفات المنصات الخارجية ───────────────────────────────────────── */
-section("5. معرّفات يوتيوب");
+/* ── External platform ids ─────────────────────────────────────────────── */
+section("5. YouTube ids");
 if (has("youtube.ts")) {
   const src = read("youtube.ts");
-  /* معرّف الفيديو ١١ حرف، وقايمة التشغيل PL + ٣٢ = ٣٤ */
+  /* A video id is 11 characters; a playlist id is PL + 32 = 34 */
   const badVideos = [...src.matchAll(/videoId:\s*"([^"]+)"/g)]
     .map((m) => m[1]).filter((v) => v.length !== 11);
-  if (badVideos.length) fail(`معرّفات فيديو بطول غلط: ${badVideos.join(", ")}`);
-  else ok("كل معرّفات الفيديو ١١ حرف");
+  if (badVideos.length) fail(`video ids with the wrong length: ${badVideos.join(", ")}`);
+  else ok("all video ids are 11 characters");
 
   const badLists = [...src.matchAll(/playlistId:\s*"([^"]+)"/g)]
     .map((m) => m[1]).filter((p) => !/^PL[\w-]{32}$/.test(p));
   if (badLists.length) {
     fail(
-      `معرّفات قوائم تشغيل مقطوعة (اللينك والـ iframe هيرجعوا خطأ): ` +
-        badLists.map((p) => `${p} (${p.length} حرف)`).join(", "),
+      `truncated playlist ids (the link and the iframe will return an error): ` +
+        badLists.map((p) => `${p} (${p.length} chars)`).join(", "),
     );
-  } else ok("كل معرّفات القوائم ٣٤ حرف");
+  } else ok("all playlist ids are 34 characters");
 }
 
-/* ── روابط الصور الخارجية ───────────────────────────────────────────── */
-section("6. روابط خارجية معروفة الصيغة");
+/* ── External image URLs ───────────────────────────────────────────────── */
+section("6. Well-formed external URLs");
 if (has("projects.ts")) {
   const src = read("projects.ts");
   const avatars = [...new Set([...src.matchAll(/avatar_url:\s*"([^"]+)"/g)].map((m) => m[1]))];
   /*
-   * صيغتين بيشتغلوا:
-   *   avatars.githubusercontent.com/u/<رقم>   ← الرقم مش الاسم
-   *   github.com/<الاسم>.png                   ← أبسط، وبيقبل الاسم
+   * Two formats work:
+   *   avatars.githubusercontent.com/u/<number>   ← the numeric id, not the username
+   *   github.com/<username>.png                  ← simpler, accepts the username
    *
-   * أول نسخة من الفحص ده كانت بتقبل الأولى بس، فلما اتصلّح الرابط
-   * للصيغة التانية (وهي صحيحة) السكربت فضل يبلّغ عنه. الفحص كان أضيق
-   * من الواقع.
+   * The first version of this audit accepted only the first one, so when the URL was fixed
+   * to the second format (which is valid) the script kept reporting it. The audit was stricter
+   * than reality.
    */
   const bad = avatars.filter(
     (u) =>
@@ -184,14 +184,14 @@ if (has("projects.ts")) {
   );
   if (bad.length) {
     fail(
-      `avatar_url لازم يكون avatars.githubusercontent.com/u/<رقم> أو ` +
-        `github.com/<الاسم>.png — الصيغة دي بترجع 404: ` + bad.join(", "),
+      `avatar_url must be avatars.githubusercontent.com/u/<number> or ` +
+        `github.com/<username>.png — this format returns 404: ` + bad.join(", "),
     );
-  } else ok("روابط الأفاتار بصيغة صحيحة");
+  } else ok("avatar URLs are well-formed");
 }
 
-/* ── الخط الزمني ────────────────────────────────────────────────────── */
-section("7. الخط الزمني (experience.ts)");
+/* ── Timeline ──────────────────────────────────────────────────────────── */
+section("7. Timeline (experience.ts)");
 if (has("experience.ts")) {
   const src = read("experience.ts");
   const body = src.slice(src.indexOf("knowledgeEducationItems = ["));
@@ -205,38 +205,38 @@ if (has("experience.ts")) {
   }));
 
   /*
-   * الكومبوننت بيعرض بترتيب المصفوفة من غير أي فرز
-   * (experience-section.tsx: knowledgeEducationItems.map). فترتيب الملف
-   * هو الترتيب اللي بيتشاف على الشاشة.
+   * The component used to render in array order without any sorting
+   * (experience-section.tsx: knowledgeEducationItems.map), so the file order
+   * was the order shown on screen.
    */
   /*
-   * الترتيب والتبادل بقوا بيتحسبوا في الكومبوننت
-   * (experience-section.tsx بيعمل sort بالتاريخ و index % 2 للجهة).
+   * Ordering and alternation are now computed in the component
+   * (experience-section.tsx sorts by date and uses index % 2 for the side).
    *
-   * فالفحصين اللي كانوا هنا — "المصفوفة مش مرتّبة" و"عنصرين على نفس
-   * الجهة" — بقوا بيقيسوا حاجة مبقاش ليها أثر على الشاشة. لو سبتهم
-   * كانوا هيفضلوا يبلّغوا عن مشاكل اتحلّت من أصلها.
+   * So the two checks that used to live here — "array not sorted" and "two items on the same
+   * side" — were measuring something that no longer affects the screen. Keeping them
+   * would have meant reporting problems that were fixed at the root.
    *
-   * اللي فضل مهم: إن الكومبوننت **لسه** بيرتّب. لو حد شال الفرز
-   * بعدين، ترتيب الملف هيرجع يهمّ تاني.
+   * What still matters: that the component **still** sorts. If someone removes the sort
+   * later, the file order will matter again.
    */
   const comp = readCode("../../components/experience/experience-section.tsx");
   if (!/\.sort\(/.test(comp)) {
-    warn("الكومبوننت مبقاش بيرتّب بالتاريخ — يبقى ترتيب المصفوفة في الملف بقى مهم تاني");
-  } else ok("الكومبوننت بيرتّب بالتاريخ وبيوزّع الجهات لوحده");
+    warn("the component no longer sorts by date — array order in the file matters again");
+  } else ok("the component sorts by date and assigns sides itself");
 
   if (/isRight:/.test(src)) {
-    warn("`isRight` لسه مكتوبة في الداتا — مبقاش ليها أثر بعد الفرز، الأنضف تتشال");
-  } else ok("مفيش isRight مكتوبة بإيد");
+    warn("`isRight` is still hard-coded in the data — it has no effect after sorting, cleaner to remove it");
+  } else ok("no hard-coded isRight");
 
-  /* تواريخ مستقبلية */
+  /* Future dates */
   const today = new Date().toISOString().slice(0, 10);
   for (const r of rows) {
-    if (r.start > today) warn(`"${r.tag}" تاريخ بدايته في المستقبل (${r.start})`);
-    if (r.end && r.start && r.end < r.start) fail(`"${r.tag}" تاريخ النهاية قبل البداية`);
+    if (r.start > today) warn(`"${r.tag}" has a start date in the future (${r.start})`);
+    if (r.end && r.start && r.end < r.start) fail(`"${r.tag}" end date is before the start date`);
   }
 }
 
 console.log(`\n${"─".repeat(62)}`);
-console.log(`${errors} خطأ · ${warnings} تحذير\n`);
+console.log(`${errors} error(s) · ${warnings} warning(s)\n`);
 process.exit(errors ? 1 : 0);
