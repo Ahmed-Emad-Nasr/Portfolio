@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "sqli-login-bypass": Array.from({ length: 9 }, (_, i) => `Assets/Cases/Lab SQL injection vulnerability allowing login bypass/Screenshot (${235 + i}).webp`),
   "basic-ssrf-local-server": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Basic SSRF against the local server/Screenshot (${219 + i}).webp`),
  "owasp-juice-shop": Array.from({ length: 83 }, (_, i) => `Assets/Cases/OWASP Juice Shop/Screenshot (${1 + i}).webp`),
   "web-shell-content-type-bypass": Array.from({ length: 15 }, (_, i) => `Assets/Cases/Lab Web shell upload via Content-Type restriction bypass/Screenshot (${134 + i}).webp`),
@@ -1327,6 +1328,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-20",
     screenshots: Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Basic SSRF against the local server/Screenshot (${219 + i}).webp`),
     image: "Assets/Cases/Lab Basic SSRF against the local server/Screenshot (226).webp", // the lab solution screenshot as the cover
+  },
+  {
+    id: "sqli-login-bypass",
+    title: "Lab SQL injection vulnerability allowing login bypass",
+    description: "Exploited a SQL injection vulnerability in the login function of the application. By injecting a malicious SQL payload (administrator'--) into the username field, the password check was successfully bypassed, granting unauthorized access to the administrator account.",
+    platform: "PortSwigger",
+    type: "Walkthrough",
+    category: "Web Security",
+    difficulty: "Easy",
+    tags: ["SQL Injection", "Authentication Bypass", "PortSwigger", "Burp Suite"],
+    tools: ["Burp Suite"],
+    skillsGained: ["SQL Injection (SQLi)", "Authentication Bypass Techniques", "Payload Crafting"],
+    readTime: 5,
+    date: "2026-10-20",
+    screenshots: Array.from({ length: 9 }, (_, i) => `Assets/Cases/Lab SQL injection vulnerability allowing login bypass/Screenshot (${235 + i}).webp`),
+    image: "Assets/Cases/Lab SQL injection vulnerability allowing login bypass/Screenshot (243).webp",
   },
 ] as const;
 
