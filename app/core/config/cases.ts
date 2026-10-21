@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "guided-pentest-infrastructure": Array.from({ length: 31 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${385 + i}).webp`),
   "password-reset-broken-logic": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Lab Password reset broken logic/Screenshot (${371 + i}).webp`),
   "2fa-simple-bypass": Array.from({ length: 3 }, (_, i) => `Assets/Cases/Lab 2FA simple bypass/Screenshot (${351 + i}).webp`),
   "oauth-implicit-flow-bypass": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (${343 + i}).webp`),
@@ -1548,6 +1549,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-21",
     screenshots: Array.from({ length: 13 }, (_, i) => `Assets/Cases/Lab Password reset broken logic/Screenshot (${371 + i}).webp`),
     image: "Assets/Cases/Lab Password reset broken logic/Screenshot (379).webp", // صورة تعديل الـ username في الريكوست كغلاف
+  },
+  {
+    id: "guided-pentest-infrastructure",
+    title: "Guided Pentest: Infrastructure Walkthrough",
+    description: "Successfully completed an end-to-end infrastructure penetration test on TryHackMe, demonstrating a complete attack lifecycle from initial enumeration to full system compromise. Initiated the engagement with comprehensive network discovery using Nmap to enumerate open ports and running services, identifying an outdated UnrealIRCd service running on port 6667. Researched and weaponized a known remote backdoor command execution exploit (UnrealIRCd 3.2.8.1 Backdoor) using Metasploit Framework to gain an initial foothold as the 'webmaster' user, successfully extracting the user flag. Conducted post-exploitation enumeration on the target system, discovering a misconfigured plaintext password file stored at '/etc/password.txt' containing root credentials. Leveraged these credentials to escalate privileges to root via SSH, extracted the final root flag, and documented comprehensive remediation steps including executive summaries and technical recommendations.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "Penetration Testing",
+    difficulty: "Medium",
+    tags: ["TryHackMe", "Infrastructure Pentest", "Nmap", "Metasploit", "UnrealIRCd", "Privilege Escalation", "SSH"],
+    tools: ["Nmap", "Searchsploit", "Metasploit Framework", "SSH"],
+    skillsGained: ["Network Enumeration", "Vulnerability Exploitation", "Initial Access", "Privilege Escalation via Plaintext Credentials", "Pentest Reporting"],
+    readTime: 15,
+    date: "2026-10-21",
+    screenshots: Array.from({ length: 31 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${385 + i}).webp`),
+    image: "Assets/Cases/Guided Pentest Infrastructure/Screenshot (414).webp", // صورة إتمام الروم كغلاف
   },
 ] as const;
 
