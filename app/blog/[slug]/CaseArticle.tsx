@@ -11,12 +11,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import { normalizePublicHref, getThumbnail, formatDate } from "../blog-utils";
 import type { GalleryState } from "../blog-types";
 import blogStyles from "../page.module.css";
 import styles from "./case.module.css";
+import ActionIcon from "../components/ActionIcon";
+import { useCopyLink } from "../components/useCopyLink";
 
 const BlogGalleryModal = dynamic(() => import("../components/BlogGalleryModal"), { ssr: false });
 
@@ -112,10 +114,7 @@ export default function CaseArticle({
   related?: readonly Related[];
 }) {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
-  const [copied, setCopied] = useState(false);
-  const copyTimer = useRef<number | undefined>(undefined);
-
-  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
+  const { state: copyState, copy } = useCopyLink();
 
   const goGallery = useCallback((delta: number) => {
     setGallery((cur) =>
@@ -132,26 +131,9 @@ export default function CaseArticle({
     [item.title, screenshots],
   );
 
-  const copyLink = useCallback(async () => {
-    const url = `${window.location.origin}${window.location.pathname}`;
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      // The clipboard API needs a secure context — this fallback works anywhere
-      const field = document.createElement("textarea");
-      field.value = url;
-      field.setAttribute("readonly", "");
-      field.style.position = "fixed";
-      field.style.opacity = "0";
-      document.body.appendChild(field);
-      field.select();
-      document.execCommand("copy");
-      document.body.removeChild(field);
-    }
-    setCopied(true);
-    window.clearTimeout(copyTimer.current);
-    copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
-  }, []);
+  const copyLink = useCallback(() => {
+    void copy(`${window.location.origin}${window.location.pathname}`);
+  }, [copy]);
 
   const difficultyClass = blogStyles[`difficulty-${item.difficulty.toLowerCase()}`];
 
@@ -194,12 +176,12 @@ export default function CaseArticle({
                 href={normalizePublicHref(item.href)}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-fx="btn" data-btn="ghost" data-tone="accent"
+                data-fx="btn" data-btn="solid" className={blogStyles.primaryAction}
               >
-                View PDF
+                <ActionIcon name="external" /> View PDF
               </a>
               <a href={normalizePublicHref(item.href)} download data-fx="btn" data-btn="ghost" data-tone="main">
-                Download
+                <ActionIcon name="download" /> Download
               </a>
             </>
           )}
@@ -209,11 +191,24 @@ export default function CaseArticle({
               onClick={() => openGallery(0)}
               data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed"
             >
-              View All Screenshots
+              <ActionIcon name="gallery" /> Screenshots
+              <span className={blogStyles.btnCount}>{screenshots.length}</span>
             </button>
           )}
-          <button type="button" onClick={copyLink} className={copied ? `${styles.copyAction} ${styles.copied}` : styles.copyAction}>
-            {copied ? "Link copied" : "Copy link"}
+          {/* FIX: same as BlogCard — no data-fx="btn", so the global `button` hover
+              (red background, white text) overrode this button's own hover. */}
+          <button
+            type="button"
+            onClick={copyLink}
+            data-fx="btn"
+            data-btn="ghost"
+            data-state={copyState === "idle" ? undefined : copyState}
+            className={styles.copyAction}
+          >
+            <ActionIcon key={copyState} name={copyState === "done" ? "check" : copyState === "error" ? "alert" : "link"} />
+            <span aria-live="polite">
+              {copyState === "done" ? "Copied!" : copyState === "error" ? "Copy failed" : "Copy link"}
+            </span>
           </button>
         </div>
 

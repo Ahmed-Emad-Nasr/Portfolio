@@ -93,26 +93,11 @@
   color: var(--text-muted);
 }
 
+/* Appearance comes from [data-fx="btn"] (globals.css section 17), including the
+   copied/failed states. Only the fixed width stays, so the label swap
+   ("Copy link" → "Copied!") doesn't make the row jump. */
 .copyAction {
-  padding: 10px 18px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #b8b8b8;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.copyAction:hover {
-  border-color: var(--accent-color);
-  color: var(--accent-color);
-}
-
-.copied {
-  border-color: #00ff88;
-  color: #00ff88;
+  min-width: 15ch;
 }
 
 /* ── Details ────────────────────────────────────────────────────────────── */
@@ -179,8 +164,18 @@
   }
 }
 
-.shot:hover {
+/* Doubled class: .shot is a <button>, and the global button hover (0,2,1)
+   was replacing this gold border with red and tinting the frame. */
+.shot.shot {
+  border-radius: 2px;
+  transition: border-color 200ms var(--motion-ease), box-shadow 200ms var(--motion-ease);
+}
+
+.shot.shot:hover {
   border-color: var(--accent-color);
+  background: var(--bg-color);
+  box-shadow: var(--glow-accent);
+  transform: none;
 }
 
 .shot:hover img {
@@ -208,8 +203,30 @@
   transition: border-color var(--motion-fast) ease;
 }
 
+.sibling {
+  transition:
+    border-color 220ms var(--motion-ease),
+    background-color 220ms var(--motion-ease),
+    transform 220ms var(--motion-ease-out);
+}
+
 .sibling:hover {
   border-color: var(--main-color);
+  background: rgba(var(--main-color-rgb), 0.06);
+  transform: translateY(-2px);
+}
+
+/* The label slides toward the direction you are going */
+.siblingLabel {
+  display: inline-block;
+  transition: transform 220ms var(--motion-ease-out);
+}
+.sibling:hover .siblingLabel { transform: translateX(-4px); }
+.siblingNext:hover .siblingLabel { transform: translateX(4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sibling:hover,
+  .sibling:hover .siblingLabel { transform: none; }
 }
 
 .siblingNext {

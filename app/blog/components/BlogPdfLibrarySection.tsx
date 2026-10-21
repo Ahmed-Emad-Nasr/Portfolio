@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Reveal from "@/app/core/components/Reveal";
 import BlogCard from "../BlogCard";
+import ActionIcon from "./ActionIcon";
 import styles from "../page.module.css";
 import type { PdfResource } from "../blog-types";
 import { EMPTY_SCREENSHOTS } from "@/app/core/config/cases";
@@ -83,12 +84,12 @@ export default function BlogPdfLibrarySection({
             <div className={styles.cardActions}>
               {leadCase.href && (
                 <>
-                  <a href={normalizeHref(leadCase.href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">View PDF</a>
-                  <a href={normalizeHref(leadCase.href)} download data-fx="btn" data-btn="ghost" data-tone="main">Download</a>
+                  <a href={normalizeHref(leadCase.href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent"><ActionIcon name="external" /> View PDF</a>
+                  <a href={normalizeHref(leadCase.href)} download data-fx="btn" data-btn="ghost" data-tone="main"><ActionIcon name="download" /> Download</a>
                 </>
               )}
               <button type="button" onClick={() => openGallery(leadCase.title, screenshotsById[leadCase.id] ?? EMPTY_SCREENSHOTS, 0)} data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed">
-                View All Screenshots
+                <ActionIcon name="gallery" /> View All Screenshots
               </button>
             </div>
           </div>

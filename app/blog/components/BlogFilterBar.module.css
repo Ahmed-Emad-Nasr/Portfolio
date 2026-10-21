@@ -34,22 +34,47 @@
   border-bottom-color: var(--accent-color);
 }
 
-.reset {
+/*
+ * Doubled classes (.reset.reset, .chip.chip …): these are <button>s, and the
+ * global `button:hover:not(:disabled)` is (0,2,1) — it beat every :hover in
+ * this file, so the chips turned red with a rounded 8px corner on hover
+ * instead of the gold outline written here.
+ */
+.reset.reset {
   flex-shrink: 0;
   padding: 6px 12px;
+  border-radius: 2px;
   background: transparent;
   border: 1px solid rgba(var(--main-color-rgb), 0.5);
   color: var(--main-text);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 1.1rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  animation: resetIn 260ms var(--motion-ease-out) both;
+  transition:
+    background-color 200ms var(--motion-ease),
+    border-color 200ms var(--motion-ease),
+    color 200ms var(--motion-ease),
+    box-shadow 200ms var(--motion-ease),
+    transform 200ms var(--motion-ease-out);
 }
 
-.reset:hover {
-  background: rgba(var(--main-color-rgb), 0.15);
+.reset.reset:hover {
+  background: rgba(var(--main-color-rgb), 0.18);
+  border-color: var(--main-color);
   color: #ffffff;
+  box-shadow: var(--glow-main);
+  transform: translateY(-1px);
+}
+
+.reset.reset:active { transform: scale(0.95); transition-duration: 80ms; }
+
+@keyframes resetIn {
+  from { opacity: 0; transform: translateX(6px); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* ── Chips ──────────────────────────────────────────────────────────────── */
@@ -70,22 +95,29 @@
   color: #8a8a8a;
 }
 
-.chip,
-.toolChip {
+.chip.chip,
+.toolChip.toolChip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   /* Minimum touch target on mobile */
   min-height: 34px;
   padding: 5px 11px;
+  border-radius: 2px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: #b8b8b8;
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 1.15rem;
+  font-weight: 500;
   letter-spacing: 0.5px;
-  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  transition:
+    color 180ms var(--motion-ease),
+    border-color 180ms var(--motion-ease),
+    background-color 180ms var(--motion-ease),
+    box-shadow 180ms var(--motion-ease),
+    transform 180ms var(--motion-ease-out);
 }
 
 .toolChip::before {
@@ -93,16 +125,46 @@
   color: var(--main-text);
 }
 
-.chip:hover,
-.toolChip:hover {
-  color: #ffffff;
-  border-color: rgba(var(--accent-color-rgb), 0.5);
+/* The global button sheen is a ::before too — on .toolChip that slot is the
+   ">_" prompt, so the sheen must not reposition it. */
+.toolChip.toolChip::before {
+  position: static;
+  inset: auto;
+  z-index: auto;
+  background: none;
+  transform: none;
+  transition: none;
 }
 
-.chipActive {
-  background: rgba(var(--accent-color-rgb), 0.12);
+/* (0,3,1) — the global hover rule that slides the sheen is (0,2,2) */
+.toolChip.toolChip:hover::before {
+  transform: none;
+}
+
+.chip.chip::before {
+  display: none;
+}
+
+.chip.chip:hover,
+.toolChip.toolChip:hover {
+  color: #ffffff;
+  border-color: rgba(var(--accent-color-rgb), 0.6);
+  background: rgba(var(--accent-color-rgb), 0.06);
+  transform: translateY(-1px);
+}
+
+.chip.chip:active,
+.toolChip.toolChip:active {
+  transform: scale(0.95);
+  transition-duration: 80ms;
+}
+
+.chipActive.chipActive,
+.chipActive.chipActive:hover {
+  background: rgba(var(--accent-color-rgb), 0.14);
   border-color: var(--accent-color);
   color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-color-rgb), 0.25), var(--glow-accent);
 }
 
 .count {
@@ -124,6 +186,15 @@
 .status::before {
   content: "// ";
   color: var(--main-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reset.reset { animation: none; }
+  .reset.reset:hover,
+  .chip.chip:hover,
+  .toolChip.toolChip:hover,
+  .chip.chip:active,
+  .toolChip.toolChip:active { transform: none; }
 }
 
 @media (max-width: 768px) {

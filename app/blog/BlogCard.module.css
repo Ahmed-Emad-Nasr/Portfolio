@@ -31,19 +31,20 @@
   }
 }
 
-.copyAction.copyAction {
-  border-color: rgba(255, 255, 255, 0.25);
-  color: #b8b8b8;
-}
-
-.copyAction.copyAction:hover {
-  border-color: var(--accent-color);
-  color: var(--accent-color);
-}
-
-.copied.copied {
-  border-color: #00ff88;
-  color: #00ff88;
+/*
+ * Copy link.
+ *
+ * This used to be the only styling the button had — a border colour and a
+ * text colour — because it was missing data-fx="btn". Everything else
+ * (padding, radius, font, background) came from the global `button {}` rule,
+ * which is why it rendered as a red-tinted rounded pill in the body font
+ * next to sharp mono buttons. All of that now comes from the shared primitive
+ * (globals.css section 17), including the "copied" and "failed" states via
+ * data-state. What stays here is only the fixed width, so the row doesn't
+ * jump when the label changes from "Copy link" to "Copied!".
+ */
+.copyAction {
+  min-width: 15ch;
 }
 
 @media (prefers-reduced-motion: reduce) {

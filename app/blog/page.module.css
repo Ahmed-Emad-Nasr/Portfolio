@@ -102,6 +102,49 @@
  * so it wins outright and nothing needs doubling.
  */
 
+/*
+ * The action row.
+ *
+ * FIX: `.cardActions` was used in three components (BlogCard, the spotlight,
+ * CaseArticle) and had no rule at all — the buttons were bare inline
+ * elements with no gap, butted against each other, and the row's spacing
+ * depended on whitespace in the JSX.
+ */
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.8rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+/* Open case: filled, but at the ghost buttons' size so the row stays one height */
+.primaryAction {
+  --btn-size: 1.2rem;
+  --btn-pad: 0.6rem 1.6rem;
+  --btn-tracking: 1px;
+  font-weight: 700;
+}
+
+/* The count chip inside "Screenshots" */
+.btnCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2em;
+  padding: 0.15em 0.5em;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-size: 0.85em;
+  line-height: 1.2;
+  opacity: 0.75;
+  transition: opacity var(--btn-speed, 220ms) var(--motion-ease);
+}
+[data-fx="btn"]:hover .btnCount { opacity: 1; }
+
+
 /* =========================================
    4. GRID & CYBER CARDS
    ========================================= */
@@ -149,7 +192,7 @@
 .pdfCardBody { display: flex; flex-direction: column; justify-content: center; gap: 0.5rem; }
 .pdfCardMedia { position: relative; }
 .caseCardTextOnly .pdfCardMedia { display: none; }
-.caseCardTextOnly .cardActions { margin-top: 2rem; }
+.caseCardTextOnly .cardActions { margin-top: 2.4rem; }
 
 /* Case Spotlight */
 .caseSpotlight {
@@ -206,10 +249,24 @@
 .cardDescriptionExpanded {
   margin-top: 0.6rem; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; font-family: var(--font-body);
 }
-.descToggle {
-  margin-top: 0.4rem; padding: 0; border: 0; background: transparent; cursor: pointer;
-  color: var(--accent-color); font-family: var(--font-mono); font-size: 1rem;
+/*
+ * Doubled class (.descToggle.descToggle): the global `button:hover:not(:disabled)`
+ * is (0,2,1) and would otherwise paint a red background and lift on this
+ * text-only control.
+ */
+.descToggle.descToggle {
+  align-self: flex-start; margin-top: 0.4rem; padding: 0.2rem 0; border: 0; border-radius: 0;
+  background: transparent; cursor: pointer; overflow: visible;
+  color: var(--accent-color); font-family: var(--font-mono); font-size: 1rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: 1px; text-decoration: underline dotted; text-underline-offset: 4px;
+  transition: color 200ms var(--motion-ease), letter-spacing 200ms var(--motion-ease), text-underline-offset 200ms var(--motion-ease);
+}
+.descToggle.descToggle::before { display: none; }
+.descToggle.descToggle::after { content: " ↓"; display: inline-block; transition: transform 200ms var(--motion-ease); }
+.descToggle.descToggle[aria-expanded="true"]::after { transform: rotate(180deg); }
+.descToggle.descToggle:hover {
+  background: transparent; color: var(--text-bright); transform: none;
+  letter-spacing: 1.6px; text-underline-offset: 6px; text-shadow: var(--glow-text);
 }
 .cardPlatform { margin-top: 1rem; color: rgba(255, 255, 255, 0.55); font-size: 1.1rem; font-family: var(--font-mono); text-transform: uppercase; }
 
@@ -271,7 +328,20 @@
   color: var(--main-text); font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; z-index: 5;
   transition: background-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease);
 }
-.embedPreview:hover .embedPlayButton { background: var(--main-color); color: #000; }
+.embedPlayButton::after {
+  content: ""; position: absolute; inset: -1px; border: 1px solid var(--main-color); border-radius: inherit;
+  pointer-events: none; opacity: 0;
+}
+.embedPreview:hover .embedPlayButton { background: var(--main-color); color: #fff; box-shadow: var(--glow-main); }
+.embedPreview:hover .embedPlayButton::after { animation: playPulse 1.2s var(--motion-ease-out) infinite; }
+/* The preview is a <button>: keep the global red hover off it (doubled class) */
+.embedPreview.embedPreview:hover { background: transparent; transform: none; }
+.embedPreview.embedPreview::before { display: none; }
+
+@keyframes playPulse {
+  0%   { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.35, 1.6); }
+}
 
 /* =========================================
    7. GALLERY OVERLAY (HUD STYLE)
@@ -297,15 +367,36 @@
    contrast ratio required for normal-size text; 0.6 clears it comfortably */
 .galleryCounter { font-size: 1.2rem; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono); }
 
-.galleryClose {
-  padding: 0.6rem 1.4rem; border-radius: 2px; border: 1px solid var(--danger);
-  background: transparent; color: var(--danger); font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: background-color 0.2s ease, box-shadow 0.2s ease;
+/*
+ * Gallery controls — doubled classes for the same reason as .descToggle: the
+ * global button hover (0,2,1) was overriding every :hover below, so Close,
+ * the arrows and the thumbnails all turned the same red on hover.
+ */
+.galleryClose.galleryClose {
+  padding: 0.6rem 1.4rem; border-radius: 2px; border: 1px solid rgba(var(--danger-rgb), 0.6);
+  background: transparent; color: var(--danger); font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+  transition: background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease), color 200ms var(--motion-ease), box-shadow 200ms var(--motion-ease), transform 200ms var(--motion-ease);
 }
-.galleryClose:hover { background: rgba(var(--danger-rgb), 0.15); box-shadow: none; /* Changed here */ }
+.galleryClose.galleryClose:hover {
+  background: rgba(var(--danger-rgb), 0.16); border-color: var(--danger); color: #fff;
+  box-shadow: 0 0 14px rgba(var(--danger-rgb), 0.4); transform: translateY(-1px);
+}
+.galleryClose.galleryClose:active { transform: scale(0.96); transition-duration: 80ms; }
 
 .galleryStage { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-sm); padding: 2rem; }
-.galleryNav { min-width: 50px; min-height: 50px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: #fff; font-family: var(--font-mono); font-size: 1.8rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease; }
-.galleryNav:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1); }
+.galleryNav.galleryNav {
+  min-width: 50px; min-height: 50px; padding: 0; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent; color: #fff; font-family: var(--font-mono); font-size: 1.8rem; cursor: pointer;
+  transition: border-color 200ms var(--motion-ease), color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), box-shadow 200ms var(--motion-ease), transform 200ms var(--motion-ease-out);
+}
+.galleryNav.galleryNav:hover {
+  border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1);
+  box-shadow: var(--glow-accent); transform: none;
+}
+/* The arrow nudges toward the direction it goes */
+.galleryNav.galleryNav:first-child:hover { transform: translateX(-3px); }
+.galleryNav.galleryNav:last-child:hover  { transform: translateX(3px); }
+.galleryNav.galleryNav:active { transform: scale(0.94); transition-duration: 80ms; }
 
 .galleryImageWrap {
   position: relative; min-height: 60vh; border-radius: calc(var(--radius-card) - 4px); overflow: hidden;
@@ -314,11 +405,14 @@
 .galleryImageWrap img { width: 100%; height: 100%; object-fit: contain; }
 
 .galleryThumbs { display: flex; flex-wrap: wrap; gap: var(--space-xs); padding: 1.5rem 2rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); background: #05080c; overflow-y: auto; }
-.galleryThumbButton {
-  min-width: 40px; min-height: 40px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono); font-size: 1.2rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+.galleryThumbButton.galleryThumbButton {
+  min-width: 40px; min-height: 40px; padding: 0 0.6rem; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono); font-size: 1.2rem; cursor: pointer;
+  transition: border-color 160ms var(--motion-ease), color 160ms var(--motion-ease), background-color 160ms var(--motion-ease), transform 160ms var(--motion-ease-out);
 }
-.activeGalleryThumb, .galleryThumbButton:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1); }
+.galleryThumbButton.galleryThumbButton:hover { border-color: rgba(var(--accent-color-rgb), 0.6); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.08); transform: translateY(-2px); }
+.activeGalleryThumb.activeGalleryThumb,
+.activeGalleryThumb.activeGalleryThumb:hover { border-color: var(--accent-color); color: #000; background: var(--accent-color); box-shadow: var(--glow-accent); transform: none; }
 
 /* =========================================
    8. EXTRAS & SECTIONS
@@ -360,6 +454,7 @@
   .page { padding: 6rem 1rem 3rem; }
   .playlistGrid, .youtubeHubGrid { grid-template-columns: 1fr; }
   .cardActions [data-fx="btn"], .playlistCard [data-fx="btn"] { width: 100%; }
+  .cardActions { gap: 0.8rem; }
   .insightStrip { grid-template-columns: 1fr; gap: 1rem; }
 
   .galleryStage { grid-template-columns: 1fr; padding: 1rem; }
@@ -391,7 +486,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pdfCard[data-visible="true"], .playlistCard[data-visible="true"], .videoCard[data-visible="true"],
-  .insightCard, .galleryOverlay, .galleryDialog { animation: none !important; }
+  .insightCard, .galleryOverlay, .galleryDialog,
+  .embedPreview:hover .embedPlayButton::after { animation: none !important; }
+  .galleryNav.galleryNav:hover, .galleryThumbButton.galleryThumbButton:hover,
+  .galleryClose.galleryClose:hover { transform: none; }
 }
 /*
  * Animated `filter` is opted into only where hover exists.

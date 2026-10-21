@@ -1768,26 +1768,168 @@ html [data-fx="field"]:focus-visible { outline: none; }
   --btn-radius: var(--radius-button);
   /* Minimum comfortable tap target on a touch screen. */
   --tap-min: 44px;
+  /*
+   * Buttons get their own speed instead of --motion-fast. --motion-fast is
+   * 380ms on desktop — right for a card lifting, sluggish for a button the
+   * cursor is already on. 220ms reads as "responds instantly" without snapping.
+   */
+  --btn-speed: 220ms;
+  /* The corner brackets that lock onto a button on hover (see ::after) */
+  --btn-bracket: 7px;
+  --btn-bracket-w: 1.5px;
+  --btn-lift: -2px;
+  --success: #00ff88;
+  --success-rgb: 0, 255, 136;
 }
 
 html [data-fx="btn"] {
+  /* position + isolation: the sheen (::before) and the brackets (::after) are
+     positioned against the button and stack under its text, not under the page. */
+  position: relative;
+  isolation: isolate;
+  /* The global `button` rule sets overflow: hidden — that would clip the
+     brackets, which sit on the border line. The sheen no longer needs it. */
+  overflow: visible;
+  z-index: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.75em;
   min-height: var(--tap-min);
   padding: var(--btn-pad);
   border-radius: var(--btn-radius);
   font-family: var(--font-mono);
   font-size: var(--btn-size);
+  line-height: 1.2;
   letter-spacing: var(--btn-tracking);
   text-transform: uppercase;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition:
-    color var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease),
-    background-color var(--motion-fast) var(--motion-ease),
-    opacity var(--motion-fast) var(--motion-ease);
+    color var(--btn-speed) var(--motion-ease),
+    border-color var(--btn-speed) var(--motion-ease),
+    background-color var(--btn-speed) var(--motion-ease),
+    box-shadow var(--btn-speed) var(--motion-ease),
+    opacity var(--btn-speed) var(--motion-ease),
+    transform var(--btn-speed) var(--motion-ease-out);
+}
+
+/*
+ * Sheen — a light band that sweeps across once on hover.
+ *
+ * This replaces the global `button::before` for these controls (it overrides
+ * the same pseudo-element) and, unlike that one, it also runs on <a> buttons:
+ * View PDF, Download and Open case were links, so they never got it.
+ *
+ * It moves by background-position, not transform, so it needs no
+ * overflow: hidden on the button — which is what lets the brackets below
+ * sit on the border without being clipped.
+ */
+html [data-fx="btn"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  transform: none;
+  background: linear-gradient(
+      105deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.16) 50%,
+      transparent 62%
+    )
+    100% 0 / 250% 100% no-repeat;
+  transition: background-position 0s;
+}
+
+/*
+ * Brackets — four corner marks that "lock on" to the button: they start a
+ * little outside it and snap onto the corners. The same targeting language
+ * as the custom cursor, at button scale. Drawn with gradients in
+ * currentColor, so every tone recolours them for free.
+ */
+html [data-fx="btn"]::after {
+  --b: var(--btn-bracket);
+  --w: var(--btn-bracket-w);
+  content: "";
+  position: absolute;
+  inset: -4px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1.08);
+  background:
+    linear-gradient(currentColor, currentColor) top left / var(--b) var(--w),
+    linear-gradient(currentColor, currentColor) top left / var(--w) var(--b),
+    linear-gradient(currentColor, currentColor) top right / var(--b) var(--w),
+    linear-gradient(currentColor, currentColor) top right / var(--w) var(--b),
+    linear-gradient(currentColor, currentColor) bottom left / var(--b) var(--w),
+    linear-gradient(currentColor, currentColor) bottom left / var(--w) var(--b),
+    linear-gradient(currentColor, currentColor) bottom right / var(--b) var(--w),
+    linear-gradient(currentColor, currentColor) bottom right / var(--w) var(--b);
+  background-repeat: no-repeat;
+  transition:
+    opacity var(--btn-speed) var(--motion-ease),
+    transform var(--btn-speed) var(--motion-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"]:hover {
+    transform: translate3d(0, var(--btn-lift), 0);
+  }
+  html [data-fx="btn"]:hover::before {
+    background-position: 0 0;
+    transition: background-position 700ms var(--motion-ease-out);
+  }
+  html [data-fx="btn"]:hover::after {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+/* Press: a short, physical push down — faster than the hover on purpose */
+html [data-fx="btn"]:active {
+  transform: translate3d(0, 0, 0) scale(0.97);
+  transition-duration: 80ms;
+}
+
+html [data-fx="btn"]:focus-visible {
+  outline: 1px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+html [data-fx="btn"]:focus-visible::after {
+  opacity: 0.9;
+  transform: scale(1);
+}
+
+/* ── icons inside a button ─────────────────────────────────────────────── */
+/*
+ * <svg data-fx-icon="arrow|external|download|gallery|link|check">
+ * Each kind moves the way its action does: the arrow goes forward, the
+ * external-link icon leaves up-right, the download drops down.
+ */
+html [data-fx="btn"] [data-fx-icon] {
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  transition: transform var(--btn-speed) var(--motion-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html [data-fx="btn"]:hover [data-fx-icon="arrow"]    { transform: translateX(4px); }
+  html [data-fx="btn"]:hover [data-fx-icon="external"] { transform: translate(2px, -2px); }
+  html [data-fx="btn"]:hover [data-fx-icon="download"] { animation: btnIconDrop 900ms var(--motion-ease) infinite; }
+  html [data-fx="btn"]:hover [data-fx-icon="gallery"]  { transform: scale(1.12) rotate(-6deg); }
+  html [data-fx="btn"]:hover [data-fx-icon="link"]     { transform: rotate(-25deg); }
+}
+
+@keyframes btnIconDrop {
+  0%, 100% { transform: translateY(0); }
+  45%      { transform: translateY(3px); }
 }
 
 /* ── solid ───────────────────────────────────────────────────────────── */
@@ -1798,7 +1940,11 @@ html [data-fx="btn"][data-btn="solid"] {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"][data-btn="solid"]:hover { opacity: 0.88; }
+  html [data-fx="btn"][data-btn="solid"]:hover {
+    background: var(--main-text);
+    border-color: var(--main-light);
+    color: var(--text-bright);
+  }
 }
 
 /* ── outline ─────────────────────────────────────────────────────────── */
@@ -1812,6 +1958,7 @@ html [data-fx="btn"][data-btn="outline"] {
   html [data-fx="btn"][data-btn="outline"]:hover {
     color: var(--accent-color);
     border-color: currentColor;
+    background: rgba(var(--accent-color-rgb), 0.06);
   }
 }
 
@@ -1830,9 +1977,9 @@ html [data-fx="btn"][data-btn="ghost"] {
   --btn-size: 1.2rem;
   --btn-pad: 0.6rem 1.4rem;
   --btn-tracking: 1px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.015);
   border: 1px solid var(--btn-border);
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.78);
   font-weight: 700;
 }
 
@@ -1840,7 +1987,7 @@ html [data-fx="btn"][data-btn="ghost"] {
   html [data-fx="btn"][data-btn="ghost"]:hover {
     border-color: var(--accent-color);
     color: var(--accent-color);
-    background: rgba(var(--accent-color-rgb), 0.05);
+    background: rgba(var(--accent-color-rgb), 0.07);
   }
 }
 
@@ -1851,7 +1998,7 @@ html [data-fx="btn"][data-btn="ghost"] {
  * copies from being combinable.
  */
 html [data-fx="btn"][data-tone="main"] {
-  border-color: rgba(var(--main-color-rgb), 0.4);
+  border-color: rgba(var(--main-color-rgb), 0.45);
   color: var(--main-text);
 }
 
@@ -1863,7 +2010,7 @@ html [data-fx="btn"][data-tone="accent"] {
 @media (hover: hover) and (pointer: fine) {
   html [data-fx="btn"][data-tone="main"]:hover {
     border-color: var(--main-color);
-    background: rgba(var(--main-color-rgb), 0.12);
+    background: rgba(var(--main-color-rgb), 0.14);
     color: var(--text-bright);
   }
   html [data-fx="btn"][data-tone="accent"]:hover {
@@ -1871,14 +2018,73 @@ html [data-fx="btn"][data-tone="accent"] {
     background: rgba(var(--accent-color-rgb), 0.12);
     color: var(--text-bright);
   }
+  /* The brackets keep the tone colour even when the text turns white */
+  html [data-fx="btn"][data-tone="main"]:hover::after   { color: var(--main-text); }
+  html [data-fx="btn"][data-tone="accent"]:hover::after { color: var(--accent-color); }
+  html [data-fx="btn"][data-btn="solid"]:hover::after   { color: var(--main-light); }
 }
 
 /* A dashed edge marks an action that opens something in place (a gallery)
    rather than navigating away. */
 html [data-fx="btn"][data-btn-edge="dashed"] { border-style: dashed; }
 
+/*
+ * A finished state — "Link copied". Wins over hover on purpose: the
+ * confirmation is the one thing the user must see, even with the cursor
+ * still on the button.
+ */
+html [data-fx="btn"][data-state="done"],
+html [data-fx="btn"][data-state="done"]:hover {
+  border-color: var(--success);
+  border-style: solid;
+  color: var(--success);
+  background: rgba(var(--success-rgb), 0.1);
+  box-shadow: 0 0 14px rgba(var(--success-rgb), 0.35);
+}
+
+html [data-fx="btn"][data-state="done"] [data-fx-icon] {
+  animation: btnIconPop 420ms var(--motion-ease-out) both;
+}
+
+html [data-fx="btn"][data-state="error"],
+html [data-fx="btn"][data-state="error"]:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(var(--danger-rgb), 0.1);
+  animation: btnShake 360ms var(--motion-ease) 1;
+}
+
+@keyframes btnIconPop {
+  0%   { transform: scale(0.3) rotate(-30deg); opacity: 0; }
+  60%  { transform: scale(1.25) rotate(6deg);  opacity: 1; }
+  100% { transform: scale(1) rotate(0);        opacity: 1; }
+}
+
+@keyframes btnShake {
+  0%, 100% { translate: 0 0; }
+  25%      { translate: -3px 0; }
+  75%      { translate: 3px 0; }
+}
+
+/* Touch screens: no hover state to animate toward, so no sheen or lift —
+   the press scale above is the feedback. */
+@media (hover: none) {
+  html [data-fx="btn"]::before { display: none; }
+}
+
+html[data-tier="low"] [data-fx="btn"]::before { display: none; }
+html[data-tier="low"] [data-fx="btn"]:hover { transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
-  html [data-fx="btn"] { transition: none; }
+  html [data-fx="btn"],
+  html [data-fx="btn"]::after,
+  html [data-fx="btn"] [data-fx-icon] { transition: none; }
+  html [data-fx="btn"]::before { display: none; }
+  html [data-fx="btn"]:hover,
+  html [data-fx="btn"]:active,
+  html [data-fx="btn"]:hover [data-fx-icon] { transform: none; animation: none; }
+  html [data-fx="btn"][data-state] [data-fx-icon],
+  html [data-fx="btn"][data-state] { animation: none; }
 }
 
 /*--------- 18. Modal overlay ---------*/
@@ -1985,11 +2191,26 @@ html [data-fx="tag"] {
 
 /* ── Buttons ───────────────────────────────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"]:hover { box-shadow: var(--glow-main); }
-  html [data-fx="btn"][data-tone="accent"]:hover { box-shadow: var(--glow-accent); }
+  /* The glow plus a faint offset "hard" shadow underneath: the lift on hover
+     reads as the button rising off the page instead of just brightening. */
+  html [data-fx="btn"]:hover {
+    box-shadow: var(--glow-accent), 0 6px 0 -3px rgba(var(--accent-color-rgb), 0.18);
+  }
+  html [data-fx="btn"][data-tone="main"]:hover,
+  html [data-fx="btn"][data-btn="solid"]:hover {
+    box-shadow: var(--glow-main), 0 6px 0 -3px rgba(var(--main-color-rgb), 0.35);
+  }
+  html [data-fx="btn"][data-tone="accent"]:hover {
+    box-shadow: var(--glow-accent), 0 6px 0 -3px rgba(var(--accent-color-rgb), 0.22);
+  }
 }
 
 html [data-fx="btn"]:focus-visible { box-shadow: var(--glow-accent-strong); }
+
+/* The copied/failed confirmation keeps its own colour over every glow above */
+html [data-fx="btn"][data-state="done"]:is(:hover, :focus-visible) {
+  box-shadow: 0 0 14px rgba(var(--success-rgb), 0.35);
+}
 
 /* ── Social icons ──────────────────────────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {

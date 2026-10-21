@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import { TRAILING_SLASH } from "@/app/core/config/site";
 import Image from "next/image";
 import styles from "./page.module.css";
 import anchorStyles from "./BlogCard.module.css";
+import ActionIcon from "./components/ActionIcon";
+import { currentBasePath, useCopyLink } from "./components/useCopyLink";
 
 interface BlogCardProps {
   /* NEW: it was already being passed inside {...item} but wasn't declared, so it was lost.
@@ -47,37 +49,20 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
   const [primaryFailed, setPrimaryFailed] = useState(false);
   const [secondaryFailed, setSecondaryFailed] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
-  const [copied, setCopied] = useState(false);
   const isLongDescription = (description?.length ?? 0) > 140;
+  const { state: copyState, copy } = useCopyLink();
 
-  const copyTimer = useRef<number | undefined>(undefined);
-  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
-
-  const copyLink = useCallback(async () => {
+  const copyLink = useCallback(() => {
     // The link goes to the standalone case page, not the anchor: that's the one with its own title,
     // description and image, so it displays correctly when shared anywhere.
-    const path = normalizeHref(detailPath);
+    //
+    // FIX: the base path now comes from the page's real URL (currentBasePath) instead of
+    // normalizeHref, which guesses "/Portfolio" from NODE_ENV — so the copied link opens
+    // the same site you copied it from, whatever domain or base path it's served on.
+    const path = `${currentBasePath()}${detailPath.startsWith("/") ? detailPath : `/${detailPath}`}`;
     const url = `${window.location.origin}${TRAILING_SLASH ? `${path}/` : path}`;
-
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      // The clipboard API needs a secure context — this fallback works anywhere
-      const field = document.createElement("textarea");
-      field.value = url;
-      field.setAttribute("readonly", "");
-      field.style.position = "fixed";
-      field.style.opacity = "0";
-      document.body.appendChild(field);
-      field.select();
-      document.execCommand("copy");
-      document.body.removeChild(field);
-    }
-
-    setCopied(true);
-    window.clearTimeout(copyTimer.current);
-    copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
-  }, [detailPath, normalizeHref]);
+    void copy(url);
+  }, [detailPath, copy]);
 
   return (
     <article
@@ -155,28 +140,46 @@ const BlogCard: React.FC<BlogCardProps> = React.memo(({
         )}
 
         <div className={styles.cardActions}>
-          <Link href={detailPath} data-fx="btn" data-btn="ghost">Open case</Link>
+          {/* The primary action of the card gets the filled style — it was the same faint ghost
+              as everything next to it, so nothing told you where to click first. */}
+          <Link href={detailPath} data-fx="btn" data-btn="solid" className={styles.primaryAction}>
+            Open case <ActionIcon name="arrow" />
+          </Link>
           {/* Not every case has a PDF — six of them have image-only evidence. Previously the buttons
               were always shown and led to a 404. */}
           {href && (
             <>
-              <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">View PDF</a>
-              <a href={normalizeHref(href)} download data-fx="btn" data-btn="ghost" data-tone="main">Download</a>
+              <a href={normalizeHref(href)} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">
+                <ActionIcon name="external" /> View PDF
+              </a>
+              <a href={normalizeHref(href)} download data-fx="btn" data-btn="ghost" data-tone="main">
+                <ActionIcon name="download" /> Download
+              </a>
             </>
           )}
           {hasScreenshots && (
             <button type="button" onClick={() => onOpenGallery(title, screenshots, 0)} data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed">
-              View All Screenshots
+              <ActionIcon name="gallery" /> Screenshots
+              <span className={styles.btnCount}>{screenshots.length}</span>
             </button>
           )}
-          {/* NEW: a direct link to this card alone — useful when sending a specific case
-              in an interview instead of "scroll down a bit" */}
+          {/* FIX: this button had no data-fx="btn", so the global `button {}` rule styled it —
+              a red-tinted, round-cornered pill in the body font, sitting in a row of sharp
+              mono buttons. It's the same primitive as its neighbours now. */}
           <button
             type="button"
             onClick={copyLink}
-            className={copied ? `${anchorStyles.copyAction} ${anchorStyles.copied}` : anchorStyles.copyAction}
+            data-fx="btn"
+            data-btn="ghost"
+            data-state={copyState === "idle" ? undefined : copyState}
+            className={anchorStyles.copyAction}
+            aria-label={`Copy link to ${title}`}
           >
-            {copied ? "Link copied" : "Copy link"}
+            {/* key: remounting the icon replays its pop-in each time the state changes */}
+            <ActionIcon key={copyState} name={copyState === "done" ? "check" : copyState === "error" ? "alert" : "link"} />
+            <span aria-live="polite">
+              {copyState === "done" ? "Copied!" : copyState === "error" ? "Copy failed" : "Copy link"}
+            </span>
           </button>
         </div>
       </div>
