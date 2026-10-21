@@ -192,6 +192,18 @@ export default function CyberBackground() {
     const tier = document.documentElement.dataset.tier;
     const fpsCap = tier === "mid" ? 24 : 30;
     const frameBudget = 1000 / fpsCap;
+    /*
+     * PERF: two speeds. The full cap only matters while the pointer is
+     * moving and bubbles are being pushed around (fast motion needs frames).
+     * The rest of the time — which is most of the time: reading, scrolling
+     * with the wheel — they only drift at ~13px/s, and 15fps is
+     * indistinguishable from 30 at that speed. Every frame writes 20 inline
+     * transforms, so halving the idle rate halves the background's
+     * style-recalc cost on every page for every desktop visitor.
+     */
+    const idleBudget = 1000 / 15;
+    const ACTIVE_MS = 1500;
+    let lastMove = -Infinity;
 
     let w = window.innerWidth;
     let h = window.innerHeight;
@@ -237,6 +249,7 @@ export default function CyberBackground() {
 
     const onMove = (e: PointerEvent) => {
       mx = e.clientX;
+      lastMove = performance.now();
       my = e.clientY;
     };
     const onLeave = () => {
@@ -259,7 +272,8 @@ export default function CyberBackground() {
        * the next frame. What we save is **the math and the DOM
        * writes**, which are the real cost, not the call itself.
        */
-      if (now - lastFrame < frameBudget) {
+      const budget = now - lastMove < ACTIVE_MS ? frameBudget : idleBudget;
+      if (now - lastFrame < budget) {
         raf = requestAnimationFrame(tick);
         return;
       }
@@ -272,7 +286,9 @@ export default function CyberBackground() {
        * for a moment, the time delta is huge and the bubbles jump half the screen in a single
        * frame. The cap makes the worst case three steps instead of one.
        */
-      const dt = Math.min(3, (now - last) / 16.67);
+      // Cap at 4.5, not 3: at the 15fps idle rate a frame is ~4 units long, and a cap
+      // of 3 would quietly slow the drift down by a quarter whenever the mouse rests.
+      const dt = Math.min(4.5, (now - last) / 16.67);
       last = now;
 
       for (let i = 0; i < COUNT; i++) {

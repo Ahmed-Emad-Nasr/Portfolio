@@ -143,8 +143,8 @@
   margin-bottom: 2.2rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(var(--ui-blur));
-  backdrop-filter: blur(var(--ui-blur));
+  -webkit-backdrop-filter: var(--ui-backdrop);
+  backdrop-filter: var(--ui-backdrop);
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.1s;
 }
@@ -237,24 +237,50 @@
 }
 
 /*
- * Now it's just the cursor (the bar) — without a background.
+ * The typing cursor (the bar).
  *
- * It still uses the same width animation so its left edge stays exactly at the edge of
- * the revealed text, in sync with the clip-path above (same timings
- * and the same steps(14)). The element is fully transparent, so only the bar is visible.
+ * PERF + BUG FIX. This used to animate `width` (to move the bar with the
+ * reveal) and `border-left` (to blink it):
+ *
+ *   · `width` forces a layout of the line on every animation frame,
+ *     forever, on every device — phones included, since the ticker is kept
+ *     on the low tier on purpose. That was all of the hero's idle layout cost.
+ *   · the blink never worked: `cursor` had only a `to` keyframe with
+ *     step-end timing, which jumps to the end value exactly when the
+ *     iteration restarts — so the bar stayed transparent 100% of the time.
+ *     The page was paying for a layout-per-frame animation of an invisible
+ *     element.
+ *
+ * Now the element has a fixed size and travels with `transform` (same
+ * 16s timeline, same steps(14), so it still sits on the reveal edge), and
+ * blinks with `opacity`. Both run on the compositor: no layout, no paint.
+ *
+ * Geometry is unchanged: the box is the old full width (100% + 7px) with
+ * its right edge at -2px, so translateX(0) is the old "width: full"
+ * position (text hidden, bar at the start) and translateX(100% - 3px) the
+ * old "width: 0" position (text shown, bar after the last letter).
  */
 .typingHighlight::after {
-  content: " ";
+  content: "";
   position: absolute;
-  width: calc(100% + 8px);
-  height: 100%;
-  border-left: 3px solid transparent;
+  top: 0;
   right: -2px;
+  width: calc(100% + 7px);
+  height: 100%;
+  border-left: 3px solid var(--main-color);
   pointer-events: none;
-  animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite;
+  animation:
+    caretBlink var(--typing-cursor) step-end infinite,
+    typingBar var(--typing-typing) steps(14) infinite;
 }
 
-@keyframes cursor { to { border-left: 3px solid var(--main-color); } }
+@keyframes caretBlink { 50% { opacity: 0; } }
+
+/* Bar position — exactly the same timings as typingReveal below */
+@keyframes typingBar {
+  10%, 15%, 30%, 35%, 50%, 55%, 70%, 75%, 90%, 95% { transform: translateX(calc(100% - 3px)); }
+  5%, 20%, 25%, 40%, 45%, 60%, 65%, 80%, 85% { transform: translateX(0); }
+}
 
 /* NOTE: "Noob Malware Analyst" was in this list. It reads as self-deprecating
    humour to a friend and as a disqualifier to a hiring manager skimming the
@@ -265,11 +291,6 @@
   0%, 20% { content: "Information Security Engineer"; } 21%, 40% { content: "Cybersecurity Engineer"; }
   41%, 61% { content: "SOC/DFIR Engineer"; } 62%, 80% { content: "Malware Analyst"; }
   81%, 100% { content: "Cybersecurity Instructor"; }
-}
-/* Bar position — exactly the same timings as the reveal below */
-@keyframes typing {
-  10%, 15%, 30%, 35%, 50%, 55%, 70%, 75%, 90%, 95% { width: 0; }
-  5%, 20%, 25%, 40%, 45%, 60%, 65%, 80%, 85% { width: calc(100% + 7px); }
 }
 
 /* Text reveal. inset(0 100% 0 0) = fully hidden, inset(0) = fully visible. */
@@ -287,8 +308,8 @@
   margin-bottom: 2.4rem;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.02);
-  -webkit-backdrop-filter: blur(var(--ui-blur));
-  backdrop-filter: blur(var(--ui-blur));
+  -webkit-backdrop-filter: var(--ui-backdrop);
+  backdrop-filter: var(--ui-backdrop);
   animation: fadeInUp 0.9s var(--motion-ease) both;
   animation-delay: 0.46s;
 }
@@ -716,7 +737,7 @@
   .typingText { animation: textDrift var(--typing-textDrift) ease-in-out infinite !important; }
   .typingHighlight::before { animation: words var(--typing-words) infinite !important; }
   .typingHighlight::after {
-    animation: cursor var(--typing-cursor) step-end infinite, typing var(--typing-typing) steps(14) infinite !important;
+    animation: caretBlink var(--typing-cursor) step-end infinite, typingBar var(--typing-typing) steps(14) infinite !important;
   }
   .cvBtn:hover svg { animation: none !important; }
 }

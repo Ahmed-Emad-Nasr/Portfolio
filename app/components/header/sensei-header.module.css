@@ -62,8 +62,8 @@
   background: var(--card-bg);
   border: 1px solid var(--card-border-color);
   border-radius: var(--radius-card);
-  -webkit-backdrop-filter: blur(var(--ui-blur)) saturate(130%);
-  backdrop-filter: blur(var(--ui-blur)) saturate(130%);
+  -webkit-backdrop-filter: var(--ui-backdrop-glass);
+  backdrop-filter: var(--ui-backdrop-glass);
 
   /*
    * Floats away from the screen edges like any card, not stuck to both sides.
@@ -228,8 +228,8 @@
      * on hover.
      */
     background: var(--card-bg-hover);
-    -webkit-backdrop-filter: blur(var(--ui-blur));
-    backdrop-filter: blur(var(--ui-blur));
+    -webkit-backdrop-filter: var(--ui-backdrop);
+    backdrop-filter: var(--ui-backdrop);
     border: 1px solid var(--card-border-color);
     border-radius: var(--radius-card);
     margin-top: 0.5rem;

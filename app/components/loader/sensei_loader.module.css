@@ -88,7 +88,19 @@
     transparent 10px,
     transparent 18px
   );
-  filter: blur(0.2px);
+  /*
+   * PERF: this was `filter: blur(0.2px)` + an animated background-position on
+   * a full-screen layer — a full-screen repaint *and* re-filter on every
+   * frame, during page load, when the browser is busiest decoding images and
+   * parsing JS. (The file's own ground rule above says transform/opacity
+   * only; this one layer had slipped through.)
+   *
+   * Now the layer is 240px wider on the left and slides with transform:
+   * the same 240px / 12s drift, painted once, moved by the compositor. The
+   * 0.2px blur was below what a screen can show and is gone.
+   */
+  inset: 0 0 0 -240px;
+  will-change: transform;
   animation: speedDrift 12s linear infinite;
 }
 
@@ -423,8 +435,8 @@
 .sideLabelRight { right: 2.2rem; font-family: var(--font-jp); }
 
 @keyframes speedDrift {
-  from { background-position: 0 0; }
-  to { background-position: 240px 0; }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(240px, 0, 0); }
 }
 
 /* ── Mobile ────────────────────────────────────────────────────────── */

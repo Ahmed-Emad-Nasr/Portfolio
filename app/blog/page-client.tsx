@@ -59,7 +59,6 @@ export default function BlogPageClient({
 }: BlogPageClientProps) {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
-  const [scrolled, setScrolled] = useState(false);
 
   // ── Filter state ────────────────────────────────────────────────────────
   const [query, setQuery] = useState("");
@@ -169,23 +168,18 @@ export default function BlogPageClient({
     if (screenshots.length) setGallery({ title, screenshots, index: Math.min(Math.max(index, 0), screenshots.length - 1) });
   }, []);
 
-  // Scroll blur effect: toggles a subtle backdrop blur between background and content for smoothness
-  useEffect(() => {
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY || window.pageYOffset;
-        setScrolled(y > 24);
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+  /*
+   * PERF: the "scroll blur" overlay lived here — a scroll listener toggling a
+   * full-screen backdrop-filter (blur + saturate) between the animated
+   * background and the content. Measured on the built site, that one layer
+   * plus the card blurs cut the blog to ~28 frames per scroll pass on a fast
+   * desktop (vs ~140 without), because every backdrop-filter forces the
+   * compositor to re-render everything behind it on every frame the
+   * background moves. The visual difference with it removed: an average of
+   * ~1 brightness level out of 255 — the bubbles are soft gradients already,
+   * blurring them by 4px changes nothing you can see. So it went, listener
+   * and all.
+   */
 
   // ── Deep link (#case-<id>) ──────────────────────────────────────────────
   // The browser tries to jump to the hash before the cards are mounted, so it silently fails.
@@ -221,7 +215,6 @@ export default function BlogPageClient({
 
   return (
     <main id="main-content" className={styles.page}>
-      <div className={styles.scrollBlurOverlay} data-active={scrolled}></div>
       <LoadingScreen />
       <AppBar />
       

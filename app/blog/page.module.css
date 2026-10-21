@@ -23,6 +23,9 @@
   content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.06; z-index: 0;
   background: repeating-linear-gradient( 0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.8) 2px, rgba(0, 229, 255, 0.8) 4px );
 }
+/* Perf: a full-screen texture layer at 6% opacity. On a phone (DPR 3) that is
+   a ~12MB GPU layer for an effect you can hardly see at that size. */
+:global(html[data-tier="low"]) .page::before { display: none; }
 
 /*
  * .block is rendered on a literal <section> element (see BlogPdfLibrarySection.tsx
@@ -47,26 +50,7 @@
 .blockHeading h2::before { content: "> "; color: var(--main-text); }
 .blockHeading p { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.5rem; }
 
-/* Scroll blur overlay (sits between background and content) */
-/*
- * This used to have a transition on backdrop-filter itself — repainting a
- * full-screen blur on every frame for 300ms. backdrop-filter is the most
- * expensive property in CSS; animating it is the most expensive thing you
- * can do with it.
- *
- * The transition is on opacity alone now (a compositor property, free) and
- * the blur value is fixed, coming from --ui-blur — so this overlay falls
- * under the device budget like every other glass surface. On a phone
- * --ui-blur is 0px and the effect switches itself off.
- */
-.scrollBlurOverlay {
-  position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  backdrop-filter: blur(var(--ui-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--ui-blur)) saturate(120%);
-  transition: opacity 300ms var(--motion-ease);
-  opacity: 0;
-}
-.scrollBlurOverlay[data-active="true"] { opacity: 0.9; }
+/* The scroll blur overlay was removed — see the note in page-client.tsx. */
 
 /* =========================================
    2. ANIMATIONS
@@ -159,15 +143,35 @@
    and .content (experience-section), so the blog stops reading as a
    different, rounder site than the rest of the portfolio. */
 /* All appearance comes from html [data-fx="card"] in globals.css.
-   backdrop-filter stays here because it is specific to the blog cards —
-   they are the only ones with a translucent background behind them. */
+   The backdrop-filter reads --card-backdrop, which is `none` on every tier
+   now (see globals.css) — kept as a token so it can be turned back on in
+   one place. */
 .pdfCard, .playlistCard, .videoCard, .insightCard, .youtubeHub {
-  backdrop-filter: blur(var(--card-blur));
-  -webkit-backdrop-filter: blur(var(--card-blur));
+  backdrop-filter: var(--card-backdrop);
+  -webkit-backdrop-filter: var(--card-backdrop);
   display: grid;
 }
 
 .playlistCard, .videoCard { display: flex; flex-direction: column; gap: 1.2rem; }
+
+/*
+ * Perf: the browser skips style, layout and paint for every card that is
+ * off screen. The blog renders ~75 cards (38 cases, each with screenshots,
+ * plus the video and playlist cards) and a visitor sees two or three at a
+ * time — all of them were being laid out and painted on load and on every
+ * resize.
+ *
+ * `auto` in contain-intrinsic-size makes the browser remember each card's
+ * real height once it has been rendered, so the scrollbar does not jump when
+ * cards come in and out. The deep link (#case-…) still works: cards above
+ * the target stay skipped at their placeholder height, so nothing shifts
+ * under it.
+ */
+.pdfCard, .playlistCard, .videoCard {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
+}
+.playlistCard, .videoCard { contain-intrinsic-size: auto 420px; }
 .caseCardLarge { grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 3rem; }
 .caseCardTextOnly { grid-template-columns: minmax(0, 1fr); }
 

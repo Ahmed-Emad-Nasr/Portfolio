@@ -13,7 +13,14 @@
     radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 56%),
     radial-gradient(circle at center, rgba(var(--main-color-rgb), 0.18), transparent 70%);
   box-shadow: none; /* Changed here */
-  mix-blend-mode: screen;
+  /*
+   * PERF: `mix-blend-mode: screen` was here. A blend mode on a layer that
+   * moves every frame makes the compositor re-blend it against everything
+   * underneath on every mouse move, and forces the page behind it into an
+   * isolated group. Over this site's near-black background, screen-blending
+   * a ring of 6–28% alpha tints is visually the same as normal alpha
+   * blending — so the cost bought nothing you could see.
+   */
   will-change: transform, opacity;
 }
 
