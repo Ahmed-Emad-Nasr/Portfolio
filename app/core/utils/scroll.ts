@@ -43,9 +43,8 @@
 
 import type Lenis from "lenis";
 
-/* The instance is registered by LenisGsapBridge inside <ReactLenis>. It stays null
-   on the server, and on weak devices (tier="low" never mounts Lenis) —
-   and in both cases the functions below fall back to native behaviour. */
+/* The instance is registered by SmoothScroll inside <ReactLenis>. It stays null
+   on the server, and the functions below fall back to native behaviour. */
 let lenis: Lenis | null = null;
 
 export function registerLenis(instance: Lenis | null): void {

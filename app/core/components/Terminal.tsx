@@ -11,11 +11,12 @@
  * All lazy, so it takes no bytes from the main bundle.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { normalizePublicHref } from "@/app/blog/blog-utils";
-import styles from "./Terminal.module.css";
 
 type Line = { id: number; text: string; kind: "in" | "out" | "err" | "dim" };
 
@@ -26,6 +27,14 @@ const BANNER = [
 
 /** Maximum number of lines kept — without it the DOM grows unbounded */
 const MAX_LINES = 300;
+
+/* One class per output line kind */
+const LINE_CLASS: Record<string, string> = {
+  in: "text-foreground whitespace-pre-wrap [word-break:break-word]",
+  out: "text-foreground/65 whitespace-pre-wrap [word-break:break-word]",
+  err: "text-primary whitespace-pre-wrap",
+  dim: "text-foreground/40 whitespace-pre-wrap",
+};
 
 export default function Terminal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
@@ -249,8 +258,11 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div
-      data-fx="overlay" style={{ "--scrim": "rgba(0, 0, 0, 0.88)" } as CSSProperties}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[300] flex items-start justify-center bg-background/70 px-4 pt-[12vh] backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Terminal"
@@ -258,29 +270,42 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.window} onClick={() => inputRef.current?.focus()}>
-        <div className={styles.titleBar}>
-          <span className={styles.dot} aria-hidden="true" />
-          <span className={styles.windowTitle}>3omda@portfolio: ~</span>
-          <button type="button" className={styles.close} onClick={onClose} aria-label="Close terminal">
-            ✕
+      <motion.div
+        initial={{ opacity: 0, y: -12, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.22 }}
+        className="relative flex h-[min(520px,76vh)] w-full max-w-2xl flex-col overflow-hidden border border-foreground/10 bg-surface shadow-2xl"
+        onClick={() => inputRef.current?.focus()}
+      >
+        <div className="absolute top-0 left-0 h-[2px] w-full bg-gradient-to-r from-primary via-primary/40 to-transparent" aria-hidden="true" />
+        <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-3">
+          <span className="h-2 w-2 bg-primary" aria-hidden="true" />
+          <span className="flex-1 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/50">3omda@portfolio: ~</span>
+          <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">端末</span>
+          <button
+            type="button"
+            className="border border-foreground/15 p-1.5 text-foreground/40 transition-colors hover:border-primary hover:text-primary"
+            onClick={onClose}
+            aria-label="Close terminal"
+          >
+            <X size={14} />
           </button>
         </div>
 
-        <div ref={bodyRef} className={styles.body}>
+        <div ref={bodyRef} className="flex-1 overflow-y-auto overscroll-contain px-4 py-3.5 font-mono text-[13px] leading-[1.65] max-sm:text-xs" data-lenis-prevent>
           {lines.map((line) => (
-            <p key={line.id} className={styles[line.kind]}>
+            <p key={line.id} className={LINE_CLASS[line.kind]}>
               {line.text}
             </p>
           ))}
 
-          <div className={styles.inputRow}>
-            <span className={styles.prompt} aria-hidden="true">
+          <div className="mt-0.5 flex items-baseline gap-2">
+            <span className="shrink-0 text-accent max-sm:text-[11px]" aria-hidden="true">
               3omda@portfolio:~$
             </span>
             <input
               ref={inputRef}
-              className={styles.input}
+              className="min-w-0 flex-1 border-0 bg-transparent text-[16px] text-foreground outline-none [font-family:inherit]"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={onKeyDown}
@@ -292,7 +317,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             />
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

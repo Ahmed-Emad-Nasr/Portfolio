@@ -15,6 +15,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import CaseArticle from "./CaseArticle";
+import { PageShell } from "@/app/components/shared/kit";
 import { absoluteUrl, caseUrl } from "@/app/core/config/site";
 import { caseAttackMapping, TECHNIQUES } from "@/app/core/config/attack";
 
@@ -160,7 +161,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
+          { "@type": "ListItem", position: 2, name: "Case library", item: `${absoluteUrl("/")}#cases` },
           { "@type": "ListItem", position: 3, name: item.title, item: caseUrl(item.id) },
         ],
       },
@@ -170,6 +171,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
+      <PageShell>
       <CaseArticle
         item={item}
         screenshots={screenshots}
@@ -178,6 +180,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         techniques={techniquesFor(item.id)}
         related={relatedTo(item)}
       />
+      </PageShell>
     </>
   );
 }

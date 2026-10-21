@@ -19,7 +19,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { startHere } from "@/app/core/config/start-here";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import styles from "./not-found.module.css";
+import { Home, FolderSearch, FileText } from "lucide-react";
+import {
+  statusActions, statusCode, statusInner, statusLede, statusPage, statusReport, statusTitle,
+} from "@/app/core/status-page-ui";
+import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
 
 export const metadata: Metadata = {
   title: "Page not found — Ahmed Emad Nasr",
@@ -32,46 +36,68 @@ const SUGGESTIONS = startHere.filter((entry) => KNOWN.has(entry.id)).slice(0, 3)
 
 export default function NotFound() {
   return (
-    <main className={styles.page} id="main-content">
-      <div className={styles.inner}>
-        <p className={styles.code} aria-hidden="true">404</p>
+    <PageShell>
+      <section className={statusPage}>
+        <KanjiWatermark chars="迷子" side="right" />
+        <div className={statusInner}>
+          <div className="flex items-center gap-4 mb-2">
+            <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
+            <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Not found</span>
+            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">迷子</span>
+          </div>
+          <p className={statusCode} aria-hidden="true">404</p>
 
-        <h1 className={styles.title}>This page doesn&apos;t exist</h1>
-        <p className={styles.lede}>
-          The link may be outdated, or the address may have a typo. Everything
-          below still works.
-        </p>
+          <h1 className={statusTitle}>This page doesn&apos;t <span className="text-primary italic">exist.</span></h1>
+          <p className={statusLede}>
+            The link may be outdated, or the address may have a typo. Everything
+            below still works.
+          </p>
 
-        <nav className={styles.actions} aria-label="Main destinations">
-          <Link href="/" data-fx="btn" data-btn="solid">Portfolio</Link>
-          <Link href="/blog" data-fx="btn" data-btn="outline">Case library</Link>
-          <Link href="/cv" data-fx="btn" data-btn="outline">CV</Link>
-        </nav>
+          <nav className={statusActions} aria-label="Main destinations">
+            <Link href="/" className={ctaPrimary}>
+              <Home size={16} /> Portfolio
+            </Link>
+            <Link href="/#cases" className={ctaSecondary}>
+              <FolderSearch size={14} className="text-primary" /> Case library
+            </Link>
+            <Link href="/cv" className={ctaSecondary}>
+              <FileText size={14} className="text-primary" /> CV
+            </Link>
+          </nav>
 
-        {SUGGESTIONS.length > 0 && (
-          <section className={styles.suggest} aria-labelledby="nf-suggest">
-            <h2 className={styles.suggestTitle} id="nf-suggest">
-              Or start with one of these
-            </h2>
-            <ul className={styles.suggestList} data-links="inline">
-              {SUGGESTIONS.map((entry) => (
-                <li key={entry.id}>
-                  <Link href={`/blog/${entry.id}`}>{entry.label}</Link>
-                  <span className={styles.suggestWhy}>{entry.why}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+          {SUGGESTIONS.length > 0 && (
+            <section aria-labelledby="nf-suggest">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-6 h-[2px] bg-primary" aria-hidden="true" />
+                <h2 id="nf-suggest" className="font-mono text-[10px] text-primary tracking-[0.35em] uppercase font-bold">
+                  Or start with one of these
+                </h2>
+              </div>
+              <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {SUGGESTIONS.map((entry) => (
+                  <li key={entry.id}>
+                    <Link
+                      href={`/blog/${entry.id}`}
+                      className="group spotlight relative flex h-full flex-col bg-surface/60 border border-foreground/5 p-6 hover:border-primary/40 transition-colors duration-500"
+                    >
+                      <span className="font-display text-lg font-black uppercase tracking-tight text-foreground group-hover:text-primary transition-colors duration-300 mb-3">
+                        {entry.label}
+                      </span>
+                      <span className="text-sm text-foreground/55 font-light leading-relaxed">{entry.why}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
-        <p className={styles.report}>
-          Landed here from a link on this site?{" "}
-          <a href="mailto:ahmed.em.nasr@gmail.com?subject=Broken%20link%20on%20portfolio">
-            Tell me which one
-          </a>{" "}
-          and I&apos;ll fix it.
-        </p>
-      </div>
-    </main>
+          <p className={statusReport}>
+            Landed here from a link on this site?{" "}
+            <a href="mailto:ahmed.em.nasr@gmail.com?subject=Broken%20link%20on%20portfolio">Tell me which one</a>{" "}
+            and I&apos;ll fix it.
+          </p>
+        </div>
+      </section>
+    </PageShell>
   );
 }

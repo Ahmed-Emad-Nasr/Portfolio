@@ -36,72 +36,22 @@ export type Certification = {
   verifyUrl?: string;
   /** Image number in image_display/{N}.webp, if known */
   galleryIndex?: number;
+  /** false = listed on the site but not on the CV page (it isn't in the PDF) */
+  cv?: boolean;
 };
 
 /** Ordered newest to oldest — same order as the CV */
+/* Order and wording follow the CV PDF. */
 export const certifications: readonly Certification[] = [
-  {
-    id: "ejpt-v2",
-    name: "eLearnSecurity Junior Penetration Tester v2",
-    shortName: "eJPT v2",
-    issuer: "INE Security",
-    year: 2026,
-    // verifyUrl: "https://certs.ine.com/…",
-  },
-  {
-    id: "ccep",
-    name: "Certified Cybersecurity Educator Professional",
-    shortName: "CCEP",
-    issuer: "Red Team Leaders",
-    year: 2026,
-  },
-  {
-    id: "rh124",
-    name: "Red Hat System Administration I (RH124)",
-    shortName: "RH124",
-    issuer: "Red Hat",
-    year: 2026,
-  },
-  {
-    id: "malware-analysis-fundamentals",
-    name: "Malware Analysis Fundamentals",
-    issuer: "ITI Mahara-Tech",
-    year: 2025,
-  },
-  {
-    // From the CV — it was completely missing from the site.
-    id: "thm-soc-l1-l2",
-    name: "SOC Level 1 & SOC Level 2 Learning Paths",
-    issuer: "TryHackMe",
-    year: 2025,
-  },
-  {
-    id: "cti-101",
-    name: "Cyber Threat Intelligence 101",
-    issuer: "arcX",
-    year: 2025,
-  },
-  {
-    id: "ccna",
-    name: "Cisco Certified Network Associate (CCNA 200-301)",
-    shortName: "CCNA",
-    issuer: "Cisco Systems",
-    year: 2024,
-  },
-  {
-    id: "hcia-cloud",
-    name: "HCIA-Cloud Computing V5.0",
-    shortName: "HCIA-Cloud",
-    issuer: "Huawei",
-    year: 2024,
-  },
-  {
-    id: "hcia-datacom",
-    name: "HCIA-Datacom V1.0",
-    shortName: "HCIA-Datacom",
-    issuer: "Huawei",
-    year: 2023,
-  },
+  { id: "ejpt-v2", name: "eLearnSecurity Junior Penetration Tester v2", shortName: "eJPT v2", issuer: "INE", year: 2026 },
+  { id: "ccep", name: "Certified Cybersecurity Educator Professional", shortName: "CCEP", issuer: "Red Team Leaders", year: 2026 },
+  { id: "rh124", name: "Red Hat System Administration I (RH124)", shortName: "RH124", issuer: "Red Hat", year: 2026 },
+  { id: "hcia-datacom", name: "HCIA-Datacom V1.0 & HCCDA-Tech Essentials", shortName: "HCIA-Datacom", issuer: "Huawei", year: 2025 },
+  { id: "thm-soc-l1-l2", name: "SOC Level 1 & SOC Level 2 Learning Paths", issuer: "TryHackMe", year: 2025 },
+  { id: "malware-analysis-fundamentals", name: "Malware Analysis Fundamentals", issuer: "Mahara-Tech (ITI)", year: 2025 },
+  { id: "cti-101", name: "Cyber Threat Intelligence 101", issuer: "arcX", year: 2025 },
+  { id: "ccna", name: "Cisco Certified Network Associate (CCNA 200-301)", shortName: "CCNA", issuer: "Cisco Systems", year: 2024 },
+  { id: "hcia-cloud", name: "HCIA-Cloud Computing V5.0", shortName: "HCIA-Cloud", issuer: "Huawei", year: 2024, cv: false },
 ];
 
 /*

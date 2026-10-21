@@ -109,5 +109,5 @@ export const skillGroups: readonly SkillGroup[] = [
 
 export const languages = [
   { name: "Arabic", level: "Native" },
-  { name: "English", level: "Professional working proficiency" },
+  { name: "English", level: "Professional Working Proficiency" },
 ] as const;

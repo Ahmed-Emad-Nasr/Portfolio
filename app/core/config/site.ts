@@ -50,3 +50,11 @@ export const absoluteUrl = (path: string): string => {
 
 /** A case page's URL — the only place this shape is defined */
 export const caseUrl = (id: string): string => absoluteUrl(`/blog/${id}`);
+
+/** The share card (public/og-image.png, made from scripts/og/og-image.html) */
+export const OG_IMAGE = {
+  url: `${SITE_BASE_URL}/og-image.png`,
+  width: 1200,
+  height: 630,
+  alt: "Ahmed Emad Nasr — SOC Analyst & Incident Responder",
+};

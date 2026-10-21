@@ -35,7 +35,7 @@ export default function GlobalError({
           justifyContent: "center",
           gap: "1rem",
           padding: "2rem",
-          background: "#000",
+          background: "#080808",
           color: "#fff",
           fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
           textAlign: "center",

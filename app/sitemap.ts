@@ -41,12 +41,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: absoluteUrl("/blog"),
-      lastModified: latestCaseDate,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
       // The HTML CV page. Higher priority than the PDF: Google indexes the page
       // better, ATS systems read it better, and it is built from the same site
       // config so it cannot go stale.

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { normalizePublicHref } from "@/app/core/config/shared";
 
 // Required with output: "export" — exactly like sitemap.ts and robots.ts.
 // Without it, next build fails during "Collecting page data" with:
@@ -24,10 +25,13 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "3omda",
     description:
       "SOC operations, incident response, digital forensics, and malware analysis case reports.",
-    start_url: "/",
+    /* The site lives under /Portfolio on GitHub Pages: "/" would open the
+       github.io root from an installed app */
+    start_url: normalizePublicHref("/"),
+    scope: normalizePublicHref("/"),
     display: "standalone",
-    background_color: "#000000",
-    theme_color: "#000000",
+    background_color: "#080808",
+    theme_color: "#080808",
     /*
      * The sizes Android asks for are 192 and 512. This image is square
      * (560×560) so it works as an icon, but it is not the ideal size.
@@ -39,7 +43,7 @@ export default function manifest(): MetadataRoute.Manifest {
      */
     icons: [
       {
-        src: "/Assets/art-gallery/Images/logo/3omda.webp",
+        src: normalizePublicHref("Assets/art-gallery/Images/logo/3omda.webp"),
         sizes: "560x560",
         type: "image/webp",
       },

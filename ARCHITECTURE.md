@@ -12,10 +12,37 @@ problem, and several were mistakes that got fixed.
 |---|---|
 | Framework | Next.js, App Router |
 | Language | TypeScript, React |
-| Styling | CSS Modules + one global stylesheet |
+| Styling | Tailwind CSS v4 — Sensei-Dev design system (see "Design" below) |
 | Animation | CSS transitions, one shared IntersectionObserver |
 | Output | `output: "export"` — static HTML, no server |
 | Hosting | GitHub Pages under `/Portfolio` |
+
+### Design
+
+The visual design, motion and component structure are the Neo-Samurai theme
+from Mostafa Mahmoud's **Sensei-Dev** portfolio
+(github.com/MostafaSensei106/Sensei-Dev, GPL-3.0 — same licence as this repo),
+used unchanged; the content is this site's own.
+
+- **Stack:** Tailwind CSS v4 (utility classes in the JSX, tokens in `@theme`
+  in `app/globals.css`), framer-motion, GSAP ScrollTrigger, Lenis smooth
+  scroll, next-themes (dark default + light "washi" theme with the water-drop
+  transition), lucide-react, yet-another-react-lightbox. Fonts are
+  self-hosted through @fontsource.
+- **Home page:** `app/page.tsx` composes the sections in `app/components/`
+  (home, services, experience, art-gallery, header). All their content comes
+  from `app/core/config/portfolio-data.ts`, which reads the existing config
+  files (experience, certifications, achievements, skills, projects, cases).
+- **One page:** the case library and the YouTube hub are the last sections
+  of the home page (`#cases`, `#videos`, `components/cases/`), computed at
+  build time in `core/config/library-data.ts` and paged six cards at a time.
+  `/blog` only forwards old links to `/#cases` (keeping `?q=` filters and
+  `#case-…` anchors); every case still has its own page at `/blog/<id>`.
+- **Other pages** (case pages, CV, privacy, terms, 404) use
+  `app/components/shared/kit.tsx`: the same classes and building blocks,
+  copied from the original components, plus `PageShell` (nav + footer bar).
+- **Kept from this site:** the terminal (type `3omda`), the keyboard
+  shortcuts (`?`, `/`, `g` + key), the case search inside the command palette.
 
 **The static-export constraint drives most of the architecture.** There is no
 server at runtime. Every decision below follows from that:
@@ -40,7 +67,7 @@ app/
 ├── error.tsx             Route error boundary
 ├── global-error.tsx      Layout error boundary (last resort)
 ├── not-found.tsx         404
-├── globals.css           Tokens, reset, motion budget, card system
+├── globals.css           Tailwind setup, tokens, reset, motion budget, card system, effects
 ├── sitemap.ts            Generated at build
 ├── robots.ts             Generated at build
 ├── manifest.ts           Generated at build
@@ -72,7 +99,7 @@ app/
 │   ├── page.tsx          Index (Server)
 │   ├── page-client.tsx   Index shell (Client)
 │   ├── [slug]/           Case detail — generateStaticParams
-│   ├── blog_header/      Nav (imports the main header's CSS module)
+│   ├── blog_header/      Nav (shares components/header/header-ui.ts with the main header)
 │   ├── components/       Blog-only sections
 │   └── BlogCard.tsx
 │
@@ -260,8 +287,8 @@ alive.
 ## 6. The card system
 
 **All cards in the site are styled from one place:** section 14 of
-`globals.css`. No CSS module contains card borders, backgrounds, radii,
-padding, or hover behaviour.
+`globals.css`. No component sets card borders, backgrounds, radii,
+padding, or hover behaviour in its own classes.
 
 ### Usage
 
@@ -308,9 +335,9 @@ costs nothing; changing a border colour triggers paint. It also lets the line
 *draw in* rather than appear.
 
 **The selector is `html [data-fx="card"]`, not `[data-fx="card"]`.** An
-attribute selector alone has specificity `(0,1,0)` — identical to any class
-in a CSS module. Which one wins would depend on stylesheet load order, which
-Next does not guarantee. Prefixing `html` makes it `(0,1,1)` and it always
+attribute selector alone has specificity `(0,1,0)` — identical to any single
+class. When the site still used CSS Modules, which one won depended on
+stylesheet load order, which Next does not guarantee. Prefixing `html` makes it `(0,1,1)` and it always
 wins. The conflicting module declarations were removed as well; the
 specificity bump is a safety net for cards added later.
 
@@ -453,7 +480,7 @@ confirming the `images` config in `next.config`.
 node scripts/css-audit.mjs
 ```
 
-Reports unused CSS module classes, unused custom properties, near-duplicate
+Reports unused classes in `globals.css` (the named effects), unused custom properties, near-duplicate
 stylesheets, and expensive properties on the critical path. Zero
 dependencies. Run it before opening a PR.
 

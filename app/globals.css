@@ -1,2300 +1,411 @@
-/**
- * globals.css — Premium Cyber & SOC Theme
- * @author Ahmed Emad Nasr
- *
- * ═══ WHAT THIS CLEANUP REMOVED ═══
- *
- *  · 47 CSS custom properties that were defined and never read
- *    (42% of the entire token system)
- *  · 11 global utility classes (.katana-card, .glow-red, .text-stroke …) —
- *    not one of them appears in any JSX in the site
- *  · .skeleton-shimmer — defined and gated in the motion budget, and
- *    used nowhere
- *  · 16 `box-shadow: none` declarations — leftovers from removing the
- *    glow effect: the value was replaced with `none` instead of deleting
- *    the line
- *  · a global `*` selector with !important for backdrop-filter — dropped
- *    in favour of gating the token itself (see section 9)
- *
- * ═══ WHAT THIS CLEANUP FIXED ═══
- *
- *  · content-visibility was active on the hero (section 6)
- *  · the mid-tier rule flattened every decorative animation to one duration
- *  · --motion-slow was written in 3 places and read in zero
- *
- * A note on file size: these comments are stripped entirely from the
- * production build (Next minifies the CSS). What the cleanup reduces is
- * the number of **rules** the browser walks on every style recalculation —
- * that is the thing that gets measured, not the byte count in the repo.
- **/
-
-/*--------- 1. Tokens ---------*/
-/* Every token here is read in at least one place. If you add a new one
-   and nothing consumes it, it is not a token — it is a note, and notes
-   belong in comments. */
-:root {
-  /*
-   * ── UI SCALE ──────────────────────────────────────────────────────────
-   *
-   * ONE NUMBER CONTROLS THE SIZE OF THE WHOLE SITE.
-   *
-   * Every dimension in this project is expressed in rem, and rem resolves
-   * against the root font-size below. Multiplying that one value scales
-   * type, padding, gaps, radii and component widths together — so the
-   * design keeps its exact proportions and only gets smaller.
-   *
-   * This is why it works as a single knob: the primitives in sections 14
-   * to 17 removed the hand-written px and per-file scales that used to sit
-   * outside the token system. Before that, changing this would have shrunk
-   * some things and left others behind.
-   *
-   *   1     the original size
-   *   0.95  the current default
-   *   0.9   the previous default
-   *   0.85  noticeably compact
-   *
-   * What 0.9 actually produces on desktop:
-   *   body text        16px → 14.4px
-   *   section title    35px → 31.5px
-   *   card padding     25px → 22.5px
-   *   timeline rail  1160px → 1044px
-   *
-   * Do not go far below 0.85 without checking the smallest text on the
-   * site: the micro-labels are 1.2rem, which is already only 10.8px here.
-   *
-   * Mobile carries its own value: phones are already tight, and shrinking
-   * body text below ~14px costs readability rather than buying space.
-   */
-  --ui-scale: 0.95;
-
-  /*
-   * ══ PALETTE ═══════════════════════════════════════════════════════════
-   *
-   * The whole site reads from these tokens, so theme changes happen here only.
-   *
-   * These are the site's original colours — black + red + gold + cyan.
-   * Two neon palettes were tried on top (magenta, then orange/cyan/green) and the originals
-   * were restored both times. **Don't change them again unless asked.**
-   *
-   * ── Contrast (on #000000) ──
-   *
-   *     --foreground  #ffffff  21.00      --accent    #ffd700  14.97
-   *     --text-muted  #d8d6cc  14.41      --tertiary  #00d2ef  11.47
-   *     --text-dim    #a59f90   7.96      --main-text #f5003b   4.94
-   *
-   * --primary (#bc002d) has a contrast of 3.18: passes for large text, fails for normal text.
-   * That's why there's a --main-text below. The reasoning is next to it.
-   *
-   * ── Neon layer ──
-   *
-   * Section 19 (Neon) and the CyberBackground backdrop run on these tokens, not
-   * on hand-written colours. So the glow is now red and gold with these colours,
-   * and it will follow any palette you set later automatically.
-   */
-
-  /* Core palette */
-  --background: #000000;
-  --foreground: #ffffff;
-  --primary: #bc002d;
-  --accent: #ffd700;
-  --tertiary: #00d2ef;
-
-  /* Aliases the existing code already uses */
-  --bg-color: var(--background);
-  --bg-gradient: none;
-  --text-color: var(--foreground);
-  --text-muted: #d8d6cc;
-  --text-dim: #a59f90;
-  --text-bright: #ffffff;
-
-  --main-color: var(--primary);
-  --main-color-rgb: 188, 0, 45;
-  --main-light: #ff2d78;
-
-  /*
-   * --main-text: the text variant of the primary colour.
-   *
-   * --primary itself has a contrast of 5.59 and passes, so this token isn't technically necessary right now
-   * — but it's kept because every file uses it after the Lighthouse fix, and because it
-   * gives a safety margin if you change the primary to a darker shade later.
-   */
-  --main-text: #f5003b;
-
-  --accent-color: var(--accent);
-  --accent-color-rgb: 255, 215, 0;
-  --accent-light: #fff0a6;
-
-  --tertiary-rgb: 0, 210, 239;
-
-  --danger: #ff2d55;
-  --danger-rgb: 255, 45, 85;
-
-  /* The one-pixel divider used all over the site. Tinted cyan now instead
-     of neutral white — a pure-white hairline reads as "unstyled" next to
-     neon, and the tint is what makes the grid feel wired together. */
-  --hairline: rgba(255, 255, 255, 0.22);
-
-  /*
-   * ── Text-page veil ─────────────────────────────────────────────────────
-   *
-   * The blog and article pages used to have an explicit `var(--background)`, which is
-   * a fully opaque colour — so it completely covered the bubbles and meteors. The animated
-   * background was only visible on the home page.
-   *
-   * The fix isn't to remove the background entirely: these are long-form reading pages, and bubbles
-   * moving directly behind the text strain the eyes and reduce effective contrast.
-   *
-   * So instead of fully opaque, a translucent black veil: the bubbles show through it but
-   * muted, and the text stays on a steady near-black background.
-   *
-   *   0.55  the default — bubbles visible and calm
-   *   0.75  calmer, text clearer
-   *   0.35  bubbles as visible as on the home page
-   *   1     back to fully opaque (bubbles disappear like before)
-   */
-  --page-veil: rgba(0, 0, 0, 0.55);
-
-  /*
-   * ── Glow ──────────────────────────────────────────────────────────────
-   *
-   * Central tokens so the glow can be turned off from one place on weak devices
-   * (section 9). Every shadow here is computed on the GPU.
-   *
-   * The value is zero on tier="low" — not a smaller value, zero. Coloured shadows are among
-   * the most expensive things on a mid-range phone, and the visual difference on a small screen in
-   * sunlight is practically nil.
-   */
-  --glow-main: 0 0 12px rgba(var(--main-color-rgb), 0.45);
-  --glow-accent: 0 0 12px rgba(var(--accent-color-rgb), 0.45);
-  --glow-accent-strong: 0 0 24px rgba(var(--accent-color-rgb), 0.6);
-  --glow-text: 0 0 10px rgba(var(--accent-color-rgb), 0.35);
-  --glow-text-main: 0 0 10px rgba(var(--main-color-rgb), 0.4);
-
-  --surface-card-border: rgba(var(--main-color-rgb), 0.18);
-
-  /* Typefaces */
-  --font-body: var(--font-overlock), "Overlock", sans-serif;
-  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace,
-    "SF Mono", Menlo, Consolas, monospace;
-  /* Overlock contains no Japanese glyphs. Without this stack every piece
-     of Japanese text falls back to whatever CJK font the device happens to
-     have — Yu Gothic on Windows, Hiragino on macOS, Noto on Android. Three
-     different looks for one identity.
-     For full control: Noto Sans JP via next/font/local, subset to the
-     glyphs actually used (a small, fixed set) — ~20KB instead of ~1.5MB. */
-  --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
-    "Noto Sans JP", "Noto Sans CJK JP", Meiryo, sans-serif;
-
-  /* Radii */
-  --radius-card: 14px;
-  --radius-card-sm: 8px;
-  --radius-button: 2px;
-  --radius-pill: 999px;
-
-  /* Type scale — html at 62.5% means 1rem = 10px */
-  --text-xs: 1.2rem;
-  --text-sm: 1.4rem;
-  --text-base: 1.6rem;
-  --text-md: 1.8rem;
-  --text-lg: 2.0rem;
-  --text-xl: 2.2rem;
-
-  /*
-   * ══ Motion — a cinematic curve ═══════════════════════════════════════
-   *
-   * ── The core idea: the curve, not the duration ──
-   *
-   * "Slow like the iPhone" doesn't mean multiplying every duration by 2. Do that and the site
-   * feels **heavy**, not cinematic — the difference is that motion that starts slow looks
-   * as if the device is stuck, while motion that starts fast and settles slowly looks
-   * like it has weight.
-   *
-   * Apple's curve puts most of the time at **the end**: an instant launch, then
-   * a long glide that eases until it stops. That's why the motion feels luxurious and fast
-   * at the same time.
-   *
-   *     cubic-bezier(0.32, 0.72, 0, 1)
-   *                   │     │    │  └── ends at exactly zero velocity
-   *                   │     │    └───── no acceleration at the end at all
-   *                   └─────┴────────── launches fast from the first frame
-   *
-   * The old one was `cubic-bezier(0.22, 1, 0.36, 1)` — close, but it reaches
-   * its top speed too early so it looks abrupt. The new one distributes more smoothly.
-   *
-   * ── Durations: why they weren't all doubled ──
-   *
-   * There's a real tension here that needs resolving:
-   *
-   *   · **Entrance** motion (an element appearing, a page moving) → slowness reads as luxury
-   *   · **Response** motion (hover, press, focus) → slowness reads as a fault
-   *
-   * A button that takes 600ms to respond to the mouse feels like the site is frozen, not
-   * cinematic. Apple itself keeps feedback under 300ms and transitions above it.
-   *
-   * So --motion-fast (81 uses, mostly hover and focus) was raised only slightly,
-   * and --motion-normal (13 uses, all transitions and element motion) was widened.
-   */
-  --motion-fast: 380ms;
-  --motion-normal: 900ms;
-  --motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
-
-  /*
-   * A curve for motion that enters and exits (not feedback).
-   *
-   * expo-out: starts at top speed and stops very gently. Better suited to appearing and disappearing
-   * than --motion-ease because it has no acceleration at the start at all.
-   */
-  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Timing for the role ticker in the hero */
-  --typing-cursor: 0.9s;
-  --typing-typing: 16s;
-  --typing-words: 16s;
-  --typing-textDrift: 6.5s;
-
-  /*
-   * ── Spacing knob ─────────────────────────────────────────────────────
-   *
-   * The sibling of --ui-scale. This one controls the **space** between things, that one controls
-   * the **size** of things. They're separated on purpose, so you can enlarge the type and tighten
-   * the spacing at the same time — which is exactly what's needed here.
-   *
-   *   1     the original spacing
-   *   0.78  the current default — ~22% tighter
-   *   0.7   very tight
-   *
-   * Note: --ui-scale multiplies into this. When the size was raised from 0.9 to 0.95,
-   * the spacing would have grown 5.6% with it because it's all in rem. So the real net
-   * spacing is 0.78 × (0.95/0.9) = **0.823**, i.e. ~18% tighter than before.
-   *
-   * Every spacing on the site goes through here: spacing tokens, section padding,
-   * the gap between sections, card padding, and the gap between a section title and its content.
-   * Just one number to play with.
-   */
-  --space-scale: 0.78;
-
-  /* Spacing — clamp so it shrinks gradually on narrow screens instead
-     of collapsing all at once at a breakpoint */
-  --space-xs: calc(clamp(0.6rem, 1vw, 0.9rem) * var(--space-scale));
-  --space-sm: calc(clamp(1rem, 2vw, 1.5rem) * var(--space-scale));
-  --space-md: calc(clamp(1.6rem, 3vw, 2.4rem) * var(--space-scale));
-  --space-lg: calc(clamp(2.4rem, 5vw, 4rem) * var(--space-scale));
-  --space-xl: calc(clamp(4rem, 8vw, 8rem) * var(--space-scale));
-
-  /* Section shell — see section 16 */
-  --section-pad: calc(8rem * var(--space-scale)) 0 calc(6rem * var(--space-scale));
-  --section-reserve: 1px 1200px;
-  --section-head-gap: calc(5rem * var(--space-scale));
-
-  /* Section title — two sizes existed in the wild, so both are tokens.
-     The small one was used by attack / contact / projects, the large one
-     by experience / art_gallery. */
-  --title-size: 2.6rem;
-  --title-tracking: 1.6px;
-  --title-gap: 1.6rem;
-  --title-size-lg: 3.5rem;
-  --title-tracking-lg: 2px;
-  --title-gap-lg: 2rem;
-
-  /* Micro-label: mono, uppercase, wide tracking */
-  --label-tracking: 0.14em;
-
-  /* Tokens shared by experience-section and sensei-projects */
-  --container-max-width: 150rem;
-  --container-pad-x: 5.25%;
-  --title-underline-thin: 1px;
-  --title-underline-thick: 3px;
-  --title-underline-width: 40%;
-  --title-underline-opacity: 0.3;
-  --timeline-line-width: 2px;
-  --timeline-line-opacity: 0.2;
-  --diamond-node-size: 14px;
-  --diamond-border-width: 2px;
-
-  /* z layers — only the four that are actually used */
-  --z-sticky: 200;
-  --z-navbar: 1500;
-  --z-modal: 2000;
-  --z-progress: 3000;
-
-  /* Blur — the single source for every glass surface on the site.
-     Changing it here changes everywhere, and that is exactly what lets
-     section 9 work without a global !important selector. */
-  --ui-blur: 4px;
-  --card-blur: 4px;
-
-  /*
-   * The complete backdrop-filter values, built from the blurs above. Every
-   * glass surface reads one of these instead of writing blur(var(--…)) itself.
-   *
-   * Why: "off" used to mean --*-blur: 0px, so a low-tier phone still got
-   * `backdrop-filter: blur(0px) saturate(130%)`. That is not off — any
-   * non-`none` backdrop-filter makes the browser snapshot whatever is behind
-   * the element and run a filter over it, every frame the backdrop changes
-   * (i.e. every scroll frame). saturate() alone keeps the whole pipeline
-   * alive. Off now means `none`, which skips it entirely.
-   */
-  /*
-   * Cards: no backdrop blur on any tier. Measured on the blog (built site,
-   * scroll pass): card blurs + the old scroll overlay held a fast desktop at
-   * ~28 frames per pass; without them, ~140, with zero long frames. Each
-   * backdrop-filter makes the compositor re-render everything behind the
-   * element whenever the animated background moves — i.e. every frame. The
-   * visible difference measured ~1 brightness level out of 255: the cards
-   * are 60% opaque and what is behind them is already soft gradients.
-   * To bring it back: blur(var(--card-blur)).
-   */
-  --card-backdrop: none;
-  --ui-backdrop: blur(var(--ui-blur));
-  --ui-backdrop-glass: blur(var(--ui-blur)) saturate(130%);
-
-  color-scheme: dark;
-}
-
-/*--------- 2. Base ---------*/
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  text-decoration: none;
-  border: none;
-  outline-offset: 4px;
-}
-
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-html {
-  /* 62.5% makes 1rem = 10px, which is what every rem value in this project
-     assumes. --ui-scale then trims that uniformly.
-
-     NOTE: I replaced this with a fluid clamp() and Ahmed reverted it. The
-     clamp grew the root to ~10.4px at 1920px, which scaled the ENTIRE site
-     up about 15% on desktop — every rem in the project resolves against
-     this one number, which is exactly what makes it a good knob and exactly
-     what makes changing it a redesign rather than an optimization.
-     Do not "fix" this again. */
-  font-size: calc(62.5% * var(--ui-scale));
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
-  scroll-behavior: auto;
-  scroll-padding-top: var(--scroll-offset);
-  background-color: var(--bg-color);
-}
-
-body {
-  font-family: var(--font-body);
-  color: var(--text-color);
-  background-color: var(--bg-color);
-  background-attachment: fixed;
-  background-image: var(--bg-gradient);
-  overflow-x: hidden;
-  text-rendering: optimizeSpeed;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 /*
- * There used to be `overscroll-behavior-y: none` on the body here to prevent the white
- * that shows when you pull past the top/bottom of the page. It was removed.
+ * globals.css
  *
- * Reason: `html` and `body` both have `overflow-x: hidden`, which makes
- * determining the actual scroll element differ between browsers. And overscroll-behavior
- * on body in that combination has a history of interfering with touch scrolling.
- *
- * The gain was purely cosmetic (a white strip visible for a fraction of a second), and the risk was that
- * the page wouldn't scroll on a phone. The trade-off isn't balanced.
+ * Design system: the Neo-Samurai theme from Mostafa Mahmoud's Sensei-Dev
+ * portfolio (github.com/MostafaSensei106/Sensei-Dev, GPL-3.0), used here
+ * with its tokens, effects and motion unchanged (utility classes no component
+ * here uses were left out). Content is Ahmed Emad Nasr's.
+ * Fonts are self-hosted through next/font/local (app/fonts.ts).
  */
+@import "tailwindcss";
 
-/* background-attachment: fixed forces the browser to repaint the
-   background on every scroll frame — a well known source of jank on
-   Safari and mobile Chrome in particular. And the effect itself is
-   invisible on a phone screen anyway. */
-@media (max-width: 991px), (hover: none) {
-  body { background-attachment: scroll; }
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Three-Color Palette & Design Tokens */
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-tertiary: var(--tertiary);
+  --color-quaternary: var(--quaternary);
+
+  --color-surface: var(--surface);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-surface-variant: var(--surface-variant);
+
+  --color-primary-container: var(--primary-container);
+  --color-tertiary-container: var(--tertiary-container);
+
+  /* Geometry Tokens */
+  --radius-base: var(--radius-base);
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
+  --radius-katana: 0.5rem 2rem 0.5rem 2rem;
+
+  /* Font Families */
+  --font-display: var(--font-dela), 'Dela Gothic One', 'Noto Sans JP', sans-serif;
+  --font-body: var(--font-outfit), 'Outfit', sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', monospace;
+  --font-jp: var(--font-yuji), 'Yuji Syuku', 'Noto Sans JP', sans-serif;
+  --font-jp-brush: var(--font-yuji), 'Yuji Syuku', 'Noto Sans JP', serif;
 }
 
-/*
- * All the safe-area rules were removed along with viewportFit: "cover".
- * Without cover the viewport already stops at the safe area, so the insets
- * all resolve to 0px and these rules do nothing except add more rules for the browser
- * to walk through.
- */
-
-body[data-custom-cursor="true"],
-body[data-custom-cursor="true"] :where(a, button, input, textarea, select, summary) {
-  cursor: none;
-}
-
-img,
-video,
-canvas,
-svg {
-  max-width: 100%;
-  height: auto;
-}
-
-/*--------- 3. Interactive elements ---------*/
-:where(a, button, input, textarea, select, summary) {
-  transition: transform var(--motion-fast) var(--motion-ease),
-              opacity var(--motion-fast) var(--motion-ease);
-}
-
-button {
-  background: rgba(var(--main-color-rgb), 0.1);
-  color: var(--main-text);
-  border: 1px solid var(--surface-card-border);
-  border-radius: var(--radius-card-sm);
-  padding: 0.8em 1.8em;
-  font-weight: 600;
-  font-size: 1.1em;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-button:hover:not(:disabled) {
-  background: rgba(var(--main-color-rgb), 0.16);
-  color: var(--text-bright);
-  border-color: var(--main-light);
-  transform: translateY(-1px);
-}
-
-button:active:not(:disabled) { transform: none; }
-
-button:disabled {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-dim);
-  border-color: transparent;
-  cursor: not-allowed;
-}
-
-/*
- * THE focus ring for the whole site.
- *
- * This was previously written with :where(), which has zero specificity —
- * so any module class with its own :focus-visible rule beat it, and 14 of
- * them had been written by hand (in two slightly different variants: one
- * with var(--accent-color), one with var(--accent-color)).
- *
- * :is() takes the highest specificity of its arguments, and [tabindex] is
- * an attribute selector (0,1,0). With the `html` prefix that makes this
- * rule (0,1,1) — it outranks any single class in a module file, which is
- * what lets those 14 hand-written copies be deleted outright.
- */
-html :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-  border-radius: var(--radius-card-sm);
-}
-
-/*--------- 4. Accessibility ---------*/
-.skip-link {
-  position: absolute;
-  left: 1rem;
-  top: 0;
-  z-index: var(--z-modal);
-  padding: 0.9rem 1.2rem;
-  border-radius: var(--radius-pill);
-  background: var(--main-color);
-  /* It was #000 on #bc002d = contrast 3.18 — fails WCAG AA (4.5 required)
-     and the text here is 1.4rem, i.e. ~12.6px, so it's "normal text", not large.
-     Black on dark red is one of the worst combinations. White gives 6.61 and passes.
-     This is a helper element that only appears when you press Tab, so its colour isn't part of the design. */
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: 800;
-  transform: translateY(-6rem);
-  transition: transform var(--motion-normal) var(--motion-ease);
-}
-
-.skip-link:focus-visible { transform: translateY(1rem); }
-
-/*
- * Screen-reader-only text — present in the accessibility tree and takes no space on screen.
- *
- * There was no utility like this on the site, so any information that had to be read to a screen reader
- * had to be shown visually or be lost. `clip-path` + `1px` is the form that
- * stays readable for screen readers (display:none and visibility:hidden remove
- * the element from the tree entirely).
- */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-/*--------- 5. Typography and layout ---------*/
-p,
-li {
-  color: var(--text-muted);
-  line-height: 1.7;
-  font-size: var(--text-base);
-}
-
-main { position: relative; }
-
-/* text-wrap: balance distributes the words of a heading evenly across
-   its lines instead of leaving a single orphan on the last one — the
-   difference is most visible on mobile.
-   pretty does the same thing for paragraphs at a lower cost. */
-h1, h2, h3, h4 { text-wrap: balance; }
-p { text-wrap: pretty; }
-
-/* Japanese reads more clearly with slightly looser leading than Latin */
-[lang="ja"],
-:lang(ja) {
-  font-family: var(--font-jp);
-  line-height: 1.5;
-}
-
-::selection {
-  background: rgba(var(--main-color-rgb), 0.85);
-  color: #fff;
-}
-
-/*--------- 6. Section layout ---------*/
-section {
-  padding: calc(7.1rem * var(--space-scale)) 5.25% calc(5.9rem * var(--space-scale));
-  position: relative;
-  width: 100%;
-  max-width: 128rem;
-  margin: 0 auto calc(clamp(6rem, 10vw, 12rem) * var(--space-scale)) auto;
-  z-index: 1;
-  contain: layout style;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 900px;
-}
-
-/*
- * Fix: the hero has to paint on the first pass.
- *
- * `section` matches <section id="Home"> — which contains the LCP image
- * itself. `content-visibility: auto` tells the browser "skip style,
- * layout and paint for this element". Below the fold that is a win.
- * **Above** the fold it is a direct penalty: Chrome defers the subtree
- * to a later render step and does not count LCP for content inside a
- * skipped subtree.
- *
- * On top of that, the 900px placeholder is shorter than the hero's real
- * height on a phone (min-height: auto below 992px) — so it introduced
- * CLS for no reason.
- *
- * :where() keeps the specificity at zero so it never fights another rule.
- */
-section:where(#Home) {
-  content-visibility: visible;
-  contain-intrinsic-size: none;
-  contain: none;
-}
-
-/* Reaching a section from outside (a #Contact link, the back button, the
-   command palette) bypasses the JavaScript header-height calculation, so
-   the heading ends up clipped under the fixed header. scroll-margin fixes
-   every one of those cases with no code at all. */
-section[id],
-#main-content {
-  scroll-margin-top: var(--scroll-offset);
-}
-
-/* Proportional figures make columns dance: "111" is narrower than "999".
-   It shows up in stats, dates and counters.
-
-   Note: these selectors used to be [class*="stat"] and friends — partial
-   substring matching against every element on the page, which is one of
-   the slowest selector types, and fragile too because CSS Modules hashes
-   class names. <time> is a real element, and everything else opts in via
-   an explicit data attribute: add data-nums to anything that needs it. */
-time,
-[data-nums] {
-  font-variant-numeric: tabular-nums;
-}
-
-/*--------- 7. Breakpoints ---------*/
-/*
- * These values are the originals. Restored exactly as they were.
- *
- * They had been changed to a unified ladder (430/600/768/992/1440) with extra steps for
- * large screens (1440/1920/2200) widening the section from 128rem to 160rem.
- * That enlarged the site instead of fixing it — so it was reverted.
- *
- * The only thing kept from the unification is **merging near-identical values** in
- * the module files (991/992, 767/768, and so on), because they don't change any size —
- * they just make the same breakpoint written as a single number everywhere.
- *
- * And the only real bug here was in sensei-home.module.css: a block at
- * 600px followed by a block at 42rem (=672px). The wider one is written last so it wins
- * on a 375px phone, meaning the 600px rules were dead. That was fixed there,
- * and the sizes themselves are unchanged.
- */
-@media (max-width: 991px) {
-  section {
-    padding: calc(4rem * var(--space-scale)) 3.5% calc(4rem * var(--space-scale));
-    margin-bottom: calc(clamp(5rem, 8vw, 8rem) * var(--space-scale));
-    width: 94%;
-  }
-}
-
-@media (max-width: 768px) {
-  section { width: calc(100% - 3rem); }
-}
-
-@media (max-width: 600px) {
-  section {
-    padding: calc(4.5rem * var(--space-scale)) 1.5rem calc(4.2rem * var(--space-scale));
-    margin-bottom: calc(5rem * var(--space-scale));
-    width: calc(100% - 2rem);
-  }
-}
-
-@media (max-width: 360px) {
-  html { font-size: calc(56.25% * var(--ui-scale)); }
-  section {
-    width: calc(100% - 1.2rem);
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-@media (min-width: 1800px) {
-  html { font-size: calc(68.75% * var(--ui-scale)); }
-  section {
-    padding-left: 8%;
-    padding-right: 8%;
-    max-width: 153.6rem;
-    margin-inline: auto;
-  }
-}
-
-/*
- * ── Overflow guard ─────────────────────────────────────────────────────
- *
- * This isn't a size change — it's a content-clipping fix, and it stays.
- *
- * 6 grids were written as `minmax(<fixed>, 1fr)` without a guard. A track with a minimum of
- * 300px can't shrink below 300px, so on a 320px screen it overflows its container —
- * and `overflow-x: hidden` in section 2 **clips** it instead of letting you scroll to it.
- * They were fixed at the source to `minmax(min(100%, X), 1fr)`; the layout doesn't change
- * on any sufficiently wide screen, but on narrow ones the track can shrink instead of
- * being clipped.
- */
-
-/*--------- 8. User preferences ---------*/
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  html { scroll-behavior: auto !important; }
-
-  /* The custom cursor tracks the mouse and repaints every frame — exactly
-     the kind of motion this preference exists for. */
-  body[data-custom-cursor="true"],
-  body[data-custom-cursor="true"] :where(a, button, input, textarea, select, summary) {
-    cursor: auto;
-  }
-}
-
-@media (forced-colors: active) {
+@layer base {
   :root {
-    --main-color: Highlight;
-    --accent-color: Highlight;
-    --text-color: CanvasText;
-    --text-muted: CanvasText;
-    --bg-color: Canvas;
+    /* Light theme (washi paper)  default, class strategy via next-themes */
+    color-scheme: light;
+    --primary: #BC002D;
+    --secondary: #1A1A1A;
+    --accent: #8a6d00;
+    --tertiary: #007a8a;
+    --quaternary: #5b54d6;
+
+    --background: #f7f5f0;
+    --foreground: #141210;
+
+    --surface: #ffffff;
+    --on-surface: #141210;
+    --on-surface-variant: #57534a;
+    --surface-variant: #ece8df;
+
+    --primary-container: rgba(188, 0, 45, 0.08);
+    --tertiary-container: rgba(0, 122, 138, 0.1);
+
+    /* Border Radius Tokens */
+    --radius-base: 0px;
+    --radius-card: 4px;
+    --radius-button: 2px;
   }
-  button, a { forced-color-adjust: auto; }
+
+  .dark {
+    /* Dark theme (sumi ink) */
+    color-scheme: dark;
+    --primary: #BC002D;
+    --secondary: #1A1A1A;
+    --accent: #FFD700;
+    --tertiary: #00D2EF;
+    --quaternary: #A29BFE;
+
+    --background: #080808;
+    --foreground: #FFFFFF;
+
+    --surface: #121212;
+    --on-surface: #FCFCFC;
+    --on-surface-variant: #A0A0A0;
+    --surface-variant: #1E1E1E;
+
+    --primary-container: rgba(226, 0, 26, 0.1);
+    --tertiary-container: rgba(0, 210, 239, 0.1);
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  /* Custom cursor only on precise pointers; touch keeps native cursor */
+  @media (pointer: fine) {
+
+    body.custom-cursor-on,
+    body.custom-cursor-on a,
+    body.custom-cursor-on button {
+      cursor: none;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  /* Pointer affordance on touch / non-fine pointers
+     (fine pointers use the custom cursor with cursor:none). */
+  @media (pointer: coarse) {
+
+    button,
+    [role="button"] {
+      cursor: pointer;
+    }
+  }
+
+  /* Skip link */
   .skip-link {
-    forced-color-adjust: none;
-    background: Highlight;
-    color: HighlightText;
-    border: 2px solid ButtonText;
+    position: fixed;
+    top: -60px;
+    left: 16px;
+    z-index: 10001;
+    background: var(--primary);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 10px 16px;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: 16px;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--background);
+  }
+
+  /* Selection Styling */
+  ::selection {
+    background: var(--primary);
+    color: #FFFFFF;
+  }
+
+  ::-moz-selection {
+    background: var(--primary);
+    color: #FFFFFF;
+  }
+
+  body {
+    transition: background-color 0.35s ease, color 0.35s ease;
   }
 }
 
-@media (prefers-contrast: more) {
-  :root {
-    --surface-card-border: rgba(var(--main-color-rgb), 0.55);
-    --text-muted: #b0cfe0;
-    --text-dim: #6a8ea8;
-  }
+/* ─── Neo-Samurai Components ─── */
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  gap: 0.1em;
+  line-height: 1.2;
+  font-family: var(--font-jp-brush);
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  :root {
-    --card-blur: 0px; --ui-blur: 0px;
-    --card-backdrop: none; --ui-backdrop: none; --ui-backdrop-glass: none;
-  }
+.brush-jp {
+  font-family: var(--font-jp-brush);
+  font-weight: 400;
 }
 
-/*--------- 9. Per-device motion budget ---------*/
-/*
- * data-tier is written onto <html> by an inline script in <head> — before
- * first paint. These rules are live from the very first frame, with zero
- * JavaScript in the critical path.
- *
- * The philosophy: anything decorative carries data-decorative="true" in
- * the JSX. That puts the "what is safe to drop" decision in the component,
- * where it belongs, and leaves the CSS here to do nothing but enforce it.
- */
-
-/* --- LOW: zero decorative motion, zero blur --- */
-html[data-tier="low"] [data-decorative="true"] {
-  /* display: none removes the paint and the compositor layer together.
-     animation: none removed the motion and left the layer alive. */
-  display: none !important;
+.vertical-text span {
+  display: block;
 }
 
-html[data-tier="low"] {
-  /* These tokens are every blur on the site — four declarations read
-     them. Zeroing them here switches off backdrop-filter everywhere
-     without any global !important selector, which used to force a style
-     recalculation on every element on the page. */
-  --card-blur: 0px;
-  --ui-blur: 0px;
-  --card-backdrop: none;
-  --ui-backdrop: none;
-  --ui-backdrop-glass: none;
-  /*
-   * Weak devices keep short motion, **and that's intentional, not an oversight**.
-   *
-   * Every long transition keeps a compositor layer alive longer, and the visual
-   * difference on a 6-inch screen in sunlight is close to zero. More importantly: slow
-   * motion on a slow device looks **choppy**, not cinematic — which is worse than
-   * short, clean motion.
-   *
-   * They were raised slightly from the old values (140/220) to pick up some of the new character without
-   * paying its price.
-   */
-  --motion-fast: 200ms;
-  --motion-normal: 340ms;
+.neural-grid {
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 0);
+  background-size: 40px 40px;
 }
 
-/* --- MID: same character, lower cost --- */
-html[data-tier="mid"] {
-  --card-blur: 2px;
-  --ui-blur: 2px;
-  /* Midway between the full cinematic feel (900ms) and the short one (340ms) */
-  --motion-fast: 300ms;
-  --motion-normal: 600ms;
+/* ─── JDM Overlay Effects ─── */
+
+.scanlines {
+  background-image: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 4px);
+  background-size: 100% 4px;
+  pointer-events: none;
 }
 
-/*
- * Fix: the old rule was
- *     animation-duration: calc(var(--anim-slow) * 1.5) !important
- * which did not slow the animations down — it **flattened every
- * decorative animation to 6 seconds**, whatever its original duration.
- * The badge pulse (1.6s), the rotating ring (25s) and the particles (4s)
- * all ended up identical, which broke the timing relationships the
- * design was built on.
- *
- * animation-play-state is the right tool here: it pauses motion without
- * touching any duration. The pause happens when the element leaves the
- * viewport — the rule already in sensei-home.module.css covers that.
- */
-
-/* Fallback: if JavaScript is disabled outright and the script never
-   classified the device, phones get the low budget rather than the full one. */
-html:not([data-tier]) [data-decorative="true"] {
-  display: none !important;
-}
-html:not([data-tier]) {
-  --card-blur: 0px;
-  --ui-blur: 0px;
-  --card-backdrop: none;
-  --ui-backdrop: none;
-  --ui-backdrop-glass: none;
+.halftone {
+  background-image: radial-gradient(circle at 2px 2px, color-mix(in srgb, var(--foreground) 5%, transparent) 1px, transparent 0);
+  background-size: 8px 8px;
 }
 
-/* An explicit motion ceiling for phones — this catches anything that is
-   not marked data-decorative and therefore misses the gating above. */
-@media (pointer: coarse) and (max-width: 900px) {
-  /*
-   * Note: this used to be `* { will-change: auto !important }`.
-   *
-   * The intent was right — a permanent compositor layer eats into the same
-   * GPU budget scrolling competes for. But the whole site contains
-   * **three** will-change declarations: two in the custom cursor (desktop
-   * only, never mounted on mobile) and one that is transform alone. So the
-   * global selector was forcing a style recalculation on every element on
-   * the page in order to undo a single harmless declaration. Review those
-   * three by hand instead.
-   */
+/* ─── Button sheen  one delight, used by every primary CTA ─── */
 
-  /* Android's blue tap highlight cuts against the red/gold identity */
-  a, button, [role="button"] {
-    -webkit-tap-highlight-color: rgba(var(--main-color-rgb), 0.18);
-  }
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/*--------- 10. Scrollbar ---------*/
-/*
- * The scrollbar is styled twice because the browsers split:
- *   · Firefox           → scrollbar-width / scrollbar-color (standard, limited control)
- *   · Chrome/Safari/Edge → ::-webkit-scrollbar (non-standard, full control)
- *
- * Both are tuned to the same colour. They used to differ, so the site
- * looked like two different sites depending on the browser.
- *
- * The old rule was `border: 3px solid var(--bg-color)` on a 10px thumb —
- * 6 pixels eaten, leaving 4 pixels of washed-out red. The trick here is
- * `border: 2px solid transparent` + `background-clip: padding-box`: the
- * border lets the track show through underneath instead of painting over it.
- */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(var(--main-color-rgb), 0.55) rgba(255, 255, 255, 0.04);
+.btn-sheen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -70%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  z-index: 1;
 }
 
-:where(*)::-webkit-scrollbar { width: 12px; height: 12px; }
-
-/* Faint horizontal rules for a ruler feel + a red vertical line on the
-   edge. The gradients are static, so the browser paints them once and
-   caches the result. */
-:where(*)::-webkit-scrollbar-track {
-  background:
-    linear-gradient(90deg, rgba(var(--main-color-rgb), 0.35) 0 1px, transparent 1px),
-    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 6px),
-    rgba(255, 255, 255, 0.03);
+.btn-sheen:hover::after {
+  left: 135%;
 }
 
-/* Red → gold gradient with two white notches in the middle, like a grip
-   in a HUD */
-:where(*)::-webkit-scrollbar-thumb {
-  border: 2px solid transparent;
-  background:
-    linear-gradient(
-      180deg,
-      transparent calc(50% - 5px),
-      rgba(255, 255, 255, 0.5) calc(50% - 5px) calc(50% - 4px),
-      transparent calc(50% - 4px) calc(50% + 3px),
-      rgba(255, 255, 255, 0.5) calc(50% + 3px) calc(50% + 4px),
-      transparent calc(50% + 4px)
-    ),
-    linear-gradient(180deg, rgba(var(--main-color-rgb), 0.9), rgba(var(--accent-color-rgb), 0.75));
-  background-clip: padding-box;
+/* ─── Samurai Theme Discipline ───
+   Red = action/structure, Gold = metrics/proof, Sky = stack/systems.
+   Quaternary is retired from core sections (Art only). */
+
+.jp-eyebrow {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  letter-spacing: 0.35em;
 }
 
-:where(*)::-webkit-scrollbar-thumb:hover {
-  background:
-    linear-gradient(
-      180deg,
-      transparent calc(50% - 5px),
-      rgba(255, 255, 255, 0.75) calc(50% - 5px) calc(50% - 4px),
-      transparent calc(50% - 4px) calc(50% + 3px),
-      rgba(255, 255, 255, 0.75) calc(50% + 3px) calc(50% + 4px),
-      transparent calc(50% + 4px)
-    ),
-    linear-gradient(180deg, var(--main-color), var(--accent-color));
-  background-clip: padding-box;
+/* ─── Mouse spotlight cards  radial highlight follows the cursor.
+   TiltCard sets --mx/--my. Zero JS cost beyond the tilt handler. */
+.spotlight {
+  position: relative;
 }
 
-/* The pressed state — without it there is no feedback at all while dragging */
-:where(*)::-webkit-scrollbar-thumb:active {
-  background: var(--accent-color);
-  background-clip: padding-box;
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--primary) 14%, transparent),
+      transparent 70%);
 }
 
-/* The square where the vertical and horizontal bars meet — white by
-   default on Windows */
-:where(*)::-webkit-scrollbar-corner { background: var(--bg-color); }
-
-/* Low-end devices: a flat single-colour bar. The three gradients repaint
-   on every frame the thumb moves through. */
-html[data-tier="low"] ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.04);
-}
-html[data-tier="low"] ::-webkit-scrollbar-thumb {
-  background: rgba(var(--main-color-rgb), 0.7);
-  background-clip: padding-box;
-}
-
-/*--------- 11. Print ---------*/
-/* A portfolio really does get printed: someone hits Save as PDF and sends
-   it to a colleague, or prints it before an interview. Without these rules
-   it comes out with a black background and every link reduced to text with
-   no destination. */
-@media print {
-  :root {
-    --bg-color: #fff;
-    --background: #fff;
-    /*
-     * It must be defined here.
-     *
-     * The page wrappers (the CV, the blog and 404) now use --page-veil instead of
-     * an opaque colour so the animated background shows through. The normal value is
-     * `rgba(0,0,0,0.55)` — so without this line, the CV page would have
-     * printed with a 55% black layer over the paper.
-     *
-     * The animated background itself doesn't need a rule: it has aria-hidden="true"
-     * and the rule below hides all of that in print.
-     */
-    --page-veil: #fff;
-    --text-color: #000;
-    --text-bright: #000;
-    --text-muted: #333;
-    --text-dim: #555;
-  }
-
-  body { background: #fff !important; color: #000 !important; }
-
-  [data-decorative="true"],
-  [aria-hidden="true"],
-  header[data-site-header],
-  nav,
-  form,
-  video,
-  iframe {
-    display: none !important;
-  }
-
-  /* Without this the printed page is full of meaningless words like "Verify" */
-  a[href^="http"]::after {
-    content: " (" attr(href) ")";
-    font-size: 0.75em;
-    color: #555;
-    word-break: break-all;
-  }
-
-  h1, h2, h3, h4 { break-after: avoid; }
-  section { break-inside: auto; }
-
-  /* content-visibility hides offscreen content from the printer too.
-     Only sections opt into content-visibility: auto (globals.css section 6,
-     [data-fx="section"], and the section-level module classes), so the reset
-     targets those instead of every element on the page. The decorative
-     KanjiDivider also uses it, but it is aria-hidden and already hidden above. */
-  section,
-  [data-fx="section"] { content-visibility: visible !important; }
-}
-
-/*--------- 12. Scroll reveal ---------*/
-/*
- * This is exactly the hero's `fadeInUp` — same distance, same easing, same
- * stagger logic. The difference is that it is now available site-wide
- * instead of being hand-written inside sensei-home.module.css.
- *
- * It is `opacity` and `transform` only — the two properties the browser
- * animates on the compositor with no layout and no paint. That is why this
- * animation is genuinely free on mobile, rather than an aesthetic
- * indulgence.
- *
- * The JavaScript (Reveal.tsx) does exactly one thing: flip data-reveal
- * from "pending" to "in" once, when the element enters the viewport.
- */
-
-:root {
-  /*
-   * A longer distance: 24 → 34px.
-   *
-   * With a longer duration, a short distance makes the motion look slow without looking like
-   * it's moving — the eye needs to see distance to feel the glide. Distance
-   * and duration must grow together, or the motion looks sluggish.
-   */
-  --reveal-distance: 34px;
-
-  /*
-   * 820ms → 1150ms.
-   *
-   * This is the longest motion on the site on purpose: elements revealing on scroll are what
-   * give the cinematic feel more than anything else, and it's **not feedback** —
-   * the user isn't waiting for a result, so slowness here is a pure gain.
-   *
-   * And it uses --motion-ease-out (expo), not --motion-ease: a reveal has no
-   * slow start, it enters at top speed and settles.
-   *
-   * One knob. Feels slow? Set it back to 820ms and that's it.
-   */
-  --reveal-duration: 1150ms;
-  --reveal-delay: 0ms;
-
-  /*
-   * Stagger between elements: 60 → 90ms.
-   *
-   * This is what makes a grid reveal one element after another instead of appearing all at once.
-   * With a longer duration, a short stagger makes the elements overlap and the sense
-   * of order is lost.
-   */
-  --reveal-stagger: 90ms;
-}
-
-/*
- * The initial state is deliberately scoped to html[data-tier]: that
- * attribute is written by an inline script in <head> before first paint.
- * If JavaScript is off entirely the condition never matches and the
- * content renders normally.
- */
-html[data-tier] [data-reveal="pending"] { opacity: 0; }
-
-html[data-tier] [data-reveal="pending"][data-reveal-variant="up"]    { transform: translate3d(0, var(--reveal-distance), 0); }
-html[data-tier] [data-reveal="pending"][data-reveal-variant="down"]  { transform: translate3d(0, calc(var(--reveal-distance) * -1), 0); }
-html[data-tier] [data-reveal="pending"][data-reveal-variant="left"]  { transform: translate3d(calc(var(--reveal-distance) * -1), 0, 0); }
-html[data-tier] [data-reveal="pending"][data-reveal-variant="right"] { transform: translate3d(var(--reveal-distance), 0, 0); }
-html[data-tier] [data-reveal="pending"][data-reveal-variant="scale"] { transform: scale(0.96); }
-/* "fade" has no transform — opacity only. It is the cheapest variant, and
-   the correct one for anything already inside a moving element (a
-   transform inside a transform compounds). */
-
-/*
- * `transform: none`, not `translate3d(0,0,0)`: the former lets the browser
- * discard the layer once the animation finishes. The latter keeps the
- * element on a compositor layer forever — and on a page with 50 elements
- * that is 50 live layers.
- */
-html[data-tier] [data-reveal="in"] {
+.spotlight:hover::before {
   opacity: 1;
-  transform: none;
-  transition:
-    opacity var(--reveal-duration) var(--motion-ease-out) var(--reveal-delay),
-    transform var(--reveal-duration) var(--motion-ease-out) var(--reveal-delay);
 }
 
-/* Stagger inside a group — pure CSS, no JavaScript timers.
-   RevealGroup sets --i on each child and the arithmetic happens here. */
-html[data-tier] [data-reveal-group="true"] > * {
-  transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
+/* Blue variant  tools-flavored glow (tertiary) instead of red. */
+.spotlight-blue::before {
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--tertiary) 16%, transparent),
+      transparent 70%);
 }
 
-/* A ceiling on the stagger. Without it a 50-item list means 50 × 60ms =
-   3 seconds before the last one appears — the visitor has already scrolled
-   past while items are still fading in. */
-html[data-tier] [data-reveal-group="true"] > *:nth-child(n + 13) {
-  transition-delay: calc(12 * var(--reveal-stagger));
-}
-
-/*
- * The safety net.
- *
- * opacity: 0 is written into the server-rendered HTML. If the bundle fails
- * to load for any reason — a broken chunk, a dropped connection — the site
- * would have stayed completely invisible.
- *
- * This rule reveals everything after 4 seconds for as long as JavaScript
- * has not reported in. The moment Reveal mounts it sets data-reveal-ready
- * on <html>, the rule stops matching, and it never fires in the normal case.
- */
-html[data-tier]:not([data-reveal-ready]) [data-reveal="pending"] {
-  animation: revealSafety 1ms linear 4s forwards;
-}
-
-@keyframes revealSafety {
-  to { opacity: 1; transform: none; }
-}
-
-/*
- * Every phone is tier="low". But the reveal is not decoration — it is the
- * difference between a page that assembles itself in front of the visitor
- * and one that snaps into existence. So rather than switching it off:
- * opacity only, shorter duration, no stagger. opacity is the cheapest
- * property there is to animate.
- */
-html[data-tier="low"] [data-reveal="pending"] { transform: none; }
-html[data-tier="low"] [data-reveal="in"] { transition: opacity 280ms linear; }
-html[data-tier="low"] [data-reveal-group="true"] > *,
-html[data-tier="low"] [data-reveal-group="true"] > *:nth-child(n + 13) {
-  transition-delay: 0ms;
-}
-
-/* reduced-motion: no motion at all. Not a faster version — none. */
 @media (prefers-reduced-motion: reduce) {
-  html[data-tier] [data-reveal="pending"],
-  html[data-tier] [data-reveal="in"] {
-    opacity: 1;
-    transform: none;
-    transition: none;
+  .spotlight::before {
+    display: none;
+  }
+}
+
+/* ─── Contribution cells pop as Pac-Man passes ─── */
+
+.cell-pop {
+  animation: cell-pop 0.45s ease both;
+  animation-delay: calc(var(--i, 0) * 12ms);
+}
+
+@keyframes cell-pop {
+  0% {
+    transform: scale(0.4);
+    filter: brightness(1.8);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell-pop {
     animation: none;
   }
 }
 
-/*--------- 13. Button sheen ---------*/
-/*
- * The `button` rule in section 3 carries position/overflow/z-index. On
- * their own those three mean nothing — overflow: hidden on a button with
- * nothing overflowing, z-index: 1 with nothing to stack against. They were
- * groundwork for a pseudo-element that was planned and never written.
- * Here it is.
- */
-button::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(
-    100deg,
-    transparent 30%,
-    rgba(var(--accent-color-rgb), 0.18) 50%,
-    transparent 70%
-  );
-  transform: translateX(-100%);
-  transition: transform 600ms var(--motion-ease);
-}
-
-button:hover:not(:disabled)::before { transform: translateX(100%); }
-
-/* Touch devices have no hover — the sheen would freeze mid-sweep after
-   the first tap and stay parked there. */
-@media (hover: none) { button::before { display: none; } }
-html[data-tier="low"] button::before { display: none; }
-
-/*--------- 14. Card ---------*/
-/*
- * ══ THE SINGLE SOURCE FOR EVERY CARD ON THE SITE ══
- *
- * Each section used to define its card from scratch. Five different
- * treatments, all reaching for the same look with different values:
- *
- *   .single-project    border .05 + 2px top rule (transparent→red)   bg 10,10,10,.6      padding 2.5rem
- *   .content           border .05 + 3px left rule (washed red)       bg 10,10,10,.6      padding 2.5rem
- *   .pdfCard & friends border .05 + 3px left rule (washed red)       bg 10,10,10,.6      padding 2.5rem
- *   .relatedCard/.card border .08 + 2px left rule (full red)         bg 255,255,255,.015 padding 1.8rem
- *   .art_pic           border .05 + no colour accent                 bg 10,10,10,.6      padding 0.6rem
- *
- * They all come from here now. The module files no longer contain a single
- * border, background, radius, padding or hover declaration for the card
- * itself — only its internal layout, which is the part that genuinely
- * differs between a project card and an image card.
- *
- * ── Usage ──
- *
- *   <article data-fx="card">                     default (padding 2.5rem)
- *   <article data-fx="card" data-card="compact"> tighter (1.8rem)
- *   <article data-fx="card" data-card="tight">   frame around an image (0.6rem)
- *
- * ── Why `html [data-fx="card"]` and not `[data-fx="card"]` ──
- *
- * A bare attribute selector has specificity (0,1,0) — the same weight as
- * any class in a module file. Which one wins then comes down to CSS load
- * order, and that is not guaranteed in Next. Adding `html` makes it
- * (0,1,1), so it always wins.
- */
-
-:root {
-  /* The border lights up on hover and emits a glow (section 19), instead of just
-     darkening. The colour comes from --main-color so it follows the palette. */
-  --card-bg: rgba(10, 10, 10, 0.6);
-  --card-bg-hover: rgba(15, 15, 15, 0.9);
-  --card-border-color: rgba(255, 255, 255, 0.05);
-  --card-border-color-hover: rgba(var(--main-color-rgb), 0.55);
-  --card-accent-height: 2px;
-  /* Goes through --space-scale like any other spacing — card padding is part of
-     the sense of spaciousness, exactly like the gap between cards. */
-  --card-pad: calc(2.5rem * var(--space-scale));
-  --card-pad-compact: calc(1.8rem * var(--space-scale)) calc(2rem * var(--space-scale));
-  --card-pad-tight: calc(0.6rem * var(--space-scale));
-  --card-lift: -3px;
-}
-
-html [data-fx="card"] {
-  position: relative;
-  /* Clips the top rule at the rounded corners — without it the rule
-     renders as a square poking outside the curve */
-  overflow: hidden;
-  padding: var(--card-pad);
-  background: var(--card-bg);
-  border: 1px solid var(--card-border-color);
-  border-radius: var(--radius-card);
+/* ─── Theme water-drop morph  gradual token easing while the
+   canvas ripple covers the flip. Added/removed by ThemeFxProvider. */
+.fx-morph,
+.fx-morph *,
+.fx-morph *::before,
+.fx-morph *::after {
   transition:
-    transform var(--motion-fast) var(--motion-ease),
-    background-color var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease),
-    box-shadow var(--motion-fast) var(--motion-ease);
-}
-
-html [data-fx="card"][data-card="compact"] { padding: var(--card-pad-compact); }
-html [data-fx="card"][data-card="tight"]   { padding: var(--card-pad-tight); }
-
-/*
- * The red rule along the top.
- *
- * On ::before rather than border-top-color: the pseudo-element is drawn
- * with transform: scaleX (a compositor property, free), whereas changing a
- * border colour causes a paint. The side benefit is that the rule "draws
- * itself" instead of appearing all at once.
- */
-html [data-fx="card"]::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: var(--card-accent-height);
-  background: linear-gradient(90deg, var(--main-color), var(--accent-color));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--motion-fast) var(--motion-ease);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* The sheen. 105 degrees so it sweeps at an angle, like a real light
-   reflection. */
-html [data-fx="card"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(var(--accent-color-rgb), 0.07) 50%,
-    transparent 65%
-  );
-  transform: translateX(-100%);
-  transition: transform 700ms var(--motion-ease);
-  pointer-events: none;
-}
-
-html [data-fx="card"] :is(img, [data-fx-media]) {
-  transition: transform 600ms var(--motion-ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="card"]:hover {
-    transform: translate3d(0, var(--card-lift), 0);
-    background: var(--card-bg-hover);
-    border-color: var(--card-border-color-hover);
-    /* The glow comes from the token, so it's turned off once on weak devices */
-    box-shadow: var(--glow-main);
-  }
-  html [data-fx="card"]:hover::before { transform: scaleX(1); }
-  html [data-fx="card"]:hover::after  { transform: translateX(100%); }
-  html [data-fx="card"]:hover :is(img, [data-fx-media]) { transform: scale(1.04); }
-}
-
-/*
- * Keyboard.
- *
- * Without this a visitor tabbing through gets no feedback at all — the
- * card is interactive for the mouse only. That was the situation for every
- * card on the site except .single-project, which had :focus-within on the
- * icon alone.
- */
-html [data-fx="card"]:focus-within {
-  background: var(--card-bg-hover);
-  border-color: var(--card-border-color-hover);
-  box-shadow: var(--glow-main);
-}
-html [data-fx="card"]:focus-within::before { transform: scaleX(1); }
-
-/* Cards that are themselves links need a focus ring, not just a colour shift */
-html a[data-fx="card"]:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 3px;
-}
-
-/* Touch: there is no hover on a phone, so the card would have stayed dead. */
-@media (hover: none) {
-  html [data-fx="card"]:active {
-    transform: scale(0.985);
-    transition-duration: 90ms;
-  }
-  html [data-fx="card"]:active::before { transform: scaleX(1); }
-  html [data-fx="card"]::after { display: none; }
-}
-
-html[data-tier="low"] [data-fx="card"]::after { display: none; }
-html[data-tier="low"] [data-fx="card"] :is(img, [data-fx-media]) { transition: none; }
-html[data-tier="low"] [data-fx="card"]:hover :is(img, [data-fx-media]) { transform: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  html [data-fx="card"],
-  html [data-fx="card"]::before,
-  html [data-fx="card"]::after,
-  html [data-fx="card"] :is(img, [data-fx-media]) { transition: none; animation: none; }
-  html [data-fx="card"]:hover { transform: none; }
-  html [data-fx="card"]::after { display: none; }
-  /* The red rule still appears — it is information (where you are), not decoration */
-}
-
-@media (max-width: 768px) {
-  :root {
-    --card-pad: calc(1.8rem * var(--space-scale));
-    --card-pad-compact: calc(1.4rem * var(--space-scale)) calc(1.5rem * var(--space-scale));
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --card-pad: calc(1.4rem * var(--space-scale));
-    --card-pad-compact: calc(1.2rem * var(--space-scale));
-  }
-}
-
-/*--------- 14b. Spotlight (optional) ---------*/
-/*
- * These rules only apply together with <Spotlight>. Kept here so they are
- * ready if you decide to use it more widely.
- *
- * The gradient rides on the same ::after as the sheen, so the sheen is
- * cancelled on whichever card is under the cursor. The two do not work
- * together: a sweep passing through while a spotlight tracks the mouse at
- * the same moment is just noise.
- *
- * ⚠️ This is the one thing in the file that costs a paint: a
- * radial-gradient at a moving position means repainting the card on every
- * frame the mouse moves through it. The component bails out early on any
- * touch device and on any tier that is not "high".
- */
-html [data-fx="card"][data-spot="on"]::after {
-  background: radial-gradient(
-    circle 180px at var(--spot-x, 50%) var(--spot-y, 50%),
-    rgba(var(--accent-color-rgb), 0.10),
-    transparent 70%
-  );
-  transform: none;
-  transition: opacity 200ms linear;
-}
-
-/*--------- 15. Micro-interactions ---------*/
-
-/* The link underline: it draws in from the left and wipes out to the
-   right, so it reads as passing through rather than appearing and
-   disappearing. transform, not text-decoration — the latter causes
-   layout. */
-[data-fx="link"] { position: relative; display: inline-block; }
-
-[data-fx="link"]::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform var(--motion-fast) var(--motion-ease);
-}
-
-[data-fx="link"]:hover::after,
-[data-fx="link"]:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* The arrow in "see more" links — a 3px move, just enough to suggest
-   direction */
-[data-fx="arrow"] {
-  display: inline-block;
-  transition: transform var(--motion-fast) var(--motion-ease);
-}
-
-:is(a, button):hover [data-fx="arrow"],
-:is(a, button):focus-visible [data-fx="arrow"] { transform: translateX(3px); }
-
-/* Tags and chips — the site is full of them and every one was inert */
-[data-fx="tag"] {
-  transition:
-    transform var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease),
-    color var(--motion-fast) var(--motion-ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  [data-fx="tag"]:hover {
-    transform: translateY(-2px);
-    border-color: rgba(var(--accent-color-rgb), 0.5);
-    color: var(--accent-color);
-  }
-}
-
-[data-fx="tag"]:active { transform: scale(0.94); transition-duration: 80ms; }
-
-/*
- * Press feedback on everything interactive.
- *
- * The cheapest thing in this file and the one you feel the most. On mobile
- * there is no hover at all — the visitor taps and the site says nothing.
- * This shrink turns "I pressed it and I'm waiting" into "I pressed it and
- * something happened". 40 milliseconds.
- *
- * :where() keeps specificity at zero so it never fights a local rule.
- */
-/*
- * Press feedback — **stays at 120ms on purpose, and doesn't follow --motion-fast.**
- *
- * This isn't a transition, it's a touch. The user pressed and is waiting for the device to say "got it".
- * Any delay here above ~150ms reads as a **fault**, not as luxury — the same reason
- * Apple keeps press feedback instant even in its smoothest transitions.
- *
- * If you tied it to --motion-fast (380ms) every button would feel like it's lagging.
- */
-:where(a, button, [role="button"], summary) {
-  transition: transform 120ms var(--motion-ease);
-}
-
-:where(a, button, [role="button"], summary):active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-/* Form fields — the field lifts slightly on focus */
-:where(input, textarea, select) {
-  transition:
-    transform var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease),
-    background-color var(--motion-fast) var(--motion-ease);
-}
-
-:where(input, textarea):focus-visible { transform: translateY(-1px); }
-
-/* Social icons */
-[data-fx="social"] { transition: transform var(--motion-fast) var(--motion-ease); }
-
-@media (hover: hover) and (pointer: fine) {
-  [data-fx="social"]:hover { transform: translateY(-3px) rotate(-4deg); }
-}
-
-html[data-tier="low"] :where([data-fx="tag"], [data-fx="social"]):hover {
-  transform: none;
+    background-color 0.55s ease,
+    color 0.55s ease,
+    border-color 0.55s ease,
+    fill 0.55s ease,
+    stroke 0.55s ease !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-fx="link"]::after,
-  [data-fx="arrow"],
-  [data-fx="tag"],
-  [data-fx="social"],
-  :where(a, button, [role="button"], summary),
-  :where(input, textarea, select) { transition: none; }
-  :where(a, button, [role="button"], summary):active { transform: none; }
-  /* The link underline still appears — that is information, not decoration */
-  [data-fx="link"]:hover::after,
-  [data-fx="link"]:focus-visible::after { transform: scaleX(1); }
-}
-
-/*--------- 16. Layout and content primitives ---------*/
-/*
- * ══ SAME IDEA AS SECTION 14, APPLIED TO THE REST OF THE SITE ══
- *
- * Section 14 made the card look come from exactly one place. Every family
- * below was in the same state the card was in: written out by hand in
- * three to fourteen different module files, drifting apart a little each
- * time someone touched one of them.
- *
- * What was actually duplicated, measured across the 24 module files:
- *
- *   focus ring        14 blocks, in 2 variants   → fixed in section 3
- *   section title      5 identical copies        → [data-fx="section-title"]
- *   section shell      3 identical copies        → [data-fx="section"]
- *   container          3 identical copies        → [data-fx="container"]
- *   section head       3 copies                  → [data-fx="section-head"]
- *   inline link        6 copies                  → [data-fx="linkline"]
- *   micro-label        3 identical copies        → [data-fx="label"]
- *   timeline rail      2 identical copies        → [data-fx="timeline"]
- *   text field         2 identical copies        → [data-fx="field"]
- *   mono id            2 copies                  → [data-fx="id"]
- *
- * Every rule here is `html [data-fx="…"]` for the same reason section 14
- * is: (0,1,1) beats any single class in a module file regardless of CSS
- * load order.
- *
- * The rule for module files is unchanged from section 14: they keep
- * internal layout (grid, gap, order, what goes where) and hold no
- * appearance declarations for anything that has a primitive here.
- */
-
-/* ── Section shell ───────────────────────────────────────────────────── */
-/*
- * The element selector `section` in section 6 handles the page-level
- * rhythm. This handles the full-height sections that opt in, which had
- * their own padding and their own content-visibility reservation.
- *
- * data-section="auto" drops the min-height — contact-section was the one
- * that never wanted it, and it also reserves less vertical space.
- */
-html [data-fx="section"] {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding: var(--section-pad);
-  content-visibility: auto;
-  contain-intrinsic-size: var(--section-reserve);
-}
-
-html [data-fx="section"][data-section="auto"] {
-  min-height: 0;
-  --section-pad: calc(8rem * var(--space-scale)) 0 calc(9rem * var(--space-scale));
-  --section-reserve: 1px 900px;
-}
-
-/* ── Container ───────────────────────────────────────────────────────── */
-html [data-fx="container"] {
-  margin: 0 auto;
-  max-width: var(--container-max-width);
-  padding: 0 var(--container-pad-x);
-}
-
-/* The gallery runs edge to edge and pads itself internally */
-html [data-fx="container"][data-container="full"] {
-  width: 100%;
-  max-width: none;
-  padding: 0;
-}
-
-/* ── Section head ────────────────────────────────────────────────────── */
-html [data-fx="section-head"] {
-  text-align: center;
-  margin-bottom: var(--section-head-gap);
-}
-
-/* ── Section title ───────────────────────────────────────────────────── */
-/*
- * Two horizontal rules stacked at the bottom edge: a full-width hairline
- * and a shorter, thicker red one centred on top of it.
- *
- * Both pseudo-elements share the positioning block, so the two size
- * variants only need to change type metrics — the underline geometry is
- * driven by the --title-underline-* tokens from section 1 and is identical
- * either way.
- */
-html [data-fx="section-title"] {
-  position: relative;
-  display: inline-block;
-  color: var(--text-color);
-  font-weight: 800;
-  font-size: var(--title-size);
-  letter-spacing: var(--title-tracking);
-  text-transform: uppercase;
-  padding-bottom: var(--title-gap);
-}
-
-html [data-fx="section-title"][data-title="lg"] {
-  font-size: var(--title-size-lg);
-  letter-spacing: var(--title-tracking-lg);
-  padding-bottom: var(--title-gap-lg);
-}
-
-html [data-fx="section-title"]::before,
-html [data-fx="section-title"]::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-html [data-fx="section-title"]::before {
-  width: 100%;
-  height: var(--title-underline-thin);
-  background: rgba(var(--main-color-rgb), var(--title-underline-opacity));
-}
-
-html [data-fx="section-title"]::after {
-  width: var(--title-underline-width);
-  height: var(--title-underline-thick);
-  background: var(--main-color);
-}
-
-/* ── Timeline rail ───────────────────────────────────────────────────── */
-/* The vertical line behind the experience and projects timelines. */
-html [data-fx="timeline"] {
-  position: relative;
-  /* rem so the rail narrows with --ui-scale — a px width here would have
-     left the cards shrinking inside a box that stayed the same size, which
-     only widens the empty margins. */
-  max-width: 116rem;
-  margin: 0 auto;
-  padding: 2rem 0;
-}
-
-html [data-fx="timeline"]::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--timeline-line-width);
-  background: rgba(var(--main-color-rgb), var(--timeline-line-opacity));
-}
-
-/* ── Micro-label ─────────────────────────────────────────────────────── */
-/* The small mono uppercase caption above a value: <dt>, form labels, the
-   caption over a stat. */
-html [data-fx="label"] {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-/* ── Mono identifier ─────────────────────────────────────────────────── */
-/* Technique IDs, case IDs — anything that reads as a reference code.
-   tabular-nums so a column of them lines up. */
-html [data-fx="id"] {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--accent-color);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── Inline link ─────────────────────────────────────────────────────── */
-/*
- * A link inside a paragraph, distinct from [data-fx="link"] in section 15.
- * That one animates an underline in on hover for standalone links; this
- * one is always underlined because it sits inside running text, where an
- * invisible link is an accessibility problem, not a style choice.
- */
-html [data-fx="linkline"] {
-  color: var(--text-muted);
-  text-decoration: none;
-  border-bottom: 1px solid var(--hairline);
-  transition:
-    color var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease);
-}
-
-html [data-fx="linkline"]:hover,
-html [data-fx="linkline"]:focus-visible {
-  color: var(--accent-color);
-  border-bottom-color: currentColor;
-}
-
-/*
- * Scoped variant. Most of the inline links on this site are not marked up
- * one by one — they are every <a> inside a list or a paragraph
- * (.evidenceList a, .suggestList a, .contact a, .org a).
- * Marking the container once beats adding an attribute to every anchor.
- *
- * The originals had drifted: .evidenceList used --text-dim with a 0.18
- * border, everything else used --text-muted with 0.22, and cv's .org a and
- * a.dates changed colour on hover but not the underline. They are one
- * treatment now.
- */
-html [data-links="inline"] a {
-  color: var(--text-muted);
-  text-decoration: none;
-  border-bottom: 1px solid var(--hairline);
-  transition:
-    color var(--motion-fast) var(--motion-ease),
-    border-color var(--motion-fast) var(--motion-ease);
-}
-
-html [data-links="inline"] a:hover,
-html [data-links="inline"] a:focus-visible {
-  color: var(--accent-color);
-  border-bottom-color: currentColor;
-}
-
-/* ── Text field ──────────────────────────────────────────────────────── */
-/*
- * A bare input that sits inside a styled row — the row owns the border and
- * the focus state, the input owns nothing but its text. Used by the blog
- * filter bar and the command palette, which had identical copies.
- */
-html [data-fx="field"] {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-bright);
-  font-family: var(--font-mono);
-  /* At least 16px, or iOS zooms the page in on focus */
-  font-size: 16px;
-  letter-spacing: 0.5px;
-}
-
-/* --text-faint (#5a5a5a) has a contrast of 3.04 on black — fails AA.
-   Placeholder text is real text the user needs to read, not decoration.
-   --text-dim (#a59f90) gives 7.96 and passes, and it's a token that already exists on the site.
-
-   And that was the only use of --text-faint, so the token was removed — the section 1
-   rule says a token nobody reads isn't a token, it's a comment. (css-audit caught it.) */
-html [data-fx="field"]::placeholder { color: var(--text-dim); }
-
-/* The row owns the focus indication, so the input suppresses its own */
-html [data-fx="field"]:focus-visible { outline: none; }
-
-/* ── Responsive ──────────────────────────────────────────────────────── */
-/*
- * These values are the ones the five modules already used — collected here
- * and reconciled. The drift that got collapsed, for the record:
- *
- *   title (md)  attack 2.2rem @991 · contact 2.2rem @900 · projects 2.1rem @430
- *   title (lg)  art 3rem @991, 2.6rem @430 · experience 2.5rem @430
- *   section pad attack 5rem 0 4rem @991 · contact 5rem 0 6rem @900
- *
- * Contact's larger bottom padding was the one real difference, and it is
- * kept — as part of data-section="auto", which contact already carries.
- */
-@media (max-width: 991px) {
-  :root {
-    /* Phones and small tablets are already tight. Trimming type here the
-       way the desktop does would push body text under ~14px, which costs
-       readability rather than buying usable space. */
-    --ui-scale: 0.96;
-    --section-pad: 5rem 0 4rem;
-    --section-head-gap: 4rem;
-    --title-size: 2.2rem;
-    --title-size-lg: 3rem;
+  * {
+    scroll-behavior: auto !important;
   }
-  html [data-fx="section"][data-section="auto"] { --section-pad: 5rem 0 6rem; }
 
-  /* The rail moves off centre and runs down the left edge — the two-column
-     timeline collapses to a single column at this width. */
-  html [data-fx="timeline"] { padding: 1rem 0; }
-  html [data-fx="timeline"]::after { left: 2rem; }
-}
-
-@media (max-width: 430px) {
-  :root {
-    --section-head-gap: 3rem;
-    --title-size: 2.1rem;
-    --title-size-lg: 2.5rem;
-    --title-tracking-lg: 1.6px;
+  /* Infinite indicators are decoration, not information. */
+  .animate-ping,
+  .animate-pulse {
+    animation: none !important;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html [data-fx="linkline"] { transition: none; }
-}
-
-/*--------- 17. Buttons and actions ---------*/
-/*
- * ══ THE SINGLE SOURCE FOR EVERY ACTION CONTROL ══
- *
- * Six different button treatments existed across five files. Two of them
- * (cv and not-found) were byte-identical apart from padding; the other four
- * were the same idea — mono, uppercase, a thin border, a tinted hover — at
- * four slightly different sizes and border opacities:
- *
- *   cv .primaryAction/.secondaryAction   1.3rem  · pad 1.1rem 2.2rem
- *   not-found .primary/.secondary        1.3rem  · pad 1.2rem 2.4rem   (same rules)
- *   blog .primaryAction/.cardActions a   1.2rem  · border .15 · 44px min
- *   projects .action-btn                 1.05rem · border .10 · 44px min
- *   art .primaryAction                   1.3rem  · border main-color
- *   home .btn                            0.92rem · no border (kept — it is
- *                                        the hero CTA and has its own shape)
- *
- * The base below is shared. Everything that genuinely differs is a variant:
- *
- *   data-btn="solid"    filled with the main colour
- *   data-btn="outline"  hairline border, muted text        (the cv/404 pair)
- *   data-btn="ghost"    faint border, transparent          (blog/projects)
- *
- *   data-tone="main"    red border and text
- *   data-tone="accent"  gold border and text
- *
- * home's .btn is deliberately NOT converted: it is clipped to a trapezoid,
- * lifts 4px on hover and animates its icon. That is a distinct control, not
- * a drifted copy of this one.
- */
-
-:root {
-  --btn-size: 1.3rem;
-  --btn-pad: 1.1rem 2.2rem;
-  --btn-tracking: 0.1em;
-  --btn-border: rgba(255, 255, 255, 0.15);
-  --btn-radius: var(--radius-button);
-  /* Minimum comfortable tap target on a touch screen. */
-  --tap-min: 44px;
-  /*
-   * Buttons get their own speed instead of --motion-fast. --motion-fast is
-   * 380ms on desktop — right for a card lifting, sluggish for a button the
-   * cursor is already on. 220ms reads as "responds instantly" without snapping.
-   */
-  --btn-speed: 220ms;
-  /* The corner brackets that lock onto a button on hover (see ::after) */
-  --btn-bracket: 7px;
-  --btn-bracket-w: 1.5px;
-  --btn-lift: -2px;
-  --success: #00ff88;
-  --success-rgb: 0, 255, 136;
-  /*
-   * Hover = the card hover. Every button, whatever its idle tone, lands on
-   * the same state the cards use: the darker surface, the red border, the
-   * red glow and the red→gold rule drawn across the top. One hover language
-   * for the whole site instead of a different colour per button.
-   */
-  --btn-hover-bg: var(--card-bg-hover, rgba(15, 15, 15, 0.9));
-  --btn-hover-border: var(--card-border-color-hover, rgba(var(--main-color-rgb), 0.55));
-  --btn-hover-rule: linear-gradient(90deg, var(--main-color), var(--accent-color));
-}
-
-html [data-fx="btn"] {
-  /* position + isolation: the sheen (::before) and the brackets (::after) are
-     positioned against the button and stack under its text, not under the page. */
-  position: relative;
-  isolation: isolate;
-  /* The global `button` rule sets overflow: hidden — that would clip the
-     brackets, which sit on the border line. The sheen no longer needs it. */
-  overflow: visible;
-  z-index: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75em;
-  min-height: var(--tap-min);
-  padding: var(--btn-pad);
-  border-radius: var(--btn-radius);
-  font-family: var(--font-mono);
-  font-size: var(--btn-size);
-  line-height: 1.2;
-  letter-spacing: var(--btn-tracking);
-  text-transform: uppercase;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  /* The card's top rule, as a background layer: 0 wide at rest, drawn
-     left → right on hover (background-size), exactly like the card's ::before. */
-  background-image: var(--btn-hover-rule);
-  background-repeat: no-repeat;
-  background-position: top left;
-  background-size: 0% 2px;
-  transition:
-    background-size var(--btn-speed) var(--motion-ease),
-    color var(--btn-speed) var(--motion-ease),
-    border-color var(--btn-speed) var(--motion-ease),
-    background-color var(--btn-speed) var(--motion-ease),
-    box-shadow var(--btn-speed) var(--motion-ease),
-    opacity var(--btn-speed) var(--motion-ease),
-    transform var(--btn-speed) var(--motion-ease-out);
-}
-
-/*
- * Sheen — a light band that sweeps across once on hover.
- *
- * This replaces the global `button::before` for these controls (it overrides
- * the same pseudo-element) and, unlike that one, it also runs on <a> buttons:
- * View PDF, Download and Open case were links, so they never got it.
- *
- * It moves by background-position, not transform, so it needs no
- * overflow: hidden on the button — which is what lets the brackets below
- * sit on the border without being clipped.
- */
-html [data-fx="btn"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  transform: none;
-  background: linear-gradient(
-      105deg,
-      transparent 38%,
-      rgba(var(--accent-color-rgb), 0.16) 50%,
-      transparent 62%
-    )
-    100% 0 / 250% 100% no-repeat;
-  transition: background-position 0s;
-}
-
-/*
- * Brackets — four corner marks that "lock on" to the button: they start a
- * little outside it and snap onto the corners. The same targeting language
- * as the custom cursor, at button scale. Drawn with gradients in
- * currentColor, so every tone recolours them for free.
- */
-html [data-fx="btn"]::after {
-  --b: var(--btn-bracket);
-  --w: var(--btn-bracket-w);
-  content: "";
-  position: absolute;
-  inset: -4px;
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(1.08);
-  background:
-    linear-gradient(currentColor, currentColor) top left / var(--b) var(--w),
-    linear-gradient(currentColor, currentColor) top left / var(--w) var(--b),
-    linear-gradient(currentColor, currentColor) top right / var(--b) var(--w),
-    linear-gradient(currentColor, currentColor) top right / var(--w) var(--b),
-    linear-gradient(currentColor, currentColor) bottom left / var(--b) var(--w),
-    linear-gradient(currentColor, currentColor) bottom left / var(--w) var(--b),
-    linear-gradient(currentColor, currentColor) bottom right / var(--b) var(--w),
-    linear-gradient(currentColor, currentColor) bottom right / var(--w) var(--b);
-  background-repeat: no-repeat;
-  transition:
-    opacity var(--btn-speed) var(--motion-ease),
-    transform var(--btn-speed) var(--motion-ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"]:hover {
-    transform: translate3d(0, var(--btn-lift), 0);
+@keyframes float-particle {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.3;
   }
-  html [data-fx="btn"]:hover::before {
-    background-position: 0 0;
-    transition: background-position 700ms var(--motion-ease-out);
-  }
-  html [data-fx="btn"]:hover::after {
-    color: var(--accent-color);
-    opacity: 0.9;
-    transform: scale(1);
+
+  100% {
+    transform: translate3d(10px, -20px, 0);
+    opacity: 0.1;
   }
 }
 
-/* Press: a short, physical push down — faster than the hover on purpose */
-html [data-fx="btn"]:active {
-  transform: translate3d(0, 0, 0) scale(0.97);
-  transition-duration: 80ms;
+/* ─── Additions for the pages the original theme does not have
+   (case library, case pages, CV, legal pages). Same tokens. ─── */
+
+/* Long-form text on the legal pages */
+.legal-copy p,
+.legal-copy li {
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  line-height: 1.75;
+  font-weight: 300;
+}
+.legal-copy ul {
+  list-style: square;
+  padding-left: 1.25rem;
+}
+.legal-copy li::marker {
+  color: var(--primary);
+}
+.legal-copy a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.legal-copy strong {
+  color: var(--foreground);
+  font-weight: 600;
 }
 
-html [data-fx="btn"]:focus-visible {
-  outline: 1px solid var(--accent-color);
-  outline-offset: 3px;
+/* The intro screen plays once per tab (see AppLoader.tsx) */
+.booted [data-app-loader] {
+  display: none;
 }
 
-html [data-fx="btn"]:focus-visible::after {
-  opacity: 0.9;
-  transform: scale(1);
+/* Lightbox: follow the theme's red instead of the library's default blue */
+.yarl__thumbnails_thumbnail_active {
+  border-color: var(--primary) !important;
 }
 
-/* ── icons inside a button ─────────────────────────────────────────────── */
-/*
- * <svg data-fx-icon="arrow|external|download|gallery|link|check">
- * Each kind moves the way its action does: the arrow goes forward, the
- * external-link icon leaves up-right, the download drops down.
- */
-html [data-fx="btn"] [data-fx-icon] {
-  flex-shrink: 0;
-  width: 1.15em;
-  height: 1.15em;
-  transition: transform var(--btn-speed) var(--motion-ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"]:hover [data-fx-icon="arrow"]    { transform: translateX(4px); }
-  html [data-fx="btn"]:hover [data-fx-icon="external"] { transform: translate(2px, -2px); }
-  html [data-fx="btn"]:hover [data-fx-icon="download"] { animation: btnIconDrop 900ms var(--motion-ease) infinite; }
-  html [data-fx="btn"]:hover [data-fx-icon="gallery"]  { transform: scale(1.12) rotate(-6deg); }
-  html [data-fx="btn"]:hover [data-fx-icon="link"]     { transform: rotate(-25deg); }
-}
-
-@keyframes btnIconDrop {
-  0%, 100% { transform: translateY(0); }
-  45%      { transform: translateY(3px); }
-}
-
-/* ── solid ───────────────────────────────────────────────────────────── */
-html [data-fx="btn"][data-btn="solid"] {
-  background-color: var(--main-color);
-  color: var(--text-bright);
-  border: 1px solid var(--main-color);
-}
-
-
-/* ── outline ─────────────────────────────────────────────────────────── */
-html [data-fx="btn"][data-btn="outline"] {
-  background-color: transparent;
-  border: 1px solid var(--hairline);
-  color: var(--text-muted);
-}
-
-
-html [data-fx="btn"][data-btn="outline"]:focus-visible {
-  color: var(--accent-color);
-  border-color: currentColor;
-}
-
-/* ── ghost ───────────────────────────────────────────────────────────── */
-/*
- * The compact action that sits in a card footer. Smaller type than the
- * outline variant, and a fainter border, because several of these sit side
- * by side and a full-strength border reads as a grid.
- */
-html [data-fx="btn"][data-btn="ghost"] {
-  --btn-size: 1.2rem;
-  --btn-pad: 0.6rem 1.4rem;
-  --btn-tracking: 1px;
-  background-color: rgba(255, 255, 255, 0.015);
-  border: 1px solid var(--btn-border);
-  color: rgba(255, 255, 255, 0.78);
-  font-weight: 700;
-}
-
-
-/* ── tones ───────────────────────────────────────────────────────────── */
-/*
- * A tone recolours whichever variant it is applied to. It does not carry
- * geometry — that stays with data-btn — which is what stopped the previous
- * copies from being combinable.
- */
-html [data-fx="btn"][data-tone="main"] {
-  border-color: rgba(var(--main-color-rgb), 0.45);
-  color: var(--main-text);
-}
-
-html [data-fx="btn"][data-tone="accent"] {
-  border-color: rgba(var(--accent-color-rgb), 0.4);
-  color: var(--accent-color);
-}
-
-/*
- * ── the hover: one state for every button ──────────────────────────────
- *
- * `html body [data-fx="btn"]` is (0,2,2): above every variant and tone rule
- * (0,2,1)–(0,3,1) at rest, above the global button hover (0,2,1), and still
- * below the copied/failed states (0,3,1 + :hover), which must win.
- *
- * The text goes white and the icon goes gold — the same move the card makes
- * with its title.
- */
-@media (hover: hover) and (pointer: fine) {
-  html body [data-fx="btn"]:hover {
-    background-color: var(--btn-hover-bg);
-    background-size: 100% 2px;
-    border-color: var(--btn-hover-border);
-    border-style: solid;
-    color: var(--text-bright);
+/* The CV prints as a plain one-column page */
+@media print {
+  @page {
+    margin: 14mm;
   }
-  html body [data-fx="btn"]:hover [data-fx-icon] { color: var(--accent-color); }
-}
-
-/* Keyboard focus gets the same look — the card does the same on :focus-within */
-html body [data-fx="btn"]:focus-visible {
-  background-color: var(--btn-hover-bg);
-  background-size: 100% 2px;
-  border-color: var(--btn-hover-border);
-  color: var(--text-bright);
-}
-
-/* Touch: no hover, so the card look shows while the finger is down */
-@media (hover: none) {
-  html body [data-fx="btn"]:active {
-    background-color: var(--btn-hover-bg);
-    background-size: 100% 2px;
-    border-color: var(--btn-hover-border);
-    color: var(--text-bright);
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  nav,
+  canvas {
+    display: none !important;
   }
 }
-
-/* A dashed edge marks an action that opens something in place (a gallery)
-   rather than navigating away. */
-html [data-fx="btn"][data-btn-edge="dashed"] { border-style: dashed; }
-
-/*
- * A finished state — "Link copied". Wins over hover on purpose: the
- * confirmation is the one thing the user must see, even with the cursor
- * still on the button.
- */
-html body [data-fx="btn"][data-state="done"],
-html body [data-fx="btn"][data-state="done"]:hover {
-  background-size: 0% 2px;
-  border-color: var(--success);
-  border-style: solid;
-  color: var(--success);
-  background-color: rgba(var(--success-rgb), 0.1);
-  box-shadow: 0 0 14px rgba(var(--success-rgb), 0.35);
-}
-
-html body [data-fx="btn"][data-state] [data-fx-icon] { color: inherit; }
-html [data-fx="btn"][data-state="done"] [data-fx-icon] {
-  animation: btnIconPop 420ms var(--motion-ease-out) both;
-}
-
-html body [data-fx="btn"][data-state="error"],
-html body [data-fx="btn"][data-state="error"]:hover {
-  background-size: 0% 2px;
-  border-color: var(--danger);
-  color: var(--danger);
-  background-color: rgba(var(--danger-rgb), 0.1);
-  animation: btnShake 360ms var(--motion-ease) 1;
-}
-
-@keyframes btnIconPop {
-  0%   { transform: scale(0.3) rotate(-30deg); opacity: 0; }
-  60%  { transform: scale(1.25) rotate(6deg);  opacity: 1; }
-  100% { transform: scale(1) rotate(0);        opacity: 1; }
-}
-
-@keyframes btnShake {
-  0%, 100% { translate: 0 0; }
-  25%      { translate: -3px 0; }
-  75%      { translate: 3px 0; }
-}
-
-/* Touch screens: no hover state to animate toward, so no sheen or lift —
-   the press scale above is the feedback. */
-@media (hover: none) {
-  html [data-fx="btn"]::before { display: none; }
-}
-
-html[data-tier="low"] [data-fx="btn"]::before { display: none; }
-html[data-tier="low"] [data-fx="btn"]:hover { transform: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  html [data-fx="btn"],
-  html [data-fx="btn"]::after,
-  html [data-fx="btn"] [data-fx-icon] { transition: none; }
-  html [data-fx="btn"]::before { display: none; }
-  html [data-fx="btn"]:hover,
-  html [data-fx="btn"]:active,
-  html [data-fx="btn"]:hover [data-fx-icon] { transform: none; animation: none; }
-  html [data-fx="btn"][data-state] [data-fx-icon],
-  html [data-fx="btn"][data-state] { animation: none; }
-}
-
-/*--------- 18. Modal overlay ---------*/
-/*
- * ══ THE SINGLE SOURCE FOR EVERY LAYER THAT OPENS OVER THE PAGE ══
- *
- * Four overlays, four copies of the same seven declarations, four different
- * scrim opacities and one hardcoded z-index that bypassed the token system
- * entirely:
- *
- *   CommandPalette .overlay    rgba(0,0,0,.82)  z var(--z-modal)  top-aligned
- *   ShortcutsHelp  .overlay    rgba(0,0,0,.85)  z var(--z-modal)  centred
- *   Terminal       .overlay    rgba(0,0,0,.88)  z var(--z-modal)  centred
- *   blog .galleryOverlay       rgba(0,0,0,.95)  z 9999            centred
- *
- * That 9999 was the real problem: --z-modal is 2000 and --z-progress is
- * 3000, so the gallery was sitting above the scroll progress bar while the
- * other three sat below it. Same kind of element, two different stacking
- * behaviours, decided by a number someone typed once.
- *
- * ── Usage ──
- *
- *   <div data-fx="overlay">                    centred, default scrim
- *   <div data-fx="overlay" data-overlay="top"> aligned to the top (palette)
- *
- * Scrim depth is a token, so a specific overlay can go darker without
- * restating the layout:
- *
- *   <div data-fx="overlay" style={{ "--scrim": "rgba(0,0,0,.95)" }}>
- */
-
-:root {
-  --scrim: rgba(0, 0, 0, 0.85);
-  --overlay-pad: clamp(1rem, 4vh, 3rem);
-}
-
-html [data-fx="overlay"] {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--overlay-pad);
-  background: var(--scrim);
-}
-
-/* The command palette hangs from the top rather than centring: the results
-   list changes height as you type, and a centred panel would slide up and
-   down under the cursor while you read it. */
-html [data-fx="overlay"][data-overlay="top"] {
-  align-items: flex-start;
-  --overlay-pad: clamp(1rem, 10vh, 9rem) 1rem 1rem;
-}
-
-
-/*--------- 19. Neon ---------*/
-/*
- * The layer that makes the theme "cyberpunk" rather than just loud colours.
- *
- * It all runs on primitives that already exist (data-fx), so no
- * module file was touched. That means this layer can be removed by deleting this whole section and the site
- * returns to its previous look without breaking.
- *
- * Every glow goes through --glow-*, and section 9 zeroes them on tier="low".
- */
-
-/* ── Headings ──────────────────────────────────────────────────────────── */
-html [data-fx="section-title"] {
-  text-shadow: var(--glow-text-main);
-}
-
-/*
- * Numbers and units — the small monospace text that gives the technical feel.
- *
- * Uses --tertiary (cyan), not red or gold. The reason is that three
- * colours of equal weight become chaos, so each colour has a role: red for headings
- * and buttons, gold for focus and tags, and cyan for data only.
- */
-html [data-fx="label"],
-html [data-fx="id"] {
-  color: var(--tertiary);
-  text-shadow: 0 0 8px rgba(var(--tertiary-rgb), 0.3);
-}
-
-/* ── Links ─────────────────────────────────────────────────────────────── */
-html [data-fx="link"]:hover,
-html [data-fx="linkline"]:hover {
-  text-shadow: var(--glow-text);
-}
-
-/* ── Tags ──────────────────────────────────────────────────────────────── */
-html [data-fx="tag"] {
-  border-color: rgba(var(--accent-color-rgb), 0.28);
-  background: rgba(var(--accent-color-rgb), 0.05);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="tag"]:hover {
-    border-color: rgba(var(--accent-color-rgb), 0.7);
-    box-shadow: var(--glow-accent);
-  }
-}
-
-/* ── Buttons ───────────────────────────────────────────────────────────── */
-@media (hover: hover) and (pointer: fine) {
-  /* The card's glow (--glow-main) plus a faint offset shadow underneath, so
-     the 2px lift reads as the button rising off the page. */
-  html body [data-fx="btn"]:hover {
-    box-shadow: var(--glow-main), 0 6px 0 -3px rgba(var(--main-color-rgb), 0.3);
-  }
-}
-
-html [data-fx="btn"]:focus-visible { box-shadow: var(--glow-accent-strong); }
-
-/* The copied/failed confirmation keeps its own colour over every glow above */
-html body [data-fx="btn"][data-state="done"]:is(:hover, :focus-visible) {
-  box-shadow: 0 0 14px rgba(var(--success-rgb), 0.35);
-}
-
-/* ── Social icons ──────────────────────────────────────────────────────── */
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="social"]:hover {
-    border-color: rgba(var(--accent-color-rgb), 0.7);
-    box-shadow: var(--glow-accent);
-  }
-}
-
-/* ── Input fields ──────────────────────────────────────────────────────── */
-html [data-fx="field"]:focus {
-  border-color: var(--accent-color);
-  box-shadow: var(--glow-accent);
-}
-
-/*
- * There used to be a scanline layer on html::after here. It was removed.
- *
- * Reason: the blog page already has its own scanline layer
- * (.page::before in blog/page.module.css, present before any changes).
- * So the extra layer stacked on top of it, and together the two gave a grid/texture feel
- * across the whole screen — which didn't look right.
- *
- * One layer was enough, and the one that already existed deserves to stay.
- */
-
-/*
- * Weak devices and people who prefer reduced motion: the glow is zeroed and the scanlines
- * are removed. The colours stay the same — the theme doesn't change, only the decoration
- * stops.
- */
-html[data-tier="low"] {
-  --glow-main: none;
-  --glow-accent: none;
-  --glow-accent-strong: none;
-  --glow-text: none;
-  --glow-text-main: none;
-}
-

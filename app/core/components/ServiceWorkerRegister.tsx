@@ -20,16 +20,19 @@
 import { useEffect } from "react";
 import { normalizePublicHref } from "@/app/core/config/shared";
 
-export default function ServiceWorkerRegister() {
+/* `enabled` is decided at build time by the root layout: true only when
+   public/sw.js exists — registering a missing file would log an error on
+   every page load. */
+export default function ServiceWorkerRegister({ enabled = true }: { enabled?: boolean }) {
   useEffect(() => {
+    if (!enabled) return;
     if (process.env.NODE_ENV !== "production") return;
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
 
+    /* Offline is progressive enhancement: a failed registration (old
+       browser, privacy settings …) stops nothing else. */
     const register = () => {
-      navigator.serviceWorker.register(normalizePublicHref("sw.js")).catch(() => {
-        // Offline is progressive enhancement, not a requirement — a failed registration
-        // (old browser, privacy settings, and so on) stops nothing else on the site.
-      });
+      navigator.serviceWorker.register(normalizePublicHref("sw.js")).catch(() => {});
     };
 
     if (document.readyState === "complete") {
@@ -38,7 +41,7 @@ export default function ServiceWorkerRegister() {
       window.addEventListener("load", register, { once: true });
       return () => window.removeEventListener("load", register);
     }
-  }, []);
+  }, [enabled]);
 
   return null;
 }

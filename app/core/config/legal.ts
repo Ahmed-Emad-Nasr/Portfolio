@@ -12,13 +12,13 @@
  *
  * ⚠️ When you change the code, change this file too:
  *
- *   · Enabled analytics (NEXT_PUBLIC_PLAUSIBLE_DOMAIN)? → ANALYTICS
+ *   · Analytics are read from core/config/analytics.ts (set by env at build time)
  *   · Added another contact form? → FORMS
  *   · Added any external script or embed? → THIRD_PARTY
  *   · Added any browser storage? → BROWSER_STORAGE
  */
 
-export const LEGAL_LAST_UPDATED = "2026-09-07";
+export const LEGAL_LAST_UPDATED = "2026-10-21";
 
 /** Contact details — the same email used across the site */
 export const LEGAL_CONTACT = {
@@ -39,8 +39,6 @@ export const LEGAL_CONTACT = {
  * Every value here was verified against the code and the build, not from memory.
  */
 export const SITE_FACTS = {
-  /** No analytics script at all in the built HTML */
-  ANALYTICS: false,
   /** No document.cookie anywhere in the code */
   COOKIES: false,
   /** No <form> anywhere on the built site */
@@ -49,13 +47,22 @@ export const SITE_FACTS = {
    * localStorage: a single key that saves the last section you were on in the navigation, so when
    * you come back you land in the same place. It's stored on your device and never sent to anyone.
    */
-  BROWSER_STORAGE: ["The last section opened in the navigation menu"],
+  BROWSER_STORAGE: [
+    "Your light or dark theme choice",
+    "The theme-transition speed, if you change it in the command palette",
+    "Whether the intro screen already played in this tab (cleared when the tab closes)",
+  ],
   /** Requests that may go to a third party from the visitor's browser */
   THIRD_PARTY: [
     {
       name: "YouTube (youtube-nocookie.com)",
       when: "Only when you click a video preview on the blog page yourself",
       note: "Uses the nocookie domain, and only loads after you click",
+    },
+    {
+      name: "github-contributions-api.jogruber.de",
+      when: "When you scroll near the GitHub contribution graph on the home page, to draw it",
+      note: "A public, open-source service; it receives your IP address like any web request, and nothing else",
     },
     {
       name: "GitHub Pages",

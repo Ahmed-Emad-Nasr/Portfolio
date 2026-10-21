@@ -14,44 +14,53 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_BASE_URL } from "@/app/core/config/site";
+import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
 import { LEGAL_CONTACT, LEGAL_LAST_UPDATED, SITE_FACTS } from "@/app/core/config/legal";
-import styles from "../legal.module.css";
+import { ANALYTICS } from "@/app/core/config/analytics";
+import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
+import { PageShell } from "@/app/components/shared/kit";
+import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Ahmed Emad Nasr",
   description:
-    "What this site does and does not collect. No analytics, no cookies, no tracking, and no contact form.",
+    "What this site does and does not collect. No cookies, no tracking, and nothing submitted to a server.",
   alternates: { canonical: "/privacy" },
   openGraph: {
     title: "Privacy Policy — Ahmed Emad Nasr",
-    description: "No analytics, no cookies, no tracking.",
+    description: "No cookies, no tracking.",
     url: `${SITE_BASE_URL}/privacy`,
+    images: [OG_IMAGE],
   },
 };
 
 export default function PrivacyPage() {
   return (
-    <main id="main-content" className={styles.page}>
-      <div className={styles.sheet}>
-        <Link href="/" className={styles.backLink}>← Back to the site</Link>
+    <PageShell>
+    <article className={legalPage}>
+      <div className={legalSheet}>
+        <Link href="/" className={legalBackLink}>← Back to the site</Link>
 
-        <h1 className={styles.title}>Privacy Policy</h1>
-        <p className={styles.updated}>Last updated: {LEGAL_LAST_UPDATED}</p>
+        <h1 className={legalTitle}>Privacy Policy</h1>
+        <p className={legalUpdated}>Last updated: {LEGAL_LAST_UPDATED}</p>
 
-        <div className={styles.summary}>
+        <div className={legalSummary}>
           <p>
             <strong>The short version.</strong> This is a personal portfolio. It
-            has no analytics, sets no cookies, runs no tracking, and has no
-            contact form. Nothing you do here is recorded by me.
+            sets no cookies, runs no tracking, and nothing you type is sent to a
+            server.{" "}
+            {ANALYTICS
+              ? `It counts visits with ${ANALYTICS.provider}, which is cookieless and keeps no profile of you.`
+              : "It has no analytics, so nothing you do here is recorded by me."}
           </p>
           <p>
-            The one exception is ordinary server logs kept by the host, and
+            The exceptions are ordinary server logs kept by the host, a public
+            GitHub statistics service that draws the contribution graph, and
             YouTube — which only loads if you click a video yourself.
           </p>
         </div>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Who runs this site</h2>
           <p>
             This site is a personal portfolio operated by an individual,{" "}
@@ -61,23 +70,27 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>What is not collected</h2>
           <p>
             To be specific rather than vague, here is what this site does{" "}
             <strong>not</strong> do:
           </p>
           <ul>
-            <li>No analytics of any kind. No Google Analytics, no Plausible, no pixels.</li>
+            {ANALYTICS ? (
+              <li>No Google Analytics, no advertising pixels, no session recording.</li>
+            ) : (
+              <li>No analytics of any kind. No Google Analytics, no Plausible, no pixels.</li>
+            )}
             <li>No cookies. The site sets none, first-party or third-party.</li>
             <li>No advertising, no advertising networks, no profiling.</li>
-            <li>No contact form, newsletter, or sign-up. There is nowhere to submit personal data.</li>
+            <li>No newsletter, sign-up, or server-side form. The contact form on the home page does not submit anywhere — it only opens your own email app with the message filled in.</li>
             <li>No accounts, no logins, no user profiles.</li>
             <li>Your data is never sold or shared, because none is collected.</li>
           </ul>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>What is stored in your browser</h2>
           <p>
             The site stores a small amount of data locally on your own device so
@@ -89,18 +102,20 @@ export default function PrivacyPage() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <p>
-            A service worker also caches pages and images so the site loads
-            faster on repeat visits and keeps working offline. That cache lives
-            on your device. Clearing your browser data removes all of it.
-          </p>
+          {HAS_SERVICE_WORKER && (
+            <p>
+              A service worker also caches pages and images so the site loads
+              faster on repeat visits and keeps working offline. That cache lives
+              on your device. Clearing your browser data removes all of it.
+            </p>
+          )}
           <p>
             This is functional storage that the site needs to work as intended.
             It is not used to identify you, follow you, or build any profile.
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Third parties</h2>
           <p>
             Very few requests leave your browser to anyone other than the host:
@@ -130,7 +145,21 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        {ANALYTICS && (
+          <section className={legalSection}>
+            <h2>Visit statistics</h2>
+            <p>
+              To see which pages and cases are read, the site uses{" "}
+              <strong>{ANALYTICS.provider}</strong>. It counts page views, the
+              referring site, the browser and operating system, and the country
+              — in aggregate. It sets no cookies, uses no fingerprinting, and does
+              not follow you across other sites. Its own data policy is{" "}
+              <a href={ANALYTICS.policy} target="_blank" rel="noopener noreferrer">here</a>.
+            </p>
+          </section>
+        )}
+
+        <section className={legalSection}>
           <h2>Cookies</h2>
           <p>
             This site sets no cookies. There is no cookie banner because there
@@ -138,27 +167,27 @@ export default function PrivacyPage() {
             does not exist would be misleading rather than helpful.
           </p>
           <p>
-            The local storage described above is limited to remembering an
-            interface preference on your own device. Under the ePrivacy Directive
+            The local storage described above is limited to remembering
+            interface preferences on your own device. Under the ePrivacy Directive
             and comparable rules, storage that is strictly necessary for a
             service the user has requested does not require consent. If tracking
-            or analytics are ever added to this site, this section and the
-            consent position will be revisited before they go live.
+            or cookie-based analytics are ever added to this site, this section and
+            the consent position will be revisited before they go live.
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Emailing me</h2>
           <p>
-            The email link on this site opens your own mail application. Nothing
-            is sent through the site itself. If you choose to email me, I will
+            The email link and the contact form on this site both open your own
+            mail application. Nothing is sent through the site itself. If you choose to email me, I will
             have whatever you put in that email — your address and its contents —
             and I keep it only for as long as needed to reply and to keep a
             record of the conversation. I do not add anyone to a mailing list.
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Your rights</h2>
           <p>
             Because no personal data is collected through this site, there is
@@ -175,7 +204,7 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Children</h2>
           <p>
             This site is a professional portfolio aimed at employers and
@@ -184,15 +213,16 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Changes</h2>
           <p>
             If the site changes in a way that affects this policy — for example
-            if analytics or a contact form are added — this page will be updated
+            if analytics or a server-side form are added — this page will be updated
             and the date at the top changed before that feature goes live.
           </p>
         </section>
       </div>
-    </main>
+    </article>
+    </PageShell>
   );
 }

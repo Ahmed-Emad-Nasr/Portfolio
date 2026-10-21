@@ -211,7 +211,7 @@ if (has("experience.ts")) {
    */
   /*
    * Ordering and alternation are now computed in the component
-   * (experience-section.tsx sorts by date and uses index % 2 for the side).
+   * (core/config/portfolio-data.ts sorts by date before the timeline renders).
    *
    * So the two checks that used to live here — "array not sorted" and "two items on the same
    * side" — were measuring something that no longer affects the screen. Keeping them
@@ -220,7 +220,7 @@ if (has("experience.ts")) {
    * What still matters: that the component **still** sorts. If someone removes the sort
    * later, the file order will matter again.
    */
-  const comp = readCode("../../components/experience/experience-section.tsx");
+  const comp = readCode("portfolio-data.ts");
   if (!/\.sort\(/.test(comp)) {
     warn("the component no longer sorts by date — array order in the file matters again");
   } else ok("the component sorts by date and assigns sides itself");

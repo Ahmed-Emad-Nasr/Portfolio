@@ -1,26 +1,25 @@
 "use client";
 
 /*
- * blog/[slug]/CaseArticle.tsx
- * Author: Ahmed Emad Nasr
- *
- * The body of the case page. A client component because it needs the image gallery and copy, but
- * all the text is prerendered normally into the HTML — so Google and OG crawlers
- * see the full content without JS.
+ * CaseArticle — one case page, in the Sensei-Dev design language: the
+ * experience "service record" panel for the header, tertiary/accent chips,
+ * the credential cards' image treatment for screenshots, and the theme's
+ * lightbox for the evidence.
  */
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
+import { EASE } from "@/app/core/motion";
+import { TiltCard } from "@/app/core/components/Motion";
 import { normalizePublicHref, getThumbnail, formatDate } from "../blog-utils";
-import type { GalleryState } from "../blog-types";
-import blogStyles from "../page.module.css";
-import styles from "./case.module.css";
-import ActionIcon from "../components/ActionIcon";
-import { useCopyLink } from "../components/useCopyLink";
+import { useCopyLink } from "@/app/components/cases/useCopyLink";
+import { btnOutline, chipAccent, chipTertiary, ctaPrimary, ctaSecondary, KanjiWatermark } from "@/app/components/shared/kit";
 
-const BlogGalleryModal = dynamic(() => import("../components/BlogGalleryModal"), { ssr: false });
+const GalleryLightbox = dynamic(() => import("@/app/components/art-gallery/GalleryLightbox"), { ssr: false });
 
 type CaseItem = {
   id: string;
@@ -39,61 +38,49 @@ type CaseItem = {
 };
 
 type Sibling = { id: string; title: string } | null;
-
-/* Computed in page.tsx (Server Component) and delivered ready-made — this component is
-   client, so any import of attack.ts or cases.ts here would be bundled into the browser. */
+/* Passed in from the server page — importing attack.ts or cases.ts here
+   would bundle them into the browser. */
 type Technique = { id: string; name: string; tactic: string };
-type Related = {
-  id: string;
-  title: string;
-  category: string;
-  readTime: number;
-  sharedTechniques: number;
-};
+type Related = { id: string; title: string; category: string; readTime: number; sharedTechniques: number };
 
-/*
- * getThumbnail() turns "1.webp" into "1-thumb.webp" — it assumes every image
- * has a thumbnail on disk. That assumption isn't true for every case: the link-check
- * script found nine images in one case looking for a -thumb that doesn't exist,
- * so the evidence grid showed broken tiles.
- *
- * BlogCard already has this protection (it falls back to the full image on error), but
- * the case page didn't. This component unifies the behaviour.
- *
- * Note that the state must live in a per-image component — if it were in the parent,
- * one failing image would make every image fall back to full size.
- */
-function CaseShot({
-  shot,
-  index,
-  total,
-  title,
-  onOpen,
-}: {
-  shot: string;
-  index: number;
-  total: number;
-  title: string;
-  onOpen: (index: number) => void;
-}) {
+function BlockTitle({ children, japanese, id }: { children: ReactNode; japanese: string; id?: string }) {
+  return (
+    <div className="flex items-center gap-3 mb-5">
+      <div className="w-6 h-[2px] bg-primary" aria-hidden="true" />
+      <h2 id={id} className="font-mono text-[10px] text-primary tracking-[0.35em] uppercase font-bold">
+        {children}
+      </h2>
+      <span className="brush-jp text-base text-foreground/30" lang="ja">{japanese}</span>
+    </div>
+  );
+}
+
+function Shot({ shot, index, total, title, onOpen }: { shot: string; index: number; total: number; title: string; onOpen: (i: number) => void }) {
   const [thumbFailed, setThumbFailed] = useState(false);
-
   return (
     <button
       type="button"
-      className={styles.shot}
       onClick={() => onOpen(index)}
       aria-label={`Open screenshot ${index + 1} of ${total}`}
+      className="spotlight group relative aspect-[16/10] overflow-hidden bg-surface border border-foreground/5 hover:border-primary/40 transition-all duration-700"
     >
       <Image
         src={normalizePublicHref(thumbFailed ? shot : getThumbnail(shot))}
         alt={`${title} — screenshot ${index + 1}`}
         fill
-        sizes="(max-width: 992px) 45vw, 24vw"
+        sizes="(max-width: 768px) 50vw, 25vw"
         loading="lazy"
-        decoding="async"
         onError={() => setThumbFailed(true)}
+        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
       />
+      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-between p-3 z-10">
+        <span className="font-mono text-[9px] font-bold tracking-[0.3em] uppercase text-white">
+          Evidence {String(index + 1).padStart(2, "0")}
+        </span>
+        <Maximize2 size={12} className="text-white/70" />
+      </div>
     </button>
   );
 }
@@ -113,135 +100,137 @@ export default function CaseArticle({
   techniques?: readonly Technique[];
   related?: readonly Related[];
 }) {
-  const [gallery, setGallery] = useState<GalleryState | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const { state: copyState, copy } = useCopyLink();
-
-  const goGallery = useCallback((delta: number) => {
-    setGallery((cur) =>
-      cur
-        ? { ...cur, index: (cur.index + delta + cur.screenshots.length) % cur.screenshots.length }
-        : null,
-    );
-  }, []);
-
-  const openGallery = useCallback(
-    (index: number) => {
-      if (screenshots.length) setGallery({ title: item.title, screenshots, index });
-    },
-    [item.title, screenshots],
-  );
 
   const copyLink = useCallback(() => {
     void copy(`${window.location.origin}${window.location.pathname}`);
   }, [copy]);
 
-  const difficultyClass = blogStyles[`difficulty-${item.difficulty.toLowerCase()}`];
+  const slides = useMemo(
+    () =>
+      screenshots.map((shot, i) => ({
+        src: normalizePublicHref(shot),
+        title: item.title,
+        description: `Evidence ${i + 1} of ${screenshots.length}`,
+      })),
+    [screenshots, item.title],
+  );
 
   return (
-    <main id="main-content" className={styles.page}>
-      {/* A navigation bar specific to this page: the regular blog header scrolls to sections
-          that don't exist here, so it would be dead buttons. */}
-      <nav className={styles.bar} aria-label="Breadcrumb">
-        <Link href="/blog" className={styles.backLink}>
-          ← All cases
-        </Link>
-        <span className={styles.barSep} aria-hidden="true">
-          /
-        </span>
-        <span className={styles.barCurrent}>{item.category}</span>
-      </nav>
+    <article id="case-body" className="relative px-6 md:px-20 pt-36 md:pt-44 pb-24 overflow-hidden">
+      <KanjiWatermark chars="報告書" side="right" />
 
-      <article id="case-body" className={styles.article}>
-        <header className={styles.head}>
-          <p className={styles.kicker}>{item.type}</p>
-          <h1 className={styles.title}>{item.title}</h1>
-          <p className={styles.platform}>{item.platform}</p>
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Breadcrumb */}
+        <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
+          <Link href="/#cases" className="group flex items-center gap-2 text-primary hover:text-foreground transition-colors">
+            <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
+          </Link>
+          <span className="text-foreground/20" aria-hidden="true">/</span>
+          <span className="text-foreground/40">{item.category}</span>
+        </nav>
 
-          <div className={blogStyles.caseMetadata}>
-            <span className={`${blogStyles.badge} ${difficultyClass ?? ""}`}>{item.difficulty}</span>
-            <span className={blogStyles.badge}>{item.category}</span>
-            <span className={blogStyles.badge}>{item.readTime} min read</span>
-            <span className={blogStyles.badge}>{formatDate(item.date)}</span>
+        {/* Header */}
+        <motion.header
+          initial={{ opacity: 0, x: -32 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-4 mb-5">
+            <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
+            <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
+            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">事件</span>
           </div>
-        </header>
+          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-[0.95] text-foreground">
+            {item.title}
+          </h1>
+          <p className="mt-5 font-mono text-xs uppercase tracking-[0.25em] text-tertiary">{item.platform}</p>
 
-        <p className={styles.summary}>{item.description}</p>
-
-        <div className={blogStyles.cardActions}>
-          {/* This case may have image-only evidence. When there's no PDF, there are no buttons —
-              better than a button that leads to a 404. */}
-          {item.href && (
-            <>
-              <a
-                href={normalizePublicHref(item.href)}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-fx="btn" data-btn="solid" className={blogStyles.primaryAction}
-              >
-                <ActionIcon name="external" /> View PDF
-              </a>
-              <a href={normalizePublicHref(item.href)} download data-fx="btn" data-btn="ghost" data-tone="main">
-                <ActionIcon name="download" /> Download
-              </a>
-            </>
-          )}
-          {screenshots.length > 0 && (
-            <button
-              type="button"
-              onClick={() => openGallery(0)}
-              data-fx="btn" data-btn="ghost" data-tone="accent" data-btn-edge="dashed"
-            >
-              <ActionIcon name="gallery" /> Screenshots
-              <span className={blogStyles.btnCount}>{screenshots.length}</span>
-            </button>
-          )}
-          {/* FIX: same as BlogCard — no data-fx="btn", so the global `button` hover
-              (red background, white text) overrode this button's own hover. */}
-          <button
-            type="button"
-            onClick={copyLink}
-            data-fx="btn"
-            data-btn="ghost"
-            data-state={copyState === "idle" ? undefined : copyState}
-            className={styles.copyAction}
-          >
-            <ActionIcon key={copyState} name={copyState === "done" ? "check" : copyState === "error" ? "alert" : "link"} />
-            <span aria-live="polite">
-              {copyState === "done" ? "Copied!" : copyState === "error" ? "Copy failed" : "Copy link"}
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-on-surface-variant">
+            <span className="flex items-center gap-2 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
+              <AlertTriangle size={11} /> {item.difficulty}
             </span>
-          </button>
-        </div>
+            <span className="flex items-center gap-2 font-mono text-xs">
+              <Clock size={14} className="text-accent" /> {item.readTime} min read
+            </span>
+            <span className="flex items-center gap-2 font-mono text-xs">
+              <Calendar size={14} className="text-on-surface-variant/60" /> {formatDate(item.date)}
+            </span>
+          </div>
+        </motion.header>
 
-        <section className={styles.facts} aria-label="Case details">
-          <div className={styles.factBlock}>
-            <h2 className={styles.factTitle}>Tools</h2>
-            <div className={blogStyles.toolsListCompact}>
+        {/* Summary panel — the experience "service record" */}
+        <TiltCard max={3} className="spotlight relative bg-surface/60 border border-foreground/5 backdrop-blur-sm hover:border-primary/20 transition-all duration-700 overflow-hidden mb-14">
+          <div className="absolute top-0 left-0 w-[3px] h-full bg-primary" />
+          <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none" aria-hidden="true">
+            {screenshots.length ? String(screenshots.length).padStart(2, "0") : "00"}
+          </div>
+          <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-accent" />
+              <span className="font-mono text-[9px] text-foreground/30 tracking-[0.3em] uppercase">Case summary</span>
+            </div>
+            <span className="font-mono text-[9px] text-foreground/20 tracking-wider uppercase">{item.category}</span>
+          </div>
+          <div className="relative z-10 px-6 md:px-12 py-6 md:py-8">
+            <p className="text-base md:text-lg font-light text-foreground/80 leading-relaxed border-l-2 border-foreground/10 pl-5 italic">
+              {item.description}
+            </p>
+          </div>
+          <div className="relative z-10 px-6 md:px-12 pb-8 flex flex-wrap gap-4">
+            {item.href && (
+              <>
+                <a href={normalizePublicHref(item.href)} target="_blank" rel="noopener noreferrer" className={ctaPrimary}>
+                  <ExternalLink size={16} /> View PDF
+                </a>
+                <a href={normalizePublicHref(item.href)} download className={ctaSecondary}>
+                  <Download size={14} className="text-primary" /> Download
+                </a>
+              </>
+            )}
+            {screenshots.length > 0 && (
+              <button type="button" onClick={() => setGalleryIndex(0)} className={ctaSecondary}>
+                <Images size={14} className="text-primary" /> Evidence
+                <span className="font-mono text-[10px] text-foreground/40 tabular-nums">{screenshots.length}</span>
+              </button>
+            )}
+            <button type="button" onClick={copyLink} className={`${ctaSecondary} min-w-[12rem] justify-center`}>
+              {copyState === "done" ? <Check size={14} className="text-accent" /> : <Copy size={14} className="text-primary" />}
+              <span aria-live="polite">{copyState === "done" ? "Copied" : copyState === "error" ? "Copy failed" : "Copy link"}</span>
+            </button>
+          </div>
+        </TiltCard>
+
+        {/* Details */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16" aria-label="Case details">
+          <div>
+            <BlockTitle japanese="道具">Tools</BlockTitle>
+            <div className="flex flex-wrap gap-2">
               {item.tools.map((tool) => (
-                <span key={tool} className={blogStyles.toolButtonSmall}>
-                  {tool}
-                </span>
+                <span key={tool} className={chipTertiary}>{tool}</span>
               ))}
             </div>
           </div>
-
-          <div className={styles.factBlock}>
-            <h2 className={styles.factTitle}>Skills demonstrated</h2>
-            <div className={blogStyles.skillsListCompact}>
+          <div>
+            <BlockTitle japanese="技能">Skills</BlockTitle>
+            <div className="flex flex-wrap gap-2">
               {item.skillsGained.map((skill) => (
-                <span key={skill} className={blogStyles.skillButtonSmall}>
-                  {skill}
-                </span>
+                <span key={skill} className={chipAccent}>{skill}</span>
               ))}
             </div>
           </div>
-
-          <div className={styles.factBlock}>
-            <h2 className={styles.factTitle}>Tags</h2>
-            <div className={blogStyles.tagsListInline}>
+          <div>
+            <BlockTitle japanese="標識">Tags</BlockTitle>
+            <div className="flex flex-wrap gap-2">
               {item.tags.map((tag) => (
-                // The link takes you back to the library filtered on this tool/tag
-                <Link key={tag} href={`/blog?q=${encodeURIComponent(tag)}`} className={blogStyles.tagButtonSmall}>
-                  {tag}
+                <Link
+                  key={tag}
+                  href={`/?q=${encodeURIComponent(tag)}#cases`}
+                  className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10 hover:border-primary hover:text-primary transition-colors"
+                >
+                  #{tag}
                 </Link>
               ))}
             </div>
@@ -249,35 +238,24 @@ export default function CaseArticle({
         </section>
 
         {screenshots.length > 0 && (
-          <section className={styles.shots} aria-label="Screenshots">
-            <h2 className={styles.factTitle}>
-              Evidence — {screenshots.length} screenshot(s)
-            </h2>
-            <div className={styles.shotGrid}>
+          <section className="mb-16" aria-labelledby="case-evidence-title">
+            <BlockTitle id="case-evidence-title" japanese="証拠">Evidence — {screenshots.length} screenshot(s)</BlockTitle>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {screenshots.map((shot, i) => (
-                <CaseShot
-                  key={shot}
-                  shot={shot}
-                  index={i}
-                  total={screenshots.length}
-                  title={item.title}
-                  onOpen={openGallery}
-                />
+                <Shot key={shot} shot={shot} index={i} total={screenshots.length} title={item.title} onOpen={setGalleryIndex} />
               ))}
             </div>
           </section>
         )}
 
         {techniques.length > 0 && (
-          <section className={styles.attack} aria-labelledby="case-attack-title">
-            <h2 className={styles.factTitle} id="case-attack-title">
-              MITRE ATT&amp;CK — {techniques.length} technique(s)
-            </h2>
-            <ul className={styles.attackList}>
-              {techniques.map((technique) => (
-                <li key={technique.id} className={styles.attackChip}>
-                  <span className={styles.attackId}>{technique.id}</span>
-                  <span className={styles.attackName}>{technique.name}</span>
+          <section className="mb-16" aria-labelledby="case-attack-title">
+            <BlockTitle id="case-attack-title" japanese="戦術">MITRE ATT&amp;CK — {techniques.length} technique(s)</BlockTitle>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {techniques.map((t) => (
+                <li key={t.id} className="spotlight relative flex items-baseline gap-4 bg-surface/60 border border-foreground/5 px-5 py-4 hover:border-primary/40 transition-colors duration-500">
+                  <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0">{t.id}</span>
+                  <span className="text-sm text-foreground/80">{t.name}</span>
                 </li>
               ))}
             </ul>
@@ -285,19 +263,22 @@ export default function CaseArticle({
         )}
 
         {related.length > 0 && (
-          <section className={styles.related} aria-labelledby="case-related-title">
-            <h2 className={styles.factTitle} id="case-related-title">
-              Related reports
-            </h2>
-            <ul className={styles.relatedList}>
+          <section className="mb-16" aria-labelledby="case-related-title">
+            <BlockTitle id="case-related-title" japanese="関連">Related reports</BlockTitle>
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map((entry) => (
                 <li key={entry.id}>
-                  <Link href={`/blog/${entry.id}`} className={styles.relatedCard} data-fx="card" data-card="compact">
-                    <span className={styles.relatedTitle}>{entry.title}</span>
-                    <span className={styles.relatedMeta}>
-                      {entry.category} · {entry.readTime} min
-                      {entry.sharedTechniques > 0 &&
-                        ` · ${entry.sharedTechniques} shared technique(s)`}
+                  <Link
+                    href={`/blog/${entry.id}`}
+                    className="group spotlight spotlight-blue relative flex h-full flex-col bg-surface/60 border border-foreground/5 p-6 hover:border-tertiary/50 transition-colors duration-500"
+                  >
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-tertiary/0 group-hover:bg-tertiary transition-colors duration-500" aria-hidden="true" />
+                    <span className="font-display text-lg font-black uppercase tracking-tight text-foreground group-hover:text-tertiary transition-colors duration-300 mb-4">
+                      {entry.title}
+                    </span>
+                    <span className="mt-auto font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/40">
+                      {entry.category} • {entry.readTime} min
+                      {entry.sharedTechniques > 0 && ` • ${entry.sharedTechniques} shared technique(s)`}
                     </span>
                   </Link>
                 </li>
@@ -306,36 +287,38 @@ export default function CaseArticle({
           </section>
         )}
 
-        <nav className={styles.siblings} aria-label="Other cases">
+        {/* Previous / next */}
+        <nav className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10 border-t border-foreground/10" aria-label="Other cases">
           {previous ? (
-            <Link href={`/blog/${previous.id}`} className={styles.sibling}>
-              <span className={styles.siblingLabel}>← Previous</span>
-              <span className={styles.siblingTitle}>{previous.title}</span>
+            <Link href={`/blog/${previous.id}`} className="group spotlight relative flex flex-col gap-3 bg-surface/60 border border-foreground/5 p-6 hover:border-primary/40 transition-colors duration-500">
+              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
+                <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> Previous
+              </span>
+              <span className="font-display text-base font-black uppercase tracking-tight text-foreground/80 group-hover:text-foreground">{previous.title}</span>
             </Link>
           ) : (
             <span />
           )}
           {next && (
-            <Link href={`/blog/${next.id}`} className={`${styles.sibling} ${styles.siblingNext}`}>
-              <span className={styles.siblingLabel}>Next →</span>
-              <span className={styles.siblingTitle}>{next.title}</span>
+            <Link href={`/blog/${next.id}`} className="group spotlight relative flex flex-col items-end gap-3 text-right bg-surface/60 border border-foreground/5 p-6 hover:border-primary/40 transition-colors duration-500">
+              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
+                Next <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
+              <span className="font-display text-base font-black uppercase tracking-tight text-foreground/80 group-hover:text-foreground">{next.title}</span>
             </Link>
           )}
         </nav>
-      </article>
 
-      {gallery && (
-        <BlogGalleryModal
-          gallery={gallery}
-          currentShot={
-            gallery.screenshots[gallery.index]
-              ? normalizePublicHref(gallery.screenshots[gallery.index])
-              : null
-          }
-          setGallery={setGallery}
-          goGallery={goGallery}
-        />
+        <div className="mt-10 flex justify-center">
+          <Link href="/#cases" className={btnOutline}>
+            <ArrowLeft size={13} /> Back to the library
+          </Link>
+        </div>
+      </div>
+
+      {galleryIndex !== null && (
+        <GalleryLightbox open close={() => setGalleryIndex(null)} index={galleryIndex} slides={slides} />
       )}
-    </main>
+    </article>
   );
 }

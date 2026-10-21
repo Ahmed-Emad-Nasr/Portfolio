@@ -1,427 +1,325 @@
 "use client";
 
-/*
- * CommandPalette.tsx
- * Author: Ahmed Emad Nasr
- *
- * The palette itself. It is lazy-loaded from CommandPaletteMount, so all
- * the heavy imports here (portfolio.ts) stay out of the main bundle.
- *
- * The commands are built once at module level (they are constant), and the
- * parts that depend on the current page are computed in useMemo.
- *
- * Search: simple subsequence matching with priority ordering —
- * a literal match at the start > a literal match anywhere > scattered
- * characters in order. More than enough for a few dozen commands, and with
- * no extra library.
- */
-
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import { YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
-import { normalizePublicHref } from "@/app/blog/blog-utils";
-import { scrollToElement, scrollToTop } from "@/app/core/utils/scroll";
-import styles from "./CommandPalette.module.css";
+import {
+  Home,
+  Briefcase,
+  Code2,
+  Award,
+  Palette,
+  Mail,
+  Sun,
+  Moon,
+  Copy,
+  Check,
+  Download,
+  MessageCircle,
+  Gauge,
+  ChevronRight,
+  Search,
+  FileText,
+  FolderSearch,
+  SquareTerminal,
+  Keyboard,
+  PlayCircle,
+} from "lucide-react";
+import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
+import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
+import { useThemeFx } from "@/app/core/theme/ThemeFxProvider";
+import { FX_DURATIONS, getFxDuration, setFxDuration } from "@/app/core/theme/fx";
 
-type CommandGroup = "Navigate" | "Cases" | "Links" | "Actions";
-
-type Command = {
+interface Command {
   id: string;
+  group: string;
   label: string;
   hint?: string;
-  group: CommandGroup;
-  /** Extra search terms that are not shown in the UI */
-  keywords?: string;
-  run: (ctx: CommandContext) => void;
-};
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  run: () => void | Promise<void>;
+}
 
-type CommandContext = {
-  goToSection: (id: string) => void;
-  goToRoute: (href: string) => void;
-  close: () => void;
-};
+/* Passed in by the root layout (a server component), so the palette doesn't
+   pull all of cases.ts into every page's bundle for three fields */
+export type CaseIndexEntry = { id: string; title: string; category: string };
 
-const EMAIL = "ahmed.em.nasr@gmail.com";
-const CV_HREF = "Assets/cv/AhmedEmadNasr_CV.pdf";
-
-// ─── Static commands ─────────────────────────────────────────────────────────
-
-const PORTFOLIO_SECTIONS: { id: string; label: string }[] = [
-  { id: "Home", label: "Home" },
-  { id: "Experience", label: "Experience" },
-  { id: "Projects", label: "Projects" },
-  { id: "Certifications", label: "Certifications" },
-];
-
-const BLOG_SECTIONS: { id: string; label: string }[] = [
-  { id: "blog-pdfs-title", label: "PDF Library" },
-  { id: "youtube-hub-title", label: "YouTube Hub" },
-];
-
-const LINK_COMMANDS: Command[] = [
-  {
-    id: "link-linkedin",
-    label: "LinkedIn",
-    hint: "opens in a new tab",
-    group: "Links",
-    keywords: "profile social contact",
-    run: () => window.open("https://www.linkedin.com/in/ahmed-emad-nasr/", "_blank", "noopener"),
-  },
-  {
-    id: "link-github",
-    label: "GitHub",
-    hint: "opens in a new tab",
-    group: "Links",
-    keywords: "code repos source",
-    run: () => window.open("https://github.com/Ahmed-Emad-Nasr", "_blank", "noopener"),
-  },
-  {
-    id: "link-x",
-    label: "X / Twitter",
-    hint: "opens in a new tab",
-    group: "Links",
-    keywords: "twitter social 0x3omda",
-    run: () => window.open("https://x.com/0x3omda", "_blank", "noopener"),
-  },
-  {
-    id: "link-youtube",
-    label: "YouTube channel",
-    hint: "opens in a new tab",
-    group: "Links",
-    keywords: "videos training arabic",
-    run: () => window.open(YOUTUBE_CHANNEL_URL, "_blank", "noopener"),
-  },
-  {
-    id: "link-rss",
-    label: "RSS feed",
-    hint: "/feed.xml",
-    group: "Links",
-    keywords: "subscribe feed atom",
-    run: () => window.open(normalizePublicHref("feed.xml"), "_blank", "noopener"),
-  },
-];
-
-const ACTION_COMMANDS: Command[] = [
-  {
-    id: "action-cv-open",
-    label: "Open CV",
-    hint: "PDF",
-    group: "Actions",
-    keywords: "resume cv download pdf",
-    run: () => window.open(normalizePublicHref(CV_HREF), "_blank", "noopener"),
-  },
-  {
-    id: "action-email",
-    label: "Copy email address",
-    hint: EMAIL,
-    group: "Actions",
-    keywords: "mail contact hire",
-    run: () => {
-      void navigator.clipboard?.writeText(EMAIL);
-    },
-  },
-  {
-    id: "action-email-send",
-    label: "Send an email",
-    hint: "opens your mail app",
-    group: "Actions",
-    keywords: "contact hire mailto",
-    run: () => {
-      window.location.href = `mailto:${EMAIL}`;
-    },
-  },
-  {
-    id: "action-terminal",
-    label: "Open terminal",
-    hint: "or type 3omda",
-    group: "Actions",
-    keywords: "shell console cli easter egg",
-    run: () => window.dispatchEvent(new CustomEvent("sensei:open-terminal")),
-  },
-  {
-    id: "action-shortcuts",
-    label: "Keyboard shortcuts",
-    hint: "?",
-    group: "Actions",
-    keywords: "keys help hotkeys",
-    run: () => window.dispatchEvent(new CustomEvent("sensei:open-shortcuts")),
-  },
-  {
-    id: "action-top",
-    label: "Back to top",
-    group: "Actions",
-    keywords: "scroll up start",
-    run: () => scrollToTop(),
-  },
-];
-
-// Each case leads to its own page
-const CASE_COMMANDS: Command[] = caseEvidenceLibrary.map((item) => ({
-  id: `case-${item.id}`,
-  label: item.title,
-  hint: item.category ?? item.platform,
-  group: "Cases",
-  keywords: [item.platform, item.category, ...(item.tags ?? []), ...(item.tools ?? [])]
-    .filter(Boolean)
-    .join(" "),
-  run: (ctx) => ctx.goToRoute(`/blog/${item.id}`),
-}));
-
-// ─── Search ──────────────────────────────────────────────────────────────────
-
-/**
- * Returns a match score, or -1 when there is no match at all.
- * A higher score sorts earlier.
- */
-const score = (haystack: string, needle: string): number => {
-  if (!needle) return 0;
-
-  const h = haystack.toLowerCase();
-  const idx = h.indexOf(needle);
-
-  if (idx === 0) return 1000;
-  if (idx > 0) return 500 - Math.min(idx, 400);
-
-  // fallback: the characters in order, but not necessarily adjacent
-  let pos = 0;
-  for (let i = 0; i < needle.length; i++) {
-    pos = h.indexOf(needle[i], pos);
-    if (pos === -1) return -1;
-    pos++;
-  }
-  return 100;
-};
-
-const GROUP_ORDER: CommandGroup[] = ["Navigate", "Cases", "Actions", "Links"];
-
-// ─── Component ───────────────────────────────────────────────────────────────
-
-export default function CommandPalette({ onClose }: { onClose: () => void }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const isBlog = pathname.startsWith("/blog");
-
+export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry[] }) {
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeIndex, setActiveIndex] = useState(0);
-
+  const [index, setIndex] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const [fxDuration, setFxDurationState] = useState(getFxDuration());
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
-  const restoreFocusTo = useRef<HTMLElement | null>(null);
+  const { resolvedTheme } = useTheme();
+  const { transitionTo } = useThemeFx();
+  const router = useRouter();
+  const pathname = usePathname() || "/";
 
-  // ── The context the commands operate in ─────────────────────────────────
-  /* The header-offset calculation was duplicated here, in CommandPaletteMount and in
-     both headers — four copies of the same two lines. It now lives in getHeaderOffset. */
-  const goToSection = useCallback((id: string) => {
-    scrollToElement(document.getElementById(id));
-  }, []);
-
-  const goToRoute = useCallback((href: string) => router.push(href), [router]);
-
-  const ctx = useMemo<CommandContext>(
-    () => ({ goToSection, goToRoute, close: onClose }),
-    [goToSection, goToRoute, onClose],
-  );
-
-  // ── Build the commands for the current page ─────────────────────────────
-  const commands = useMemo<Command[]>(() => {
-    const sections = isBlog ? BLOG_SECTIONS : PORTFOLIO_SECTIONS;
-
-    const nav: Command[] = sections.map((section) => ({
-      id: `nav-${section.id}`,
-      label: section.label,
-      hint: "section",
-      group: "Navigate",
-      run: (c) => c.goToSection(section.id),
-    }));
-
-    nav.push(
-      isBlog
-        ? {
-            id: "nav-portfolio",
-            label: "Back to portfolio",
-            hint: "page",
-            group: "Navigate",
-            keywords: "home main index",
-            run: (c) => c.goToRoute("/"),
-          }
-        : {
-            id: "nav-blog",
-            label: "Blog — cases & writeups",
-            hint: "page",
-            group: "Navigate",
-            keywords: "cases reports dfir writeups pdf",
-            run: (c) => c.goToRoute("/blog"),
-          },
-    );
-
-    return [...nav, ...CASE_COMMANDS, ...ACTION_COMMANDS, ...LINK_COMMANDS];
-  }, [isBlog]);
-
-  // ── Filter and sort ─────────────────────────────────────────────────────
-  const results = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-
-    if (!needle) {
-      return [...commands].sort(
-        (a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group),
-      );
-    }
-
-    const scored: { cmd: Command; value: number }[] = [];
-    for (const cmd of commands) {
-      const labelScore = score(cmd.label, needle);
-      const keywordScore = cmd.keywords ? score(cmd.keywords, needle) : -1;
-      const best = Math.max(labelScore, keywordScore === -1 ? -1 : keywordScore * 0.6);
-      if (best >= 0) scored.push({ cmd, value: best });
-    }
-
-    return scored
-      .sort((a, b) => b.value - a.value || GROUP_ORDER.indexOf(a.cmd.group) - GROUP_ORDER.indexOf(b.cmd.group))
-      .slice(0, 40)
-      .map((s) => s.cmd);
-  }, [commands, query]);
-
-  // Reset to the first result whenever the query changes
-  useEffect(() => setActiveIndex(0), [query]);
-
-  // ── Open/close: focus + scroll lock ─────────────────────────────────────
   useEffect(() => {
-    restoreFocusTo.current = document.activeElement as HTMLElement | null;
-    inputRef.current?.focus();
-
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }
+      if (e.key === "Escape") setOpen(false);
+    };
+    const onExternal = () => setOpen(true);
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("sensei:palette", onExternal);
     return () => {
-      document.body.style.overflow = prevOverflow;
-      restoreFocusTo.current?.focus?.();
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("sensei:palette", onExternal);
     };
   }, []);
 
-  const runCommand = useCallback(
-    (cmd: Command | undefined) => {
-      if (!cmd) return;
-      onClose();
-      // Close first, so the scroll lock lifts before any scrolling happens
-      requestAnimationFrame(() => cmd.run(ctx));
+  useEffect(() => {
+    if (open) {
+      setQuery("");
+      setIndex(0);
+      setCopied(false);
+      setFxDurationState(getFxDuration());
+      requestAnimationFrame(() => inputRef.current?.focus());
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open ]);
+
+  useEffect(() => {
+    const onFx = (e: Event) =>
+      setFxDurationState((e as CustomEvent<number>).detail);
+    window.addEventListener("sensei-fx-duration", onFx);
+    return () => window.removeEventListener("sensei-fx-duration", onFx);
+  }, []);
+
+  const go = useCallback(
+    (hash: string) => {
+      setOpen(false);
+      if (pathname !== "/") {
+        router.push(`/${hash}`);
+        return;
+      }
+      requestAnimationFrame(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
+      });
     },
-    [ctx, onClose],
+    [pathname, router]
   );
 
-  // ── Keyboard ────────────────────────────────────────────────────────────
-  const onKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      onClose();
-      return;
-    }
+  const visit = useCallback(
+    (path: string) => {
+      setOpen(false);
+      router.push(path);
+    },
+    [router]
+  );
+
+  const commands: Command[] = useMemo(() => {
+    const c = PORTFOLIO_DATA.profile.contact;
+    const isDark = resolvedTheme === "dark";
+    return [
+      { id: "home", group: "Go to", label: "Home", icon: Home, run: () => go("#home") },
+      { id: "services", group: "Go to", label: "Services", icon: Briefcase, run: () => go("#services") },
+      { id: "work", group: "Go to", label: "Selected work", icon: Code2, run: () => go("#work") },
+      { id: "projects", group: "Go to", label: "Open-source projects", icon: Code2, run: () => go("#projects") },
+      { id: "experience", group: "Go to", label: "Experience", icon: Briefcase, run: () => go("#experience") },
+      { id: "faq", group: "Go to", label: "FAQ", icon: MessageCircle, run: () => go("#faq") },
+      { id: "certs", group: "Go to", label: "Certifications", icon: Award, run: () => go("#certificates") },
+      { id: "art", group: "Go to", label: "Proof gallery", icon: Palette, run: () => go("#art") },
+      { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
+      { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
+      { id: "videos", group: "Go to", label: "Videos", icon: PlayCircle, run: () => go("#videos") },
+      { id: "cv-page", group: "Pages", label: "CV", icon: FileText, run: () => visit("/cv") },
+      {
+        id: "theme", group: "Appearance", label: isDark ? "Switch to light mode" : "Switch to dark mode",
+        icon: isDark ? Sun : Moon,
+        run: () => {
+          setOpen(false);
+          transitionTo(isDark ? "light" : "dark", {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2,
+          });
+        },
+      },
+      ...FX_DURATIONS.map((ms) => ({
+        id: `fx-${ms}`,
+        group: "Appearance",
+        label: `Transition speed ${ms}ms${fxDuration === ms ? " (current)" : ""}`,
+        hint: `${ms}ms`,
+        icon: Gauge,
+        run: () => {
+          setFxDuration(ms);
+          setFxDurationState(ms);
+        },
+      })),
+      {
+        id: "copy-email", group: "Actions", label: copied ? "Email copied!" : "Copy email address",
+        hint: c.email, icon: copied ? Check : Copy,
+        run: async () => {
+          try {
+            await navigator.clipboard.writeText(c.email);
+            setCopied(true);
+          } catch {
+            window.location.href = `mailto:${c.email}`;
+            setOpen(false);
+          }
+        },
+      },
+      {
+        id: "cv", group: "Actions", label: "Download CV (PDF)", icon: Download,
+        run: () => {
+          window.open(PORTFOLIO_DATA.profile.hero.cvUrl, "_blank");
+          setOpen(false);
+        },
+      },
+      { id: "gh", group: "Social", label: "Open GitHub", hint: c.github, icon: Github, run: () => { window.open(`https://github.com/${c.github}`, "_blank"); setOpen(false); } },
+      { id: "li", group: "Social", label: "Open LinkedIn", icon: Linkedin, run: () => { window.open(c.linkedin, "_blank"); setOpen(false); } },
+      { id: "wa", group: "Social", label: "Open WhatsApp", icon: MessageCircle, run: () => { window.open(`https://wa.me/${c.whatsapp}`, "_blank"); setOpen(false); } },
+      {
+        id: "terminal", group: "Extras", label: "Open the terminal", hint: "3omda", icon: SquareTerminal,
+        run: () => { setOpen(false); window.dispatchEvent(new Event("sensei:open-terminal")); },
+      },
+      {
+        id: "shortcuts", group: "Extras", label: "Keyboard shortcuts", hint: "?", icon: Keyboard,
+        run: () => { setOpen(false); window.dispatchEvent(new Event("sensei:open-shortcuts")); },
+      },
+    ];
+  }, [go, visit, resolvedTheme, transitionTo, copied, fxDuration]);
+
+  /* Cases only join the list once you type — 38 of them would bury the
+     commands on an empty query. */
+  const caseCommands: Command[] = useMemo(
+    () =>
+      cases.map((item) => ({
+        id: `case-${item.id}`,
+        group: "Cases",
+        label: item.title,
+        hint: item.category,
+        icon: FolderSearch,
+        run: () => visit(`/blog/${item.id}`),
+      })),
+    [visit, cases]
+  );
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return commands;
+    return [...commands, ...caseCommands].filter(
+      (c) =>
+        c.label.toLowerCase().includes(q) ||
+        c.group.toLowerCase().includes(q) ||
+        (c.hint ?? "").toLowerCase().includes(q)
+    );
+  }, [commands, caseCommands, query]);
+
+  useEffect(() => setIndex(0), [query]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => (results.length ? (i + 1) % results.length : 0));
-      return;
-    }
-    if (e.key === "ArrowUp") {
+      setIndex((i) => Math.min(i + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((i) => (results.length ? (i - 1 + results.length) % results.length : 0));
-      return;
-    }
-    if (e.key === "Home") {
+      setIndex((i) => Math.max(i - 1, 0));
+    } else if (e.key === "Enter") {
       e.preventDefault();
-      setActiveIndex(0);
-      return;
-    }
-    if (e.key === "End") {
-      e.preventDefault();
-      setActiveIndex(Math.max(0, results.length - 1));
-      return;
-    }
-    if (e.key === "Enter") {
-      e.preventDefault();
-      runCommand(results[activeIndex]);
+      filtered[index]?.run();
     }
   };
 
-  // Keep the active item visible while navigating by keyboard
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-    const el = list.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`);
-    el?.scrollIntoView({ block: "nearest" });
-  }, [activeIndex]);
-
-  // The group heading is written once, at the first item in that group
-  let lastGroup: CommandGroup | null = null;
-
   return (
-    <div
-      data-fx="overlay" data-overlay="top"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Command palette"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className={styles.panel} onKeyDown={onKeyDown}>
-        <div className={styles.searchRow}>
-          <span className={styles.prompt} aria-hidden="true">
-            &gt;
-          </span>
-          <input
-            ref={inputRef}
-            data-fx="field"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search sections, cases, links…"
-            aria-label="Search commands"
-            aria-controls="command-palette-list"
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <button type="button" className={styles.escKey} onClick={onClose} aria-label="Close">
-            ESC
-          </button>
-        </div>
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[300] flex items-start justify-center bg-background/70 px-4 pt-[14vh] backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Command palette"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: -12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.22 }}
+            className="w-full max-w-xl overflow-hidden border border-foreground/10 bg-surface shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 border-b border-foreground/10 px-4">
+              <Search size={16} className="shrink-0 text-foreground/40" />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={onKeyDown}
+                placeholder="Type a command or search…"
+                className="w-full bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-foreground/30"
+                aria-label="Search commands"
+              />
+              <kbd className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/40">
+                ESC
+              </kbd>
+            </div>
 
-        <ul id="command-palette-list" ref={listRef} className={styles.list} role="listbox">
-          {results.map((cmd, i) => {
-            const showGroup = cmd.group !== lastGroup;
-            lastGroup = cmd.group;
-
-            return (
-              <li key={cmd.id} className={styles.listItem}>
-                {showGroup && <p className={styles.groupLabel}>{cmd.group}</p>}
+            <div className="max-h-[46vh] overflow-y-auto p-2" role="listbox">
+              {filtered.length === 0 && (
+                <p className="px-3 py-6 text-center font-mono text-xs text-foreground/40">
+                  No commands match “{query}”.
+                </p>
+              )}
+              {filtered.map((cmd, i) => (
                 <button
-                  type="button"
-                  data-index={i}
+                  key={cmd.id}
                   role="option"
-                  aria-selected={i === activeIndex}
-                  className={i === activeIndex ? `${styles.row} ${styles.rowActive}` : styles.row}
-                  onMouseMove={() => setActiveIndex(i)}
-                  onClick={() => runCommand(cmd)}
+                  aria-selected={i === index}
+                  onMouseEnter={() => setIndex(i)}
+                  onClick={() => cmd.run()}
+                  className={`flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors ${
+                    i === index ? "bg-primary/10 text-foreground" : "text-foreground/70"
+                  }`}
                 >
-                  <span className={styles.rowLabel}>{cmd.label}</span>
-                  {cmd.hint && <span className={styles.rowHint}>{cmd.hint}</span>}
+                  <cmd.icon
+                    size={15}
+                    className={i === index ? "text-primary" : "text-foreground/40"}
+                  />
+                  <span className="flex-1 text-sm">{cmd.label}</span>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/30">
+                    {cmd.group}
+                  </span>
+                  {cmd.hint && (
+                    <span className="max-w-[180px] truncate font-mono text-[10px] text-foreground/40">
+                      {cmd.hint}
+                    </span>
+                  )}
+                  {i === index && (
+                    <ChevronRight size={14} className="text-primary" />
+                  )}
                 </button>
-              </li>
-            );
-          })}
+              ))}
+            </div>
 
-          {results.length === 0 && (
-            <li className={styles.empty}>
-              No match for “{query.trim()}”. Try a tool name, a case, or a section.
-            </li>
-          )}
-        </ul>
-
-        <div className={styles.footer}>
-          <span>↑↓ move</span>
-          <span>↵ open</span>
-          <span>esc close</span>
-          <span className={styles.footerCount}>{results.length} result(s)</span>
-        </div>
-      </div>
-    </div>
+            <div className="flex items-center gap-4 border-t border-foreground/10 px-4 py-2.5 font-mono text-[10px] text-foreground/35">
+              <span className="flex items-center gap-1.5">
+                <kbd className="border border-foreground/15 px-1">↑↓</kbd> navigate
+              </span>
+              <span className="flex items-center gap-1.5">
+                <kbd className="border border-foreground/15 px-1">↵</kbd> run
+              </span>
+              <span className="ml-auto flex items-center gap-1.5">
+                <kbd className="border border-foreground/15 px-1">Ctrl K</kbd> toggle
+              </span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

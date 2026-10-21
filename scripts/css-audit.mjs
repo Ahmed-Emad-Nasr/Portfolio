@@ -7,7 +7,7 @@
  *
  * Looks for four things, each of which has actually turned up on this site at least once:
  *
- *   1. Classes defined in a .module.css file that nothing uses
+ *   1. Classes defined in a CSS file (the named effects in globals.css) that nothing uses
  *   2. CSS custom properties that are declared but never read
  *   3. Near-identical CSS files (the main header and the blog header were 99% the same file)
  *   4. Expensive properties on the critical path (backdrop-filter, transitions on it,
@@ -46,50 +46,26 @@ const section = (title) => console.log(`\n\x1b[1m${title}\x1b[0m`);
 /* ── 1. Dead classes ───────────────────────────────────────────────────── */
 section("1. Classes defined but not used");
 
-/* Collect every use of any styles object whatever its name (styles, anchorStyles, …)
-   and handle dynamic composition like styles[`x-${y}`] by ignoring any class whose
-   prefix appears in such a template. */
-const usedNames = new Set();
-for (const m of allCode.matchAll(/\b\w*[Ss]tyles\.(\w+)/g)) usedNames.add(m[1]);
-for (const m of allCode.matchAll(/\b\w*[Ss]tyles\[\s*[`"']([\w-]+)/g)) usedNames.add(m[1]);
-
-const dynamicPrefixes = [];
-for (const m of allCode.matchAll(/\b\w*[Ss]tyles\[\s*`([\w-]*)\$\{/g)) {
-  if (m[1]) dynamicPrefixes.push(m[1]);
-}
-
-/* Fully dynamic lookup: styles[line.kind] or styles[variant] — no static
-   string we can catch.
-
-   This produced a real false positive: Terminal.tsx renders
-   `className={styles[line.kind]}` and line.kind is "in" | "out" | "err" |
-   "dim". The script reported .in, .out and .dim as dead classes while they were live —
-   and deleting them would have silently broken the terminal colours.
-
-   When a file contains a lookup like that we can't judge its classes statically, so we flag
-   the whole file and exclude it from the dead-class check with an explicit note. */
-const dynamicFiles = new Set();
-for (const f of codeFiles) {
-  const src = read(f);
-  if (/\b\w*[Ss]tyles\[\s*[A-Za-z_$][\w.$]*\s*\]/.test(src)) {
-    /* Map each source file to the CSS module it imports */
-    for (const m of src.matchAll(/from\s+["'](\.[^"']*\.module\.css)["']/g)) {
-      dynamicFiles.add(m[1].replace(/^\.\//, ""));
-    }
-  }
-}
-
+/* The components style themselves with Tailwind utilities, so the only
+   hand-written classes left are the named effects in globals.css
+   (.hero-btn, .cursor-ring, .loader-fill …). A class counts as used when its
+   name appears as a whole word anywhere in the code — in a className string,
+   a cn() call, or a classList.add() in a JS animation loop. */
+const codeWords = new Set(allCode.match(/[A-Za-z_][\w-]*/g) ?? []);
 let deadClasses = 0;
-let skippedDynamic = 0;
-for (const f of cssFiles.filter((f) => f.endsWith(".module.css"))) {
-  if ([...dynamicFiles].some((d) => f.endsWith(d.split("/").pop()))) {
-    skippedDynamic++;
-    continue;
+for (const f of cssFiles) {
+  const css = strip(read(f))
+    /* url(...) and string contents are not selectors */
+    .replace(/url\([^)]*\)/g, "")
+    .replace(/"[^"]*"|'[^']*'/g, "");
+  /* Only selector text — the part before each { — can define a class */
+  const selectors = [...css.matchAll(/([^{};]+)\{/g)].map((m) => m[1]).filter((t) => !t.trim().startsWith("@"));
+  const names = new Set();
+  for (const sel of selectors) {
+    for (const m of sel.matchAll(/\.(-?[A-Za-z_][\w-]*)(?![\w\\])/g)) names.add(m[1]);
   }
-  const names = new Set(strip(read(f)).match(/\.[A-Za-z_][\w-]*/g)?.map((s) => s.slice(1)) ?? []);
-  const dead = [...names].filter(
-    (n) => !usedNames.has(n) && !dynamicPrefixes.some((p) => n.startsWith(p)),
-  );
+  /* yarl__… are the lightbox library's own classes, restyled from here */
+  const dead = [...names].filter((n) => !codeWords.has(n) && !n.startsWith("yarl__"));
   if (dead.length) {
     console.log(`   ${relative(".", f)}`);
     console.log(`      ${dead.join(", ")}`);
@@ -97,11 +73,6 @@ for (const f of cssFiles.filter((f) => f.endsWith(".module.css"))) {
   }
 }
 console.log(deadClasses ? `   → ${deadClasses} class(es)` : "   ✓ clean");
-if (skippedDynamic) {
-  console.log(
-    `   (${skippedDynamic} file(s) skipped — uses styles[expr], can't be checked statically)`,
-  );
-}
 issues += deadClasses;
 
 /* ── 2. Dead variables ─────────────────────────────────────────────────── */
@@ -111,11 +82,29 @@ const readVars = new Set([
   ...[...allCss.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1]),
   // next/font generates --font-* from JavaScript
   ...[...allCode.matchAll(/(--font-[\w-]+)/g)].map((m) => m[1]),
+  // Tailwind classes read variables from the JSX: bg-(--page-veil), mb-[var(--space-xl)]
+  ...[...allCode.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1]),
+  ...[...allCode.matchAll(/[(:](--[\w-]+)/g)].map((m) => m[1]),
 ]);
+
+/* Tokens inside @theme are Tailwind's: they are consumed by utility classes
+   (bg-accent, text-xs, animate-fade-up …), never by a var() in CSS. */
+const withoutTheme = (css) => {
+  let out = css;
+  for (let at = out.indexOf("@theme"); at !== -1; at = out.indexOf("@theme")) {
+    let i = out.indexOf("{", at), depth = 0;
+    for (; i < out.length; i++) {
+      if (out[i] === "{") depth++;
+      else if (out[i] === "}" && --depth === 0) break;
+    }
+    out = out.slice(0, at) + out.slice(i + 1);
+  }
+  return out;
+};
 
 const declared = new Map();
 for (const f of cssFiles) {
-  for (const m of strip(read(f)).matchAll(/^\s*(--[\w-]+)\s*:/gm)) {
+  for (const m of withoutTheme(strip(read(f))).matchAll(/^\s*(--[\w-]+)\s*:/gm)) {
     if (!declared.has(m[1])) declared.set(m[1], f);
   }
 }

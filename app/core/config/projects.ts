@@ -22,37 +22,37 @@ export const GITHUB_USERNAME = "Ahmed-Emad-Nasr";
 
 export const projectBullets: Record<string, string[]> = {
   "SOC-Environment": [
-    "Merged a custom Wazuh detection rule into the open-source SOC Fortress repo via a reviewed PR.",
+    "Authored a custom Wazuh rule, merged by maintainers into open-source SOC Fortress (1.5k+ stars).",
     "Deployed a Wazuh/Suricata/Zeek/YARA/FIM/auditd/Sysmon lab, expanding detection coverage by 12% across 5+ endpoints.",
     "Simulated 50+ attacks to validate detection rules, achieving a 95%+ true positive rate across TTPs."
   ],
   "insider-threat-detection-deception": [
     "Built a Wazuh honeytoken insider threat lab, detecting 100% of access attempts across 3 scenarios.",
     "Integrated pfSense and Suricata for monitoring, reducing false positive volume by 30% from baseline.",
-    "Developed a Python script to hash files, query VirusTotal, and auto-delete files flagged as malicious."
+    "Built a Python script to hash files, query threat intel & auto-quarantine malware, cutting triage time by 10%."
   ],
   "Malware-Analysis-and-Prevention-Strategy": [
-    "Deployed an isolated lab, analyzing 20+ malware samples (5+ ransomware) and extracting actionable IOCs.",
-    "Used FakeNet-NG and Process Hacker/Explorer for dynamic analysis to uncover C2 traffic behaviors.",
-    "Engineered a custom PDF parsing utility to detect and extract embedded JavaScript payloads, downloaded by 18+ users."
+    "Deployed an isolated lab; analyzed 20+ malware samples via DIE & CFF Explorer to extract actionable IOCs.",
+    "Conducted dynamic analysis using Wireshark & FakeNet-NG to uncover Command and Control (C2) traffic behaviors.",
+    "Engineered a parsing utility and leveraged FIM to detect & extract embedded malicious payloads (18+ downloads)."
   ],
   "Attack-Simulation-Security-Assessment": [
-    "Conducted 15+ attack simulations on Metasploitable 2/3 and DVWA using Kali Linux and Nessus.",
-    "Applied the Cyber Kill Chain & MITRE ATT&CK to document paths, assess impact, and recommend fixes."
+    "Conducted Nessus VA and validated vulnerabilities via Kali Linux Pentest POCs on Metasploitable and DVWA.",
+    "Simulated 15+ attacks mapped to Cyber Kill Chain & MITRE ATT&CK to assess impact and recommend fixes."
   ],
   "Threat-Intelligence-Tool": [
     "Developed a Python-based threat intelligence utility integrating VirusTotal, Hybrid Analysis, NIST for CVEs, and Exploit DB.",
     "Achieved 10 stars on GitHub, demonstrating community interest and utility in centralizing security data."
   ],
   "Compliance-Framework": [
-    "Developed an AI-driven GRC platform centralizing Risk, AppSec, Audit, and Privacy operations.",
-    "Accelerated assessments by 15% via automated control mapping across 150+ frameworks (ISO, NIST, PCI DSS, GDPR).",
-    "Streamlined continuous compliance by automating evidence validation from security scans and configs."
+    "Architected an AI-powered GRC platform to automate evidence validation and regulatory control mapping.",
+    "Engineered risk scoring & automated gap analysis generating remediation plans, cutting manual assessment effort by 30%.",
+    "Accelerated assessments by 15% via automated control mapping across 150+ frameworks."
   ],
   // From the CV — a whole project that was missing from the projects list, and it's the site itself.
   "Portfolio": [
-    "Developed and deployed a technical portfolio & blog, attracting 1,200+ organic visitors.",
-    "Published 40+ security cases, CTFs, and complex lab solutions, earning 22+ GitHub stars from the security community."
+    "Developed & deployed a technical portfolio & blog, attracting 1,200+ organic visitors.",
+    "Published 40+ security cases, CTFs, & complex lab solutions, earning 22+ GitHub stars from the security community."
   ]
 };
 

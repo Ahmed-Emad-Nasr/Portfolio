@@ -55,7 +55,7 @@ ${categories}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ahmed Emad Nasr — SOC &amp; DFIR Cases</title>
-    <link>${absoluteUrl("/blog")}</link>
+    <link>${absoluteUrl("/")}#cases</link>
     <description>Incident response reports, DFIR writeups, malware analysis, and threat hunting cases.</description>
     <language>en</language>
     <lastBuildDate>${toRfc822()}</lastBuildDate>

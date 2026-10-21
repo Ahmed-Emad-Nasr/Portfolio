@@ -11,13 +11,17 @@
  * (a Next requirement) and it receives `reset` to try re-rendering the part that crashed without
  * a full reload.
  *
- * It reuses not-found.module.css so both pages look the same —
- * there's no reason for another CSS file for a page with exactly the same layout.
+ * It reads the same classes as not-found.tsx (core/status-page-ui.ts) so both
+ * pages look the same.
  */
 
 import { useEffect } from "react";
 import Link from "next/link";
-import styles from "./not-found.module.css";
+import { RotateCcw } from "lucide-react";
+import {
+  statusActions, statusCode, statusInner, statusLede, statusPage, statusReport, statusTitle,
+} from "@/app/core/status-page-ui";
+import { PageShell, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
 
 export default function Error({
   error,
@@ -38,32 +42,39 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className={styles.page} id="main-content">
-      <div className={styles.inner}>
-        <p className={styles.code} aria-hidden="true">ERR</p>
+    <PageShell>
+      <section className={statusPage}>
+        <div className={statusInner}>
+          <div className="flex items-center gap-4 mb-2">
+            <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
+            <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Runtime</span>
+            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">故障</span>
+          </div>
+          <p className={statusCode} aria-hidden="true">ERR</p>
 
-        <h1 className={styles.title}>Something broke</h1>
-        <p className={styles.lede}>
-          An unexpected error stopped this section from rendering. The rest of
-          the site still works.
-        </p>
+          <h1 className={statusTitle}>Something <span className="text-primary italic">broke.</span></h1>
+          <p className={statusLede}>
+            An unexpected error stopped this section from rendering. The rest of
+            the site still works.
+          </p>
 
-        <nav className={styles.actions} aria-label="Recovery options">
-          {/* reset tries to re-render the part that crashed without a full reload —
-              most transient errors are resolved by it. */}
-          <button type="button" data-fx="btn" data-btn="solid" onClick={reset}>
-            Try again
-          </button>
-          <Link href="/" data-fx="btn" data-btn="outline">Portfolio</Link>
-          <Link href="/blog" data-fx="btn" data-btn="outline">Case library</Link>
-        </nav>
+          <nav className={statusActions} aria-label="Recovery options">
+            {/* reset tries to re-render the part that crashed without a full reload —
+                most transient errors are resolved by it. */}
+            <button type="button" className={ctaPrimary} onClick={reset}>
+              <RotateCcw size={16} /> Try again
+            </button>
+            <Link href="/" className={ctaSecondary}>Portfolio</Link>
+            <Link href="/#cases" className={ctaSecondary}>Case library</Link>
+          </nav>
 
-        {/* digest is the hash Next generates for the error. It's shown so that if someone
-            reports a problem they can give you this number instead of a vague description. */}
-        {error.digest && (
-          <p className={styles.report}>Error reference: {error.digest}</p>
-        )}
-      </div>
-    </main>
+          {/* digest is the hash Next generates for the error. It's shown so that if someone
+              reports a problem they can give you this number instead of a vague description. */}
+          {error.digest && (
+            <p className={statusReport}>Error reference: {error.digest}</p>
+          )}
+        </div>
+      </section>
+    </PageShell>
   );
 }

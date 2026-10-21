@@ -17,9 +17,10 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_BASE_URL } from "@/app/core/config/site";
+import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
 import { LEGAL_CONTACT, LEGAL_LAST_UPDATED } from "@/app/core/config/legal";
-import styles from "../legal.module.css";
+import { PageShell } from "@/app/components/shared/kit";
+import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
 
 export const metadata: Metadata = {
   title: "Terms of Use — Ahmed Emad Nasr",
@@ -30,19 +31,21 @@ export const metadata: Metadata = {
     title: "Terms of Use — Ahmed Emad Nasr",
     description: "Content ownership, acceptable use, and disclaimers.",
     url: `${SITE_BASE_URL}/terms`,
+    images: [OG_IMAGE],
   },
 };
 
 export default function TermsPage() {
   return (
-    <main id="main-content" className={styles.page}>
-      <div className={styles.sheet}>
-        <Link href="/" className={styles.backLink}>← Back to the site</Link>
+    <PageShell>
+    <article className={legalPage}>
+      <div className={legalSheet}>
+        <Link href="/" className={legalBackLink}>← Back to the site</Link>
 
-        <h1 className={styles.title}>Terms of Use</h1>
-        <p className={styles.updated}>Last updated: {LEGAL_LAST_UPDATED}</p>
+        <h1 className={legalTitle}>Terms of Use</h1>
+        <p className={legalUpdated}>Last updated: {LEGAL_LAST_UPDATED}</p>
 
-        <div className={styles.summary}>
+        <div className={legalSummary}>
           <p>
             <strong>The short version.</strong> This is a personal portfolio.
             Read it, learn from it, link to it. The security research here is
@@ -55,7 +58,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>What this site is</h2>
           <p>
             This site is the personal portfolio of {LEGAL_CONTACT.name}. It
@@ -72,7 +75,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Security content — use it responsibly</h2>
           <p>
             This site publishes security research: malware analysis, incident
@@ -95,7 +98,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Ownership of the content</h2>
           <p>
             The written content, investigation reports, code, and site design are
@@ -122,7 +125,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Accuracy and no warranty</h2>
           <p>
             The content is provided as-is. Reasonable care is taken to keep it
@@ -137,7 +140,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Links to other sites</h2>
           <p>
             This site links to external sites including GitHub, LinkedIn, and
@@ -147,7 +150,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Availability</h2>
           <p>
             The site is a personal project hosted on a free platform. No uptime
@@ -156,7 +159,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className={styles.section}>
+        <section className={legalSection}>
           <h2>Governing law and contact</h2>
           <p>
             These terms are governed by the laws of the Arab Republic of Egypt.
@@ -168,6 +171,7 @@ export default function TermsPage() {
           </p>
         </section>
       </div>
-    </main>
+    </article>
+    </PageShell>
   );
 }

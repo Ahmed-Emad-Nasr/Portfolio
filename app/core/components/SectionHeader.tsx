@@ -1,47 +1,54 @@
-/*
- * File: SectionHeader.tsx
- *
- * Server Component — no "use client", no React.memo, 0 KB of JS shipped.
- *
- * APPEARANCE COMES FROM globals.css SECTION 16.
- *
- * This used to take a `titleClassName` prop, and each of the four callers
- * passed its own module's `.title` — four byte-identical copies of the same
- * eight declarations plus the two underline pseudo-elements, in four files.
- *
- * Now the heading carries data-fx="section-title" and the module files hold
- * nothing about it. If a section needs the large variant, pass size="lg";
- * `className` is still available but is for layout only (margins, grid
- * placement) — never for the title's own appearance.
- */
+"use client";
+
+import { motion } from "framer-motion";
+import { EASE } from "@/app/core/motion";
 
 interface SectionHeaderProps {
-  japaneseText: string;
-  englishText: string;
-  /** Layout-only class. Appearance belongs to the primitive. */
-  className?: string;
-  /** "md" is the default (2.6rem). "lg" is the 3.5rem variant. */
-  size?: "md" | "lg";
+  eyebrow: string;
+  japanese: string;
+  titleA: string;
+  titleB: string;
+  description?: string;
+  align?: "left" | "split";
+  /** h1 on pages where this is the page title (case library, CV …) */
+  as?: "h1" | "h2";
 }
 
 export default function SectionHeader({
-  japaneseText,
-  englishText,
-  className,
-  size = "md",
+  eyebrow,
+  japanese,
+  titleA,
+  titleB,
+  description,
+  align = "left",
+  as: Heading = "h2",
 }: SectionHeaderProps) {
   return (
-    <h2
-      className={className}
-      data-fx="section-title"
-      data-title={size === "lg" ? "lg" : undefined}
+    <motion.div
+      initial={{ opacity: 0, x: -32 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, ease: EASE }}
+      className={align === "split" ? "mb-16 md:mb-20" : "mb-16 md:mb-20 max-w-3xl"}
     >
-      {/* lang="ja" makes the :lang(ja) rule in globals.css give this text a
-          deliberate CJK font instead of letting the browser pick whichever
-          Japanese face happens to be installed — and it stops screen readers
-          from pronouncing the kanji with English phonetics. */}
-      <span lang="ja">{japaneseText} •</span>
-      <span lang="en"> {englishText}</span>
-    </h2>
+      <div className="flex items-center gap-4 mb-5">
+        <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
+        <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+          {eyebrow}
+        </span>
+        <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja">
+          {japanese}
+        </span>
+      </div>
+      <Heading className="font-display text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
+        <span className="text-foreground">{titleA}</span> <br />
+        <span className="text-primary italic">{titleB}</span>
+      </Heading>
+      {description ? (
+        <p className="mt-5 text-base md:text-lg text-foreground/60 font-light leading-relaxed max-w-2xl">
+          {description}
+        </p>
+      ) : null}
+    </motion.div>
   );
 }
