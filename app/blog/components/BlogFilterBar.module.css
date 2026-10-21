@@ -145,13 +145,17 @@
   display: none;
 }
 
+/* The card hover, at chip scale: dark surface, red border, red glow */
 .chip.chip:hover,
 .toolChip.toolChip:hover {
   color: #ffffff;
-  border-color: rgba(var(--accent-color-rgb), 0.6);
-  background: rgba(var(--accent-color-rgb), 0.06);
+  border-color: var(--card-border-color-hover);
+  background: var(--card-bg-hover);
+  box-shadow: var(--glow-main);
   transform: translateY(-1px);
 }
+
+.chip.chip:hover .count { color: var(--accent-color); }
 
 .chip.chip:active,
 .toolChip.toolChip:active {

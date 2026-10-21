@@ -389,9 +389,10 @@
   background: transparent; color: #fff; font-family: var(--font-mono); font-size: 1.8rem; cursor: pointer;
   transition: border-color 200ms var(--motion-ease), color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), box-shadow 200ms var(--motion-ease), transform 200ms var(--motion-ease-out);
 }
+/* Same hover as the cards: dark surface, red border, red glow */
 .galleryNav.galleryNav:hover {
-  border-color: var(--accent-color); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.1);
-  box-shadow: var(--glow-accent); transform: none;
+  border-color: var(--card-border-color-hover); color: var(--accent-color); background: var(--card-bg-hover);
+  box-shadow: var(--glow-main); transform: none;
 }
 /* The arrow nudges toward the direction it goes */
 .galleryNav.galleryNav:first-child:hover { transform: translateX(-3px); }
@@ -410,7 +411,7 @@
   background: transparent; color: rgba(255, 255, 255, 0.6); font-family: var(--font-mono); font-size: 1.2rem; cursor: pointer;
   transition: border-color 160ms var(--motion-ease), color 160ms var(--motion-ease), background-color 160ms var(--motion-ease), transform 160ms var(--motion-ease-out);
 }
-.galleryThumbButton.galleryThumbButton:hover { border-color: rgba(var(--accent-color-rgb), 0.6); color: var(--accent-color); background: rgba(var(--accent-color-rgb), 0.08); transform: translateY(-2px); }
+.galleryThumbButton.galleryThumbButton:hover { border-color: var(--card-border-color-hover); color: #fff; background: var(--card-bg-hover); box-shadow: var(--glow-main); transform: translateY(-2px); }
 .activeGalleryThumb.activeGalleryThumb,
 .activeGalleryThumb.activeGalleryThumb:hover { border-color: var(--accent-color); color: #000; background: var(--accent-color); box-shadow: var(--glow-accent); transform: none; }
 
@@ -433,8 +434,7 @@
    other card — everything else comes from the shared rule. */
 .youtubeHub { margin: 4rem auto 0; border-style: dashed; }
 .youtubeHubActions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
-.channelAction { border-color: rgba(var(--accent-color-rgb), 0.4) !important; color: var(--accent-color) !important; }
-.channelAction:hover { background: rgba(var(--accent-color-rgb), 0.15) !important; border-color: var(--accent-color) !important; color: #fff !important; }
+
 .youtubeHubGrid { margin-top: 2.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--space-sm); }
 
 .videoCardContent h3, .playlistContent h3 { color: #fff; font-family: var(--font-mono); font-size: 1.6rem; letter-spacing: 1px; }

@@ -40,7 +40,7 @@ export default function BlogMediaSections({
             <p>All channel videos appear here in one place.</p>
           </div>
           <div className={styles.youtubeHubActions}>
-            <a href={youtubeChannelUrl} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" className={styles.channelAction}>Open YouTube Channel <ActionIcon name="external" /></a>
+            <a href={youtubeChannelUrl} target="_blank" rel="noopener noreferrer" data-fx="btn" data-btn="ghost" data-tone="accent">Open YouTube Channel <ActionIcon name="external" /></a>
           </div>
 
           {!filteredChannelVideos.length ? (

@@ -1780,6 +1780,15 @@ html [data-fx="field"]:focus-visible { outline: none; }
   --btn-lift: -2px;
   --success: #00ff88;
   --success-rgb: 0, 255, 136;
+  /*
+   * Hover = the card hover. Every button, whatever its idle tone, lands on
+   * the same state the cards use: the darker surface, the red border, the
+   * red glow and the red→gold rule drawn across the top. One hover language
+   * for the whole site instead of a different colour per button.
+   */
+  --btn-hover-bg: var(--card-bg-hover, rgba(15, 15, 15, 0.9));
+  --btn-hover-border: var(--card-border-color-hover, rgba(var(--main-color-rgb), 0.55));
+  --btn-hover-rule: linear-gradient(90deg, var(--main-color), var(--accent-color));
 }
 
 html [data-fx="btn"] {
@@ -1808,7 +1817,14 @@ html [data-fx="btn"] {
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  /* The card's top rule, as a background layer: 0 wide at rest, drawn
+     left → right on hover (background-size), exactly like the card's ::before. */
+  background-image: var(--btn-hover-rule);
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: 0% 2px;
   transition:
+    background-size var(--btn-speed) var(--motion-ease),
     color var(--btn-speed) var(--motion-ease),
     border-color var(--btn-speed) var(--motion-ease),
     background-color var(--btn-speed) var(--motion-ease),
@@ -1839,7 +1855,7 @@ html [data-fx="btn"]::before {
   background: linear-gradient(
       105deg,
       transparent 38%,
-      rgba(255, 255, 255, 0.16) 50%,
+      rgba(var(--accent-color-rgb), 0.16) 50%,
       transparent 62%
     )
     100% 0 / 250% 100% no-repeat;
@@ -1885,6 +1901,7 @@ html [data-fx="btn"]::after {
     transition: background-position 700ms var(--motion-ease-out);
   }
   html [data-fx="btn"]:hover::after {
+    color: var(--accent-color);
     opacity: 0.9;
     transform: scale(1);
   }
@@ -1934,33 +1951,19 @@ html [data-fx="btn"] [data-fx-icon] {
 
 /* ── solid ───────────────────────────────────────────────────────────── */
 html [data-fx="btn"][data-btn="solid"] {
-  background: var(--main-color);
+  background-color: var(--main-color);
   color: var(--text-bright);
   border: 1px solid var(--main-color);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"][data-btn="solid"]:hover {
-    background: var(--main-text);
-    border-color: var(--main-light);
-    color: var(--text-bright);
-  }
-}
 
 /* ── outline ─────────────────────────────────────────────────────────── */
 html [data-fx="btn"][data-btn="outline"] {
-  background: transparent;
+  background-color: transparent;
   border: 1px solid var(--hairline);
   color: var(--text-muted);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"][data-btn="outline"]:hover {
-    color: var(--accent-color);
-    border-color: currentColor;
-    background: rgba(var(--accent-color-rgb), 0.06);
-  }
-}
 
 html [data-fx="btn"][data-btn="outline"]:focus-visible {
   color: var(--accent-color);
@@ -1977,19 +1980,12 @@ html [data-fx="btn"][data-btn="ghost"] {
   --btn-size: 1.2rem;
   --btn-pad: 0.6rem 1.4rem;
   --btn-tracking: 1px;
-  background: rgba(255, 255, 255, 0.015);
+  background-color: rgba(255, 255, 255, 0.015);
   border: 1px solid var(--btn-border);
   color: rgba(255, 255, 255, 0.78);
   font-weight: 700;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"][data-btn="ghost"]:hover {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-    background: rgba(var(--accent-color-rgb), 0.07);
-  }
-}
 
 /* ── tones ───────────────────────────────────────────────────────────── */
 /*
@@ -2007,21 +2003,43 @@ html [data-fx="btn"][data-tone="accent"] {
   color: var(--accent-color);
 }
 
+/*
+ * ── the hover: one state for every button ──────────────────────────────
+ *
+ * `html body [data-fx="btn"]` is (0,2,2): above every variant and tone rule
+ * (0,2,1)–(0,3,1) at rest, above the global button hover (0,2,1), and still
+ * below the copied/failed states (0,3,1 + :hover), which must win.
+ *
+ * The text goes white and the icon goes gold — the same move the card makes
+ * with its title.
+ */
 @media (hover: hover) and (pointer: fine) {
-  html [data-fx="btn"][data-tone="main"]:hover {
-    border-color: var(--main-color);
-    background: rgba(var(--main-color-rgb), 0.14);
+  html body [data-fx="btn"]:hover {
+    background-color: var(--btn-hover-bg);
+    background-size: 100% 2px;
+    border-color: var(--btn-hover-border);
+    border-style: solid;
     color: var(--text-bright);
   }
-  html [data-fx="btn"][data-tone="accent"]:hover {
-    border-color: var(--accent-color);
-    background: rgba(var(--accent-color-rgb), 0.12);
+  html body [data-fx="btn"]:hover [data-fx-icon] { color: var(--accent-color); }
+}
+
+/* Keyboard focus gets the same look — the card does the same on :focus-within */
+html body [data-fx="btn"]:focus-visible {
+  background-color: var(--btn-hover-bg);
+  background-size: 100% 2px;
+  border-color: var(--btn-hover-border);
+  color: var(--text-bright);
+}
+
+/* Touch: no hover, so the card look shows while the finger is down */
+@media (hover: none) {
+  html body [data-fx="btn"]:active {
+    background-color: var(--btn-hover-bg);
+    background-size: 100% 2px;
+    border-color: var(--btn-hover-border);
     color: var(--text-bright);
   }
-  /* The brackets keep the tone colour even when the text turns white */
-  html [data-fx="btn"][data-tone="main"]:hover::after   { color: var(--main-text); }
-  html [data-fx="btn"][data-tone="accent"]:hover::after { color: var(--accent-color); }
-  html [data-fx="btn"][data-btn="solid"]:hover::after   { color: var(--main-light); }
 }
 
 /* A dashed edge marks an action that opens something in place (a gallery)
@@ -2033,24 +2051,27 @@ html [data-fx="btn"][data-btn-edge="dashed"] { border-style: dashed; }
  * confirmation is the one thing the user must see, even with the cursor
  * still on the button.
  */
-html [data-fx="btn"][data-state="done"],
-html [data-fx="btn"][data-state="done"]:hover {
+html body [data-fx="btn"][data-state="done"],
+html body [data-fx="btn"][data-state="done"]:hover {
+  background-size: 0% 2px;
   border-color: var(--success);
   border-style: solid;
   color: var(--success);
-  background: rgba(var(--success-rgb), 0.1);
+  background-color: rgba(var(--success-rgb), 0.1);
   box-shadow: 0 0 14px rgba(var(--success-rgb), 0.35);
 }
 
+html body [data-fx="btn"][data-state] [data-fx-icon] { color: inherit; }
 html [data-fx="btn"][data-state="done"] [data-fx-icon] {
   animation: btnIconPop 420ms var(--motion-ease-out) both;
 }
 
-html [data-fx="btn"][data-state="error"],
-html [data-fx="btn"][data-state="error"]:hover {
+html body [data-fx="btn"][data-state="error"],
+html body [data-fx="btn"][data-state="error"]:hover {
+  background-size: 0% 2px;
   border-color: var(--danger);
   color: var(--danger);
-  background: rgba(var(--danger-rgb), 0.1);
+  background-color: rgba(var(--danger-rgb), 0.1);
   animation: btnShake 360ms var(--motion-ease) 1;
 }
 
@@ -2191,24 +2212,17 @@ html [data-fx="tag"] {
 
 /* ── Buttons ───────────────────────────────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
-  /* The glow plus a faint offset "hard" shadow underneath: the lift on hover
-     reads as the button rising off the page instead of just brightening. */
-  html [data-fx="btn"]:hover {
-    box-shadow: var(--glow-accent), 0 6px 0 -3px rgba(var(--accent-color-rgb), 0.18);
-  }
-  html [data-fx="btn"][data-tone="main"]:hover,
-  html [data-fx="btn"][data-btn="solid"]:hover {
-    box-shadow: var(--glow-main), 0 6px 0 -3px rgba(var(--main-color-rgb), 0.35);
-  }
-  html [data-fx="btn"][data-tone="accent"]:hover {
-    box-shadow: var(--glow-accent), 0 6px 0 -3px rgba(var(--accent-color-rgb), 0.22);
+  /* The card's glow (--glow-main) plus a faint offset shadow underneath, so
+     the 2px lift reads as the button rising off the page. */
+  html body [data-fx="btn"]:hover {
+    box-shadow: var(--glow-main), 0 6px 0 -3px rgba(var(--main-color-rgb), 0.3);
   }
 }
 
 html [data-fx="btn"]:focus-visible { box-shadow: var(--glow-accent-strong); }
 
 /* The copied/failed confirmation keeps its own colour over every glow above */
-html [data-fx="btn"][data-state="done"]:is(:hover, :focus-visible) {
+html body [data-fx="btn"][data-state="done"]:is(:hover, :focus-visible) {
   box-shadow: 0 0 14px rgba(var(--success-rgb), 0.35);
 }
 
