@@ -78,7 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
-  "guided-pentest-infrastructure": Array.from({ length: 31 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${385 + i}).webp`),
+  "guided-pentest-infrastructure": Array.from({ length: 29 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${387 + i}).webp`),
   "password-reset-broken-logic": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Lab Password reset broken logic/Screenshot (${371 + i}).webp`),
   "2fa-simple-bypass": Array.from({ length: 3 }, (_, i) => `Assets/Cases/Lab 2FA simple bypass/Screenshot (${351 + i}).webp`),
   "oauth-implicit-flow-bypass": Array.from({ length: 8 }, (_, i) => `Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (${343 + i}).webp`),
@@ -1563,8 +1563,8 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Network Enumeration", "Vulnerability Exploitation", "Initial Access", "Privilege Escalation via Plaintext Credentials", "Pentest Reporting"],
     readTime: 15,
     date: "2026-10-21",
-    screenshots: Array.from({ length: 31 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${385 + i}).webp`),
-    image: "Assets/Cases/Guided Pentest Infrastructure/Screenshot (414).webp", // صورة إتمام الروم كغلاف
+    screenshots: Array.from({ length: 29 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${387 + i}).webp`),
+    image: "Assets/Cases/Guided Pentest Infrastructure/Screenshot (415).webp", // صورة إتمام الروم كغلاف
   },
 ] as const;
 
