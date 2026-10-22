@@ -466,126 +466,296 @@
 }
 
 /* ATT&CK coverage (components/cases/AttackCoverage.tsx). Server-rendered,
-   ~30 rows and ~90 links, so the row styling is written once here. */
-.attack-row {
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 5%, transparent);
+   ~30 tiles, ~30 popovers and ~90 links, so the repeated styling is written
+   once here instead of as long utility lists. Same tokens as the rest. */
+
+/* ── Kill-chain strip ── */
+.attack-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
 }
-.attack-row:first-child {
-  border-top: 0;
+@media (width >= 64rem) {
+  .attack-strip {
+    grid-template-columns: repeat(15, minmax(0, 1fr));
+  }
 }
-.attack-row summary {
-  display: block;
-  cursor: pointer;
-  list-style: none;
-  padding: 0.75rem 0;
+.attack-seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 5.25rem;
+  padding: 0.625rem 0.625rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  background: color-mix(in srgb, var(--primary) var(--heat, 8%), var(--surface));
+  transition: border-color 0.3s, transform 0.3s;
 }
-.attack-row summary::-webkit-details-marker {
+.attack-seg::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--primary);
+}
+.attack-seg:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.attack-seg-n {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+}
+.attack-seg-count {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-ink);
+}
+.attack-seg-label {
+  margin-top: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 85%, transparent);
+}
+/* A tactic with no report: an outline, not a fill */
+.attack-seg[data-off] {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--foreground) 15%, transparent);
+  background: transparent;
+}
+.attack-seg[data-off]::before {
   display: none;
 }
-.attack-head {
+.attack-seg[data-off] .attack-seg-count,
+.attack-seg[data-off] .attack-seg-label {
+  color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+/* ── Ledger rows ── */
+.attack-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+@media (width >= 40rem) {
+  .attack-grid {
+    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  }
+}
+.attack-empty {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  min-height: 4.5rem;
+  padding: 0 1rem;
+  border: 1px dashed color-mix(in srgb, var(--foreground) 15%, transparent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+/* ── Technique tile ── */
+.attack-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 0.75rem 0.875rem 0.625rem;
+  text-align: left;
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  border-left: 2px solid var(--primary);
+  background: color-mix(in srgb, var(--primary) var(--heat, 8%), var(--surface));
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.attack-tile:hover,
+.attack-tile:focus-visible {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+.attack-tile-top {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 .attack-id {
-  display: block;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   color: var(--accent);
 }
 .attack-name {
   display: block;
+  margin-top: 0.375rem;
   font-size: 0.875rem;
-  line-height: 1.375;
-  color: color-mix(in srgb, var(--foreground) 85%, transparent);
-  transition: color 0.2s;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--foreground) 88%, transparent);
 }
-.attack-row summary:hover .attack-name {
-  color: var(--foreground);
-}
-.attack-count {
+.attack-tile-foot {
   display: flex;
-  flex-shrink: 0;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.625rem;
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: color-mix(in srgb, var(--foreground) 60%, transparent);
 }
-.attack-chev {
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
-  border-right: 1.5px solid var(--primary-ink);
-  border-bottom: 1.5px solid var(--primary-ink);
-  transform: rotate(45deg);
+.attack-tile-foot > span {
+  color: var(--primary-ink);
   transition: transform 0.3s;
 }
-.attack-row details[open] .attack-chev {
-  transform: rotate(-135deg);
-  margin-top: 3px;
+.attack-tile:hover .attack-tile-foot > span {
+  transform: translateX(3px);
 }
-.attack-heat {
-  display: block;
-  margin-top: 0.5rem;
-  height: 3px;
-  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+.attack-pips {
+  display: inline-flex;
+  gap: 2px;
 }
-.attack-heat > span {
-  display: block;
-  height: 100%;
+.attack-pips > span {
+  width: 5px;
+  height: 5px;
+  background: color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+.attack-pips > span[data-on] {
   background: var(--primary);
 }
-.attack-cases {
-  margin-bottom: 0.75rem;
-  padding-left: 0.75rem;
-  border-left: 2px solid color-mix(in srgb, var(--primary) 50%, transparent);
-}
-.attack-cases > li + li {
-  margin-top: 0.375rem;
-}
-.attack-cases a {
-  font-size: 13px;
-  line-height: 1.375;
-  color: color-mix(in srgb, var(--foreground) 70%, transparent);
-  transition: color 0.2s;
-}
-.attack-cases a:hover {
+
+/* ── Evidence popover (native [popover], top layer, no JS) ── */
+.attack-pop {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(36rem, calc(100vw - 2rem));
+  height: fit-content;
+  max-height: calc(100dvh - 3rem);
+  overflow: auto;
+  padding: 1.75rem;
   color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  border-top: 2px solid var(--primary);
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.6);
 }
-.attack-cases a::after {
-  content: " ↗";
+.attack-pop:popover-open {
+  animation: attack-pop-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.attack-pop::backdrop {
+  background: rgb(0 0 0 / 0.65);
+}
+/* The custom cursor lives below the top layer: show the native one here */
+.attack-pop,
+.attack-pop * {
+  cursor: auto !important;
+}
+.attack-pop a,
+.attack-pop button {
+  cursor: pointer !important;
+}
+.attack-pop-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+.attack-pop-corner.tl {
+  top: 6px;
+  left: 6px;
+  border-top: 1px solid var(--primary);
+  border-left: 1px solid var(--primary);
+}
+.attack-pop-corner.br {
+  right: 6px;
+  bottom: 6px;
+  border-right: 1px solid var(--primary);
+  border-bottom: 1px solid var(--primary);
+}
+.attack-pop-close {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 12px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  transition: border-color 0.2s, color 0.2s;
+}
+.attack-pop-close:hover {
+  border-color: var(--primary);
   color: var(--primary-ink);
-  opacity: 0;
-  transition: opacity 0.2s;
 }
-.attack-cases a:hover::after,
-.attack-cases a:focus-visible::after {
-  opacity: 1;
+.attack-pop-cases {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
 }
-.attack-cases .attack-ext {
+.attack-pop-cases a {
+  display: flex;
+  align-items: baseline;
+  gap: 0.875rem;
+  padding: 0.75rem 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--foreground) 80%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  transition: color 0.2s, background-color 0.2s;
+}
+.attack-pop-cases a:hover,
+.attack-pop-cases a:focus-visible {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+.attack-pop-n {
   font-family: var(--font-mono);
   font-size: 10px;
+  color: color-mix(in srgb, var(--foreground) 50%, transparent);
+}
+.attack-pop-go {
+  color: var(--primary-ink);
+  transition: transform 0.2s;
+}
+.attack-pop-cases a:hover .attack-pop-go {
+  transform: translateX(3px);
+}
+.attack-pop-ext {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
   color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  text-underline-offset: 4px;
 }
-.attack-cases .attack-ext::after {
-  opacity: 1;
+.attack-pop-ext:hover {
+  color: var(--primary-ink);
 }
-/* The case list eases in when its <details> opens */
-.attack-row details[open] .attack-cases {
-  animation: attack-open 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes attack-open {
-  from { opacity: 0; transform: translateY(-4px); }
+@keyframes attack-pop-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
   to { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .attack-row details[open] .attack-cases { animation: none; }
-  .attack-chev { transition: none; }
+  .attack-pop:popover-open { animation: none; }
+  .attack-seg,
+  .attack-tile,
+  .attack-tile-foot > span { transition: none; }
+  .attack-seg:hover,
+  .attack-tile:hover { transform: none; }
 }

@@ -20,21 +20,29 @@
  * report and compare.
  */
 
-/** Tactics in Enterprise ATT&CK order — this is the column order of the matrix */
+/**
+ * Tactics in Enterprise ATT&CK order — the column order of the matrix.
+ *
+ * ATT&CK v19 (April 2026): 15 tactics. Defense Evasion was split into
+ * Stealth (keeps TA0005) and Defense Impairment (TA0112). `short` is the
+ * label used where a full name does not fit (the kill-chain strip).
+ */
 export const ATTACK_TACTICS = [
-  { id: "reconnaissance", name: "Reconnaissance" },
-  { id: "initial-access", name: "Initial Access" },
-  { id: "execution", name: "Execution" },
-  { id: "persistence", name: "Persistence" },
-  { id: "privilege-escalation", name: "Privilege Escalation" },
-  { id: "defense-evasion", name: "Defense Evasion" },
-  { id: "credential-access", name: "Credential Access" },
-  { id: "discovery", name: "Discovery" },
-  { id: "lateral-movement", name: "Lateral Movement" },
-  { id: "collection", name: "Collection" },
-  { id: "command-and-control", name: "Command and Control" },
-  { id: "exfiltration", name: "Exfiltration" },
-  { id: "impact", name: "Impact" },
+  { id: "reconnaissance", ta: "TA0043", name: "Reconnaissance", short: "Recon" },
+  { id: "resource-development", ta: "TA0042", name: "Resource Development", short: "Resource Dev" },
+  { id: "initial-access", ta: "TA0001", name: "Initial Access", short: "Initial Access" },
+  { id: "execution", ta: "TA0002", name: "Execution", short: "Execution" },
+  { id: "persistence", ta: "TA0003", name: "Persistence", short: "Persistence" },
+  { id: "privilege-escalation", ta: "TA0004", name: "Privilege Escalation", short: "Priv Esc" },
+  { id: "stealth", ta: "TA0005", name: "Stealth", short: "Stealth" },
+  { id: "defense-impairment", ta: "TA0112", name: "Defense Impairment", short: "Def Impair" },
+  { id: "credential-access", ta: "TA0006", name: "Credential Access", short: "Cred Access" },
+  { id: "discovery", ta: "TA0007", name: "Discovery", short: "Discovery" },
+  { id: "lateral-movement", ta: "TA0008", name: "Lateral Movement", short: "Lateral" },
+  { id: "collection", ta: "TA0009", name: "Collection", short: "Collection" },
+  { id: "command-and-control", ta: "TA0011", name: "Command and Control", short: "C2" },
+  { id: "exfiltration", ta: "TA0010", name: "Exfiltration", short: "Exfil" },
+  { id: "impact", ta: "TA0040", name: "Impact", short: "Impact" },
 ] as const;
 
 export type TacticId = (typeof ATTACK_TACTICS)[number]["id"];
@@ -46,7 +54,7 @@ export type Technique = {
   tactic: TacticId;
 };
 
-/** Techniques referenced in the mapping below. Name and tactic from ATT&CK Enterprise. */
+/** Techniques referenced in the mapping below. Name and tactic from ATT&CK Enterprise v19. */
 export const TECHNIQUES: readonly Technique[] = [
   { id: "T1595", name: "Active Scanning", tactic: "reconnaissance" },
   { id: "T1566", name: "Phishing", tactic: "initial-access" },
@@ -59,9 +67,9 @@ export const TECHNIQUES: readonly Technique[] = [
   { id: "T1098", name: "Account Manipulation", tactic: "persistence" },
   { id: "T1068", name: "Exploitation for Privilege Escalation", tactic: "privilege-escalation" },
   { id: "T1548", name: "Abuse Elevation Control Mechanism", tactic: "privilege-escalation" },
-  { id: "T1027", name: "Obfuscated Files or Information", tactic: "defense-evasion" },
-  { id: "T1070", name: "Indicator Removal", tactic: "defense-evasion" },
-  { id: "T1112", name: "Modify Registry", tactic: "defense-evasion" },
+  { id: "T1027", name: "Obfuscated Files or Information", tactic: "stealth" },
+  { id: "T1070", name: "Indicator Removal", tactic: "stealth" },
+  { id: "T1112", name: "Modify Registry", tactic: "defense-impairment" },
   { id: "T1110", name: "Brute Force", tactic: "credential-access" },
   { id: "T1003", name: "OS Credential Dumping", tactic: "credential-access" },
   { id: "T1555", name: "Credentials from Password Stores", tactic: "credential-access" },

@@ -26,9 +26,13 @@ import {
   Keyboard,
   PlayCircle,
   Crosshair,
+  GraduationCap,
+  Trophy,
+  ShieldCheck,
 } from "lucide-react";
 import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
+import { normalizePublicHref } from "@/app/core/config/shared";
 import { useThemeFx } from "@/app/core/theme/ThemeFxProvider";
 import { FX_DURATIONS, getFxDuration, setFxDuration } from "@/app/core/theme/fx";
 
@@ -128,14 +132,23 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
       { id: "work", group: "Go to", label: "Selected work", icon: Code2, run: () => go("#work") },
       { id: "projects", group: "Go to", label: "Open-source projects", icon: Code2, run: () => go("#projects") },
       { id: "experience", group: "Go to", label: "Experience", icon: Briefcase, run: () => go("#experience") },
+      { id: "teaching", group: "Go to", label: "Teaching", icon: GraduationCap, run: () => go("#teaching") },
       { id: "faq", group: "Go to", label: "FAQ", icon: MessageCircle, run: () => go("#faq") },
       { id: "certs", group: "Go to", label: "Certifications", icon: Award, run: () => go("#certificates") },
+      { id: "platforms", group: "Go to", label: "Practice platforms (THM, HTB …)", icon: Trophy, run: () => go("#platforms") },
       { id: "art", group: "Go to", label: "Proof gallery", icon: Palette, run: () => go("#art") },
       { id: "attack", group: "Go to", label: "MITRE ATT&CK coverage", icon: Crosshair, run: () => go("#attack") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
       { id: "videos", group: "Go to", label: "Videos", icon: PlayCircle, run: () => go("#videos") },
       { id: "cv-page", group: "Pages", label: "CV", icon: FileText, run: () => visit("/cv") },
+      {
+        id: "security-txt", group: "Pages", label: "security.txt", icon: ShieldCheck,
+        run: () => {
+          setOpen(false);
+          window.open(normalizePublicHref(".well-known/security.txt"), "_blank", "noopener");
+        },
+      },
       {
         id: "theme", group: "Appearance", label: isDark ? "Switch to light mode" : "Switch to dark mode",
         icon: isDark ? Sun : Moon,

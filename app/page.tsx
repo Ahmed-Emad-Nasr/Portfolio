@@ -22,6 +22,10 @@ import ContributionsGrid from "@/app/components/services/ContributionsGrid";
 import { getGitHubRepos } from "@/app/core/api/github";
 import StartHere from "@/app/components/cases/StartHere";
 import AttackCoverage from "@/app/components/cases/AttackCoverage";
+import TeachingSection from "@/app/components/experience/TeachingSection";
+import PlatformsSection from "@/app/components/experience/PlatformsSection";
+import { getTryHackMeStats } from "@/app/core/api/tryhackme";
+import { STATIC_PLATFORMS, tryHackMePlatform } from "@/app/core/config/platforms";
 import {
   attackCoverage,
   categoryFacets,
@@ -135,7 +139,7 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
 const DEFER = "[content-visibility:auto] [contain-intrinsic-size:auto_1200px]";
 
 export default async function Home() {
-  const repos = await getGitHubRepos();
+  const [repos, thm] = await Promise.all([getGitHubRepos(), getTryHackMeStats()]);
   const projectCount = repos.length;
   const starCount = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
 
@@ -207,6 +211,11 @@ export default async function Home() {
       <div className={DEFER}>
         <MilestonesSection />
       </div>
+      {/* 07c  Teaching: the curriculum and where it was taught */}
+      <div className={DEFER}>
+        <TeachingSection />
+      </div>
+
       <div className={DEFER}>
         <NowSection />
       </div>
@@ -226,6 +235,11 @@ export default async function Home() {
       {/* 09  Credentials */}
       <div className={DEFER}>
         <CredentialsGallery />
+      </div>
+
+      {/* 09b  Public training profiles: proof anyone can check */}
+      <div className={DEFER}>
+        <PlatformsSection featured={tryHackMePlatform(thm)} thm={thm} others={STATIC_PLATFORMS} />
       </div>
 
       <SectionDivider text="記録 • 証明 • 実績" reverse={true} angle={-1.5} />

@@ -17,6 +17,7 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { normalizePublicHref } from "@/app/blog/blog-utils";
+import { STATIC_PLATFORMS, THM_SNAPSHOT, tryHackMePlatform } from "@/app/core/config/platforms";
 
 type Line = { id: number; text: string; kind: "in" | "out" | "err" | "dim" };
 
@@ -99,6 +100,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             "open <n|id>       — open a case page",
             "cat cv            — open the CV",
             "skills            — most used tools",
+            "ranks             — public training profiles",
             "contact           — how to reach me",
             "clear             — clear the screen",
             "exit              — close the terminal",
@@ -179,6 +181,13 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
               .slice(0, 12)
               .map(([tool, count]) => `${String(count).padStart(2, " ")}x  ${tool}`),
           );
+          break;
+        }
+
+        case "ranks": {
+          const all = [tryHackMePlatform({ ...THM_SNAPSHOT, live: false }), ...STATIC_PLATFORMS];
+          printAll(all.map((p) => `${p.name.toLowerCase().replace(/\s+/g, "").padEnd(15, " ")}${p.url.replace(/^https:\/\//, "")}`));
+          print(`tryhackme: top ${THM_SNAPSHOT.topPercentage}% worldwide · ${THM_SNAPSHOT.completedRoomsNumber} rooms`, "dim");
           break;
         }
 

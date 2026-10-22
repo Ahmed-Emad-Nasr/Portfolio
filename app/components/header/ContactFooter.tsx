@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { MessageCircle, ArrowUpRight, Mail, Copy, Check } from "lucide-react";
+import { MessageCircle, ArrowUpRight, Mail, Copy, Check, ShieldCheck, KeyRound } from "lucide-react";
 import { Github, Linkedin, Youtube, Instagram, XLogo } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
+import { PGP, SECURITY_TXT_PATH, formattedFingerprint, hasPgpKey } from "@/app/core/config/security";
 
 /* The last line of every page: the mark, the copyright, the legal pages and
    the design credit. On the home page it closes the contact section; the
@@ -32,6 +33,10 @@ export function FooterBar({ className = "" }: { className?: string }) {
         <Link href="/terms" className="hover:text-primary-ink transition-colors">Terms</Link>
         <span className="text-primary-ink" aria-hidden="true">•</span>
         <a href={normalizePublicHref("feed.xml")} className="hover:text-primary-ink transition-colors">RSS</a>
+        <span className="text-primary-ink" aria-hidden="true">•</span>
+        <a href={normalizePublicHref(SECURITY_TXT_PATH)} className="hover:text-primary-ink transition-colors normal-case tracking-[0.2em]">
+          security.txt
+        </a>
       </nav>
       <div className="flex items-center gap-2 text-on-surface-variant">
         <span>
@@ -64,6 +69,7 @@ const gmailComposeUrl = ({ subject, body }: Draft) =>
 export default function ContactFooter() {
   const { state: emailCopy, copy: copyEmail } = useCopyLink();
   const { state: draftCopy, copy: copyDraft } = useCopyLink();
+  const { state: fpCopy, copy: copyFingerprint } = useCopyLink();
   /* The last message handed to the mail app — kept so the fallback panel
      can offer the same text another way. */
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -147,7 +153,7 @@ export default function ContactFooter() {
               </div>
 
               {/* Social Links  sharp-edged tags */}
-              <div className="flex flex-wrap gap-3 mb-16">
+              <div className="flex flex-wrap gap-3 mb-10">
                 {socialLinks.map((social) => (
                   <a
                     key={social.name}
@@ -168,6 +174,56 @@ export default function ContactFooter() {
                     />
                   </a>
                 ))}
+              </div>
+
+              {/* Responsible disclosure: security.txt, and the PGP key once
+                  one is set in core/config/security.ts */}
+              <div className="relative mb-12 max-w-xl border border-foreground/10 border-l-2 border-l-primary bg-foreground/[0.02] px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck size={16} className="shrink-0 text-primary-ink" aria-hidden="true" />
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-foreground">
+                    Responsible disclosure
+                  </span>
+                  <span className="jp-eyebrow text-[9px] text-foreground/30" lang="ja" aria-hidden="true">
+                    開示
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-foreground/60 font-light leading-relaxed">
+                  Found something on this site? Report it privately —{" "}
+                  <a
+                    href={normalizePublicHref(SECURITY_TXT_PATH)}
+                    className="font-mono text-[13px] text-foreground/80 underline underline-offset-4 decoration-primary/50 hover:text-primary-ink"
+                  >
+                    security.txt
+                  </a>{" "}
+                  {hasPgpKey() ? "has the details, and the key below encrypts it." : "has the details."}
+                </p>
+                {hasPgpKey() && (
+                  <div className="mt-4 pt-4 border-t border-foreground/10">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">PGP fingerprint</p>
+                    <p className="mt-1.5 font-mono text-xs md:text-[13px] tracking-[0.08em] text-accent break-words">
+                      {formattedFingerprint()}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <a
+                        href={normalizePublicHref(PGP.keyFile)}
+                        download
+                        className="flex items-center gap-2 px-3.5 py-2 border border-foreground/15 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
+                      >
+                        <KeyRound size={12} aria-hidden="true" /> Public key
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => void copyFingerprint(formattedFingerprint())}
+                        className="flex items-center gap-2 px-3.5 py-2 border border-foreground/15 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
+                        aria-label={fpCopy === "done" ? "Fingerprint copied" : "Copy PGP fingerprint"}
+                      >
+                        {fpCopy === "done" ? <Check size={12} className="text-tertiary" aria-hidden="true" /> : <Copy size={12} aria-hidden="true" />}
+                        {fpCopy === "done" ? "Copied" : "Copy fingerprint"}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Languages  from portfolio data */}

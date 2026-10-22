@@ -111,7 +111,9 @@ const COVERED = new Map(buildCoverage().map((column) => [column.tactic.id, colum
 export const attackCoverage = {
   tactics: ATTACK_TACTICS.map((tactic, index) => ({
     id: tactic.id,
+    ta: tactic.ta,
     name: tactic.name,
+    short: tactic.short,
     order: index + 1,
     techniques: (COVERED.get(tactic.id) ?? [])
       .map(({ technique, caseIds }) => ({

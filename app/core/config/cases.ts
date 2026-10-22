@@ -287,7 +287,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   },
   {
     id: "soc-env-depi-r3-project",
-    title: "SOC Enviroment DEPI R3 Project",
+    title: "SOC Environment DEPI R3 Project",
     description: "Architected, deployed, and configured a full Security Operations Center (SOC) monitoring environment for the DEPI R3 capstone project using Wazuh SIEM. The implementation included deploying endpoint agents, configuring File Integrity Monitoring (FIM) within ossec.conf to monitor critical directories in real time, validating alert generation by simulating unauthorized file creation and modification events, and building custom visualization dashboards for centralized SOC triage and operational visibility.",
     platform: "DEPI R3",
     type: "PDF Report",
