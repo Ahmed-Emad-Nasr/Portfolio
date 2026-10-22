@@ -57,26 +57,31 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
             <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-tertiary">
               {typeLabel}
             </span>
-            <span className="brush-jp text-sm text-foreground/30 leading-none" lang="ja">
+            <span className="brush-jp text-sm text-foreground/30 leading-none" lang="ja" aria-hidden="true">
               {TYPE_JP[typeLabel] ?? "庫"}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/10 border border-accent/25">
-          <Star size={11} className="text-accent" />
-          <span className="font-mono text-[10px] font-bold text-accent">
-            {repo.stargazers_count}
-          </span>
-        </div>
+        {/* A "★ 0" badge advertises the absence of stars — show it only once
+            there is something to show. */}
+        {repo.stargazers_count > 0 && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/10 border border-accent/25">
+            <span className="sr-only">{`${repo.stargazers_count} GitHub ${repo.stargazers_count === 1 ? "star" : "stars"}`}</span>
+            <Star size={11} className="text-accent" aria-hidden="true" />
+            <span className="font-mono text-[10px] font-bold text-accent" aria-hidden="true">
+              {repo.stargazers_count}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Title */}
-      <h3 className="font-display text-xl md:text-2xl font-black mb-3 tracking-tight uppercase leading-tight text-foreground group-hover:text-primary transition-colors duration-300">
+      <h3 className="font-display text-lg xl:text-2xl font-black mb-3 tracking-tight uppercase leading-tight text-foreground group-hover:text-primary transition-colors duration-300">
         {highlight?.name || repo.name.replace(/-/g, " ")}
       </h3>
 
       {/* Description */}
-      <p className="text-foreground/55 line-clamp-3 mb-5 text-sm font-light leading-relaxed">
+      <p className="text-foreground/60 line-clamp-3 mb-5 text-sm font-light leading-relaxed">
         {highlight?.description || repo.description || "Open-source security project. Setup and results documented in the repo."}
       </p>
 
@@ -86,7 +91,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
           {repo.language || "Native"}
         </span>
         {repo.license && repo.license.spdx_id !== "NOASSERTION" && (
-          <span className="px-3 py-1 text-[9px] uppercase tracking-[0.15em] font-mono text-foreground/40 bg-foreground/[0.04] border border-foreground/10">
+          <span className="px-3 py-1 text-[9px] uppercase tracking-[0.15em] font-mono text-foreground/60 bg-foreground/[0.04] border border-foreground/10">
             {repo.license.spdx_id}
           </span>
         )}

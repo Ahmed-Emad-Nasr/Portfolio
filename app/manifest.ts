@@ -32,21 +32,13 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#080808",
     theme_color: "#080808",
-    /*
-     * The sizes Android asks for are 192 and 512. This image is square
-     * (560×560) so it works as an icon, but it is not the ideal size.
-     *
-     * ⭐ For a proper icon: export 192 and 512, put them in
-     *   public/Assets/icons/ and change the paths here. purpose:
-     *   "maskable" needs a safe margin around the logo (20% on each side)
-     *   because Android crops the icon to a circle on some devices.
-     */
+    /* 192 and 512 are the sizes Android asks for. The maskable one keeps the
+       mark inside the 80% safe zone, because launchers crop it to a circle
+       or squircle. Generated from the site font (see README → Icons). */
     icons: [
-      {
-        src: normalizePublicHref("Assets/art-gallery/Images/logo/3omda.webp"),
-        sizes: "560x560",
-        type: "image/webp",
-      },
+      { src: normalizePublicHref("icons/icon-192.png"), sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: normalizePublicHref("icons/icon-512.png"), sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: normalizePublicHref("icons/maskable-512.png"), sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }

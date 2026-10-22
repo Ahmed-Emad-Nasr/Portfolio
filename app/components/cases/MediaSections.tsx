@@ -112,7 +112,7 @@ export default function MediaSections({
               </span>
               <span className="flex flex-col">
                 <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
-                <span className="jp-eyebrow text-[9px] text-foreground/25" lang="ja">{s.japanese}</span>
+                <span className="jp-eyebrow text-[9px] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
               </span>
             </motion.div>
           ))}
@@ -140,7 +140,7 @@ export default function MediaSections({
           </div>
 
           {videos.length === 0 ? (
-            <p className="font-mono text-sm text-foreground/40">No channel videos yet.</p>
+            <p className="font-mono text-sm text-foreground/60">No channel videos yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {videos.slice(0, visible).map((video, idx) => (
@@ -189,9 +189,9 @@ export default function MediaSections({
                 onClick={() => setVisible((n) => Math.min(videos.length, n + VIDEO_PAGE))}
                 className="group flex items-center gap-3 px-8 py-4 border border-foreground/15 border-l-2 border-l-primary bg-foreground/[0.02] backdrop-blur-md text-foreground font-mono font-bold uppercase tracking-widest text-sm transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
               >
-                <ChevronDown size={14} className="text-primary transition-transform duration-300 group-hover:translate-y-0.5" />
+                <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                 Show more
-                <span className="font-mono text-[10px] text-foreground/40 tabular-nums">
+                <span className="font-mono text-[10px] text-foreground/60 tabular-nums">
                   {visible}/{videos.length}
                 </span>
               </button>
@@ -202,10 +202,10 @@ export default function MediaSections({
             <div className="mt-24">
               <div className="mb-10 flex flex-wrap items-center gap-4">
                 <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-                <h3 id="blog-playlists-title" className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+                <h3 id="blog-playlists-title" className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
                   Playlists
                 </h3>
-                <span className="brush-jp text-lg text-foreground/30" lang="ja">連続</span>
+                <span className="brush-jp text-lg text-foreground/30" lang="ja" aria-hidden="true">連続</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {playlists.map((playlist, idx) => (
@@ -235,7 +235,7 @@ export default function MediaSections({
                         <ListVideo size={14} className="shrink-0 text-foreground/25 group-hover:text-tertiary transition-colors duration-300" />
                       </div>
                       {playlist.description && (
-                        <p className="text-sm text-foreground/55 font-light leading-relaxed mb-5 line-clamp-3">{playlist.description}</p>
+                        <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5 line-clamp-3">{playlist.description}</p>
                       )}
                       <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} mt-auto w-fit`}>
                         <ExternalLink size={13} /> Open playlist

@@ -20,7 +20,7 @@ import { skillGroups } from "./skills";
 import { GITHUB_USERNAME, projectBullets, staticProjectFallback } from "./projects";
 import { CASE_STATS } from "./case-stats";
 import { CV_PDF_HREF, CV_SUMMARY } from "./cv";
-import { GALLERY_IMAGE_COUNT } from "./certifications";
+import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryTitle } from "./certifications";
 import { YOUTUBE_CHANNEL_URL, normalizePublicHref } from "./shared";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -220,6 +220,8 @@ const certificates: Certificate[] = [
     date: String(c.year),
     kind: "certification" as const,
     link: c.verifyUrl,
+    /* The scan itself, from the gallery: the card shows it and opens it */
+    image: c.galleryIndex ? normalizePublicHref(galleryImagePath(c.galleryIndex)) : undefined,
   })),
   ...achievements
     .filter((a) => a.cv !== false)
@@ -401,9 +403,9 @@ export const PORTFOLIO_DATA: PortfolioData = {
   ],
   certificates,
   artGallery: Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
-    src: normalizePublicHref(`Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`),
-    thumb: normalizePublicHref(`Assets/art-gallery/Images/image_display_thumb/${k + 1}.webp`),
-    title: `Record ${String(k + 1).padStart(2, "0")}`,
+    src: normalizePublicHref(galleryImagePath(k + 1)),
+    thumb: normalizePublicHref(galleryImagePath(k + 1)),
+    title: galleryTitle(k + 1),
   })),
   stats: [
     { target: CASE_STATS.published, suffix: "", label: "Cases published", japanese: "記録" },

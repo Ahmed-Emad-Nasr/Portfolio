@@ -1,11 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { MessageCircle, ArrowUpRight, Mail } from "lucide-react";
+import { MessageCircle, ArrowUpRight, Mail, Copy, Check } from "lucide-react";
 import { Github, Linkedin, Youtube, Instagram, XLogo } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
+import { useCopyLink } from "@/app/components/cases/useCopyLink";
 
 /* The last line of every page: the mark, the copyright, the legal pages and
    the design credit. On the home page it closes the contact section; the
@@ -13,9 +15,9 @@ import { normalizePublicHref } from "@/app/core/config/shared";
 export function FooterBar({ className = "" }: { className?: string }) {
   const currentYear = new Date().getFullYear();
   return (
-    <div className={`pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant font-mono text-[10px] tracking-[0.3em] uppercase opacity-70 ${className}`}>
+    <div className={`pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant font-mono text-[10px] tracking-[0.3em] uppercase ${className}`}>
       <div className="flex items-center gap-4">
-        <span className="text-primary font-black text-base tracking-normal font-display">
+        <span className="text-primary-ink font-black text-base tracking-normal font-display">
           AE.
         </span>
         <span>
@@ -23,36 +25,51 @@ export function FooterBar({ className = "" }: { className?: string }) {
         </span>
       </div>
       <nav aria-label="Site information" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <Link href="/cv" className="hover:text-primary transition-colors">CV</Link>
-        <span className="text-primary" aria-hidden="true">•</span>
-        <Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
-        <span className="text-primary" aria-hidden="true">•</span>
-        <Link href="/terms" className="hover:text-primary transition-colors">Terms</Link>
-        <span className="text-primary" aria-hidden="true">•</span>
-        <a href={normalizePublicHref("feed.xml")} className="hover:text-primary transition-colors">RSS</a>
+        <Link href="/cv" className="hover:text-primary-ink transition-colors">CV</Link>
+        <span className="text-primary-ink" aria-hidden="true">•</span>
+        <Link href="/privacy" className="hover:text-primary-ink transition-colors">Privacy</Link>
+        <span className="text-primary-ink" aria-hidden="true">•</span>
+        <Link href="/terms" className="hover:text-primary-ink transition-colors">Terms</Link>
+        <span className="text-primary-ink" aria-hidden="true">•</span>
+        <a href={normalizePublicHref("feed.xml")} className="hover:text-primary-ink transition-colors">RSS</a>
       </nav>
-      <div className="flex items-center gap-2 text-on-surface-variant/50">
+      <div className="flex items-center gap-2 text-on-surface-variant">
         <span>
           Design{" "}
           <a
             href="https://github.com/MostafaSensei106/Sensei-Dev"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-primary transition-colors"
+            className="hover:text-primary-ink transition-colors"
           >
             Sensei-Dev
           </a>
         </span>
-        <span className="text-primary">•</span>
-        <span>次のレベル</span>
+        <span className="text-primary-ink">•</span>
+        <span lang="ja" aria-hidden="true">次のレベル</span>
       </div>
     </div>
   );
 }
 
+type Draft = { subject: string; body: string };
+
+const EMAIL = PORTFOLIO_DATA.profile.contact.email;
+
+/* Gmail's web composer, prefilled — for visitors with no mail app set up,
+   where a mailto: link silently does nothing. */
+const gmailComposeUrl = ({ subject, body }: Draft) =>
+  `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
 export default function ContactFooter() {
+  const { state: emailCopy, copy: copyEmail } = useCopyLink();
+  const { state: draftCopy, copy: copyDraft } = useCopyLink();
+  /* The last message handed to the mail app — kept so the fallback panel
+     can offer the same text another way. */
+  const [draft, setDraft] = useState<Draft | null>(null);
+
   const socialLinks = [
-    { name: "GitHub", icon: Github, href: `https://github.com/${PORTFOLIO_DATA.profile.contact.github}`, color: "text-primary" },
+    { name: "GitHub", icon: Github, href: `https://github.com/${PORTFOLIO_DATA.profile.contact.github}`, color: "text-primary-ink" },
     { name: "LinkedIn", icon: Linkedin, href: `${PORTFOLIO_DATA.profile.contact.linkedin}`, color: "text-[#0077b5]" },
     { name: "WhatsApp", icon: MessageCircle, href: `https://wa.me/${PORTFOLIO_DATA.profile.contact.whatsapp}`, color: "text-[#25d366]" },
     { name: "YouTube", icon: Youtube, href: PORTFOLIO_DATA.profile.contact.youtube, color: "text-[#ff0000]" },
@@ -97,16 +114,37 @@ export default function ContactFooter() {
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-[2px] bg-primary" />
-                <span className="text-primary font-mono text-[10px] tracking-[0.5em] uppercase font-bold">
+                <span className="text-primary-ink font-mono text-[10px] tracking-[0.5em] uppercase font-bold">
                   The End of the Path
                 </span>
               </div>
 
               {/* Sized to its column: the fixed text-9xl ran past the half-width
                   column into the form on every desktop width */}
-              <h2 className="font-display text-[clamp(2.75rem,12vw,5rem)] lg:text-[clamp(3.5rem,5.6vw,8rem)] font-black uppercase leading-[0.8] mb-12 tracking-tighter">
+              <h2 className="font-display text-[clamp(2rem,10.5vw,5rem)] lg:text-[clamp(3rem,4.8vw,8rem)] font-black uppercase leading-[0.8] mb-12 tracking-tighter">
                 Forge <br /> <span className="text-primary italic">Together.</span>
               </h2>
+
+              {/* Direct email: the one channel a recruiter usually wants,
+                  readable and copyable without opening anything. */}
+              <div className="mb-6 flex flex-wrap items-stretch gap-3">
+                <a
+                  href={`mailto:${EMAIL}`}
+                  className="group flex min-w-0 items-center gap-3 px-5 py-3 border border-primary/30 bg-primary/[0.06] hover:border-primary transition-colors duration-300"
+                >
+                  <Mail size={18} className="shrink-0 text-primary-ink" aria-hidden="true" />
+                  <span className="truncate font-mono text-sm text-foreground">{EMAIL}</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => void copyEmail(EMAIL)}
+                  className="flex items-center gap-2 px-4 py-3 border border-foreground/10 bg-foreground/5 hover:border-primary/40 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 transition-colors duration-300"
+                  aria-label={emailCopy === "done" ? "Email address copied" : "Copy email address"}
+                >
+                  {emailCopy === "done" ? <Check size={14} className="text-tertiary" aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                  {emailCopy === "done" ? "Copied" : emailCopy === "error" ? "Copy failed" : "Copy"}
+                </button>
+              </div>
 
               {/* Social Links  sharp-edged tags */}
               <div className="flex flex-wrap gap-3 mb-16">
@@ -116,10 +154,11 @@ export default function ContactFooter() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group flex items-center gap-3 px-5 py-3 bg-foreground/5 border border-foreground/10 hover:border-primary/40 transition-all duration-300 ${social.color}`}
-                    aria-label={social.name}
+                    className="group flex items-center gap-3 px-5 py-3 bg-foreground/5 border border-foreground/10 hover:border-primary/40 transition-all duration-300 text-foreground/80 hover:text-foreground"
                   >
-                    <social.icon size={18} />
+                    {/* Brand colour on the icon only: LinkedIn blue or YouTube
+                        red as 10px text fell below 4.5:1 on the dark theme. */}
+                    <social.icon size={18} className={social.color} aria-hidden="true" />
                     <span className="font-mono font-bold uppercase tracking-[0.15em] text-[10px]">
                       {social.name}
                     </span>
@@ -136,7 +175,7 @@ export default function ContactFooter() {
                 {PORTFOLIO_DATA.languages.map((l, i) => (
                   <span key={l.code} className="flex items-center gap-3">
                     {i > 0 && (
-                      <span className="text-primary" aria-hidden="true">
+                      <span className="text-primary-ink" aria-hidden="true">
                         •
                       </span>
                     )}
@@ -165,20 +204,20 @@ export default function ContactFooter() {
 
             {/* Background mail icon */}
             <div className="absolute top-4 right-4 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
-              <Mail size={120} className="text-primary" />
+              <Mail size={120} className="text-primary-ink" />
             </div>
 
             {/* Briefing header */}
             <div className="flex items-center gap-3 mb-2">
               <div className="w-6 h-[2px] bg-primary" />
-              <span className="font-mono text-[9px] text-primary tracking-[0.4em] uppercase font-bold">
+              <span className="font-mono text-[9px] text-primary-ink tracking-[0.4em] uppercase font-bold">
                 Mission Briefing // 依頼
               </span>
             </div>
             <h3 className="font-display text-3xl font-black mb-3 uppercase tracking-tight text-foreground">
               Seal Intent
             </h3>
-            <p className="font-mono text-[11px] text-foreground/45 tracking-wider mb-8">
+            <p className="font-mono text-[11px] text-foreground/60 tracking-wider mb-8">
               {PORTFOLIO_DATA.profile.availability}  training and collaborations welcome too.
             </p>
 
@@ -199,8 +238,9 @@ export default function ContactFooter() {
                 const fullBody = `Sender: ${name} (${email})\nType: ${type}\n\n${message}`;
                 const body = encodeURIComponent(fullBody);
 
-                const mailto = `mailto:${PORTFOLIO_DATA.profile.contact.email}?subject=${subject}&body=${body}`;
+                const mailto = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
 
+                setDraft({ subject: `[${type}] Inquiry from ${name}`, body: fullBody });
                 window.location.assign(mailto);
               }}
             >
@@ -231,7 +271,7 @@ export default function ContactFooter() {
                 />
               </div>
               <div className="relative">
-                <label htmlFor="type" className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/40">
+                <label htmlFor="type" className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
                   Reason
                 </label>
                 <select
@@ -261,11 +301,47 @@ export default function ContactFooter() {
               </div>
               <button
                 type="submit"
-                aria-label="Dispatch Message"
                 className="btn-sheen mt-4 w-full py-5 bg-primary text-white font-mono font-black uppercase tracking-[0.3em] text-sm hover:bg-foreground hover:text-background active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/20"
               >
                 DISPATCH MESSAGE
               </button>
+
+              {/* A static site has no server to send mail: the button opens
+                  the visitor's mail app. When none is set up nothing visible
+                  happens, so the same message is offered two other ways. */}
+              <AnimatePresence>
+                {draft && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    role="status"
+                    className="border-l-2 border-primary bg-foreground/[0.03] px-5 py-4"
+                  >
+                    <p className="font-mono text-[11px] leading-relaxed text-foreground/70">
+                      Your mail app should open with the message ready. Nothing opened?
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-3">
+                      <a
+                        href={gmailComposeUrl(draft)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-foreground hover:text-background transition-colors duration-300"
+                      >
+                        Open in Gmail <ArrowUpRight size={12} aria-hidden="true" />
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => void copyDraft(`To: ${EMAIL}\nSubject: ${draft.subject}\n\n${draft.body}`)}
+                        className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
+                      >
+                        {draftCopy === "done" ? <Check size={12} className="text-tertiary" aria-hidden="true" /> : <Copy size={12} aria-hidden="true" />}
+                        {draftCopy === "done" ? "Copied" : "Copy message"}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </form>
           </motion.div>
         </div>

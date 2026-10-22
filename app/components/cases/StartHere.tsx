@@ -20,10 +20,10 @@ export default function StartHere() {
       <h2 id="start-here-title" className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-foreground mb-3">
         Start <span className="text-primary italic">here.</span>
       </h2>
-      <p className="mb-10 max-w-2xl text-foreground/55 font-light leading-relaxed">
+      <p className="mb-10 max-w-2xl text-foreground/60 font-light leading-relaxed">
         Three reports that cover the range of the work. The full library is below.
       </p>
-      <ol className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {ENTRIES.map((entry, idx) => (
           <li key={entry.id}>
             <Link
@@ -33,13 +33,13 @@ export default function StartHere() {
               <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true">
                 {String(idx + 1).padStart(2, "0")}
               </div>
-              <div className="font-mono text-[10px] text-primary tracking-[0.3em] uppercase mb-3">
+              <div className="font-mono text-[10px] text-primary-ink tracking-[0.3em] uppercase mb-3">
                 {String(idx + 1).padStart(2, "0")} • {entry.minutes} min
               </div>
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
                 {entry.label}
               </h3>
-              <p className="text-sm text-foreground/55 font-light leading-relaxed">{entry.why}</p>
+              <p className="text-sm text-foreground/60 font-light leading-relaxed">{entry.why}</p>
             </Link>
           </li>
         ))}

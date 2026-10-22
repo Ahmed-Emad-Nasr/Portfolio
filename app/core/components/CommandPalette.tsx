@@ -25,6 +25,7 @@ import {
   SquareTerminal,
   Keyboard,
   PlayCircle,
+  Crosshair,
 } from "lucide-react";
 import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
@@ -130,6 +131,7 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
       { id: "faq", group: "Go to", label: "FAQ", icon: MessageCircle, run: () => go("#faq") },
       { id: "certs", group: "Go to", label: "Certifications", icon: Award, run: () => go("#certificates") },
       { id: "art", group: "Go to", label: "Proof gallery", icon: Palette, run: () => go("#art") },
+      { id: "attack", group: "Go to", label: "MITRE ATT&CK coverage", icon: Crosshair, run: () => go("#attack") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
       { id: "videos", group: "Go to", label: "Videos", icon: PlayCircle, run: () => go("#videos") },
@@ -264,14 +266,14 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
                 className="w-full bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-foreground/30"
                 aria-label="Search commands"
               />
-              <kbd className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/40">
+              <kbd className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/60">
                 ESC
               </kbd>
             </div>
 
             <div className="max-h-[46vh] overflow-y-auto p-2" role="listbox">
               {filtered.length === 0 && (
-                <p className="px-3 py-6 text-center font-mono text-xs text-foreground/40">
+                <p className="px-3 py-6 text-center font-mono text-xs text-foreground/60">
                   No commands match “{query}”.
                 </p>
               )}
@@ -288,25 +290,25 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
                 >
                   <cmd.icon
                     size={15}
-                    className={i === index ? "text-primary" : "text-foreground/40"}
+                    className={i === index ? "text-primary-ink" : "text-foreground/40"}
                   />
                   <span className="flex-1 text-sm">{cmd.label}</span>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/30">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/60">
                     {cmd.group}
                   </span>
                   {cmd.hint && (
-                    <span className="max-w-[180px] truncate font-mono text-[10px] text-foreground/40">
+                    <span className="max-w-[180px] truncate font-mono text-[10px] text-foreground/60">
                       {cmd.hint}
                     </span>
                   )}
                   {i === index && (
-                    <ChevronRight size={14} className="text-primary" />
+                    <ChevronRight size={14} className="text-primary-ink" />
                   )}
                 </button>
               ))}
             </div>
 
-            <div className="flex items-center gap-4 border-t border-foreground/10 px-4 py-2.5 font-mono text-[10px] text-foreground/35">
+            <div className="flex items-center gap-4 border-t border-foreground/10 px-4 py-2.5 font-mono text-[10px] text-foreground/60">
               <span className="flex items-center gap-1.5">
                 <kbd className="border border-foreground/15 px-1">↑↓</kbd> navigate
               </span>

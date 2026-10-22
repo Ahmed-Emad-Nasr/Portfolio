@@ -21,8 +21,10 @@ import { btnOutline, btnPrimary, chipAccent, chipNeutral, chipTertiary } from "@
 
 type CaseCardProps = PdfResource & {
   index: number;
-  screenshots: string[];
-  onOpenGallery: (title: string, screenshots: string[], index?: number) => void;
+  /** First screenshot, shown as the card's cover */
+  cover?: string;
+  shotCount: number;
+  onOpenGallery: (title: string, id: string, index?: number) => void;
 };
 
 function CaseCard({
@@ -40,11 +42,11 @@ function CaseCard({
   readTime,
   date,
   detailHref,
-  screenshots,
+  cover,
+  shotCount,
   onOpenGallery,
 }: CaseCardProps) {
   const detailPath = detailHref ?? `/blog/${id}`;
-  const cover = screenshots[0];
   const [coverFailed, setCoverFailed] = useState(false);
   const { state: copyState, copy } = useCopyLink();
 
@@ -72,9 +74,9 @@ function CaseCard({
         {cover && (
           <button
             type="button"
-            onClick={() => onOpenGallery(title, screenshots, 0)}
+            onClick={() => void onOpenGallery(title, id, 0)}
             className="relative block h-52 w-full overflow-hidden border-b border-foreground/5"
-            aria-label={`Open ${screenshots.length} screenshot(s) of ${title}`}
+            aria-label={`Open ${shotCount} screenshot(s) of ${title}`}
           >
             <Image
               src={normalizePublicHref(coverFailed ? cover : getThumbnail(cover))}
@@ -87,7 +89,7 @@ function CaseCard({
             />
             <div className="absolute inset-0 bg-primary/10 mix-blend-multiply group-hover:bg-transparent transition-all duration-700" />
             <span className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-background/80 backdrop-blur-md border border-foreground/15 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-foreground">
-              <Images size={11} className="text-accent" /> {screenshots.length}
+              <Images size={11} className="text-accent" /> {shotCount}
             </span>
           </button>
         )}
@@ -107,7 +109,7 @@ function CaseCard({
                   {type}
                   {category ? ` • ${category}` : ""}
                 </div>
-                <div className="font-mono text-[9px] text-foreground/30 tracking-widest mt-1 truncate">
+                <div className="font-mono text-[9px] text-foreground/60 tracking-widest mt-1 truncate">
                   {[date, readTime ? `${readTime} min` : null, platform].filter(Boolean).join(" • ")}
                 </div>
               </div>
@@ -119,13 +121,13 @@ function CaseCard({
             )}
           </div>
 
-          <h3 className="font-display text-xl md:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
-            <Link href={detailPath} className="hover:text-primary transition-colors duration-300">
+          <h3 className="font-display text-xl md:text-lg lg:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
+            <Link href={detailPath} className="hover:text-primary-ink transition-colors duration-300">
               {title}
             </Link>
           </h3>
           {description && (
-            <p className="text-sm text-foreground/55 font-light leading-relaxed mb-5 line-clamp-3">{description}</p>
+            <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5 line-clamp-3">{description}</p>
           )}
 
           {shownTools.length > 0 && (

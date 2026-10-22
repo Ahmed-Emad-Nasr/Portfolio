@@ -29,7 +29,7 @@ export default function ServicesSection() {
           description="Four kinds of work. Each one ends with something written down that the next person can use."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           {PORTFOLIO_DATA.services.map((s, idx) => {
             const Icon = ICONS[idx % ICONS.length];
             return (
@@ -47,7 +47,7 @@ export default function ServicesSection() {
                   <div className="p-2.5 bg-foreground/5 border border-foreground/10">
                     <Icon size={18} className="text-tertiary" />
                   </div>
-                  <span className="jp-eyebrow text-[10px] text-foreground/25" lang="ja">{s.japanese}</span>
+                  <span className="jp-eyebrow text-[10px] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
                 </div>
                 <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground mb-3">
                   {s.title}

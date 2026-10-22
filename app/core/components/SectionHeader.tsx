@@ -33,10 +33,10 @@ export default function SectionHeader({
     >
       <div className="flex items-center gap-4 mb-5">
         <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-        <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+        <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
           {eyebrow}
         </span>
-        <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja">
+        <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
           {japanese}
         </span>
       </div>

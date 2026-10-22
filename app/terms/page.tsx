@@ -23,7 +23,7 @@ import { PageShell } from "@/app/components/shared/kit";
 import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — Ahmed Emad Nasr",
+  title: "Terms of Use",
   description:
     "Terms for using this portfolio site: content ownership, acceptable use, and disclaimers.",
   alternates: { canonical: "/terms" },

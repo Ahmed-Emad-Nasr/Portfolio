@@ -27,18 +27,18 @@ export default function NowSection() {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
-              <span className="text-primary text-xs font-black tracking-[0.4em] uppercase font-mono">
+              <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Now // Loading the present
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja">
+              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 現在
               </span>
             </div>
-            <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+            <h2 className="font-display title-fit [--title-n:8] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Right</span> <br />
               <span className="text-primary italic">Now.</span>
             </h2>
-            <p className="mt-5 text-foreground/55 max-w-xl font-light leading-relaxed">
+            <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               A snapshot, not a promise  updated as the work shifts.
             </p>
           </motion.div>
@@ -56,7 +56,7 @@ export default function NowSection() {
                 <span className="absolute inline-flex h-full w-full animate-ping bg-primary opacity-60" />
                 <span className="relative inline-flex h-2.5 w-2.5 bg-primary" />
               </span>
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-primary">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-primary-ink">
                 Live
               </span>
             </div>
@@ -77,7 +77,7 @@ export default function NowSection() {
                   <span className="absolute inline-flex h-full w-full animate-ping bg-primary opacity-60" />
                   <span className="relative inline-flex h-2 w-2 bg-primary" />
                 </span>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-primary-ink">
                   {n.label}
                 </span>
               </div>

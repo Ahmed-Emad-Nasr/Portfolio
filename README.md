@@ -34,7 +34,7 @@ written twice.
 | Skills, languages | `skills.ts` |
 | Projects and their bullet points | `projects.ts` |
 | Cases (the library) and their screenshots | `cases.ts` |
-| ATT&CK mapping per case | `attack.ts` |
+| ATT&CK mapping per case (also feeds the coverage section on the home page) | `attack.ts` |
 | "Start here" reading path | `start-here.ts` |
 | YouTube videos and playlists | `youtube.ts` |
 | CV page (summary, projects, skills) | `cv.ts` |
@@ -46,12 +46,14 @@ uses. `npm run check:assets` lists any that are missing.
 
 ## Pages
 
-- `/` — the whole portfolio on one page, ending with the case library
-  (`#cases`) and the videos (`#videos`).
+- `/` — the whole portfolio on one page, ending with the ATT&CK coverage map
+  (`#attack`), the case library (`#cases`) and the videos (`#videos`).
 - `/blog/<id>` — one page per case (shareable, indexed by search engines).
 - `/blog` — forwards old links to `/#cases`, keeping `?q=` filters and
   `#case-…` anchors.
 - `/cv` — the CV as HTML (prints as a clean one-column PDF).
+- `/case-screenshots.json` — every case's screenshot list, fetched by the
+  library the first time a gallery is opened.
 - `/privacy`, `/terms`, 404.
 
 Hidden extras: `Ctrl/⌘ K` command palette (also searches cases), `?` keyboard
@@ -80,6 +82,12 @@ npm run check:links     # after a build: every internal link resolves to a file
   use. Re-run `scripts/subset-fonts.py` (instructions at the top of the file).
 - **Share image** (`public/og-image.png`, 1200×630): made from
   `scripts/og/og-image.html` — edit and re-screenshot it.
+- **Icons** (`app/favicon.ico`, `public/icons/*.png`): the "AE." mark from
+  `scripts/og/app-icon.html`, screenshotted at 512/192/180 px (and 512 with
+  no top bar and a smaller mark for the maskable icon).
+- **New hero photo?** Replace `public/Assets/art-gallery/Images/logo/3omda.webp`
+  and run `node scripts/generate-hero-sizes.mjs` — the page serves the
+  320–840px variants, not the original.
 
 ## Performance notes
 
@@ -103,6 +111,22 @@ config modules, the contribution graph only loads when scrolled near, the
 case library pages its cards, and the sections below the experience timeline
 skip rendering until they are near the viewport. The remaining mobile cost is
 the design's own animation stack (framer-motion, GSAP, Lenis) and hydration.
+
+Second pass (October 2026), median of 3 Lighthouse runs each, same build
+setup (`basePath` on, gzip):
+
+| | Before | After |
+|---|---|---|
+| Page weight, home | 999 KB | 705 KB |
+| Hero portrait (the LCP image) | 311 KB | 4–28 KB by screen |
+| LCP, mobile with real (devtools) throttling | 2.2 s | 1.7 s |
+| Desktop performance | 98 | 98 |
+| Best practices / SEO | 96 / 100 | 100 / 100 |
+
+Mobile performance under simulated throttling stays in the high 60s either
+way; it is bound by the same animation stack. The accessibility score is 97:
+what Lighthouse still flags is the faded Japanese decoration (eyebrows,
+dividers), which is hidden from screen readers and kept faint on purpose.
 
 ## Licence
 

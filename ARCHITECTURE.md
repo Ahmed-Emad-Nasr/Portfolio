@@ -52,8 +52,12 @@ server at runtime. Every decision below follows from that:
   with **no `srcset`** — the `sizes` prop is inert
 - "Server Component" means "runs at build time." Its data never reaches the
   browser, which makes it a bundle-size tool, not just a rendering one
-- Every path needs the `/Portfolio` base path (`normalizePublicHref` in
-  `core/config/shared.ts` is the single place that handles this)
+- Every path needs the `/Portfolio` base path. Two mechanisms, one value:
+  Next's `basePath` (set in `next.config.mjs`) prefixes `_next/` chunks, CSS,
+  fonts and `next/link`; `normalizePublicHref` in `core/config/shared.ts`
+  prefixes plain `<a>`/`<img>` asset paths. Both read
+  `NEXT_PUBLIC_BASE_PATH ?? (production ? "/Portfolio" : "")`, and
+  `npm run check:links` fails on any root-relative URL without the prefix
 
 ---
 
@@ -464,15 +468,23 @@ Chrome does not report LCP for content inside a skipped subtree. The hero
 holds the LCP image, so the global rule was actively suppressing the metric
 it was meant to help.
 
-### Known gap: the LCP image
+### The LCP image
 
-**Not yet fixed.** With `images.unoptimized`, `next/image` emits a plain
-`<img>` with no `srcset`. A 360px phone downloads the same file as a 4K
-display, and that file is the LCP element.
+`images.unoptimized` means `next/image` never writes a `srcset`, so the hero
+portrait is a plain `<img>` with `srcSet`/`sizes` over the variants from
+`scripts/generate-hero-sizes.mjs` (320/420/560/840px, 4–28 KB instead of the
+318 KB original), preloaded with `fetchPriority="high"` through React's
+`preload()`. `sizes` matches the circle's real widths: 176 / 216 / 276 CSS px.
 
-`scripts/generate-hero-sizes.mjs` produces 320/420/560/840px variants. Wiring
-them up needs a custom `loader` on that one `<Image>`, which requires
-confirming the `images` config in `next.config`.
+### Payload kept out of the home page
+
+- Case cards get `{ cover, count }` per case (`mediaById`); the full
+  screenshot lists are a static `/case-screenshots.json` fetched on the first
+  gallery open.
+- `sortedCases` keeps only the fields a card and the search use.
+- The ATT&CK coverage section is a Server Component built on `<details>`, so
+  it ships no JavaScript of its own; its row styling lives in `globals.css`
+  (`.attack-*`) rather than repeated utility lists.
 
 ### The audit script
 

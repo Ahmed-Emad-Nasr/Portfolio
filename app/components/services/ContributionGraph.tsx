@@ -38,13 +38,13 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
 
   if (status === "error" || status === "empty") {
     return (
-      <p className="border border-foreground/10 bg-surface/60 px-6 py-5 font-mono text-xs text-foreground/50">
+      <p className="border border-foreground/10 bg-surface/60 px-6 py-5 font-mono text-xs text-foreground/60">
         {status === "error" ? "Contribution graph is unreachable right now  " : "No recent activity to draw  "}
         <a
           href={`https://github.com/${username}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary underline-offset-4 hover:underline"
+          className="text-primary-ink underline underline-offset-4 decoration-primary/50 hover:decoration-primary"
         >
           see the profile on GitHub
         </a>
@@ -65,7 +65,7 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
         <span className="font-mono text-2xl font-black text-accent tabular-nums">
           <CountUp target={total} duration={1800} />
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/50">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
           contributions in the last year
         </span>
       </div>
@@ -87,7 +87,7 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
           </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[9px] text-foreground/40">
+      <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[9px] text-foreground/60">
         <span>Less</span>
         {LEVEL_BG.map((bg, i) => (
           <span key={i} className={`h-2.5 w-2.5 ${bg}`} />

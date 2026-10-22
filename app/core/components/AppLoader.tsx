@@ -92,10 +92,12 @@ export default function AppLoader() {
             {word}
           </motion.span>
 
-          <h1 className="mt-4 font-display text-xl font-black uppercase tracking-tighter text-foreground">
-            Ahmed<span className="text-primary">.</span>
-          </h1>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/40">
+          {/* Not an <h1>: the loader is in the server HTML, so crawlers and
+              screen readers met "Ahmed." as the page's first heading. */}
+          <p className="mt-4 font-display text-xl font-black uppercase tracking-tighter text-foreground">
+            Ahmed<span className="text-primary-ink">.</span>
+          </p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/60">
             Portfolio
           </p>
 
@@ -106,7 +108,7 @@ export default function AppLoader() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="mt-3 flex items-center justify-between font-mono text-[10px] tracking-[0.3em] text-foreground/40">
+            <div className="mt-3 flex items-center justify-between font-mono text-[10px] tracking-[0.3em] text-foreground/60">
               <span>LOADING</span>
               <span aria-hidden="true" className="tabular-nums">
                 {String(progress).padStart(3, "0")}%
@@ -114,7 +116,7 @@ export default function AppLoader() {
             </div>
           </div>
 
-          <span className="absolute bottom-6 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/25">
+          <span className="absolute bottom-6 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
             tap anywhere to skip
           </span>
         </motion.div>

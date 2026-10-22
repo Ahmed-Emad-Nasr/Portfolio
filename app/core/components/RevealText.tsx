@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { EASE } from "@/app/core/motion";
-import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 /**
  * Word-by-word masked reveal for headings.
@@ -25,14 +24,10 @@ export function RevealText({
   const units = isLatin ? text.split(" ") : [text];
   const MTag = motion[Tag] as typeof motion.span;
 
-  // Reduced motion: render the final state, no masked slide.
-  if (typeof window !== "undefined" && prefersReducedMotion()) {
-    return (
-      <MTag className={className} style={style}>
-        {text}
-      </MTag>
-    );
-  }
+  /* Reduced motion is handled in CSS (.reveal-word in globals.css), not by
+     rendering different markup here: branching on matchMedia during render
+     gave reduced-motion visitors a server/client mismatch (React #418) and a
+     full client re-render of every heading. */
 
   return (
     <MTag
@@ -53,7 +48,7 @@ export function RevealText({
           aria-hidden="true"
         >
           <motion.span
-            className="inline-block will-change-transform"
+            className="reveal-word inline-block will-change-transform"
             variants={{
               hidden: { y: "110%" },
               show: { y: "0%", transition: { duration: 0.7, ease: EASE } },

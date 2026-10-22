@@ -24,6 +24,15 @@ export default function CredentialsGallery() {
     title: c.title,
   }));
 
+  const openCert = (cert: (typeof PORTFOLIO_DATA.certificates)[number]) => {
+    if (cert.image) {
+      setIndex(withImage.indexOf(cert));
+      setOpen(true);
+    } else if (cert.link) {
+      window.open(cert.link, "_blank", "noopener");
+    }
+  };
+
   return (
     <section id="certificates" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
       {/* Background Decorative Kanji */}
@@ -45,16 +54,16 @@ export default function CredentialsGallery() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8"
+          className="mb-16 md:mb-20 flex flex-col lg:flex-row justify-between lg:items-end gap-8"
         >
-          <div className="max-w-3xl">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
-              <span className="text-primary text-xs font-black tracking-[0.4em] uppercase font-mono">
+              <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Credentials
               </span>
             </div>
-            <h2 className="font-display text-5xl md:text-8xl font-black uppercase leading-[0.85] tracking-tighter">
+            <h2 className="font-display title-fit [--title-n:14] lg:[--title-n:18] font-black uppercase leading-[0.85] tracking-tighter">
               <span className="text-foreground">Certifications</span> <br />
               <span className="text-primary italic">&amp; Achievements.</span>
             </h2>
@@ -76,7 +85,7 @@ export default function CredentialsGallery() {
         </motion.div>
 
         {/* Certificate Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {PORTFOLIO_DATA.certificates.map((cert, idx) => (
             <motion.div
               key={idx}
@@ -84,21 +93,30 @@ export default function CredentialsGallery() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: (idx % 2) * 0.15, duration: 0.8, ease: EASE }}
-              onClick={() => {
-                if (cert.image) {
-                  setIndex(withImage.indexOf(cert));
-                  setOpen(true);
-                } else if (cert.link) {
-                  window.open(cert.link, "_blank", "noopener");
-                }
-              }}
-              className={cert.image || cert.link ? "cursor-pointer" : undefined}
+              onClick={() => openCert(cert)}
+              /* The card was mouse-only: a clickable <div> with no role or
+                 tab stop, so keyboard and screen-reader users could not open
+                 a single certificate. */
+              {...(cert.image || cert.link
+                ? {
+                    role: "button",
+                    tabIndex: 0,
+                    "aria-label": `${cert.image ? "View" : "Open"} ${cert.title}`,
+                    onKeyDown: (e: React.KeyboardEvent) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openCert(cert);
+                      }
+                    },
+                  }
+                : {})}
+              className={cert.image || cert.link ? "cursor-pointer focus-visible:outline-offset-4" : undefined}
             >
               <TiltCard className="spotlight relative group bg-surface/60 border border-foreground/5 overflow-hidden backdrop-blur-xl hover:border-accent/40 transition-all duration-700 h-full"
               >
-                <div className="flex flex-col lg:flex-row h-full">
+                <div className="flex flex-col xl:flex-row h-full">
                   {/* Certificate Image  40% width on desktop */}
-                  <div className="w-full lg:w-2/5 h-40 lg:h-auto lg:min-h-[13rem] relative overflow-hidden">
+                  <div className="w-full xl:w-2/5 h-40 xl:h-auto xl:min-h-[13rem] relative overflow-hidden">
                     {cert.image ? (
                       <Image
                         src={cert.image}
@@ -123,7 +141,7 @@ export default function CredentialsGallery() {
 
                     {/* Seal stamp effect */}
                     <div className="absolute top-4 right-4 w-14 h-14 rounded-full border-2 border-primary/40 flex items-center justify-center opacity-70 group-hover:opacity-100 group-hover:border-primary transition-all duration-500">
-                      <span className="text-primary font-black text-[10px] font-mono tracking-wider rotate-[-12deg]">
+                      <span className="text-primary-ink font-black text-[10px] font-mono tracking-wider rotate-[-12deg]">
                         認定
                       </span>
                     </div>
@@ -139,7 +157,7 @@ export default function CredentialsGallery() {
                   </div>
 
                   {/* Content */}
-                  <div className="w-full lg:w-3/5 p-8 md:p-10 flex flex-col justify-center">
+                  <div className="w-full xl:w-3/5 p-8 md:p-10 flex flex-col justify-center">
                     <div className="flex items-center gap-3 text-accent mb-5">
                       <ShieldCheck size={18} />
                       <span className="font-mono text-[10px] tracking-[0.3em] font-bold uppercase">
@@ -147,7 +165,7 @@ export default function CredentialsGallery() {
                       </span>
                     </div>
 
-                    <h3 className="font-display text-xl md:text-2xl font-black mb-5 text-foreground group-hover:text-accent transition-colors duration-300 leading-tight uppercase tracking-tight [overflow-wrap:anywhere]">
+                    <h3 className="font-display text-xl md:text-2xl xl:text-xl font-black mb-5 text-foreground group-hover:text-accent transition-colors duration-300 leading-tight uppercase tracking-tight [overflow-wrap:anywhere]">
                       {cert.title}
                     </h3>
 
@@ -169,7 +187,7 @@ export default function CredentialsGallery() {
                 {/* Japanese Decorative 認定 Watermark  more visible on hover */}
                 <div
                   className="absolute bottom-4 right-6 text-foreground/[0.04] font-black text-7xl select-none group-hover:text-accent/15 transition-colors duration-700 pointer-events-none"
-                  role="presentation"
+                  aria-hidden="true"
                 >
                   認定
                 </div>

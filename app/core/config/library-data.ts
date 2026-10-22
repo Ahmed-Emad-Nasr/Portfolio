@@ -10,12 +10,19 @@
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId, investigationReportCount } from "./cases";
 import type { PdfResource } from "./shared";
 import { SITE_BASE_URL, caseUrl } from "./site";
+import { ATTACK_TACTICS, buildCoverage, caseAttackMapping, coveredTechniqueCount } from "./attack";
 
 export type Facet = { value: string; count: number };
 
-/* Screenshots per case, for the cards — passed to the client section as a prop */
-export const screenshotsById: Record<string, string[]> = Object.fromEntries(
-  caseEvidenceLibrary.map((item) => [item.id, caseScreenshotsByEvidenceId[item.id] ?? []]),
+/* What a card shows of its screenshots: the cover and the count. The full
+   lists are served once as /case-screenshots.json and fetched only when a
+   gallery is opened, instead of riding along in the home page's HTML. */
+export type CaseMedia = { cover?: string; count: number };
+export const mediaById: Record<string, CaseMedia> = Object.fromEntries(
+  caseEvidenceLibrary.map((item) => {
+    const shots = caseScreenshotsByEvidenceId[item.id] ?? [];
+    return [item.id, { cover: shots[0], count: shots.length }];
+  }),
 );
 
 /* The palette's case search needs only these three fields */
@@ -27,8 +34,17 @@ const DATE_MS: Record<string, number> = Object.fromEntries(
   caseEvidenceLibrary.map((item) => [item.id, item.date ? new Date(item.date).getTime() : 0]),
 );
 
-/* Featured case first, then cases with screenshots, then newest first */
-export const sortedCases: PdfResource[] = [...caseEvidenceLibrary].sort((a, b) => {
+/* Featured case first, then cases with screenshots, then newest first.
+   Only the fields a card and the search use are kept: the case objects also
+   carry their full screenshot list, which tripled the home page's payload
+   (see mediaById below). */
+const toCard = ({
+  id, title, description, platform, type, category, difficulty, href, tags, tools, skillsGained, readTime, date, detailHref,
+}: PdfResource): PdfResource => ({
+  id, title, description, platform, type, category, difficulty, href, tags, tools, skillsGained, readTime, date, detailHref,
+});
+
+export const sortedCases: PdfResource[] = [...caseEvidenceLibrary].map(toCard).sort((a, b) => {
   if (a.id === FEATURED_ID) return -1;
   if (b.id === FEATURED_ID) return 1;
   const aShots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
@@ -81,4 +97,32 @@ export const libraryStructuredData = {
       ? { associatedMedia: { "@type": "DigitalDocument", encodingFormat: "application/pdf", contentUrl: absoluteAsset(item.href) } }
       : {}),
   })),
+};
+
+/*
+ * The ATT&CK coverage section, ready to render: every tactic in kill-chain
+ * order, each covered technique with the case
+ * titles behind it. Cases that are not in the library are dropped, so a
+ * stale mapping can never produce a dead link.
+ */
+const TITLE_BY_ID = new Map(caseEvidenceLibrary.map((item) => [item.id, item.title]));
+const COVERED = new Map(buildCoverage().map((column) => [column.tactic.id, column.techniques]));
+
+export const attackCoverage = {
+  tactics: ATTACK_TACTICS.map((tactic, index) => ({
+    id: tactic.id,
+    name: tactic.name,
+    order: index + 1,
+    techniques: (COVERED.get(tactic.id) ?? [])
+      .map(({ technique, caseIds }) => ({
+        id: technique.id,
+        name: technique.name,
+        cases: caseIds
+          .filter((id) => TITLE_BY_ID.has(id))
+          .map((id) => ({ id, title: TITLE_BY_ID.get(id) as string })),
+      }))
+      .filter((technique) => technique.cases.length > 0),
+  })),
+  techniqueCount: coveredTechniqueCount(),
+  mappedCaseCount: Object.keys(caseAttackMapping).filter((id) => TITLE_BY_ID.has(id)).length,
 };

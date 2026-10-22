@@ -58,3 +58,16 @@ export const OG_IMAGE = {
   height: 630,
   alt: "Ahmed Emad Nasr — SOC Analyst & Incident Responder",
 };
+
+/**
+ * A description cut to `max` characters at a word boundary, for the
+ * <meta name="description"> and og:description tags. Search engines show
+ * ~155 characters and social cards ~200; some case summaries are 700+.
+ */
+export const summarize = (text: string, max = 155): string => {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  const atWord = cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:.\-–—(]+$/, "");
+  return `${atWord}…`;
+};

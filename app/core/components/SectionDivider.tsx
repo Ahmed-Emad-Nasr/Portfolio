@@ -56,12 +56,12 @@ export default function SectionDivider({
       >
         {[...Array(8)].map((_, i) => (
           <span key={i} className="flex items-center gap-10">
-            <span className="brush-jp text-2xl md:text-3xl text-foreground/25" lang="ja">
+            <span className="brush-jp text-2xl md:text-3xl text-foreground/35" lang="ja" aria-hidden="true">
               {text}
             </span>
             <span className="flex items-center gap-2.5" aria-hidden="true">
               <span className="inline-block h-1.5 w-1.5 rotate-45 bg-primary/80" />
-              <span className="font-mono text-[10px] font-bold tracking-[0.45em] text-primary/80">
+              <span className="font-mono text-[10px] font-bold tracking-[0.45em] text-primary-ink">
                 3OMDA
               </span>
               <span className="inline-block h-1.5 w-1.5 rotate-45 bg-primary/80" />

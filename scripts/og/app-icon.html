@@ -1,0 +1,18 @@
+<!doctype html>
+<!--
+  The "AE." app icon (app/favicon.ico, public/icons/*.png).
+  Open in Chrome, set the tile size in DevTools, screenshot the .tile element:
+    --s:512px --k:.40 --bar:block   → icons/icon-512.png
+    --s:192px --k:.40 --bar:block   → icons/icon-192.png
+    --s:180px --k:.40 --bar:block   → icons/apple-touch-icon.png
+    --s:512px --k:.30 --bar:none    → icons/maskable-512.png (mark inside the 80% safe zone)
+    --s:256px --k:.46 --r:18% --bar:none → the source of favicon.ico (16/32/48)
+-->
+<html><head><meta charset="utf-8"><title>AE. app icon</title><style>
+@font-face{font-family:Dela;src:url("../../app/fonts/dela-gothic-one.woff2") format("woff2")}
+html,body{margin:0;background:transparent}
+.tile{width:var(--s);height:var(--s);background:#080808;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-radius:var(--r)}
+.tile::before{content:"";position:absolute;left:0;right:0;top:0;height:calc(var(--s)*.045);background:#BC002D;display:var(--bar)}
+.mark{font-family:Dela;color:#fff;font-size:calc(var(--s)*var(--k));letter-spacing:-0.06em;line-height:1;transform:translateY(calc(var(--s)*-.01))}
+.mark b{color:#BC002D;font-weight:inherit}
+</style></head><body><div class="tile" style="--s:512px;--k:.40;--r:0;--bar:block"><span class="mark">AE<b>.</b></span></div></body></html>

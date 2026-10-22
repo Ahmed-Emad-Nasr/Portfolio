@@ -32,8 +32,8 @@ const MAX_LINES = 300;
 const LINE_CLASS: Record<string, string> = {
   in: "text-foreground whitespace-pre-wrap [word-break:break-word]",
   out: "text-foreground/65 whitespace-pre-wrap [word-break:break-word]",
-  err: "text-primary whitespace-pre-wrap",
-  dim: "text-foreground/40 whitespace-pre-wrap",
+  err: "text-primary-ink whitespace-pre-wrap",
+  dim: "text-foreground/60 whitespace-pre-wrap",
 };
 
 export default function Terminal({ onClose }: { onClose: () => void }) {
@@ -280,11 +280,11 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         <div className="absolute top-0 left-0 h-[2px] w-full bg-gradient-to-r from-primary via-primary/40 to-transparent" aria-hidden="true" />
         <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-3">
           <span className="h-2 w-2 bg-primary" aria-hidden="true" />
-          <span className="flex-1 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/50">3omda@portfolio: ~</span>
+          <span className="flex-1 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">3omda@portfolio: ~</span>
           <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">端末</span>
           <button
             type="button"
-            className="border border-foreground/15 p-1.5 text-foreground/40 transition-colors hover:border-primary hover:text-primary"
+            className="border border-foreground/15 p-1.5 text-foreground/40 transition-colors hover:border-primary hover:text-primary-ink"
             onClick={onClose}
             aria-label="Close terminal"
           >

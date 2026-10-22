@@ -125,30 +125,33 @@ export default function SiteNav() {
           href="#home"
           onHome={onHome}
           className="font-display font-bold text-lg md:text-xl tracking-tighter cursor-pointer flex items-center group shrink-0"
-          aria-label="Ahmed Emad Nasr — home"
+          aria-label="AE. — Ahmed Emad Nasr, home"
         >
-          <span className="text-foreground group-hover:text-primary transition-colors duration-300">
+          <span className="text-foreground group-hover:text-primary-ink transition-colors duration-300">
             AE
           </span>
           <span className="text-primary text-2xl leading-none">.</span>
         </NavLink>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-5 lg:gap-7">
+        {/* Desktop Menu — from lg: between md and lg the eight links plus the
+            ⌘K/theme buttons were ~90px wider than the bar and ran under its
+            clipped edge, so tablets get the full-screen menu instead. */}
+        <div className="hidden lg:flex items-center gap-4 xl:gap-7">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               href={item.href}
               onHome={onHome}
               aria-current={active === item.href ? "page" : undefined}
-              className={`relative flex items-center gap-2 text-[9px] lg:text-[10px] font-mono font-bold uppercase tracking-[0.22em] transition-all duration-300 group ${
+              className={`relative flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.22em] transition-all duration-300 group ${
                 active === item.href ? "text-foreground" : "text-foreground/60 hover:text-foreground"
               }`}
             >
               <item.icon
                 size={12}
                 strokeWidth={2.5}
-                className={`transition-colors duration-300 ${active === item.href ? "text-primary" : "text-foreground/30 group-hover:text-primary"}`}
+                aria-hidden="true"
+                className={`hidden xl:block transition-colors duration-300 ${active === item.href ? "text-primary-ink" : "text-foreground/30 group-hover:text-primary-ink"}`}
               />
               <span>{item.name}</span>
               {/* Red dot indicator */}
@@ -158,25 +161,26 @@ export default function SiteNav() {
         </div>
 
         {/* Mobile Toggle */}
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-2">
           <ThemeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="relative p-2 text-foreground/60 hover:text-primary transition-colors z-[110]"
-            aria-label="Toggle Menu"
+            className="relative p-2 text-foreground/60 hover:text-primary-ink transition-colors z-[110]"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         {/* Desktop theme toggle */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2">
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("sensei:palette"))}
             aria-label="Open command palette (Ctrl+K)"
             title="Commands (Ctrl+K)"
-            className="flex items-center gap-1.5 border border-foreground/10 bg-foreground/[0.03] px-2.5 py-2.5 font-mono text-[10px] text-foreground/50 transition-colors duration-300 hover:border-primary hover:text-primary"
+            className="flex items-center gap-1.5 border border-foreground/10 bg-foreground/[0.03] px-2.5 py-2.5 font-mono text-[10px] text-foreground/60 transition-colors duration-300 hover:border-primary hover:text-primary-ink"
           >
             <Command size={14} />
             <kbd>K</kbd>
@@ -193,7 +197,7 @@ export default function SiteNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[95] md:hidden bg-background/95 backdrop-blur-2xl flex flex-col"
+            className="fixed inset-0 z-[95] lg:hidden bg-background/95 backdrop-blur-2xl flex flex-col"
             onClick={() => setIsOpen(false)}
           >
             {/* Background Decorative Kanji */}
@@ -225,7 +229,7 @@ export default function SiteNav() {
               animate={{ opacity: 1, rotate: 0 }}
               transition={{ delay: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="absolute top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center border border-primary/40 text-primary hover:bg-primary hover:text-foreground transition-all duration-300"
+              className="absolute top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center border border-primary/40 text-primary-ink hover:bg-primary hover:text-foreground transition-all duration-300"
               aria-label="Close Menu"
             >
               <X size={20} strokeWidth={3} />
@@ -255,7 +259,7 @@ export default function SiteNav() {
                   className="group relative flex items-center gap-6 py-4"
                 >
                   {/* Index Number */}
-                  <span className="font-mono text-[10px] text-foreground/20 w-6 tabular-nums">
+                  <span className="font-mono text-[10px] text-foreground/60 w-6 tabular-nums">
                     0{idx + 1}
                   </span>
 
@@ -263,7 +267,7 @@ export default function SiteNav() {
                   <item.icon
                     size={24}
                     strokeWidth={1.5}
-                    className="text-foreground/15 group-hover:text-primary transition-colors duration-300"
+                    className="text-foreground/15 group-hover:text-primary-ink transition-colors duration-300"
                   />
 
                   {/* Name - large katakana style */}
@@ -271,7 +275,7 @@ export default function SiteNav() {
                     <span className="font-display text-3xl font-black text-foreground uppercase tracking-tight group-hover:text-primary transition-colors duration-300">
                       {item.name}
                     </span>
-                    <span className="font-mono text-[10px] text-foreground/25 tracking-[0.3em]">
+                    <span className="font-mono text-[10px] text-foreground/60 tracking-[0.3em]">
                       {item.katakana}
                     </span>
                   </div>
@@ -290,7 +294,7 @@ export default function SiteNav() {
                 className="mt-12 flex flex-col gap-3"
               >
                 <div className="w-16 h-[2px] bg-primary" />
-                <span className="text-[9px] font-mono text-foreground/30 tracking-[0.5em] uppercase">
+                <span className="text-[9px] font-mono text-foreground/60 tracking-[0.5em] uppercase">
                   3omda Portfolio
                 </span>
               </motion.div>

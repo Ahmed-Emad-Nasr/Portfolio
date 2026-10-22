@@ -47,8 +47,8 @@ export default function Error({
         <div className={statusInner}>
           <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-            <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Runtime</span>
-            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">故障</span>
+            <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Runtime</span>
+            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">故障</span>
           </div>
           <p className={statusCode} aria-hidden="true">ERR</p>
 

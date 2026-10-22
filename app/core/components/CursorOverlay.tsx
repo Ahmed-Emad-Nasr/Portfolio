@@ -128,10 +128,10 @@ export default function CursorOverlay() {
           animate={{ opacity: isHovering ? 1 : 0, x: isHovering ? 0 : -10 }}
           transition={{ duration: 0.2 }}
         >
-          <span className="font-mono text-[8px] text-primary tracking-widest font-black uppercase leading-none">
+          <span className="font-mono text-[8px] text-primary-ink tracking-widest font-black uppercase leading-none">
             Target
           </span>
-          <span className="brush-jp text-sm text-foreground/80 leading-none mt-0.5" lang="ja">
+          <span className="brush-jp text-sm text-foreground/80 leading-none mt-0.5" lang="ja" aria-hidden="true">
             斬
           </span>
         </motion.div>

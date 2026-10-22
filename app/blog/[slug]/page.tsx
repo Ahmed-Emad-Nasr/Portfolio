@@ -16,7 +16,7 @@ import { notFound } from "next/navigation";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import CaseArticle from "./CaseArticle";
 import { PageShell } from "@/app/components/shared/kit";
-import { absoluteUrl, caseUrl } from "@/app/core/config/site";
+import { absoluteUrl, caseUrl, summarize } from "@/app/core/config/site";
 import { caseAttackMapping, TECHNIQUES } from "@/app/core/config/attack";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
@@ -89,16 +89,22 @@ export async function generateMetadata({
   // The first screenshot is the share image — far more fitting than the generic logo
   const shots = caseScreenshotsByEvidenceId[item.id] ?? [];
   const ogImage = absoluteUrl(item.image ?? shots[0] ?? "Assets/art-gallery/Images/logo/3omda.webp");
-  const title = `${item.title} | Ahmed Emad Nasr`;
+  /* The root layout's title template already appends "| Ahmed Emad Nasr";
+     the share cards have no template, so they carry the name themselves. */
+  const shareTitle = `${item.title} | Ahmed Emad Nasr`;
+  const description = summarize(item.description ?? "");
+  const shareDescription = summarize(item.description ?? "", 200);
 
   return {
-    title,
-    description: item.description,
+    title: item.title,
+    description,
     keywords: [...item.tags, ...item.tools, item.category, item.platform],
     alternates: { canonical: `/blog/${item.id}` },
     openGraph: {
-      title,
-      description: item.description,
+      title: shareTitle,
+      description: shareDescription,
+      siteName: "Ahmed Emad Nasr Portfolio",
+      locale: "en_US",
       url: caseUrl(item.id),
       type: "article",
       publishedTime: item.date,
@@ -106,8 +112,10 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description: item.description,
+      title: shareTitle,
+      description: shareDescription,
+      site: "@0x3omda",
+      creator: "@0x3omda",
       images: [ogImage],
     },
   };

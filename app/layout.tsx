@@ -32,6 +32,7 @@ import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
+import { normalizePublicHref } from "@/app/core/config/shared";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -74,20 +75,27 @@ export const metadata: Metadata = {
      *
      * A full absolute URL, exactly like the OG images in page.tsx.
      */
-    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp"],
+    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/icons/icon-512.png"],
   },
   /*
    * The metadata had appleWebApp.capable = true without any icon —
    * so the site told iOS "I'm installable" and then provided no icon,
    * and the OS took a screenshot of the page and used it as the icon.
    *
-   * favicon.ico in app/ is picked up automatically. The rest has to be declared.
+   * All icons are declared explicitly. Once `icons` is set here, Next stops emitting the
+   * <link rel="icon"> for app/favicon.ico by itself — which is how the site
+   * ended up with no favicon at all: browsers fell back to the domain root
+   * (ahmed-emad-nasr.github.io/favicon.ico), which is a 404.
+   * normalizePublicHref adds /Portfolio in production, like every asset.
+   * iOS ignores WebP for the home-screen icon, so apple-touch-icon is a PNG.
    */
-/* The favicon comes from app/favicon.ico, which Next links with the base path
-   on every page; a relative "favicon.ico" here broke on /blog/… and /cv. */
-icons: {
-  apple: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
-},
+  icons: {
+    icon: [
+      { url: normalizePublicHref("favicon.ico"), sizes: "48x48" },
+      { url: normalizePublicHref("icons/icon-192.png"), sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: normalizePublicHref("icons/apple-touch-icon.png"), sizes: "180x180", type: "image/png" }],
+  },
 manifest: "manifest.webmanifest",
   title: {
     default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",

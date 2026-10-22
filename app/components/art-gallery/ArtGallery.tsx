@@ -52,11 +52,11 @@ export default function ArtGallery() {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
-              <span className="text-primary text-xs font-black tracking-[0.4em] uppercase font-mono">
+              <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Visual Archive
               </span>
             </div>
-            <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+            <h2 className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Proof</span> <br />
               <span className="text-primary italic">Gallery.</span>
             </h2>
@@ -73,7 +73,7 @@ export default function ArtGallery() {
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-primary" />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-primary text-2xl font-black">
+                <span className="font-mono text-primary-ink text-2xl font-black">
                   {String(PORTFOLIO_DATA.artGallery.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
@@ -142,7 +142,7 @@ export default function ArtGallery() {
                   />
 
                   <div className="relative z-10">
-                    <div className="flex items-center gap-2 text-primary mb-2">
+                    <div className="flex items-center gap-2 text-primary-ink mb-2">
                       <Sparkles size={12} />
                       <span className="font-mono text-[10px] font-bold tracking-[0.3em] uppercase">
                         Visual Entry {String(idx + 1).padStart(2, "0")}
@@ -169,9 +169,9 @@ export default function ArtGallery() {
               onClick={() => setVisible((n) => Math.min(PORTFOLIO_DATA.artGallery.length, n + PAGE))}
               className="group flex items-center gap-3 px-8 py-4 border border-foreground/15 border-l-2 border-l-primary bg-foreground/[0.02] backdrop-blur-md text-foreground font-mono font-bold uppercase tracking-widest text-sm transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
             >
-              <ChevronDown size={14} className="text-primary transition-transform duration-300 group-hover:translate-y-0.5" />
+              <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
               Show more
-              <span className="font-mono text-[10px] text-foreground/40 tabular-nums">
+              <span className="font-mono text-[10px] text-foreground/60 tabular-nums">
                 {visible}/{PORTFOLIO_DATA.artGallery.length}
               </span>
             </button>

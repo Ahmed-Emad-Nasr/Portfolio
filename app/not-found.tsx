@@ -26,7 +26,7 @@ import {
 import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
 
 export const metadata: Metadata = {
-  title: "Page not found — Ahmed Emad Nasr",
+  title: "Page not found",
   // noindex: there's no point indexing an error page
   robots: { index: false, follow: true },
 };
@@ -42,8 +42,8 @@ export default function NotFound() {
         <div className={statusInner}>
           <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-            <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Not found</span>
-            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">迷子</span>
+            <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Not found</span>
+            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">迷子</span>
           </div>
           <p className={statusCode} aria-hidden="true">404</p>
 
@@ -58,10 +58,10 @@ export default function NotFound() {
               <Home size={16} /> Portfolio
             </Link>
             <Link href="/#cases" className={ctaSecondary}>
-              <FolderSearch size={14} className="text-primary" /> Case library
+              <FolderSearch size={14} className="text-primary-ink" /> Case library
             </Link>
             <Link href="/cv" className={ctaSecondary}>
-              <FileText size={14} className="text-primary" /> CV
+              <FileText size={14} className="text-primary-ink" /> CV
             </Link>
           </nav>
 
@@ -69,7 +69,7 @@ export default function NotFound() {
             <section aria-labelledby="nf-suggest">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-6 h-[2px] bg-primary" aria-hidden="true" />
-                <h2 id="nf-suggest" className="font-mono text-[10px] text-primary tracking-[0.35em] uppercase font-bold">
+                <h2 id="nf-suggest" className="font-mono text-[10px] text-primary-ink tracking-[0.35em] uppercase font-bold">
                   Or start with one of these
                 </h2>
               </div>
@@ -83,7 +83,7 @@ export default function NotFound() {
                       <span className="font-display text-lg font-black uppercase tracking-tight text-foreground group-hover:text-primary transition-colors duration-300 mb-3">
                         {entry.label}
                       </span>
-                      <span className="text-sm text-foreground/55 font-light leading-relaxed">{entry.why}</span>
+                      <span className="text-sm text-foreground/60 font-light leading-relaxed">{entry.why}</span>
                     </Link>
                   </li>
                 ))}

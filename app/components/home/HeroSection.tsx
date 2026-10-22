@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
+import { preload } from "react-dom";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
+import { normalizePublicHref } from "@/app/core/config/shared";
 import { RevealText } from "@/app/core/components/RevealText";
 import { HeroMascot } from "@/app/components/home/HeroMascot";
 import { MessageCircle, Download, ArrowDown } from "lucide-react";
@@ -15,7 +16,7 @@ import { prefersReducedMotion } from "@/app/core/theme/fx";
 function FieldRow({ label, value, hot = false }: { label: string; value: string; hot?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-2.5 border-b border-foreground/5 last:border-b-0">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/35 shrink-0">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
         {label}
       </dt>
       <dd className={`font-mono text-xs text-right leading-relaxed ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
@@ -25,6 +26,16 @@ function FieldRow({ label, value, hot = false }: { label: string; value: string;
   );
 }
 
+/* The hero portrait at the widths the circle is drawn at (176 / 216 / 276
+   CSS px, see .hero-image below) for 1x–3x screens. */
+const HERO_PHOTO = {
+  src: normalizePublicHref("Assets/art-gallery/Images/logo/3omda-560.webp"),
+  srcSet: [320, 420, 560, 840]
+    .map((w) => `${normalizePublicHref(`Assets/art-gallery/Images/logo/3omda-${w}.webp`)} ${w}w`)
+    .join(", "),
+  sizes: "(max-width: 639px) 176px, (max-width: 1023px) 216px, 276px",
+};
+
 export default function HeroSection({
   projectCount,
   starCount,
@@ -32,6 +43,14 @@ export default function HeroSection({
   projectCount: number;
   starCount: number;
 }) {
+  /* The portrait is the LCP element: let the browser fetch it with the HTML
+     instead of after the CSS. */
+  preload(HERO_PHOTO.src, {
+    as: "image",
+    imageSrcSet: HERO_PHOTO.srcSet,
+    imageSizes: HERO_PHOTO.sizes,
+    fetchPriority: "high",
+  });
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -41,24 +60,29 @@ export default function HeroSection({
 
   useEffect(() => {
     if (prefersReducedMotion()) return; // final state is the natural layout
+    /* Phones run the same entrance at a faster tempo. On a mid-range phone
+       the page is already ~2 s into hydration when this starts, and the
+       portrait and headline (the LCP candidates) stayed invisible for the
+       full 2 s of desktop timing on top of that. */
+    const t = window.matchMedia("(max-width: 767px)").matches ? 0.5 : 1;
     const ctx = gsap.context(() => {
       /* Entrance: content stack */
       gsap.from(".hero-content > *", {
         y: 60,
         opacity: 0,
-        duration: 1.5,
-        stagger: 0.15,
+        duration: 1.5 * t,
+        stagger: 0.15 * t,
         ease: "power4.out",
-        delay: 0.5,
+        delay: 0.5 * t,
       });
 
       /* Entrance: portrait */
       gsap.from(".hero-image", {
         scale: 1.1,
         opacity: 0,
-        duration: 2,
+        duration: 2 * t,
         ease: "power2.out",
-        delay: 0.2,
+        delay: 0.2 * t,
       });
 
       /* Entrance: background kanji */
@@ -221,7 +245,7 @@ export default function HeroSection({
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16 w-full">
           {/* Name */}
           <div className="text-center md:text-left order-2 md:order-1">
-            <p className="font-mono text-[11px] md:text-xs font-bold uppercase tracking-[0.4em] text-primary mb-3">
+            <p className="font-mono text-[11px] md:text-xs font-bold uppercase tracking-[0.4em] text-primary-ink mb-3">
               Portfolio  履歴書
             </p>
             <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
@@ -243,7 +267,7 @@ export default function HeroSection({
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
             </h1>
-            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja">
+            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true">
               アハメド・エマド・ナスル  セキュリティアナリスト
             </p>
           </div>
@@ -296,13 +320,21 @@ export default function HeroSection({
               aria-label="Watch the YouTube channel"
             >
               <div className="absolute inset-5 rounded-full overflow-hidden border-2 border-foreground/10 group-hover/photo:border-primary/40 transition-colors duration-700 shadow-2xl shadow-primary/10">
-                <Image
-                  src={PORTFOLIO_DATA.profile.hero.photo}
+                {/* A plain <img> on purpose: with `images.unoptimized` (required
+                    by the static export) next/image never writes a srcset, so
+                    every phone downloaded the 2048px original (318 KB) for a
+                    176px circle. The variants come from
+                    scripts/generate-hero-sizes.mjs. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={HERO_PHOTO.src}
+                  srcSet={HERO_PHOTO.srcSet}
+                  sizes={HERO_PHOTO.sizes}
                   alt={PORTFOLIO_DATA.profile.name}
-                  width={500}
-                  height={500}
-                  priority
-                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 260px, 320px"
+                  width={560}
+                  height={560}
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover object-top grayscale group-hover/photo:grayscale-0 group-hover/photo:scale-105 transition-all duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/25 via-transparent to-transparent group-hover/photo:from-transparent transition-all duration-700" />
@@ -316,7 +348,7 @@ export default function HeroSection({
               aria-label="Maker's seal"
             >
               <div className="absolute inset-1.5 border border-foreground/40 pointer-events-none" />
-              <span className="brush-jp text-xl lg:text-2xl text-foreground leading-none" lang="ja">
+              <span className="brush-jp text-xl lg:text-2xl text-foreground leading-none" lang="ja" aria-hidden="true">
                 村長
               </span>
             </div>
@@ -342,7 +374,7 @@ export default function HeroSection({
             <div className="mb-8 w-full border border-foreground/5 bg-foreground/[0.02] backdrop-blur-sm">
               <div className="border-b border-foreground/5 px-4 py-2 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-primary" />
-                <span className="font-mono text-[10px] text-foreground/40 uppercase tracking-[0.3em]">
+                <span className="font-mono text-[10px] text-foreground/60 uppercase tracking-[0.3em]">
                   Technical Specifications
                 </span>
               </div>
@@ -364,7 +396,7 @@ export default function HeroSection({
                   </span>
                 </div>
                 <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[10px] font-bold text-foreground/50 tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[10px] font-bold text-foreground/60 tracking-[0.2em] uppercase">
                     Investigate
                   </span>
                   <span className="font-mono text-sm text-foreground/85">
@@ -396,11 +428,13 @@ export default function HeroSection({
                   style={{
                     clipPath: "polygon(0 0, 100% 0, 96% 100%, 4% 100%)",
                   }}
-                  aria-label="Download Resume PDF"
                 >
-                  <Download size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+                  {/* The accessible name now starts with the visible text
+                      (WCAG 2.5.3 — voice users say what they see). */}
+                  <Download size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-y-0.5" />
                   RESUME.pdf
-                  <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja">
+                  <span className="sr-only"> (download)</span>
+                  <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja" aria-hidden="true">
                     履歴書
                   </span>
                 </a>
@@ -408,9 +442,9 @@ export default function HeroSection({
                   href="#work"
                   className="interactive group flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 border border-foreground/15 border-l-2 border-l-primary bg-foreground/[0.02] backdrop-blur-md text-foreground font-mono font-bold uppercase tracking-widest text-sm transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  <ArrowDown size={14} className="text-primary transition-transform duration-300 group-hover:translate-y-0.5" />
+                  <ArrowDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                   View Work
-                  <span className="brush-jp text-base normal-case tracking-normal text-foreground/50" lang="ja">
+                  <span className="brush-jp text-base normal-case tracking-normal text-foreground/50" lang="ja" aria-hidden="true">
                     仕事
                   </span>
                 </a>
@@ -424,7 +458,7 @@ export default function HeroSection({
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/social relative w-11 h-11 flex items-center justify-center border border-foreground/10 bg-foreground/[0.02] text-foreground/40 transition-all duration-300 hover:border-primary hover:text-primary hover:-translate-y-1 hover:shadow-[0_0_18px_rgba(188,0,45,0.35)] active:translate-y-0"
+                    className="group/social relative w-11 h-11 flex items-center justify-center border border-foreground/10 bg-foreground/[0.02] text-foreground/60 transition-all duration-300 hover:border-primary hover:text-primary-ink hover:-translate-y-1 hover:shadow-[0_0_18px_rgba(188,0,45,0.35)] active:translate-y-0"
                     aria-label={s.name}
                   >
                     <span
@@ -433,7 +467,7 @@ export default function HeroSection({
                     />
                     <s.icon size={18} strokeWidth={1.5} />
                     <span
-                      className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 bg-background border border-primary/40 font-mono text-[9px] font-bold tracking-[0.25em] uppercase text-primary opacity-0 group-hover/social:opacity-100 transition-opacity duration-300"
+                      className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 bg-background border border-primary/40 font-mono text-[9px] font-bold tracking-[0.25em] uppercase text-primary-ink opacity-0 group-hover/social:opacity-100 transition-opacity duration-300"
                       aria-hidden="true"
                     >
                       {s.name}
@@ -453,10 +487,10 @@ export default function HeroSection({
             <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/50 pointer-events-none" />
             <div className="flex items-center gap-3 mb-5">
               <div className="w-8 h-[2px] bg-primary" />
-              <span className="font-mono text-[10px] font-bold tracking-[0.35em] uppercase text-primary">
+              <span className="font-mono text-[10px] font-bold tracking-[0.35em] uppercase text-primary-ink">
                 Field Record
               </span>
-              <span className="brush-jp text-base text-foreground/30" lang="ja">
+              <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">
                 記録
               </span>
             </div>

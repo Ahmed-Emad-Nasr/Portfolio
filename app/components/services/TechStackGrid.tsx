@@ -52,7 +52,7 @@ export default function TechStackGrid() {
                   <h3 className="font-display text-lg font-black uppercase tracking-tight text-foreground">
                     {g.title}
                   </h3>
-                  <span className="brush-jp text-xl text-tertiary" lang="ja">
+                  <span className="brush-jp text-xl text-tertiary" lang="ja" aria-hidden="true">
                     {g.japanese}
                   </span>
                 </div>

@@ -20,18 +20,18 @@ export default function MilestonesSection() {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
-              <span className="text-primary text-xs font-black tracking-[0.4em] uppercase font-mono">
+              <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Milestones // How it compounded
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja">
+              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 歩み
               </span>
             </div>
-            <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+            <h2 className="font-display title-fit [--title-n:8] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">The</span> <br />
               <span className="text-primary italic">Path.</span>
             </h2>
-            <p className="mt-5 text-foreground/55 max-w-xl font-light leading-relaxed">
+            <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               Every step below is documented somewhere above  experience, work, or credentials.
             </p>
           </motion.div>
@@ -46,7 +46,7 @@ export default function MilestonesSection() {
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-primary" />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-primary text-2xl font-black tabular-nums">
+                <span className="font-mono text-primary-ink text-2xl font-black tabular-nums">
                   {String(items.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
@@ -88,7 +88,7 @@ export default function MilestonesSection() {
                     <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground">
                       {m.title}
                     </h3>
-                    <p className="mt-1 text-sm text-foreground/55 font-light leading-relaxed">
+                    <p className="mt-1 text-sm text-foreground/60 font-light leading-relaxed">
                       {m.detail}
                     </p>
                   </div>

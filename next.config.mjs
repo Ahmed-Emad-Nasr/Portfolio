@@ -1,22 +1,23 @@
 /** @type {import('next').NextConfig} */
 
-// NOTE ON BASE PATH — deliberately NOT set here.
+// BASE PATH — one value, used by both mechanisms.
 //
-// This project already handles the /Portfolio sub-path MANUALLY, via
-// normalizePublicHref() in app/core/config/portfolio.ts:
-//
-//   process.env.NEXT_PUBLIC_BASE_PATH ??
-//     (process.env.NODE_ENV === "production" ? "/Portfolio" : "")
-//
-// Adding Next's own `basePath` on top of that double-prefixes every asset
-// (/Portfolio/Portfolio/Assets/...) in production and breaks them in dev,
-// where the manual helper resolves to "" but the framework still serves from
-// /Portfolio. One base-path mechanism at a time — this project uses the
-// manual one, which is already deployed and working.
+// The site lives at https://ahmed-emad-nasr.github.io/Portfolio/, so every
+// URL needs the /Portfolio prefix in production:
+//   • Next's own `basePath` prefixes _next/ chunks, CSS, fonts and next/link.
+//   • normalizePublicHref() (core/config/shared.ts) prefixes plain <a>/<img>
+//     asset paths, which `basePath` does not touch (images are unoptimized).
+// Both read the same expression, so they can never disagree. Before, basePath
+// was only injected by actions/configure-pages in CI, which meant a local
+// `npm run build` produced a site whose CSS and JS 404'd under /Portfolio.
+const BASE_PATH =
+  process.env.NEXT_PUBLIC_BASE_PATH ??
+  (process.env.NODE_ENV === "production" ? "/Portfolio" : "");
 
 const nextConfig = {
   reactStrictMode: true,
   output: "export",
+  basePath: BASE_PATH,
 
   images: {
     // Static export cannot run the optimizer at request time, so next/image is

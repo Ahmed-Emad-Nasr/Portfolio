@@ -21,11 +21,13 @@ import FaqSection from "@/app/components/services/FaqSection";
 import ContributionsGrid from "@/app/components/services/ContributionsGrid";
 import { getGitHubRepos } from "@/app/core/api/github";
 import StartHere from "@/app/components/cases/StartHere";
+import AttackCoverage from "@/app/components/cases/AttackCoverage";
 import {
+  attackCoverage,
   categoryFacets,
   libraryCounts,
   libraryStructuredData,
-  screenshotsById,
+  mediaById,
   sortedCases,
   toolFacets,
 } from "@/app/core/config/library-data";
@@ -77,6 +79,10 @@ export const metadata: Metadata = {
       "Real SOC/IR case reports, security projects, malware analysis, and cybersecurity training impact by Ahmed Emad Nasr.",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     type: "website",
+    /* A page-level openGraph replaces the layout's whole object, so the two
+       fields below would otherwise be lost on the home page. */
+    siteName: "Ahmed Emad Nasr Portfolio",
+    locale: "en_US",
     images: [
       {
         url: "https://ahmed-emad-nasr.github.io/Portfolio/og-image.png",
@@ -88,6 +94,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@0x3omda",
+    creator: "@0x3omda",
     title: "Ahmed Emad Nasr | SOC & Incident Response Analyst",
     description:
       "Explore SOC investigations, DFIR workflows, malware analysis cases, and detection engineering.",
@@ -227,14 +235,21 @@ export default async function Home() {
         <ArtGallery />
       </div>
 
-      <SectionDivider text="事件 • 調査 • 報告 • 証拠" angle={-1.5} />
+      <SectionDivider text="戦術 • 技術 • 網羅 • 証拠" angle={-1.5} />
+
+      {/* 10a  The library on MITRE ATT&CK: which tactics the reports cover */}
+      <div className={DEFER}>
+        <AttackCoverage {...attackCoverage} />
+      </div>
+
+      <SectionDivider text="事件 • 調査 • 報告 • 証拠" reverse={true} angle={-1.5} />
 
       {/* 10b  The case library and the videos — what used to be the blog */}
       <div className={DEFER}>
       <CaseLibrarySection
         startHere={<StartHere />}
         sortedPdfs={sortedCases}
-        screenshotsById={screenshotsById}
+        mediaById={mediaById}
         categoryFacets={categoryFacets}
         toolFacets={toolFacets}
         totalCasesCount={libraryCounts.total}

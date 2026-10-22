@@ -18,19 +18,31 @@ import SectionDivider from "@/app/core/components/SectionDivider";
 import { ChevronDown } from "lucide-react";
 import { formatDate, normalizePublicHref } from "@/app/blog/blog-utils";
 import type { PdfResource, GalleryState } from "@/app/blog/blog-types";
+import type { CaseMedia } from "@/app/core/config/library-data";
 import CaseFilters, { type Facet } from "./CaseFilters";
 import CaseCard from "./CaseCard";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
 
 const MediaSections = dynamic(() => import("./MediaSections"));
 const PAGE = 6;
-const NO_SHOTS: string[] = [];
+/* The full screenshot lists, fetched once on the first gallery open */
+let screenshotsRequest: Promise<Record<string, string[]>> | null = null;
+const loadScreenshots = () => {
+  screenshotsRequest ??= fetch(normalizePublicHref("case-screenshots.json"))
+    .then((response) => (response.ok ? response.json() : {}))
+    .catch(() => {
+      screenshotsRequest = null; // let the next click try again
+      return {};
+    });
+  return screenshotsRequest;
+};
+
 const GalleryLightbox = dynamic(() => import("@/app/components/art-gallery/GalleryLightbox"), { ssr: false });
 
 type CaseLibrarySectionProps = {
   startHere?: React.ReactNode;
   sortedPdfs: PdfResource[];
-  screenshotsById: Record<string, string[]>;
+  mediaById: Record<string, CaseMedia>;
   categoryFacets: Facet[];
   toolFacets: Facet[];
   totalCasesCount: number;
@@ -42,7 +54,7 @@ type CaseLibrarySectionProps = {
 export default function CaseLibrarySection({
   startHere,
   sortedPdfs,
-  screenshotsById,
+  mediaById,
   categoryFacets,
   toolFacets,
   totalCasesCount,
@@ -169,7 +181,8 @@ export default function CaseLibrarySection({
     return [featured, ...others];
   }, []);
 
-  const openGallery = useCallback((title: string, screenshots: string[], index = 0) => {
+  const openGallery = useCallback(async (title: string, id: string, index = 0) => {
+    const screenshots = (await loadScreenshots())[id] ?? [];
     if (screenshots.length) {
       setGallery({ title, screenshots, index: Math.min(Math.max(index, 0), screenshots.length - 1) });
     }
@@ -240,10 +253,10 @@ export default function CaseLibrarySection({
 
           <div className="flex items-center gap-4 mb-10">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-            <h2 className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+            <h2 className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
               All cases
             </h2>
-            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">全件</span>
+            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">全件</span>
           </div>
 
           <CaseFilters
@@ -266,7 +279,8 @@ export default function CaseLibrarySection({
                 key={item.id}
                 index={idx}
                 {...item}
-                screenshots={screenshotsById[item.id] ?? NO_SHOTS}
+                cover={mediaById[item.id]?.cover}
+                shotCount={mediaById[item.id]?.count ?? 0}
                 onOpenGallery={openGallery}
               />
             ))}
@@ -279,9 +293,9 @@ export default function CaseLibrarySection({
                 onClick={() => setVisible((n) => Math.min(visiblePdfs.length, n + PAGE))}
                 className="group flex items-center gap-3 px-8 py-4 border border-foreground/15 border-l-2 border-l-primary bg-foreground/[0.02] backdrop-blur-md text-foreground font-mono font-bold uppercase tracking-widest text-sm transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
               >
-                <ChevronDown size={14} className="text-primary transition-transform duration-300 group-hover:translate-y-0.5" />
+                <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                 Show more cases
-                <span className="font-mono text-[10px] text-foreground/40 tabular-nums">
+                <span className="font-mono text-[10px] text-foreground/60 tabular-nums">
                   {Math.min(visible, visiblePdfs.length)}/{visiblePdfs.length}
                 </span>
               </button>
@@ -291,12 +305,12 @@ export default function CaseLibrarySection({
           {visiblePdfs.length === 0 && (
             <div className="relative bg-surface/60 border border-foreground/10 p-10 md:p-14 text-center">
               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
-              <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja">該当なし</p>
+              <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja" aria-hidden="true">該当なし</p>
               <p className="font-mono text-sm text-foreground/60 tracking-wider mb-4">No case matches these filters.</p>
               <button
                 type="button"
                 onClick={resetFilters}
-                className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary underline-offset-4 hover:underline"
+                className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary-ink underline-offset-4 hover:underline"
               >
                 Clear filters
               </button>

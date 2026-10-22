@@ -47,7 +47,7 @@ const panel =
 const entryWrap =
   "relative px-6 md:px-10 py-7 border-b border-foreground/5 last:border-b-0 break-inside-avoid print:px-0 print:py-[5pt] print:border-0";
 const roleClass = "font-display text-xl md:text-2xl font-black uppercase tracking-tight text-foreground print:text-[11pt] print:font-bold print:normal-case print:tracking-normal";
-const datesClass = "font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/50 whitespace-nowrap print:text-[8.5pt] print:tracking-normal";
+const datesClass = "font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60 whitespace-nowrap print:text-[8.5pt] print:tracking-normal";
 const orgClass = "mt-2 font-mono text-xs font-black uppercase tracking-[0.2em] text-accent print:text-[9pt] print:tracking-normal print:text-black";
 const bulletList = "mt-4 flex flex-col gap-2 print:mt-[3pt] print:gap-[1pt]";
 const bulletItem =
@@ -58,16 +58,16 @@ function SectionTitle({ children, japanese }: { children: ReactNode; japanese: s
   return (
     <div className="flex items-center gap-4 mb-6 print:mb-[4pt] print:border-b print:border-black print:pb-[2pt]">
       <div className="w-12 h-[2px] bg-primary print:hidden" aria-hidden="true" />
-      <h2 className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase print:text-black print:text-[9.5pt] print:tracking-[0.15em]">
+      <h2 className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase print:text-black print:text-[9.5pt] print:tracking-[0.15em]">
         {children}
       </h2>
-      <span className="jp-eyebrow text-[11px] text-foreground/30 print:hidden" lang="ja">{japanese}</span>
+      <span className="jp-eyebrow text-[11px] text-foreground/30 print:hidden" lang="ja" aria-hidden="true">{japanese}</span>
     </div>
   );
 }
 
 export const metadata: Metadata = {
-  title: "CV — Ahmed Emad Nasr | SOC Analyst & Incident Responder",
+  title: "CV — SOC Analyst & Incident Responder",
   description:
     "Full CV for Ahmed Emad Nasr: SOC operations, incident response and DFIR experience, security certifications, projects, and published investigation reports.",
   alternates: { canonical: "/cv" },
@@ -152,7 +152,7 @@ export default function CvPage() {
   const volunteer = cvItems.filter((item) => item.kind === "volunteer").sort(newestFirst);
   const education = cvItems.filter((item) => item.kind === "education");
 
-  const contactLink = "flex items-center gap-2 hover:text-primary transition-colors print:text-black";
+  const contactLink = "flex items-center gap-2 hover:text-primary-ink transition-colors print:text-black";
 
   return (
     <PageShell>
@@ -163,8 +163,8 @@ export default function CvPage() {
           <header className="pb-10 border-b border-foreground/10 print:pb-[8pt] print:border-black">
             <div className="flex items-center gap-4 mb-5 print:hidden">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-              <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Curriculum Vitae</span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja">履歴書</span>
+              <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Curriculum Vitae</span>
+              <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">履歴書</span>
             </div>
             <h1 className="font-display text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] print:text-[22pt] print:normal-case print:tracking-normal print:text-black">
               <span className="text-foreground print:text-black">{CV_CONTACT.name.split(" ")[0]}</span>{" "}
@@ -175,21 +175,21 @@ export default function CvPage() {
             </p>
 
             <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs text-on-surface-variant print:text-[8.5pt] print:gap-x-[12pt]">
-              <li className="flex items-center gap-2"><MapPin size={13} className="text-primary print:hidden" /> {CV_CONTACT.location}</li>
-              <li><a className={contactLink} href={`mailto:${CV_CONTACT.email}`}><Mail size={13} className="text-primary print:hidden" /> {CV_CONTACT.email}</a></li>
-              <li><a className={contactLink} href={`tel:${CV_CONTACT.phone.replace(/\s/g, "")}`}><Phone size={13} className="text-primary print:hidden" /> {CV_CONTACT.phone}</a></li>
-              <li><a className={contactLink} href={CV_CONTACT.linkedin.href} target="_blank" rel="noopener noreferrer"><Linkedin size={13} className="text-primary print:hidden" /> {CV_CONTACT.linkedin.label}</a></li>
-              <li><a className={contactLink} href={CV_CONTACT.github.href} target="_blank" rel="noopener noreferrer"><Github size={13} className="text-primary print:hidden" /> {CV_CONTACT.github.label}</a></li>
+              <li className="flex items-center gap-2"><MapPin size={13} className="text-primary-ink print:hidden" /> {CV_CONTACT.location}</li>
+              <li><a className={contactLink} href={`mailto:${CV_CONTACT.email}`}><Mail size={13} className="text-primary-ink print:hidden" /> {CV_CONTACT.email}</a></li>
+              <li><a className={contactLink} href={`tel:${CV_CONTACT.phone.replace(/\s/g, "")}`}><Phone size={13} className="text-primary-ink print:hidden" /> {CV_CONTACT.phone}</a></li>
+              <li><a className={contactLink} href={CV_CONTACT.linkedin.href} target="_blank" rel="noopener noreferrer"><Linkedin size={13} className="text-primary-ink print:hidden" /> {CV_CONTACT.linkedin.label}</a></li>
+              <li><a className={contactLink} href={CV_CONTACT.github.href} target="_blank" rel="noopener noreferrer"><Github size={13} className="text-primary-ink print:hidden" /> {CV_CONTACT.github.label}</a></li>
             </ul>
 
             <div className="mt-8 flex flex-wrap gap-4 print:hidden">
               <a className={ctaPrimary} href={normalizePublicHref(CV_PDF_HREF)} download style={{ clipPath: "polygon(0 0, 100% 0, 96% 100%, 4% 100%)" }}>
                 <Download size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
                 RESUME.pdf
-                <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja">履歴書</span>
+                <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja" aria-hidden="true">履歴書</span>
               </a>
               <Link className={ctaSecondary} href="/">
-                <ArrowLeft size={14} className="text-primary transition-transform duration-300 group-hover:-translate-x-0.5" />
+                <ArrowLeft size={14} className="text-primary-ink transition-transform duration-300 group-hover:-translate-x-0.5" />
                 Portfolio
               </Link>
             </div>
@@ -211,7 +211,7 @@ export default function CvPage() {
                 <Entry key={`${item.tag}-${item.startDate}`} item={item} linkOrg={false} />
               ))}
               <p className="px-6 md:px-10 pb-7 text-sm text-on-surface-variant font-light print:px-0 print:pb-0 print:text-[9pt] print:text-black">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/50 print:text-black">Relevant coursework  </span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60 print:text-black">Relevant coursework  </span>
                 {RELEVANT_COURSEWORK.join(" · ")}
               </p>
             </div>
@@ -227,11 +227,11 @@ export default function CvPage() {
                   <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                     <h3 className={roleClass}>{project.title}</h3>
                     <span className={`${datesClass} flex gap-3`}>
-                      <a className="hover:text-primary transition-colors" href={project.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+                      <a className="hover:text-primary-ink transition-colors" href={project.github} target="_blank" rel="noopener noreferrer">GitHub</a>
                       {project.demo && (
                         <>
-                          <span className="text-primary" aria-hidden="true">•</span>
-                          <a className="hover:text-primary transition-colors" href={project.demo} target="_blank" rel="noopener noreferrer">Demo</a>
+                          <span className="text-primary-ink" aria-hidden="true">•</span>
+                          <a className="hover:text-primary-ink transition-colors" href={project.demo} target="_blank" rel="noopener noreferrer">Demo</a>
                         </>
                       )}
                     </span>
@@ -265,7 +265,7 @@ export default function CvPage() {
                       {cert.verifyUrl && (
                         <>
                           {" "}
-                          <a className="text-primary underline underline-offset-4" href={cert.verifyUrl} target="_blank" rel="noopener noreferrer">verify</a>
+                          <a className="text-primary-ink underline underline-offset-4" href={cert.verifyUrl} target="_blank" rel="noopener noreferrer">verify</a>
                         </>
                       )}
                     </span>
@@ -285,7 +285,7 @@ export default function CvPage() {
                       <span className="text-on-surface-variant print:text-black">
                         {" — "}
                         {item.proofUrl ? (
-                          <a className="text-primary underline underline-offset-4" href={item.proofUrl} target="_blank" rel="noopener noreferrer">{item.context}</a>
+                          <a className="text-primary-ink underline underline-offset-4" href={item.proofUrl} target="_blank" rel="noopener noreferrer">{item.context}</a>
                         ) : (
                           item.context
                         )}
@@ -324,10 +324,10 @@ export default function CvPage() {
             </dl>
           </section>
 
-          <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[10px] uppercase tracking-[0.25em] leading-relaxed text-foreground/40 print:hidden">
+          <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[10px] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 print:hidden">
             Generated from the same data as the{" "}
-            <Link className="text-primary underline underline-offset-4" href="/">portfolio</Link> and the{" "}
-            <Link className="text-primary underline underline-offset-4" href="/#cases">case library</Link>  print it (Ctrl/Cmd + P) for a clean PDF.
+            <Link className="text-primary-ink underline underline-offset-4" href="/">portfolio</Link> and the{" "}
+            <Link className="text-primary-ink underline underline-offset-4" href="/#cases">case library</Link>  print it (Ctrl/Cmd + P) for a clean PDF.
           </p>
         </div>
       </article>

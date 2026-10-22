@@ -17,6 +17,7 @@
 
   /* Three-Color Palette & Design Tokens */
   --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-tertiary: var(--tertiary);
@@ -49,9 +50,13 @@
     /* Light theme (washi paper)  default, class strategy via next-themes */
     color-scheme: light;
     --primary: #BC002D;
+    /* Red used AS TEXT. Same as --primary on the light theme (6.1:1). */
+    --primary-ink: #BC002D;
     --secondary: #1A1A1A;
-    --accent: #8a6d00;
-    --tertiary: #007a8a;
+    /* Darkened a step from #8a6d00 / #007a8a: the chips sit on a 10% tint
+       of their own colour, which took them just under 4.5:1. */
+    --accent: #7a6000;
+    --tertiary: #006b78;
     --quaternary: #5b54d6;
 
     --background: #f7f5f0;
@@ -75,6 +80,11 @@
     /* Dark theme (sumi ink) */
     color-scheme: dark;
     --primary: #BC002D;
+    /* On sumi black the brand red is 3:1 — fine for fills, borders and big
+       display type, too dark for the small red eyebrows and labels (WCAG
+       wants 4.5:1). Text gets a lighter cut of the same red: 5:1 on the
+       background, 4.6:1 on cards. Buttons and borders keep --primary. */
+    --primary-ink: #F0304F;
     --secondary: #1A1A1A;
     --accent: #FFD700;
     --tertiary: #00D2EF;
@@ -119,6 +129,22 @@
     [role="button"] {
       cursor: pointer;
     }
+  }
+
+  /*
+   * Display headings never run past their column.
+   *
+   * Dela Gothic One is very wide (~0.84em per capital), so one long word —
+   * "PROFESSIONAL", "REPOSITORIES", "CERTIFICATIONS", a repo name — at a
+   * fixed text-5xl/8xl spilled off phones and tablets. break-word only acts
+   * when a single word cannot fit; hyphens: auto lets English words break at
+   * a real syllable first.
+   */
+  h1, h2, h3, h4 {
+    overflow-wrap: break-word;
+  }
+  .font-display:is(h1, h2, h3, h4) {
+    hyphens: auto;
   }
 
   /* Skip link */
@@ -372,10 +398,10 @@
   padding-left: 1.25rem;
 }
 .legal-copy li::marker {
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 .legal-copy a {
-  color: var(--primary);
+  color: var(--primary-ink);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -408,4 +434,151 @@
   canvas {
     display: none !important;
   }
+}
+
+/*
+ * Section titles in the display face: the design's size (text-5xl on phones,
+ * text-8xl from md), shrunk only when the longest word would not fit the
+ * column. --title-n is that word's length in letters (set per heading); 0.86em
+ * per letter is Dela Gothic One's widest-case advance. 3rem / 10rem are the
+ * section's side padding (px-6 / md:px-20); 80rem is max-w-7xl.
+ */
+@utility title-fit {
+  font-size: min(3rem, calc((100vw - 3rem) / (var(--title-n, 10) * 0.86)));
+  @media (width >= 48rem) {
+    font-size: min(6rem, calc((min(100vw - 10rem, 80rem)) / (var(--title-n, 10) * 0.86)));
+  }
+}
+
+/* RevealText: reduced-motion visitors get the words in place at once — the
+   same markup as everyone else, so server and client HTML always match. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-word {
+    transform: none !important;
+  }
+}
+
+/* ATT&CK coverage (components/cases/AttackCoverage.tsx). Server-rendered,
+   ~30 rows and ~90 links, so the row styling is written once here. */
+.attack-row {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+.attack-row:first-child {
+  border-top: 0;
+}
+.attack-row summary {
+  display: block;
+  cursor: pointer;
+  list-style: none;
+  padding: 0.75rem 0;
+}
+.attack-row summary::-webkit-details-marker {
+  display: none;
+}
+.attack-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.attack-id {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+}
+.attack-name {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.375;
+  color: color-mix(in srgb, var(--foreground) 85%, transparent);
+  transition: color 0.2s;
+}
+.attack-row summary:hover .attack-name {
+  color: var(--foreground);
+}
+.attack-count {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+}
+.attack-chev {
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-right: 1.5px solid var(--primary-ink);
+  border-bottom: 1.5px solid var(--primary-ink);
+  transform: rotate(45deg);
+  transition: transform 0.3s;
+}
+.attack-row details[open] .attack-chev {
+  transform: rotate(-135deg);
+  margin-top: 3px;
+}
+.attack-heat {
+  display: block;
+  margin-top: 0.5rem;
+  height: 3px;
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+.attack-heat > span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+}
+.attack-cases {
+  margin-bottom: 0.75rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid color-mix(in srgb, var(--primary) 50%, transparent);
+}
+.attack-cases > li + li {
+  margin-top: 0.375rem;
+}
+.attack-cases a {
+  font-size: 13px;
+  line-height: 1.375;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  transition: color 0.2s;
+}
+.attack-cases a:hover {
+  color: var(--foreground);
+}
+.attack-cases a::after {
+  content: " ↗";
+  color: var(--primary-ink);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.attack-cases a:hover::after,
+.attack-cases a:focus-visible::after {
+  opacity: 1;
+}
+.attack-cases .attack-ext {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+}
+.attack-cases .attack-ext::after {
+  opacity: 1;
+}
+/* The case list eases in when its <details> opens */
+.attack-row details[open] .attack-cases {
+  animation: attack-open 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes attack-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .attack-row details[open] .attack-cases { animation: none; }
+  .attack-chev { transition: none; }
 }

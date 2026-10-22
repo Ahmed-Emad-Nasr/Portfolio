@@ -46,16 +46,16 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
-              <span className="text-primary text-xs font-black tracking-[0.4em] uppercase font-mono">
+              <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Open Source // リポジトリ
               </span>
             </div>
 
-            <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+            <h2 className="font-display title-fit [--title-n:13] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Code</span> <br />
               <span className="text-primary italic">Repositories.</span>
             </h2>
-            <p className="mt-5 text-foreground/55 max-w-xl font-light leading-relaxed">
+            <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               The labs and tools above, as code. Setup, rules and results live in each repo, not in headlines.
             </p>
           </motion.div>
@@ -107,11 +107,11 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
         {repos.length === 0 && (
           <div className="relative bg-surface/60 border border-foreground/10 p-10 md:p-14 text-center">
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
-            <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja">接続切れ</p>
+            <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja" aria-hidden="true">接続切れ</p>
             <p className="font-mono text-sm text-foreground/60 tracking-wider mb-2">
               GitHub API unreachable right now.
             </p>
-            <p className="text-sm text-foreground/40 font-light">
+            <p className="text-sm text-foreground/60 font-light">
               Full write-ups with benchmarks live in the Selected Work section above.
             </p>
           </div>

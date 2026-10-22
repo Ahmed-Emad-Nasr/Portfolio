@@ -57,10 +57,10 @@ export default function WorkShowcase() {
               onClick={() => setFilter(f.id)}
               className={`px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${filter === f.id
                   ? "bg-primary text-white border-primary"
-                  : "bg-foreground/[0.03] text-foreground/60 border-foreground/10 hover:border-primary/50 hover:text-foreground"
+                  : "bg-foreground/[0.03] text-foreground/70 border-foreground/10 hover:border-primary/50 hover:text-foreground"
                 }`}
             >
-              {f.label} <span className="ml-2 text-[9px] opacity-60" lang="ja">{f.japanese}</span>
+              {f.label} <span className="ml-2 text-[9px]" lang="ja" aria-hidden="true">{f.japanese}</span>
             </button>
           ))}
         </div>
@@ -86,7 +86,7 @@ export default function WorkShowcase() {
                       </div>
                       <div>
                         <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-tertiary">{w.type} • {w.platform}</div>
-                        <div className="font-mono text-[9px] text-foreground/30 tracking-widest mt-1">{w.year} • {w.status}</div>
+                        <div className="font-mono text-[9px] text-foreground/60 tracking-widest mt-1">{w.year} • {w.status}</div>
                       </div>
                     </div>
                     {w.status === "private-demo" && (
@@ -96,16 +96,16 @@ export default function WorkShowcase() {
                     )}
                   </div>
 
-                  <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground mb-2">
+                  <h3 className="font-display text-2xl md:text-[1.375rem] lg:text-3xl font-black uppercase tracking-tight text-foreground mb-2">
                     {w.title}
                   </h3>
                   <p className="text-foreground/80 font-medium mb-3">{w.tagline}</p>
-                  <p className="text-sm text-foreground/55 font-light leading-relaxed mb-2">
-                    <span className="text-foreground/35 font-mono text-[10px] uppercase tracking-[0.2em]">Problem  </span>
+                  <p className="text-sm text-foreground/60 font-light leading-relaxed mb-2">
+                    <span className="text-foreground/60 font-mono text-[10px] uppercase tracking-[0.2em]">Problem  </span>
                     {w.problem}
                   </p>
-                  <p className="text-sm text-foreground/55 font-light leading-relaxed mb-5">
-                    <span className="text-foreground/35 font-mono text-[10px] uppercase tracking-[0.2em]">Role  </span>
+                  <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5">
+                    <span className="text-foreground/60 font-mono text-[10px] uppercase tracking-[0.2em]">Role  </span>
                     {w.role}
                   </p>
 
@@ -141,7 +141,7 @@ export default function WorkShowcase() {
                       </a>
                     )}
                     {!w.links.github && !w.links.live && !w.links.demo && (
-                      <span className="font-mono text-[10px] text-foreground/35 tracking-[0.2em] uppercase">Demo on request  NDA client work</span>
+                      <span className="font-mono text-[10px] text-foreground/60 tracking-[0.2em] uppercase">Demo on request  NDA client work</span>
                     )}
                   </div>
                 </TiltCard>
@@ -151,7 +151,7 @@ export default function WorkShowcase() {
         </div>
 
         {items.length === 0 && (
-          <p className="mt-8 font-mono text-sm text-foreground/40">No items in this filter yet.</p>
+          <p className="mt-8 font-mono text-sm text-foreground/60">No items in this filter yet.</p>
         )}
       </div>
     </section>

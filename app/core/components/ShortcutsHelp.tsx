@@ -30,6 +30,7 @@ const GROUPS: { title: string; items: { keys: string[]; label: string }[] }[] = 
       { keys: ["g", "w"], label: "Selected work" },
       { keys: ["g", "e"], label: "Experience" },
       { keys: ["g", "c"], label: "Certifications" },
+      { keys: ["g", "a"], label: "ATT&CK coverage" },
       { keys: ["g", "b"], label: "Case library" },
       { keys: ["g", "t"], label: "Back to top" },
     ],
@@ -77,7 +78,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
         className="w-full max-w-xl max-h-[72vh] overflow-y-auto border border-foreground/10 bg-surface shadow-2xl"
       >
         <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-4">
-          <Keyboard size={16} className="shrink-0 text-primary" />
+          <Keyboard size={16} className="shrink-0 text-primary-ink" />
           <h2 className="flex-1 font-mono text-[11px] font-bold uppercase tracking-[0.35em] text-foreground">
             Keyboard shortcuts
           </h2>
@@ -85,7 +86,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/40 transition-colors hover:border-primary hover:text-primary"
+            className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/60 transition-colors hover:border-primary hover:text-primary-ink"
           >
             ESC
           </button>
@@ -94,7 +95,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
         <div className="grid gap-6 p-5">
           {GROUPS.map((group) => (
             <section key={group.title}>
-              <h3 className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/40">
+              <h3 className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60">
                 {group.title}
               </h3>
               <ul className="grid gap-1">

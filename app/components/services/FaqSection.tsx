@@ -31,18 +31,18 @@ export default function FaqSection() {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
-              <span className="text-primary text-xs font-black tracking-[0.4em] uppercase font-mono">
+              <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 FAQ // Before you ask
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja">
+              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 質問
               </span>
             </div>
-            <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+            <h2 className="font-display title-fit [--title-n:11] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Fair</span> <br />
               <span className="text-primary italic">Questions.</span>
             </h2>
-            <p className="mt-5 text-foreground/55 max-w-xl font-light leading-relaxed">
+            <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               The answers recruiters and teams usually need before the first call.
             </p>
           </motion.div>
@@ -57,7 +57,7 @@ export default function FaqSection() {
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-primary" />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-primary text-2xl font-black tabular-nums">
+                <span className="font-mono text-primary-ink text-2xl font-black tabular-nums">
                   {String(PORTFOLIO_DATA.faq.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
@@ -91,7 +91,7 @@ export default function FaqSection() {
                   aria-controls={`faq-panel-${i}`}
                   className="flex w-full items-center gap-4 py-5 text-left group"
                 >
-                  <span className="font-mono text-[10px] text-foreground/25 tabular-nums w-6 shrink-0">
+                  <span className="font-mono text-[10px] text-foreground/60 tabular-nums w-6 shrink-0">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className={`flex-1 font-display text-lg md:text-xl font-black uppercase tracking-tight transition-colors ${isOpen ? "text-primary" : "text-foreground group-hover:text-primary"}`}>
@@ -100,7 +100,7 @@ export default function FaqSection() {
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`shrink-0 border p-1.5 transition-colors ${isOpen ? "border-primary text-primary" : "border-foreground/15 text-foreground/40"}`}
+                    className={`shrink-0 border p-1.5 transition-colors ${isOpen ? "border-primary text-primary-ink" : "border-foreground/15 text-foreground/40"}`}
                   >
                     <Plus size={15} />
                   </motion.span>

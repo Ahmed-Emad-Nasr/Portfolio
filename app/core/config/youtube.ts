@@ -81,7 +81,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   },
   {
     videoId: "Vj8lynVzv2k",
-    title: "Solvin INE Lab FootPrinting And Scanning",
+    title: "Solving INE Lab: Footprinting and Scanning",
     description: "A practical walkthrough of solving the INE Footprinting and Scanning lab for the eJPT/PTS course. The video demonstrates essential network enumeration techniques on a Metasploitable 2 target, covering ping sweeps (fping), basic Nmap scans, SYN scans, service version detection, and OS fingerprinting. Perfect for beginners learning penetration testing.",
     publishedAt: "2026-07-24",
     tags: [
@@ -190,7 +190,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   },
   {
     videoId: "J8MNgB-5rMo",
-    title: "Fix Cant Access ossec conf Permission Problem",
+    title: "Fix: Can't Access ossec.conf (Permission Problem)",
     description: "A quick tutorial on resolving permission issues when accessing the ossec.conf file in Wazuh.",
     publishedAt: "2025-07-02",
     tags: ["Wazuh", "Troubleshooting", "ossec.conf", "Permissions", "Tutorial"],
@@ -204,7 +204,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   },
   {
     videoId: "u_hezaAwnmM",
-    title: "Demo Threat Inteligence Platform Tool",
+    title: "Demo: Threat Intelligence Platform Tool",
     description: "A walkthrough demo of a Python-based threat intelligence utility integrating VirusTotal, Hybrid Analysis, NIST for CVEs, and Exploit DB to centralize threat data for faster analysis.",
     publishedAt: "2026-08-18",
     tags: ["Threat Intelligence", "Python", "VirusTotal", "Hybrid Analysis", "Exploit DB"],
@@ -236,8 +236,8 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
 
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
   videoId: "orw_kiHZvhU",
-  title: "Featured Video",
-  description: "Watch our featured security tutorial and learn key techniques.",
+  title: "How to Download and Install the Wazuh SIEM",
+  description: "A from-scratch walkthrough of downloading and installing Wazuh — the first step of the SOC lab series (Arabic narration).",
   sourceUrl: "https://youtu.be/orw_kiHZvhU?si=0D4Ri-NSCzCB-Bg_",
 };
 

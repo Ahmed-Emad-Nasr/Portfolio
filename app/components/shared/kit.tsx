@@ -17,7 +17,7 @@ export const chipTertiary =
 export const chipAccent =
   "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25";
 export const chipNeutral =
-  "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-foreground/50 bg-foreground/[0.04] border border-foreground/10";
+  "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10";
 
 /* Buttons — WorkShowcase card actions, HeroSection CTAs */
 export const btnPrimary =
@@ -34,7 +34,7 @@ export const filterTab = (active: boolean) =>
   `px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${
     active
       ? "bg-primary text-white border-primary"
-      : "bg-foreground/[0.03] text-foreground/60 border-foreground/10 hover:border-primary/50 hover:text-foreground"
+      : "bg-foreground/[0.03] text-foreground/70 border-foreground/10 hover:border-primary/50 hover:text-foreground"
   }`;
 
 /* Card surface — WorkShowcase / ProjectCard (used with TiltCard) */
@@ -46,9 +46,9 @@ export function Eyebrow({ children, japanese }: { children: ReactNode; japanese?
   return (
     <div className="flex items-center gap-4 mb-6">
       <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-      <span className="text-primary text-[11px] font-mono font-bold tracking-[0.35em] uppercase">{children}</span>
+      <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">{children}</span>
       {japanese && (
-        <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja">
+        <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
           {japanese}
         </span>
       )}
@@ -69,7 +69,7 @@ export function CounterBadge({
   tone?: "primary" | "accent";
 }) {
   const border = tone === "accent" ? "border-accent" : "border-primary";
-  const text = tone === "accent" ? "text-accent" : "text-primary";
+  const text = tone === "accent" ? "text-accent" : "text-primary-ink";
   return (
     <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm w-fit">
       <div className={`absolute top-0 left-0 w-3 h-3 border-t border-l ${border}`} />
@@ -113,11 +113,11 @@ export function PageShell({ children, className = "" }: { children: ReactNode; c
         <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.02] neural-grid" aria-hidden="true" />
         {children}
       </main>
-      <div className="relative bg-background px-6 md:px-20 pb-12">
+      <footer className="relative bg-background px-6 md:px-20 pb-12">
         <div className="max-w-7xl mx-auto">
           <FooterBar />
         </div>
-      </div>
+      </footer>
     </>
   );
 }

@@ -22,7 +22,7 @@ import { PageShell } from "@/app/components/shared/kit";
 import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Ahmed Emad Nasr",
+  title: "Privacy Policy",
   description:
     "What this site does and does not collect. No cookies, no tracking, and nothing submitted to a server.",
   alternates: { canonical: "/privacy" },

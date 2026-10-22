@@ -71,7 +71,7 @@ async function main() {
     console.log(`[hero-sizes] ${out} — ${(info.size / 1024).toFixed(1)} KB`);
   }
 
-  console.log("[hero-sizes] done. Update srcSet in sensei-home.tsx if you changed the sizes.");
+  console.log("[hero-sizes] done. Update HERO_PHOTO in app/components/home/HeroSection.tsx if you changed the sizes.");
 }
 
 main().catch((err) => {

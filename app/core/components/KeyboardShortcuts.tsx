@@ -29,6 +29,7 @@ const GO_TO_SECTION: Record<string, string> = {
   w: "work",
   e: "experience",
   c: "certificates",
+  a: "attack",
 };
 
 const SECRET = "3omda";

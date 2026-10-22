@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 import BlogRedirect from "./BlogRedirect";
 
 export const metadata: Metadata = {
-  title: "Case Library — Ahmed Emad Nasr",
+  title: "Case Library",
   description: "The case library has moved to the portfolio's home page.",
   alternates: { canonical: "/" },
   robots: { index: false, follow: true },

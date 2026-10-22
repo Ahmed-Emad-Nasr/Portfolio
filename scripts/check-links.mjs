@@ -66,9 +66,31 @@ for (const f of files.filter((f) => f.endsWith(".html"))) {
   const html = readFileSync(f, "utf8");
   const from = relative(OUT, f);
 
-  for (const [, href] of html.matchAll(/(?:href|src)="(\/[^"#?]*)"/g)) {
+  /* href/src as-is; srcset/imagesrcset is "url 320w, url 420w, …" */
+  const urls = [];
+  for (const [, attr, value] of html.matchAll(/\b(href|src|srcSet|srcset|imageSrcSet|imagesrcset)="([^"]*)"/g)) {
+    const parts = /srcset$/i.test(attr) ? value.split(",").map((c) => c.trim().split(/\s+/)[0]) : [value];
+    for (const url of parts) if (url.startsWith("/") && !url.startsWith("//")) urls.push(url.replace(/[#?].*$/, ""));
+  }
+
+  for (const href of urls) {
+    /*
+     * Every root-relative URL must carry the base path. Without it the link
+     * works on `localhost:3000` and 404s on GitHub Pages, where "/" is the
+     * github.io root — exactly the bug that hid the CSS, JS and fonts when
+     * basePath was only injected in CI. The old check stripped the prefix
+     * when present and silently accepted it when missing.
+     */
+    if (BASE_PATH && !(href === BASE_PATH || href.startsWith(`${BASE_PATH}/`))) {
+      checkedLinks++;
+      const key = `${href}  (missing ${BASE_PATH})`;
+      if (!broken.has(key)) broken.set(key, new Set());
+      broken.get(key).add(relative(OUT, f));
+      continue;
+    }
+
     // Next's chunks have generated names, no need to check them
-    if (href.startsWith("/_next/")) continue;
+    if (href.startsWith(`${BASE_PATH}/_next/`)) continue;
 
     checkedLinks++;
 
