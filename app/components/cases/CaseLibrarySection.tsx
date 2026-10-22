@@ -177,7 +177,10 @@ export default function CaseLibrarySection({
 
   const channelVideos = useMemo(() => {
     const featured = { ...blogFeaturedYoutubeVideo, sourceUrl: blogFeaturedYoutubeVideo.sourceUrl };
-    const others = blogYoutubeVideos.map((v) => ({ ...v, sourceUrl: `https://youtu.be/${v.videoId}` }));
+    /* Newest first, whatever order the config file lists them in */
+    const others = [...blogYoutubeVideos]
+      .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+      .map((v) => ({ ...v, sourceUrl: `https://youtu.be/${v.videoId}` }));
     return [featured, ...others];
   }, []);
 
