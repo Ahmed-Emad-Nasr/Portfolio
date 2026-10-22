@@ -47,7 +47,7 @@ export default function ServicesSection() {
                   <div className="p-2.5 bg-foreground/5 border border-foreground/10">
                     <Icon size={18} className="text-tertiary" />
                   </div>
-                  <span className="jp-eyebrow text-[10px] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
+                  <span className="jp-eyebrow text-[0.625rem] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
                 </div>
                 <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground mb-3">
                   {s.title}
@@ -57,13 +57,13 @@ export default function ServicesSection() {
                   {s.stack.map((t) => (
                     <span
                       key={t}
-                      className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25"
+                      className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25"
                     >
                       {t}
                     </span>
                   ))}
                 </div>
-                <div className="pt-4 border-t border-foreground/5 font-mono text-[10px] text-accent tracking-[0.2em] uppercase">
+                <div className="pt-4 border-t border-foreground/5 font-mono text-[0.625rem] text-accent tracking-[0.2em] uppercase">
                   → {s.deliverable}
                 </div>
               </TiltCard>

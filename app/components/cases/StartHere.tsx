@@ -33,7 +33,7 @@ export default function StartHere() {
               <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true">
                 {String(idx + 1).padStart(2, "0")}
               </div>
-              <div className="font-mono text-[10px] text-primary-ink tracking-[0.3em] uppercase mb-3">
+              <div className="font-mono text-[0.625rem] text-primary-ink tracking-[0.3em] uppercase mb-3">
                 {String(idx + 1).padStart(2, "0")} • {entry.minutes} min
               </div>
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3 group-hover:text-primary transition-colors duration-300">

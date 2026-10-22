@@ -55,12 +55,12 @@ export default function WorkShowcase() {
               role="tab"
               aria-selected={filter === f.id}
               onClick={() => setFilter(f.id)}
-              className={`px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${filter === f.id
+              className={`px-5 py-2.5 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${filter === f.id
                   ? "bg-primary text-white border-primary"
                   : "bg-foreground/[0.03] text-foreground/70 border-foreground/10 hover:border-primary/50 hover:text-foreground"
                 }`}
             >
-              {f.label} <span className="ml-2 text-[9px]" lang="ja" aria-hidden="true">{f.japanese}</span>
+              {f.label} <span className="ml-2 text-[0.5625rem]" lang="ja" aria-hidden="true">{f.japanese}</span>
             </button>
           ))}
         </div>
@@ -85,12 +85,12 @@ export default function WorkShowcase() {
                         <Icon size={18} className="text-tertiary" />
                       </div>
                       <div>
-                        <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-tertiary">{w.type} • {w.platform}</div>
-                        <div className="font-mono text-[9px] text-foreground/60 tracking-widest mt-1">{w.year} • {w.status}</div>
+                        <div className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-tertiary">{w.type} • {w.platform}</div>
+                        <div className="font-mono text-[0.5625rem] text-foreground/60 tracking-widest mt-1">{w.year} • {w.status}</div>
                       </div>
                     </div>
                     {w.status === "private-demo" && (
-                      <span className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
+                      <span className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
                         <Lock size={11} /> Private
                       </span>
                     )}
@@ -101,24 +101,24 @@ export default function WorkShowcase() {
                   </h3>
                   <p className="text-foreground/80 font-medium mb-3">{w.tagline}</p>
                   <p className="text-sm text-foreground/60 font-light leading-relaxed mb-2">
-                    <span className="text-foreground/60 font-mono text-[10px] uppercase tracking-[0.2em]">Problem  </span>
+                    <span className="text-foreground/60 font-mono text-[0.625rem] uppercase tracking-[0.2em]">Problem  </span>
                     {w.problem}
                   </p>
                   <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5">
-                    <span className="text-foreground/60 font-mono text-[10px] uppercase tracking-[0.2em]">Role  </span>
+                    <span className="text-foreground/60 font-mono text-[0.625rem] uppercase tracking-[0.2em]">Role  </span>
                     {w.role}
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-5">
                     {w.stack.map((s) => (
-                      <span key={s} className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25">
+                      <span key={s} className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25">
                         {s}
                       </span>
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-2 mb-6">
                     {w.metrics.map((m) => (
-                      <span key={m} className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25">
+                      <span key={m} className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25">
                         {m}
                       </span>
                     ))}
@@ -126,22 +126,22 @@ export default function WorkShowcase() {
 
                   <div className="flex gap-3 mt-auto pt-5 border-t border-foreground/5">
                     {w.links.github && (
-                      <a href={w.links.github} target="_blank" rel="noopener noreferrer" className="btn-sheen flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors">
+                      <a href={w.links.github} target="_blank" rel="noopener noreferrer" className="btn-sheen flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors">
                         <Github size={13} /> Source
                       </a>
                     )}
                     {w.links.live && (
-                      <a href={w.links.live} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 text-foreground/70 font-mono text-[10px] uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors">
+                      <a href={w.links.live} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 text-foreground/70 font-mono text-[0.625rem] uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors">
                         <ExternalLink size={13} /> Live
                       </a>
                     )}
                     {w.links.demo && (
-                      <a href={w.links.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 text-foreground/70 font-mono text-[10px] uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors">
+                      <a href={w.links.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 text-foreground/70 font-mono text-[0.625rem] uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors">
                         <PlayCircle size={13} /> Demo
                       </a>
                     )}
                     {!w.links.github && !w.links.live && !w.links.demo && (
-                      <span className="font-mono text-[10px] text-foreground/60 tracking-[0.2em] uppercase">Demo on request  NDA client work</span>
+                      <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.2em] uppercase">Demo on request  NDA client work</span>
                     )}
                   </div>
                 </TiltCard>

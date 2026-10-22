@@ -77,10 +77,10 @@ export default function ArtGallery() {
                   {String(PORTFOLIO_DATA.artGallery.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Items
                   </span>
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Indexed
                   </span>
                 </div>
@@ -144,7 +144,7 @@ export default function ArtGallery() {
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 text-primary-ink mb-2">
                       <Sparkles size={12} />
-                      <span className="font-mono text-[10px] font-bold tracking-[0.3em] uppercase">
+                      <span className="font-mono text-[0.625rem] font-bold tracking-[0.3em] uppercase">
                         Visual Entry {String(idx + 1).padStart(2, "0")}
                       </span>
                     </div>
@@ -171,7 +171,7 @@ export default function ArtGallery() {
             >
               <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
               Show more
-              <span className="font-mono text-[10px] text-foreground/60 tabular-nums">
+              <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">
                 {visible}/{PORTFOLIO_DATA.artGallery.length}
               </span>
             </button>

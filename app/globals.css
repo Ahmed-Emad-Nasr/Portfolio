@@ -102,6 +102,36 @@
     --tertiary-container: rgba(0, 210, 239, 0.1);
   }
 
+  /*
+   * Large screens. Every size on the site is in rem (spacing, type, the
+   * max-w-7xl column), so growing the root grows the whole layout in
+   * proportion — the same page, bigger, instead of an 80rem column floating
+   * in empty space. Below 1800px nothing changes (16px root).
+   *   1800px+  (1920 monitors)        18px → column 1440px
+   *   2400px+  (2560 / 1440p)         20px → column 1600px
+   *   3200px+  (4K at 100% scaling)   24px → column 1920px
+   * Users who set a bigger default font in their browser keep it: these are
+   * percentages of their setting, not fixed pixels.
+   */
+  html {
+    font-size: 100%;
+  }
+  @media (min-width: 1800px) {
+    html {
+      font-size: 112.5%;
+    }
+  }
+  @media (min-width: 2400px) {
+    html {
+      font-size: 125%;
+    }
+  }
+  @media (min-width: 3200px) {
+    html {
+      font-size: 150%;
+    }
+  }
+
   body {
     @apply bg-background text-foreground font-body antialiased;
   }
@@ -156,7 +186,7 @@
     background: var(--primary);
     color: #fff;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 10px 16px;
     transition: top 0.2s ease;
   }
@@ -504,7 +534,7 @@
 }
 .attack-seg-n {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   letter-spacing: 0.15em;
   color: color-mix(in srgb, var(--foreground) 60%, transparent);
 }
@@ -520,7 +550,7 @@
 .attack-seg-label {
   margin-top: 0.375rem;
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 0.5312rem;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: 0.08em;
@@ -549,7 +579,7 @@
 }
 @media (width >= 40rem) {
   .attack-grid {
-    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
   }
 }
 .attack-empty {
@@ -559,7 +589,7 @@
   padding: 0 1rem;
   border: 1px dashed color-mix(in srgb, var(--foreground) 15%, transparent);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--foreground) 55%, transparent);
@@ -593,7 +623,7 @@
 }
 .attack-id {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   color: var(--accent);
@@ -612,7 +642,7 @@
   margin-top: auto;
   padding-top: 0.625rem;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.5625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--foreground) 60%, transparent);
@@ -692,7 +722,7 @@
   place-items: center;
   width: 2rem;
   height: 2rem;
-  font-size: 12px;
+  font-size: 0.75rem;
   border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
   color: color-mix(in srgb, var(--foreground) 70%, transparent);
   transition: border-color 0.2s, color 0.2s;
@@ -722,7 +752,7 @@
 }
 .attack-pop-n {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   color: color-mix(in srgb, var(--foreground) 50%, transparent);
 }
 .attack-pop-go {
@@ -736,7 +766,7 @@
   display: inline-block;
   margin-top: 1.25rem;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--foreground) 60%, transparent);

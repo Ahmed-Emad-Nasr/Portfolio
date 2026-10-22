@@ -88,7 +88,7 @@ function CaseCard({
               className="object-cover object-top grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
             />
             <div className="absolute inset-0 bg-primary/10 mix-blend-multiply group-hover:bg-transparent transition-all duration-700" />
-            <span className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-background/80 backdrop-blur-md border border-foreground/15 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-foreground">
+            <span className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-background/80 backdrop-blur-md border border-foreground/15 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-foreground">
               <Images size={11} className="text-accent" /> {shotCount}
             </span>
           </button>
@@ -105,17 +105,17 @@ function CaseCard({
                 )}
               </div>
               <div className="min-w-0">
-                <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-tertiary truncate">
+                <div className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-tertiary truncate">
                   {type}
                   {category ? ` • ${category}` : ""}
                 </div>
-                <div className="font-mono text-[9px] text-foreground/60 tracking-widest mt-1 truncate">
+                <div className="font-mono text-[0.5625rem] text-foreground/60 tracking-widest mt-1 truncate">
                   {[date, readTime ? `${readTime} min` : null, platform].filter(Boolean).join(" • ")}
                 </div>
               </div>
             </div>
             {difficulty && (
-              <span className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
+              <span className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
                 <AlertTriangle size={11} /> {difficulty}
               </span>
             )}

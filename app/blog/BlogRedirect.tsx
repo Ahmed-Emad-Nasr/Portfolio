@@ -12,7 +12,7 @@ export default function BlogRedirect() {
 
   return (
     <main id="main-content" className="min-h-screen flex items-center justify-center px-6 bg-background">
-      <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
+      <p className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60">
         The case library moved —{" "}
         <Link href="/#cases" className="text-primary-ink underline-offset-4 hover:underline">
           open it on the home page

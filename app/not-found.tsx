@@ -42,8 +42,8 @@ export default function NotFound() {
         <div className={statusInner}>
           <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-            <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Error // Not found</span>
-            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">迷子</span>
+            <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">Error // Not found</span>
+            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">迷子</span>
           </div>
           <p className={statusCode} aria-hidden="true">404</p>
 
@@ -69,7 +69,7 @@ export default function NotFound() {
             <section aria-labelledby="nf-suggest">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-6 h-[2px] bg-primary" aria-hidden="true" />
-                <h2 id="nf-suggest" className="font-mono text-[10px] text-primary-ink tracking-[0.35em] uppercase font-bold">
+                <h2 id="nf-suggest" className="font-mono text-[0.625rem] text-primary-ink tracking-[0.35em] uppercase font-bold">
                   Or start with one of these
                 </h2>
               </div>

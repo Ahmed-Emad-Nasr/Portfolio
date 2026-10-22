@@ -289,7 +289,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         <div className="absolute top-0 left-0 h-[2px] w-full bg-gradient-to-r from-primary via-primary/40 to-transparent" aria-hidden="true" />
         <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-3">
           <span className="h-2 w-2 bg-primary" aria-hidden="true" />
-          <span className="flex-1 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">3omda@portfolio: ~</span>
+          <span className="flex-1 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60">3omda@portfolio: ~</span>
           <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">端末</span>
           <button
             type="button"
@@ -301,7 +301,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div ref={bodyRef} className="flex-1 overflow-y-auto overscroll-contain px-4 py-3.5 font-mono text-[13px] leading-[1.65] max-sm:text-xs" data-lenis-prevent>
+        <div ref={bodyRef} className="flex-1 overflow-y-auto overscroll-contain px-4 py-3.5 font-mono text-[0.8125rem] leading-[1.65] max-sm:text-xs" data-lenis-prevent>
           {lines.map((line) => (
             <p key={line.id} className={LINE_CLASS[line.kind]}>
               {line.text}
@@ -309,12 +309,12 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           ))}
 
           <div className="mt-0.5 flex items-baseline gap-2">
-            <span className="shrink-0 text-accent max-sm:text-[11px]" aria-hidden="true">
+            <span className="shrink-0 text-accent max-sm:text-[0.6875rem]" aria-hidden="true">
               3omda@portfolio:~$
             </span>
             <input
               ref={inputRef}
-              className="min-w-0 flex-1 border-0 bg-transparent text-[16px] text-foreground outline-none [font-family:inherit]"
+              className="min-w-0 flex-1 border-0 bg-transparent text-[1rem] text-foreground outline-none [font-family:inherit]"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={onKeyDown}

@@ -35,10 +35,10 @@ export default function TeachingSection() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-4 mb-5">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-              <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+              <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
                 Teaching // Passing it on
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 指導
               </span>
             </div>
@@ -63,8 +63,8 @@ export default function TeachingSection() {
             {TEACHING_STATS.map((s) => (
               <div key={s.label} className="flex items-center gap-4 px-6 py-5 bg-background">
                 <dt className="order-2 flex flex-col">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
-                  <span className="jp-eyebrow text-[9px] text-foreground/25" lang="ja" aria-hidden="true">
+                  <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
+                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true">
                     {s.japanese}
                   </span>
                 </dt>
@@ -81,10 +81,10 @@ export default function TeachingSection() {
             <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-primary" aria-hidden="true" />
 
             <div className="flex items-center justify-between gap-4">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-primary-ink">
+              <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.3em] text-primary-ink">
                 Curriculum // {DIPLOMA.hours} hours
               </span>
-              <span className="jp-eyebrow text-[10px] text-foreground/30" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true">
                 {DIPLOMA.japanese}
               </span>
             </div>
@@ -98,17 +98,17 @@ export default function TeachingSection() {
               {DIPLOMA.modules.map((m) => (
                 <li key={m.n} className="group/mod relative pl-7 py-3">
                   <span
-                    className="absolute -left-[12px] top-1/2 -translate-y-1/2 grid place-items-center w-[23px] h-[23px] bg-surface border border-primary/60 font-mono text-[9px] font-bold text-primary-ink group-hover/mod:bg-primary group-hover/mod:text-white transition-colors"
+                    className="absolute -left-[12px] top-1/2 -translate-y-1/2 grid place-items-center w-[23px] h-[23px] bg-surface border border-primary/60 font-mono text-[0.5625rem] font-bold text-primary-ink group-hover/mod:bg-primary group-hover/mod:text-white transition-colors"
                     aria-hidden="true"
                   >
                     {m.n}
                   </span>
                   <div className="flex items-baseline justify-between gap-4">
-                    <span className="text-sm md:text-[15px] text-foreground/85">
+                    <span className="text-sm md:text-[0.9375rem] text-foreground/85">
                       <span className="sr-only">Module {m.n}: </span>
                       {m.title}
                     </span>
-                    <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/60">
+                    <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60">
                       {m.detail}
                     </span>
                   </div>
@@ -117,7 +117,7 @@ export default function TeachingSection() {
             </ol>
 
             <div className="mt-8 pt-6 border-t border-foreground/10">
-              <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">
+              <p className="mb-3 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
                 Every session ends with
               </p>
               <ul className="flex flex-wrap gap-2">
@@ -152,10 +152,10 @@ export default function TeachingSection() {
                           r.org
                         )}
                       </h3>
-                      <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-primary-ink">{r.role}</p>
+                      <p className="mt-1 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-primary-ink">{r.role}</p>
                     </div>
                     <span
-                      className={`shrink-0 font-mono text-[9px] uppercase tracking-[0.25em] px-2.5 py-1 border ${
+                      className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.25em] px-2.5 py-1 border ${
                         r.period === "Now"
                           ? "border-primary/40 text-primary-ink bg-primary/[0.06]"
                           : "border-foreground/10 text-foreground/60"

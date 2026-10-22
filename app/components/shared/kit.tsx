@@ -13,17 +13,17 @@ import { FooterBar } from "@/app/components/header/ContactFooter";
 
 /* Chips — WorkShowcase / ServicesSection */
 export const chipTertiary =
-  "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25";
+  "px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25";
 export const chipAccent =
-  "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25";
+  "px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25";
 export const chipNeutral =
-  "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10";
+  "px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10";
 
 /* Buttons — WorkShowcase card actions, HeroSection CTAs */
 export const btnPrimary =
-  "btn-sheen inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors";
+  "btn-sheen inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors";
 export const btnOutline =
-  "inline-flex items-center gap-2 px-4 py-2.5 border border-foreground/15 text-foreground/70 font-mono text-[10px] uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors";
+  "inline-flex items-center gap-2 px-4 py-2.5 border border-foreground/15 text-foreground/70 font-mono text-[0.625rem] uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors";
 export const ctaPrimary =
   "interactive btn-sheen group flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 bg-primary text-white font-mono font-black uppercase tracking-widest text-sm transition-all duration-300 shadow-2xl shadow-primary/25 hover:bg-[#d60030] hover:-translate-y-0.5 active:translate-y-0";
 export const ctaSecondary =
@@ -31,7 +31,7 @@ export const ctaSecondary =
 
 /* Filter tabs — WorkShowcase */
 export const filterTab = (active: boolean) =>
-  `px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${
+  `px-5 py-2.5 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${
     active
       ? "bg-primary text-white border-primary"
       : "bg-foreground/[0.03] text-foreground/70 border-foreground/10 hover:border-primary/50 hover:text-foreground"
@@ -46,9 +46,9 @@ export function Eyebrow({ children, japanese }: { children: ReactNode; japanese?
   return (
     <div className="flex items-center gap-4 mb-6">
       <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-      <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">{children}</span>
+      <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{children}</span>
       {japanese && (
-        <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+        <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
           {japanese}
         </span>
       )}
@@ -79,8 +79,8 @@ export function CounterBadge({
           {typeof value === "number" ? String(value).padStart(2, "0") : value}
         </span>
         <div className="flex flex-col">
-          <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">{top}</span>
-          <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">{bottom}</span>
+          <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">{top}</span>
+          <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">{bottom}</span>
         </div>
       </div>
     </div>

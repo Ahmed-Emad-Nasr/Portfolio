@@ -279,7 +279,7 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
                 className="w-full bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-foreground/30"
                 aria-label="Search commands"
               />
-              <kbd className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/60">
+              <kbd className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[0.625rem] text-foreground/60">
                 ESC
               </kbd>
             </div>
@@ -306,11 +306,11 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
                     className={i === index ? "text-primary-ink" : "text-foreground/40"}
                   />
                   <span className="flex-1 text-sm">{cmd.label}</span>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/60">
+                  <span className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60">
                     {cmd.group}
                   </span>
                   {cmd.hint && (
-                    <span className="max-w-[180px] truncate font-mono text-[10px] text-foreground/60">
+                    <span className="max-w-[180px] truncate font-mono text-[0.625rem] text-foreground/60">
                       {cmd.hint}
                     </span>
                   )}
@@ -321,7 +321,7 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
               ))}
             </div>
 
-            <div className="flex items-center gap-4 border-t border-foreground/10 px-4 py-2.5 font-mono text-[10px] text-foreground/60">
+            <div className="flex items-center gap-4 border-t border-foreground/10 px-4 py-2.5 font-mono text-[0.625rem] text-foreground/60">
               <span className="flex items-center gap-1.5">
                 <kbd className="border border-foreground/15 px-1">↑↓</kbd> navigate
               </span>

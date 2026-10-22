@@ -24,8 +24,8 @@ export default function StatsBar() {
               <CountUp target={s.target} suffix={s.suffix} />
             </span>
             <span className="flex flex-col">
-              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
-              <span className="jp-eyebrow text-[9px] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
+              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
+              <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
             </span>
           </motion.div>
         ))}

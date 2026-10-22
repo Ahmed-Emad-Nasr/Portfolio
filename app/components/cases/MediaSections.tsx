@@ -54,7 +54,7 @@ function Embed({
             className="object-cover grayscale group-hover/play:grayscale-0 group-hover/play:scale-105 transition-all duration-1000"
           />
           <div className="absolute inset-0 bg-primary/10 mix-blend-multiply group-hover/play:bg-transparent transition-all duration-700" />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-3 bg-primary text-white font-mono text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 transition-transform duration-300 group-hover/play:scale-105">
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-3 bg-primary text-white font-mono text-[0.625rem] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 transition-transform duration-300 group-hover/play:scale-105">
             <Play size={13} fill="currentColor" /> {label}
           </span>
         </button>
@@ -111,8 +111,8 @@ export default function MediaSections({
                 <CountUp target={s.value} />
               </span>
               <span className="flex flex-col">
-                <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
-                <span className="jp-eyebrow text-[9px] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
+                <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
+                <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true">{s.japanese}</span>
               </span>
             </motion.div>
           ))}
@@ -165,7 +165,7 @@ export default function MediaSections({
                     />
                     <div className="flex flex-col flex-1 p-6">
                       {video.publishedAt && (
-                        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-tertiary mb-2">
+                        <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-tertiary mb-2">
                           {formatDate(video.publishedAt)}
                         </span>
                       )}
@@ -191,7 +191,7 @@ export default function MediaSections({
               >
                 <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                 Show more
-                <span className="font-mono text-[10px] text-foreground/60 tabular-nums">
+                <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">
                   {visible}/{videos.length}
                 </span>
               </button>
@@ -202,7 +202,7 @@ export default function MediaSections({
             <div className="mt-24">
               <div className="mb-10 flex flex-wrap items-center gap-4">
                 <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-                <h3 id="blog-playlists-title" className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+                <h3 id="blog-playlists-title" className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
                   Playlists
                 </h3>
                 <span className="brush-jp text-lg text-foreground/30" lang="ja" aria-hidden="true">連続</span>

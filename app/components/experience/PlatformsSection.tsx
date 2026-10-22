@@ -29,7 +29,7 @@ function Mark({ children }: { children: string }) {
 
 function ProfileLink({ label }: { label: string }) {
   return (
-    <span className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-accent">
+    <span className="flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-accent">
       <span aria-hidden="true">→</span> {label}
       <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
     </span>
@@ -49,14 +49,14 @@ function FeaturedCard({ platform, stats }: { platform: Platform; stats: TryHackM
       <div className="flex flex-col xl:w-[36%] shrink-0">
         <div className="flex items-start justify-between gap-4">
           <Mark>{platform.mark}</Mark>
-          <span className="jp-eyebrow text-[10px] text-foreground/30" lang="ja" aria-hidden="true">
+          <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true">
             {platform.japanese}
           </span>
         </div>
         <h3 className="mt-6 font-display text-3xl md:text-4xl font-black uppercase tracking-tight leading-none">
           {platform.name}
         </h3>
-        <p className="mt-2 font-mono text-[11px] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
+        <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
         <p className="mt-5 text-sm md:text-base text-foreground/60 font-light leading-relaxed">{platform.focus}</p>
         <div className="mt-auto pt-6">
           <ProfileLink label="View profile" />
@@ -68,12 +68,12 @@ function FeaturedCard({ platform, stats }: { platform: Platform; stats: TryHackM
         <dl className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-foreground/10 border border-foreground/10">
           {platform.stats.map((s) => (
             <div key={s.label} className="flex flex-col gap-2 px-4 py-6 bg-surface last:col-span-2 sm:last:col-span-1">
-              <dt className="order-2 font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/60">{s.label}</dt>
+              <dt className="order-2 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60">{s.label}</dt>
               <dd className="order-1 font-mono text-xl font-black tabular-nums text-accent leading-none whitespace-nowrap">{s.value}</dd>
             </div>
           ))}
         </dl>
-        <p className="mt-4 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">
+        <p className="mt-4 flex items-center gap-2 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
           <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
             {stats.live && <span className="absolute inline-flex h-full w-full animate-ping bg-tertiary opacity-60" />}
             <span className={`relative inline-flex h-1.5 w-1.5 ${stats.live ? "bg-tertiary" : "bg-foreground/40"}`} />
@@ -99,21 +99,21 @@ function PlatformCard({ platform }: { platform: Platform }) {
       />
       <div className="flex items-start justify-between gap-4">
         <Mark>{platform.mark}</Mark>
-        <span className="jp-eyebrow text-[10px] text-foreground/30" lang="ja" aria-hidden="true">
+        <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true">
           {platform.japanese}
         </span>
       </div>
       <h3 className="mt-6 font-display text-xl sm:text-2xl lg:text-lg xl:text-2xl font-black uppercase tracking-tight leading-none group-hover:text-primary transition-colors duration-300">
         {platform.name}
       </h3>
-      <p className="mt-2 font-mono text-[11px] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
+      <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
       <p className="mt-4 text-sm text-foreground/60 font-light leading-relaxed">{platform.focus}</p>
 
       {platform.stats.length > 0 && (
         <dl className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
           {platform.stats.map((s) => (
             <div key={s.label} className="flex flex-col gap-1.5">
-              <dt className="order-2 font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">{s.label}</dt>
+              <dt className="order-2 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</dt>
               <dd className="order-1 font-mono text-xl font-black tabular-nums text-accent leading-none">{s.value}</dd>
             </div>
           ))}
@@ -156,10 +156,10 @@ export default function PlatformsSection({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-4 mb-5">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-              <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+              <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
                 Practice // Public profiles
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 修練
               </span>
             </div>

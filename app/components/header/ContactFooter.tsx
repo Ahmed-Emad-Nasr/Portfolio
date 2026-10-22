@@ -16,7 +16,7 @@ import { PGP, SECURITY_TXT_PATH, formattedFingerprint, hasPgpKey } from "@/app/c
 export function FooterBar({ className = "" }: { className?: string }) {
   const currentYear = new Date().getFullYear();
   return (
-    <div className={`pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant font-mono text-[10px] tracking-[0.3em] uppercase ${className}`}>
+    <div className={`pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant font-mono text-[0.625rem] tracking-[0.3em] uppercase ${className}`}>
       <div className="flex items-center gap-4">
         <span className="text-primary-ink font-black text-base tracking-normal font-display">
           AE.
@@ -120,7 +120,7 @@ export default function ContactFooter() {
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-[2px] bg-primary" />
-                <span className="text-primary-ink font-mono text-[10px] tracking-[0.5em] uppercase font-bold">
+                <span className="text-primary-ink font-mono text-[0.625rem] tracking-[0.5em] uppercase font-bold">
                   The End of the Path
                 </span>
               </div>
@@ -144,7 +144,7 @@ export default function ContactFooter() {
                 <button
                   type="button"
                   onClick={() => void copyEmail(EMAIL)}
-                  className="flex items-center gap-2 px-4 py-3 border border-foreground/10 bg-foreground/5 hover:border-primary/40 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 transition-colors duration-300"
+                  className="flex items-center gap-2 px-4 py-3 border border-foreground/10 bg-foreground/5 hover:border-primary/40 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground/80 transition-colors duration-300"
                   aria-label={emailCopy === "done" ? "Email address copied" : "Copy email address"}
                 >
                   {emailCopy === "done" ? <Check size={14} className="text-tertiary" aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
@@ -165,7 +165,7 @@ export default function ContactFooter() {
                     {/* Brand colour on the icon only: LinkedIn blue or YouTube
                         red as 10px text fell below 4.5:1 on the dark theme. */}
                     <social.icon size={18} className={social.color} aria-hidden="true" />
-                    <span className="font-mono font-bold uppercase tracking-[0.15em] text-[10px]">
+                    <span className="font-mono font-bold uppercase tracking-[0.15em] text-[0.625rem]">
                       {social.name}
                     </span>
                     <ArrowUpRight
@@ -181,10 +181,10 @@ export default function ContactFooter() {
               <div className="relative mb-12 max-w-xl border border-foreground/10 border-l-2 border-l-primary bg-foreground/[0.02] px-5 py-4">
                 <div className="flex items-center gap-3">
                   <ShieldCheck size={16} className="shrink-0 text-primary-ink" aria-hidden="true" />
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-foreground">
+                  <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-foreground">
                     Responsible disclosure
                   </span>
-                  <span className="jp-eyebrow text-[9px] text-foreground/30" lang="ja" aria-hidden="true">
+                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/30" lang="ja" aria-hidden="true">
                     開示
                   </span>
                 </div>
@@ -192,7 +192,7 @@ export default function ContactFooter() {
                   Found something on this site? Report it privately —{" "}
                   <a
                     href={normalizePublicHref(SECURITY_TXT_PATH)}
-                    className="font-mono text-[13px] text-foreground/80 underline underline-offset-4 decoration-primary/50 hover:text-primary-ink"
+                    className="font-mono text-[0.8125rem] text-foreground/80 underline underline-offset-4 decoration-primary/50 hover:text-primary-ink"
                   >
                     security.txt
                   </a>{" "}
@@ -200,22 +200,22 @@ export default function ContactFooter() {
                 </p>
                 {hasPgpKey() && (
                   <div className="mt-4 pt-4 border-t border-foreground/10">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">PGP fingerprint</p>
-                    <p className="mt-1.5 font-mono text-xs md:text-[13px] tracking-[0.08em] text-accent break-words">
+                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">PGP fingerprint</p>
+                    <p className="mt-1.5 font-mono text-xs md:text-[0.8125rem] tracking-[0.08em] text-accent break-words">
                       {formattedFingerprint()}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <a
                         href={normalizePublicHref(PGP.keyFile)}
                         download
-                        className="flex items-center gap-2 px-3.5 py-2 border border-foreground/15 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
+                        className="flex items-center gap-2 px-3.5 py-2 border border-foreground/15 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
                       >
                         <KeyRound size={12} aria-hidden="true" /> Public key
                       </a>
                       <button
                         type="button"
                         onClick={() => void copyFingerprint(formattedFingerprint())}
-                        className="flex items-center gap-2 px-3.5 py-2 border border-foreground/15 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
+                        className="flex items-center gap-2 px-3.5 py-2 border border-foreground/15 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
                         aria-label={fpCopy === "done" ? "Fingerprint copied" : "Copy PGP fingerprint"}
                       >
                         {fpCopy === "done" ? <Check size={12} className="text-tertiary" aria-hidden="true" /> : <Copy size={12} aria-hidden="true" />}
@@ -227,7 +227,7 @@ export default function ContactFooter() {
               </div>
 
               {/* Languages  from portfolio data */}
-              <div className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[10px] tracking-[0.25em] uppercase">
+              <div className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] tracking-[0.25em] uppercase">
                 {PORTFOLIO_DATA.languages.map((l, i) => (
                   <span key={l.code} className="flex items-center gap-3">
                     {i > 0 && (
@@ -266,14 +266,14 @@ export default function ContactFooter() {
             {/* Briefing header */}
             <div className="flex items-center gap-3 mb-2">
               <div className="w-6 h-[2px] bg-primary" />
-              <span className="font-mono text-[9px] text-primary-ink tracking-[0.4em] uppercase font-bold">
+              <span className="font-mono text-[0.5625rem] text-primary-ink tracking-[0.4em] uppercase font-bold">
                 Mission Briefing // 依頼
               </span>
             </div>
             <h3 className="font-display text-3xl font-black mb-3 uppercase tracking-tight text-foreground">
               Seal Intent
             </h3>
-            <p className="font-mono text-[11px] text-foreground/60 tracking-wider mb-8">
+            <p className="font-mono text-[0.6875rem] text-foreground/60 tracking-wider mb-8">
               {PORTFOLIO_DATA.profile.availability}  training and collaborations welcome too.
             </p>
 
@@ -327,7 +327,7 @@ export default function ContactFooter() {
                 />
               </div>
               <div className="relative">
-                <label htmlFor="type" className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
+                <label htmlFor="type" className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60">
                   Reason
                 </label>
                 <select
@@ -374,7 +374,7 @@ export default function ContactFooter() {
                     role="status"
                     className="border-l-2 border-primary bg-foreground/[0.03] px-5 py-4"
                   >
-                    <p className="font-mono text-[11px] leading-relaxed text-foreground/70">
+                    <p className="font-mono text-[0.6875rem] leading-relaxed text-foreground/70">
                       Your mail app should open with the message ready. Nothing opened?
                     </p>
                     <div className="mt-3 flex flex-wrap gap-3">
@@ -382,14 +382,14 @@ export default function ContactFooter() {
                         href={gmailComposeUrl(draft)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-foreground hover:text-background transition-colors duration-300"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] hover:bg-foreground hover:text-background transition-colors duration-300"
                       >
                         Open in Gmail <ArrowUpRight size={12} aria-hidden="true" />
                       </a>
                       <button
                         type="button"
                         onClick={() => void copyDraft(`To: ${EMAIL}\nSubject: ${draft.subject}\n\n${draft.body}`)}
-                        className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
+                        className="flex items-center gap-2 px-4 py-2.5 border border-foreground/15 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground/80 hover:border-primary/40 transition-colors duration-300"
                       >
                         {draftCopy === "done" ? <Check size={12} className="text-tertiary" aria-hidden="true" /> : <Copy size={12} aria-hidden="true" />}
                         {draftCopy === "done" ? "Copied" : "Copy message"}

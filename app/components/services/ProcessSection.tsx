@@ -38,8 +38,8 @@ export default function ProcessSection() {
               <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true">
                 {p.index}
               </div>
-              <div className="font-mono text-[10px] text-primary-ink tracking-[0.3em] uppercase mb-1">{p.index}</div>
-              <div className="jp-eyebrow text-[10px] text-foreground/30 mb-3" lang="ja" aria-hidden="true">{p.japanese}</div>
+              <div className="font-mono text-[0.625rem] text-primary-ink tracking-[0.3em] uppercase mb-1">{p.index}</div>
+              <div className="jp-eyebrow text-[0.625rem] text-foreground/30 mb-3" lang="ja" aria-hidden="true">{p.japanese}</div>
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3">{p.title}</h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{p.description}</p>
               {idx < PORTFOLIO_DATA.process.length - 1 && (

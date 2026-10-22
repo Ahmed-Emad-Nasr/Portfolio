@@ -23,7 +23,7 @@ export default function MilestonesSection() {
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Milestones // How it compounded
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 歩み
               </span>
             </div>
@@ -50,10 +50,10 @@ export default function MilestonesSection() {
                   {String(items.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Stops
                   </span>
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     So far
                   </span>
                 </div>

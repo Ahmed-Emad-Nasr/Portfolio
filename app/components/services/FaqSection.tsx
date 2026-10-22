@@ -34,7 +34,7 @@ export default function FaqSection() {
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 FAQ // Before you ask
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 質問
               </span>
             </div>
@@ -61,10 +61,10 @@ export default function FaqSection() {
                   {String(PORTFOLIO_DATA.faq.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Answers
                   </span>
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Ready
                   </span>
                 </div>
@@ -91,7 +91,7 @@ export default function FaqSection() {
                   aria-controls={`faq-panel-${i}`}
                   className="flex w-full items-center gap-4 py-5 text-left group"
                 >
-                  <span className="font-mono text-[10px] text-foreground/60 tabular-nums w-6 shrink-0">
+                  <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums w-6 shrink-0">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className={`flex-1 font-display text-lg md:text-xl font-black uppercase tracking-tight transition-colors ${isOpen ? "text-primary" : "text-foreground group-hover:text-primary"}`}>

@@ -17,7 +17,7 @@ import { prefersReducedMotion } from "@/app/core/theme/fx";
 function FieldRow({ label, value, hot = false }: { label: string; value: string; hot?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-2.5 border-b border-foreground/5 last:border-b-0">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
+      <dt className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
         {label}
       </dt>
       <dd className={`font-mono text-xs text-right leading-relaxed ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
@@ -246,7 +246,7 @@ export default function HeroSection({
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16 w-full">
           {/* Name */}
           <div className="text-center md:text-left order-2 md:order-1">
-            <p className="font-mono text-[11px] md:text-xs font-bold uppercase tracking-[0.4em] text-primary-ink mb-3">
+            <p className="font-mono text-[0.6875rem] md:text-xs font-bold uppercase tracking-[0.4em] text-primary-ink mb-3">
               Portfolio  履歴書
             </p>
             <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
@@ -279,7 +279,7 @@ export default function HeroSection({
           </div>
 
           {/* Portrait */}
-          <div className="hero-image relative w-[220px] sm:w-[260px] lg:w-[320px] aspect-square shrink-0 order-1 md:order-2 md:ml-auto">
+          <div className="hero-image relative w-[13.75rem] sm:w-[16.25rem] lg:w-[20rem] aspect-square shrink-0 order-1 md:order-2 md:ml-auto">
             {/* Hinomaru  Red Sun */}
             <div className="hinomaru-sun absolute inset-[-20%] flex items-center justify-center pointer-events-none">
               <div
@@ -380,13 +380,13 @@ export default function HeroSection({
             <div className="mb-8 w-full border border-foreground/5 bg-foreground/[0.02] backdrop-blur-sm">
               <div className="border-b border-foreground/5 px-4 py-2 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-primary" />
-                <span className="font-mono text-[10px] text-foreground/60 uppercase tracking-[0.3em]">
+                <span className="font-mono text-[0.625rem] text-foreground/60 uppercase tracking-[0.3em]">
                   Technical Specifications
                 </span>
               </div>
               <div className="px-4 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[10px] font-bold text-accent tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[0.625rem] font-bold text-accent tracking-[0.2em] uppercase">
                     Detect
                   </span>
                   <span className="font-mono text-sm text-foreground/85">
@@ -394,7 +394,7 @@ export default function HeroSection({
                   </span>
                 </div>
                 <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[10px] font-bold text-tertiary tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[0.625rem] font-bold text-tertiary tracking-[0.2em] uppercase">
                     Respond
                   </span>
                   <span className="font-mono text-sm text-foreground/85">
@@ -402,7 +402,7 @@ export default function HeroSection({
                   </span>
                 </div>
                 <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[10px] font-bold text-foreground/60 tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[0.625rem] font-bold text-foreground/60 tracking-[0.2em] uppercase">
                     Investigate
                   </span>
                   <span className="font-mono text-sm text-foreground/85">
@@ -473,7 +473,7 @@ export default function HeroSection({
                     />
                     <s.icon size={18} strokeWidth={1.5} />
                     <span
-                      className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 bg-background border border-primary/40 font-mono text-[9px] font-bold tracking-[0.25em] uppercase text-primary-ink opacity-0 group-hover/social:opacity-100 transition-opacity duration-300"
+                      className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 bg-background border border-primary/40 font-mono text-[0.5625rem] font-bold tracking-[0.25em] uppercase text-primary-ink opacity-0 group-hover/social:opacity-100 transition-opacity duration-300"
                       aria-hidden="true"
                     >
                       {s.name}
@@ -493,7 +493,7 @@ export default function HeroSection({
             <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/50 pointer-events-none" />
             <div className="flex items-center gap-3 mb-5">
               <div className="w-8 h-[2px] bg-primary" />
-              <span className="font-mono text-[10px] font-bold tracking-[0.35em] uppercase text-primary-ink">
+              <span className="font-mono text-[0.625rem] font-bold tracking-[0.35em] uppercase text-primary-ink">
                 Field Record
               </span>
               <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">
@@ -519,7 +519,7 @@ export default function HeroSection({
         role="img"
       >
         <div className="w-8 h-[1px] bg-primary/40" />
-        <p className="text-[10px] text-foreground/15 font-mono font-bold uppercase tracking-[0.5em]">
+        <p className="text-[0.625rem] text-foreground/15 font-mono font-bold uppercase tracking-[0.5em]">
           継続は力なり  PERSEVERANCE IS POWER
         </p>
       </div>

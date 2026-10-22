@@ -29,7 +29,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
   const metrics = highlight?.metrics ?? [];
 
   return (
-    <TiltCard className="spotlight group relative w-full min-h-[380px] md:min-h-[340px] flex flex-col bg-surface/60 border border-foreground/5 p-8 hover:border-primary/40 transition-colors duration-500">
+    <TiltCard className="spotlight group relative w-full min-h-[23.75rem] md:min-h-[21.25rem] flex flex-col bg-surface/60 border border-foreground/5 p-8 hover:border-primary/40 transition-colors duration-500">
       {/* Top katana line */}
       <div
         className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-500"
@@ -54,7 +54,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
             <Github className="text-tertiary" size={16} />
           </div>
           <div className="flex flex-col">
-            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-tertiary">
+            <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-tertiary">
               {typeLabel}
             </span>
             <span className="brush-jp text-sm text-foreground/30 leading-none" lang="ja" aria-hidden="true">
@@ -68,7 +68,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/10 border border-accent/25">
             <span className="sr-only">{`${repo.stargazers_count} GitHub ${repo.stargazers_count === 1 ? "star" : "stars"}`}</span>
             <Star size={11} className="text-accent" aria-hidden="true" />
-            <span className="font-mono text-[10px] font-bold text-accent" aria-hidden="true">
+            <span className="font-mono text-[0.625rem] font-bold text-accent" aria-hidden="true">
               {repo.stargazers_count}
             </span>
           </div>
@@ -87,11 +87,11 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
 
       {/* Language + metrics */}
       <div className="flex flex-wrap gap-2 mb-3">
-        <span className="px-3 py-1 text-[9px] font-bold uppercase tracking-[0.15em] font-mono text-tertiary bg-tertiary/10 border border-tertiary/25">
+        <span className="px-3 py-1 text-[0.5625rem] font-bold uppercase tracking-[0.15em] font-mono text-tertiary bg-tertiary/10 border border-tertiary/25">
           {repo.language || "Native"}
         </span>
         {repo.license && repo.license.spdx_id !== "NOASSERTION" && (
-          <span className="px-3 py-1 text-[9px] uppercase tracking-[0.15em] font-mono text-foreground/60 bg-foreground/[0.04] border border-foreground/10">
+          <span className="px-3 py-1 text-[0.5625rem] uppercase tracking-[0.15em] font-mono text-foreground/60 bg-foreground/[0.04] border border-foreground/10">
             {repo.license.spdx_id}
           </span>
         )}
@@ -101,7 +101,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
           {metrics.map((m) => (
             <span
               key={m}
-              className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25"
+              className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/25"
             >
               {m}
             </span>
@@ -115,7 +115,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
           href={repo.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-sheen flex-1 py-3 px-4 bg-primary text-white font-mono font-black text-[10px] tracking-[0.2em] uppercase text-center flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-300"
+          className="btn-sheen flex-1 py-3 px-4 bg-primary text-white font-mono font-black text-[0.625rem] tracking-[0.2em] uppercase text-center flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-300"
         >
           <Github size={13} /> Source
         </a>

@@ -81,14 +81,14 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
       >
         <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-4">
           <Keyboard size={16} className="shrink-0 text-primary-ink" />
-          <h2 className="flex-1 font-mono text-[11px] font-bold uppercase tracking-[0.35em] text-foreground">
+          <h2 className="flex-1 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.35em] text-foreground">
             Keyboard shortcuts
           </h2>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[10px] text-foreground/60 transition-colors hover:border-primary hover:text-primary-ink"
+            className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[0.625rem] text-foreground/60 transition-colors hover:border-primary hover:text-primary-ink"
           >
             ESC
           </button>
@@ -97,7 +97,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
         <div className="grid gap-6 p-5">
           {GROUPS.map((group) => (
             <section key={group.title}>
-              <h3 className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60">
+              <h3 className="mb-3 font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/60">
                 {group.title}
               </h3>
               <ul className="grid gap-1">
@@ -107,7 +107,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
                       {item.keys.map((key) => (
                         <kbd
                           key={key}
-                          className="border border-foreground/15 bg-foreground/[0.03] px-1.5 py-0.5 font-mono text-[10px] text-accent"
+                          className="border border-foreground/15 bg-foreground/[0.03] px-1.5 py-0.5 font-mono text-[0.625rem] text-accent"
                         >
                           {key}
                         </kbd>

@@ -29,7 +29,7 @@ export default function ContributionsGrid() {
           className="mb-10 flex flex-wrap items-center gap-4"
         >
           <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-          <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+          <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
             Community // Contributed
           </span>
           <span className="brush-jp text-lg text-foreground/30" lang="ja" aria-hidden="true">
@@ -40,7 +40,7 @@ export default function ContributionsGrid() {
               <span className="font-mono text-lg font-black text-accent tabular-nums">
                 <CountUp target={stats.total} />
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/60">
+              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
                 commits // last year
               </span>
             </span>
@@ -74,7 +74,7 @@ export default function ContributionsGrid() {
                   className="text-foreground/25 group-hover:text-tertiary transition-colors duration-300 shrink-0"
                 />
               </div>
-              <span className="mb-3 w-fit px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-tertiary bg-tertiary/10 border border-tertiary/25">
+              <span className="mb-3 w-fit px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-tertiary bg-tertiary/10 border border-tertiary/25">
                 {c.org}
               </span>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{c.description}</p>

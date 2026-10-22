@@ -11,4 +11,4 @@ export const statusTitle =
 export const statusLede = "mt-5 mb-10 max-w-2xl text-lg text-foreground/60 font-light leading-relaxed";
 export const statusActions = "flex flex-wrap gap-4 mb-14";
 export const statusReport =
-  "mt-14 font-mono text-[10px] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 [&_a]:text-primary-ink [&_a:hover]:underline [&_a]:underline-offset-4";
+  "mt-14 font-mono text-[0.625rem] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 [&_a]:text-primary-ink [&_a:hover]:underline [&_a]:underline-offset-4";

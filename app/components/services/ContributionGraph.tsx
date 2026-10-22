@@ -65,7 +65,7 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
         <span className="font-mono text-2xl font-black text-accent tabular-nums">
           <CountUp target={total} duration={1800} />
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
+        <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60">
           contributions in the last year
         </span>
       </div>
@@ -87,7 +87,7 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
           </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[9px] text-foreground/60">
+      <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[0.5625rem] text-foreground/60">
         <span>Less</span>
         {LEVEL_BG.map((bg, i) => (
           <span key={i} className={`h-2.5 w-2.5 ${bg}`} />

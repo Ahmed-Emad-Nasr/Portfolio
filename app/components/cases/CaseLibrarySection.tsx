@@ -256,10 +256,10 @@ export default function CaseLibrarySection({
 
           <div className="flex items-center gap-4 mb-10">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-            <h2 className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+            <h2 className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
               All cases
             </h2>
-            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">全件</span>
+            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">全件</span>
           </div>
 
           <CaseFilters
@@ -298,7 +298,7 @@ export default function CaseLibrarySection({
               >
                 <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                 Show more cases
-                <span className="font-mono text-[10px] text-foreground/60 tabular-nums">
+                <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">
                   {Math.min(visible, visiblePdfs.length)}/{visiblePdfs.length}
                 </span>
               </button>
@@ -313,7 +313,7 @@ export default function CaseLibrarySection({
               <button
                 type="button"
                 onClick={resetFilters}
-                className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary-ink underline-offset-4 hover:underline"
+                className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-primary-ink underline-offset-4 hover:underline"
               >
                 Clear filters
               </button>

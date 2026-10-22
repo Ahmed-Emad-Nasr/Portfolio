@@ -77,10 +77,10 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
                   <CountUp target={repos.length} />
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Projects
                   </span>
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Indexed
                   </span>
                 </div>
@@ -91,10 +91,10 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
                   <CountUp target={totalStars} />
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Stars
                   </span>
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Earned
                   </span>
                 </div>

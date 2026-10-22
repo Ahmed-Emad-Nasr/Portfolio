@@ -33,7 +33,7 @@ export default function UsesSection() {
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Uses // Daily drivers
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 道具
               </span>
             </div>
@@ -60,10 +60,10 @@ export default function UsesSection() {
                   {String(toolCount).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Tools
                   </span>
-                  <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Loaded
                   </span>
                 </div>
@@ -99,7 +99,7 @@ export default function UsesSection() {
                   {g.items.map((item) => (
                     <li
                       key={item}
-                      className="px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground bg-tertiary/10 border border-tertiary/40"
+                      className="px-3 py-1.5 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground bg-tertiary/10 border border-tertiary/40"
                     >
                       {item}
                     </li>

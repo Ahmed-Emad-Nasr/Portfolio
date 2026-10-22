@@ -59,7 +59,7 @@ function CaseFilters({
           <button
             type="button"
             onClick={onReset}
-            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 border border-primary/40 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary-ink hover:bg-primary hover:text-white transition-colors duration-300"
+            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 border border-primary/40 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-primary-ink hover:bg-primary hover:text-white transition-colors duration-300"
           >
             <X size={12} /> Clear
           </button>
@@ -73,7 +73,7 @@ function CaseFilters({
           onClick={() => onCategoryChange(null)}
           aria-pressed={activeCategory === null}
         >
-          All <span className="ml-2 text-[9px] tabular-nums">{totalCount}</span>
+          All <span className="ml-2 text-[0.5625rem] tabular-nums">{totalCount}</span>
         </button>
         {categories.map(({ value, count }) => (
           <button
@@ -83,13 +83,13 @@ function CaseFilters({
             onClick={() => onCategoryChange(activeCategory === value ? null : value)}
             aria-pressed={activeCategory === value}
           >
-            {value} <span className="ml-2 text-[9px] tabular-nums">{count}</span>
+            {value} <span className="ml-2 text-[0.5625rem] tabular-nums">{count}</span>
           </button>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by tool">
-        <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">Tools</span>
+        <span className="mr-2 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60">Tools</span>
         {tools.map(({ value, count }) => {
           const active = activeTools.includes(value);
           return (
@@ -98,7 +98,7 @@ function CaseFilters({
               type="button"
               onClick={() => onToolToggle(value)}
               aria-pressed={active}
-              className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.15em] border transition-colors duration-300 ${
+              className={`px-3 py-1.5 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] border transition-colors duration-300 ${
                 active
                   ? "bg-tertiary text-background border-tertiary"
                   : "text-tertiary bg-tertiary/10 border-tertiary/25 hover:border-tertiary"
@@ -110,7 +110,7 @@ function CaseFilters({
         })}
       </div>
 
-      <p className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60" role="status" aria-live="polite">
+      <p className="flex items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60" role="status" aria-live="polite">
         <span className="w-2 h-2 bg-primary" aria-hidden="true" />
         {resultCount} of {totalCount} case(s)
         {isFiltered ? " match your filters" : " in the library"}

@@ -143,7 +143,7 @@ export default function SiteNav() {
               href={item.href}
               onHome={onHome}
               aria-current={active === item.href ? "page" : undefined}
-              className={`relative flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.22em] transition-all duration-300 group ${
+              className={`relative flex items-center gap-2 text-[0.625rem] font-mono font-bold uppercase tracking-[0.22em] transition-all duration-300 group ${
                 active === item.href ? "text-foreground" : "text-foreground/60 hover:text-foreground"
               }`}
             >
@@ -180,7 +180,7 @@ export default function SiteNav() {
             onClick={() => window.dispatchEvent(new Event("sensei:palette"))}
             aria-label="Open command palette (Ctrl+K)"
             title="Commands (Ctrl+K)"
-            className="flex items-center gap-1.5 border border-foreground/10 bg-foreground/[0.03] px-2.5 py-2.5 font-mono text-[10px] text-foreground/60 transition-colors duration-300 hover:border-primary hover:text-primary-ink"
+            className="flex items-center gap-1.5 border border-foreground/10 bg-foreground/[0.03] px-2.5 py-2.5 font-mono text-[0.625rem] text-foreground/60 transition-colors duration-300 hover:border-primary hover:text-primary-ink"
           >
             <Command size={14} />
             <kbd>K</kbd>
@@ -259,7 +259,7 @@ export default function SiteNav() {
                   className="group relative flex items-center gap-6 py-4"
                 >
                   {/* Index Number */}
-                  <span className="font-mono text-[10px] text-foreground/60 w-6 tabular-nums">
+                  <span className="font-mono text-[0.625rem] text-foreground/60 w-6 tabular-nums">
                     0{idx + 1}
                   </span>
 
@@ -275,7 +275,7 @@ export default function SiteNav() {
                     <span className="font-display text-3xl font-black text-foreground uppercase tracking-tight group-hover:text-primary transition-colors duration-300">
                       {item.name}
                     </span>
-                    <span className="font-mono text-[10px] text-foreground/60 tracking-[0.3em]">
+                    <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.3em]">
                       {item.katakana}
                     </span>
                   </div>
@@ -294,7 +294,7 @@ export default function SiteNav() {
                 className="mt-12 flex flex-col gap-3"
               >
                 <div className="w-16 h-[2px] bg-primary" />
-                <span className="text-[9px] font-mono text-foreground/60 tracking-[0.5em] uppercase">
+                <span className="text-[0.5625rem] font-mono text-foreground/60 tracking-[0.5em] uppercase">
                   3omda Portfolio
                 </span>
               </motion.div>

@@ -47,7 +47,7 @@ function BlockTitle({ children, japanese, id }: { children: ReactNode; japanese:
   return (
     <div className="flex items-center gap-3 mb-5">
       <div className="w-6 h-[2px] bg-primary" aria-hidden="true" />
-      <h2 id={id} className="font-mono text-[10px] text-primary-ink tracking-[0.35em] uppercase font-bold">
+      <h2 id={id} className="font-mono text-[0.625rem] text-primary-ink tracking-[0.35em] uppercase font-bold">
         {children}
       </h2>
       <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">{japanese}</span>
@@ -76,7 +76,7 @@ function Shot({ shot, index, total, title, onOpen }: { shot: string; index: numb
       <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-between p-3 z-10">
-        <span className="font-mono text-[9px] font-bold tracking-[0.3em] uppercase text-white">
+        <span className="font-mono text-[0.5625rem] font-bold tracking-[0.3em] uppercase text-white">
           Evidence {String(index + 1).padStart(2, "0")}
         </span>
         <Maximize2 size={12} className="text-white/70" />
@@ -123,7 +123,7 @@ export default function CaseArticle({
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Breadcrumb */}
-        <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
+        <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
           <Link href="/#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
             <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
           </Link>
@@ -140,8 +140,8 @@ export default function CaseArticle({
         >
           <div className="flex items-center gap-4 mb-5">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-            <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
-            <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">事件</span>
+            <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
+            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">事件</span>
           </div>
           <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-[0.95] text-foreground">
             {item.title}
@@ -149,7 +149,7 @@ export default function CaseArticle({
           <p className="mt-5 font-mono text-xs uppercase tracking-[0.25em] text-tertiary">{item.platform}</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-on-surface-variant">
-            <span className="flex items-center gap-2 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
+            <span className="flex items-center gap-2 px-3 py-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
               <AlertTriangle size={11} /> {item.difficulty}
             </span>
             <span className="flex items-center gap-2 font-mono text-xs">
@@ -170,9 +170,9 @@ export default function CaseArticle({
           <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent" />
-              <span className="font-mono text-[9px] text-foreground/60 tracking-[0.3em] uppercase">Case summary</span>
+              <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-[0.3em] uppercase">Case summary</span>
             </div>
-            <span className="font-mono text-[9px] text-foreground/60 tracking-wider uppercase">{item.category}</span>
+            <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-wider uppercase">{item.category}</span>
           </div>
           <div className="relative z-10 px-6 md:px-12 py-6 md:py-8">
             <p className="text-base md:text-lg font-light text-foreground/80 leading-relaxed border-l-2 border-foreground/10 pl-5 italic">
@@ -193,7 +193,7 @@ export default function CaseArticle({
             {screenshots.length > 0 && (
               <button type="button" onClick={() => setGalleryIndex(0)} className={ctaSecondary}>
                 <Images size={14} className="text-primary-ink" /> Evidence
-                <span className="font-mono text-[10px] text-foreground/60 tabular-nums">{screenshots.length}</span>
+                <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">{screenshots.length}</span>
               </button>
             )}
             <button type="button" onClick={copyLink} className={`${ctaSecondary} min-w-[12rem] justify-center`}>
@@ -228,7 +228,7 @@ export default function CaseArticle({
                 <Link
                   key={tag}
                   href={`/?q=${encodeURIComponent(tag)}#cases`}
-                  className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10 hover:border-primary hover:text-primary-ink transition-colors"
+                  className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10 hover:border-primary hover:text-primary-ink transition-colors"
                 >
                   #{tag}
                 </Link>
@@ -276,7 +276,7 @@ export default function CaseArticle({
                     <span className="font-display text-lg font-black uppercase tracking-tight text-foreground group-hover:text-tertiary transition-colors duration-300 mb-4">
                       {entry.title}
                     </span>
-                    <span className="mt-auto font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/60">
+                    <span className="mt-auto font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60">
                       {entry.category} • {entry.readTime} min
                       {entry.sharedTechniques > 0 && ` • ${entry.sharedTechniques} shared technique(s)`}
                     </span>
@@ -291,7 +291,7 @@ export default function CaseArticle({
         <nav className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10 border-t border-foreground/10" aria-label="Other cases">
           {previous ? (
             <Link href={`/blog/${previous.id}`} className="group spotlight relative flex flex-col gap-3 bg-surface/60 border border-foreground/5 p-6 hover:border-primary/40 transition-colors duration-500">
-              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-primary-ink">
+              <span className="flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-primary-ink">
                 <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> Previous
               </span>
               <span className="font-display text-base font-black uppercase tracking-tight text-foreground/80 group-hover:text-foreground">{previous.title}</span>
@@ -301,7 +301,7 @@ export default function CaseArticle({
           )}
           {next && (
             <Link href={`/blog/${next.id}`} className="group spotlight relative flex flex-col items-end gap-3 text-right bg-surface/60 border border-foreground/5 p-6 hover:border-primary/40 transition-colors duration-500">
-              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-primary-ink">
+              <span className="flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-primary-ink">
                 Next <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
               </span>
               <span className="font-display text-base font-black uppercase tracking-tight text-foreground/80 group-hover:text-foreground">{next.title}</span>

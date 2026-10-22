@@ -30,7 +30,7 @@ export default function NowSection() {
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 Now // Loading the present
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 現在
               </span>
             </div>
@@ -56,7 +56,7 @@ export default function NowSection() {
                 <span className="absolute inline-flex h-full w-full animate-ping bg-primary opacity-60" />
                 <span className="relative inline-flex h-2.5 w-2.5 bg-primary" />
               </span>
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-primary-ink">
+              <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.35em] text-primary-ink">
                 Live
               </span>
             </div>
@@ -77,7 +77,7 @@ export default function NowSection() {
                   <span className="absolute inline-flex h-full w-full animate-ping bg-primary opacity-60" />
                   <span className="relative inline-flex h-2 w-2 bg-primary" />
                 </span>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-primary-ink">
+                <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.3em] text-primary-ink">
                   {n.label}
                 </span>
               </div>

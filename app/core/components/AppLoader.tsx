@@ -97,7 +97,7 @@ export default function AppLoader() {
           <p className="mt-4 font-display text-xl font-black uppercase tracking-tighter text-foreground">
             Ahmed<span className="text-primary-ink">.</span>
           </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/60">
+          <p className="mt-1 font-mono text-[0.625rem] uppercase tracking-[0.45em] text-foreground/60">
             Portfolio
           </p>
 
@@ -108,7 +108,7 @@ export default function AppLoader() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="mt-3 flex items-center justify-between font-mono text-[10px] tracking-[0.3em] text-foreground/60">
+            <div className="mt-3 flex items-center justify-between font-mono text-[0.625rem] tracking-[0.3em] text-foreground/60">
               <span>LOADING</span>
               <span aria-hidden="true" className="tabular-nums">
                 {String(progress).padStart(3, "0")}%
@@ -116,7 +116,7 @@ export default function AppLoader() {
             </div>
           </div>
 
-          <span className="absolute bottom-6 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/60">
+          <span className="absolute bottom-6 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/60">
             tap anywhere to skip
           </span>
         </motion.div>

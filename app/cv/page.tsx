@@ -47,7 +47,7 @@ const panel =
 const entryWrap =
   "relative px-6 md:px-10 py-7 border-b border-foreground/5 last:border-b-0 break-inside-avoid print:px-0 print:py-[5pt] print:border-0";
 const roleClass = "font-display text-xl md:text-2xl font-black uppercase tracking-tight text-foreground print:text-[11pt] print:font-bold print:normal-case print:tracking-normal";
-const datesClass = "font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60 whitespace-nowrap print:text-[8.5pt] print:tracking-normal";
+const datesClass = "font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/60 whitespace-nowrap print:text-[8.5pt] print:tracking-normal";
 const orgClass = "mt-2 font-mono text-xs font-black uppercase tracking-[0.2em] text-accent print:text-[9pt] print:tracking-normal print:text-black";
 const bulletList = "mt-4 flex flex-col gap-2 print:mt-[3pt] print:gap-[1pt]";
 const bulletItem =
@@ -58,10 +58,10 @@ function SectionTitle({ children, japanese }: { children: ReactNode; japanese: s
   return (
     <div className="flex items-center gap-4 mb-6 print:mb-[4pt] print:border-b print:border-black print:pb-[2pt]">
       <div className="w-12 h-[2px] bg-primary print:hidden" aria-hidden="true" />
-      <h2 className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase print:text-black print:text-[9.5pt] print:tracking-[0.15em]">
+      <h2 className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase print:text-black print:text-[9.5pt] print:tracking-[0.15em]">
         {children}
       </h2>
-      <span className="jp-eyebrow text-[11px] text-foreground/30 print:hidden" lang="ja" aria-hidden="true">{japanese}</span>
+      <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 print:hidden" lang="ja" aria-hidden="true">{japanese}</span>
     </div>
   );
 }
@@ -163,8 +163,8 @@ export default function CvPage() {
           <header className="pb-10 border-b border-foreground/10 print:pb-[8pt] print:border-black">
             <div className="flex items-center gap-4 mb-5 print:hidden">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-              <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">Curriculum Vitae</span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30" lang="ja" aria-hidden="true">履歴書</span>
+              <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">Curriculum Vitae</span>
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">履歴書</span>
             </div>
             <h1 className="font-display text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] print:text-[22pt] print:normal-case print:tracking-normal print:text-black">
               <span className="text-foreground print:text-black">{CV_CONTACT.name.split(" ")[0]}</span>{" "}
@@ -211,7 +211,7 @@ export default function CvPage() {
                 <Entry key={`${item.tag}-${item.startDate}`} item={item} linkOrg={false} />
               ))}
               <p className="px-6 md:px-10 pb-7 text-sm text-on-surface-variant font-light print:px-0 print:pb-0 print:text-[9pt] print:text-black">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60 print:text-black">Relevant coursework  </span>
+                <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/60 print:text-black">Relevant coursework  </span>
                 {RELEVANT_COURSEWORK.join(" · ")}
               </p>
             </div>
@@ -238,7 +238,7 @@ export default function CvPage() {
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2 print:hidden">
                     {project.stack.map((t) => (
-                      <span key={t} className="px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25">{t}</span>
+                      <span key={t} className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-tertiary bg-tertiary/10 border border-tertiary/25">{t}</span>
                     ))}
                   </div>
                   <p className="hidden print:block print:text-[8.5pt] print:text-black">{project.stack.join(", ")}</p>
@@ -315,7 +315,7 @@ export default function CvPage() {
                   </dt>
                   <dd className="flex flex-wrap gap-2 print:hidden">
                     {group.items.map((it) => (
-                      <span key={it} className="px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-foreground bg-tertiary/10 border border-tertiary/40">{it}</span>
+                      <span key={it} className="px-2.5 py-1 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.15em] text-foreground bg-tertiary/10 border border-tertiary/40">{it}</span>
                     ))}
                   </dd>
                   <dd className="hidden print:block print:text-[9pt] print:text-black">{group.items.join(", ")}</dd>
@@ -324,7 +324,7 @@ export default function CvPage() {
             </dl>
           </section>
 
-          <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[10px] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 print:hidden">
+          <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[0.625rem] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 print:hidden">
             Generated from the same data as the{" "}
             <Link className="text-primary-ink underline underline-offset-4" href="/">portfolio</Link> and the{" "}
             <Link className="text-primary-ink underline underline-offset-4" href="/#cases">case library</Link>  print it (Ctrl/Cmd + P) for a clean PDF.

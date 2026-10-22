@@ -77,7 +77,7 @@ export default function CredentialsGallery() {
               <span className="font-mono text-accent text-2xl font-black">
                 {String(PORTFOLIO_DATA.certificates.length).padStart(2, "0")}
               </span>
-              <span className="font-mono text-[9px] text-on-surface-variant tracking-[0.3em] uppercase">
+              <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                 Sealed
               </span>
             </div>
@@ -141,7 +141,7 @@ export default function CredentialsGallery() {
 
                     {/* Seal stamp effect */}
                     <div className="absolute top-4 right-4 w-14 h-14 rounded-full border-2 border-primary/40 flex items-center justify-center opacity-70 group-hover:opacity-100 group-hover:border-primary transition-all duration-500">
-                      <span className="text-primary-ink font-black text-[10px] font-mono tracking-wider rotate-[-12deg]">
+                      <span className="text-primary-ink font-black text-[0.625rem] font-mono tracking-wider rotate-[-12deg]">
                         認定
                       </span>
                     </div>
@@ -160,7 +160,7 @@ export default function CredentialsGallery() {
                   <div className="w-full xl:w-3/5 p-8 md:p-10 flex flex-col justify-center">
                     <div className="flex items-center gap-3 text-accent mb-5">
                       <ShieldCheck size={18} />
-                      <span className="font-mono text-[10px] tracking-[0.3em] font-bold uppercase">
+                      <span className="font-mono text-[0.625rem] tracking-[0.3em] font-bold uppercase">
                         {cert.kind === "award" ? "Achievement" : "Certification"}
                       </span>
                     </div>

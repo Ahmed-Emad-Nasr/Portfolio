@@ -92,7 +92,7 @@ function TechniqueTile({ technique, tactic, max }: { technique: CoverageTechniqu
         <span className="attack-pop-corner br" aria-hidden="true" />
 
         <div className="flex items-start justify-between gap-4">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-primary-ink">
+          <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.3em] text-primary-ink">
             {`${tactic.ta} // ${tactic.name}`}
           </p>
           <button
@@ -111,7 +111,7 @@ function TechniqueTile({ technique, tactic, max }: { technique: CoverageTechniqu
           {technique.name}
         </h4>
 
-        <p className="mt-6 mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/60">
+        <p className="mt-6 mb-3 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60">
           Evidence // {count} {count === 1 ? "report" : "reports"}
         </p>
         <ol className="attack-pop-cases">
@@ -158,10 +158,10 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-4 mb-5">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
-              <span className="text-primary-ink text-[11px] font-mono font-bold tracking-[0.35em] uppercase">
+              <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
                 Coverage // MITRE ATT&amp;CK
               </span>
-              <span className="jp-eyebrow text-[11px] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
                 網羅
               </span>
             </div>
@@ -186,7 +186,7 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
 
         {/* ─── Kill-chain strip: the whole matrix at a glance ─── */}
         <FadeIn className="mb-14 md:mb-16">
-          <div className="mb-3 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/60">
+          <div className="mb-3 flex items-center justify-between gap-4 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60">
             <span>Kill chain // Enterprise v19</span>
             <span className="hidden sm:inline">Heat = techniques per tactic</span>
           </div>
@@ -226,7 +226,7 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
                 >
                   <div className="min-w-0">
                     <div className="flex items-baseline gap-3">
-                      <span className="font-mono text-[10px] tabular-nums text-foreground/60 w-6 shrink-0">
+                      <span className="font-mono text-[0.625rem] tabular-nums text-foreground/60 w-6 shrink-0">
                         {pad(t.order)}
                       </span>
                       <h3
@@ -237,7 +237,7 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
                         {t.name}
                       </h3>
                     </div>
-                    <p className="mt-2 pl-9 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/60">
+                    <p className="mt-2 pl-9 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-foreground/60">
                       <a
                         href={tacticUrl(t.ta)}
                         target="_blank"
@@ -265,7 +265,7 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
           })}
         </div>
 
-        <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/60">
+        <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-foreground/60">
           <span className="flex items-center gap-3">
             <span className="attack-pips" aria-hidden="true">
               <span data-on="" />

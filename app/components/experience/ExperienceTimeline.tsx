@@ -79,7 +79,7 @@ export default function ExperienceTimeline() {
         <div className="exp-header mb-16 md:mb-20">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-12 h-[2px] bg-primary" />
-            <span className="text-primary-ink text-[10px] font-mono font-bold tracking-[0.4em] uppercase">
+            <span className="text-primary-ink text-[0.625rem] font-mono font-bold tracking-[0.4em] uppercase">
               Professional Path // 職歴
             </span>
           </div>
@@ -89,7 +89,7 @@ export default function ExperienceTimeline() {
           </h2>
           <div className="mt-6 flex items-center gap-3">
             <div className="w-2 h-2 bg-primary" />
-            <span className="font-mono text-[10px] text-foreground/60 tracking-[0.2em] uppercase">
+            <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.2em] uppercase">
               Service Record // Maintenance Log
             </span>
           </div>
@@ -141,7 +141,7 @@ export default function ExperienceTimeline() {
 
                 {/* Japanese Role Tag */}
                 {item.japaneseRole && (
-                  <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 bg-foreground/[0.03] border-l-2 border-primary text-[10px] font-mono font-bold text-foreground/60 tracking-[0.15em] w-fit">
+                  <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 bg-foreground/[0.03] border-l-2 border-primary text-[0.625rem] font-mono font-bold text-foreground/60 tracking-[0.15em] w-fit">
                     <span className="text-primary-ink/60">JP</span>
                     <span>{item.japaneseRole}</span>
                   </div>
@@ -162,11 +162,11 @@ export default function ExperienceTimeline() {
                 <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-accent" />
-                    <span className="font-mono text-[9px] text-foreground/60 tracking-[0.3em] uppercase">
+                    <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-[0.3em] uppercase">
                       Record #{String(idx + 1).padStart(2, "0")}
                     </span>
                   </div>
-                  <span className="font-mono text-[9px] text-foreground/60 tracking-wider uppercase">
+                  <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-wider uppercase">
                     {item.period.split("–")[0]?.trim()}
                   </span>
                 </div>
@@ -188,7 +188,7 @@ export default function ExperienceTimeline() {
                       <div className="flex items-start gap-4 group/detail py-3">
                         {/* Custom bullet */}
                         <div className="mt-1 shrink-0 flex items-center gap-2">
-                          <span className="font-mono text-[9px] text-foreground/60 tabular-nums w-4">
+                          <span className="font-mono text-[0.5625rem] text-foreground/60 tabular-nums w-4">
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <div className="w-3 h-3 border border-accent/30 flex items-center justify-center group-hover/detail:border-accent transition-colors duration-300">
@@ -212,7 +212,7 @@ export default function ExperienceTimeline() {
 
                 {/* Panel Footer */}
                 <div className="px-6 md:px-12 py-4 border-t border-foreground/5 flex items-center justify-between">
-                  <span className="font-mono text-[8px] text-foreground/15 tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[0.5rem] text-foreground/15 tracking-[0.2em] uppercase">
                     {item.details.length} entries logged
                   </span>
                   <div className="flex items-center gap-2">

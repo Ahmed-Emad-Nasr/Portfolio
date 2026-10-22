@@ -19,7 +19,8 @@ const ROOT = process.cwd();
 /* The breakpoints actually used in the project.
    They were once unified into a 5-step ladder and then reverted to the originals — so the script follows
    reality, not the other way round. This list is a description, not a prescription: if you add a new value, add it here. */
-const LADDER = [360, 380, 430, 480, 600, 640, 672, 767, 768, 900, 991, 992, 1024, 1199, 1800];
+/* 2400 and 3200: the large-screen steps of the root font size (globals.css). */
+const LADDER = [360, 380, 430, 480, 600, 640, 672, 767, 768, 900, 991, 992, 1024, 1199, 1800, 2400, 3200];
 
 /*
  * The small-font check is **disabled**.
