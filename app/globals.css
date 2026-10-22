@@ -383,6 +383,13 @@
   }
 }
 
+/* Hero role ticker cursor (RoleTicker.tsx) */
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* ─── Additions for the pages the original theme does not have
    (case library, case pages, CV, legal pages). Same tokens. ─── */
 

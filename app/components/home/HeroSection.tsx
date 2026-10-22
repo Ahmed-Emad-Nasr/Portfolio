@@ -8,6 +8,7 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { RevealText } from "@/app/core/components/RevealText";
 import { HeroMascot } from "@/app/components/home/HeroMascot";
+import { RoleTicker } from "@/app/components/home/RoleTicker";
 import { MessageCircle, Download, ArrowDown } from "lucide-react";
 import { Github, Linkedin, Youtube } from "@/app/core/icons/BrandIcons";
 
@@ -270,6 +271,11 @@ export default function HeroSection({
             <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true">
               アハメド・エマド・ナスル  セキュリティアナリスト
             </p>
+            {/* The jobs, typed one after another (from the old site's hero) */}
+            <RoleTicker
+              roles={PORTFOLIO_DATA.profile.roles}
+              className="mt-5 text-sm sm:text-base md:text-lg"
+            />
           </div>
 
           {/* Portrait */}

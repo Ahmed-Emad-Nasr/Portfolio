@@ -23,6 +23,8 @@ export interface Profile {
   title: string;
   japaneseTitle: string;
   availability: string;
+  /** The jobs typed one after another under the name in the hero */
+  roles: string[];
   contact: ContactInfo;
   hero: HeroInfo;
 }

@@ -265,6 +265,14 @@ export const PORTFOLIO_DATA: PortfolioData = {
     title: "SOC Analyst & Incident Responder",
     japaneseTitle: "セキュリティアナリスト • SOC Analyst & Incident Responder",
     availability: "Open to SOC, IR & DFIR roles",
+    /* Same list as the old site's hero ticker */
+    roles: [
+      "Information Security Engineer",
+      "Cybersecurity Engineer",
+      "SOC/DFIR Engineer",
+      "Malware Analyst",
+      "Cybersecurity Instructor",
+    ],
     contact: {
       email: "ahmed.em.nasr@gmail.com",
       phone: "+201013972690",
