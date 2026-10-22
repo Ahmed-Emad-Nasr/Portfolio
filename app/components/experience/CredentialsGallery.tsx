@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { EASE } from "@/app/core/motion";
 import { useState } from "react";
 import dynamic from "next/dynamic";
@@ -9,6 +9,7 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import "yet-another-react-lightbox/styles.css";
 import { Award, ExternalLink, Calendar, ShieldCheck } from "lucide-react";
+import { rv } from "@/app/core/reveal";
 
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
 
@@ -49,13 +50,10 @@ export default function CredentialsGallery() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: EASE }}
-          className="mb-16 md:mb-20 flex flex-col lg:flex-row justify-between lg:items-end gap-8"
-        >
+        <div
+  className="mb-16 md:mb-20 flex flex-col lg:flex-row justify-between lg:items-end gap-8"
+  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
+>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
@@ -82,7 +80,7 @@ export default function CredentialsGallery() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Certificate Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -101,7 +99,6 @@ export default function CredentialsGallery() {
                 ? {
                     role: "button",
                     tabIndex: 0,
-                    "aria-label": `${cert.image ? "View" : "Open"} ${cert.title}`,
                     onKeyDown: (e: React.KeyboardEvent) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();

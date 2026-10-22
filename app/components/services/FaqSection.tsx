@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/app/core/motion";
-import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
+import type { FaqItem } from "@/app/core/types/portfolio";
 import { Plus } from "lucide-react";
+import { rv } from "@/app/core/reveal";
 
-export default function FaqSection() {
+export default function FaqSection({ items }: { items: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -22,21 +23,16 @@ export default function FaqSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="max-w-3xl"
-          >
+          <div
+  className="max-w-3xl"
+  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
+>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 FAQ // Before you ask
               </span>
-              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
-                質問
-              </span>
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="質問" />
             </div>
             <h2 className="font-display title-fit [--title-n:11] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Fair</span> <br />
@@ -45,20 +41,17 @@ export default function FaqSection() {
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               The answers recruiters and teams usually need before the first call.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
+          <div
+  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+>
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-primary" />
               <div className="flex items-center gap-3">
                 <span className="font-mono text-primary-ink text-2xl font-black tabular-nums">
-                  {String(PORTFOLIO_DATA.faq.length).padStart(2, "0")}
+                  {String(items.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
                   <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
@@ -70,20 +63,17 @@ export default function FaqSection() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
         <div className="max-w-4xl flex flex-col border-t border-foreground/10">
-          {PORTFOLIO_DATA.faq.map((f, i) => {
+          {items.map((f, i) => {
             const isOpen = open === i;
             return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.55, delay: i * 0.05, ease: EASE }}
-                className="border-b border-foreground/10"
-              >
+              <div
+  key={i}
+  className="border-b border-foreground/10"
+  data-reveal={rv({ y: 20, duration: 0.55, delay: i * 0.05 })}
+>
                 <button
                   type="button"
                   onClick={() => setOpen(isOpen ? null : i)}
@@ -121,7 +111,7 @@ export default function FaqSection() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </div>
             );
           })}
         </div>

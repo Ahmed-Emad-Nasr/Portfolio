@@ -140,6 +140,9 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 const dateCache = new Map<string, string>();
 const DATE_CACHE_MAX = 500;
 
+/** The CV PDF, in public/ (re-exported by cv.ts) */
+export const CV_PDF_HREF = "Assets/cv/AhmedEmadNasr_CV.pdf";
+
 export const normalizePublicHref = (href: string): string => {
   if (/^https?:\/\//i.test(href)) return href;
   const basePath =

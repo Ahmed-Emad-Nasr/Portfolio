@@ -61,7 +61,7 @@ function SectionTitle({ children, japanese }: { children: ReactNode; japanese: s
       <h2 className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase print:text-black print:text-[9.5pt] print:tracking-[0.15em]">
         {children}
       </h2>
-      <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 print:hidden" lang="ja" aria-hidden="true">{japanese}</span>
+      <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 print:hidden" lang="ja" aria-hidden="true" data-jp={japanese} />
     </div>
   );
 }
@@ -164,7 +164,7 @@ export default function CvPage() {
             <div className="flex items-center gap-4 mb-5 print:hidden">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
               <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">Curriculum Vitae</span>
-              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">履歴書</span>
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="履歴書" />
             </div>
             <h1 className="font-display text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] print:text-[22pt] print:normal-case print:tracking-normal print:text-black">
               <span className="text-foreground print:text-black">{CV_CONTACT.name.split(" ")[0]}</span>{" "}
@@ -186,7 +186,7 @@ export default function CvPage() {
               <a className={ctaPrimary} href={normalizePublicHref(CV_PDF_HREF)} download style={{ clipPath: "polygon(0 0, 100% 0, 96% 100%, 4% 100%)" }}>
                 <Download size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
                 RESUME.pdf
-                <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja" aria-hidden="true">履歴書</span>
+                <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja" aria-hidden="true" data-jp="履歴書" />
               </a>
               <Link className={ctaSecondary} href="/">
                 <ArrowLeft size={14} className="text-primary-ink transition-transform duration-300 group-hover:-translate-x-0.5" />

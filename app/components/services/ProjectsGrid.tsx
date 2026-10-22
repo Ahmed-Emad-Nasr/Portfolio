@@ -1,12 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { EASE } from "@/app/core/motion";
 import { Repo } from "@/app/core/api/github";
 import ProjectCard from "./ProjectCard";
 import { CountUp } from "@/app/core/components/CountUp";
 import { Star } from "lucide-react";
+import { rv } from "@/app/core/reveal";
 
 export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
   const totalStars = useMemo(
@@ -37,13 +36,10 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 mb-16 md:mb-20 items-end">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="flex flex-col"
-          >
+          <div
+  className="flex flex-col"
+  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
+>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
@@ -58,16 +54,13 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               The labs and tools above, as code. Setup, rules and results live in each repo, not in headlines.
             </p>
-          </motion.div>
+          </div>
 
           {/* Counter Badge  pacman eats the numbers up */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex lg:justify-end"
-          >
+          <div
+  className="flex lg:justify-end"
+  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+>
             <div className="relative flex items-center gap-4 px-6 py-3 border border-accent/40 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-accent" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-accent" />
@@ -100,14 +93,14 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Project Grid  empty state when GitHub API is down */}
         {repos.length === 0 && (
           <div className="relative bg-surface/60 border border-foreground/10 p-10 md:p-14 text-center">
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
-            <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja" aria-hidden="true">接続切れ</p>
+            <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja" aria-hidden="true" data-jp="接続切れ" />
             <p className="font-mono text-sm text-foreground/60 tracking-wider mb-2">
               GitHub API unreachable right now.
             </p>
@@ -118,20 +111,13 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {repos.map((repo, idx) => (
-            <motion.div
-              key={repo.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{
-                delay: (idx % 3) * 0.1,
-                duration: 0.7,
-                ease: EASE,
-              }}
-              className="flex"
-            >
+            <div
+  key={repo.id}
+  className="flex"
+  data-reveal={rv({ y: 40, duration: 0.7, delay: (idx % 3) * 0.1 })}
+>
               <ProjectCard repo={repo} index={idx} />
-            </motion.div>
+            </div>
           ))}
         </div>
 

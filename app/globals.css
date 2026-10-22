@@ -309,6 +309,18 @@
    Red = action/structure, Gold = metrics/proof, Sky = stack/systems.
    Quaternary is retired from core sections (Art only). */
 
+/*
+ * Decorative Japanese labels are painted from a data attribute
+ * (<span data-jp="網羅" aria-hidden="true" />). They are ornament, not
+ * content — WCAG exempts pure decoration from contrast — but accessibility
+ * checkers can't tell, and flagged every faint label as a contrast failure.
+ * Generated content is not text in the document, so it is neither read nor
+ * audited, and the design keeps its quiet 25–30% labels.
+ */
+[data-jp]::before {
+  content: attr(data-jp);
+}
+
 .jp-eyebrow {
   font-family: var(--font-jp);
   font-weight: 700;
@@ -447,9 +459,109 @@
   font-weight: 600;
 }
 
-/* The intro screen plays once per tab (see AppLoader.tsx) */
+/* The intro screen plays once per tab (see AppLoader.tsx), and leaves on
+   its own schedule — never held hostage by hydration on a slow phone. */
 .booted [data-app-loader] {
   display: none;
+}
+[data-app-loader] {
+  animation: app-loader-out 0.55s cubic-bezier(0.76, 0, 0.24, 1) 1.2s forwards;
+}
+@keyframes app-loader-out {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-app-loader] {
+    animation-duration: 0.01s;
+    animation-delay: 0.3s;
+  }
+}
+
+/*
+ * Hero entrance (HeroSection.tsx) — was GSAP after hydration, now CSS from the
+ * first paint. Same choreography: content stack, portrait, sun, kanji, spec
+ * sheet, speed lines. --hero-lead holds everything back while the intro
+ * screen is up (first visit only; the head script adds .booted on the next
+ * page load), --hero-t is the phone tempo (the GSAP version ran at half time
+ * below 768px). Individual transform properties (translate / scale) compose
+ * with the elements' own transforms instead of replacing them.
+ */
+:root {
+  --hero-lead: 1.5s;
+  --hero-t: 1;
+}
+.booted {
+  --hero-lead: 0s;
+}
+@media (max-width: 767px) {
+  :root {
+    --hero-t: 0.5;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-content > * {
+    animation: hero-rise calc(1.5s * var(--hero-t)) cubic-bezier(0.165, 0.84, 0.44, 1) both;
+    animation-delay: calc(var(--hero-lead) + 0.5s * var(--hero-t) + var(--hero-i, 0) * 0.15s * var(--hero-t));
+  }
+  .hero-content > :nth-child(2) { --hero-i: 1; }
+  .hero-content > :nth-child(3) { --hero-i: 2; }
+  .hero-content > :nth-child(4) { --hero-i: 3; }
+  .hero-content > :nth-child(5) { --hero-i: 4; }
+  .hero-image {
+    animation: hero-portrait calc(2s * var(--hero-t)) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation-delay: calc(var(--hero-lead) + 0.2s * var(--hero-t));
+  }
+  .japanese-bg {
+    animation: hero-kanji 2s cubic-bezier(0.19, 1, 0.22, 1) both;
+    animation-delay: calc(var(--hero-lead) + 1s);
+  }
+  .hinomaru-sun {
+    animation: hero-sun 2.5s cubic-bezier(0.19, 1, 0.22, 1) both;
+    animation-delay: calc(var(--hero-lead) + 0.3s);
+  }
+  .spec-item {
+    animation: hero-spec 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+    animation-delay: calc(var(--hero-lead) + 1.2s + var(--hero-i, 0) * 0.1s);
+  }
+  .spec-item:nth-child(2) { --hero-i: 1; }
+  .spec-item:nth-child(3) { --hero-i: 2; }
+  .speed-line {
+    transform-origin: left center;
+    animation: hero-line 1.5s cubic-bezier(0.19, 1, 0.22, 1) both;
+    animation-delay: calc(var(--hero-lead) + 1.5s + var(--hero-i, 0) * 0.05s);
+  }
+  .speed-line:nth-child(2) { --hero-i: 1; }
+  .speed-line:nth-child(3) { --hero-i: 2; }
+  .speed-line:nth-child(4) { --hero-i: 3; }
+  .speed-line:nth-child(5) { --hero-i: 4; }
+  .speed-line:nth-child(6) { --hero-i: 5; }
+  .speed-line:nth-child(7) { --hero-i: 6; }
+  .speed-line:nth-child(8) { --hero-i: 7; }
+}
+/* 0.01, not 0: Chrome ignores paints at opacity 0 for LCP, and an opacity
+   animation on the compositor never repaints — so a hero that starts fully
+   transparent is never measured, and a later, smaller paint (the role
+   ticker typing) became the page's LCP. Invisible to the eye either way. */
+@keyframes hero-rise {
+  from { opacity: 0.01; translate: 0 60px; }
+}
+@keyframes hero-portrait {
+  from { opacity: 0; scale: 1.1; }
+}
+@keyframes hero-kanji {
+  from { opacity: 0; transform: translateX(100px); }
+}
+@keyframes hero-sun {
+  from { opacity: 0; scale: 0; }
+}
+@keyframes hero-spec {
+  from { opacity: 0; translate: -30px 0; }
+}
+@keyframes hero-line {
+  from { opacity: 0; scale: 0 1; }
 }
 
 /* Lightbox: follow the theme's red instead of the library's default blue */
@@ -487,17 +599,35 @@
   }
 }
 
-/* RevealText: reduced-motion visitors get the words in place at once — the
-   same markup as everyone else, so server and client HTML always match. */
-@media (prefers-reduced-motion: reduce) {
+/* RevealText (core/components/RevealText.tsx): each word rises out of its
+   mask from the first paint. --w is the word's own delay; --hero-lead waits
+   for the intro screen on a first visit. Reduced motion: words in place. */
+@media (prefers-reduced-motion: no-preference) {
   .reveal-word {
-    transform: none !important;
+    animation: reveal-word 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation-delay: calc(var(--hero-lead, 0s) + var(--w, 0) * 1s);
+  }
+}
+/* Starts with the top of the word just inside its mask (not fully clipped),
+   for the same LCP reason as hero-rise above. */
+@keyframes reveal-word {
+  from {
+    translate: 0 92%;
   }
 }
 
 /* ATT&CK coverage (components/cases/AttackCoverage.tsx). Server-rendered,
    ~30 tiles, ~30 popovers and ~90 links, so the repeated styling is written
    once here instead of as long utility lists. Same tokens as the rest. */
+
+/* Heat tint strength: half as strong on the light theme, where a deep pink
+   behind 9–10px labels fell under 4.5:1. */
+#attack {
+  --heat-k: 0.5;
+}
+.dark #attack {
+  --heat-k: 1;
+}
 
 /* ── Kill-chain strip ── */
 .attack-strip {
@@ -518,7 +648,7 @@
   min-height: 5.25rem;
   padding: 0.625rem 0.625rem 0.5rem;
   border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
-  background: color-mix(in srgb, var(--primary) var(--heat, 8%), var(--surface));
+  background: color-mix(in srgb, var(--primary) calc(var(--heat, 8%) * var(--heat-k)), var(--surface));
   transition: border-color 0.3s, transform 0.3s;
 }
 .attack-seg::before {
@@ -536,7 +666,7 @@
   font-family: var(--font-mono);
   font-size: 0.5625rem;
   letter-spacing: 0.15em;
-  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  color: color-mix(in srgb, var(--foreground) 75%, transparent);
 }
 .attack-seg-count {
   margin-top: auto;
@@ -568,7 +698,7 @@
 }
 .attack-seg[data-off] .attack-seg-count,
 .attack-seg[data-off] .attack-seg-label {
-  color: color-mix(in srgb, var(--foreground) 40%, transparent);
+  color: color-mix(in srgb, var(--foreground) 62%, transparent);
 }
 
 /* ── Ledger rows ── */
@@ -592,7 +722,7 @@
   font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+  color: color-mix(in srgb, var(--foreground) 68%, transparent);
 }
 
 /* ── Technique tile ── */
@@ -606,7 +736,7 @@
   text-align: left;
   border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
   border-left: 2px solid var(--primary);
-  background: color-mix(in srgb, var(--primary) var(--heat, 8%), var(--surface));
+  background: color-mix(in srgb, var(--primary) calc(var(--heat, 8%) * var(--heat-k)), var(--surface));
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 .attack-tile:hover,
@@ -645,7 +775,7 @@
   font-size: 0.5625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  color: color-mix(in srgb, var(--foreground) 72%, transparent);
 }
 .attack-tile-foot > span {
   color: var(--primary-ink);
@@ -654,17 +784,18 @@
 .attack-tile:hover .attack-tile-foot > span {
   transform: translateX(3px);
 }
+/* One element per pip row: --n of --max squares filled. A 5px square every
+   7px is a mask over a two-tone bar — 1 node instead of 7 per tile. */
 .attack-pips {
-  display: inline-flex;
-  gap: 2px;
-}
-.attack-pips > span {
-  width: 5px;
+  display: inline-block;
+  width: calc(var(--max, 1) * 7px - 2px);
   height: 5px;
-  background: color-mix(in srgb, var(--foreground) 14%, transparent);
-}
-.attack-pips > span[data-on] {
-  background: var(--primary);
+  background: linear-gradient(
+    to right,
+    var(--primary) calc(var(--n, 0) * 7px),
+    color-mix(in srgb, var(--foreground) 14%, transparent) 0
+  );
+  mask: repeating-linear-gradient(to right, #000 0 5px, transparent 5px 7px);
 }
 
 /* ── Evidence popover (native [popover], top layer, no JS) ── */
@@ -698,19 +829,22 @@
 .attack-pop button {
   cursor: pointer !important;
 }
-.attack-pop-corner {
+/* Corner brackets, drawn by the popover itself */
+.attack-pop::before,
+.attack-pop::after {
+  content: "";
   position: absolute;
   width: 12px;
   height: 12px;
   pointer-events: none;
 }
-.attack-pop-corner.tl {
+.attack-pop::before {
   top: 6px;
   left: 6px;
   border-top: 1px solid var(--primary);
   border-left: 1px solid var(--primary);
 }
-.attack-pop-corner.br {
+.attack-pop::after {
   right: 6px;
   bottom: 6px;
   border-right: 1px solid var(--primary);

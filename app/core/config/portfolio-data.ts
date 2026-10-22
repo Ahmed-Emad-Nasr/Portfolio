@@ -8,6 +8,11 @@
  * projects, cases — it is read from there, not copied, so the home page,
  * the CV and the case library can never disagree.
  *
+ * Nothing here may import cases.ts, attack.ts or case-stats.ts: this module is
+ * read by ~18 client components, so whatever it imports ships to every visitor.
+ * The numbers computed from the case library live in live-copy.ts (server-only)
+ * and reach the client sections as props.
+ *
  * Asset paths go through normalizePublicHref so they resolve under the
  * /Portfolio base path on every route, not just on the home page.
  */
@@ -18,10 +23,8 @@ import { certifications } from "./certifications";
 import { achievements } from "./achievements";
 import { skillGroups } from "./skills";
 import { GITHUB_USERNAME, projectBullets, staticProjectFallback } from "./projects";
-import { CASE_STATS } from "./case-stats";
-import { CV_PDF_HREF, CV_SUMMARY } from "./cv";
 import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryTitle } from "./certifications";
-import { YOUTUBE_CHANNEL_URL, normalizePublicHref } from "./shared";
+import { CV_PDF_HREF, YOUTUBE_CHANNEL_URL, normalizePublicHref } from "./shared";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const monthYear = (iso: string) => {
@@ -287,7 +290,6 @@ export const PORTFOLIO_DATA: PortfolioData = {
     hero: {
       tagline: "Blue-team operations, incident response & digital forensics.",
       japaneseTagline: "検知・対応・鑑識。",
-      description: CV_SUMMARY,
       photo: normalizePublicHref("Assets/art-gallery/Images/logo/3omda.webp"),
       cvUrl: normalizePublicHref(CV_PDF_HREF),
     },
@@ -367,20 +369,6 @@ export const PORTFOLIO_DATA: PortfolioData = {
     { id: "automate", title: "Automate", japanese: "自動化", items: ["Python", "Bash", "PowerShell", "Regex"] },
     { id: "practice", title: "Practice", japanese: "修練", items: ["TryHackMe", "LetsDefend", "Hack The Box", "PortSwigger"] },
   ],
-  now: [
-    { label: "Teaching", detail: "Cybersecurity instructor at AMIT Learning and NTI — Linux, networking, SOC and pentest tracks." },
-    { label: "Writing", detail: `Case reports for the library — ${CASE_STATS.published} published, ${CASE_STATS.reports} of them full investigations.` },
-    { label: "Recording", detail: "Security walkthroughs on the YouTube channel, free for anyone starting out." },
-    { label: "Open to", detail: "SOC analyst, incident response and DFIR roles." },
-  ],
-  faq: [
-    { q: "What kind of role are you after?", a: "SOC analyst, incident response and DFIR — blue-team work where detection and investigation are the job." },
-    { q: "Where can I see real work?", a: `In the case library: ${CASE_STATS.published} documented cases, ${CASE_STATS.reports} of them full investigation reports, with screenshots and ATT&CK mapping where it applies.` },
-    { q: "Which tools do you use day to day?", a: "Wazuh, ELK and Splunk for SIEM; Suricata and Zeek on the network; Volatility, Autopsy and YARA for forensics; Python and Bash to automate the rest." },
-    { q: "Do you teach?", a: "Yes — instructor at AMIT Learning and NTI, with 300+ students taught. Before that, 35+ sessions with Google Developer Groups." },
-    { q: "Which certifications do you hold?", a: "eJPT v2, CCNA, Red Hat RH124, CCEP and HCIA-Datacom, plus the TryHackMe SOC Level 1 and 2 paths." },
-    { q: "How do I reach you?", a: "Email or LinkedIn. The form at the bottom of the page opens a pre-filled email — nothing is sent anywhere else." },
-  ],
   milestones: [
     { year: "2022", title: "Started CS", detail: "Benha University — Information Security & Digital Forensics." },
     { year: "2023", title: "First teaching role", detail: "IEEE: C and Python training for robotics teams." },
@@ -415,10 +403,4 @@ export const PORTFOLIO_DATA: PortfolioData = {
     thumb: normalizePublicHref(galleryImagePath(k + 1)),
     title: galleryTitle(k + 1),
   })),
-  stats: [
-    { target: CASE_STATS.published, suffix: "", label: "Cases published", japanese: "記録" },
-    { target: certifications.length, suffix: "", label: "Certifications", japanese: "認定" },
-    { target: 300, suffix: "+", label: "Students taught", japanese: "指導" },
-    { target: 60, suffix: "K+", label: "Channel views", japanese: "動画" },
-  ],
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { m as motion, useMotionValue, useSpring } from "framer-motion";
 
 /**
  * Katana cursor  your blade for browsing the dojo.
@@ -69,8 +69,10 @@ export default function CursorOverlay() {
 
   if (!enabled) return null;
 
+  /* Decoration that follows the pointer — hidden from assistive tech, and
+     kept out of the landmark structure (axe "region"). */
   return (
-    <>
+    <div aria-hidden="true" className="contents">
       {/* Outer ring  gold at rest, brackets lock on-hover */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999]"
@@ -131,9 +133,7 @@ export default function CursorOverlay() {
           <span className="font-mono text-[0.5rem] text-primary-ink tracking-widest font-black uppercase leading-none">
             Target
           </span>
-          <span className="brush-jp text-sm text-foreground/80 leading-none mt-0.5" lang="ja" aria-hidden="true">
-            斬
-          </span>
+          <span className="brush-jp text-sm text-foreground/80 leading-none mt-0.5" lang="ja" aria-hidden="true" data-jp="斬" />
         </motion.div>
       </motion.div>
 
@@ -187,6 +187,6 @@ export default function CursorOverlay() {
           />
         </motion.div>
       ))}
-    </>
+    </div>
   );
 }

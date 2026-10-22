@@ -78,6 +78,7 @@ const buildScreenshotRange = (
     .map((n) => `Assets/Cases/${folder}/Screenshot (${n}).webp`);
 
 export const caseScreenshotsByEvidenceId: Record<string, string[]> = {
+  "vulnerability-scanning-tools": Array.from({ length: 25 }, (_, i) => `Assets/Cases/Vulnerability Scanning Tools/Screenshot (${418 + i}).webp`),
   "guided-pentest-infrastructure": Array.from({ length: 29 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${387 + i}).webp`),
   "password-reset-broken-logic": Array.from({ length: 13 }, (_, i) => `Assets/Cases/Lab Password reset broken logic/Screenshot (${371 + i}).webp`),
   "2fa-simple-bypass": Array.from({ length: 3 }, (_, i) => `Assets/Cases/Lab 2FA simple bypass/Screenshot (${351 + i}).webp`),
@@ -1565,6 +1566,22 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     date: "2026-10-21",
     screenshots: Array.from({ length: 29 }, (_, i) => `Assets/Cases/Guided Pentest Infrastructure/Screenshot (${387 + i}).webp`),
     image: "Assets/Cases/Guided Pentest Infrastructure/Screenshot (415).webp", // صورة إتمام الروم كغلاف
+  },
+  {
+    id: "vulnerability-scanning-tools",
+    title: "Vulnerability Scanning Tools Walkthrough (Nmap, Nikto & OpenVAS)",
+    description: "Completed a full-spectrum vulnerability scanning and management assessment across all 7 tasks of TryHackMe's 'Vulnerability Scanning Tools' room, operating from the AttackBox (10.128.162.243) against the target host (10.128.147.232). Phase 1 — Network & Service Enumeration with Nmap & NSE: Executed an aggressive scan ('nmap -A 10.128.147.232') leveraging the Lua-based Nmap Scripting Engine (NSE). Discovered Port 21/tcp running vsftpd 3.0.5 where the 'ftp-anon' NSE script confirmed 'Anonymous FTP login allowed (FTP code 230)', Port 22/tcp running OpenSSH 9.6p1 on Ubuntu Linux, and Port 80/tcp running WebSockify Python/3.12.3. Phase 2 — Web Server Auditing with Nikto: Scanned the secondary web service on port 8080 ('nikto -h http://10.128.147.232:8080' using Nikto v2.1.5 across 6,544 checks), identifying Apache/2.4.58 (Ubuntu) and uncovering 7 notable security issues: session cookie 'PHPSESSID' issued without the 'HttpOnly' flag, missing 'X-Frame-Options' anti-clickjacking header, enabled HTTP 'DEBUG' verb, an exposed '/info.php' test script executing 'phpinfo()' (OSVDB-3233), directory indexing/listing enabled on '/static/' (OSVDB-3268), and a Remote File Inclusion (RFI) vulnerability via the 'file' parameter ('/info.php?file=http://cirt.net/rfiinc.txt?', OSVDB-5292). Phase 3 — Enterprise Vulnerability Management with OpenVAS / Greenbone: Authenticated into the OpenVAS Community Edition v26.7.0 web console ('http://127.0.0.1:9392/login') as 'admin', reviewed the 169,731 Network Vulnerability Tests (NVTs) feed, configured a new scan target ('SecondTarget' for host 10.128.147.232 across 'All IANA assigned TCP' ports), and created a scan task ('SecondTask' with Min QoD set to 70). Analyzed the completed 'MyTarget' scan report to extract a CVSS severity score of 5.3 for 'phpinfo() Output Reporting (HTTP)', mapped 'Anonymous FTP Login Reporting' to CVE-1999-0497, and verified the target operating system as Ubuntu 24.04.",
+    platform: "TryHackMe",
+    type: "Walkthrough",
+    category: "Vulnerability Management",
+    difficulty: "Easy",
+    tags: ["TryHackMe", "Vulnerability Scanning", "Nmap", "NSE", "Nikto", "OpenVAS", "Greenbone", "RFI", "CVE-1999-0497"],
+    tools: ["Nmap (NSE)", "Nikto v2.1.5", "OpenVAS / Greenbone v26.7.0"],
+    skillsGained: ["Automated Vulnerability Scanning", "Nmap Scripting Engine (NSE)", "Web Server Misconfiguration Auditing", "OpenVAS Target & Task Management", "CVE & CVSS Triage"],
+    readTime: 14,
+    date: "2026-10-22",
+    screenshots: Array.from({ length: 25 }, (_, i) => `Assets/Cases/Vulnerability Scanning Tools/Screenshot (${418 + i}).webp`),
+    image: "Assets/Cases/Vulnerability Scanning Tools/Screenshot (442).webp",
   },
 ] as const;
 

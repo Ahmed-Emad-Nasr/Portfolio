@@ -259,7 +259,7 @@ export default function CaseLibrarySection({
             <h2 className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
               All cases
             </h2>
-            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">全件</span>
+            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="全件" />
           </div>
 
           <CaseFilters
@@ -308,7 +308,7 @@ export default function CaseLibrarySection({
           {visiblePdfs.length === 0 && (
             <div className="relative bg-surface/60 border border-foreground/10 p-10 md:p-14 text-center">
               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
-              <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja" aria-hidden="true">該当なし</p>
+              <p className="brush-jp text-4xl text-accent/80 mb-4" lang="ja" aria-hidden="true" data-jp="該当なし" />
               <p className="font-mono text-sm text-foreground/60 tracking-wider mb-4">No case matches these filters.</p>
               <button
                 type="button"

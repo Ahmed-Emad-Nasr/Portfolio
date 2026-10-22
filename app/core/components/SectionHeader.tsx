@@ -1,7 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { EASE } from "@/app/core/motion";
+import { rv } from "@/app/core/reveal";
 
 interface SectionHeaderProps {
   eyebrow: string;
@@ -24,21 +21,16 @@ export default function SectionHeader({
   as: Heading = "h2",
 }: SectionHeaderProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -32 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7, ease: EASE }}
-      className={align === "split" ? "mb-16 md:mb-20" : "mb-16 md:mb-20 max-w-3xl"}
-    >
+    <div
+  className={align === "split" ? "mb-16 md:mb-20" : "mb-16 md:mb-20 max-w-3xl"}
+  data-reveal={rv({ x: -32, y: 0, duration: 0.7 })}
+>
       <div className="flex items-center gap-4 mb-5">
         <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
         <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
           {eyebrow}
         </span>
-        <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
-          {japanese}
-        </span>
+        <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp={japanese} />
       </div>
       <Heading className="font-display text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
         <span className="text-foreground">{titleA}</span> <br />
@@ -49,6 +41,6 @@ export default function SectionHeader({
           {description}
         </p>
       ) : null}
-    </motion.div>
+    </div>
   );
 }

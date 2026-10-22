@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 const BOOT_WORDS = ["起動中", "武士道", "鍛錬", "技術調整", "出陣"];
@@ -9,6 +9,12 @@ const BOOT_WORDS = ["起動中", "武士道", "鍛錬", "技術調整", "出陣"
 /**
  * Minimal boot screen: monogram, cycling kanji, hairline progress.
  * Click anywhere to skip. Respects reduced-motion (short + static).
+ *
+ * The screen leaves on its own: a CSS animation (globals.css) slides it out
+ * at ~1.2 s whether or not the JavaScript has loaded. It used to wait for
+ * hydration plus 1.9 s, so on a mid-range phone on 4G visitors stared at the
+ * intro for 5–7 s before seeing anything. The script now only drives the
+ * progress bar and the click-to-skip.
  *
  * Plays once per tab: after the first run a sessionStorage flag is set, and
  * the inline script in layout.tsx marks <html class="booted"> before first
@@ -36,7 +42,7 @@ export default function AppLoader() {
     let raf = 0;
     let doneTimer: NodeJS.Timeout | undefined;
     const start = performance.now();
-    const DURATION = reduced ? 600 : 1900;
+    const DURATION = reduced ? 300 : 1000;
 
     const tick = (now: number) => {
       const t = Math.min(1, Math.max(0, (now - start) / DURATION));
@@ -50,7 +56,7 @@ export default function AppLoader() {
     raf = requestAnimationFrame(tick);
 
     // Safety: never trap the user
-    const fallback = setTimeout(() => setLoading(false), 3500);
+    const fallback = setTimeout(() => setLoading(false), 2000);
 
     return () => {
       cancelAnimationFrame(raf);

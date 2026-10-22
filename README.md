@@ -10,8 +10,10 @@ Design, motion and component structure: the Neo-Samurai theme from
 ## Stack
 
 Next.js 16 (App Router, static export) · React 19 · TypeScript · Tailwind CSS v4 ·
-framer-motion · GSAP ScrollTrigger · Lenis · next-themes · lucide-react ·
+framer-motion (lazy `m` + `LazyMotion`) · Lenis · next-themes · lucide-react ·
 yet-another-react-lightbox. Fonts are self-hosted with `next/font/local`.
+Scroll entrances are one inline script (`app/core/reveal.ts`), the hero
+entrance is CSS — no GSAP.
 
 ## Run it
 
@@ -127,6 +129,48 @@ Mobile performance under simulated throttling stays in the high 60s either
 way; it is bound by the same animation stack. The accessibility score is 97:
 what Lighthouse still flags is the faded Japanese decoration (eyebrows,
 dividers), which is hidden from screen readers and kept faint on purpose.
+
+Third pass (October 2026, production audit). Same build measured before and
+after on one machine (no `public/` images in the test, so compare the deltas,
+not the absolute numbers with the tables above):
+
+| | Before | After |
+|---|---|---|
+| JavaScript, every page except home (gzip) | 303 KB | 214 KB |
+| JavaScript, home (gzip, modern browsers) | 344 KB | 260 KB |
+| Main-thread blocking, home, 4× CPU (median) | 2.55 s | ~1.9 s |
+| Lighthouse accessibility | 97 | 100 |
+| Lighthouse desktop performance | 88 | 92 |
+| axe-core violations (home, CV, case page, legal, 404 — both themes) | 6 rule types | 0 |
+
+What changed:
+
+- The case library (`cases.ts`, ~115 KB with every screenshot path) and the
+  ATT&CK mapping no longer ship to the browser. `portfolio-data.ts` imported
+  `case-stats.ts`, so all 18 client sections that read it pulled the whole
+  library into every page's JS. The numbers now live in `live-copy.ts`
+  (server-only) and reach the sections as props.
+- GSAP and ScrollTrigger are gone. The hero entrance is CSS (it starts at
+  the first paint instead of hiding the server-rendered hero at hydration
+  and replaying it), the timeline uses the reveal script, and Lenis drives
+  itself (`autoRaf`) instead of riding GSAP's ticker.
+- ~40 framer-motion `whileInView` components became `data-reveal`
+  attributes played by one IntersectionObserver (`core/reveal.ts`), and
+  framer-motion loads its animation engine lazily (`MotionProvider`).
+  Ten static sections became server components.
+- The intro screen leaves on a CSS timer (~1.2 s) instead of waiting for
+  hydration plus 1.9 s.
+- Accessibility: decorative Japanese labels are painted from `data-jp`
+  (generated content), the ATT&CK links are underlined, accessible names
+  match visible text, the cursor overlay is hidden from assistive tech.
+- Security: a Content-Security-Policy `<meta>` (production builds), an
+  explicit referrer policy, `security.txt`.
+
+What still limits mobile Lighthouse is the size of the one page: ~1 MB of
+HTML (126 KB gzip) and ~5,300 elements — 76 cases, 98 gallery records, 28
+ATT&CK techniques with their evidence, 26 videos — all hydrated at once.
+Moving the case library and the videos to their own route would roughly
+halve it.
 
 ## Licence
 

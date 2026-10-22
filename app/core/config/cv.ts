@@ -112,7 +112,7 @@ export const CV_SKILLS: readonly { label: string; items: readonly string[] }[] =
 ];
 
 /** Path to the PDF. Goes through normalizePublicHref like any other asset. */
-export const CV_PDF_HREF = "Assets/cv/AhmedEmadNasr_CV.pdf";
+export { CV_PDF_HREF } from "./shared";
 
 /**
  * The opening line. This is the only place on the site that states outright

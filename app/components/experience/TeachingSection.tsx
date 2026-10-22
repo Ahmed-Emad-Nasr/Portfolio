@@ -38,9 +38,7 @@ export default function TeachingSection() {
               <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
                 Teaching // Passing it on
               </span>
-              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
-                指導
-              </span>
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="指導" />
             </div>
             <h2
               id="teaching-title"
@@ -64,9 +62,7 @@ export default function TeachingSection() {
               <div key={s.label} className="flex items-center gap-4 px-6 py-5 bg-background">
                 <dt className="order-2 flex flex-col">
                   <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
-                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true">
-                    {s.japanese}
-                  </span>
+                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true" data-jp={s.japanese} />
                 </dt>
                 <dd className="order-1 font-mono text-xl md:text-2xl font-black tabular-nums text-accent">{s.value}</dd>
               </div>
@@ -84,9 +80,7 @@ export default function TeachingSection() {
               <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.3em] text-primary-ink">
                 Curriculum // {DIPLOMA.hours} hours
               </span>
-              <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true">
-                {DIPLOMA.japanese}
-              </span>
+              <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp={DIPLOMA.japanese} />
             </div>
             <h3 className="mt-5 font-display text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight leading-[0.95]">
               {DIPLOMA.title}

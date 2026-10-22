@@ -26,6 +26,7 @@ import TeachingSection from "@/app/components/experience/TeachingSection";
 import PlatformsSection from "@/app/components/experience/PlatformsSection";
 import { getTryHackMeStats } from "@/app/core/api/tryhackme";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/app/core/config/platforms";
+import { LIVE_COPY } from "@/app/core/config/live-copy";
 import {
   attackCoverage,
   categoryFacets,
@@ -63,8 +64,9 @@ const ContactFooter = dynamic(
 
 export const metadata: Metadata = {
   title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst | DFIR & Malware Analysis",
+  /* ≤160 characters: search results cut anything longer mid-sentence */
   description:
-    "Ahmed Emad Nasr's portfolio showcasing SOC operations, incident response, malware analysis, threat hunting, and real security case reports using Wazuh, Suricata, and ELK.",
+    "SOC analyst & incident responder: real investigation reports, malware analysis, DFIR and detection engineering (Wazuh, Suricata, ELK) mapped to ATT&CK.",
   keywords: [
     "SOC portfolio",
     "incident response portfolio",
@@ -163,11 +165,11 @@ export default async function Home() {
 
       {/* 01  Who: face, name, stack in 5 seconds */}
       <div>
-        <HeroSection projectCount={projectCount} starCount={starCount} />
+        <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} />
       </div>
 
       {/* 02  Trust: numbers before claims */}
-      <StatsBar />
+      <StatsBar stats={LIVE_COPY.stats} />
 
       {/* 03  Offer: what you can hire me for */}
       <div>
@@ -217,7 +219,7 @@ export default async function Home() {
       </div>
 
       <div className={DEFER}>
-        <NowSection />
+        <NowSection items={LIVE_COPY.now} />
       </div>
 
       {/* 08  Risk removal: how we will work together */}
@@ -227,7 +229,7 @@ export default async function Home() {
 
       {/* 08b  Pre-call answers */}
       <div className={DEFER}>
-        <FaqSection />
+        <FaqSection items={LIVE_COPY.faq} />
       </div>
 
       <SectionDivider text="認定 • 実績 • 知識 • 技能" angle={-1.5} />

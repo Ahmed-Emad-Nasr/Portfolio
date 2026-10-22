@@ -48,9 +48,7 @@ export function Eyebrow({ children, japanese }: { children: ReactNode; japanese?
       <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
       <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{children}</span>
       {japanese && (
-        <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
-          {japanese}
-        </span>
+        <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp={japanese} />
       )}
     </div>
   );

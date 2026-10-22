@@ -28,6 +28,9 @@ import { caseIndex } from "@/app/core/config/library-data";
 import { SmoothScroll } from "@/app/core/components/SmoothScroll";
 import CursorOverlay from "@/app/core/components/CursorOverlay";
 import AppLoader from "@/app/core/components/AppLoader";
+import MotionProvider from "@/app/core/components/MotionProvider";
+import { REVEAL_SCRIPT } from "@/app/core/reveal";
+import { CONTENT_SECURITY_POLICY } from "@/app/core/config/security";
 import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
 import Analytics from "@/app/core/components/Analytics";
@@ -59,6 +62,9 @@ export const viewport: Viewport = {
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
+  /* Full URL to same-origin pages, only the origin to other sites (the
+     default, stated explicitly so no browser falls back to leaking paths) */
+  referrer: "strict-origin-when-cross-origin",
   metadataBase: new URL("https://ahmed-emad-nasr.github.io/Portfolio/"),
   applicationName: "Ahmed Emad Nasr Portfolio",
   appleWebApp: {
@@ -258,6 +264,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <head>
+        {/* Production only: the dev server needs eval and a websocket for HMR */}
+        {process.env.NODE_ENV === "production" && (
+          <meta httpEquiv="Content-Security-Policy" content={CONTENT_SECURITY_POLICY} />
+        )}
         {/* Before first paint: skip the intro screen if it already played in this tab */}
         <script
           dangerouslySetInnerHTML={{
@@ -267,6 +277,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body className="font-body antialiased bg-background text-foreground overflow-x-hidden">
+        {/* Scroll entrances (core/reveal.ts) — first in <body> so it sees every
+            element as the parser inserts it, before any of them is painted */}
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_SCRIPT }} />
+        <MotionProvider>
         <ThemeProvider>
           <ThemeFxProvider>
             <a href="#main-content" className="skip-link">Skip to content</a>
@@ -286,6 +300,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <ServiceWorkerRegister enabled={HAS_SERVICE_WORKER} />
           </ThemeFxProvider>
         </ThemeProvider>
+        </MotionProvider>
       </body>
     </html>
   );

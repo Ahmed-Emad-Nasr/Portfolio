@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState, type ReactNode } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
 import { EASE } from "@/app/core/motion";
 import { TiltCard } from "@/app/core/components/Motion";
@@ -50,7 +50,7 @@ function BlockTitle({ children, japanese, id }: { children: ReactNode; japanese:
       <h2 id={id} className="font-mono text-[0.625rem] text-primary-ink tracking-[0.35em] uppercase font-bold">
         {children}
       </h2>
-      <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">{japanese}</span>
+      <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true" data-jp={japanese} />
     </div>
   );
 }
@@ -128,7 +128,7 @@ export default function CaseArticle({
             <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
           </Link>
           <span className="text-foreground/20" aria-hidden="true">/</span>
-          <span className="text-foreground/40">{item.category}</span>
+          <span className="text-foreground/60">{item.category}</span>
         </nav>
 
         {/* Header */}
@@ -141,7 +141,7 @@ export default function CaseArticle({
           <div className="flex items-center gap-4 mb-5">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
             <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
-            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">事件</span>
+            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="事件" />
           </div>
           <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-[0.95] text-foreground">
             {item.title}

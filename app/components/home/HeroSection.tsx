@@ -1,9 +1,8 @@
 "use client";
 
 import { preload } from "react-dom";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { m as motion, useScroll, useTransform } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { RevealText } from "@/app/core/components/RevealText";
@@ -12,7 +11,6 @@ import { RoleTicker } from "@/app/components/home/RoleTicker";
 import { MessageCircle, Download, ArrowDown } from "lucide-react";
 import { Github, Linkedin, Youtube } from "@/app/core/icons/BrandIcons";
 
-import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 function FieldRow({ label, value, hot = false }: { label: string; value: string; hot?: boolean }) {
   return (
@@ -40,9 +38,12 @@ const HERO_PHOTO = {
 export default function HeroSection({
   projectCount,
   starCount,
+  description,
 }: {
   projectCount: number;
   starCount: number;
+  /** The summary paragraph — quotes the case-library numbers (live-copy.ts) */
+  description: string;
 }) {
   /* The portrait is the LCP element: let the browser fetch it with the HTML
      instead of after the CSS. */
@@ -59,75 +60,12 @@ export default function HeroSection({
   });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 140]);
 
-  useEffect(() => {
-    if (prefersReducedMotion()) return; // final state is the natural layout
-    /* Phones run the same entrance at a faster tempo. On a mid-range phone
-       the page is already ~2 s into hydration when this starts, and the
-       portrait and headline (the LCP candidates) stayed invisible for the
-       full 2 s of desktop timing on top of that. */
-    const t = window.matchMedia("(max-width: 767px)").matches ? 0.5 : 1;
-    const ctx = gsap.context(() => {
-      /* Entrance: content stack */
-      gsap.from(".hero-content > *", {
-        y: 60,
-        opacity: 0,
-        duration: 1.5 * t,
-        stagger: 0.15 * t,
-        ease: "power4.out",
-        delay: 0.5 * t,
-      });
-
-      /* Entrance: portrait */
-      gsap.from(".hero-image", {
-        scale: 1.1,
-        opacity: 0,
-        duration: 2 * t,
-        ease: "power2.out",
-        delay: 0.2 * t,
-      });
-
-      /* Entrance: background kanji */
-      gsap.from(".japanese-bg", {
-        x: 100,
-        opacity: 0,
-        duration: 2,
-        ease: "expo.out",
-        delay: 1,
-      });
-
-      /* Entrance: hinomaru sun */
-      gsap.from(".hinomaru-sun", {
-        scale: 0,
-        opacity: 0,
-        duration: 2.5,
-        ease: "expo.out",
-        delay: 0.3,
-      });
-
-      /* Entrance: spec sheet */
-      gsap.from(".spec-item", {
-        x: -30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        delay: 1.2,
-      });
-
-      /* Entrance: speed lines */
-      gsap.from(".speed-line", {
-        scaleX: 0,
-        opacity: 0,
-        duration: 1.5,
-        stagger: 0.05,
-        ease: "expo.out",
-        delay: 1.5,
-        transformOrigin: "left center",
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  /* The entrance (content stack, portrait, sun, kanji, spec sheet, speed
+     lines) is CSS — globals.css, "Hero entrance". It used to be GSAP, which
+     ran only after hydration: on a phone the server-rendered hero was shown,
+     then hidden and replayed seconds later, and GSAP's style reads forced a
+     layout of the whole page during load. CSS starts with the first paint
+     and needs no JavaScript at all. */
 
   const socials = [{
     name: "GitHub",
@@ -250,27 +188,25 @@ export default function HeroSection({
               Portfolio  履歴書
             </p>
             <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
-              <RevealText text="Ahmed" className="block text-foreground" />
+              <RevealText text="Ahmed" delay={0.6} className="block text-foreground" />
               {/* One line per word, always: "Emad Nasr" wraps at every width
                   in the display font but fits on one line in the fallback, so
                   letting it wrap on its own made the whole hero jump (a layout
                   shift of up to 0.75 on phones) when the font arrived. */}
               <RevealText
                 text="Emad"
-                delay={0.12}
+                delay={0.72}
                 className="block md:ml-10 text-transparent"
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
               <RevealText
                 text="Nasr"
-                delay={0.18}
+                delay={0.78}
                 className="block md:ml-10 text-transparent"
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
             </h1>
-            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true">
-              アハメド・エマド・ナスル  セキュリティアナリスト
-            </p>
+            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true" data-jp="アハメド・エマド・ナスル  セキュリティアナリスト" />
             {/* The jobs, typed one after another (from the old site's hero) */}
             <RoleTicker
               roles={PORTFOLIO_DATA.profile.roles}
@@ -354,9 +290,7 @@ export default function HeroSection({
               aria-label="Maker's seal"
             >
               <div className="absolute inset-1.5 border border-foreground/40 pointer-events-none" />
-              <span className="brush-jp text-xl lg:text-2xl text-foreground leading-none" lang="ja" aria-hidden="true">
-                村長
-              </span>
+              <span className="brush-jp text-xl lg:text-2xl text-foreground leading-none" lang="ja" aria-hidden="true" data-jp="村長" />
             </div>
 
             {/* Outer decorative ring with dashes */}
@@ -418,7 +352,7 @@ export default function HeroSection({
                 {PORTFOLIO_DATA.profile.hero.tagline}
               </p>
               <p className="text-lg text-on-surface-variant font-light leading-relaxed">
-                {PORTFOLIO_DATA.profile.hero.description}
+                {description}
               </p>
             </div>
 
@@ -440,9 +374,7 @@ export default function HeroSection({
                   <Download size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-y-0.5" />
                   RESUME.pdf
                   <span className="sr-only"> (download)</span>
-                  <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja" aria-hidden="true">
-                    履歴書
-                  </span>
+                  <span className="brush-jp text-base normal-case tracking-normal opacity-70" lang="ja" aria-hidden="true" data-jp="履歴書" />
                 </a>
                 <a
                   href="#work"
@@ -450,9 +382,7 @@ export default function HeroSection({
                 >
                   <ArrowDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                   View Work
-                  <span className="brush-jp text-base normal-case tracking-normal text-foreground/50" lang="ja" aria-hidden="true">
-                    仕事
-                  </span>
+                  <span className="brush-jp text-base normal-case tracking-normal text-foreground/50" lang="ja" aria-hidden="true" data-jp="仕事" />
                 </a>
               </div>
 
@@ -496,9 +426,7 @@ export default function HeroSection({
               <span className="font-mono text-[0.625rem] font-bold tracking-[0.35em] uppercase text-primary-ink">
                 Field Record
               </span>
-              <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true">
-                記録
-              </span>
+              <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true" data-jp="記録" />
             </div>
             <dl className="flex flex-col">
               <FieldRow label="Status" value={PORTFOLIO_DATA.profile.availability} hot />

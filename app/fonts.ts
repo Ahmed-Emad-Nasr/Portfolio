@@ -39,8 +39,14 @@ export const yujiSyuku = localFont({
   src: "./fonts/yuji-syuku.woff2",
   weight: "400",
   variable: "--font-yuji",
-  display: "swap",
-  /* Only the decorative kanji use it, and none of them is above the fold's
-     main text — no need to compete with the headline font for bandwidth */
+  /* "optional", not "swap": the brush line under the hero name is set in
+     it, and swapping it in after first paint changed that line's height —
+     the whole hero shifted (CLS 0.14 on desktop). With optional the browser
+     uses Yuji only if it is ready within ~100 ms, otherwise keeps the
+     fallback for this page view; the file is cached for the next one. It is
+     decoration only, so a fallback glyph on a first visit costs nothing. */
+  display: "optional",
+  /* None of the decorative kanji is the page's main text — no need to
+     compete with the headline font for bandwidth */
   preload: false,
 });

@@ -1,10 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { EASE } from "@/app/core/motion";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
+import { rv } from "@/app/core/reveal";
 
 /**
  * Arsenal  static stack grid (no marquee).
@@ -35,13 +32,10 @@ export default function TechStackGrid() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {PORTFOLIO_DATA.stack.map((g, idx) => (
-            <motion.div
-              key={g.id}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.65, delay: idx * 0.08, ease: EASE }}
-            >
+            <div
+  key={g.id}
+  data-reveal={rv({ y: 28, duration: 0.65, delay: idx * 0.08 })}
+>
               <TiltCard className="group spotlight spotlight-blue relative bg-surface/60 border border-foreground/5 p-7 h-full hover:border-tertiary/50 transition-colors duration-500"
               >
                 <div
@@ -52,9 +46,7 @@ export default function TechStackGrid() {
                   <h3 className="font-display text-lg font-black uppercase tracking-tight text-foreground">
                     {g.title}
                   </h3>
-                  <span className="brush-jp text-xl text-tertiary" lang="ja" aria-hidden="true">
-                    {g.japanese}
-                  </span>
+                  <span className="brush-jp text-xl text-tertiary" lang="ja" aria-hidden="true" data-jp={g.japanese} />
                 </div>
                 <div className="w-8 h-[2px] bg-tertiary/60 mb-5" aria-hidden="true" />
                 <ul className="flex flex-wrap gap-2" aria-label={`${g.title} tools`}>
@@ -68,7 +60,7 @@ export default function TechStackGrid() {
                   ))}
                 </ul>
               </TiltCard>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

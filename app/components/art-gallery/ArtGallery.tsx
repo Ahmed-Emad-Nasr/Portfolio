@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { EASE } from "@/app/core/motion";
 import { useState } from "react";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import dynamic from "next/dynamic";
 import { Sparkles, Maximize2, ChevronDown } from "lucide-react";
+import { rv } from "@/app/core/reveal";
 
 const GalleryLightbox = dynamic(() => import("./GalleryLightbox"), { ssr: false });
 
@@ -43,13 +44,10 @@ export default function ArtGallery() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="max-w-3xl"
-          >
+          <div
+  className="max-w-3xl"
+  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
+>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
@@ -60,15 +58,12 @@ export default function ArtGallery() {
               <span className="text-foreground">Proof</span> <br />
               <span className="text-primary italic">Gallery.</span>
             </h2>
-          </motion.div>
+          </div>
 
           {/* Counter Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
+          <div
+  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+>
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-primary" />
@@ -86,7 +81,7 @@ export default function ArtGallery() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Art Grid  masonry columns */}

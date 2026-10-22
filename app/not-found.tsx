@@ -43,7 +43,7 @@ export default function NotFound() {
           <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
             <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">Error // Not found</span>
-            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true">迷子</span>
+            <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="迷子" />
           </div>
           <p className={statusCode} aria-hidden="true">404</p>
 

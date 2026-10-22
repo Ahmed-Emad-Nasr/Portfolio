@@ -25,8 +25,10 @@ from Mostafa Mahmoud's **Sensei-Dev** portfolio
 used unchanged; the content is this site's own.
 
 - **Stack:** Tailwind CSS v4 (utility classes in the JSX, tokens in `@theme`
-  in `app/globals.css`), framer-motion, GSAP ScrollTrigger, Lenis smooth
-  scroll, next-themes (dark default + light "washi" theme with the water-drop
+  in `app/globals.css`), framer-motion (lazy `m` components under
+  `LazyMotion`, see `core/components/MotionProvider.tsx`), Lenis smooth
+  scroll (its own rAF loop), scroll entrances from `core/reveal.ts` (one
+  inline IntersectionObserver script, no per-element components), next-themes (dark default + light "washi" theme with the water-drop
   transition), lucide-react, yet-another-react-lightbox. Fonts are
   self-hosted through @fontsource.
 - **Home page:** `app/page.tsx` composes the sections in `app/components/`

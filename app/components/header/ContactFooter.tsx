@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { MessageCircle, ArrowUpRight, Mail, Copy, Check, ShieldCheck, KeyRound } from "lucide-react";
 import { Github, Linkedin, Youtube, Instagram, XLogo } from "@/app/core/icons/BrandIcons";
@@ -9,6 +9,7 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import { PGP, SECURITY_TXT_PATH, formattedFingerprint, hasPgpKey } from "@/app/core/config/security";
+import { rv } from "@/app/core/reveal";
 
 /* The last line of every page: the mark, the copyright, the legal pages and
    the design credit. On the home page it closes the contact section; the
@@ -51,7 +52,7 @@ export function FooterBar({ className = "" }: { className?: string }) {
           </a>
         </span>
         <span className="text-primary-ink">•</span>
-        <span lang="ja" aria-hidden="true">次のレベル</span>
+        <span lang="ja" aria-hidden="true" data-jp="次のレベル" />
       </div>
     </div>
   );
@@ -112,12 +113,9 @@ export default function ContactFooter() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           {/* Brand Column */}
           <div className="flex flex-col">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            >
+            <div
+  data-reveal={rv({ y: 30, duration: 0.8 })}
+>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-[2px] bg-primary" />
                 <span className="text-primary-ink font-mono text-[0.625rem] tracking-[0.5em] uppercase font-bold">
@@ -184,9 +182,7 @@ export default function ContactFooter() {
                   <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-foreground">
                     Responsible disclosure
                   </span>
-                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/30" lang="ja" aria-hidden="true">
-                    開示
-                  </span>
+                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="開示" />
                 </div>
                 <p className="mt-2 text-sm text-foreground/60 font-light leading-relaxed">
                   Found something on this site? Report it privately —{" "}
@@ -241,17 +237,14 @@ export default function ContactFooter() {
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Form Column  Mission Briefing style */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="relative bg-surface/60 backdrop-blur-xl border border-foreground/5 p-8 md:p-12 group"
-          >
+          <div
+  className="relative bg-surface/60 backdrop-blur-xl border border-foreground/5 p-8 md:p-12 group"
+  data-reveal={rv({ y: 40, duration: 0.8, delay: 0.2 })}
+>
             {/* Corner bracket accents */}
             <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-primary/40" />
             <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-primary/40" />
@@ -399,7 +392,7 @@ export default function ContactFooter() {
                 )}
               </AnimatePresence>
             </form>
-          </motion.div>
+          </div>
         </div>
 
         {/* Bottom bar */}

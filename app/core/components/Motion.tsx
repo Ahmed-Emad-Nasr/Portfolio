@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode, type MouseEvent } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { m as motion, useMotionValue, useSpring } from "framer-motion";
 import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 /** One global listener: feeds --mx/--my to any hovered .spotlight card. */

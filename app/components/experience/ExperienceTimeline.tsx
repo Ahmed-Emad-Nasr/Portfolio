@@ -1,55 +1,11 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Calendar, MapPin, CheckCircle2, ExternalLink } from "lucide-react";
+import { rv } from "@/app/core/reveal";
 
 export default function ExperienceTimeline() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".exp-item");
-
-      cards.forEach((card, i) => {
-        gsap.from(card, {
-          x: i % 2 === 0 ? -100 : 100,
-          opacity: 0,
-          duration: 1.2,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top bottom-=100",
-            end: "top center",
-            toggleActions: "play none none reverse",
-          },
-        });
-      });
-
-      /* Section header */
-      gsap.from(".exp-header > *", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: ".exp-header",
-          start: "top bottom-=50",
-          toggleActions: "play none none reverse",
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
       className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden"
     >
       {/* ─── Background Decorative Kanji ─── */}
@@ -77,17 +33,17 @@ export default function ExperienceTimeline() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* ─── Section Header ─── */}
         <div className="exp-header mb-16 md:mb-20">
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-6" data-reveal={rv({ y: 40, duration: 1 })}>
             <div className="w-12 h-[2px] bg-primary" />
             <span className="text-primary-ink text-[0.625rem] font-mono font-bold tracking-[0.4em] uppercase">
               Professional Path // 職歴
             </span>
           </div>
-          <h2 className="font-display title-fit [--title-n:12] font-black tracking-tighter uppercase leading-[0.85]">
+          <h2 className="font-display title-fit [--title-n:12] font-black tracking-tighter uppercase leading-[0.85]" data-reveal={rv({ y: 40, duration: 1, delay: 0.15 })}>
             <span className="text-foreground">Professional</span> <br />
-            <span className="text-primary-ink">Experience.</span>
+            <span className="text-primary italic">Experience.</span>
           </h2>
-          <div className="mt-6 flex items-center gap-3">
+          <div className="mt-6 flex items-center gap-3" data-reveal={rv({ y: 40, duration: 1, delay: 0.3 })}>
             <div className="w-2 h-2 bg-primary" />
             <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.2em] uppercase">
               Service Record // Maintenance Log
@@ -101,6 +57,7 @@ export default function ExperienceTimeline() {
             <div
               key={idx}
               className="exp-item group relative grid grid-cols-1 lg:grid-cols-[1fr_1.7fr] gap-10 lg:gap-16 items-start"
+              data-reveal={rv({ x: idx % 2 === 0 ? -100 : 100, y: 0, duration: 1.2 })}
             >
               {/* Left Column: Metadata */}
               <div className="flex flex-col gap-4">

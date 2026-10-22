@@ -13,7 +13,6 @@ export interface ContactInfo {
 export interface HeroInfo {
   tagline: string;
   japaneseTagline: string;
-  description: string;
   photo: string;
   cvUrl: string;
 }
@@ -183,8 +182,5 @@ export interface PortfolioData {
   certificates: Certificate[];
   artGallery: ArtGalleryItem[];
   uses: UsesGroup[];
-  now: NowItem[];
-  faq: FaqItem[];
   milestones: Milestone[];
-  stats: Stat[];
 }

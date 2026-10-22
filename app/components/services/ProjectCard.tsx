@@ -57,9 +57,7 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
             <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-tertiary">
               {typeLabel}
             </span>
-            <span className="brush-jp text-sm text-foreground/30 leading-none" lang="ja" aria-hidden="true">
-              {TYPE_JP[typeLabel] ?? "庫"}
-            </span>
+            <span className="brush-jp text-sm text-foreground/30 leading-none" lang="ja" aria-hidden="true" data-jp={TYPE_JP[typeLabel] ?? "庫"} />
           </div>
         </div>
         {/* A "★ 0" badge advertises the absence of stars — show it only once

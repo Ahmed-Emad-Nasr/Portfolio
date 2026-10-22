@@ -9,15 +9,14 @@
 import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Check, Copy, ExternalLink, FileText, Download, Images, ShieldAlert, AlertTriangle, ArrowRight } from "lucide-react";
-import { EASE } from "@/app/core/motion";
 import { TiltCard } from "@/app/core/components/Motion";
 import { TRAILING_SLASH } from "@/app/core/config/site";
 import { getThumbnail, normalizePublicHref } from "@/app/blog/blog-utils";
 import type { PdfResource } from "@/app/blog/blog-types";
 import { useCopyLink } from "./useCopyLink";
 import { btnOutline, btnPrimary, chipAccent, chipNeutral, chipTertiary } from "@/app/components/shared/kit";
+import { rv } from "@/app/core/reveal";
 
 type CaseCardProps = PdfResource & {
   index: number;
@@ -60,14 +59,11 @@ function CaseCard({
   const moreTools = Math.max(0, (tools ?? []).length - shownTools.length);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.7, delay: (index % 2) * 0.1, ease: EASE }}
-      id={`case-${id}`}
-      className="scroll-mt-28"
-    >
+    <div
+  id={`case-${id}`}
+  className="scroll-mt-28"
+  data-reveal={rv({ y: 32, duration: 0.7, delay: (index % 2) * 0.1 })}
+>
       <TiltCard className="spotlight group relative bg-surface/60 border border-foreground/5 hover:border-primary/40 transition-colors duration-500 flex flex-col h-full overflow-hidden">
         <div className="absolute top-0 left-0 z-10 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-70" aria-hidden="true" />
 
@@ -174,7 +170,7 @@ function CaseCard({
           </div>
         </div>
       </TiltCard>
-    </motion.div>
+    </div>
   );
 }
 

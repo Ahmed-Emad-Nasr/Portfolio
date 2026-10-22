@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { motion, useAnimationControls } from "framer-motion";
+import { m as motion, useAnimationControls } from "framer-motion";
 import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 interface Mascot {

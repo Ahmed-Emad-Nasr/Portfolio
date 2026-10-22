@@ -13,7 +13,7 @@
  */
 
 import type { MetadataRoute } from "next";
-import { SITE_BASE_URL, absoluteUrl } from "@/app/core/config/site";
+import { absoluteUrl } from "@/app/core/config/site";
 
 // Required with output: "export" — Next 16 rejects any metadata route
 // without it, even when the function contains nothing dynamic.
@@ -28,6 +28,7 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: absoluteUrl("/sitemap.xml"),
-    host: SITE_BASE_URL,
+    // No `host`: it is a Yandex-only directive, ignored by Google and flagged
+    // by validators when it carries a scheme and a path.
   };
 }

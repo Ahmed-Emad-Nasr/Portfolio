@@ -17,6 +17,7 @@
  */
 
 import { SITE_BASE_URL } from "./site";
+import { ANALYTICS } from "./analytics";
 
 export const SECURITY_CONTACT_EMAIL = "ahmed.em.nasr@gmail.com";
 
@@ -51,3 +52,43 @@ export const securityTxt = (built = new Date()): string => {
     "",
   ].join("\n");
 };
+
+/*
+ * Content-Security-Policy, delivered as a <meta> tag (layout.tsx) because
+ * GitHub Pages cannot send response headers. Every origin the site really
+ * loads from, and nothing else:
+ *   · YouTube: the privacy-enhanced player and its thumbnails
+ *   · GitHub: the avatar on the project cards (github.com redirects to
+ *     avatars.githubusercontent.com), and the contribution calendar, read
+ *     in the browser from github-contributions-api.jogruber.de (api/contributions.ts)
+ *   · the analytics provider, only when one is configured (analytics.ts)
+ * 'unsafe-inline' for scripts is required by Next.js static export (its
+ * hydration data and the theme / reveal bootstraps are inline scripts with
+ * no build-stable hash); everything else is locked down. A meta CSP cannot
+ * set frame-ancestors — clickjacking protection needs a header (a custom
+ * domain behind Cloudflare could add it).
+ */
+const analyticsOrigins = ANALYTICS ? [new URL(ANALYTICS.script).origin] : [];
+const analyticsConnect =
+  ANALYTICS?.provider === "Plausible"
+    ? ["https://plausible.io"]
+    : ANALYTICS
+      ? ["https://cloudflareinsights.com"]
+      : [];
+
+export const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline' ${analyticsOrigins.join(" ")}`.trim(),
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://i.ytimg.com https://github.com https://avatars.githubusercontent.com",
+  "font-src 'self'",
+  `connect-src 'self' https://github-contributions-api.jogruber.de ${analyticsConnect.join(" ")}`.trim(),
+  "frame-src https://www.youtube-nocookie.com",
+  "media-src 'self'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "upgrade-insecure-requests",
+].join("; ");

@@ -49,9 +49,7 @@ function FeaturedCard({ platform, stats }: { platform: Platform; stats: TryHackM
       <div className="flex flex-col xl:w-[36%] shrink-0">
         <div className="flex items-start justify-between gap-4">
           <Mark>{platform.mark}</Mark>
-          <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true">
-            {platform.japanese}
-          </span>
+          <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp={platform.japanese} />
         </div>
         <h3 className="mt-6 font-display text-3xl md:text-4xl font-black uppercase tracking-tight leading-none">
           {platform.name}
@@ -99,9 +97,7 @@ function PlatformCard({ platform }: { platform: Platform }) {
       />
       <div className="flex items-start justify-between gap-4">
         <Mark>{platform.mark}</Mark>
-        <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true">
-          {platform.japanese}
-        </span>
+        <span className="jp-eyebrow text-[0.625rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp={platform.japanese} />
       </div>
       <h3 className="mt-6 font-display text-xl sm:text-2xl lg:text-lg xl:text-2xl font-black uppercase tracking-tight leading-none group-hover:text-primary transition-colors duration-300">
         {platform.name}
@@ -159,9 +155,7 @@ export default function PlatformsSection({
               <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
                 Practice // Public profiles
               </span>
-              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true">
-                修練
-              </span>
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="修練" />
             </div>
             <h2
               id="platforms-title"

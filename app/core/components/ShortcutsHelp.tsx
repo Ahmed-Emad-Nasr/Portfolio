@@ -10,7 +10,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Keyboard } from "lucide-react";
 
 const GROUPS: { title: string; items: { keys: string[]; label: string }[] }[] = [

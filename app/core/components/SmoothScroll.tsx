@@ -1,42 +1,32 @@
 "use client";
 
+/*
+ * Lenis smooth scrolling, driven by its own requestAnimationFrame loop
+ * (autoRaf). It used to run on GSAP's ticker, which put GSAP and
+ * ScrollTrigger into the layout bundle of every page; now GSAP is only
+ * downloaded by the two sections that animate with it (hero, timeline).
+ * ScrollTrigger follows Lenis through the native scroll events Lenis fires.
+ */
+
 import { ReactLenis, useLenis } from "lenis/react";
 import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { registerLenis } from "@/app/core/utils/scroll";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
+function LenisBridge() {
+  const lenis = useLenis();
+  useEffect(() => {
+    if (!lenis) return;
+    // The keyboard shortcuts scroll through the same instance (core/utils/scroll.ts)
+    registerLenis(lenis);
+    return () => registerLenis(null);
+  }, [lenis]);
+  return null;
 }
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
-  const lenis = useLenis();
-
-  useEffect(() => {
-    if (!lenis) return;
-
-    // The keyboard shortcuts scroll through the same instance (core/utils/scroll.ts)
-    registerLenis(lenis);
-
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const updateRaf = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(updateRaf);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      lenis.off("scroll", ScrollTrigger.update);
-      gsap.ticker.remove(updateRaf);
-      registerLenis(null);
-    };
-  }, [lenis]);
-
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true, autoRaf: true }}>
+      <LenisBridge />
       {children}
     </ReactLenis>
   );

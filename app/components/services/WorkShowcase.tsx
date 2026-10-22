@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { EASE } from "@/app/core/motion";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import type { WorkType } from "@/app/core/types/portfolio";
 import { ExternalLink, FlaskConical, Microscope, Wrench, Server, Lock, PlayCircle } from "lucide-react";
 import { Github } from "@/app/core/icons/BrandIcons";
 import { TiltCard } from "@/app/core/components/Motion";
+import { rv } from "@/app/core/reveal";
 
 const FILTERS: { id: WorkType | "all"; label: string; japanese: string }[] = [
   { id: "all", label: "All", japanese: "全部" },
@@ -60,7 +59,7 @@ export default function WorkShowcase() {
                   : "bg-foreground/[0.03] text-foreground/70 border-foreground/10 hover:border-primary/50 hover:text-foreground"
                 }`}
             >
-              {f.label} <span className="ml-2 text-[0.5625rem]" lang="ja" aria-hidden="true">{f.japanese}</span>
+              {f.label} <span className="ml-2 text-[0.5625rem]" lang="ja" aria-hidden="true" data-jp={f.japanese} />
             </button>
           ))}
         </div>
@@ -69,13 +68,10 @@ export default function WorkShowcase() {
           {items.map((w, idx) => {
             const Icon = TYPE_ICON[w.type];
             return (
-              <motion.div
-                key={w.id}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.7, delay: (idx % 2) * 0.1, ease: EASE }}
-              >
+              <div
+  key={w.id}
+  data-reveal={rv({ y: 32, duration: 0.7, delay: (idx % 2) * 0.1 })}
+>
                 <TiltCard className="spotlight group relative bg-surface/60 border border-foreground/5 p-8 hover:border-primary/40 transition-colors duration-500 flex flex-col h-full"
                 >
                   <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-70" aria-hidden="true" />
@@ -145,7 +141,7 @@ export default function WorkShowcase() {
                     )}
                   </div>
                 </TiltCard>
-              </motion.div>
+              </div>
             );
           })}
         </div>
