@@ -139,8 +139,12 @@ const CV_STRUCTURED_DATA = jsonLd({
 const toBullets = (desc: string): string[] =>
   desc.split("•").map((part) => part.trim()).filter(Boolean);
 
+/* Month and year only: the dates in experience.ts are month-precise, and
+   formatDate printed them as "1 Jul 2026 — 1 Sept 2026" */
+const monthYear = new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
+const fmtMonth = (iso: string) => monthYear.format(new Date(iso)).replace("Sept", "Sep");
 const dateRange = (start: string, end?: string): string =>
-  `${formatDate(start)} — ${end ? formatDate(end) : "Present"}`;
+  `${fmtMonth(start)} — ${end ? fmtMonth(end) : "Present"}`;
 
 /*
  * Every item in knowledgeEducationItems now has a subTagHyperlink, so
@@ -383,7 +387,7 @@ export default function CvPage() {
           <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[0.625rem] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 print:hidden">
             Generated from the same data as the{" "}
             <Link className="text-primary-ink underline underline-offset-4" href="/">portfolio</Link> and the{" "}
-            <Link className="text-primary-ink underline underline-offset-4" href="/#cases">case library</Link>  print it (Ctrl/Cmd + P) for a clean PDF.
+            <Link className="text-primary-ink underline underline-offset-4" href="/#cases">case library</Link> — print it (Ctrl/Cmd + P) for a clean PDF.
           </p>
         </div>
       </article>

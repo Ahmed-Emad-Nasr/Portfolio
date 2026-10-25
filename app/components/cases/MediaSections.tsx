@@ -125,7 +125,7 @@ export default function MediaSections({
               japanese="動画"
               titleA="Watch &"
               titleB="Learn."
-              description="Walkthroughs and labs from the channel, all in one place."
+              description="Arabic walkthroughs and labs from the channel — SIEM, malware analysis, web security and GRC basics, all in one place."
             />
             <div className="mb-16 md:mb-20 flex flex-col items-start gap-4">
               <CounterBadge value={videos.length} top="Videos" bottom="Indexed" />

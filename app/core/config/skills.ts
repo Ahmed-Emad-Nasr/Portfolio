@@ -58,7 +58,7 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "ir",
     label: "Incident Response & Threat Detection",
-    items: ["Incident Response", "Alert Triage", "Incident Detection", "IOC Analysis", "Log Analysis", "Threat Hunting"],
+    items: ["Alert Triage", "Incident Detection", "IOC Analysis", "Log Analysis", "Threat Hunting", "Containment & Recovery"],
     evidence: [
       { id: "soc326-report", label: "SOC326 — full IR lifecycle" },
       { id: "soc336-report", label: "SOC336 — APT persistence" },

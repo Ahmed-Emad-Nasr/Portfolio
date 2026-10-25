@@ -18,7 +18,7 @@
  *   · Added any browser storage? → BROWSER_STORAGE
  */
 
-export const LEGAL_LAST_UPDATED = "2026-10-21";
+export const LEGAL_LAST_UPDATED = "2026-10-25";
 
 /** Contact details — the same email used across the site */
 export const LEGAL_CONTACT = {
@@ -56,8 +56,15 @@ export const SITE_FACTS = {
   THIRD_PARTY: [
     {
       name: "YouTube (youtube-nocookie.com)",
-      when: "Only when you click a video preview on the blog page yourself",
+      when: "Only when you click a video preview in the video section yourself",
       note: "Uses the nocookie domain, and only loads after you click",
+    },
+    {
+      /* Missing before: the preview images load as soon as the video
+         section scrolls into view, without a click */
+      name: "YouTube thumbnails (i.ytimg.com)",
+      when: "When the video section on the home page scrolls into view, to show the preview images",
+      note: "A plain image request: Google receives your IP address, no cookies are set, and no player loads",
     },
     {
       name: "github-contributions-api.jogruber.de",

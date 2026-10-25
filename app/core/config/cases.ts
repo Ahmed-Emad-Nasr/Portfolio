@@ -256,7 +256,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "ecir-registry-forensics",
     title: "Windows Registry Forensics - eCIR",
-    description: "Conducted a comprehensive digital forensic examination of offline Windows Registry hives (SYSTEM, SOFTWARE, SAM, and NTUSER.DAT) as part of an eCIR incident response investigation into suspected employee misconduct and anti-forensics activity. Utilized Registry Explorer and DCode to parse registry artifacts, decode binary timestamps, reconstruct user execution history (UserAssist, ShimCache, Amcache, and RunMRU), track external storage connections, and uncover evidence of evidence-wiping utilities. Compiled all extracted artifacts and timeline correlations into a formal forensic report.",
+    description: "Conducted a digital forensic examination of offline Windows Registry hives (SYSTEM, SOFTWARE, SAM, and NTUSER.DAT) as part of an eCIR incident response investigation into suspected employee misconduct and anti-forensics activity. Utilized Registry Explorer and DCode to parse registry artifacts, decode binary timestamps, reconstruct user execution history (UserAssist, ShimCache, Amcache, and RunMRU), track external storage connections, and uncover evidence of evidence-wiping utilities. Compiled all extracted artifacts and timeline correlations into a formal forensic report.",
     platform: "INE Labs / eCIR",
     type: "DOCX & PDF Report",
     category: "Digital Forensics",
@@ -272,7 +272,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "depi-r4-project",
     title: "Depi R4 Project",
-    description: "Executed an end-to-end malware analysis and prevention strategy project during the Digital Egypt Pioneers Initiative (DEPI R4). The workflow encompassed static and dynamic examination of malicious binaries in an isolated sandbox environment, extraction of host-based and network-based Indicators of Compromise (IOCs), behavior mapping across the infection lifecycle, and the formulation of actionable defensive countermeasures and detection rules documented in a comprehensive technical report.",
+    description: "Executed an end-to-end malware analysis and prevention strategy project during the Digital Egypt Pioneers Initiative (DEPI R4). The workflow encompassed static and dynamic examination of malicious binaries in an isolated sandbox environment, extraction of host-based and network-based Indicators of Compromise (IOCs), behavior mapping across the infection lifecycle, and the formulation of actionable defensive countermeasures and detection rules documented in a technical report.",
     platform: "DEPI R4",
     type: "DOCX & PDF Report",
     category: "Malware Analysis",
@@ -322,7 +322,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "hidden-backdoor-report",
     title: "Hidden Backdoor Case Study",
-    description: "Performed an in-depth Blue Team incident response and forensic investigation to uncover a stealthy backdoor implanted within a simulated enterprise environment. Correlated SIEM telemetry with host-level forensic artifacts to identify the initial infection vector, analyze the attacker's persistence mechanisms (scheduled tasks, registry run keys, and disguised services), extract malicious payloads for behavioral analysis, and establish a complete eradication and hardening plan.",
+    description: "Performed a Blue Team incident response and forensic investigation to uncover a stealthy backdoor implanted within a simulated enterprise environment. Correlated SIEM telemetry with host-level forensic artifacts to identify the initial infection vector, analyze the attacker's persistence mechanisms (scheduled tasks, registry run keys, and disguised services), extract malicious payloads for behavioral analysis, and establish a complete eradication and hardening plan.",
     platform: "Blue Team Simulation",
     type: "DOCX & PDF Report",
     category: "Malware Analysis",
@@ -339,7 +339,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "malware-analysis-wannacry",
     title: "WannaCry Ransomware Analysis & Response",
-    description: "Conducted a comprehensive static and dynamic malware analysis and incident response simulation for a WannaCry ransomware outbreak. Examined the binary structure, kill-switch domain behavior, cryptographic file encryption routines, and SMBv1 lateral propagation (EternalBlue). Extracted critical host and network IOCs, authored custom YARA rules and SIEM detection logic to identify infection artifacts, and documented step-by-step containment, eradication, and disaster recovery procedures.",
+    description: "Conducted a static and dynamic malware analysis and incident response simulation for a WannaCry ransomware outbreak. Examined the binary structure, kill-switch domain behavior, cryptographic file encryption routines, and SMBv1 lateral propagation (EternalBlue). Extracted critical host and network IOCs, authored custom YARA rules and SIEM detection logic to identify infection artifacts, and documented step-by-step containment, eradication, and disaster recovery procedures.",
     platform: "Lab Simulation",
     type: "DOCX & PDF Report",
     category: "Malware Analysis",
@@ -385,7 +385,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "penetration-testing-life-cycle",
     title: "penetration testing Life Cycle",
-    description: "Documented and demonstrated the complete end-to-end Penetration Testing Lifecycle within a controlled Kali Linux and SIEM/EDR lab environment. Covered each operational phase in detail, including scoping and reconnaissance, active enumeration, vulnerability exploitation, post-exploitation privilege escalation, defense evasion techniques, and translating offensive findings into actionable Blue Team detection rules and remediation reports.",
+    description: "Documented and demonstrated the end-to-end Penetration Testing Lifecycle within a controlled Kali Linux and SIEM/EDR lab environment. Covered each operational phase in detail, including scoping and reconnaissance, active enumeration, vulnerability exploitation, post-exploitation privilege escalation, defense evasion techniques, and translating offensive findings into actionable Blue Team detection rules and remediation reports.",
     platform: "Kali Linux Lab",
     type: "PDF Report",
     category: "Penetration Testing",
@@ -417,7 +417,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "data-exfiltration-investigation",
     title: "Unauthorized Data Exfiltration & Credential Compromise",
-    description: "Led a comprehensive Digital Forensics and Incident Response (DFIR) memory investigation using the Volatility Framework, FTK Imager, and John the Ripper. Analyzed a captured RAM dump to reconstruct the attack timeline, uncovering unauthorized data exfiltration via removable USB media, NTLM password hash dumping from memory, cracking of compromised credentials, and the deployment of an unauthorized SSH backdoor used for persistent remote access.",
+    description: "Led a Digital Forensics and Incident Response (DFIR) memory investigation using the Volatility Framework, FTK Imager, and John the Ripper. Analyzed a captured RAM dump to reconstruct the attack timeline, uncovering unauthorized data exfiltration via removable USB media, NTLM password hash dumping from memory, cracking of compromised credentials, and the deployment of an unauthorized SSH backdoor used for persistent remote access.",
     platform: "Memory Forensics Lab",
     type: "Report",
     category: "Digital Forensics",
@@ -434,7 +434,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "aws-guardduty-setup",
     title: "Amazon GuardDuty Threat Detection",
-    description: "Configured and operationalized continuous cloud threat detection in AWS using Amazon GuardDuty. Enabled GuardDuty monitoring across cloud accounts, generated and simulated security findings, and conducted in-depth alert triage on high-severity detections—specifically investigating anomalous API invocations, compromised EC2 instance behaviors, and unauthorized access attempts targeting sensitive Amazon S3 buckets.",
+    description: "Configured and operationalized continuous cloud threat detection in AWS using Amazon GuardDuty. Enabled GuardDuty monitoring across cloud accounts, generated and simulated security findings, and conducted alert triage on high-severity detections—specifically investigating anomalous API invocations, compromised EC2 instance behaviors, and unauthorized access attempts targeting sensitive Amazon S3 buckets.",
     platform: "AWS Lab",
     type: "Write-up",
     category: "Cloud Security",
@@ -575,7 +575,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "soc336-report",
     title: "SOC336 Incident Response Report",
-    description: "Conducted an Advanced Persistent Threat (APT) investigation for alert SOC336 on LetsDefend. Leveraged threat intelligence feeds, SIEM log correlation, and endpoint forensics to uncover stealthy persistence mechanisms, trace command-and-control (C2) communications, and formulate a comprehensive eradication strategy to remove all adversary footholds from the network.",
+    description: "Conducted an Advanced Persistent Threat (APT) investigation for alert SOC336 on LetsDefend. Leveraged threat intelligence feeds, SIEM log correlation, and endpoint forensics to uncover stealthy persistence mechanisms, trace command-and-control (C2) communications, and formulate an eradication strategy to remove all adversary footholds from the network.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
     category: "Incident Response",
@@ -605,7 +605,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "soc342-pdf",
     title: "SOC342 Incident Report",
-    description: "Performed a deep-dive investigation into alert SOC342 on LetsDefend involving a multi-stage privilege escalation attack chain. Correlated EDR telemetry and SIEM logs to reconstruct how the attacker elevated privileges from a standard user context to SYSTEM/root, identified the defense bypass techniques utilized, contained the affected host, and documented hardening measures.",
+    description: "Performed an investigation into alert SOC342 on LetsDefend involving a multi-stage privilege escalation attack chain. Correlated EDR telemetry and SIEM logs to reconstruct how the attacker elevated privileges from a standard user context to SYSTEM/root, identified the defense bypass techniques utilized, contained the affected host, and documented hardening measures.",
     platform: "LetsDefend Simulation",
     type: "PDF Report",
     category: "Incident Response",
@@ -651,7 +651,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "unload-malware-report",
     title: "Unload Malware Analysis Report",
-    description: "Performed a comprehensive static and dynamic malware analysis on the 'Unload' malware sample within an isolated lab environment. Inspected portable executable (PE) headers, strings, and imported APIs, monitored real-time process injection, registry modifications, and network callbacks during execution, and compiled all extracted behavioral indicators and IOCs into a technical report.",
+    description: "Performed a static and dynamic malware analysis on the 'Unload' malware sample within an isolated lab environment. Inspected portable executable (PE) headers, strings, and imported APIs, monitored real-time process injection, registry modifications, and network callbacks during execution, and compiled all extracted behavioral indicators and IOCs into a technical report.",
     platform: "Blue Team Simulation",
     type: "PDF Report",
     category: "Malware Analysis",
@@ -711,7 +711,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "malicious-web-traffic-room-report",
     title: "Malicious Web Traffic Room Report",
-    description: "Performed a comprehensive network and web log investigation to identify malicious web traffic patterns targeting an enterprise web server. Correlated HTTP access logs in the SIEM to detect automated vulnerability scanning, directory traversal, SQL injection, and web shell requests, extracted attacker IOCs, and provided actionable WAF and server hardening recommendations.",
+    description: "Performed a network and web log investigation to identify malicious web traffic patterns targeting an enterprise web server. Correlated HTTP access logs in the SIEM to detect automated vulnerability scanning, directory traversal, SQL injection, and web shell requests, extracted attacker IOCs, and provided actionable WAF and server hardening recommendations.",
     platform: "Blue Team Simulation",
     type: "PDF Report",
     category: "Web Security",
@@ -758,7 +758,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "usb-forensics-report",
     title: "USB Forensics Case Study",
-    description: "Performed a deep-dive digital forensic investigation focused on removable USB storage artifacts. Extracted device identification metadata (Vendor ID, Product ID, Serial Number, and volume GUIDs), correlated mount/unmount timestamps with user activity logs to reconstruct a precise timeline of file transfers, recovered deleted evidence, and compiled a formal forensic report.",
+    description: "Performed a digital forensic investigation focused on removable USB storage artifacts. Extracted device identification metadata (Vendor ID, Product ID, Serial Number, and volume GUIDs), correlated mount/unmount timestamps with user activity logs to reconstruct a precise timeline of file transfers, recovered deleted evidence, and compiled a formal forensic report.",
     platform: "Blue Team Simulation",
     type: "PDF & DOCX Report",
     category: "Digital Forensics",
@@ -815,7 +815,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "lockbit-ransomware-forensics",
     title: "LockBit Ransomware Forensics",
-    description: "Led a comprehensive digital forensics and incident response (DFIR) investigation into a simulated LockBit ransomware attack. Collected and preserved volatile and non-volatile evidence, analyzed SIEM logs and host artifacts to reconstruct initial access, privilege escalation, defense evasion, and encryption execution, and formulated a complete containment and system recovery plan.",
+    description: "Led a digital forensics and incident response (DFIR) investigation into a simulated LockBit ransomware attack. Collected and preserved volatile and non-volatile evidence, analyzed SIEM logs and host artifacts to reconstruct initial access, privilege escalation, defense evasion, and encryption execution, and formulated a complete containment and system recovery plan.",
     platform: "Blue Team Simulation",
     type: "DOCX & PDF Report",
     category: "Malware Analysis",
@@ -870,7 +870,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "easy-peasy-ctf-writeup",
     title: "Easy Peasy CTF Walkthrough",
-    description: "Executed a full penetration testing walkthrough of TryHackMe's 'Easy Peasy' CTF room. Performed comprehensive Nmap port and service enumeration across all ports, conducted web directory brute-forcing with Gobuster to uncover hidden endpoints, inspected HTML source code to retrieve encoded flags, and utilized CyberChef to decode multi-layered Base64/Base62 strings and crack hashes before escalating privileges via a vulnerable cron job.",
+    description: "Executed a full penetration testing walkthrough of TryHackMe's 'Easy Peasy' CTF room. Performed Nmap port and service enumeration across all ports, conducted web directory brute-forcing with Gobuster to uncover hidden endpoints, inspected HTML source code to retrieve encoded flags, and utilized CyberChef to decode multi-layered Base64/Base62 strings and crack hashes before escalating privileges via a vulnerable cron job.",
     platform: "TryHackMe",
     type: "Write-up",
     category: "Penetration Testing",
@@ -938,7 +938,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "soc-l2-alert-triage",
     title: "SOC L2 Alert Triage Walkthrough",
-    description: "Completed the SOC L2 Alert Triage room on TryHackMe, transitioning from Tier 1 initial alert validation to Tier 2 deep-dive incident analysis. Applied the Threat Hunting Loop methodology, correlated multi-source SIEM logs to reconstruct comprehensive attack timelines, analyzed root causes to tune out recurring false positives, and executed targeted endpoint containment actions.",
+    description: "Completed the SOC L2 Alert Triage room on TryHackMe, transitioning from Tier 1 initial alert validation to Tier 2 incident analysis. Applied the Threat Hunting Loop methodology, correlated multi-source SIEM logs to reconstruct attack timelines, analyzed root causes to tune out recurring false positives, and executed targeted endpoint containment actions.",
     platform: "TryHackMe",
     type: "Walkthrough",
     category: "SOC Analysis",
@@ -972,7 +972,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "defensive-security-trends",
     title: "Defensive Security Trends & SOC Level-Up",
-    description: "Completed the Defensive Security Trends room on TryHackMe, officially earning the 'SOC Level-Up' achievement badge. Explored modern Blue Team architectural shifts, SOAR automation, threat intelligence integration, cloud-native detection engineering, and the analytical mindset required to excel as a Tier 2 SOC Analyst.",
+    description: "Completed the Defensive Security Trends room on TryHackMe, earning the 'SOC Level-Up' achievement badge. Explored modern Blue Team architectural shifts, SOAR automation, threat intelligence integration, cloud-native detection engineering, and the analytical mindset required to excel as a Tier 2 SOC Analyst.",
     platform: "TryHackMe",
     type: "Achievement",
     category: "Defensive Security",
@@ -1006,7 +1006,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "information-disclosure-module",
     title: "Information Disclosure Module",
-    description: "Completed the Information Disclosure module on PortSwigger Web Security Academy. This comprehensive walkthrough covers solving multiple vulnerabilities: utilizing 'wget' and 'Git Cola' to dump and analyze exposed '.git' directories to recover hardcoded admin credentials from version control history, exploiting HTTP headers (X-Custom-IP-Authorization) via Burp Suite to bypass authentication, extracting sensitive environment variables (SECRET_KEY) from exposed phpinfo debug pages, and discovering sensitive backend logic via hidden source code backup files.",
+    description: "Completed the Information Disclosure module on PortSwigger Web Security Academy. This walkthrough covers solving multiple vulnerabilities: utilizing 'wget' and 'Git Cola' to dump and analyze exposed '.git' directories to recover hardcoded admin credentials from version control history, exploiting HTTP headers (X-Custom-IP-Authorization) via Burp Suite to bypass authentication, extracting sensitive environment variables (SECRET_KEY) from exposed phpinfo debug pages, and discovering sensitive backend logic via hidden source code backup files.",
     platform: "PortSwigger",
     type: "Module Walkthrough",
     category: "Web Security",
@@ -1119,7 +1119,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "owasp-juice-shop",
     title: "OWASP Juice Shop Penetration Testing",
-    description: "Conducted an extensive, multi-stage web application penetration test against the OWASP Juice Shop platform. Utilized Burp Suite and Browser DevTools to enumerate hidden client-side routes (such as the Score Board and administration panels), exploit SQL Injection payloads for authentication bypass and database extraction, inject DOM and Reflected Cross-Site Scripting (XSS) payloads, manipulate Insecure Direct Object References (IDOR) to access unauthorized baskets, and uncover sensitive data exposure across the OWASP Top 10.",
+    description: "Conducted a multi-stage web application penetration test against the OWASP Juice Shop platform. Utilized Burp Suite and Browser DevTools to enumerate hidden client-side routes (such as the Score Board and administration panels), exploit SQL Injection payloads for authentication bypass and database extraction, inject DOM and Reflected Cross-Site Scripting (XSS) payloads, manipulate Insecure Direct Object References (IDOR) to access unauthorized baskets, and uncover sensitive data exposure across the OWASP Top 10.",
     platform: "OWASP",
     type: "Walkthrough",
     category: "Web Security",
@@ -1135,7 +1135,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "web-shell-content-type-bypass",
     title: "Web Shell Upload via Content-Type Bypass",
-    description: "Successfully exploited a restricted file upload feature on PortSwigger Web Security Academy to achieve Remote Code Execution (RCE). Observed that the server blocks PHP file uploads based solely on the HTTP 'Content-Type' header in the multipart/form-data POST request. By intercepting the avatar upload request in Burp Suite Repeater and spoofing the 'Content-Type' header from 'application/x-php' to 'image/jpeg' while keeping the '.php' extension intact, I uploaded a PHP web shell and executed commands to exfiltrate the target secret file.",
+    description: "Exploited a restricted file upload feature on PortSwigger Web Security Academy to achieve Remote Code Execution (RCE). Observed that the server blocks PHP file uploads based solely on the HTTP 'Content-Type' header in the multipart/form-data POST request. By intercepting the avatar upload request in Burp Suite Repeater and spoofing the 'Content-Type' header from 'application/x-php' to 'image/jpeg' while keeping the '.php' extension intact, I uploaded a PHP web shell and executed commands to exfiltrate the target secret file.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1183,7 +1183,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "user-id-unpredictable",
     title: "IDOR with Unpredictable User IDs",
-    description: "Successfully exploited a horizontal privilege escalation (IDOR) vulnerability despite the application using unpredictable GUIDs for user identification. Enumerated public blog posts published by the target user ('carlos') and inspected the HTML source code of author links to harvest his unique GUID. Using Burp Suite, I substituted my own 'id' parameter in the '/my-account?id=' GET request with Carlos's GUID, gaining unauthorized access to his profile page and extracting his API key.",
+    description: "Exploited a horizontal privilege escalation (IDOR) vulnerability despite the application using unpredictable GUIDs for user identification. Enumerated public blog posts published by the target user ('carlos') and inspected the HTML source code of author links to harvest his unique GUID. Using Burp Suite, I substituted my own 'id' parameter in the '/my-account?id=' GET request with Carlos's GUID, gaining unauthorized access to his profile page and extracting his API key.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1218,7 +1218,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "user-id-data-leakage",
     title: "IDOR with Data Leakage in Redirect",
-    description: "Exploited an Insecure Direct Object Reference (IDOR) vulnerability where unauthorized requests trigger an HTTP 302 redirect to the login page, but still include the sensitive HTML body of the requested user profile in the response. By intercepting the '/my-account?id=wiener' request in Burp Suite Repeater and changing the 'id' parameter to 'carlos', I inspected the raw body of the 302 redirect response before the browser followed it, successfully extracting Carlos's confidential API key.",
+    description: "Exploited an Insecure Direct Object Reference (IDOR) vulnerability where unauthorized requests trigger an HTTP 302 redirect to the login page, but still include the sensitive HTML body of the requested user profile in the response. By intercepting the '/my-account?id=wiener' request in Burp Suite Repeater and changing the 'id' parameter to 'carlos', I inspected the raw body of the 302 redirect response before the browser followed it, extracting Carlos's confidential API key.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1314,7 +1314,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "blind-os-injection-output",
     title: "Blind OS Command Injection with Output Redirection",
-    description: "Successfully exfiltrated command output from a Blind OS Command Injection vulnerability on PortSwigger Web Security Academy using output redirection. Intercepted the feedback submission POST request in Burp Suite Repeater and injected a shell payload ('|| whoami > /var/www/images/output.txt ||') into the 'email' parameter to write the command result into the writable public images directory. I then sent a GET request to '/image?filename=output.txt' to retrieve the executed command output.",
+    description: "Exfiltrated command output from a Blind OS Command Injection vulnerability on PortSwigger Web Security Academy using output redirection. Intercepted the feedback submission POST request in Burp Suite Repeater and injected a shell payload ('|| whoami > /var/www/images/output.txt ||') into the 'email' parameter to write the command result into the writable public images directory. I then sent a GET request to '/image?filename=output.txt' to retrieve the executed command output.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1330,7 +1330,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "basic-ssrf-local-server",
     title: "Basic SSRF Against the Local Server",
-    description: "Successfully discovered and exploited a Server-Side Request Forgery (SSRF) vulnerability within the product stock check feature on PortSwigger Web Security Academy. Attempting to visit '/admin' directly from the browser was blocked because administrative access is restricted to local loopback connections. By intercepting the '/product/stock' POST request in Burp Suite Repeater and modifying the 'stockApi' parameter from an external URL to 'http://localhost/admin', I forced the server to fetch the admin page internally and discovered the user deletion endpoint. Sending a second SSRF payload targeting 'http://localhost/admin/delete?username=carlos' deleted the target user and solved the lab.",
+    description: "Discovered and exploited a Server-Side Request Forgery (SSRF) vulnerability within the product stock check feature on PortSwigger Web Security Academy. Attempting to visit '/admin' directly from the browser was blocked because administrative access is restricted to local loopback connections. By intercepting the '/product/stock' POST request in Burp Suite Repeater and modifying the 'stockApi' parameter from an external URL to 'http://localhost/admin', I forced the server to fetch the admin page internally and discovered the user deletion endpoint. Sending a second SSRF payload targeting 'http://localhost/admin/delete?username=carlos' deleted the target user and solved the lab.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1346,7 +1346,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "sqli-login-bypass",
     title: "Lab SQL injection vulnerability allowing login bypass",
-    description: "Successfully exploited an authentication bypass vulnerability via SQL Injection (SQLi) in the application's login form on PortSwigger Web Security Academy. The backend constructs a dynamic SQL query using unvalidated user input from the 'username' and 'password' fields. By intercepting the '/login' POST request in Burp Suite and injecting the payload \"administrator'--\" into the 'username' field, I closed the SQL string literal and used the '--' comment sequence to neutralize the remainder of the query (completely removing the password verification check), logging directly into the administrator account.",
+    description: "Exploited an authentication bypass vulnerability via SQL Injection (SQLi) in the application's login form on PortSwigger Web Security Academy. The backend constructs a dynamic SQL query using unvalidated user input from the 'username' and 'password' fields. By intercepting the '/login' POST request in Burp Suite and injecting the payload \"administrator'--\" into the 'username' field, I closed the SQL string literal and used the '--' comment sequence to neutralize the remainder of the query (completely removing the password verification check), logging directly into the administrator account.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1378,7 +1378,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "reflected-xss-html-context",
     title: "Reflected XSS into HTML Context",
-    description: "Identified and exploited a Reflected Cross-Site Scripting (XSS) vulnerability in the blog search functionality on PortSwigger Web Security Academy. Probed the search input with an HTML test string ('<h1>hello 3omda</h1>') and observed that the application reflects the raw query parameter directly into the HTML response body without encoding angle brackets. I then crafted and submitted the payload '<script>alert(1)</script>' via the '?search=' parameter, successfully executing arbitrary JavaScript in the browser.",
+    description: "Identified and exploited a Reflected Cross-Site Scripting (XSS) vulnerability in the blog search functionality on PortSwigger Web Security Academy. Probed the search input with an HTML test string ('<h1>hello 3omda</h1>') and observed that the application reflects the raw query parameter directly into the HTML response body without encoding angle brackets. I then crafted and submitted the payload '<script>alert(1)</script>' via the '?search=' parameter, executing arbitrary JavaScript in the browser.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1442,7 +1442,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "xxe-retrieve-files",
     title: "Exploiting XXE to Retrieve Files",
-    description: "Successfully identified and exploited an XML External Entity (XXE) injection vulnerability in the product stock checker on PortSwigger Web Security Academy. Intercepted the POST request to '/product/stock' in Burp Suite Repeater and observed that the request body sends XML data ('<stockCheck><productId>5</productId>...'). I injected a custom XML '<!DOCTYPE test [ <!ENTITY xxe SYSTEM \"file:///etc/passwd\"> ]>' declaration before the root element and referenced '&xxe;' inside the '<productId>' node, causing the XML parser to resolve the external entity and return the full contents of '/etc/passwd' inside the error response.",
+    description: "Identified and exploited an XML External Entity (XXE) injection vulnerability in the product stock checker on PortSwigger Web Security Academy. Intercepted the POST request to '/product/stock' in Burp Suite Repeater and observed that the request body sends XML data ('<stockCheck><productId>5</productId>...'). I injected a custom XML '<!DOCTYPE test [ <!ENTITY xxe SYSTEM \"file:///etc/passwd\"> ]>' declaration before the root element and referenced '&xxe;' inside the '<productId>' node, causing the XML parser to resolve the external entity and return the full contents of '/etc/passwd' inside the error response.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1474,7 +1474,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "jwt-unverified-signature",
     title: "JWT Authentication Bypass via Unverified Signature",
-    description: "Successfully bypassed authentication controls by exploiting an unverified JSON Web Token (JWT) signature implementation on PortSwigger Web Security Academy. Logged into the application with standard credentials ('wiener') and captured the 'session' cookie containing an RS256-signed JWT in Burp Suite. Decoded the Base64-encoded payload, modified the '\"sub\"' (subject) claim from '\"wiener\"' to '\"administrator\"', and re-encoded the modified payload while leaving the original cryptographic signature untouched. Because the backend failed to verify the signature against the modified payload, replacing the session cookie granted full access to '/admin' to delete the target user.",
+    description: "Bypassed authentication controls by exploiting an unverified JSON Web Token (JWT) signature implementation on PortSwigger Web Security Academy. Logged into the application with standard credentials ('wiener') and captured the 'session' cookie containing an RS256-signed JWT in Burp Suite. Decoded the Base64-encoded payload, modified the '\"sub\"' (subject) claim from '\"wiener\"' to '\"administrator\"', and re-encoded the modified payload while leaving the original cryptographic signature untouched. Because the backend failed to verify the signature against the modified payload, replacing the session cookie granted full access to '/admin' to delete the target user.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1506,7 +1506,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "oauth-implicit-flow-bypass",
     title: "Authentication Bypass via OAuth Implicit Flow",
-    description: "Successfully achieved account takeover by exploiting a flawed OAuth 2.0 Implicit Flow implementation on PortSwigger Web Security Academy. Monitored the OAuth social login sequence in Burp Suite Proxy HTTP History and observed that after receiving the access token from the OAuth server, the client application sends a POST request to '/authenticate' containing a JSON body with 'email', 'username', and 'token'. Because the server does not validate that the access token actually belongs to the supplied email address, I sent the request to Burp Repeater, modified the 'email' parameter to 'carlos@carlos-montoya.net' and 'username' to 'carlos', and used the resulting session cookie to hijack Carlos's account.",
+    description: "Achieved account takeover by exploiting a flawed OAuth 2.0 Implicit Flow implementation on PortSwigger Web Security Academy. Monitored the OAuth social login sequence in Burp Suite Proxy HTTP History and observed that after receiving the access token from the OAuth server, the client application sends a POST request to '/authenticate' containing a JSON body with 'email', 'username', and 'token'. Because the server does not validate that the access token actually belongs to the supplied email address, I sent the request to Burp Repeater, modified the 'email' parameter to 'carlos@carlos-montoya.net' and 'username' to 'carlos', and used the resulting session cookie to hijack Carlos's account.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1522,7 +1522,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "2fa-simple-bypass",
     title: "2FA Simple Bypass",
-    description: "Successfully bypassed a Two-Factor Authentication (2FA) mechanism by exploiting a broken authentication state flow on PortSwigger Web Security Academy. After logging in with the victim's ('carlos') primary username and password, the application redirected to '/login2' and prompted for a 4-digit security code sent to the user's email. By inspecting the HTTP traffic in Burp Suite, I noticed the server had already issued an authenticated session cookie upon primary password verification without checking if the second factor was completed. Navigating directly (Forced Browsing) to '/my-account' bypassed the 2FA verification step completely and solved the lab.",
+    description: "Bypassed a Two-Factor Authentication (2FA) mechanism by exploiting a broken authentication state flow on PortSwigger Web Security Academy. After logging in with the victim's ('carlos') primary username and password, the application redirected to '/login2' and prompted for a 4-digit security code sent to the user's email. By inspecting the HTTP traffic in Burp Suite, I noticed the server had already issued an authenticated session cookie upon primary password verification without checking if the second factor was completed. Navigating directly (Forced Browsing) to '/my-account' bypassed the 2FA verification step completely and solved the lab.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1538,7 +1538,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "password-reset-broken-logic",
     title: "Password Reset Broken Logic",
-    description: "Successfully discovered and exploited a critical Business Logic Flaw within the application's password reset functionality. The attack began by initiating a legitimate password reset request for a controlled account ('wiener') to generate a valid reset token. Upon inspecting the subsequent password reset submission request using Burp Suite Proxy, it was revealed that the server relies on a hidden 'username' parameter alongside the reset token to identify the target account. The vulnerability stems from the fact that the server does not cryptographically bind the generated reset token to the specific user who requested it. By intercepting the final POST request in Burp Suite Repeater, I manipulated the 'username' parameter, changing it from my controlled account ('wiener') to the victim's account ('carlos'), while keeping my valid reset token intact. The server processed this manipulated request without validation, allowing me to arbitrarily overwrite the victim's password. Finally, I successfully authenticated into the victim's account using the newly set password, demonstrating a complete account takeover due to flawed logic implementation.",
+    description: "Discovered and exploited a critical Business Logic Flaw within the application's password reset functionality. The attack began by initiating a legitimate password reset request for a controlled account ('wiener') to generate a valid reset token. Upon inspecting the subsequent password reset submission request using Burp Suite Proxy, it was revealed that the server relies on a hidden 'username' parameter alongside the reset token to identify the target account. The vulnerability stems from the fact that the server does not cryptographically bind the generated reset token to the specific user who requested it. By intercepting the final POST request in Burp Suite Repeater, I manipulated the 'username' parameter, changing it from my controlled account ('wiener') to the victim's account ('carlos'), while keeping my valid reset token intact. The server processed this manipulated request without validation, allowing me to arbitrarily overwrite the victim's password. Finally, I authenticated into the victim's account using the newly set password, demonstrating a complete account takeover due to flawed logic implementation.",
     platform: "PortSwigger",
     type: "Walkthrough",
     category: "Web Security",
@@ -1554,7 +1554,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "guided-pentest-infrastructure",
     title: "Guided Pentest: Infrastructure Walkthrough",
-    description: "Successfully completed an end-to-end infrastructure penetration test on TryHackMe, demonstrating a complete attack lifecycle from initial enumeration to full system compromise. Initiated the engagement with comprehensive network discovery using Nmap to enumerate open ports and running services, identifying an outdated UnrealIRCd service running on port 6667. Researched and weaponized a known remote backdoor command execution exploit (UnrealIRCd 3.2.8.1 Backdoor) using Metasploit Framework to gain an initial foothold as the 'webmaster' user, successfully extracting the user flag. Conducted post-exploitation enumeration on the target system, discovering a misconfigured plaintext password file stored at '/etc/password.txt' containing root credentials. Leveraged these credentials to escalate privileges to root via SSH, extracted the final root flag, and documented comprehensive remediation steps including executive summaries and technical recommendations.",
+    description: "Completed an end-to-end infrastructure penetration test on TryHackMe, demonstrating a complete attack lifecycle from initial enumeration to full system compromise. Initiated the engagement with network discovery using Nmap to enumerate open ports and running services, identifying an outdated UnrealIRCd service running on port 6667. Researched and weaponized a known remote backdoor command execution exploit (UnrealIRCd 3.2.8.1 Backdoor) using Metasploit Framework to gain an initial foothold as the 'webmaster' user, extracting the user flag. Conducted post-exploitation enumeration on the target system, discovering a misconfigured plaintext password file stored at '/etc/password.txt' containing root credentials. Leveraged these credentials to escalate privileges to root via SSH, extracted the final root flag, and documented remediation steps including executive summaries and technical recommendations.",
     platform: "TryHackMe",
     type: "Walkthrough",
     category: "Penetration Testing",
@@ -1570,7 +1570,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
   {
     id: "vulnerability-scanning-tools",
     title: "Vulnerability Scanning Tools Walkthrough (Nmap, Nikto & OpenVAS)",
-    description: "Completed a full-spectrum vulnerability scanning and management assessment across all 7 tasks of TryHackMe's 'Vulnerability Scanning Tools' room, operating from the AttackBox (10.128.162.243) against the target host (10.128.147.232). Phase 1 — Network & Service Enumeration with Nmap & NSE: Executed an aggressive scan ('nmap -A 10.128.147.232') leveraging the Lua-based Nmap Scripting Engine (NSE). Discovered Port 21/tcp running vsftpd 3.0.5 where the 'ftp-anon' NSE script confirmed 'Anonymous FTP login allowed (FTP code 230)', Port 22/tcp running OpenSSH 9.6p1 on Ubuntu Linux, and Port 80/tcp running WebSockify Python/3.12.3. Phase 2 — Web Server Auditing with Nikto: Scanned the secondary web service on port 8080 ('nikto -h http://10.128.147.232:8080' using Nikto v2.1.5 across 6,544 checks), identifying Apache/2.4.58 (Ubuntu) and uncovering 7 notable security issues: session cookie 'PHPSESSID' issued without the 'HttpOnly' flag, missing 'X-Frame-Options' anti-clickjacking header, enabled HTTP 'DEBUG' verb, an exposed '/info.php' test script executing 'phpinfo()' (OSVDB-3233), directory indexing/listing enabled on '/static/' (OSVDB-3268), and a Remote File Inclusion (RFI) vulnerability via the 'file' parameter ('/info.php?file=http://cirt.net/rfiinc.txt?', OSVDB-5292). Phase 3 — Enterprise Vulnerability Management with OpenVAS / Greenbone: Authenticated into the OpenVAS Community Edition v26.7.0 web console ('http://127.0.0.1:9392/login') as 'admin', reviewed the 169,731 Network Vulnerability Tests (NVTs) feed, configured a new scan target ('SecondTarget' for host 10.128.147.232 across 'All IANA assigned TCP' ports), and created a scan task ('SecondTask' with Min QoD set to 70). Analyzed the completed 'MyTarget' scan report to extract a CVSS severity score of 5.3 for 'phpinfo() Output Reporting (HTTP)', mapped 'Anonymous FTP Login Reporting' to CVE-1999-0497, and verified the target operating system as Ubuntu 24.04.",
+    description: "Completed a vulnerability scanning and management assessment across all 7 tasks of TryHackMe's 'Vulnerability Scanning Tools' room, operating from the AttackBox (10.128.162.243) against the target host (10.128.147.232). Phase 1 — Network & Service Enumeration with Nmap & NSE: Executed an aggressive scan ('nmap -A 10.128.147.232') leveraging the Lua-based Nmap Scripting Engine (NSE). Discovered Port 21/tcp running vsftpd 3.0.5 where the 'ftp-anon' NSE script confirmed 'Anonymous FTP login allowed (FTP code 230)', Port 22/tcp running OpenSSH 9.6p1 on Ubuntu Linux, and Port 80/tcp running WebSockify Python/3.12.3. Phase 2 — Web Server Auditing with Nikto: Scanned the secondary web service on port 8080 ('nikto -h http://10.128.147.232:8080' using Nikto v2.1.5 across 6,544 checks), identifying Apache/2.4.58 (Ubuntu) and uncovering 7 notable security issues: session cookie 'PHPSESSID' issued without the 'HttpOnly' flag, missing 'X-Frame-Options' anti-clickjacking header, enabled HTTP 'DEBUG' verb, an exposed '/info.php' test script executing 'phpinfo()' (OSVDB-3233), directory indexing/listing enabled on '/static/' (OSVDB-3268), and a Remote File Inclusion (RFI) vulnerability via the 'file' parameter ('/info.php?file=http://cirt.net/rfiinc.txt?', OSVDB-5292). Phase 3 — Enterprise Vulnerability Management with OpenVAS / Greenbone: Authenticated into the OpenVAS Community Edition v26.7.0 web console ('http://127.0.0.1:9392/login') as 'admin', reviewed the 169,731 Network Vulnerability Tests (NVTs) feed, configured a new scan target ('SecondTarget' for host 10.128.147.232 across 'All IANA assigned TCP' ports), and created a scan task ('SecondTask' with Min QoD set to 70). Analyzed the completed 'MyTarget' scan report to extract a CVSS severity score of 5.3 for 'phpinfo() Output Reporting (HTTP)', mapped 'Anonymous FTP Login Reporting' to CVE-1999-0497, and verified the target operating system as Ubuntu 24.04.",
     platform: "TryHackMe",
     type: "Walkthrough",
     category: "Vulnerability Management",

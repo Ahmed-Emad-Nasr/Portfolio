@@ -85,9 +85,13 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
 
       {/* Language + metrics */}
       <div className="flex flex-wrap gap-2 mb-3">
-        <span className="px-3 py-1 text-[0.5625rem] font-bold uppercase tracking-[0.15em] font-mono text-tertiary bg-tertiary/10 border border-tertiary/25">
-          {repo.language || "Native"}
-        </span>
+        {/* GitHub reports no language for docs/config-only repos — the
+            template showed "Native" there, which means nothing here */}
+        {repo.language && (
+          <span className="px-3 py-1 text-[0.5625rem] font-bold uppercase tracking-[0.15em] font-mono text-tertiary bg-tertiary/10 border border-tertiary/25">
+            {repo.language}
+          </span>
+        )}
         {repo.license && repo.license.spdx_id !== "NOASSERTION" && (
           <span className="px-3 py-1 text-[0.5625rem] uppercase tracking-[0.15em] font-mono text-foreground/60 bg-foreground/[0.04] border border-foreground/10">
             {repo.license.spdx_id}

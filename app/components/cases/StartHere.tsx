@@ -21,7 +21,7 @@ export default function StartHere() {
         Start <span className="text-primary italic">here.</span>
       </h2>
       <p className="mb-10 max-w-2xl text-foreground/60 font-light leading-relaxed">
-        Three reports that cover the range of the work. The full library is below.
+        Three reports to start with — detection engineering, a full DFIR investigation and a malware teardown. The full library is below.
       </p>
       <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {ENTRIES.map((entry, idx) => (

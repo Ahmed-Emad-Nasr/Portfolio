@@ -27,7 +27,7 @@ export default function TechStackGrid() {
           japanese="武器庫"
           titleA="Tools of"
           titleB="The Trade."
-          description="No buzzword bingo. Every item below shows up in the labs and cases you just scrolled past — or the reports in the case library."
+          description="No buzzword bingo. Every item below comes from somewhere you can check — the labs above, the reports in the case library, or the job itself."
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

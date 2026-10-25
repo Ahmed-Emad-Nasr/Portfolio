@@ -216,3 +216,21 @@ export function parseCaseSummary(description: string): CaseSummary {
   }
   return { code, objective, steps: body.flatMap(toSteps), phases: [], outcome, artifacts };
 }
+
+/**
+ * The short text for a case card in the library: the objective, plus the
+ * next sentence when the objective alone is only a line ("Completed the X
+ * room on TryHackMe."). Code spans come back as plain text and a leading
+ * "Successfully" is dropped — on a card it costs a third of the first line.
+ */
+export function caseCardBlurb(description: string): string {
+  const s = parseCaseSummary(description);
+  const plain = (t: string) => t.replace(PLACEHOLDER, (_m, i: string) => s.code[Number(i)] ?? "");
+  const step = s.steps[0] ?? s.phases[0]?.steps[0];
+  /* A step that only introduces a list ("…covers solving multiple
+     vulnerabilities:") reads as cut off on its own — bring the list along */
+  const firstStep = step && (step.items?.length ? `${step.text} ${step.items.join(" ")}` : step.text);
+  let text = plain(s.objective);
+  if (text.length < 90 && firstStep) text = `${text} ${plain(firstStep)}`;
+  return text.replace(/^Successfully\s+(\w)/, (_m, c: string) => c.toUpperCase());
+}

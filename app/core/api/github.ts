@@ -52,12 +52,17 @@ export async function getGitHubRepos(): Promise<Repo[]> {
     const data = await response.json();
     if (Array.isArray(data)) {
       // Filter only pinned repos defined in PORTFOLIO_DATA
-      const pinnedRepos = PORTFOLIO_DATA.projects.pinnedRepos || [];
-      const filteredRepos = data
-        .filter((repo: Repo) => pinnedRepos.includes(repo.name))
-        .sort((a, b) => pinnedRepos.indexOf(a.name) - pinnedRepos.indexOf(b.name));
-
-      return filteredRepos.length > 0 ? filteredRepos : getFallbackRepos();
+      /* Matched case-insensitively, and any pinned repo the API did not
+         return is filled in from the static copy — so a renamed repo or a
+         capital letter can no longer drop a project from the grid (six were
+         pinned, five were shown). */
+      const pinned = (PORTFOLIO_DATA.projects.pinnedRepos || []).map((n) => n.toLowerCase());
+      const live = new Map<string, Repo>(
+        data.filter((repo: Repo) => pinned.includes(repo.name.toLowerCase())).map((repo: Repo) => [repo.name.toLowerCase(), repo]),
+      );
+      if (live.size === 0) return getFallbackRepos();
+      const fallback = getFallbackRepos();
+      return pinned.map((name, i) => live.get(name) ?? fallback[i]).filter(Boolean);
     }
     return getFallbackRepos();
   } catch (error) {

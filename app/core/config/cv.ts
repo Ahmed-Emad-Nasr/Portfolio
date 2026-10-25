@@ -92,7 +92,12 @@ export const CV_PROJECTS: readonly CvProject[] = [
   {
     title: "Cybersecurity Portfolio & Technical Blog",
     stack: ["Next.js", "React", "TypeScript", "JavaScript", "HTML", "Tailwind CSS", "Framer Motion", "GitHub Pages", "Medium"],
-    bullets: bulletsOf("Portfolio"),
+    /* The second PDF bullet still said "40+ security cases" — the count is
+       read from the library here so the CV page can't fall behind it */
+    bullets: [
+      bulletsOf("Portfolio")[0],
+      `Published ${CASE_STATS.published} security cases — ${CASE_STATS.reports} of them full investigation reports — plus CTFs and lab solutions, earning 22+ GitHub stars from the security community.`,
+    ].filter(Boolean),
     github: repo("Portfolio")?.html_url ?? "",
     demo: repo("Portfolio")?.homepage,
   },
@@ -135,8 +140,7 @@ export { CV_PDF_HREF } from "./shared";
  * The technique count is also computed from attack.ts now instead of a hard-coded 28.
  */
 export const CV_SUMMARY =
-  "Information security graduate working across governance, risk and compliance, SOC operations, incident response and digital forensics, IAM and data security. " +
-  `Published ${CASE_STATS.reports} investigation reports across ${CASE_STATS.published} documented cases, ` +
-  `covering ${CASE_STATS.techniques} MITRE ATT&CK techniques, contributed a detection rule to ` +
-  "the open-source SOC Fortress project, assessed GRC gaps against ISO 27001 and PCI DSS at Banque Misr, " +
-  "and taught security to 300+ students.";
+  "Information security officer working across GRC and compliance, security operations, DFIR, IAM and data security. " +
+  `The record so far: ${CASE_STATS.reports} investigation reports across ${CASE_STATS.published} documented cases, ` +
+  `${CASE_STATS.techniques} MITRE ATT&CK techniques mapped, a detection rule merged into SOC Fortress, ` +
+  "GRC gap assessments at Banque Misr, and 300+ students taught.";

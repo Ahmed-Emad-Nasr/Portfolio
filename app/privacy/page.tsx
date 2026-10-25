@@ -56,7 +56,8 @@ export default function PrivacyPage() {
           <p>
             The exceptions are ordinary server logs kept by the host, a public
             GitHub statistics service that draws the contribution graph, and
-            YouTube — which only loads if you click a video yourself.
+            YouTube — its preview images load with the video section, and the
+            player itself only if you click a video.
           </p>
         </div>
 
@@ -129,9 +130,10 @@ export default function PrivacyPage() {
           </ul>
           <h3>YouTube videos</h3>
           <p>
-            Videos in the blog are <strong>not</strong> loaded until you click
-            the preview. Until then, nothing is requested from YouTube and
-            YouTube does not know you are here. When you do click, the embed
+            The video player is <strong>not</strong> loaded until you click
+            a preview. Before that, the only request to Google is for the
+            preview images themselves (from <code>i.ytimg.com</code>) — no
+            player, no script and no cookies. When you do click, the embed
             uses the <code>youtube-nocookie.com</code> domain, and from that
             point Google&apos;s own privacy policy applies to that player.
           </p>

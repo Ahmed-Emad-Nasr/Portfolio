@@ -17,6 +17,7 @@ import type { PdfResource } from "@/app/core/config/shared";
 import { useCopyLink } from "./useCopyLink";
 import { btnOutline, btnPrimary, chipAccent, chipNeutral, chipTertiary } from "@/app/components/shared/kit";
 import { rv } from "@/app/core/reveal";
+import { caseCardBlurb } from "@/app/core/utils/case-summary";
 
 type CaseCardProps = PdfResource & {
   index: number;
@@ -123,7 +124,7 @@ function CaseCard({
             </Link>
           </h3>
           {description && (
-            <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5 line-clamp-3">{description}</p>
+            <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5 line-clamp-3">{caseCardBlurb(description)}</p>
           )}
 
           {shownTools.length > 0 && (
