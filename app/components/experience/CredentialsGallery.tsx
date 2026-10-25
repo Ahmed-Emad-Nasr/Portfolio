@@ -9,6 +9,7 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Award, ExternalLink, Calendar, ShieldCheck } from "lucide-react";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 /* Lightbox + its CSS load only when a certificate is opened (CertLightbox.tsx) */
 const Lightbox = dynamic(() => import("./CertLightbox"), { ssr: false });
@@ -58,7 +59,7 @@ export default function CredentialsGallery() {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                Credentials
+                <ScrambleText text="Credentials" />
               </span>
             </div>
             <h2 className="font-display title-fit [--title-n:14] lg:[--title-n:18] font-black uppercase leading-[0.85] tracking-tighter">

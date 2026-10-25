@@ -6,6 +6,7 @@ import { EASE } from "@/app/core/motion";
 import type { FaqItem } from "@/app/core/types/portfolio";
 import { Plus } from "lucide-react";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function FaqSection({ items }: { items: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(0);
@@ -30,7 +31,7 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                FAQ // Before you ask
+                <ScrambleText text="FAQ // Before you ask" />
               </span>
               <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="質問" />
             </div>

@@ -1,6 +1,7 @@
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function UsesSection() {
   const toolCount = PORTFOLIO_DATA.uses.reduce((s, g) => s + g.items.length, 0);
@@ -25,7 +26,7 @@ export default function UsesSection() {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                Uses // Daily drivers
+                <ScrambleText text="Uses // Daily drivers" />
               </span>
               <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="道具" />
             </div>

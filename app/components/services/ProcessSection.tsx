@@ -37,7 +37,10 @@ export default function ProcessSection() {
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3">{p.title}</h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{p.description}</p>
               {idx < PORTFOLIO_DATA.process.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-[2px] bg-primary/40" aria-hidden="true" />
+                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-[2px] bg-primary/40 overflow-visible" aria-hidden="true">
+                  {/* A packet travelling to the next step */}
+                  <span className="process-packet absolute -top-[2px] left-0 h-[6px] w-[6px] bg-primary" style={{ animationDelay: `${idx * 0.45}s` }} />
+                </div>
               )}
             </div>
           ))}

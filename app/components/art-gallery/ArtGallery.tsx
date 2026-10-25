@@ -9,6 +9,7 @@ import { TiltCard } from "@/app/core/components/Motion";
 import dynamic from "next/dynamic";
 import { Sparkles, Maximize2, ChevronDown } from "lucide-react";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 const GalleryLightbox = dynamic(() => import("./GalleryLightbox"), { ssr: false });
 
@@ -51,7 +52,7 @@ export default function ArtGallery() {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                Visual Archive
+                <ScrambleText text="Visual Archive" />
               </span>
             </div>
             <h2 className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">

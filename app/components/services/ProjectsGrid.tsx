@@ -6,6 +6,7 @@ import ProjectCard from "./ProjectCard";
 import { CountUp } from "@/app/core/components/CountUp";
 import { Star } from "lucide-react";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
   const totalStars = useMemo(
@@ -43,7 +44,7 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                Open Source // リポジトリ
+                <ScrambleText text="Open Source // リポジトリ" />
               </span>
             </div>
 

@@ -14,7 +14,6 @@ import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { m as motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
 import { EASE } from "@/app/core/motion";
-import { TiltCard } from "@/app/core/components/Motion";
 import { normalizePublicHref, getThumbnail, formatDate } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import CaseSummary from "./CaseSummary";
@@ -163,7 +162,8 @@ export default function CaseArticle({
         </motion.header>
 
         {/* Summary panel — the experience "service record" */}
-        <TiltCard max={3} className="spotlight relative bg-surface/60 border border-foreground/5 backdrop-blur-sm hover:border-primary/20 transition-all duration-700 overflow-hidden mb-14">
+        {/* No tilt: on a panel this tall the 3D lean read as the page wobbling */}
+        <div className="spotlight relative bg-surface/60 border border-foreground/5 backdrop-blur-sm hover:border-primary/20 transition-all duration-700 overflow-hidden mb-14">
           <div className="absolute top-0 left-0 w-[3px] h-full bg-primary" />
           <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none" aria-hidden="true">
             {screenshots.length ? String(screenshots.length).padStart(2, "0") : "00"}
@@ -201,7 +201,7 @@ export default function CaseArticle({
               <span aria-live="polite">{copyState === "done" ? "Copied" : copyState === "error" ? "Copy failed" : "Copy link"}</span>
             </button>
           </div>
-        </TiltCard>
+        </div>
 
         {/* Details */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16" aria-label="Case details">

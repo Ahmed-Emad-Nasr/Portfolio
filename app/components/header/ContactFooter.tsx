@@ -10,6 +10,7 @@ import { normalizePublicHref } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import { PGP, SECURITY_TXT_PATH, formattedFingerprint, hasPgpKey } from "@/app/core/config/security";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 /* The last line of every page: the mark, the copyright, the legal pages and
    the design credit. On the home page it closes the contact section; the
@@ -119,7 +120,7 @@ export default function ContactFooter() {
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-[2px] bg-primary" />
                 <span className="text-primary-ink font-mono text-[0.625rem] tracking-[0.5em] uppercase font-bold">
-                  The End of the Path
+                  <ScrambleText text="The End of the Path" />
                 </span>
               </div>
 

@@ -1,5 +1,6 @@
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function MilestonesSection() {
   const items = PORTFOLIO_DATA.milestones;
@@ -15,7 +16,7 @@ export default function MilestonesSection() {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                Milestones // How it compounded
+                <ScrambleText text="Milestones // How it compounded" />
               </span>
               <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="歩み" />
             </div>

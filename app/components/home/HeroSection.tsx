@@ -12,13 +12,16 @@ import { MessageCircle, Download, ArrowDown } from "lucide-react";
 import { Github, Linkedin, Youtube } from "@/app/core/icons/BrandIcons";
 
 
-function FieldRow({ label, value, hot = false }: { label: string; value: string; hot?: boolean }) {
+function FieldRow({ label, value, hot = false, live = false }: { label: string; value: string; hot?: boolean; live?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-2.5 border-b border-foreground/5 last:border-b-0">
       <dt className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
         {label}
       </dt>
       <dd className={`font-mono text-xs text-right leading-relaxed xl:whitespace-nowrap ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
+        {live && (
+          <span className="live-dot relative mr-2 inline-block h-1.5 w-1.5 translate-y-[-1px] rounded-full bg-accent align-middle" aria-hidden="true" />
+        )}
         {value}
       </dd>
     </div>
@@ -255,6 +258,12 @@ export default function HeroSection({
             <div className="absolute bottom-2 left-2 w-7 h-7 border-l-2 border-b-2 border-foreground/20 pointer-events-none" />
             <div className="absolute bottom-2 right-2 w-7 h-7 border-r-2 border-b-2 border-foreground/20 pointer-events-none" />
 
+            {/* HUD readout on the viewfinder: subject id, blinking REC */}
+            <div className="absolute -top-7 left-2 flex items-center gap-2 font-mono text-[0.5625rem] font-bold tracking-[0.3em] text-foreground/50 pointer-events-none" aria-hidden="true">
+              <span className="hud-rec inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+              ID // 0x3omda
+            </div>
+
             {/* The Photo */}
             <a
               href={PORTFOLIO_DATA.profile.contact.youtube}
@@ -282,6 +291,8 @@ export default function HeroSection({
                   className="w-full h-full object-cover object-top grayscale group-hover/photo:grayscale-0 group-hover/photo:scale-105 transition-all duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/25 via-transparent to-transparent group-hover/photo:from-transparent transition-all duration-700" />
+                {/* Scanner sweep — a red line passing over the portrait */}
+                <div className="hero-scan pointer-events-none absolute inset-x-0 top-0 h-[22%]" aria-hidden="true" />
               </div>
             </a>
 
@@ -418,7 +429,7 @@ export default function HeroSection({
               <span className="brush-jp text-base text-foreground/30" lang="ja" aria-hidden="true" data-jp="記録" />
             </div>
             <dl className="flex flex-col">
-              <FieldRow label="Status" value={PORTFOLIO_DATA.profile.availability} hot />
+              <FieldRow label="Status" value={PORTFOLIO_DATA.profile.availability} hot live />
               <FieldRow label="Role" value={PORTFOLIO_DATA.profile.title} />
               <FieldRow label="Base" value={PORTFOLIO_DATA.profile.contact.location} />
               <FieldRow label="Focus" value={focusLabel} />

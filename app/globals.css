@@ -1006,3 +1006,69 @@
   .attack-seg:hover,
   .attack-tile:hover { transform: none; }
 }
+
+/* ─── Security HUD motion (hero scanner, REC/live dots, process packets,
+       case-briefing steps). Everything here is decoration: with reduced
+       motion none of it runs and nothing is hidden. ─────────────────── */
+.hero-scan {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(188, 0, 45, 0.18) 70%,
+    rgba(255, 60, 90, 0.75) 97%,
+    transparent 100%
+  );
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-scan {
+    animation: hero-scan 5.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    animation-delay: calc(var(--hero-lead, 0s) + 2.5s);
+  }
+  .hud-rec {
+    animation: hud-blink 1.6s steps(1, end) infinite;
+  }
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: inherit;
+    animation: live-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  .process-packet {
+    animation: process-packet 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  /* The pulse is a pseudo-element scaling out (transform + opacity only,
+     no box-shadow repaint every frame) */
+  .brief-node::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--primary);
+    animation: brief-node 2.4s ease-out infinite;
+    animation-delay: inherit;
+  }
+}
+@keyframes hero-scan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  55% { transform: translateY(460%); opacity: 1; }
+  62%, 100% { transform: translateY(460%); opacity: 0; }
+}
+@keyframes hud-blink {
+  50% { opacity: 0.15; }
+}
+@keyframes live-ping {
+  75%, 100% { transform: scale(3); opacity: 0; }
+}
+@keyframes process-packet {
+  0% { transform: translateX(0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateX(26px); opacity: 0; }
+}
+@keyframes brief-node {
+  0% { transform: scale(1); opacity: 0.7; }
+  60%, 100% { transform: scale(2.4); opacity: 0; }
+}

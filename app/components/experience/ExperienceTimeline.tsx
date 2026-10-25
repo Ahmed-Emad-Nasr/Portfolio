@@ -2,6 +2,7 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Calendar, MapPin, CheckCircle2, ExternalLink } from "lucide-react";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function ExperienceTimeline() {
   return (
@@ -36,7 +37,7 @@ export default function ExperienceTimeline() {
           <div className="flex items-center gap-4 mb-6" data-reveal={rv({ y: 40, duration: 1 })}>
             <div className="w-12 h-[2px] bg-primary" />
             <span className="text-primary-ink text-[0.625rem] font-mono font-bold tracking-[0.4em] uppercase">
-              Professional Path // 職歴
+              <ScrambleText text="Professional Path // 職歴" />
             </span>
           </div>
           <h2 className="font-display title-fit [--title-n:12] font-black tracking-tighter uppercase leading-[0.85]" data-reveal={rv({ y: 40, duration: 1, delay: 0.15 })}>

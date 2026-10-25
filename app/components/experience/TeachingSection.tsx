@@ -14,6 +14,7 @@ import { ArrowUpRight } from "lucide-react";
 import FadeIn from "@/app/core/components/FadeIn";
 import { CounterBadge, KanjiWatermark, cardSurface, chipNeutral, chipTertiary } from "@/app/components/shared/kit";
 import { DIPLOMA, TEACHING_ROLES, TEACHING_STATS } from "@/app/core/config/teaching";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function TeachingSection() {
   return (
@@ -36,7 +37,7 @@ export default function TeachingSection() {
             <div className="flex items-center gap-4 mb-5">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
               <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
-                Teaching // Passing it on
+                <ScrambleText text="Teaching // Passing it on" />
               </span>
               <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="指導" />
             </div>

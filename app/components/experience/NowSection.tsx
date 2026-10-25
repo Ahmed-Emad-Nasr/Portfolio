@@ -1,5 +1,6 @@
 import type { NowItem } from "@/app/core/types/portfolio";
 import { rv } from "@/app/core/reveal";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export default function NowSection({ items }: { items: NowItem[] }) {
   return (
@@ -22,7 +23,7 @@ export default function NowSection({ items }: { items: NowItem[] }) {
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
-                Now // Loading the present
+                <ScrambleText text="Now // Loading the present" />
               </span>
               <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="現在" />
             </div>

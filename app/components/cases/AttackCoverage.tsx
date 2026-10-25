@@ -23,6 +23,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import FadeIn from "@/app/core/components/FadeIn";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
+import ScrambleText from "@/app/core/components/ScrambleText";
 
 export type CoverageTechnique = {
   id: string;
@@ -152,7 +153,7 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
             <div className="flex items-center gap-4 mb-5">
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
               <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
-                Coverage // MITRE ATT&amp;CK
+                <ScrambleText text="Coverage // MITRE ATT&amp;CK" />
               </span>
               <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="網羅" />
             </div>
