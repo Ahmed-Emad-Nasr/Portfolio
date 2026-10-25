@@ -7,7 +7,10 @@
  * here uses were left out). Content is Ahmed Emad Nasr's.
  * Fonts are self-hosted through next/font/local (app/fonts.ts).
  */
-@import "tailwindcss";
+/* source("./"): Tailwind looks for class names in app/ only. Left to itself
+   it scans the whole repository, so example class names in the scripts'
+   comments (e.g. mb-[var(--space-xl)]) were compiled into the site CSS. */
+@import "tailwindcss" source("./");
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -209,14 +212,17 @@
     border-radius: 0;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
-  }
-
-  /* Firefox scrollbar */
-  * {
-    scrollbar-width: thin;
+  /* Standard scrollbar properties (Firefox, and Chrome/Edge 121+, where they
+     take precedence over the ::-webkit rules above). scrollbar-color is
+     inherited, so setting it once on the root colours every scrollbar.
+     scrollbar-width is not inherited, so it goes on the elements that
+     actually scroll — instead of a `*` rule matched against every element
+     on the page (~5,000 on the home page). */
+  :root {
     scrollbar-color: var(--primary) var(--background);
+  }
+  :where(html, .overflow-x-auto, .overflow-y-auto, .attack-pop) {
+    scrollbar-width: thin;
   }
 
   /* Selection Styling */
@@ -387,22 +393,98 @@
   }
 }
 
-/* ─── Theme water-drop morph  gradual token easing while the
-   canvas ripple covers the flip. Added/removed by ThemeFxProvider. */
-.fx-morph,
-.fx-morph *,
-.fx-morph *::before,
-.fx-morph *::after {
+/* ─── Theme water-drop morph — gradual token easing while the canvas
+   ripple covers the flip. Added/removed by ThemeFxProvider.
+
+   The colour tokens that differ between the themes are registered as
+   <color> custom properties, so the browser can interpolate them. The morph
+   then transitions the tokens once, on the root, and every element that
+   uses them follows through inheritance. The old version put a 0.55 s
+   transition on every element and pseudo-element of the page
+   (`.fx-morph *, *::before, *::after`) — ~15,000 transitions started at
+   once on the home page, and a universal selector checked on every style
+   recalculation the rest of the time. */
+@property --primary-ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #BC002D;
+}
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #7a6000;
+}
+@property --tertiary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #006b78;
+}
+@property --quaternary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #5b54d6;
+}
+@property --background {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f7f5f0;
+}
+@property --foreground {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #141210;
+}
+@property --surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+@property --on-surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #141210;
+}
+@property --on-surface-variant {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #57534a;
+}
+@property --surface-variant {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ece8df;
+}
+@property --primary-container {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(188, 0, 45, 0.08);
+}
+@property --tertiary-container {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 122, 138, 0.1);
+}
+
+.fx-morph {
   transition:
-    background-color 0.55s ease,
-    color 0.55s ease,
-    border-color 0.55s ease,
-    fill 0.55s ease,
-    stroke 0.55s ease !important;
+    --primary-ink 0.55s ease,
+    --accent 0.55s ease,
+    --tertiary 0.55s ease,
+    --quaternary 0.55s ease,
+    --background 0.55s ease,
+    --foreground 0.55s ease,
+    --surface 0.55s ease,
+    --on-surface 0.55s ease,
+    --on-surface-variant 0.55s ease,
+    --surface-variant 0.55s ease,
+    --primary-container 0.55s ease,
+    --tertiary-container 0.55s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  /* Only the root scrolls smoothly (Lenis drives it); no need to match
+     every element on the page */
+  html {
     scroll-behavior: auto !important;
   }
 

@@ -7,11 +7,11 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
-import "yet-another-react-lightbox/styles.css";
 import { Award, ExternalLink, Calendar, ShieldCheck } from "lucide-react";
 import { rv } from "@/app/core/reveal";
 
-const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
+/* Lightbox + its CSS load only when a certificate is opened (CertLightbox.tsx) */
+const Lightbox = dynamic(() => import("./CertLightbox"), { ssr: false });
 
 export default function CredentialsGallery() {
   const [open, setOpen] = useState(false);
