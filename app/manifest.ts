@@ -21,10 +21,13 @@ export const dynamic = "force-static";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Ahmed Emad Nasr — SOC & Cybersecurity Analyst",
+    name: "Ahmed Emad Nasr — Information Security Officer",
     short_name: "3omda",
     description:
-      "SOC operations, incident response, digital forensics, and malware analysis case reports.",
+      "Information security portfolio: GRC and compliance, SOC operations, incident response and DFIR, malware analysis, IAM and data security — case reports, projects and videos.",
+    lang: "en",
+    dir: "ltr",
+    categories: ["security", "education", "business"],
     /* The site lives under /Portfolio on GitHub Pages: "/" would open the
        github.io root from an installed app */
     start_url: normalizePublicHref("/"),

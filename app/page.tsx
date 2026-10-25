@@ -27,6 +27,13 @@ import PlatformsSection from "@/app/components/experience/PlatformsSection";
 import { getTryHackMeStats } from "@/app/core/api/tryhackme";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/app/core/config/platforms";
 import { LIVE_COPY } from "@/app/core/config/live-copy";
+import { blogYoutubePlaylists, blogYoutubeVideos } from "@/app/core/config/youtube";
+import { knowledgeEducationItems } from "@/app/core/config/experience";
+import { OG_IMAGE } from "@/app/core/config/site";
+import {
+  CHANNEL_ID, KEYWORDS, PERSON_IMAGE, PERSON_REF, SITE_URL, WEBSITE_ID,
+  jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch,
+} from "@/app/core/config/seo";
 import {
   attackCoverage,
   categoryFacets,
@@ -63,26 +70,36 @@ const ContactFooter = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst | DFIR & Malware Analysis",
+  title: "Ahmed Emad Nasr | Information Security Officer | GRC, SOC, DFIR & IAM",
   /* ≤160 characters: search results cut anything longer mid-sentence */
   description:
-    "SOC analyst & incident responder: real investigation reports, malware analysis, DFIR and detection engineering (Wazuh, Suricata, ELK) mapped to ATT&CK.",
+    "Information security officer: GRC & compliance, SOC, incident response & DFIR, malware analysis, IAM and data security — with real reports behind each.",
   keywords: [
-    "SOC portfolio",
-    "incident response portfolio",
+    ...KEYWORDS.identity,
+    "information security officer portfolio",
+    "cybersecurity portfolio",
+    "GRC analyst portfolio",
+    "ISO 27001 PCI DSS gap assessment",
+    "IAM and data security",
+    "SOC analyst portfolio",
+    "incident response reports",
+    "DFIR case studies",
     "threat hunting projects",
     "malware analysis reports",
-    "DFIR analyst",
-    "Wazuh detection rules",
-    "eJPT certified"
+    "MITRE ATT&CK coverage",
+    "Wazuh SIEM tutorials",
+    "cybersecurity videos in Arabic",
+    "شرح أمن المعلومات بالعربي",
+    "eJPT certified",
+    ...KEYWORDS.place,
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Ahmed Emad Nasr | SOC & Cybersecurity Analyst",
+    title: "Ahmed Emad Nasr | Information Security Officer",
     description:
-      "Real SOC/IR case reports, security projects, malware analysis, and cybersecurity training impact by Ahmed Emad Nasr.",
+      "GRC, SOC, incident response & DFIR, IAM and data security: case reports, projects and training by Ahmed Emad Nasr.",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     type: "website",
     /* A page-level openGraph replaces the layout's whole object, so the two
@@ -94,7 +111,7 @@ export const metadata: Metadata = {
         url: "https://ahmed-emad-nasr.github.io/Portfolio/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ahmed Emad Nasr SOC portfolio",
+        alt: "Ahmed Emad Nasr information security portfolio",
       },
     ],
   },
@@ -102,39 +119,138 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@0x3omda",
     creator: "@0x3omda",
-    title: "Ahmed Emad Nasr | SOC & Incident Response Analyst",
+    title: "Ahmed Emad Nasr | Information Security Officer",
     description:
-      "Explore SOC investigations, DFIR workflows, malware analysis cases, and detection engineering.",
+      "GRC assessments, SOC investigations, DFIR and malware analysis, IAM and data security — the work and the reports.",
     images: ["https://ahmed-emad-nasr.github.io/Portfolio/og-image.png"],
   },
 };
 
 // Serialise the data once, in memory, to save the work on every render
-const STRUCTURED_DATA_JSON = JSON.stringify({
+const STRUCTURED_DATA_JSON = jsonLd({
   "@context": "https://schema.org",
   "@graph": [
     {
+      /* The one ProfilePage — Person.mainEntityOfPage in layout.tsx points here */
       "@type": "ProfilePage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#main-profile-page",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      name: "Ahmed Emad Nasr SOC Analyst Portfolio",
+      "@id": `${SITE_URL}#profilepage`,
+      url: SITE_URL,
+      name: "Ahmed Emad Nasr | Information Security Officer",
+      description: "The portfolio of Ahmed Emad Nasr, information security officer: GRC, security operations, incident response, forensics, malware analysis, IAM and data security, with case reports, projects, videos and certifications.",
       inLanguage: "en",
+      mainEntity: PERSON_REF,
+      about: PERSON_REF,
+      author: PERSON_REF,
+      isPartOf: { "@id": WEBSITE_ID },
+      primaryImageOfPage: { "@type": "ImageObject", url: PERSON_IMAGE },
+      image: [PERSON_IMAGE, OG_IMAGE.url],
+      hasPart: [
+        { "@id": `${SITE_URL}#faq` },
+        { "@id": `${SITE_URL}#videos` },
+        { "@id": `${SITE_URL}#cases` },
+        { "@id": `${SITE_URL}#experience-list` },
+      ],
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${SITE_URL}#experience-list`,
+      name: "Experience, education and training",
+      itemListElement: knowledgeEducationItems.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        /* Jobs as roles at an organisation, education as credentials */
+        item:
+          item.kind === "education"
+            ? {
+                "@type": "EducationalOccupationalCredential",
+                name: item.tag,
+                description: item.desc,
+                credentialCategory: /bachelor|degree/i.test(item.tag) ? "degree" : "certificate",
+                recognizedBy: { "@type": "EducationalOrganization", name: item.subTag, url: item.subTagHyperlink },
+                validFrom: item.startDate,
+                ...("endDate" in item && item.endDate ? { validUntil: item.endDate } : {}),
+              }
+            : {
+                "@type": "OrganizationRole",
+                roleName: item.tag,
+                description: item.desc,
+                startDate: item.startDate,
+                ...("endDate" in item && item.endDate ? { endDate: item.endDate } : {}),
+                memberOf: { "@type": "Organization", name: item.subTag, url: item.subTagHyperlink },
+              },
+      })),
     },
     {
       "@type": "Service",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#service-soc-ir",
-      name: "SOC Monitoring and Incident Response Support",
-      provider: {
-        "@type": "Person",
-        name: "Ahmed Emad Nasr",
-      },
-      areaServed: "Worldwide",
-      serviceType: ["SOC Monitoring", "Incident Response", "Threat Hunting", "Security Training", "Digital Forensics"],
+      "@id": `${SITE_URL}#service-soc-ir`,
+      name: "Information Security: GRC, Security Operations and Incident Response",
+      description: "Governance, risk and compliance assessments, SOC monitoring and triage, incident response and digital forensics, malware analysis, identity and access management, data security, and security training.",
+      provider: PERSON_REF,
+      areaServed: [{ "@type": "Country", name: "Egypt" }, "Worldwide"],
+      availableLanguage: ["en", "ar"],
+      serviceType: ["Governance, Risk & Compliance", "SOC Monitoring", "Incident Response", "Digital Forensics", "Malware Analysis", "Identity & Access Management", "Data Security", "Security Training"],
       /* This was #Contact — the section was removed, and the anchor became dead. */
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      url: SITE_URL,
     },
+    {
+      /* The FAQ section, as the FAQPage it already is on screen. The text is
+         the same text the reader sees — structured data that differs from
+         the page is a manual-action risk. */
+      "@type": "FAQPage",
+      "@id": `${SITE_URL}#faq`,
+      url: `${SITE_URL}#faq`,
+      inLanguage: "en",
+      author: PERSON_REF,
+      mainEntity: LIVE_COPY.faq.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    },
+    {
+      /* Every video on the page with the fields Google needs for a video
+         result (name, description, thumbnail, upload date, embed URL). */
+      "@type": "ItemList",
+      "@id": `${SITE_URL}#videos`,
+      name: "Cybersecurity video tutorials by Ahmed Emad Nasr (Arabic)",
+      numberOfItems: blogYoutubeVideos.length,
+      itemListElement: blogYoutubeVideos.map((video, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "VideoObject",
+          "@id": `${youtubeWatch(video.videoId)}#video`,
+          name: video.title,
+          description: video.description ?? video.title,
+          thumbnailUrl: [youtubeThumb(video.videoId)],
+          uploadDate: video.publishedAt,
+          embedUrl: youtubeEmbed(video.videoId),
+          url: youtubeWatch(video.videoId),
+          inLanguage: "ar",
+          keywords: (video.tags ?? []).join(", "),
+          creator: PERSON_REF,
+          author: PERSON_REF,
+          publisher: { "@id": CHANNEL_ID },
+          isFamilyFriendly: true,
+        },
+      })),
+    },
+    ...blogYoutubePlaylists.map((playlist) => ({
+      "@type": "CreativeWorkSeries",
+      "@id": `${playlist.sourceUrl.split("&")[0]}#series`,
+      name: playlist.title,
+      description: playlist.description,
+      url: playlist.sourceUrl.split("&")[0],
+      ...(playlist.thumbnailVideoId ? { image: youtubeThumb(playlist.thumbnailVideoId) } : {}),
+      keywords: (playlist.tags ?? []).join(", "),
+      inLanguage: "ar",
+      author: PERSON_REF,
+      publisher: { "@id": CHANNEL_ID },
+    })),
   ],
 });
+
+const LIBRARY_JSON = jsonLd(libraryStructuredData);
 
 /* Off-screen sections skip rendering until they near the viewport;
    `auto` in contain-intrinsic-size remembers each one's real height. */
@@ -148,7 +264,7 @@ export default async function Home() {
   return (
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(libraryStructuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: LIBRARY_JSON }} />
       {/* ─── Full-page scanlines overlay ─── */}
       <div
         className="fixed inset-0 pointer-events-none z-[50] opacity-[0.015] scanlines"

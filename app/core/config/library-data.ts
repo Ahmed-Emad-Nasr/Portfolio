@@ -11,6 +11,7 @@ import { caseEvidenceLibrary, caseScreenshotsByEvidenceId, investigationReportCo
 import type { PdfResource } from "./shared";
 import { SITE_BASE_URL, caseUrl } from "./site";
 import { ATTACK_TACTICS, buildCoverage, caseAttackMapping, coveredTechniqueCount } from "./attack";
+import { PERSON_ID } from "./seo";
 
 export type Facet = { value: string; count: number };
 
@@ -86,11 +87,16 @@ export const libraryStructuredData = {
   description:
     "SOC incident response reports, DFIR investigations, malware analysis and detection engineering cases with screenshots and documentation.",
   url: `${SITE_BASE_URL}/#cases`,
-  author: { "@type": "Person", name: "Ahmed Emad Nasr" },
+  inLanguage: "en",
+  author: { "@id": PERSON_ID },
+  isPartOf: { "@id": `${SITE_BASE_URL}/#website` },
   hasPart: caseEvidenceLibrary.map((item) => ({
     "@type": "TechArticle",
+    "@id": `${caseUrl(item.id)}#article`,
     headline: item.title,
     url: caseUrl(item.id),
+    articleSection: item.category,
+    author: { "@id": PERSON_ID },
     datePublished: item.date,
     keywords: item.tags.join(", "),
     ...(item.href

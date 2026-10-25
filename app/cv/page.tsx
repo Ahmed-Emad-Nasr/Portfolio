@@ -34,6 +34,7 @@ import {
   RELEVANT_COURSEWORK,
 } from "@/app/core/config/cv";
 import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
+import { jsonLd, KEYWORDS, PERSON_REF, SITE_URL, WEBSITE_ID } from "@/app/core/config/seo";
 import { Download, ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
 import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
@@ -67,18 +68,72 @@ function SectionTitle({ children, japanese }: { children: ReactNode; japanese: s
 }
 
 export const metadata: Metadata = {
-  title: "CV — SOC Analyst & Incident Responder",
+  title: "CV — Information Security Officer",
   description:
-    "Full CV for Ahmed Emad Nasr: SOC operations, incident response and DFIR experience, security certifications, projects, and published investigation reports.",
+    "Full CV for Ahmed Emad Nasr: GRC, SOC operations, incident response, DFIR, IAM and data security experience, certifications, projects and investigation reports.",
+  keywords: [
+    "Ahmed Emad Nasr CV",
+    "Ahmed Emad Nasr resume",
+    "information security officer CV",
+    "GRC analyst resume",
+    "SOC analyst resume",
+    "DFIR analyst CV",
+    "cybersecurity resume Egypt",
+    ...KEYWORDS.roles,
+  ],
   alternates: { canonical: "/cv" },
   openGraph: {
     title: "CV — Ahmed Emad Nasr",
-    description: "SOC Analyst, Incident Response and DFIR — full CV.",
+    description: "Information Security Officer — GRC, SOC, DFIR, IAM and data security. Full CV.",
     url: `${SITE_BASE_URL}/cv`,
+    siteName: "Ahmed Emad Nasr Portfolio",
+    locale: "en_US",
     type: "profile",
+    firstName: "Ahmed",
+    lastName: "Nasr",
+    username: "0x3omda",
     images: [OG_IMAGE],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@0x3omda",
+    creator: "@0x3omda",
+    title: "CV — Ahmed Emad Nasr | Information Security Officer",
+    description: "GRC, SOC, incident response & DFIR, IAM and data security — experience, certifications and projects.",
+    images: [OG_IMAGE.url],
+  },
 };
+
+/* The CV page is a ProfilePage about the same #person node as the home page,
+   with the PDF attached as the downloadable version. */
+const CV_STRUCTURED_DATA = jsonLd({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": `${SITE_BASE_URL}/cv#profilepage`,
+      url: `${SITE_BASE_URL}/cv`,
+      name: "CV — Ahmed Emad Nasr, Information Security Officer",
+      inLanguage: "en",
+      mainEntity: PERSON_REF,
+      isPartOf: { "@id": WEBSITE_ID },
+      associatedMedia: {
+        "@type": "DigitalDocument",
+        name: "Ahmed Emad Nasr — CV (PDF)",
+        encodingFormat: "application/pdf",
+        contentUrl: `${SITE_BASE_URL}/${CV_PDF_HREF}`,
+        author: PERSON_REF,
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "CV", item: `${SITE_BASE_URL}/cv` },
+      ],
+    },
+  ],
+});
 
 /** The desc in experience.ts is a single line separated by "•" — it's turned into bullets here */
 const toBullets = (desc: string): string[] =>
@@ -156,6 +211,7 @@ export default function CvPage() {
 
   return (
     <PageShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: CV_STRUCTURED_DATA }} />
       <article className="relative px-6 md:px-20 pt-36 md:pt-44 pb-24 overflow-hidden print:p-0">
         <KanjiWatermark chars="履歴書" side="right" />
         <div className="max-w-5xl mx-auto relative z-10">

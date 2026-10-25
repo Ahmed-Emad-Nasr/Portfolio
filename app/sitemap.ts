@@ -14,8 +14,44 @@
  */
 
 import type { MetadataRoute } from "next";
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import { absoluteUrl, caseUrl } from "@/app/core/config/site";
+import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
+import { absoluteUrl, caseUrl, OG_IMAGE } from "@/app/core/config/site";
+import { GALLERY_IMAGE_COUNT, galleryImagePath } from "@/app/core/config/certifications";
+import { blogYoutubeVideos } from "@/app/core/config/youtube";
+import { PERSON_IMAGE, SITE_URL, youtubeEmbed, youtubeThumb } from "@/app/core/config/seo";
+
+/*
+ * Image and video extensions (Google's image/video sitemap formats): they
+ * tell Google which pictures and videos belong to which page, so they can
+ * show up in Image and Video search with a link back here. Every image listed
+ * is one the page actually shows.
+ */
+const homeImages = [
+  PERSON_IMAGE,
+  OG_IMAGE.url,
+  ...Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1))),
+];
+
+/* Google allows 2,048 characters of description; keep well under */
+const clip = (text: string, max = 1000) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
+
+/* Next writes the video fields into the XML as-is (it escapes nothing), so
+   one "&" in a title — "CA Certificate & Proxy" — made the whole sitemap
+   invalid XML, and Search Console rejects an invalid sitemap entirely. */
+const xml = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+
+const homeVideos = blogYoutubeVideos.map((video) => ({
+  title: xml(video.title),
+  thumbnail_loc: youtubeThumb(video.videoId),
+  description: xml(clip(video.description ?? video.title)),
+  player_loc: youtubeEmbed(video.videoId),
+  publication_date: video.publishedAt,
+  family_friendly: "yes" as const,
+  requires_subscription: "no" as const,
+  uploader: { info: SITE_URL, content: "Ahmed Emad Nasr" },
+  ...(video.tags?.[0] ? { tag: xml(video.tags[0]) } : {}),
+}));
 
 // Required with output: "export" — exactly like robots.ts.
 export const dynamic = "force-static";
@@ -37,8 +73,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: absoluteUrl("/"),
       lastModified: latestCaseDate,
-      changeFrequency: "monthly",
+      changeFrequency: "weekly",
       priority: 1,
+      images: homeImages,
+      videos: homeVideos,
     },
     {
       // The HTML CV page. Higher priority than the PDF: Google indexes the page
@@ -48,6 +86,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: latestCaseDate,
       changeFrequency: "monthly",
       priority: 0.9,
+      images: [PERSON_IMAGE],
     },
     {
       /* The legal pages — low priority: they're meant to be indexed so they can be
@@ -75,6 +114,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: parseDate(item.date),
       changeFrequency: "yearly" as const,
       priority: 0.8,
+      images: [...new Set([...(item.image ? [item.image] : []), ...(caseScreenshotsByEvidenceId[item.id] ?? [])])]
+        .slice(0, 50)
+        .map((src) => absoluteUrl(src)),
     })),
     /*
      * And the PDF itself — only for the cases that have one.

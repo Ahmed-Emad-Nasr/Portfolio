@@ -18,6 +18,7 @@ import CaseArticle from "./CaseArticle";
 import { PageShell } from "@/app/components/shared/kit";
 import { absoluteUrl, caseUrl, summarize } from "@/app/core/config/site";
 import { caseAttackMapping, TECHNIQUES } from "@/app/core/config/attack";
+import { jsonLd, PERSON_ID, PERSON_NAME, SITE_URL } from "@/app/core/config/seo";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
 
@@ -72,6 +73,8 @@ const relatedTo = (item: (typeof caseEvidenceLibrary)[number], limit = 3) => {
     .slice(0, limit);
 };
 
+const AUTHOR = { "@type": "Person", "@id": PERSON_ID, name: PERSON_NAME, url: SITE_URL } as const;
+
 export function generateStaticParams() {
   return caseEvidenceLibrary.map((item) => ({ slug: item.id }));
 }
@@ -98,7 +101,8 @@ export async function generateMetadata({
   return {
     title: item.title,
     description,
-    keywords: [...item.tags, ...item.tools, item.category, item.platform],
+    keywords: [...new Set([...item.tags, ...item.tools, item.category, item.platform, `${item.platform} write-up`, `${item.category} report`, ...techniquesFor(item.id).map((t) => `${t.id} ${t.name}`), "Ahmed Emad Nasr"])],
+    authors: [{ name: PERSON_NAME, url: SITE_URL }],
     alternates: { canonical: `/blog/${item.id}` },
     openGraph: {
       title: shareTitle,
@@ -108,6 +112,10 @@ export async function generateMetadata({
       url: caseUrl(item.id),
       type: "article",
       publishedTime: item.date,
+      modifiedTime: item.date,
+      authors: [SITE_URL],
+      section: item.category,
+      tags: [...item.tags, ...item.tools],
       images: [{ url: ogImage, alt: `${item.title} — screenshot` }],
     },
     twitter: {
@@ -134,7 +142,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   const previous = index > 0 ? caseEvidenceLibrary[index - 1] : null;
   const next = index < caseEvidenceLibrary.length - 1 ? caseEvidenceLibrary[index + 1] : null;
 
-  const structuredData = JSON.stringify({
+  const structuredData = jsonLd({
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -148,9 +156,27 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         articleSection: item.category,
         keywords: [...item.tags, ...item.tools].join(", "),
         timeRequired: `PT${item.readTime}M`,
-        author: { "@type": "Person", name: "Ahmed Emad Nasr" },
-        publisher: { "@type": "Person", name: "Ahmed Emad Nasr" },
-        mainEntityOfPage: caseUrl(item.id),
+        /* @id ties every report to the one Person node from layout.tsx;
+           name and url stay inline for parsers that do not follow @id. */
+        author: AUTHOR,
+        publisher: AUTHOR,
+        copyrightHolder: AUTHOR,
+        isPartOf: { "@id": `${SITE_URL}#cases` },
+        mainEntityOfPage: { "@type": "WebPage", "@id": caseUrl(item.id) },
+        about: [
+          ...[...new Set([item.category, ...item.tags])].map((name) => ({ "@type": "Thing", name })),
+          /* The ATT&CK techniques as defined terms in MITRE's own term set */
+          ...techniquesFor(item.id).map((t) => ({
+            "@type": "DefinedTerm",
+            termCode: t.id,
+            name: t.name,
+            url: `https://attack.mitre.org/techniques/${t.id}/`,
+            inDefinedTermSet: { "@type": "DefinedTermSet", name: "MITRE ATT&CK", url: "https://attack.mitre.org/" },
+          })),
+        ],
+        mentions: item.tools.map((name) => ({ "@type": "SoftwareApplication", name, applicationCategory: "SecurityApplication" })),
+        isAccessibleForFree: true,
+        proficiencyLevel: item.difficulty,
         image: screenshots.slice(0, 3).map((shot) => absoluteUrl(shot)),
         /* associatedMedia is only set if there is actually a PDF — image-only
            cases don't claim a document exists. */

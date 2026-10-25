@@ -35,7 +35,11 @@ import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
-import { normalizePublicHref } from "@/app/core/config/shared";
+import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
+import {
+  CHANNEL_ID, jsonLd, KEYWORDS, OCCUPATION, PERSON_ID, PERSON_IMAGE, PERSON_NAME, PERSON_REF,
+  SAME_AS, SITE_KEYWORDS, SITE_URL, WEBSITE_ID,
+} from "@/app/core/config/seo";
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
 
@@ -104,17 +108,12 @@ export const metadata: Metadata = {
   },
 manifest: "manifest.webmanifest",
   title: {
-    default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
+    default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | Information Security Officer",
     template: "%s | Ahmed Emad Nasr",
   },
   description:
-    "Ahmed Emad Nasr's cybersecurity portfolio specializing in SOC operations, incident response, digital forensics (DFIR), threat hunting, and malware analysis.",
-  keywords: [
-    "Ahmed Emad Nasr", "SOC Analyst", "Cybersecurity Analyst", "Information Security Analyst",
-    "Incident Response", "Threat Hunting", "SIEM", "EDR", "DFIR",
-    "Wazuh", "Suricata", "Malware Analysis", "eJPT v2", 
-    "Cairo", "Benha", "Portfolio",
-  ],
+    "Ahmed Emad Nasr, information security officer: GRC and compliance, SOC operations, incident response and DFIR, malware analysis, IAM and data security.",
+  keywords: SITE_KEYWORDS,
   authors: [{ name: "Ahmed Emad Nasr" }],
   creator: "Ahmed Emad Nasr",
   publisher: "Ahmed Emad Nasr",
@@ -135,8 +134,8 @@ manifest: "manifest.webmanifest",
     },
   },
   openGraph: {
-    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC & Cybersecurity Analyst",
-    description: "Incident response, threat hunting, DFIR, and cybersecurity training from Ahmed Emad Nasr.",
+    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | Information Security Officer",
+    description: "GRC, SOC, incident response & DFIR, malware analysis, IAM and data security — with the reports to show for it.",
     type: "website",
     url: "https://ahmed-emad-nasr.github.io/Portfolio/",
     locale: "en_US",
@@ -150,38 +149,93 @@ manifest: "manifest.webmanifest",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | SOC Analyst",
-    description: "SOC analysis, incident response, threat hunting, SIEM/EDR implementation, and cybersecurity training.",
+    title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | Information Security Officer",
+    description: "GRC & compliance, SOC, incident response & DFIR, IAM and data security — and the security training behind them.",
     creator: "@0x3omda",
     site: "@0x3omda",
     images: ["https://ahmed-emad-nasr.github.io/Portfolio/og-image.png"],
   },
   verification: {
     google: "VCIeVhcDb-vQGmE68weZARtruR_F2bUwv6hcjKYdwqo",
+    /* Bing Webmaster Tools (also feeds DuckDuckGo, Yahoo and ChatGPT search):
+       paste the code from bing.com/webmasters → "HTML Meta Tag" here.
+       other: { "msvalidate.01": "YOUR-BING-CODE" }, */
+  },
+  /* Location and audience hints read by Bing, Yandex and local search. */
+  other: {
+    "geo.region": "EG-C",
+    "geo.placename": "Cairo, Egypt",
+    "geo.position": "30.0444;31.2357",
+    ICBM: "30.0444, 31.2357",
   },
 };
 
 // ─── Fonts ────────────────────────────────────────────────────────────────────
 
-const STRUCTURED_DATA_JSON = JSON.stringify({
+/* Organisations from the timeline, as schema.org nodes. Current = no endDate. */
+type Org = { name: string; url?: string; education: boolean };
+const orgNode = (org: Org) => ({
+  "@type": org.education ? "EducationalOrganization" : "Organization",
+  name: org.name,
+  ...(org.url ? { url: org.url } : {}),
+});
+const uniqueOrgs = (orgs: Org[]) => [...new Map(orgs.map((org) => [org.name, org])).values()];
+const timelineOrgs = knowledgeEducationItems
+  .filter((item) => item.subTag)
+  .map((item) => ({
+    name: item.subTag as string,
+    url: item.subTagHyperlink as string | undefined,
+    current: !("endDate" in item && item.endDate),
+    education: item.kind === "education",
+    work: item.kind === "work",
+  }));
+const currentOrgs = uniqueOrgs(timelineOrgs.filter((org) => org.current && org.work));
+const alumniOrgs = uniqueOrgs(timelineOrgs.filter((org) => org.education));
+
+/*
+ * Site-wide graph: only the nodes that are true on every page — the person,
+ * the channel and the website. The home page's ProfilePage, FAQ, videos and
+ * timeline live in app/page.tsx; each case page adds its own TechArticle.
+ * (These used to be here, so every case page also claimed to be the home
+ * ProfilePage, and the CV page ended up with two ProfilePages.)
+ */
+const STRUCTURED_DATA_JSON = jsonLd({
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Person",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person",
-      name: "Ahmed Emad Nasr",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      image: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp",
-      jobTitle: ["SOC Analyst", "Incident Response Analyst", "Cybersecurity Analyst"],
+      "@id": PERSON_ID,
+      name: PERSON_NAME,
+      givenName: "Ahmed",
+      additionalName: "Emad",
+      familyName: "Nasr",
+      alternateName: ["Ahmed Emad", "3omda", "0x3omda", "أحمد عماد نصر"],
+      url: SITE_URL,
+      mainEntityOfPage: { "@id": `${SITE_URL}#profilepage` },
+      image: { "@type": "ImageObject", "@id": `${SITE_URL}#person-image`, url: PERSON_IMAGE, caption: PERSON_NAME },
+      jobTitle: ["Information Security Officer", "GRC Analyst", "SOC Analyst", "DFIR Analyst", "Cybersecurity Instructor"],
+      /* The standard occupation (O*NET 15-1212.00) plus the skills behind it —
+         how Google matches a person to job-related searches. */
+      hasOccupation: { ...OCCUPATION, skills: skillGroups.flatMap((group) => group.items).join(", ") },
       /* knowsAbout is the field Google uses to understand a person's domain. The skills
          were scattered as tags in the JSX and nobody exported them as data — now
          a single source in config/skills.ts feeds both the display and the JSON-LD. */
-      knowsAbout: skillGroups.flatMap((group) => group.items),
+      knowsAbout: [...new Set([...KEYWORDS.grc, ...KEYWORDS.operations, ...KEYWORDS.response, ...KEYWORDS.identityData, ...skillGroups.flatMap((group) => group.items)])],
+      knowsLanguage: [
+        { "@type": "Language", name: "Arabic", alternateName: "ar" },
+        { "@type": "Language", name: "English", alternateName: "en" },
+      ],
       /* The certifications used to be 74 images, none of them understandable to any crawler. */
-      hasCredential: certificationsJsonLd("https://ahmed-emad-nasr.github.io/Portfolio/#person"),
+      hasCredential: certificationsJsonLd(PERSON_ID),
       /* The awards section was in the CV and not on the site in any form. */
       award: achievements.map((item) => `${item.title} — ${item.context}`),
-      description: "SOC Analyst and Incident Response Analyst focused on DFIR, Threat Hunting, and Security Operations.",
+      description: "Information security officer working across governance, risk and compliance, security operations, incident response and DFIR, malware analysis, identity and access management, and data security.",
+      /* Where he works and studied, as organisations rather than strings — the
+         current roles are the ones without an endDate. */
+      worksFor: currentOrgs.map(orgNode),
+      alumniOf: alumniOrgs.map(orgNode),
+      nationality: { "@type": "Country", name: "Egypt" },
+      homeLocation: { "@type": "Place", name: "Cairo, Egypt", address: { "@type": "PostalAddress", addressLocality: "Cairo", addressCountry: "EG" } },
       email: "mailto:ahmed.em.nasr@gmail.com",
       telephone: "+20 101 397 2690",
       address: { 
@@ -193,62 +247,35 @@ const STRUCTURED_DATA_JSON = JSON.stringify({
         "@type": "ContactPoint", contactType: "professional inquiry",
         email: "ahmed.em.nasr@gmail.com", availableLanguage: ["en", "ar"],
       },
-      sameAs: [
-        "https://www.linkedin.com/in/ahmed-emad-nasr/",
-        "https://x.com/0x3omda",
-        "https://github.com/Ahmed-Emad-Nasr",
-      ],
+      /* Every public profile that is the same person — the identity graph
+         a knowledge panel is built from. */
+      sameAs: [...SAME_AS],
+      owns: { "@id": CHANNEL_ID },
+    },
+    {
+      /* The channel as its own node, so every VideoObject on the home page can
+         point at it and at the person who runs it. */
+      "@type": "Organization",
+      "@id": CHANNEL_ID,
+      name: "Ahmed Emad — Cybersecurity (YouTube)",
+      url: YOUTUBE_CHANNEL_URL,
+      sameAs: [YOUTUBE_CHANNEL_URL],
+      founder: PERSON_REF,
+      description: "Arabic-language cybersecurity tutorials: SOC labs, Wazuh SIEM, malware analysis, attack simulation, GRC and security fundamentals.",
+      knowsLanguage: ["ar", "en"],
     },
     {
       "@type": "WebSite",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website",
+      "@id": WEBSITE_ID,
       name: "Ahmed Emad Nasr Portfolio",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+      alternateName: ["Ahmed Emad Nasr", "3omda Portfolio", "Ahmed Emad Nasr — Information Security"],
+      url: SITE_URL,
+      description: "The information security portfolio of Ahmed Emad Nasr: GRC, SOC, incident response, DFIR, malware analysis, IAM and data security — with case reports, projects, videos and certifications.",
       inLanguage: "en",
-    },
-    {
-      "@type": "ProfilePage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#profilepage",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      mainEntity: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
-      isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#breadcrumbs",
-      itemListElement: [
-        /* Removed the Contact item — the section no longer exists, and a breadcrumb pointing at
-           a dead anchor breaks the rich result in search results. */
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://ahmed-emad-nasr.github.io/Portfolio/" },
-      ],
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#homepage",
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/",
-      name: "Ahmed Emad Nasr | SOC Analyst & Cybersecurity Professional",
-      description: "A portfolio homepage highlighting cybersecurity work, SIEM/EDR projects, malware analysis, and professional experience.",
-      isPartOf: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#website" },
-      primaryImageOfPage: { "@type": "ImageObject", url: "https://ahmed-emad-nasr.github.io/Portfolio/Assets/art-gallery/Images/logo/3omda.webp" },
-      about: { "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#person" },
-      inLanguage: "en",
-    },
-    {
-      "@type": "ItemList",
-      "@id": "https://ahmed-emad-nasr.github.io/Portfolio/#experience-list",
-      name: "Education and Experience Timeline",
-      itemListElement: knowledgeEducationItems.map((item, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "EducationalOccupationalCredential",
-          name: item.tag,
-          description: item.desc,
-          credentialCategory: item.subTag,
-          validFrom: item.startDate,
-          validUntil: "endDate" in item ? item.endDate : undefined,
-        },
-      })),
+      author: PERSON_REF,
+      publisher: PERSON_REF,
+      copyrightHolder: PERSON_REF,
+      keywords: SITE_KEYWORDS.join(", "),
     },
   ],
 });
