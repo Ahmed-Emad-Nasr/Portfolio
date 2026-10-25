@@ -17,6 +17,7 @@ import { EASE } from "@/app/core/motion";
 import { TiltCard } from "@/app/core/components/Motion";
 import { normalizePublicHref, getThumbnail, formatDate } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
+import CaseSummary from "./CaseSummary";
 import { btnOutline, chipAccent, chipTertiary, ctaPrimary, ctaSecondary, KanjiWatermark } from "@/app/components/shared/kit";
 
 const GalleryLightbox = dynamic(() => import("@/app/components/art-gallery/GalleryLightbox"), { ssr: false });
@@ -171,15 +172,14 @@ export default function CaseArticle({
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent" />
               <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-[0.3em] uppercase">Case summary</span>
+              <span className="hidden sm:inline font-mono text-[0.5625rem] text-foreground/30 tracking-wider">~/cases/{item.id}/brief.md</span>
             </div>
             <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-wider uppercase">{item.category}</span>
           </div>
-          <div className="relative z-10 px-6 md:px-12 py-6 md:py-8">
-            <p className="text-base md:text-lg font-light text-foreground/80 leading-relaxed border-l-2 border-foreground/10 pl-5 italic">
-              {item.description}
-            </p>
+          <div className="relative z-10 px-6 md:px-12 py-7 md:py-10">
+            <CaseSummary description={item.description} />
           </div>
-          <div className="relative z-10 px-6 md:px-12 pb-8 flex flex-wrap gap-4">
+          <div className="relative z-10 px-6 md:px-12 pt-6 pb-8 flex flex-wrap gap-4 border-t border-foreground/5">
             {item.href && (
               <>
                 <a href={normalizePublicHref(item.href)} target="_blank" rel="noopener noreferrer" className={ctaPrimary}>

@@ -18,7 +18,7 @@ function FieldRow({ label, value, hot = false }: { label: string; value: string;
       <dt className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
         {label}
       </dt>
-      <dd className={`font-mono text-xs text-right leading-relaxed ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
+      <dd className={`font-mono text-xs text-right leading-relaxed xl:whitespace-nowrap ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
         {value}
       </dd>
     </div>
@@ -310,7 +310,10 @@ export default function HeroSection({
         </div>
 
         {/* ─── Content: proof + field record ─── */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-[1.35fr_.65fr] gap-10 items-start w-full">
+        {/* From xl up the field record takes the width its longest row needs
+            (auto column + nowrap values), so no row breaks onto a second
+            line; the left column gets the rest. */}
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-[1.35fr_.65fr] xl:grid-cols-[minmax(0,1fr)_auto] gap-10 items-start w-full">
           <div>
             {/* Tech Spec Sheet */}
             <div className="mb-8 w-full border border-foreground/5 bg-foreground/[0.02] backdrop-blur-sm">
