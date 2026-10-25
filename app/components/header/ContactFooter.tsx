@@ -267,7 +267,7 @@ export default function ContactFooter() {
               Seal Intent
             </h3>
             <p className="font-mono text-[0.6875rem] text-foreground/60 tracking-wider mb-8">
-              {PORTFOLIO_DATA.profile.availability}  training and collaborations welcome too.
+              {PORTFOLIO_DATA.profile.availability} — training and collaborations welcome too.
             </p>
 
             <form
@@ -330,6 +330,7 @@ export default function ContactFooter() {
                   defaultValue="Job opportunity"
                 >
                   <option>Job opportunity</option>
+                  <option>GRC / security assessment</option>
                   <option>Training / course</option>
                   <option>Collaboration</option>
                   <option>Other</option>

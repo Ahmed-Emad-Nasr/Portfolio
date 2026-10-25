@@ -4,7 +4,7 @@ import { TiltCard } from "@/app/core/components/Motion";
 import { rv } from "@/app/core/reveal";
 
 /**
- * Arsenal  static stack grid (no marquee).
+ * Arsenal — static stack grid (no marquee).
  * Same card language as Services: red structure, sky stack chips.
  * Hover edge turns sky to mark it as the "tools" section.
  */
@@ -27,7 +27,7 @@ export default function TechStackGrid() {
           japanese="武器庫"
           titleA="Tools of"
           titleB="The Trade."
-          description="No buzzword bingo. Every item below shows up in the labs and cases you just scrolled past  or the reports in the case library."
+          description="No buzzword bingo. Every item below shows up in the labs and cases you just scrolled past — or the reports in the case library."
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

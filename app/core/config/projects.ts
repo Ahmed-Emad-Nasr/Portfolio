@@ -187,7 +187,7 @@ export const staticProjectFallback = [
     // From the CV — the site's own repo, built from SITE_BASE_URL in site.ts.
     id: 8,
     name: "Portfolio",
-    description: "Cybersecurity portfolio & technical blog built with Next.js, publishing SOC/DFIR case studies and CTF writeups.",
+    description: "Cybersecurity portfolio & technical blog built with Next.js, publishing information security case studies (SOC, DFIR, malware, IAM, cloud) and CTF write-ups.",
     language: "TypeScript",
     html_url: "https://github.com/Ahmed-Emad-Nasr/Portfolio",
     homepage: "https://ahmed-emad-nasr.github.io/Portfolio/",

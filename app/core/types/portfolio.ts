@@ -10,9 +10,16 @@ export interface ContactInfo {
   x: string;
 }
 
+export interface HeroSpec {
+  label: string;
+  value: string;
+}
+
 export interface HeroInfo {
   tagline: string;
   japaneseTagline: string;
+  /** The "Technical Specifications" strip in the hero */
+  specs: HeroSpec[];
   photo: string;
   cvUrl: string;
 }
@@ -22,6 +29,8 @@ export interface Profile {
   title: string;
   japaneseTitle: string;
   availability: string;
+  /** The areas on the hero's "Focus" row */
+  focus: string[];
   /** The jobs typed one after another under the name in the hero */
   roles: string[];
   contact: ContactInfo;

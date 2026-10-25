@@ -203,7 +203,7 @@ directive — and adding it may ship data you did not intend to.
 Everything in `core/config/` is typed data, not JSX:
 
 ```
-cases.ts           38 case reports (the largest file, 46 KB)
+cases.ts           77 case reports (the largest file, ~118 KB)
 attack.ts          MITRE ATT&CK tactic/technique map
 certifications.ts  Certs with issuer, year, verification URL
 skills.ts          Skill groups, each linked to the cases that prove it
@@ -213,7 +213,8 @@ projects.ts        Project metadata and bullet points
 youtube.ts         Video and playlist metadata
 start-here.ts      Curated entry points for the blog
 cv.ts              CV structure
-portfolio.ts       Section-level copy
+portfolio-data.ts  Everything the home page renders (profile, services, process, stack)
+live-copy.ts       Home-page copy that quotes case-library numbers (server-only)
 site.ts            Absolute URLs, base path, trailing-slash policy
 shared.ts          normalizePublicHref, date formatting, thumbnails
 ```

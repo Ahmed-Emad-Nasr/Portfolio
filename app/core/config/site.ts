@@ -56,7 +56,7 @@ export const OG_IMAGE = {
   url: `${SITE_BASE_URL}/og-image.png`,
   width: 1200,
   height: 630,
-  alt: "Ahmed Emad Nasr — SOC Analyst & Incident Responder",
+  alt: "Ahmed Emad Nasr — Information Security Officer: GRC, SOC, DFIR, IAM",
 };
 
 /**

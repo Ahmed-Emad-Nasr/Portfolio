@@ -100,20 +100,13 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | Information Security Officer",
     description:
       "GRC, SOC, incident response & DFIR, IAM and data security: case reports, projects and training by Ahmed Emad Nasr.",
-    url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+    url: SITE_URL,
     type: "website",
     /* A page-level openGraph replaces the layout's whole object, so the two
        fields below would otherwise be lost on the home page. */
     siteName: "Ahmed Emad Nasr Portfolio",
     locale: "en_US",
-    images: [
-      {
-        url: "https://ahmed-emad-nasr.github.io/Portfolio/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Ahmed Emad Nasr information security portfolio",
-      },
-    ],
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
@@ -122,7 +115,7 @@ export const metadata: Metadata = {
     title: "Ahmed Emad Nasr | Information Security Officer",
     description:
       "GRC assessments, SOC investigations, DFIR and malware analysis, IAM and data security — the work and the reports.",
-    images: ["https://ahmed-emad-nasr.github.io/Portfolio/og-image.png"],
+    images: [OG_IMAGE.url],
   },
 };
 
@@ -182,7 +175,7 @@ const STRUCTURED_DATA_JSON = jsonLd({
     },
     {
       "@type": "Service",
-      "@id": `${SITE_URL}#service-soc-ir`,
+      "@id": `${SITE_URL}#service-infosec`,
       name: "Information Security: GRC, Security Operations and Incident Response",
       description: "Governance, risk and compliance assessments, SOC monitoring and triage, incident response and digital forensics, malware analysis, identity and access management, data security, and security training.",
       provider: PERSON_REF,
@@ -292,7 +285,7 @@ export default async function Home() {
         <ServicesSection />
       </div>
 
-      <SectionDivider text="検知 • 分析 • 対応 • 復旧 • 報告" reverse={true} angle={-1.5} />
+      <SectionDivider text="統治 • 防御 • 検知 • 対応 • 報告" reverse={true} angle={-1.5} />
 
       {/* 04  Proof A: labs, research and tools */}
       <div>

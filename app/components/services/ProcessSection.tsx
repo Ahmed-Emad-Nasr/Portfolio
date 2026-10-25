@@ -18,9 +18,9 @@ export default function ProcessSection() {
         <SectionHeader
           eyebrow="Process // How I work"
           japanese="手順"
-          titleA="Alert to"
-          titleB="Report."
-          description="Same rhythm on every incident, from the first alert to the write-up. Nothing is closed without a reason on record."
+          titleA="Risk to"
+          titleB="Response."
+          description="One loop for every engagement — the NIST CSF functions, from the risk register to the incident report. Nothing is closed without a reason on record."
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {PORTFOLIO_DATA.process.map((p, idx) => (

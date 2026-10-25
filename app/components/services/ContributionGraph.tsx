@@ -36,7 +36,7 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
   if (status === "error" || status === "empty") {
     return (
       <p className="border border-foreground/10 bg-surface/60 px-6 py-5 font-mono text-xs text-foreground/60">
-        {status === "error" ? "Contribution graph is unreachable right now  " : "No recent activity to draw  "}
+        {status === "error" ? "Contribution graph is unreachable right now — " : "No recent activity to draw — "}
         <a
           href={`https://github.com/${username}`}
           target="_blank"

@@ -127,7 +127,7 @@ export type BlogYoutubePlaylist = {
 };
 
 // -----------------------------------------------------------------------------
-// Utils (from blog-utils.ts)
+// Utils (blog-utils.ts used to re-export these; import them from here)
 // -----------------------------------------------------------------------------
 
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {

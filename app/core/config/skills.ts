@@ -37,9 +37,19 @@ export type SkillGroup = {
 
 export const skillGroups: readonly SkillGroup[] = [
   {
+    /* GRC first: the Banque Misr assessment and VerifAI 360 are the work
+       behind it, and it is the area a SOC-only list used to hide. */
+    id: "grc",
+    label: "Governance, Risk & Compliance",
+    items: ["ISO 27001", "PCI DSS", "NIST CSF", "COBIT", "SWIFT CSP", "GDPR", "Risk Assessment", "Gap Analysis", "Security Auditing", "Policy & Procedures", "Remediation Planning"],
+    evidence: [
+      { id: "legal-considerations-dfir", label: "Policy compliance & AUP review" },
+    ],
+  },
+  {
     id: "siem",
     label: "SIEM & Security Monitoring",
-    items: ["Wazuh", "ELK Stack", "Splunk", "Security Onion", "Sysmon", "auditd", "Threat Intelligence"],
+    items: ["Wazuh", "ELK Stack", "Splunk", "Security Onion", "Sysmon", "auditd"],
     evidence: [
       { id: "3omda-custom-detection-rules", label: "Custom Wazuh detection rules" },
       { id: "soc-env-depi-r3-project", label: "SOC environment build" },
@@ -48,34 +58,11 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "ir",
     label: "Incident Response & Threat Detection",
-    items: ["Security Monitoring", "Incident Detection", "Alert Triage", "IOC Analysis", "Log Analysis", "Incident Response"],
+    items: ["Incident Response", "Alert Triage", "Incident Detection", "IOC Analysis", "Log Analysis", "Threat Hunting"],
     evidence: [
       { id: "soc326-report", label: "SOC326 — full IR lifecycle" },
       { id: "soc336-report", label: "SOC336 — APT persistence" },
       { id: "soc274-pdf", label: "SOC274 — lateral movement" },
-    ],
-  },
-  {
-    id: "identity",
-    label: "Identity & Access Security",
-    items: ["IAM", "PAM", "DAM", "RBAC", "ABAC", "Access Control"],
-    evidence: [
-      { id: "iam-access-control-room", label: "IAM & access control" },
-      { id: "aws-kms-security", label: "AWS KMS key management" },
-    ],
-  },
-  {
-    id: "automation",
-    label: "Programming & Automation",
-    items: ["Python", "Bash", "PowerShell", "Regex"],
-  },
-  {
-    id: "network",
-    label: "Networking & Network Security",
-    items: ["TCP/IP", "VPN", "Packet Analysis", "IDS/IPS", "Suricata", "Zeek", "Wireshark", "pfSense"],
-    evidence: [
-      { id: "ettercap-case", label: "EtterCap MITM analysis" },
-      { id: "malicious-web-traffic-room-report", label: "Malicious web traffic" },
     ],
   },
   {
@@ -90,14 +77,69 @@ export const skillGroups: readonly SkillGroup[] = [
     ],
   },
   {
-    id: "frameworks",
-    label: "Security Frameworks",
-    items: ["MITRE ATT&CK", "NIST CSF", "NIST 800-61", "NIST 800-53", "Cyber Kill Chain", "ISO 27001", "PCI DSS"],
+    id: "identity",
+    label: "Identity & Access Management",
+    items: ["IAM", "PAM", "RBAC", "ABAC", "Access Control", "Active Directory"],
+    evidence: [
+      { id: "iam-access-control-room", label: "IAM & access control" },
+      { id: "monitoring-active-directory", label: "Active Directory monitoring" },
+    ],
   },
   {
-    id: "os",
-    label: "Operating Systems",
-    items: ["Windows", "Windows Server", "Ubuntu", "Kali Linux", "Arch Linux"],
+    id: "data",
+    label: "Data Security",
+    items: ["DLP", "DAM", "Encryption", "Key Management", "Data Classification", "Secure Storage"],
+    evidence: [
+      { id: "soc282-pdf", label: "SOC282 — DLP & data exfiltration" },
+      { id: "aws-kms-security", label: "AWS KMS key management" },
+      { id: "aws-athena-healthcare", label: "Encrypted healthcare data pipeline" },
+    ],
+  },
+  {
+    id: "vuln",
+    label: "Vulnerability Management & Hardening",
+    items: ["Nessus", "Vulnerability Assessment", "CIS Benchmarks", "System Hardening", "OWASP Top 10", "Burp Suite"],
+    evidence: [
+      { id: "vulnerability-scanning-tools", label: "Vulnerability scanning tools" },
+      { id: "owasp-juice-shop", label: "OWASP Juice Shop" },
+    ],
+  },
+  {
+    id: "cloud",
+    label: "Cloud Security",
+    items: ["AWS GuardDuty", "AWS KMS", "Amazon S3", "Amazon Athena", "Cloud Hardening"],
+    evidence: [
+      { id: "aws-guardduty-setup", label: "AWS GuardDuty setup" },
+      { id: "aws-kms-security", label: "AWS KMS key management" },
+    ],
+  },
+  {
+    id: "intel",
+    label: "Threat Intelligence",
+    items: ["VirusTotal", "Hybrid Analysis", "NVD", "Exploit-DB", "IOC Enrichment", "Dark-Web Monitoring"],
+  },
+  {
+    id: "network",
+    label: "Networking & Network Security",
+    items: ["TCP/IP", "VPN", "Packet Analysis", "IDS/IPS", "Suricata", "Zeek", "Wireshark", "pfSense"],
+    evidence: [
+      { id: "ettercap-case", label: "EtterCap MITM analysis" },
+      { id: "malicious-web-traffic-room-report", label: "Malicious web traffic" },
+    ],
+  },
+  {
+    /* ISO 27001, PCI DSS and NIST CSF live in the GRC group above —
+       listing them twice made the same tag appear on two cards. */
+    id: "frameworks",
+    label: "Security Frameworks",
+    items: ["MITRE ATT&CK", "NIST 800-61", "NIST 800-53", "Cyber Kill Chain", "OWASP"],
+  },
+  {
+    /* Was two groups ("Programming & Automation" and "Operating Systems");
+       merged so the arsenal grid fills three full rows of four. */
+    id: "automation",
+    label: "Automation & Platforms",
+    items: ["Python", "Bash", "PowerShell", "Regex", "Windows Server", "Linux"],
   },
   {
     // From the CV — a whole group that was missing from the site.
@@ -107,7 +149,8 @@ export const skillGroups: readonly SkillGroup[] = [
   },
 ];
 
+/* One list for the CV page (full level) and the home page (code + short level) */
 export const languages = [
-  { name: "Arabic", level: "Native" },
-  { name: "English", level: "Professional Working Proficiency" },
+  { code: "AR", name: "Arabic", level: "Native", short: "Native" },
+  { code: "EN", name: "English", level: "Professional Working Proficiency", short: "Professional" },
 ] as const;

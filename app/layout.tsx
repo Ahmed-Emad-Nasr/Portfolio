@@ -36,6 +36,7 @@ import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
+import { OG_IMAGE } from "@/app/core/config/site";
 import {
   CHANNEL_ID, jsonLd, KEYWORDS, OCCUPATION, PERSON_ID, PERSON_IMAGE, PERSON_NAME, PERSON_REF,
   SAME_AS, SITE_KEYWORDS, SITE_URL, WEBSITE_ID,
@@ -69,7 +70,7 @@ export const metadata: Metadata = {
   /* Full URL to same-origin pages, only the origin to other sites (the
      default, stated explicitly so no browser falls back to leaking paths) */
   referrer: "strict-origin-when-cross-origin",
-  metadataBase: new URL("https://ahmed-emad-nasr.github.io/Portfolio/"),
+  metadataBase: new URL(SITE_URL),
   applicationName: "Ahmed Emad Nasr Portfolio",
   appleWebApp: {
     capable: true,
@@ -85,7 +86,7 @@ export const metadata: Metadata = {
      *
      * A full absolute URL, exactly like the OG images in page.tsx.
      */
-    startupImage: ["https://ahmed-emad-nasr.github.io/Portfolio/icons/icon-512.png"],
+    startupImage: [`${SITE_URL}icons/icon-512.png`],
   },
   /*
    * The metadata had appleWebApp.capable = true without any icon —
@@ -106,7 +107,7 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: normalizePublicHref("icons/apple-touch-icon.png"), sizes: "180x180", type: "image/png" }],
   },
-manifest: "manifest.webmanifest",
+  manifest: "manifest.webmanifest",
   title: {
     default: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | Information Security Officer",
     template: "%s | Ahmed Emad Nasr",
@@ -137,15 +138,11 @@ manifest: "manifest.webmanifest",
     title: "Ahmed Emad Nasr 🇪🇬 🇵🇸 | Information Security Officer",
     description: "GRC, SOC, incident response & DFIR, malware analysis, IAM and data security — with the reports to show for it.",
     type: "website",
-    url: "https://ahmed-emad-nasr.github.io/Portfolio/",
+    url: SITE_URL,
     locale: "en_US",
     siteName: "Ahmed Emad Nasr Portfolio",
-    images: [{
-      url: "https://ahmed-emad-nasr.github.io/Portfolio/og-image.png",
-      width: 1200,
-      height: 630,
-      alt: "Ahmed Emad Nasr cybersecurity portfolio",
-    }],
+    /* One definition (config/site.ts) instead of the same URL typed four times */
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
@@ -153,7 +150,7 @@ manifest: "manifest.webmanifest",
     description: "GRC & compliance, SOC, incident response & DFIR, IAM and data security — and the security training behind them.",
     creator: "@0x3omda",
     site: "@0x3omda",
-    images: ["https://ahmed-emad-nasr.github.io/Portfolio/og-image.png"],
+    images: [OG_IMAGE.url],
   },
   verification: {
     google: "VCIeVhcDb-vQGmE68weZARtruR_F2bUwv6hcjKYdwqo",

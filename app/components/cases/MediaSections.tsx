@@ -13,7 +13,7 @@ import { TiltCard } from "@/app/core/components/Motion";
 import { CountUp } from "@/app/core/components/CountUp";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { Youtube } from "@/app/core/icons/BrandIcons";
-import type { ChannelVideo } from "@/app/blog/blog-types";
+import type { ChannelVideo } from "@/app/core/config/shared";
 import type { BlogYoutubePlaylist } from "@/app/core/config/shared";
 import { CounterBadge, KanjiWatermark, btnOutline } from "@/app/components/shared/kit";
 import { rv } from "@/app/core/reveal";

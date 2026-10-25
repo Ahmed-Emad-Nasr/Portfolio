@@ -15,7 +15,7 @@ import { m as motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
 import { EASE } from "@/app/core/motion";
 import { TiltCard } from "@/app/core/components/Motion";
-import { normalizePublicHref, getThumbnail, formatDate } from "../blog-utils";
+import { normalizePublicHref, getThumbnail, formatDate } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import { btnOutline, chipAccent, chipTertiary, ctaPrimary, ctaSecondary, KanjiWatermark } from "@/app/components/shared/kit";
 

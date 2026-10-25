@@ -28,17 +28,19 @@ export type LiveCopy = {
 export const LIVE_COPY: LiveCopy = {
   heroDescription: CV_SUMMARY,
   now: [
-    { label: "Teaching", detail: "Cybersecurity instructor at AMIT Learning and NTI — Linux, networking, SOC and pentest tracks." },
+    { label: "Teaching", detail: "Cybersecurity instructor at AMIT Learning and NTI — Linux, networking, SOC, pentest, IAM and GRC tracks." },
     { label: "Writing", detail: `Case reports for the library — ${CASE_STATS.published} published, ${CASE_STATS.reports} of them full investigations.` },
     { label: "Recording", detail: "Security walkthroughs on the YouTube channel, free for anyone starting out." },
-    { label: "Open to", detail: "SOC analyst, incident response and DFIR roles." },
+    { label: "Open to", detail: "Information security roles — GRC and compliance, SOC, incident response and DFIR, IAM and data security." },
   ],
   faq: [
-    { q: "What kind of role are you after?", a: "SOC analyst, incident response and DFIR — blue-team work where detection and investigation are the job." },
+    { q: "What kind of role are you after?", a: "Information security, end to end: GRC and compliance, SOC and incident response, DFIR and malware analysis, IAM and data security. Penetration testing only at a beginner level (eJPT)." },
+    { q: "Do you do GRC and compliance work?", a: "Yes. At Banque Misr I assessed GRC gaps across three units against ISO 27001, PCI DSS, COBIT and SWIFT, and audited IAM, PAM and DevSecOps architecture. VerifAI 360, my open-source GRC platform, automates control mapping and gap analysis across 150+ frameworks." },
     { q: "Where can I see real work?", a: `In the case library: ${CASE_STATS.published} documented cases, ${CASE_STATS.reports} of them full investigation reports, with screenshots and ATT&CK mapping where it applies.` },
-    { q: "Which tools do you use day to day?", a: "Wazuh, ELK and Splunk for SIEM; Suricata and Zeek on the network; Volatility, Autopsy and YARA for forensics; Python and Bash to automate the rest." },
+    { q: "Which tools and frameworks do you use?", a: "ISO 27001, PCI DSS and NIST CSF for governance; Wazuh, ELK and Splunk for SIEM; Suricata and Zeek on the network; Volatility, Autopsy and YARA for forensics; Python and Bash to automate the rest." },
     { q: "Do you teach?", a: "Yes — instructor at AMIT Learning and NTI, with 300+ students taught. Before that, 35+ sessions with Google Developer Groups." },
-    { q: "Which certifications do you hold?", a: "eJPT v2, CCNA, Red Hat RH124, CCEP and HCIA-Datacom, plus the TryHackMe SOC Level 1 and 2 paths." },
+    /* Read from certifications.ts — the hand-written list had fallen behind it */
+    { q: "Which certifications do you hold?", a: `${certifications.map((c) => c.shortName ?? c.name).join(", ")}.` },
     { q: "How do I reach you?", a: "Email or LinkedIn. The form at the bottom of the page opens a pre-filled email — nothing is sent anywhere else." },
   ],
   stats: [

@@ -16,13 +16,14 @@ import { m as motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import { normalizePublicHref } from "@/app/blog/blog-utils";
+import { CV_PDF_HREF, normalizePublicHref } from "@/app/core/config/shared";
+import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { STATIC_PLATFORMS, THM_SNAPSHOT, tryHackMePlatform } from "@/app/core/config/platforms";
 
 type Line = { id: number; text: string; kind: "in" | "out" | "err" | "dim" };
 
 const BANNER = [
-  "3OMDA SHELL v1.0 — SOC & DFIR portfolio",
+  "3OMDA SHELL v1.1 — information security portfolio",
   'Type "help" for commands, "exit" to close.',
 ];
 
@@ -109,8 +110,8 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
 
         case "whoami":
           printAll([
-            "Ahmed Emad Nasr — SOC Analyst / Blue Team.",
-            "Incident response, digital forensics, malware analysis.",
+            `${PORTFOLIO_DATA.profile.name} — ${PORTFOLIO_DATA.profile.title}.`,
+            `Focus: ${PORTFOLIO_DATA.profile.focus.join(", ")}.`,
             `${cases.length} documented cases in the library.`,
           ]);
           break;
@@ -144,11 +145,13 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             break;
           }
 
-          // Accepts either a number from the list or the id itself
-          const byIndex = Number.parseInt(arg, 10);
-          const target = Number.isNaN(byIndex)
-            ? cases.find((c) => c.id === arg)
-            : cases[byIndex - 1];
+          /* Accepts either a number from the list or the id itself. This used
+             parseInt, which reads "3omda-custom-detection-rules" as 3 and
+             "2fa-simple-bypass" as 2 — so opening either by id opened a
+             different case. Only an all-digit argument is a list number now. */
+          const target = /^\d+$/.test(arg)
+            ? cases[Number(arg) - 1]
+            : cases.find((c) => c.id === arg.toLowerCase());
 
           if (!target) {
             print(`open: no case "${arg}"`, "err");
@@ -164,7 +167,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         case "cat":
           if (arg.toLowerCase() === "cv") {
             print("opening CV…", "dim");
-            window.open(normalizePublicHref("Assets/cv/AhmedEmadNasr_CV.pdf"), "_blank", "noopener");
+            window.open(normalizePublicHref(CV_PDF_HREF), "_blank", "noopener");
           } else {
             print(`cat: ${arg || "missing operand"}: No such file`, "err");
           }
@@ -193,9 +196,9 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
 
         case "contact":
           printAll([
-            "email     ahmed.em.nasr@gmail.com",
-            "linkedin  linkedin.com/in/ahmed-emad-nasr",
-            "github    github.com/Ahmed-Emad-Nasr",
+            `email     ${PORTFOLIO_DATA.profile.contact.email}`,
+            `linkedin  ${PORTFOLIO_DATA.profile.contact.linkedin.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")}`,
+            `github    github.com/${PORTFOLIO_DATA.profile.contact.github}`,
           ]);
           break;
 
@@ -260,7 +263,10 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      const next = historyIndex - 1;
+      /* Clamped at -1 ("no history entry"): pressing Down on an empty
+         prompt used to walk the index to -2, -3 … and the next Up then read
+         history[-1] — undefined, which turned the input uncontrolled. */
+      const next = Math.max(historyIndex - 1, -1);
       setHistoryIndex(next);
       setValue(next < 0 ? "" : history[next] ?? "");
     }

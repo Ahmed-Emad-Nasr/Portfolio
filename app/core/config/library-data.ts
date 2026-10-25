@@ -83,9 +83,9 @@ export const libraryStructuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": `${SITE_BASE_URL}/#cases`,
-  name: "Ahmed Emad Nasr — Case Library: SOC incident reports, DFIR write-ups & malware analysis",
+  name: "Ahmed Emad Nasr — Case Library: incident reports, DFIR, malware analysis, IAM, data & cloud security",
   description:
-    "SOC incident response reports, DFIR investigations, malware analysis and detection engineering cases with screenshots and documentation.",
+    "Information security cases with screenshots and documentation: SOC incident reports, DFIR investigations, malware analysis, detection engineering, IAM, data and cloud security, and web security labs.",
   url: `${SITE_BASE_URL}/#cases`,
   inLanguage: "en",
   author: { "@id": PERSON_ID },

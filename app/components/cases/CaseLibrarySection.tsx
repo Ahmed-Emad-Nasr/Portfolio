@@ -16,8 +16,8 @@ import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUT
 import SectionHeader from "@/app/core/components/SectionHeader";
 import SectionDivider from "@/app/core/components/SectionDivider";
 import { ChevronDown } from "lucide-react";
-import { formatDate, normalizePublicHref } from "@/app/blog/blog-utils";
-import type { PdfResource, GalleryState } from "@/app/blog/blog-types";
+import { formatDate, normalizePublicHref } from "@/app/core/config/shared";
+import type { PdfResource, GalleryState } from "@/app/core/config/shared";
 import type { CaseMedia } from "@/app/core/config/library-data";
 import CaseFilters, { type Facet } from "./CaseFilters";
 import CaseCard from "./CaseCard";
@@ -245,7 +245,7 @@ export default function CaseLibrarySection({
               japanese="事件簿"
               titleA="Case"
               titleB="Library."
-              description={`${totalCasesCount} published cases — ${investigationReportCount} full investigation reports, plus write-ups and walkthroughs across SOC incidents, DFIR, malware analysis and detection engineering.`}
+              description={`${totalCasesCount} published cases — ${investigationReportCount} full investigation reports, plus write-ups and walkthroughs across SOC incidents, DFIR, malware analysis, detection engineering, IAM, data and cloud security.`}
             />
             <div className="mb-16 md:mb-20">
               <CounterBadge value={totalCasesCount} top="Cases" bottom="Indexed" tone="accent" />

@@ -31,7 +31,7 @@ export default function NowSection({ items }: { items: NowItem[] }) {
               <span className="text-primary dark:text-primary-ink italic">Now.</span>
             </h2>
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
-              A snapshot, not a promise  updated as the work shifts.
+              A snapshot, not a promise — updated as the work shifts.
             </p>
           </div>
 

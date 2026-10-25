@@ -44,7 +44,7 @@ export default function WorkShowcase() {
           japanese="仕事"
           titleA="Built &"
           titleB="Tested."
-          description="Labs built to be attacked, research done in isolation, and tools that came out of real triage. Every number below is in the repo."
+          description="A GRC platform, labs built to be attacked, research done in isolation, and tools that came out of real triage. Every number below is in the repo."
         />
 
         <div className="flex flex-wrap gap-3 mb-12" role="tablist" aria-label="Filter work by type">

@@ -34,7 +34,7 @@ export default function UsesSection() {
               <span className="text-primary italic">Drivers.</span>
             </h2>
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
-              The tools behind the work above  detect, investigate, automate, and where the practice happens.
+              The tools behind the work above — govern, detect, investigate, and where the practice happens.
             </p>
           </div>
 

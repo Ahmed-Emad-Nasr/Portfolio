@@ -15,19 +15,15 @@ const path = require("path");
 const solid = require("@fortawesome/free-solid-svg-icons");
 const brands = require("@fortawesome/free-brands-svg-icons");
 
-const SOLID = [
-  "faArrowLeft", "faArrowUpRightFromSquare", "faBook", "faBriefcase",
-  "faCalendarAlt", "faCertificate", "faCircleCheck", "faCirclePlay",
-  "faClock", "faCode", "faCodeBranch", "faEnvelope", "faEye", "faFileLines",
-  "faFilePdf", "faFolder", "faHome", "faPaperPlane", "faShieldHalved",
-  "faShuffle", "faStar", "faTerminal", "faTriangleExclamation",
-];
+/*
+ * Only what the site draws. app/core/icons/Icon.tsx (the only reader of the
+ * solid icons) was deleted as unused, and BrandIcons.tsx needs five brand
+ * glyphs — the other 32 entries shipped ~20 KB of SVG paths in the hero's
+ * client bundle for nothing. Add a name here and re-run when you need one.
+ */
+const SOLID = [];
 
-const BRANDS = [
-  "faAndroid", "faCss3", "faGithub", "faHtml5", "faInstagram", "faJava",
-  "faJs", "faLinkedin", "faPhp", "faPython", "faReact", "faSwift",
-  "faWhatsapp", "faWindows", "faYoutube",
-];
+const BRANDS = ["faGithub", "faInstagram", "faLinkedin", "faWhatsapp", "faYoutube"];
 
 const rows = [];
 let bytes = 0;

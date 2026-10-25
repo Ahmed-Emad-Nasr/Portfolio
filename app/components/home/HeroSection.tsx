@@ -25,6 +25,9 @@ function FieldRow({ label, value, hot = false }: { label: string; value: string;
   );
 }
 
+/* Label colours of the spec strip, in order */
+const SPEC_TONES = ["text-primary-ink", "text-accent", "text-tertiary", "text-foreground/60"];
+
 /* The hero portrait at the widths the circle is drawn at (176 / 216 / 276
    CSS px, see .hero-image below) for 1x–3x screens. */
 const HERO_PHOTO = {
@@ -89,11 +92,10 @@ export default function HeroSection({
   },
   ];
 
-  const focusServices = PORTFOLIO_DATA.services;
-  const focusLabel =
-    focusServices.length >= 2
-      ? `${focusServices[0].title} + ${focusServices[1].title} +${Math.max(0, focusServices.length - 2)}`
-      : focusServices.map((s) => s.title).join(" + ") || "Full-Stack";
+  /* Was built from the first two service titles plus "+N" — it read
+     "+0" with exactly two services and fell back to the template's
+     "Full-Stack" with none. The areas are now stated in the data. */
+  const focusLabel = PORTFOLIO_DATA.profile.focus.join(" · ");
   const shippedLabel = `${projectCount} repos · ${starCount} stars`;
   const tongueCodes = PORTFOLIO_DATA.languages.map((l) => l.code).join(" · ");
 
@@ -185,7 +187,7 @@ export default function HeroSection({
           {/* Name */}
           <div className="text-center md:text-left order-2 md:order-1">
             <p className="font-mono text-[0.6875rem] md:text-xs font-bold uppercase tracking-[0.4em] text-primary-ink mb-3">
-              Portfolio  履歴書
+              Portfolio · 履歴書
             </p>
             <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
               <RevealText text="Ahmed" delay={0.6} className="block text-foreground" />
@@ -206,7 +208,7 @@ export default function HeroSection({
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
             </h1>
-            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true" data-jp="アハメド・エマド・ナスル  セキュリティアナリスト" />
+            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true" data-jp="アハメド・エマド・ナスル  情報セキュリティ" />
             {/* The jobs, typed one after another (from the old site's hero) */}
             <RoleTicker
               roles={PORTFOLIO_DATA.profile.roles}
@@ -241,7 +243,7 @@ export default function HeroSection({
                 </defs>
                 <text fontSize="8" letterSpacing="2.5" className="fill-foreground/30 font-mono uppercase">
                   <textPath href="#hero-orbit">
-                    Wazuh • Splunk • YARA • Volatility • ATT&amp;CK • 侍 •
+                    GRC • ISO 27001 • Wazuh • Splunk • YARA • IAM • 侍 •
                   </textPath>
                 </text>
               </svg>
@@ -318,31 +320,15 @@ export default function HeroSection({
                   Technical Specifications
                 </span>
               </div>
-              <div className="px-4 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[0.625rem] font-bold text-accent tracking-[0.2em] uppercase">
-                    Detect
-                  </span>
-                  <span className="font-mono text-sm text-foreground/85">
-                    Wazuh, ELK, Splunk
-                  </span>
-                </div>
-                <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[0.625rem] font-bold text-tertiary tracking-[0.2em] uppercase">
-                    Respond
-                  </span>
-                  <span className="font-mono text-sm text-foreground/85">
-                    NIST 800-61, ATT&amp;CK
-                  </span>
-                </div>
-                <div className="spec-item flex flex-col gap-1.5">
-                  <span className="font-mono text-[0.625rem] font-bold text-foreground/60 tracking-[0.2em] uppercase">
-                    Investigate
-                  </span>
-                  <span className="font-mono text-sm text-foreground/85">
-                    Volatility, YARA
-                  </span>
-                </div>
+              <div className="px-4 py-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                {PORTFOLIO_DATA.profile.hero.specs.map((spec, i) => (
+                  <div key={spec.label} className="spec-item flex flex-col gap-1.5">
+                    <span className={`font-mono text-[0.625rem] font-bold tracking-[0.2em] uppercase ${SPEC_TONES[i % SPEC_TONES.length]}`}>
+                      {spec.label}
+                    </span>
+                    <span className="font-mono text-sm text-foreground/85">{spec.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -448,7 +434,7 @@ export default function HeroSection({
       >
         <div className="w-8 h-[1px] bg-primary/40" />
         <p className="text-[0.625rem] text-foreground/15 font-mono font-bold uppercase tracking-[0.5em]">
-          継続は力なり  PERSEVERANCE IS POWER
+          継続は力なり · PERSEVERANCE IS POWER
         </p>
       </div>
     </section>

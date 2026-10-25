@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { normalizePublicHref } from "./blog-utils";
+import { normalizePublicHref } from "@/app/core/config/shared";
 
 export default function BlogRedirect() {
   useEffect(() => {

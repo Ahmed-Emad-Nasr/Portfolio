@@ -1,10 +1,13 @@
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
-import { Radar, ShieldAlert, Microscope, GraduationCap } from "lucide-react";
+import { Scale, Radar, ShieldAlert, Bug, KeyRound, GraduationCap } from "lucide-react";
 import { rv } from "@/app/core/reveal";
 
-const ICONS = [Radar, ShieldAlert, Microscope, GraduationCap];
+/* One icon per service, by id — an index-based list silently gave a card
+   the wrong icon as soon as a service was added or reordered. */
+const ICONS = { grc: Scale, soc: Radar, ir: ShieldAlert, malware: Bug, iam: KeyRound, training: GraduationCap } as const;
+const COUNT_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 
 export default function ServicesSection() {
   return (
@@ -23,12 +26,12 @@ export default function ServicesSection() {
           japanese="役務"
           titleA="What I"
           titleB="Do."
-          description="Four kinds of work. Each one ends with something written down that the next person can use."
+          description={`${COUNT_WORDS[PORTFOLIO_DATA.services.length] ?? PORTFOLIO_DATA.services.length} kinds of work, one discipline: information security. Each one ends with something written down that the next person can use.`}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {PORTFOLIO_DATA.services.map((s, idx) => {
-            const Icon = ICONS[idx % ICONS.length];
+            const Icon = ICONS[s.id as keyof typeof ICONS] ?? ShieldAlert;
             return (
               <div
   key={s.id}

@@ -21,7 +21,7 @@ import type { Certificate, Experience, PortfolioData, WorkItem } from "../types/
 import { knowledgeEducationItems } from "./experience";
 import { certifications } from "./certifications";
 import { achievements } from "./achievements";
-import { skillGroups } from "./skills";
+import { languages, skillGroups } from "./skills";
 import { GITHUB_USERNAME, projectBullets, staticProjectFallback } from "./projects";
 import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryTitle } from "./certifications";
 import { CV_PDF_HREF, YOUTUBE_CHANNEL_URL, normalizePublicHref } from "./shared";
@@ -102,11 +102,12 @@ const repoName = (url: string) => url.replace(/\/+$/, "").split("/").pop() ?? ur
 const repoByName = (name: string) => staticProjectFallback.find((r) => r.name === name);
 const urlOf = (name: string) => repoByName(name)?.html_url ?? `https://github.com/${GITHUB_USERNAME}`;
 
+/* One pick per area: GRC, detection, insider/data risk, malware, intel, VA */
 const PINNED = [
+  "Compliance-Framework",
   "SOC-Environment",
   "insider-threat-detection-deception",
   "Malware-Analysis-and-Prevention-Strategy",
-  "Compliance-Framework",
   "Threat-Intelligence-Tool",
   "Attack-Simulation-Security-Assessment",
 ];
@@ -123,6 +124,21 @@ const HIGHLIGHT_META: Record<string, { name: string; type: string; metrics: stri
 /* ── Selected work ──────────────────────────────────────────────────────── */
 
 const work: WorkItem[] = [
+  {
+    id: "verifai-360",
+    title: "VerifAI 360",
+    type: "platform",
+    tagline: "GRC evidence checks without the spreadsheet marathon.",
+    problem: "Control mapping and gap analysis eat most of an assessment's time, and most of it is repetitive.",
+    role: "Architected the platform: evidence validation, risk scoring, automated gap analysis and remediation plans.",
+    stack: ["Python", "AI/LLMs", "ISO 27001", "NIST", "PCI DSS", "GDPR"],
+    platform: "Web platform",
+    status: "open-source",
+    year: "2026",
+    links: { github: urlOf("Compliance-Framework"), demo: repoByName("Compliance-Framework")?.homepage || undefined },
+    metrics: ["150+ frameworks", "−30% manual effort", "+15% faster assessments"],
+    featured: true,
+  },
   {
     id: "soc-environment",
     title: "SOC Environment",
@@ -166,21 +182,6 @@ const work: WorkItem[] = [
     year: "2025",
     links: { github: urlOf("Malware-Analysis-and-Prevention-Strategy") },
     metrics: ["20+ samples", "C2 behaviour mapped", "Actionable IOCs"],
-    featured: true,
-  },
-  {
-    id: "verifai-360",
-    title: "VerifAI 360",
-    type: "platform",
-    tagline: "GRC evidence checks without the spreadsheet marathon.",
-    problem: "Control mapping and gap analysis eat most of an assessment's time, and most of it is repetitive.",
-    role: "Architected the platform: evidence validation, risk scoring, automated gap analysis and remediation plans.",
-    stack: ["Python", "AI/LLMs", "ISO 27001", "NIST", "PCI DSS", "GDPR"],
-    platform: "Web platform",
-    status: "open-source",
-    year: "2026",
-    links: { github: urlOf("Compliance-Framework"), demo: repoByName("Compliance-Framework")?.homepage || undefined },
-    metrics: ["150+ frameworks", "−30% manual effort", "+15% faster assessments"],
     featured: true,
   },
   {
@@ -241,39 +242,51 @@ const certificates: Certificate[] = [
 /* ── Stack: the skill groups, minus soft skills ────────────────────────── */
 
 const STACK_JP: Record<string, string> = {
+  grc: "統治",
   siem: "監視",
   ir: "対応",
-  identity: "認証",
-  automation: "自動化",
-  network: "網",
   forensics: "鑑識",
+  identity: "認証",
+  data: "保護",
+  vuln: "脆弱",
+  cloud: "雲",
+  intel: "諜報",
+  network: "網",
   frameworks: "規範",
-  os: "基盤",
+  automation: "自動化",
 };
 
+/* Short card titles; the full group names (skills.ts) are on the CV page */
 const STACK_TITLE: Record<string, string> = {
+  grc: "GRC & Compliance",
   siem: "SIEM & Monitoring",
   ir: "Incident Response",
-  identity: "Identity & Access",
-  automation: "Automation",
-  network: "Network Security",
   forensics: "Malware & Forensics",
+  identity: "Identity & Access",
+  data: "Data Security",
+  vuln: "Vuln. Management",
+  cloud: "Cloud Security",
+  intel: "Threat Intel",
+  network: "Network Security",
   frameworks: "Frameworks",
-  os: "Operating Systems",
+  automation: "Automation",
 };
 
 export const PORTFOLIO_DATA: PortfolioData = {
   profile: {
     name: "Ahmed Emad Nasr",
-    title: "SOC Analyst & Incident Responder",
-    japaneseTitle: "セキュリティアナリスト • SOC Analyst & Incident Responder",
-    availability: "Open to SOC, IR & DFIR roles",
-    /* Same list as the old site's hero ticker */
+    title: "Information Security Officer",
+    japaneseTitle: "情報セキュリティ担当 • Information Security Officer",
+    availability: "Open to InfoSec roles: GRC, SOC, IR/DFIR, IAM",
+    /* The areas shown on the hero's "Focus" row */
+    focus: ["GRC", "SOC", "IR & DFIR", "Malware", "IAM", "Data Security"],
+    /* The jobs typed one after another under the name */
     roles: [
-      "Information Security Engineer",
-      "Cybersecurity Engineer",
-      "SOC/DFIR Engineer",
-      "Malware Analyst",
+      "Information Security Officer",
+      "GRC & Compliance Analyst",
+      "SOC Analyst",
+      "DFIR & Malware Analyst",
+      "IAM & Data Security",
       "Cybersecurity Instructor",
     ],
     contact: {
@@ -288,8 +301,15 @@ export const PORTFOLIO_DATA: PortfolioData = {
       x: "https://x.com/0x3omda",
     },
     hero: {
-      tagline: "Blue-team operations, incident response & digital forensics.",
-      japaneseTagline: "検知・対応・鑑識。",
+      tagline: "Governance, risk & compliance, security operations, incident response & forensics.",
+      japaneseTagline: "統治・検知・対応・鑑識。",
+      /* The "Technical Specifications" strip under the name */
+      specs: [
+        { label: "Govern", value: "ISO 27001, PCI DSS, NIST CSF" },
+        { label: "Detect", value: "Wazuh, Splunk, ATT&CK" },
+        { label: "Respond", value: "NIST 800-61, Volatility, YARA" },
+        { label: "Protect", value: "IAM, PAM, DLP" },
+      ],
       photo: normalizePublicHref("Assets/art-gallery/Images/logo/3omda.webp"),
       cvUrl: normalizePublicHref(CV_PDF_HREF),
     },
@@ -313,8 +333,16 @@ export const PORTFOLIO_DATA: PortfolioData = {
   work,
   services: [
     {
+      id: "grc",
+      title: "Governance, Risk & Compliance",
+      japanese: "統治",
+      description: "Gap assessments against ISO 27001, PCI DSS, NIST CSF, COBIT and SWIFT CSP — then the risk register, the policies and a remediation plan someone can actually follow.",
+      stack: ["ISO 27001", "PCI DSS", "NIST CSF", "COBIT"],
+      deliverable: "Gap report + remediation plan",
+    },
+    {
       id: "soc",
-      title: "SOC Monitoring",
+      title: "Security Operations",
       japanese: "監視",
       description: "Alert triage, log analysis and SIEM tuning — telling the real alert from the noise, then writing the rule that keeps the noise down.",
       stack: ["Wazuh", "ELK", "Splunk", "Sysmon"],
@@ -322,19 +350,27 @@ export const PORTFOLIO_DATA: PortfolioData = {
     },
     {
       id: "ir",
-      title: "Incident Response",
+      title: "Incident Response & DFIR",
       japanese: "対応",
-      description: "The NIST 800-61 lifecycle: scope it, contain it, clean it up, and write the report the next analyst can act on.",
-      stack: ["NIST 800-61", "ATT&CK", "IOC analysis", "TheHive"],
-      deliverable: "IR report + IOCs",
+      description: "The NIST 800-61 lifecycle with the evidence behind it: memory, disk and registry forensics, a timeline, and a report the next analyst can act on.",
+      stack: ["NIST 800-61", "Volatility", "Autopsy", "TheHive"],
+      deliverable: "IR report + timeline + IOCs",
     },
     {
-      id: "dfir",
-      title: "Forensics & Malware",
-      japanese: "鑑識",
-      description: "Memory, disk and registry forensics; static and dynamic malware analysis in an isolated lab.",
-      stack: ["Volatility", "Autopsy", "YARA", "FakeNet-NG"],
+      id: "malware",
+      title: "Malware & Threat Intel",
+      japanese: "解析",
+      description: "Static and dynamic analysis in an isolated lab, then the intelligence around it — enriched IOCs, YARA rules and the ATT&CK techniques behind them.",
+      stack: ["YARA", "FakeNet-NG", "VirusTotal", "ATT&CK"],
       deliverable: "Findings + YARA rules",
+    },
+    {
+      id: "iam",
+      title: "IAM & Data Security",
+      japanese: "認証",
+      description: "Access reviews, least privilege and PAM; data classification, DLP and encryption — the right people reach the right data, and nobody else does.",
+      stack: ["IAM", "PAM", "DLP", "AWS KMS"],
+      deliverable: "Access review + control gaps",
     },
     {
       id: "training",
@@ -354,19 +390,17 @@ export const PORTFOLIO_DATA: PortfolioData = {
       items: [...g.items],
     })),
   process: [
-    { id: "detect", index: "01", title: "Detect", japanese: "検知", description: "Baselines, logs and alerts. Know what normal looks like before deciding what isn't." },
-    { id: "triage", index: "02", title: "Triage", japanese: "選別", description: "Scope it, rate it, map it to ATT&CK. Close false positives early and say why." },
-    { id: "contain", index: "03", title: "Contain", japanese: "封じ込め", description: "Isolate, eradicate, recover — following NIST 800-61, not instinct." },
-    { id: "report", index: "04", title: "Report", japanese: "報告", description: "Timeline, IOCs, root cause and fixes, written for the next analyst." },
+    /* The NIST CSF functions, folded into four steps */
+    { id: "govern", index: "01", title: "Govern", japanese: "統治", description: "Assets, risks and controls mapped against ISO 27001 and NIST CSF. Every gap gets an owner, a priority and a fix." },
+    { id: "protect", index: "02", title: "Protect", japanese: "防御", description: "Least privilege, hardened baselines, encrypted data — IAM, PAM and CIS Benchmarks before anything else." },
+    { id: "detect", index: "03", title: "Detect", japanese: "検知", description: "Baselines, logs and alerts. Know what normal looks like, then map what isn't to ATT&CK." },
+    { id: "respond", index: "04", title: "Respond", japanese: "対応", description: "Contain, eradicate, recover — NIST 800-61, not instinct — then a report with the root cause and the fix." },
   ],
-  languages: [
-    { code: "AR", name: "Arabic", level: "Native" },
-    { code: "EN", name: "English", level: "Professional" },
-  ],
+  languages: languages.map((l) => ({ code: l.code, name: l.name, level: l.short })),
   uses: [
-    { id: "detect", title: "Detect", japanese: "検知", items: ["Wazuh", "Suricata", "Zeek", "Sysmon"] },
-    { id: "investigate", title: "Investigate", japanese: "調査", items: ["Wireshark", "Volatility", "Autopsy", "PEStudio"] },
-    { id: "automate", title: "Automate", japanese: "自動化", items: ["Python", "Bash", "PowerShell", "Regex"] },
+    { id: "govern", title: "Govern", japanese: "統治", items: ["ISO 27001", "NIST CSF", "PCI DSS", "VerifAI 360"] },
+    { id: "detect", title: "Detect", japanese: "検知", items: ["Wazuh", "Splunk", "Suricata", "Sysmon"] },
+    { id: "investigate", title: "Investigate", japanese: "調査", items: ["Volatility", "Autopsy", "Wireshark", "Python"] },
     { id: "practice", title: "Practice", japanese: "修練", items: ["TryHackMe", "LetsDefend", "Hack The Box", "PortSwigger"] },
   ],
   milestones: [
@@ -375,7 +409,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
     { year: "2024", title: "CCNA", detail: "Networking foundations, then GDG security sessions and CTF challenges." },
     { year: "2025", title: "Blue and red", detail: "Incident response internship at DEPI, penetration testing track at ITI." },
     { year: "2025", title: "Detection lab", detail: "Built the SOC environment; a custom Wazuh rule was merged into SOC Fortress." },
-    { year: "2026", title: "Instructor & graduate", detail: "Teaching at AMIT and NTI, graduated 8th of 900, InfoSec internship at Banque Misr." },
+    { year: "2026", title: "Instructor & graduate", detail: "Teaching at AMIT and NTI, graduated 8th of 900, GRC & information security internship at Banque Misr." },
   ],
   contributions: [
     {

@@ -111,7 +111,7 @@ export function HeroMascot({ className }: { className?: string }) {
         type="button"
         onClick={play}
         animate={bounce}
-        title={`${mascot.name}  ${mascot.role}. Click to meet the next one.`}
+        title={`${mascot.name} — ${mascot.role}. Click to meet the next one.`}
         aria-label={`${mascot.name}, ${mascot.role} mascot. Activate to meet the next mascot.`}
         className="group relative block w-20 cursor-pointer lg:w-24"
       >

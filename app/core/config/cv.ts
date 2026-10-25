@@ -27,7 +27,7 @@ import { YOUTUBE_CHANNEL_URL } from "./shared";
 
 export const CV_CONTACT = {
   name: "Ahmed Emad Nasr",
-  headline: "SOC Analyst · Incident Response · DFIR",
+  headline: "Information Security Officer · GRC · SOC · DFIR · IAM",
   location: "Cairo, Egypt",
   email: "ahmed.em.nasr@gmail.com",
   phone: "+20 101 397 2690",
@@ -98,15 +98,19 @@ export const CV_PROJECTS: readonly CvProject[] = [
   },
 ];
 
-/* ── Skills, grouped as in the CV PDF ───────────────────────────────────── */
+/* ── Skills, grouped as in the CV PDF ─────────────────────────────────────
+   October 2026: "GRC & Compliance" was added and "Identity & Access" became
+   "Identity & Data Security" here first — add the same two lines to the PDF
+   so the two stay identical. */
 export const CV_SKILLS: readonly { label: string; items: readonly string[] }[] = [
+  { label: "GRC & Compliance", items: ["ISO 27001", "PCI DSS", "NIST CSF", "COBIT", "SWIFT CSP", "GDPR", "Risk Assessment", "Gap Analysis"] },
   { label: "SIEM & Detection", items: ["Wazuh", "Splunk", "ELK Stack", "Security Onion", "Sysmon"] },
   { label: "Incident Response & Threat Detection", items: ["Security Monitoring", "Incident Detection", "Alert Triage", "IOC Analysis", "Log Analysis"] },
   { label: "Network Security", items: ["TCP/IP", "IDS/IPS", "Suricata", "Wireshark", "Zeek", "Packet Analysis"] },
-  { label: "Identity & Access", items: ["IAM", "PAM", "RBAC", "Access Control"] },
+  { label: "Identity & Data Security", items: ["IAM", "PAM", "DAM", "RBAC", "Access Control", "DLP", "Encryption"] },
   { label: "Malware & Forensics", items: ["YARA", "Volatility", "Autopsy", "PEStudio"] },
   { label: "Programming & Automation", items: ["Python", "Bash", "PowerShell", "Regex"] },
-  { label: "Frameworks & Standards", items: ["MITRE ATT&CK", "NIST CSF", "NIST 800-61", "NIST 800-53", "ISO 27001", "Cyber Kill Chain"] },
+  { label: "Frameworks & Standards", items: ["MITRE ATT&CK", "NIST 800-61", "NIST 800-53", "Cyber Kill Chain"] },
   { label: "Operating Systems", items: ["Windows", "Windows Server", "Linux"] },
   { label: "Soft Skills", items: ["Analytical Thinking", "Problem Solving", "Team Collaboration", "Communication", "Adaptability", "Attention to Detail"] },
 ];
@@ -131,7 +135,8 @@ export { CV_PDF_HREF } from "./shared";
  * The technique count is also computed from attack.ts now instead of a hard-coded 28.
  */
 export const CV_SUMMARY =
-  "Information Security graduate working across SOC operations, incident response, and digital forensics. " +
+  "Information security graduate working across governance, risk and compliance, SOC operations, incident response and digital forensics, IAM and data security. " +
   `Published ${CASE_STATS.reports} investigation reports across ${CASE_STATS.published} documented cases, ` +
   `covering ${CASE_STATS.techniques} MITRE ATT&CK techniques, contributed a detection rule to ` +
-  "the open-source SOC Fortress project, and taught security to 300+ students.";
+  "the open-source SOC Fortress project, assessed GRC gaps against ISO 27001 and PCI DSS at Banque Misr, " +
+  "and taught security to 300+ students.";

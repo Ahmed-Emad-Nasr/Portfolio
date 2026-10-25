@@ -24,7 +24,7 @@ export default function MilestonesSection() {
               <span className="text-primary italic">Path.</span>
             </h2>
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
-              Every step below is documented somewhere above  experience, work, or credentials.
+              Every step below is documented somewhere above — experience, work, or credentials.
             </p>
           </div>
 

@@ -610,6 +610,7 @@
   }
   .spec-item:nth-child(2) { --hero-i: 1; }
   .spec-item:nth-child(3) { --hero-i: 2; }
+  .spec-item:nth-child(4) { --hero-i: 3; }
   .speed-line {
     transform-origin: left center;
     animation: hero-line 1.5s cubic-bezier(0.19, 1, 0.22, 1) both;
