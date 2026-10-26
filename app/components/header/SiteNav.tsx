@@ -109,7 +109,7 @@ export default function SiteNav() {
     <>
       {/* ─── Main Navigation Bar ─── */}
       <motion.nav
-        className="fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-all duration-500 ease-out"
+        className="fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-[width,background-color,border-color] duration-500 ease-out"
         style={{
           width: navWidth,
           top: 20,
