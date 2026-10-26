@@ -55,7 +55,7 @@ const { caseAttackMapping } = load(join(cfg, "attack.ts"));
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 /* Fonts inlined as data URIs: a page set with setContent() cannot load file:// fonts */
-const font = (f) => `data:font/woff2;base64,${readFileSync(join(ROOT, "app/fonts", f)).toString("base64")}`;
+const font = (f) => `data:font/woff2;base64,${readFileSync(join(ROOT, "scripts/og/fonts", f)).toString("base64")}`;
 
 const html = (c) => {
   const d = caseDetails[c.id] ?? {};

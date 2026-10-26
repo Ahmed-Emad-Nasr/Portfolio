@@ -1,7 +1,8 @@
 "use client";
 
 import { m as motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { lockScroll } from "@/app/core/utils/scroll";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/app/core/components/ThemeToggle";
@@ -12,22 +13,23 @@ import {
   Briefcase,
   Code2,
   Award,
-  FolderSearch,
-  MessageCircle,
+  BookOpen,
+  UserRound,
   Mail,
   Command,
 } from "lucide-react";
 
-/* Every item is a section of the one-page portfolio. Off the home page
-   (a case page, the CV) they become links back to it: /#work, /#cases … */
+/* The home page's sections (hash links — from another page they become
+   /#work …) plus the two other top-level pages: the blog (case library,
+   write-ups, videos) and the about page (toolbox, lab, path, profiles). */
 const navItems = [
   { name: "Home", href: "#home", icon: Home, katakana: "ホーム" },
   { name: "Services", href: "#services", icon: Briefcase, katakana: "役務" },
   { name: "Work", href: "#work", icon: Code2, katakana: "仕事" },
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
-  { name: "FAQ", href: "#faq", icon: MessageCircle, katakana: "質問" },
   { name: "Honors", href: "#certificates", icon: Award, katakana: "認定" },
-  { name: "Cases", href: "#cases", icon: FolderSearch, katakana: "事件" },
+  { name: "Blog", href: "/blog", icon: BookOpen, katakana: "記録" },
+  { name: "About", href: "/about", icon: UserRound, katakana: "人物" },
   { name: "Contact", href: "#contact", icon: Mail, katakana: "連絡" },
 ];
 
@@ -76,11 +78,12 @@ export default function SiteNav() {
       setActive(navItems.find((i) => i.href !== "/" && i.href.startsWith("/") && pathname.startsWith(i.href))?.href ?? "");
       return;
     }
-    const ids = navItems.filter((i) => i.href.startsWith("#")).map((i) => i.href.slice(1));
+    const ids = [...navItems.filter((i) => i.href.startsWith("#")).map((i) => i.href.slice(1)), "blog"];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) setActive(`#${e.target.id}`);
+          /* The home page's blog teaser lights up the "Blog" item */
+          if (e.isIntersecting) setActive(e.target.id === "blog" ? "/blog" : `#${e.target.id}`);
         });
       },
       { rootMargin: "-40% 0px -55% 0px" }
@@ -92,16 +95,35 @@ export default function SiteNav() {
     return () => observer.disconnect();
   }, [mounted, onHome, pathname]);
 
+  /* While the menu is open: freeze the page (Lenis included), close on
+     Escape, and move focus into the menu; on close, focus returns to the
+     button that opened it. */
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!isOpen) return;
+    lockScroll(true);
+    const toggle = toggleRef.current;
+    menuRef.current?.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = "";
+      lockScroll(false);
+      window.removeEventListener("keydown", onKey);
+      toggle?.focus({ preventScroll: true });
     };
   }, [isOpen]);
+
+  /* A rotated phone or a resized window can cross into the desktop bar
+     with the menu still open — and the body still locked. */
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 64rem)");
+    const close = () => mq.matches && setIsOpen(false);
+    mq.addEventListener("change", close);
+    return () => mq.removeEventListener("change", close);
+  }, []);
 
   const navWidth = useTransform(scrollY, [0, 100], ["95%", "85%"]);
 
@@ -109,6 +131,7 @@ export default function SiteNav() {
     <>
       {/* ─── Main Navigation Bar ─── */}
       <motion.nav
+        data-site-header="true"
         className="fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-[width,background-color,border-color] duration-500 ease-out"
         style={{
           width: navWidth,
@@ -164,10 +187,12 @@ export default function SiteNav() {
         <div className="flex lg:hidden items-center gap-2">
           <ThemeToggle />
           <button
+            ref={toggleRef}
             onClick={() => setIsOpen(!isOpen)}
-            className="relative p-2 text-foreground/60 hover:text-primary-ink transition-colors z-[110]"
+            className="relative grid place-items-center w-11 h-11 text-foreground/60 hover:text-primary-ink transition-colors z-[110]"
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -189,20 +214,31 @@ export default function SiteNav() {
         </div>
       </motion.nav>
 
-      {/* ─── Mobile Full-Screen Overlay ─── */}
+      {/* ─── Mobile Full-Screen Overlay ───
+          The bar above stays on top (z-100) and its button turns into the
+          close button — one close control, not two stacked in a corner.
+          The layer itself scrolls: eight items are taller than a short or
+          landscape phone, and centring overflowing content with
+          justify-center pushed the first item (Home) above the screen,
+          out of reach. `safe center` centres only when everything fits. */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[95] lg:hidden bg-background/95 backdrop-blur-2xl flex flex-col"
+            className="fixed inset-0 z-[95] lg:hidden bg-background/95 backdrop-blur-2xl overflow-y-auto overscroll-contain"
+            data-lenis-prevent=""
             onClick={() => setIsOpen(false)}
           >
             {/* Background Decorative Kanji */}
             <div
-              className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+              className="fixed inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
               aria-hidden="true"
             >
               <span className="text-foreground/[0.02] text-[40vw] font-black leading-none">
@@ -210,7 +246,7 @@ export default function SiteNav() {
               </span>
             </div>
             <div
-              className="absolute top-20 right-8 pointer-events-none select-none vertical-text text-foreground/[0.04] text-4xl font-black"
+              className="fixed top-28 right-6 pointer-events-none select-none vertical-text text-foreground/[0.04] text-4xl font-black max-sm:hidden"
               aria-hidden="true"
             >
               <span>侍</span>
@@ -219,34 +255,24 @@ export default function SiteNav() {
             </div>
 
             {/* Red accent lines */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary" />
-            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary/30" />
-            <div className="absolute top-0 left-8 w-[2px] h-full bg-foreground/[0.03]" />
-
-            {/* Close Button */}
-            <motion.button
-              initial={{ opacity: 0, rotate: -90 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              transition={{ delay: 0.2 }}
-              onClick={() => setIsOpen(false)}
-              className="absolute top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center border border-primary/40 text-primary-ink hover:bg-primary hover:text-foreground transition-all duration-300"
-              aria-label="Close Menu"
-            >
-              <X size={20} strokeWidth={3} />
-            </motion.button>
+            <div className="fixed top-0 left-0 w-full h-[2px] bg-primary" aria-hidden="true" />
+            <div className="fixed bottom-0 left-0 w-full h-[2px] bg-primary/30" aria-hidden="true" />
+            <div className="fixed top-0 left-4 sm:left-8 w-[2px] h-full bg-foreground/[0.03]" aria-hidden="true" />
 
             {/* Navigation Items */}
             <div
-              className="flex flex-col justify-center flex-1 px-10 gap-2"
+              ref={menuRef}
+              className="relative min-h-full flex flex-col [justify-content:safe_center] px-6 sm:px-10 pt-28 pb-[max(2.5rem,env(safe-area-inset-bottom))] max-w-xl"
               onClick={(e) => e.stopPropagation()}
             >
+              <nav aria-label="Site">
               {navItems.map((item, idx) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, x: -60 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
-                    delay: 0.1 + idx * 0.07,
+                    delay: 0.1 + idx * 0.06,
                     duration: 0.5,
                     ease: [0.25, 0.46, 0.45, 0.94],
                   }}
@@ -256,10 +282,11 @@ export default function SiteNav() {
                   href={item.href}
                   onHome={onHome}
                   onClick={() => setIsOpen(false)}
-                  className="group relative flex items-center gap-6 py-4"
+                  aria-current={active === item.href ? "page" : undefined}
+                  className="group relative flex items-center gap-4 sm:gap-6 py-3 [@media(min-height:44rem)]:py-4"
                 >
                   {/* Index Number */}
-                  <span className="font-mono text-[0.625rem] text-foreground/60 w-6 tabular-nums">
+                  <span className="font-mono text-[0.625rem] text-foreground/60 w-6 shrink-0 tabular-nums">
                     0{idx + 1}
                   </span>
 
@@ -267,36 +294,52 @@ export default function SiteNav() {
                   <item.icon
                     size={24}
                     strokeWidth={1.5}
-                    className="text-foreground/15 group-hover:text-primary-ink transition-colors duration-300"
+                    aria-hidden="true"
+                    className={`shrink-0 transition-colors duration-300 ${active === item.href ? "text-primary-ink" : "text-foreground/15 group-hover:text-primary-ink"}`}
                   />
 
-                  {/* Name - large katakana style */}
-                  <div className="flex flex-col">
-                    <span className="font-display text-3xl font-black text-foreground uppercase tracking-tight group-hover:text-primary transition-colors duration-300">
+                  {/* Name — sized to the screen so "EXPERIENCE" fits a
+                      320px phone (it overflowed and squeezed its icon) */}
+                  <div className="flex flex-col min-w-0">
+                    <span className={`font-display text-[clamp(1.375rem,7.2vw,1.875rem)] leading-tight font-black uppercase tracking-tight transition-colors duration-300 group-hover:text-primary ${active === item.href ? "text-primary-ink" : "text-foreground"}`}>
                       {item.name}
                     </span>
-                    <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.3em]">
+                    <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.3em]" lang="ja">
                       {item.katakana}
                     </span>
                   </div>
 
                   {/* Red accent on hover */}
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-[2px] bg-primary group-hover:w-6 transition-all duration-300" />
+                  <span className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 w-0 h-[2px] bg-primary group-hover:w-3 sm:group-hover:w-4 transition-all duration-300" aria-hidden="true" />
                 </NavLink>
                 </motion.div>
               ))}
+              </nav>
 
-              {/* Bottom tagline */}
+              {/* Bottom tagline + the palette, which has no shortcut on a phone */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="mt-12 flex flex-col gap-3"
+                className="mt-10 flex flex-wrap items-center justify-between gap-4"
               >
-                <div className="w-16 h-[2px] bg-primary" />
-                <span className="text-[0.5625rem] font-mono text-foreground/60 tracking-[0.5em] uppercase">
-                  3omda Portfolio
-                </span>
+                <div className="flex flex-col gap-3">
+                  <div className="w-16 h-[2px] bg-primary" aria-hidden="true" />
+                  <span className="text-[0.625rem] font-mono text-foreground/60 tracking-[0.5em] uppercase">
+                    3omda Portfolio
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    window.dispatchEvent(new Event("sensei:palette"));
+                  }}
+                  className="flex items-center gap-2 border border-foreground/15 px-4 py-3 font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-foreground/70 transition-colors hover:border-primary hover:text-primary-ink"
+                >
+                  <Command size={14} aria-hidden="true" />
+                  Search
+                </button>
               </motion.div>
             </div>
           </motion.div>

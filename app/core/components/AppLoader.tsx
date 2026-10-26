@@ -42,7 +42,7 @@ export default function AppLoader() {
     let raf = 0;
     let doneTimer: NodeJS.Timeout | undefined;
     const start = performance.now();
-    const DURATION = reduced ? 300 : 1000;
+    const DURATION = reduced ? 300 : 550;
 
     const tick = (now: number) => {
       const t = Math.min(1, Math.max(0, (now - start) / DURATION));
@@ -50,13 +50,13 @@ export default function AppLoader() {
       if (t < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        doneTimer = setTimeout(() => setLoading(false), 200);
+        doneTimer = setTimeout(() => setLoading(false), 100);
       }
     };
     raf = requestAnimationFrame(tick);
 
     // Safety: never trap the user
-    const fallback = setTimeout(() => setLoading(false), 2000);
+    const fallback = setTimeout(() => setLoading(false), 1300);
 
     return () => {
       cancelAnimationFrame(raf);

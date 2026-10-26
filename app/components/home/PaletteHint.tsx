@@ -25,11 +25,28 @@ export default function PaletteHint() {
       return; // storage blocked: better to never show than to show every time
     }
     setMac(/Mac|iPhone|iPad/.test(navigator.platform));
-    const t = window.setTimeout(() => setOpen(true), 7000);
+    /* Not over the hero: it used to open 7 s in, bottom-left — right on
+       top of the hero's spec sheet and headline. Now it waits until the
+       reader has scrolled past the hero (and spent a few seconds here). */
+    let timeUp = false;
+    let pastHero = window.scrollY > window.innerHeight * 0.9;
+    const maybeOpen = () => timeUp && pastHero && setOpen(true);
+    const t = window.setTimeout(() => {
+      timeUp = true;
+      maybeOpen();
+    }, 5000);
+    const onScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.9) {
+        pastHero = true;
+        maybeOpen();
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     const close = () => setOpen(false);
     window.addEventListener("keydown", close, { once: true });
     return () => {
       window.clearTimeout(t);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", close);
     };
   }, []);

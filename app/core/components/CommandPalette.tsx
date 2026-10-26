@@ -33,6 +33,7 @@ import {
 import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
+import { pageOfSection } from "@/app/core/config/routes";
 import { useThemeFx } from "@/app/core/theme/ThemeFxProvider";
 import { FX_DURATIONS, getFxDuration, setFxDuration } from "@/app/core/theme/fx";
 
@@ -101,11 +102,14 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
     return () => window.removeEventListener("sensei-fx-duration", onFx);
   }, []);
 
+  /* A section lives on one of three pages (core/config/routes.ts): scroll
+     to it when it is on this page, otherwise open its page at the anchor. */
   const go = useCallback(
     (hash: string) => {
       setOpen(false);
-      if (pathname !== "/") {
-        router.push(`/${hash}`);
+      const page = pageOfSection(hash.slice(1));
+      if (pathname !== page) {
+        router.push(`${page}${hash}`);
         return;
       }
       requestAnimationFrame(() => {
@@ -144,7 +148,12 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
       { id: "triage", group: "Go to", label: "Triage challenge", icon: Crosshair, run: () => go("#triage") },
       { id: "wsa", group: "Pages", label: "Web Security Academy track", icon: FolderSearch, run: () => visit("/collections/web-security-academy") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
+      { id: "blog-page", group: "Pages", label: "Blog — posts, cases, videos", icon: FileText, run: () => visit("/blog") },
+      { id: "about-page", group: "Pages", label: "About — toolbox, lab, path", icon: FileText, run: () => visit("/about") },
+      { id: "posts", group: "Go to", label: "Blog posts", icon: FileText, run: () => go("#posts") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
+      { id: "stack", group: "Go to", label: "Tools of the trade", icon: Code2, run: () => go("#stack") },
+      { id: "process", group: "Go to", label: "How I work (process)", icon: Briefcase, run: () => go("#process") },
       { id: "videos", group: "Go to", label: "Videos", icon: PlayCircle, run: () => go("#videos") },
       { id: "cv-page", group: "Pages", label: "CV", icon: FileText, run: () => visit("/cv") },
       {

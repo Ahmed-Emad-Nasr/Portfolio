@@ -13,49 +13,25 @@ import StatsBar from "@/app/components/home/StatsBar";
 import SiteNav from "@/app/components/header/SiteNav";
 import SectionDivider from "@/app/core/components/SectionDivider";
 import ServicesSection from "@/app/components/services/ServicesSection";
-import TechStackGrid from "@/app/components/services/TechStackGrid";
-import UsesSection from "@/app/components/services/UsesSection";
 import WorkShowcase from "@/app/components/services/WorkShowcase";
-import ProcessSection from "@/app/components/services/ProcessSection";
 import FaqSection from "@/app/components/services/FaqSection";
-import ContributionsGrid from "@/app/components/services/ContributionsGrid";
 import RolesFit from "@/app/components/services/RolesFit";
-import HomeLab from "@/app/components/services/HomeLab";
 import TestimonialsSection from "@/app/components/experience/TestimonialsSection";
 import { getGitHubRepos } from "@/app/core/api/github";
-import StartHere from "@/app/components/cases/StartHere";
-import AttackCoverage from "@/app/components/cases/AttackCoverage";
+import BlogTeaser from "@/app/components/cases/BlogTeaser";
 import TeachingSection from "@/app/components/experience/TeachingSection";
 import PlatformsSection from "@/app/components/experience/PlatformsSection";
 import { getTryHackMeStats } from "@/app/core/api/tryhackme";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/app/core/config/platforms";
 import { LIVE_COPY } from "@/app/core/config/live-copy";
-import { blogYoutubePlaylists, blogYoutubeVideos } from "@/app/core/config/youtube";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
 import { OG_IMAGE } from "@/app/core/config/site";
-import {
-  CHANNEL_ID, KEYWORDS, PERSON_IMAGE, PERSON_REF, SITE_URL, WEBSITE_ID,
-  jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch,
-} from "@/app/core/config/seo";
-import {
-  attackCoverage,
-  categoryFacets,
-  kindFacets,
-  libraryCounts,
-  libraryStructuredData,
-  mediaById,
-  sortedCases,
-  toolFacets,
-} from "@/app/core/config/library-data";
+import { KEYWORDS, PERSON_IMAGE, PERSON_REF, SITE_URL, WEBSITE_ID, jsonLd } from "@/app/core/config/seo";
+import { normalizePublicHref } from "@/app/core/config/shared";
+import { homeForwardScript } from "@/app/core/config/routes";
 
 const ExperienceTimeline = dynamic(
   () => import("@/app/components/experience/ExperienceTimeline")
-);
-const MilestonesSection = dynamic(
-  () => import("@/app/components/experience/MilestonesSection")
-);
-const NowSection = dynamic(
-  () => import("@/app/components/experience/NowSection")
 );
 const ProjectsGrid = dynamic(
   () => import("@/app/components/services/ProjectsGrid")
@@ -63,16 +39,8 @@ const ProjectsGrid = dynamic(
 const CredentialsGallery = dynamic(
   () => import("@/app/components/experience/CredentialsGallery")
 );
-const ArtGallery = dynamic(
-  () => import("@/app/components/art-gallery/ArtGallery")
-);
-const CaseLibrarySection = dynamic(
-  () => import("@/app/components/cases/CaseLibrarySection")
-);
 const MobileActionBar = dynamic(() => import("@/app/components/home/MobileActionBar"));
 const PaletteHint = dynamic(() => import("@/app/components/home/PaletteHint"));
-const DetectionLibrary = dynamic(() => import("@/app/components/cases/DetectionLibrary"));
-const TriageChallenge = dynamic(() => import("@/app/components/cases/TriageChallenge"));
 const ContactFooter = dynamic(
   () => import("@/app/components/header/ContactFooter")
 );
@@ -147,8 +115,6 @@ const STRUCTURED_DATA_JSON = jsonLd({
       image: [PERSON_IMAGE, OG_IMAGE.url],
       hasPart: [
         { "@id": `${SITE_URL}#faq` },
-        { "@id": `${SITE_URL}#videos` },
-        { "@id": `${SITE_URL}#cases` },
         { "@id": `${SITE_URL}#experience-list` },
       ],
     },
@@ -208,50 +174,12 @@ const STRUCTURED_DATA_JSON = jsonLd({
         acceptedAnswer: { "@type": "Answer", text: item.a },
       })),
     },
-    {
-      /* Every video on the page with the fields Google needs for a video
-         result (name, description, thumbnail, upload date, embed URL). */
-      "@type": "ItemList",
-      "@id": `${SITE_URL}#videos`,
-      name: "Cybersecurity video tutorials by Ahmed Emad Nasr (Arabic)",
-      numberOfItems: blogYoutubeVideos.length,
-      itemListElement: blogYoutubeVideos.map((video, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "VideoObject",
-          "@id": `${youtubeWatch(video.videoId)}#video`,
-          name: video.title,
-          description: video.description ?? video.title,
-          thumbnailUrl: [youtubeThumb(video.videoId)],
-          uploadDate: video.publishedAt,
-          embedUrl: youtubeEmbed(video.videoId),
-          url: youtubeWatch(video.videoId),
-          inLanguage: "ar",
-          keywords: (video.tags ?? []).join(", "),
-          creator: PERSON_REF,
-          author: PERSON_REF,
-          publisher: { "@id": CHANNEL_ID },
-          isFamilyFriendly: true,
-        },
-      })),
-    },
-    ...blogYoutubePlaylists.map((playlist) => ({
-      "@type": "CreativeWorkSeries",
-      "@id": `${playlist.sourceUrl.split("&")[0]}#series`,
-      name: playlist.title,
-      description: playlist.description,
-      url: playlist.sourceUrl.split("&")[0],
-      ...(playlist.thumbnailVideoId ? { image: youtubeThumb(playlist.thumbnailVideoId) } : {}),
-      keywords: (playlist.tags ?? []).join(", "),
-      inLanguage: "ar",
-      author: PERSON_REF,
-      publisher: { "@id": CHANNEL_ID },
-    })),
   ],
 });
 
-const LIBRARY_JSON = jsonLd(libraryStructuredData);
+/* Links made before the blog and about pages split off (/#cases,
+   /?q=wazuh#cases, /#case-…) open the page the section moved to. */
+const FORWARD_SCRIPT = homeForwardScript(normalizePublicHref("/").replace(/\/$/, ""));
 
 /* Off-screen sections skip rendering until they near the viewport;
    `auto` in contain-intrinsic-size remembers each one's real height. */
@@ -264,8 +192,8 @@ export default async function Home() {
 
   return (
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-hidden">
+      <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: LIBRARY_JSON }} />
       {/* ─── Full-page scanlines overlay ─── */}
       <div
         className="fixed inset-0 pointer-events-none z-[50] opacity-[0.015] scanlines"
@@ -282,18 +210,22 @@ export default async function Home() {
       <MobileActionBar />
       <PaletteHint />
 
+      {/*
+       * The home page is the pitch, in the order a hiring manager reads:
+       * who → what → proof → where → credentials → writing → contact.
+       * The depth lives on two more pages (core/config/routes.ts):
+       *   /blog   posts, the case library, ATT&CK, detection rules, triage, videos
+       *   /about  toolbox, daily drivers, home lab, path, process, contributions, gallery
+       */}
+
       {/* 01  Who: face, name, stack in 5 seconds */}
-      <div>
-        <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} evidenceLabel={LIVE_COPY.heroEvidence} />
-      </div>
+      <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} evidenceLabel={LIVE_COPY.heroEvidence} />
 
       {/* 02  Trust: numbers before claims */}
       <StatsBar stats={LIVE_COPY.stats} />
 
       {/* 03  Offer: what you can hire me for */}
-      <div>
-        <ServicesSection />
-      </div>
+      <ServicesSection />
 
       {/* 03b  Fit: the role you are hiring for, with its proof */}
       <RolesFit />
@@ -301,119 +233,52 @@ export default async function Home() {
       <SectionDivider text="統治 • 防御 • 検知 • 対応 • 報告" reverse={true} angle={-1.5} />
 
       {/* 04  Proof A: labs, research and tools */}
-      <div>
-        <WorkShowcase />
-      </div>
+      <WorkShowcase />
 
       {/* 05  Proof B: open-source depth */}
-      <div>
-        <ProjectsGrid repos={repos} />
-      </div>
+      <ProjectsGrid repos={repos} />
 
-      {/* 05b  Proof C: community contributions */}
-      <ContributionsGrid />
-
-      <SectionDivider text="継続は力なり • 改善 • 実務 • 計測" angle={-1.5} />
-
-      {/* 06  Toolbox: the tools behind the proof above */}
-      <TechStackGrid />
-
-      {/* 06b  Daily drivers */}
-      <UsesSection />
-
-      {/* 06c  The lab the projects run on */}
-      <HomeLab />
-
-      {/* 07  Authority: where this happened */}
+      {/* 06  Authority: where this happened */}
       <div id="experience">
         <ExperienceTimeline />
       </div>
 
       {/* Everything below the experience timeline uses no scroll-measured
-          (GSAP) animation, so the browser may skip its style, layout and
-          paint until it nears the viewport (content-visibility: auto) —
-          most of the page's first-load rendering work on phones. */}
+          animation, so the browser may skip its style, layout and paint
+          until it nears the viewport (content-visibility: auto). */}
 
-      {/* 07b  Path recap + present snapshot */}
-      <div className={DEFER}>
-        <MilestonesSection />
-      </div>
-      {/* 07c  Teaching: the curriculum and where it was taught */}
+      {/* 07  Teaching: the curriculum and where it was taught */}
       <div className={DEFER}>
         <TeachingSection />
       </div>
 
-      {/* 07d  In other people's words (hidden until there is a quote) */}
+      {/* 07b  In other people's words (hidden until there is a quote) */}
       <div className={DEFER}>
         <TestimonialsSection />
       </div>
 
-      <div className={DEFER}>
-        <NowSection items={LIVE_COPY.now} />
-      </div>
-
-      {/* 08  Risk removal: how we will work together */}
-      <div className={DEFER}>
-        <ProcessSection />
-      </div>
-
-      {/* 08b  Pre-call answers */}
-      <div className={DEFER}>
-        <FaqSection items={LIVE_COPY.faq} />
-      </div>
-
       <SectionDivider text="認定 • 実績 • 知識 • 技能" angle={-1.5} />
 
-      {/* 09  Credentials */}
+      {/* 08  Credentials */}
       <div className={DEFER}>
         <CredentialsGallery />
       </div>
 
-      {/* 09b  Public training profiles: proof anyone can check */}
+      {/* 08b  Public training profiles: proof anyone can check */}
       <div className={DEFER}>
         <PlatformsSection featured={tryHackMePlatform(thm)} thm={thm} others={STATIC_PLATFORMS} />
       </div>
 
-      <SectionDivider text="記録 • 証明 • 実績" reverse={true} angle={-1.5} />
-
-      {/* 10  The proof gallery: certificates and moments */}
-      <div className={DEFER}>
-        <ArtGallery />
-      </div>
-
-      <SectionDivider text="戦術 • 技術 • 網羅 • 証拠" angle={-1.5} />
-
-      {/* 10a  The library on MITRE ATT&CK: which tactics the reports cover */}
-      <div className={DEFER}>
-        <AttackCoverage {...attackCoverage} />
-      </div>
-
-      {/* 10a2  The rule pack behind the coverage */}
-      <div className={DEFER}>
-        <DetectionLibrary />
-      </div>
-
-      {/* 10a3  Try the job: one real alert, three decisions */}
-      <div className={DEFER}>
-        <TriageChallenge />
-      </div>
-
       <SectionDivider text="事件 • 調査 • 報告 • 証拠" reverse={true} angle={-1.5} />
 
-      {/* 10b  The case library and the videos — what used to be the blog */}
+      {/* 09  Writing: the latest posts and three reports to start with */}
       <div className={DEFER}>
-      <CaseLibrarySection
-        startHere={<StartHere />}
-        sortedPdfs={sortedCases}
-        mediaById={mediaById}
-        categoryFacets={categoryFacets}
-        toolFacets={toolFacets}
-        kindFacets={kindFacets}
-        totalCasesCount={libraryCounts.total}
-        investigationReportCount={libraryCounts.reports}
-        casesWithScreenshotsCount={libraryCounts.withScreenshots}
-        totalScreenshotAssets={libraryCounts.screenshots}
-      />
+        <BlogTeaser />
+      </div>
+
+      {/* 10  Pre-call answers */}
+      <div className={DEFER}>
+        <FaqSection items={LIVE_COPY.faq} />
       </div>
 
       {/* 11  Action: single CTA */}

@@ -17,6 +17,7 @@ import Link from "next/link";
 import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
 import { LEGAL_CONTACT, LEGAL_LAST_UPDATED, SITE_FACTS } from "@/app/core/config/legal";
 import { ANALYTICS } from "@/app/core/config/analytics";
+import { GISCUS } from "@/app/core/config/comments";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
 import { PageShell } from "@/app/components/shared/kit";
 import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
@@ -146,6 +147,21 @@ export default function PrivacyPage() {
             is governed by its own privacy statement.
           </p>
         </section>
+
+        {GISCUS && (
+          <section className={legalSection}>
+            <h2>Comments on blog posts</h2>
+            <p>
+              Blog posts can have comments, provided by <strong>Giscus</strong>{" "}
+              (giscus.app). Nothing loads until you press &quot;Load comments&quot;
+              under a post. Then the thread is fetched from a GitHub Discussion,
+              and writing a comment needs a GitHub sign-in, which GitHub handles —
+              this site never sees your account. What you post is public on GitHub
+              and is governed by GitHub&apos;s privacy statement; you can edit or
+              delete it there.
+            </p>
+          </section>
+        )}
 
         {ANALYTICS && (
           <section className={legalSection}>

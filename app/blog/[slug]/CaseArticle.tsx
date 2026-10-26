@@ -10,7 +10,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useMemo, useState, ViewTransition, type ReactNode } from "react";
 import { m as motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
 import { EASE } from "@/app/core/motion";
@@ -134,7 +134,7 @@ export default function CaseArticle({
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Breadcrumb */}
         <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
-          <Link href="/#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
+          <Link href="/blog#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
             <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
           </Link>
           <span className="text-foreground/20" aria-hidden="true">/</span>
@@ -162,9 +162,11 @@ export default function CaseArticle({
             )}
             <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="事件" />
           </div>
-          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-[0.95] text-foreground">
-            {item.title}
-          </h1>
+          <ViewTransition name={`case-title-${item.id}`} share="morph" default="none">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter [word-spacing:0.12em] uppercase leading-[0.95] text-foreground [text-wrap:balance]">
+              {item.title}
+            </h1>
+          </ViewTransition>
           <p className="mt-5 font-mono text-xs uppercase tracking-[0.25em] text-tertiary">{item.platform}</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-on-surface-variant">
@@ -285,7 +287,7 @@ export default function CaseArticle({
                   >
                     <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0">{t.id}</span>
                     <span className="flex-1 text-sm text-foreground/80 group-hover:text-foreground transition-colors">{t.name}</span>
-                    <span className="hidden sm:block font-mono text-[0.5rem] uppercase tracking-[0.2em] text-foreground/60 shrink-0">{t.tactic.replace(/-/g, " ")}</span>
+                    <span className="hidden sm:block font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60 shrink-0">{t.tactic.replace(/-/g, " ")}</span>
                   </a>
                 </li>
               ))}
@@ -341,7 +343,7 @@ export default function CaseArticle({
         </nav>
 
         <div className="mt-10 flex justify-center">
-          <Link href="/#cases" className={btnOutline}>
+          <Link href="/blog#cases" className={btnOutline}>
             <ArrowLeft size={13} /> Back to the library
           </Link>
         </div>

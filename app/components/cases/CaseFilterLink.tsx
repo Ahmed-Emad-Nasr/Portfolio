@@ -1,11 +1,12 @@
 "use client";
 
 /*
- * CaseFilterLink — a link anywhere on the home page that opens the case
- * library already filtered ("Wazuh → the 6 cases that use it").
+ * CaseFilterLink — a link anywhere on the site that opens the case library
+ * (/blog) already filtered ("Wazuh → the 6 cases that use it").
  *
- * The home page is one route, so a next/link to "/?q=…" would not remount the
- * library and its filters would not change. Instead the link writes the query
+ * From another page it is a plain link to /blog?q=…#cases. On the blog page
+ * itself a next/link to "?q=…" would not remount the library and its filters
+ * would not change. Instead the link writes the query
  * into the URL, fires the same popstate event the back button does (which the
  * library already listens to), and scrolls to it. Without JavaScript it is a
  * plain link to the same filtered URL.
@@ -25,7 +26,7 @@ type Props = {
 
 export default function CaseFilterLink({ params, className, children, ...rest }: Props) {
   const search = new URLSearchParams(params).toString();
-  const href = `${normalizePublicHref("/")}?${search}#cases`;
+  const href = `${normalizePublicHref("/blog")}?${search}#cases`;
   return (
     <a
       href={href}

@@ -13,6 +13,7 @@
  */
 
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
+import { getAllPosts } from "@/app/core/content/posts";
 import { certifications } from "@/app/core/config/certifications";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
 import { skillGroups } from "@/app/core/config/skills";
@@ -72,6 +73,17 @@ ${education.map(line).join("\n")}
 
 ${certifications.map((cert) => `- ${cert.name} — ${cert.issuer}, ${cert.year}`).join("\n")}
 
+## Pages
+
+- [Home](${absoluteUrl("/")}): who I am, services, selected work, experience, credentials
+- [Blog](${absoluteUrl("/blog")}): posts, the case library, ATT&CK coverage, detection rules, videos
+- [About](${absoluteUrl("/about")}): toolbox, home lab, path, process, contributions
+- [CV](${absoluteUrl("/cv")})
+${getAllPosts().length ? `
+## Posts
+
+${getAllPosts().map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.description}`).join("\n")}
+` : ""}
 ## Case library (${caseEvidenceLibrary.length} reports)
 
 ${caseEvidenceLibrary.map((item) => `- [${item.title}](${caseUrl(item.id)}): ${item.category}, ${item.platform}`).join("\n")}
@@ -84,7 +96,7 @@ ${blogYoutubePlaylists.map((playlist) => `- [${playlist.title}](${playlist.sourc
 
 ## Optional
 
-- [RSS feed of the case library](${absoluteUrl("/feed.xml")})
+- [RSS feed of the blog](${absoluteUrl("/feed.xml")})
 - [Sitemap](${absoluteUrl("/sitemap.xml")})
 - [security.txt](${absoluteUrl("/.well-known/security.txt")})
 `;

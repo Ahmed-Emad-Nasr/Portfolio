@@ -6,7 +6,7 @@
  * top, tertiary stack chips, accent metric chips, sheen primary action).
  */
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, ViewTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Check, Copy, ExternalLink, FileText, Download, Images, ShieldAlert, AlertTriangle, ArrowRight } from "lucide-react";
@@ -133,11 +133,15 @@ function CaseCard({
             ) : null}
           </div>
 
-          <h3 className="font-display text-xl md:text-lg lg:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
-            <Link href={detailPath} className="hover:text-primary-ink transition-colors duration-300">
-              {title}
-            </Link>
-          </h3>
+          {/* Named like the case page's <h1>: opening the case morphs this
+              title into the page headline (React <ViewTransition>) */}
+          <ViewTransition name={`case-title-${id}`} share="morph" default="none">
+            <h3 className="font-display text-xl md:text-lg lg:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
+              <Link href={detailPath} className="hover:text-primary-ink transition-colors duration-300">
+                {title}
+              </Link>
+            </h3>
+          </ViewTransition>
           {verdict && (
             <p className="mb-3 flex items-start gap-2 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-primary-ink">
               <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" aria-hidden="true" />

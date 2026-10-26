@@ -48,8 +48,8 @@ export default function MobileActionBar() {
       <a href={normalizePublicHref(CV_PDF_HREF)} target="_blank" rel="noopener noreferrer" className={`${item} bg-primary text-white`}>
         <Download size={15} aria-hidden="true" /> Resume
       </a>
-      <a href="#cases" className={`${item} text-foreground/80 hover:text-primary-ink`}>
-        <FolderSearch size={15} aria-hidden="true" /> Cases
+      <a href={normalizePublicHref("/blog")} className={`${item} text-foreground/80 hover:text-primary-ink`}>
+        <FolderSearch size={15} aria-hidden="true" /> Blog
       </a>
       <a href="#contact" className={`${item} text-foreground/80 hover:text-primary-ink`}>
         <Mail size={15} aria-hidden="true" /> Contact

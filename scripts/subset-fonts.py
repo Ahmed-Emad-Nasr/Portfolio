@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """
-scripts/subset-fonts.py — rebuild the two Japanese-capable display fonts.
+scripts/subset-fonts.py — rebuild the share-card (OG image) fonts.
+
+The website itself loads the full Sensei-Dev font set from app/fonts.css
+(unicode-range slices, so a browser only downloads the slices a page uses).
+This script only feeds the build-time image generators in scripts/og/, which
+inline the fonts as data URIs and need small single files.
 
 Dela Gothic One and Yuji Syuku ship as ~5 MB Japanese fonts. Through
 @fontsource they cost five render-blocking stylesheets of ~100 KB of
 @font-face rules each, plus 30+ glyph-chunk downloads per page. The site only
 ever shows Latin text and the ~190 kanji/kana written in its own source, so
 this script cuts each font down to exactly that and writes small woff2 files
-to app/fonts/, which app/fonts.css loads.
+to scripts/og/fonts/.
 
 Run it again whenever new Japanese text is added anywhere under app/:
 
@@ -25,7 +30,7 @@ from fontTools import subset
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 APP = ROOT / "app"
-OUT = APP / "fonts"
+OUT = ROOT / "scripts" / "og" / "fonts"
 
 
 def used_cjk() -> str:

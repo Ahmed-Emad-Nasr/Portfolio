@@ -11,18 +11,23 @@ import { Eyebrow } from "@/app/components/shared/kit";
 const KNOWN_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
 const ENTRIES = startHere.filter((entry) => KNOWN_IDS.has(entry.id));
 
-export default function StartHere() {
+export default function StartHere({
+  note = "Three reports to start with — detection engineering, a full DFIR investigation and a malware teardown. The full library is below.",
+  headingLevel: H = "h2",
+}: {
+  note?: string;
+  /** h3 when it sits inside another section (the home page's blog teaser) */
+  headingLevel?: "h2" | "h3";
+} = {}) {
   if (ENTRIES.length === 0) return null;
 
   return (
-    <section className="relative mb-20" aria-labelledby="start-here-title">
+    <section id="start-here" className="relative mb-20" aria-labelledby="start-here-title">
       <Eyebrow japanese="入門">Short on time</Eyebrow>
-      <h2 id="start-here-title" className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-foreground mb-3">
+      <H id="start-here-title" className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-foreground mb-3">
         Start <span className="text-primary italic">here.</span>
-      </h2>
-      <p className="mb-10 max-w-2xl text-foreground/60 font-light leading-relaxed">
-        Three reports to start with — detection engineering, a full DFIR investigation and a malware teardown. The full library is below.
-      </p>
+      </H>
+      <p className="mb-10 max-w-2xl text-foreground/60 font-light leading-relaxed">{note}</p>
       <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {ENTRIES.map((entry, idx) => (
           <li key={entry.id}>

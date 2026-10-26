@@ -163,7 +163,7 @@ export default function CredentialsGallery() {
                       </span>
                       {cert.credential && (
                         <span
-                          className={`px-2 py-0.5 border font-mono text-[0.5rem] font-bold uppercase tracking-[0.2em] ${
+                          className={`px-2 py-0.5 border font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] ${
                             cert.credential === "exam" ? "text-primary-ink border-primary/40 bg-primary/10" : "text-tertiary border-tertiary/30 bg-tertiary/5"
                           }`}
                         >

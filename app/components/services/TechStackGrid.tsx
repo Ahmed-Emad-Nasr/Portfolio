@@ -88,7 +88,7 @@ export default function TechStackGrid() {
                 </ul>
                 {g.evidence && g.evidence.length > 0 && (
                   <div className="mt-6 pt-4 border-t border-foreground/5">
-                    <span className="block mb-2 font-mono text-[0.5rem] uppercase tracking-[0.3em] text-foreground/40">Proof</span>
+                    <span className="block mb-2 font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/40">Proof</span>
                     <ul className="grid gap-1.5">
                       {g.evidence.map((e) => (
                         <li key={e.id}>

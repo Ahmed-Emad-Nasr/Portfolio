@@ -13,7 +13,10 @@ import React from "react";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
-import { delaGothic, jetbrainsMono, outfit, yujiSyuku } from "./fonts";
+/* The Sensei-Dev font set, exactly as that site loads it: self-hosted
+   @font-face rules split by unicode-range (app/fonts/<family>/*.woff2). */
+import "./fonts.css";
+import "./fonts-arabic.css";
 import "./globals.css";
 
 import { knowledgeEducationItems } from "@/app/core/config/experience";
@@ -33,6 +36,7 @@ import { REVEAL_SCRIPT } from "@/app/core/reveal";
 import { CONTENT_SECURITY_POLICY } from "@/app/core/config/security";
 import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
+import MotionBudget from "@/app/core/components/MotionBudget";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
@@ -284,7 +288,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       dir="ltr"
-      className={`${outfit.variable} ${jetbrainsMono.variable} ${delaGothic.variable} ${yujiSyuku.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -320,6 +323,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <CursorOverlay />
               {children}
             </SmoothScroll>
+            <MotionBudget />
             <Analytics />
             <ServiceWorkerRegister enabled={HAS_SERVICE_WORKER} />
           </ThemeFxProvider>

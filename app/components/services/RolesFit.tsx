@@ -114,7 +114,7 @@ export default function RolesFit() {
                   <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">{r.title}</h3>
                   <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6">{r.pitch}</p>
 
-                  <span className="font-mono text-[0.5rem] uppercase tracking-[0.3em] text-foreground/60 mb-2">Proof</span>
+                  <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/60 mb-2">Proof</span>
                   <ul className="grid gap-2 mb-6">
                     {r.proof.map((p, i) => {
                       const cls = "group/p flex items-start gap-2 text-sm text-foreground/80 hover:text-primary-ink transition-colors";

@@ -57,7 +57,7 @@ export default function NotFound() {
             <Link href="/" className={ctaPrimary}>
               <Home size={16} /> Portfolio
             </Link>
-            <Link href="/#cases" className={ctaSecondary}>
+            <Link href="/blog#cases" className={ctaSecondary}>
               <FolderSearch size={14} className="text-primary-ink" /> Case library
             </Link>
             <Link href="/cv" className={ctaSecondary}>

@@ -19,6 +19,7 @@ import { absoluteUrl, caseUrl, OG_IMAGE } from "@/app/core/config/site";
 import { GALLERY_IMAGE_COUNT, galleryImagePath } from "@/app/core/config/certifications";
 import { blogYoutubeVideos } from "@/app/core/config/youtube";
 import { PERSON_IMAGE, SITE_URL, youtubeEmbed, youtubeThumb } from "@/app/core/config/seo";
+import { getAllPosts, getTags } from "@/app/core/content/posts";
 
 /*
  * Image and video extensions (Google's image/video sitemap formats): they
@@ -26,11 +27,9 @@ import { PERSON_IMAGE, SITE_URL, youtubeEmbed, youtubeThumb } from "@/app/core/c
  * show up in Image and Video search with a link back here. Every image listed
  * is one the page actually shows.
  */
-const homeImages = [
-  PERSON_IMAGE,
-  OG_IMAGE.url,
-  ...Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1))),
-];
+const homeImages = [PERSON_IMAGE, OG_IMAGE.url];
+/* The proof gallery is on the about page */
+const aboutImages = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1)));
 
 /* Google allows 2,048 characters of description; keep well under */
 const clip = (text: string, max = 1000) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
@@ -41,7 +40,8 @@ const clip = (text: string, max = 1000) => (text.length > max ? `${text.slice(0,
 const xml = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
-const homeVideos = blogYoutubeVideos.map((video) => ({
+/* The videos are on the blog page */
+const blogVideos = blogYoutubeVideos.map((video) => ({
   title: xml(video.title),
   thumbnail_loc: youtubeThumb(video.videoId),
   description: xml(clip(video.description ?? video.title)),
@@ -76,8 +76,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
       images: homeImages,
-      videos: homeVideos,
     },
+    {
+      url: absoluteUrl("/blog"),
+      lastModified: [latestCaseDate, ...getAllPosts().map((p) => parseDate(p.updated ?? p.date))].reduce((a, b) => (b > a ? b : a)),
+      changeFrequency: "weekly",
+      priority: 0.95,
+      videos: blogVideos,
+    },
+    {
+      url: absoluteUrl("/about"),
+      lastModified: latestCaseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+      images: aboutImages,
+    },
+    // Written posts, and the tag pages that list them
+    ...getAllPosts().map((p) => ({
+      url: absoluteUrl(`/blog/${p.slug}`),
+      lastModified: parseDate(p.updated ?? p.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.85,
+      ...(p.cover ? { images: [absoluteUrl(p.cover)] } : {}),
+    })),
+    ...getTags().map((t) => ({
+      url: absoluteUrl(`/blog/tag/${t.slug}`),
+      lastModified: latestCaseDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    })),
     {
       // The HTML CV page. Higher priority than the PDF: Google indexes the page
       // better, ATS systems read it better, and it is built from the same site

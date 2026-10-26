@@ -54,7 +54,7 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
                   {item.verdict && <span className="block mt-0.5 text-xs text-foreground/60 truncate">{item.verdict}</span>}
                 </span>
               </span>
-              <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5rem] uppercase tracking-[0.2em] ${KIND_TONE[item.kind ?? "lab"]}`}>
+              <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5625rem] uppercase tracking-[0.2em] ${KIND_TONE[item.kind ?? "lab"]}`}>
                 {KIND_SHORT.get(item.kind ?? "lab")}
               </span>
               <span className="font-mono text-[0.625rem] text-foreground/60 truncate">{item.category}</span>

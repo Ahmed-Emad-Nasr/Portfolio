@@ -195,7 +195,7 @@ export default function ExperienceTimeline() {
 
                 {/* Panel Footer */}
                 <div className="px-6 md:px-12 py-4 border-t border-foreground/5 flex items-center justify-between">
-                  <span className="font-mono text-[0.5rem] text-foreground/15 tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-foreground/15 tracking-[0.2em] uppercase">
                     {item.details.length} {item.details.length === 1 ? "entry" : "entries"} logged
                   </span>
                   <div className="flex items-center gap-2">

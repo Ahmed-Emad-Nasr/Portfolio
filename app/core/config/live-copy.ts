@@ -17,6 +17,8 @@ import type { FaqItem, NowItem, Stat } from "../types/portfolio";
 import { CASE_STATS } from "./case-stats";
 import { certifications } from "./certifications";
 import { CV_SUMMARY } from "./cv";
+import { normalizePublicHref } from "./shared";
+import { sectionAnchor } from "./routes";
 
 type LiveCopy = {
   heroDescription: string;
@@ -47,9 +49,12 @@ export const LIVE_COPY: LiveCopy = {
     { q: "How do I reach you?", a: "Email or LinkedIn. The form at the bottom of the page opens a pre-filled email — nothing is sent anywhere else." },
   ],
   stats: [
-    { target: CASE_STATS.published, suffix: "", label: "Cases published", japanese: "記録", href: "#cases" },
+    /* The full investigation reports, not every library entry: "79 cases"
+       counted 42 web labs and 9 notes too, and a recruiter who filtered the
+       library found the gap. The hero still gives both numbers. */
+    { target: CASE_STATS.reports, suffix: "", label: "IR / DFIR reports", japanese: "記録", href: `${normalizePublicHref("/blog")}?kind=investigation#cases` },
     { target: certifications.length, suffix: "", label: "Certifications", japanese: "認定", href: "#certificates" },
     { target: 300, suffix: "+", label: "Students taught", japanese: "指導", href: "#teaching" },
-    { target: 60, suffix: "K+", label: "Channel views", japanese: "動画", href: "#videos" },
+    { target: 60, suffix: "K+", label: "Channel views", japanese: "動画", href: sectionAnchor("videos") },
   ],
 };

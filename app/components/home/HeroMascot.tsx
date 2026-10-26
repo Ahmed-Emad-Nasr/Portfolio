@@ -116,7 +116,7 @@ export function HeroMascot({ className }: { className?: string }) {
         className="group relative block w-20 cursor-pointer lg:w-24"
       >
         <span className="block drop-shadow-[0_10px_25px_rgba(0,0,0,0.45)]">{mascot.art}</span>
-        <span className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap border border-foreground/15 bg-background/90 px-2 py-0.5 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-foreground opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+        <span className="pointer-events-none absolute -bottom-7 left-0 sm:left-1/2 sm:-translate-x-1/2 whitespace-nowrap border border-foreground/15 bg-background/90 px-2 py-0.5 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-foreground opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
           {mascot.name} • {mascot.role}
         </span>
       </motion.button>

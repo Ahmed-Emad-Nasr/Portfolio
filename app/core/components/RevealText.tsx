@@ -33,9 +33,16 @@ export function RevealText({
           (aria-label is not allowed on a plain span) */}
       <span className="sr-only">{text}</span>
       {units.map((u, i) => (
+        /* The mask only needs a bottom edge for the word to rise out of.
+           overflow:hidden clipped all four sides — and with tight tracking
+           (letter-spacing is negative, so the box ends before the last
+           glyph's ink), wide Dela Gothic letters and the 2px outline, the
+           last letter of every word was shaved off on the right ("AHMED"
+           read "AHME|"). clip-path with negative insets leaves the top and
+           sides open and clips at the bottom only. */
         <span
           key={i}
-          className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em] align-bottom"
+          className="inline-block [clip-path:inset(-0.5em_-0.5em_0_-0.5em)] pb-[0.08em] -mb-[0.08em] align-bottom"
           aria-hidden="true"
         >
           <span className="reveal-word inline-block" style={{ "--w": delay + i * 0.06 } as CSSProperties}>

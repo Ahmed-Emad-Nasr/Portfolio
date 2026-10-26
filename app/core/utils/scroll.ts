@@ -151,3 +151,19 @@ export function isTypingTarget(target: EventTarget | null): boolean {
     target.isContentEditable
   );
 }
+
+/**
+ * Freeze or release page scrolling while a full-screen layer is open (the
+ * mobile menu). `overflow: hidden` on <body> alone does not stop Lenis — it
+ * scrolls the root itself — so both are switched together. Layers that must
+ * still scroll inside carry data-lenis-prevent.
+ */
+export function lockScroll(locked: boolean): void {
+  if (typeof document === "undefined") return;
+  document.documentElement.style.overflow = locked ? "hidden" : "";
+  document.body.style.overflow = locked ? "hidden" : "";
+  if (lenis) {
+    if (locked) lenis.stop();
+    else lenis.start();
+  }
+}

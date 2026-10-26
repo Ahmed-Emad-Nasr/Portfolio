@@ -36,7 +36,9 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 mb-16 md:mb-20 items-end">
+        {/* The badge column takes its own width (auto), not a third of the
+            row: at 1024–1366px a third was narrower than the badge. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] gap-8 mb-16 md:mb-20 items-end">
           <div
   className="flex flex-col"
   data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
@@ -62,11 +64,11 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
   className="flex lg:justify-end"
   data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
 >
-            <div className="relative flex items-center gap-4 px-6 py-3 border border-accent/40 bg-surface/60 backdrop-blur-sm">
+            <div className="relative flex items-center gap-4 px-5 sm:px-6 py-3 border border-accent/40 bg-surface/60 backdrop-blur-sm max-w-full">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-accent" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-accent" />
-              <Star size={26} className="text-accent" fill="var(--accent)" />
-              <div className="flex items-center gap-3">
+              <Star size={26} className="text-accent shrink-0" fill="var(--accent)" />
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                 <span className="font-mono text-accent text-2xl font-black tabular-nums">
                   <CountUp target={repos.length} />
                 </span>

@@ -1,0 +1,102 @@
+---
+title: "Writing a post: the house style"
+description: "Every building block a post can use — headings, code with copy buttons, callouts, tables, case cards — in one page you can copy from."
+date: 2026-10-26
+tags: [Meta, Writing]
+lang: en
+series: "Blog handbook"
+seriesPart: 1
+draft: true
+---
+
+This file is a **draft** (`draft: true` in the front matter), so it shows up in
+`npm run dev` and is never part of the published site. Copy it, rename it,
+change the front matter, set `draft: false` — that is a new post.
+
+## Front matter
+
+The block between the `---` lines at the top describes the post. The file name
+becomes the URL: `content/posts/wazuh-rule-tuning.mdx` is published at
+`/blog/wazuh-rule-tuning`.
+
+| Field | Required | What it does |
+| --- | --- | --- |
+| `title` | yes | The headline, the card title and the share title |
+| `description` | yes | One sentence for the card, search results and link previews |
+| `date` | yes | Publication date, `YYYY-MM-DD` |
+| `tags` | no | Each tag gets a page at `/blog/tag/<tag>` |
+| `lang` | no | `en` (default) or `ar` — Arabic posts are laid out right-to-left |
+| `series`, `seriesPart` | no | Posts in the same series link to each other in order |
+| `cover` | no | An image under `public/`, also used as the share image |
+| `draft` | no | `true` keeps the post out of the build |
+
+## Code
+
+Fenced code is highlighted at build time and gets a copy button. Name the
+language after the opening fence:
+
+```bash
+sudo /var/ossec/bin/wazuh-logtest
+```
+
+```xml
+<rule id="100100" level="10">
+  <if_sid>5710</if_sid>
+  <match>Failed password</match>
+  <description>SSH brute force from $(srcip)</description>
+  <mitre><id>T1110</id></mitre>
+</rule>
+```
+
+```kql
+SecurityEvent
+| where EventID == 4625
+| summarize attempts = count() by TargetAccount, IpAddress, bin(TimeGenerated, 5m)
+| where attempts > 10
+```
+
+Supported out of the box: bash, PowerShell, cmd, Python, JS/TS, JSON, YAML,
+XML, HTML, SQL, KQL, SPL (Splunk), Sigma (as YAML), YARA, INI, TOML, diff,
+HTTP, Dockerfile, nginx, logs, C, Go, asm and regex. Anything else renders as
+plain text.
+
+### Inline code and keys
+
+Inline code looks like `Get-WinEvent -LogName Security`. Keys use the `Kbd`
+tag: press <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> to open the command palette.
+
+## Callouts
+
+<Callout type="tip">Use a tip for a shortcut the reader will be glad to know.</Callout>
+
+<Callout type="warning" title="Lab only">Run this against your own lab, never a network you do not own.</Callout>
+
+<Callout type="danger">Use danger for anything destructive or irreversible.</Callout>
+
+<Callout type="note">A note is for context that would interrupt the paragraph.</Callout>
+
+## Linking the case library
+
+A case from the library, as a card:
+
+<CaseRef id="3omda-custom-detection-rules" />
+
+Ordinary links work too: [the case library](/blog#cases), or a file under
+`public/` like [the CV](/Assets/cv/AhmedEmadNasr_CV.pdf). External links open
+in a new tab.
+
+## Lists
+
+1. Collect the logs
+2. Build the timeline
+3. Write it down so the next analyst does not have to repeat it
+
+- [x] Task lists render as checkboxes
+- [ ] Unchecked items too
+
+> A quote, for a line worth stopping on.
+
+## Images
+
+Put images in `public/Assets/blog/` and use the `Figure` tag for a caption, or
+plain Markdown `![alt text](Assets/blog/file.webp)` without one.

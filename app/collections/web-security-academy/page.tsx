@@ -78,14 +78,14 @@ export default function WebSecurityAcademyPage() {
         <KanjiWatermark chars="道場" side="right" />
         <div className="max-w-5xl mx-auto relative z-10">
           <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
-            <Link href="/#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
+            <Link href="/blog#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
               <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
             </Link>
             <span className="text-foreground/20" aria-hidden="true">/</span>
             <span className="text-foreground/60">Collection</span>
           </nav>
 
-          <header className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <header className="mb-14 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div>
               <div className="flex items-center gap-4 mb-5">
                 <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
@@ -99,7 +99,7 @@ export default function WebSecurityAcademyPage() {
                 The web-security track, lab by lab: what was broken, the payload that proved it, and the screenshots. Grouped by vulnerability class in the order the Academy teaches them.
               </p>
             </div>
-            <div className="flex gap-4 shrink-0">
+            <div className="flex flex-wrap gap-4 shrink-0">
               <CounterBadge value={String(LABS.length)} top="Labs" bottom="Solved" />
               <CounterBadge value={String(SHOTS)} top="Screens" bottom="Evidence" />
             </div>
@@ -133,7 +133,7 @@ export default function WebSecurityAcademyPage() {
           </div>
 
           <div className="mt-16 flex justify-center">
-            <Link href="/#cases" className={btnOutline}>
+            <Link href="/blog#cases" className={btnOutline}>
               <ArrowLeft size={13} /> Back to the library
             </Link>
           </div>

@@ -160,7 +160,7 @@ export default function MediaSections({
                     <div className="flex flex-col flex-1 p-6">
                       <span className="flex items-center gap-3 mb-2">
                         {/* The channel is narrated in Arabic — say so before someone presses play */}
-                        <span className="px-1.5 py-0.5 border border-accent/40 font-mono text-[0.5rem] font-bold uppercase tracking-[0.2em] text-accent" title="Narrated in Arabic">
+                        <span className="px-1.5 py-0.5 border border-accent/40 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-accent" title="Narrated in Arabic">
                           AR
                         </span>
                         {video.publishedAt && (

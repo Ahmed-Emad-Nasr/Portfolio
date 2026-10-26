@@ -63,58 +63,66 @@ server at runtime. Every decision below follows from that:
 
 ---
 
-## 2. Directory layout
+## 2. Pages and directory layout
+
+The site is three pages plus one page per post and per case
+(`core/config/routes.ts` is the single map of which section lives where):
+
+| Route | What | Notes |
+|---|---|---|
+| `/` | The pitch: hero, stats, services, roles, selected work, repos, experience, teaching, credentials, platforms, blog teaser, FAQ, contact | ~22,000 px on desktop (was ~44,000 px as one page) |
+| `/blog` | Posts, Start here, the case library, videos, ATT&CK coverage, detection rules, triage challenge | old `/#cases`, `/?q=…#cases`, `/#case-…` links are forwarded here by the home page's `homeForwardScript` |
+| `/blog/<slug>` | A written post (`content/posts/<slug>.mdx`) **or** a case (`core/config/cases.ts`) | one URL space; the build fails if a post slug reuses a case id |
+| `/blog/tag/<tag>` | Posts with one tag | |
+| `/about` | Toolbox, daily drivers, home lab, path, now, process, contributions, gallery | |
+| `/cv`, `/privacy`, `/terms`, `/collections/web-security-academy` | as before | |
+
+Anything that links to a section — the nav, the command palette, the `g`
+shortcuts, the stats bar, `CaseFilterLink` — asks `pageOfSection(id)` or
+`sectionAnchor(id)` where it is. Move a section by
+changing one line in `SECTION_PAGE`.
 
 ```
 app/
-├── layout.tsx            Root layout — fonts, metadata, JSON-LD, tier script
-├── page.tsx              Home (Server Component) — renders server-only slots
-├── page-client.tsx       Home shell (Client) — composes sections
-├── error.tsx             Route error boundary
-├── global-error.tsx      Layout error boundary (last resort)
-├── not-found.tsx         404
-├── globals.css           Tailwind setup, tokens, reset, motion budget, card system, effects
-├── sitemap.ts            Generated at build
-├── robots.ts             Generated at build
-├── manifest.ts           Generated at build
-├── feed.xml/             RSS route
+├── layout.tsx            Root layout — fonts.css, metadata, JSON-LD, reveal script
+├── fonts.css             The Sensei-Dev font set (unicode-range slices), unchanged
+├── fonts-arabic.css      IBM Plex Sans Arabic, Arabic block only
+├── fonts/<family>/       The woff2 slices both files point at
+├── page.tsx              Home (Server Component)
+├── about/page.tsx        About
+├── blog/
+│   ├── page.tsx          Blog index
+│   ├── [slug]/           A post (PostArticle) or a case (CaseArticle)
+│   └── tag/[tag]/        Tag pages
+├── cv/, privacy/, terms/, collections/   Other pages
+├── feed.xml/, sitemap.ts, robots.ts, manifest.ts, llms.txt/   Generated at build
 │
-├── components/           Page sections. One folder per section.
-│   ├── header/           Site nav
-│   ├── home/             Hero (contains the LCP image)
-│   ├── experience/       Timeline
-│   ├── projects/         Project cards
-│   ├── art_gallery/      Certificate wall
-│   ├── credentials/      Certs + skills + achievements (Server Component)
-│   ├── attack/           MITRE ATT&CK matrix (Server Component)
-│   ├── contact/          Formspree form
-│   ├── loader/           Boot screen
-│   ├── cursor-mount.tsx  Desktop-only custom cursor gate
-│   ├── custom-cursor.tsx
-│   └── smooth-scroll.tsx Lenis wrapper
+├── components/           Sections, one folder per area
+│   ├── home/             Hero (LCP image), stats, mascot, mobile action bar
+│   ├── header/           SiteNav (desktop bar + mobile menu), ContactFooter
+│   ├── services/         Services, roles, work, repos, stack, uses, lab, process, FAQ
+│   ├── experience/       Timeline, teaching, credentials, platforms, milestones, now
+│   ├── cases/            Case library, ATT&CK, detections, triage, blog teaser
+│   ├── blog/             PostCard, PostArticle, PostToc, CodeBlock, Comments, MDX components
+│   ├── art-gallery/      Proof gallery + lightbox
+│   └── shared/kit.tsx    Shared classes and PageShell for non-home pages
 │
-├── core/                 Everything shared across sections
-│   ├── components/       Reveal, SectionHeader, ScrollProgress, BackToTop,
-│   │                     CommandPalette, Terminal, KanjiDivider, Spotlight
-│   ├── config/           All content as typed data (see §4)
-│   ├── hooks/            useDeviceTier
-│   ├── icons/            Inline SVG path data + <Icon>
-│   └── utils/            Formatting and shared helpers
-│
-├── blog/                 Case-report library
-│   ├── page.tsx          Index (Server)
-│   ├── page-client.tsx   Index shell (Client)
-│   ├── [slug]/           Case detail — generateStaticParams
-│   ├── blog_header/      Nav (shares components/header/header-ui.ts with the main header)
-│   ├── components/       Blog-only sections
-│   └── BlogCard.tsx
-│
-└── cv/                   CV page
+└── core/
+    ├── components/       Motion, reveal text, section header/divider, palette,
+    │                     terminal, shortcuts, MotionBudget, theme
+    ├── config/           All content as typed data (see §4), routes.ts, comments.ts
+    ├── content/          posts.ts (reads content/posts), render-mdx.tsx (MDX + Shiki)
+    ├── api/              Build-time fetches (GitHub, TryHackMe) with fallbacks
+    ├── icons/            Inline SVG path data
+    └── utils/            scroll.ts (Lenis-aware scrolling, scroll lock), helpers
+
+content/posts/            Blog posts as MDX — one file per post (see §13)
 
 scripts/
-├── css-audit.mjs           Dead classes, dead tokens, duplicate files,
-│                           expensive properties. Zero dependencies.
-└── generate-hero-sizes.mjs Responsive variants of the LCP image (see §8)
+├── *-audit.mjs, check-*.mjs   The checks `npm run verify` runs
+├── og/                   Share-card generators and their small font files (og/fonts)
+├── subset-fonts.py       Rebuilds the OG fonts after new Japanese text
+└── generate-*.mjs        Thumbnails, hero sizes, icons
 ```
 
 **Rule:** anything used by more than one section lives in `core/`. Anything
@@ -464,10 +472,20 @@ that will not notice it.
 
 ### Fonts
 
-Overlock (400/700/900) and JetBrains Mono (400/700). `next/font` preloads
-every weight by default, which is five high-priority requests competing with
-the LCP image. JetBrains Mono is set to `preload: false` — it appears in HUD
-labels and the terminal, never in above-the-fold text that gets measured.
+Exactly the Sensei-Dev set, loaded the way that site loads it:
+`app/fonts.css` (imported in `layout.tsx`) declares Dela Gothic One, Outfit,
+JetBrains Mono, Noto Sans JP (400/700/900) and Yuji Syuku as `@font-face`
+rules split by `unicode-range`, pointing at `app/fonts/<family>/N.woff2`. The
+bundler fingerprints the files and adds the `/Portfolio` base path. A browser
+downloads only the slices whose characters a page uses (about 30 small files
+on the home page, mostly kanji slices of Yuji Syuku for the ornaments).
+
+`app/fonts-arabic.css` adds IBM Plex Sans Arabic for Arabic text only (the
+Sensei-Dev set has no Arabic glyphs); `:lang(ar)` in `globals.css` selects it.
+
+Trade-off vs. the previous `next/font` setup: no generated size-matched
+fallback, so text can shift slightly when a face arrives on a cold first
+visit. `font-display: swap` keeps text visible meanwhile.
 
 ### `content-visibility`
 
@@ -587,3 +605,33 @@ bug.
 
 **`transform` and `opacity` only, for anything that animates.** Everything
 else forces layout or paint on every frame.
+
+---
+
+## 13. The blog
+
+Posts are MDX files in `content/posts/`; the file name is the URL
+(`content/posts/x.mdx` → `/blog/x`). `content/posts/writing-a-post.mdx`
+documents the front matter and every component, and is itself a draft.
+
+- **Build-time only.** `core/content/posts.ts` reads the files with
+  gray-matter; `core/content/render-mdx.tsx` compiles them with
+  `@mdx-js/mdx` + remark-gfm + rehype-slug + Shiki (JavaScript regex engine,
+  two themes as CSS variables, switched by the site theme). No MDX runtime
+  ships to the browser; only `CodeBlock` (copy button), `PostToc`
+  (scrollspy), `ShareRow` and `Comments` are client components.
+- **Drafts** (`draft: true`) render under `next dev` with a Draft badge and
+  are left out of `next build` (unless `SHOW_DRAFTS=1`).
+- **Arabic** (`lang: ar`) sets `lang`/`dir="rtl"` on the article; logical
+  properties (`ps-`, `ms-`, `text-start`, `border-s`) flip the layout, code
+  blocks stay LTR, headings switch from Dela Gothic (no Arabic glyphs) to
+  IBM Plex Sans Arabic.
+- **Comments** (Giscus) are off until the four `NEXT_PUBLIC_GISCUS_*`
+  variables are set (`core/config/comments.ts`); then the CSP, the privacy
+  page and a click-to-load button under each post switch on together.
+- **Everywhere else:** posts are in the RSS feed, the sitemap, `llms.txt`,
+  the blog page's `Blog` JSON-LD, and each post page has `BlogPosting` +
+  breadcrumb JSON-LD.
+- **Motion:** the post card title morphs into the post headline (React
+  `<ViewTransition name share="morph">`); case cards do the same into the
+  case headline. The reading-progress bar is a CSS scroll timeline.

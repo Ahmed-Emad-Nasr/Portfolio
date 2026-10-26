@@ -60,8 +60,8 @@ export default function TeachingSection() {
         <FadeIn className="mb-10 md:mb-12">
           <dl className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10">
             {TEACHING_STATS.map((s) => (
-              <div key={s.label} className="flex items-center gap-4 px-6 py-5 bg-background">
-                <dt className="order-2 flex flex-col">
+              <div key={s.label} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 sm:px-6 py-5 bg-background min-w-0">
+                <dt className="order-2 flex flex-col min-w-0">
                   <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
                   <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true" data-jp={s.japanese} />
                 </dt>

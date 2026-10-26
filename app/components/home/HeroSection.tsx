@@ -12,9 +12,11 @@ import { MessageCircle, Download, ArrowDown } from "lucide-react";
 import { Github, Linkedin, Youtube } from "@/app/core/icons/BrandIcons";
 
 
-function FieldRow({ label, value, hot = false, live = false }: { label: string; value: string; hot?: boolean; live?: boolean }) {
+function FieldRow({ label, value, hot = false, live = false, wide = false }: { label: string; value: string; hot?: boolean; live?: boolean; wide?: boolean }) {
+  /* wide: a row that only repeats something the hero already says — shown
+     from md up, skipped on phones, where the panel was 1.5 screens down */
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2.5 border-b border-foreground/5 last:border-b-0">
+    <div className={`${wide ? "hidden md:flex" : "flex"} items-baseline justify-between gap-4 py-2.5 border-b border-foreground/5 last:border-b-0`}>
       <dt className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
         {label}
       </dt>
@@ -191,11 +193,17 @@ export default function HeroSection({
         {/* ─── Masthead: name first, portrait second  one row ─── */}
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16 w-full">
           {/* Name */}
-          <div className="text-center md:text-left order-2 md:order-1">
+          {/* w-full / flex-1 + min-w-0: as a flex item this block took the
+              width of its longest unbreakable line, wider than a 320px phone,
+              and in the md row it pushed the portrait past the screen edge. */}
+          <div className="text-center md:text-left order-2 md:order-1 w-full md:w-auto md:flex-1 min-w-0">
             <p className="font-mono text-[0.6875rem] md:text-xs font-bold uppercase tracking-[0.4em] text-primary-ink mb-3">
               Portfolio · 履歴書
             </p>
-            <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
+            {/* Phones: the size follows the screen (min of the design's 6xl
+                and 15vw) — "AHMED" at a fixed 60px is 338px wide, wider than a
+                320px screen minus its padding. */}
+            <h1 className="font-display text-[min(3.75rem,15vw)] sm:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
               <RevealText text="Ahmed" delay={0.6} className="block text-foreground" />
               {/* One line per word, always: "Emad Nasr" wraps at every width
                   in the display font but fits on one line in the fallback, so
@@ -214,7 +222,7 @@ export default function HeroSection({
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
             </h1>
-            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4" lang="ja" aria-hidden="true" data-jp="アハメド・エマド・ナスル  情報セキュリティ" />
+            <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4 [word-break:auto-phrase] [text-wrap:balance]" lang="ja" aria-hidden="true" data-jp="アハメド・エマド・ナスル  情報セキュリティ" />
             {/* The jobs, typed one after another (from the old site's hero) */}
             <RoleTicker
               roles={PORTFOLIO_DATA.profile.roles}
@@ -435,10 +443,10 @@ export default function HeroSection({
               <FieldRow label="Status" value={PORTFOLIO_DATA.profile.availability} hot live />
               <FieldRow label="Role" value={PORTFOLIO_DATA.profile.title} />
               <FieldRow label="Base" value={PORTFOLIO_DATA.profile.contact.location} />
-              <FieldRow label="Focus" value={focusLabel} />
+              <FieldRow label="Focus" value={focusLabel} wide />
               {evidenceLabel && <FieldRow label="Evidence" value={evidenceLabel} />}
-              <FieldRow label="Shipped" value={shippedLabel} />
-              <FieldRow label="Languages" value={tongueCodes} />
+              <FieldRow label="Shipped" value={shippedLabel} wide />
+              <FieldRow label="Languages" value={tongueCodes} wide />
             </dl>
           </aside>
         </div>

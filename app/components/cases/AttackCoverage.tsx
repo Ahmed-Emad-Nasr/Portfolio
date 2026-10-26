@@ -47,7 +47,7 @@ function MatrixView({ tactics, max }: { tactics: CoverageTactic[]; max: number }
           <div key={t.id} className="flex flex-col gap-1.5 min-w-0">
             <a
               href={`#tactic-${t.id}`}
-              className="px-1 py-2 border-b-2 border-primary/60 font-mono text-[0.5rem] font-bold uppercase tracking-[0.12em] text-foreground/70 leading-tight text-center hover:text-primary-ink transition-colors min-h-[2.25rem] flex items-center justify-center [overflow-wrap:anywhere]"
+              className="px-1 py-2 border-b-2 border-primary/60 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.12em] text-foreground/70 leading-tight text-center hover:text-primary-ink transition-colors min-h-[2.25rem] flex items-center justify-center [overflow-wrap:anywhere]"
               title={t.name}
             >
               {t.short}

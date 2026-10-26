@@ -33,7 +33,9 @@ export default function DetectionLibrary() {
     <section id="detections" aria-label="Detection library" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
       <KanjiWatermark chars="検知" side="right" />
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row justify-between md:items-end gap-8">
+        {/* Side by side only from lg: at tablet widths the title and two
+            badges did not fit, and the second badge ran off the screen. */}
+        <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-8">
           <SectionHeader
             eyebrow="Detection engineering // Wazuh"
             japanese="検知"
@@ -41,7 +43,7 @@ export default function DetectionLibrary() {
             titleB="Library."
             description="My custom Wazuh rule pack, rule by rule: what fires, how loud (Wazuh level 0–15) and which ATT&CK technique it watches. Filter by family; the full XML is in the report."
           />
-          <div className="mb-16 md:mb-20 flex gap-3">
+          <div className="mb-16 md:mb-20 flex flex-wrap gap-3 shrink-0">
             <CounterBadge value={detectionRules.length} top="Custom" bottom="Rules" />
             <CounterBadge value={techniques} top="Techniques" bottom="Watched" tone="accent" />
           </div>
@@ -78,7 +80,7 @@ export default function DetectionLibrary() {
             </span>
             <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60 tabular-nums">{rules.length} loaded</span>
           </div>
-          <div className="hidden md:grid grid-cols-[5.5rem_7rem_1fr_6.5rem] gap-4 px-5 py-2.5 border-b border-foreground/5 font-mono text-[0.5rem] uppercase tracking-[0.25em] text-foreground/60">
+          <div className="hidden md:grid grid-cols-[5.5rem_7rem_1fr_6.5rem] gap-4 px-5 py-2.5 border-b border-foreground/5 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
             <span>Rule</span>
             <span>Level</span>
             <span>Fires on</span>

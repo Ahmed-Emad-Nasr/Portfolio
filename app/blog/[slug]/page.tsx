@@ -7,8 +7,12 @@
  * or to someone in an interview it shows up with its own image and title, not the whole blog's title.
  * Google also indexes it as a page of its own instead of being part of one big page.
  *
- * Everything is static: generateStaticParams produces the 38 pages at build time, compatible
+ * Everything is static: generateStaticParams produces every page at build time, compatible
  * with output: "export".
+ *
+ * The same URL space serves the written posts (content/posts/*.mdx): a slug
+ * is a post or a case, never both (core/content/posts.ts fails the build on
+ * a clash), so links stay short — /blog/<slug> — whichever it is.
  */
 
 import type { Metadata } from "next";
@@ -23,6 +27,8 @@ import { caseAttackMapping, parentTechnique, techniquesForCase } from "@/app/cor
 import { caseDetails } from "@/app/core/config/case-details";
 import { caseKindOf, CASE_KINDS, WSA_COLLECTION } from "@/app/core/config/shared";
 import { jsonLd, PERSON_ID, PERSON_NAME, SITE_URL } from "@/app/core/config/seo";
+import { getAllPosts, getPost, getPostNeighbours, type Post } from "@/app/core/content/posts";
+import PostArticle from "@/app/components/blog/PostArticle";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
 
@@ -75,7 +81,81 @@ const relatedTo = (item: (typeof caseEvidenceLibrary)[number], limit = 3) => {
 const AUTHOR = { "@type": "Person", "@id": PERSON_ID, name: PERSON_NAME, url: SITE_URL } as const;
 
 export function generateStaticParams() {
-  return caseEvidenceLibrary.map((item) => ({ slug: item.id }));
+  return [...caseEvidenceLibrary.map((item) => ({ slug: item.id })), ...getAllPosts().map((p) => ({ slug: p.slug }))];
+}
+
+/* ─── Written posts ─────────────────────────────────────────────────────── */
+
+function postMetadata(post: Post): Metadata {
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const image = post.cover ? absoluteUrl(post.cover) : absoluteUrl("og-image.png");
+  const shareTitle = `${post.title} | Ahmed Emad Nasr`;
+  return {
+    title: post.title,
+    description: summarize(post.description),
+    keywords: [...post.tags, "Ahmed Emad Nasr"],
+    authors: [{ name: PERSON_NAME, url: SITE_URL }],
+    alternates: { canonical: `/blog/${post.slug}` },
+    ...(post.draft ? { robots: { index: false, follow: false } } : {}),
+    openGraph: {
+      title: shareTitle,
+      description: summarize(post.description, 200),
+      siteName: "Ahmed Emad Nasr Portfolio",
+      locale: post.lang === "ar" ? "ar_EG" : "en_US",
+      url,
+      type: "article",
+      publishedTime: post.date,
+      modifiedTime: post.updated ?? post.date,
+      authors: [SITE_URL],
+      tags: post.tags,
+      images: [{ url: image, alt: post.title }],
+    },
+    twitter: { card: "summary_large_image", title: shareTitle, description: summarize(post.description, 200), site: "@0x3omda", creator: "@0x3omda", images: [image] },
+  };
+}
+
+function PostPage({ post }: { post: Post }) {
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const structuredData = jsonLd({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${url}#article`,
+        headline: post.title,
+        description: post.description,
+        datePublished: post.date,
+        dateModified: post.updated ?? post.date,
+        inLanguage: post.lang,
+        keywords: post.tags.join(", "),
+        timeRequired: `PT${post.readTime}M`,
+        wordCount: post.source.split(/\s+/).filter(Boolean).length,
+        author: AUTHOR,
+        publisher: AUTHOR,
+        isPartOf: post.series
+          ? [{ "@id": `${absoluteUrl("/blog")}#blog` }, { "@type": "CreativeWorkSeries", name: post.series }]
+          : { "@id": `${absoluteUrl("/blog")}#blog` },
+        mainEntityOfPage: { "@type": "WebPage", "@id": url },
+        ...(post.cover ? { image: absoluteUrl(post.cover) } : {}),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
+          { "@type": "ListItem", position: 3, name: post.title, item: url },
+        ],
+      },
+    ],
+  });
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
+      <PageShell>
+        <PostArticle post={post} neighbours={getPostNeighbours(post.slug)} />
+      </PageShell>
+    </>
+  );
 }
 
 export async function generateMetadata({
@@ -84,6 +164,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const post = getPost(slug);
+  if (post) return postMetadata(post);
   const item = findCase(slug);
 
   if (!item) return { title: "Case not found" };
@@ -133,6 +215,8 @@ export async function generateMetadata({
 
 export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const post = getPost(slug);
+  if (post) return <PostPage post={post} />;
   const item = findCase(slug);
 
   if (!item) notFound();
@@ -163,7 +247,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         author: AUTHOR,
         publisher: AUTHOR,
         copyrightHolder: AUTHOR,
-        isPartOf: { "@id": `${SITE_URL}#cases` },
+        isPartOf: { "@id": `${absoluteUrl("/blog")}#cases` },
         mainEntityOfPage: { "@type": "WebPage", "@id": caseUrl(item.id) },
         about: [
           ...[...new Set([item.category, ...item.tags])].map((name) => ({ "@type": "Thing", name })),
@@ -197,7 +281,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Case library", item: `${absoluteUrl("/")}#cases` },
+          { "@type": "ListItem", position: 2, name: "Case library", item: `${absoluteUrl("/blog")}#cases` },
           { "@type": "ListItem", position: 3, name: item.title, item: caseUrl(item.id) },
         ],
       },

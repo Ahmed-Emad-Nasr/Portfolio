@@ -51,13 +51,15 @@ written twice.
 | Cases (the library) and their screenshots | `cases.ts` |
 | Case files — verdict, attack chain, timeline, IOCs, response, detection code, lessons (server-only, read at build time) | `case-details.ts` |
 | Case kinds (investigation / project / lab / note), collections, `defang()` | `shared.ts` |
-| ATT&CK mapping per case, sub-techniques resolved to parents (also feeds the coverage section on the home page) | `attack.ts` |
+| ATT&CK mapping per case, sub-techniques resolved to parents (also feeds the coverage section on the blog page) | `attack.ts` |
 | The Wazuh rule pack shown in the Detection Library | `detection-rules.ts` |
 | Testimonials (the section stays hidden while the list is empty) | `testimonials.ts` |
 | "Start here" reading path | `start-here.ts` |
 | YouTube videos and playlists | `youtube.ts` |
 | CV page (summary, projects, skills) | `cv.ts` |
 | Home page sections (services, process, FAQ, now, milestones …) | `portfolio-data.ts` |
+| Which page each section lives on | `routes.ts` |
+| Blog posts | `content/posts/*.mdx` (repo root) |
 | Privacy page facts | `legal.ts` |
 
 Images, PDFs and screenshots go in `public/Assets/` at the paths the config
@@ -65,26 +67,47 @@ uses. `npm run check:assets` lists any that are missing.
 
 ## Pages
 
-- `/` — the whole portfolio on one page. Sections added in this round:
-  roles I fit (`#roles`), the home lab diagram (`#lab`), the detection library
-  (`#detections`), the triage challenge (`#triage`) and testimonials (hidden
-  until there are any). It ends with the ATT&CK coverage map (`#attack`,
-  with a matrix view), the case library (`#cases`, with kind tabs, sort and
-  a list view, all kept in the URL) and the videos (`#videos`).
-- `/blog/<id>` — one page per case (shareable, indexed by search engines).
+- `/` — the pitch, in the order a hiring manager reads it: hero, numbers,
+  services, roles I fit, selected work, repositories, experience, teaching,
+  testimonials (hidden until there are any), certifications, practice
+  platforms, the latest from the blog, FAQ, contact.
+- `/blog` — posts, "Start here", the case library (`#cases`, with kind
+  tabs, sort and a list view, all kept in the URL), the videos, the ATT&CK
+  coverage map (`#attack`, with a matrix view), the detection library
+  (`#detections`) and the triage challenge (`#triage`). Old links to
+  `/#cases`, `/?q=…#cases` or `/#case-…` are forwarded here.
+- `/blog/<slug>` — a written post (`content/posts/<slug>.mdx`) or a case.
   Cases with an entry in `case-details.ts` get the full case file: verdict
   bar, facts, attack chain, timeline, defanged IOCs (copy as CSV), response,
   detection code, lessons and the report inline.
+- `/blog/tag/<tag>` — posts with one tag.
+- `/about` — the toolbox, daily drivers, home lab, the path, now, how an
+  engagement runs, contributions and the proof gallery.
 - `/collections/web-security-academy` — the PortSwigger labs grouped by
   vulnerability class.
-- `/attack-navigator-layer.json` — the coverage as an ATT&CK Navigator layer
-  (the coverage section links to it and to the Navigator).
-- `/blog` — forwards old links to `/#cases`, keeping `?q=` filters and
-  `#case-…` anchors.
+- `/attack-navigator-layer.json` — the coverage as an ATT&CK Navigator layer.
 - `/cv` — the CV as HTML (prints as a clean one-column PDF).
 - `/case-screenshots.json` — every case's screenshot list, fetched by the
   library the first time a gallery is opened.
 - `/privacy`, `/terms`, 404.
+
+Which page a section lives on is decided in one place:
+`app/core/config/routes.ts`.
+
+## Writing a blog post
+
+1. Copy `content/posts/writing-a-post.mdx` (it shows every building block)
+   to `content/posts/<url-name>.mdx`.
+2. Edit the front matter: `title`, `description`, `date`, `tags`, and
+   `lang: ar` for an Arabic post (right-to-left layout, Arabic font).
+3. Write Markdown. Code fences get highlighting and a copy button; you can
+   also use `<Callout>`, `<Figure>`, `<Kbd>` and `<CaseRef id="…" />`.
+4. `npm run dev` and open `/blog/<url-name>`. Remove `draft: true` (or set it
+   to `false`) to publish — drafts are never built.
+
+The post appears on `/blog`, on the home page's "From the blog", in the
+RSS feed, the sitemap and its tag pages automatically. Comments: see
+`app/core/config/comments.ts` (off until configured).
 
 Hidden extras: `Ctrl/⌘ K` command palette (also searches cases), `?` keyboard
 shortcuts, and type `3omda` anywhere for the terminal.
@@ -97,6 +120,9 @@ Actions workflow:
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` **or** `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` —
   cookieless visit statistics (Plausible or Cloudflare Web Analytics). Off
   when neither is set; the privacy page updates itself either way.
+- `NEXT_PUBLIC_GISCUS_REPO`, `_REPO_ID`, `_CATEGORY`, `_CATEGORY_ID` —
+  comments under blog posts through Giscus (GitHub Discussions). Off when
+  unset; when set, the CSP and the privacy page include it.
 - `NEXT_PUBLIC_WEB3FORMS_KEY` — sends the contact form through Web3Forms
   (free access key from web3forms.com). Without it the form opens the
   visitor's mail app, as before. The CSP and the privacy page already allow
@@ -132,8 +158,10 @@ npm run check:links     # after a build: every internal link resolves to a file
 
 - **Per-case share cards** live in `public/og/cases/<id>.jpg` (1200×630);
   case pages use them automatically.
-- **New Japanese text?** The display fonts are subset to the characters in
-  use. Re-run `scripts/subset-fonts.py` (instructions at the top of the file).
+- **New Japanese text?** Nothing to do for the site: `app/fonts.css` (the
+  Sensei-Dev font set) covers every character through unicode-range slices.
+  Only the share-card generators use subsets — re-run
+  `scripts/subset-fonts.py` before regenerating OG images.
 - **Share image** (`public/og-image.png`, 1200×630): made from
   `scripts/og/og-image.html` — edit and re-screenshot it.
 - **Icons** (`app/favicon.ico`, `public/icons/*.png`): the "AE." mark from
@@ -226,5 +254,6 @@ halve it.
 
 ## Licence
 
-GPL-3.0 — see `LICENSE`. Fonts are under the SIL Open Font License
-(`app/fonts/README.md`).
+GPL-3.0 — see `LICENSE`. Fonts (Dela Gothic One, Outfit, JetBrains Mono,
+Noto Sans JP, Yuji Syuku) are under the SIL Open Font License 1.1
+(https://openfontlicense.org); see `scripts/og/fonts/README.md`.
