@@ -6,7 +6,7 @@
  */
 
 const DURATION_KEY = "sensei-fx-duration";
-export const DEFAULT_FX_DURATION = 900;
+const DEFAULT_FX_DURATION = 900;
 export const FX_DURATIONS = [450, 900, 1400] as const;
 
 export function getFxDuration(): number {
@@ -26,7 +26,7 @@ export function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export type DeviceTier = "full" | "lite";
+type DeviceTier = "full" | "lite";
 
 /** Static heuristics: cores, RAM, save-data. Cheap, no probe needed. */
 export function getDeviceTier(): DeviceTier {

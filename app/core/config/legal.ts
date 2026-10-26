@@ -18,7 +18,7 @@
  *   · Added any browser storage? → BROWSER_STORAGE
  */
 
-export const LEGAL_LAST_UPDATED = "2026-10-25";
+export const LEGAL_LAST_UPDATED = "2026-10-26";
 
 /** Contact details — the same email used across the site */
 export const LEGAL_CONTACT = {
@@ -51,6 +51,7 @@ export const SITE_FACTS = {
     "Your light or dark theme choice",
     "The theme-transition speed, if you change it in the command palette",
     "Whether the intro screen already played in this tab (cleared when the tab closes)",
+    "Whether the keyboard-shortcut tip was already shown",
   ],
   /** Requests that may go to a third party from the visitor's browser */
   THIRD_PARTY: [
@@ -71,6 +72,15 @@ export const SITE_FACTS = {
       when: "When you scroll near the GitHub contribution graph on the home page, to draw it",
       note: "A public, open-source service; it receives your IP address like any web request, and nothing else",
     },
+    ...(process.env.NEXT_PUBLIC_WEB3FORMS_KEY
+      ? [
+          {
+            name: "Web3Forms (api.web3forms.com)",
+            when: "Only when you send the contact form",
+            note: "Relays what you typed in the form (name, e-mail, reason, message) to my inbox; nothing else is sent",
+          },
+        ]
+      : []),
     {
       name: "GitHub Pages",
       when: "Hosting of the site itself",

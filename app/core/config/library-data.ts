@@ -9,6 +9,8 @@
 
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId, investigationReportCount } from "./cases";
 import type { PdfResource } from "./shared";
+import { CASE_KINDS, caseKindOf } from "./shared";
+import { caseDetails } from "./case-details";
 import { SITE_BASE_URL, caseUrl } from "./site";
 import { ATTACK_TACTICS, buildCoverage, caseAttackMapping, coveredTechniqueCount } from "./attack";
 import { PERSON_ID } from "./seo";
@@ -43,16 +45,37 @@ const toCard = ({
   id, title, description, platform, type, category, difficulty, href, tags, tools, skillsGained, readTime, date, detailHref,
 }: PdfResource): PdfResource => ({
   id, title, description, platform, type, category, difficulty, href, tags, tools, skillsGained, readTime, date, detailHref,
+  kind: caseKindOf({ id, type }),
+  ...(caseDetails[id]?.verdict ? { verdict: caseDetails[id].verdict } : {}),
+  ...(caseDetails[id]?.severity ? { severity: caseDetails[id].severity } : {}),
 });
 
+const KIND_ORDER = new Map(CASE_KINDS.map((k, i) => [k.id, i]));
+
+/* "Recommended": the featured case, then investigations, projects, labs and
+   learning notes in that order; inside each, cases with a full case file
+   (case-details.ts) first, then screenshots, then newest. A reviewer with
+   five minutes meets the real investigations before the practice labs. */
 export const sortedCases: PdfResource[] = [...caseEvidenceLibrary].map(toCard).sort((a, b) => {
   if (a.id === FEATURED_ID) return -1;
   if (b.id === FEATURED_ID) return 1;
+  const kind = (KIND_ORDER.get(a.kind!) ?? 9) - (KIND_ORDER.get(b.kind!) ?? 9);
+  if (kind) return kind;
+  const aFile = caseDetails[a.id]?.chain || caseDetails[a.id]?.iocs ? 1 : 0;
+  const bFile = caseDetails[b.id]?.chain || caseDetails[b.id]?.iocs ? 1 : 0;
+  if (aFile !== bFile) return bFile - aFile;
   const aShots = (caseScreenshotsByEvidenceId[a.id] ?? []).length > 0;
   const bShots = (caseScreenshotsByEvidenceId[b.id] ?? []).length > 0;
   if (aShots !== bShots) return aShots ? -1 : 1;
   return (DATE_MS[b.id] ?? 0) - (DATE_MS[a.id] ?? 0);
 });
+
+/* Case counts per kind, for the library's kind tabs */
+export const kindFacets = CASE_KINDS.map((k) => ({
+  value: k.id,
+  label: k.label,
+  count: sortedCases.filter((c) => c.kind === k.id).length,
+})).filter((k) => k.count > 0);
 
 const countValues = (values: (string | undefined)[]): Facet[] => {
   const counts = new Map<string, number>();

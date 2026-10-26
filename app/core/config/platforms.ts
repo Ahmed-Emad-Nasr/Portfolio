@@ -30,7 +30,7 @@ export const THM_SNAPSHOT = {
 
 export type TryHackMeStats = typeof THM_SNAPSHOT & { live: boolean };
 
-export type PlatformStat = { value: string; label: string };
+type PlatformStat = { value: string; label: string };
 
 export type Platform = {
   id: string;

@@ -2,6 +2,9 @@ import type { NowItem } from "@/app/core/types/portfolio";
 import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
 
+/* Server component: this runs at build time, so it is the deploy date */
+const UPDATED = new Date().toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Africa/Cairo" });
+
 export default function NowSection({ items }: { items: NowItem[] }) {
   return (
     <section aria-label="What I am doing now" className="relative py-24 md:py-32 px-6 md:px-20 bg-surface/30 border-y border-foreground/5 overflow-hidden">
@@ -48,6 +51,10 @@ export default function NowSection({ items }: { items: NowItem[] }) {
               </span>
               <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.35em] text-primary-ink">
                 Live
+              </span>
+              {/* The build date: a "now" list is only as good as its date */}
+              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/50 border-l border-foreground/10 pl-3">
+                Updated {UPDATED}
               </span>
             </div>
           </div>

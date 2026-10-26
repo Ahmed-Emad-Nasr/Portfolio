@@ -13,7 +13,7 @@
     "format:check": "prettier --check \"app\" \"scripts\" \"*.{json,md,mjs}\"",
     "clean": "node -e \"const fs=require('fs'); ['.next','out'].forEach((d)=>fs.rmSync(d,{recursive:true,force:true}));\"",
     "audit": "npm audit --omit=dev",
-    "verify": "npm run lint && npm run type-check && npm run check:css && npm run check:data && npm run check:responsive && npm run check:assets && npm run build && npm run check:links",
+    "verify": "npm run prepare:assets && npm run lint && npm run type-check && npm run check:css && npm run check:data && npm run check:responsive && npm run check:contrast && npm run check:assets && npm run check:dead && npm run build && npm run check:links",
     "icons": "node scripts/generate-icons.cjs",
     "gallery:shift": "node scripts/shift-art-gallery-images.mjs",
     "check:assets": "node scripts/check-assets.mjs",
@@ -24,7 +24,11 @@
     "fix:type-scale": "node scripts/fix-type-scale.mjs",
     "check:dead": "node scripts/dead-code.mjs",
     "check:contrast": "node scripts/contrast-audit.mjs",
-    "check:data": "node scripts/data-audit.mjs"
+    "check:data": "node scripts/data-audit.mjs",
+    "og:cases": "node scripts/og/generate-case-og.mjs",
+    "pdf:clean": "node scripts/run-python.mjs scripts/pdf-clean.py public/Assets/Cases",
+    "hero:sizes": "node scripts/generate-hero-sizes.mjs",
+    "prepare:assets": "npm run pdf:clean && npm run thumbs && npm run hero:sizes && npm run icons && npm run og:cases"
   },
   "dependencies": {
     "framer-motion": "^14.6.0",
@@ -45,6 +49,7 @@
     "@types/react-dom": "^19.3.0",
     "eslint": "^10.13.0",
     "eslint-config-next": "^16.4.2",
+    "playwright": "1.63.0",
     "postcss": "^8.5.31",
     "prettier": "^3.9.9",
     "sharp": "^0.35.5",

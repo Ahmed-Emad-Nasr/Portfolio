@@ -43,7 +43,7 @@ const out = `/*
  * Run: node scripts/generate-icons.cjs
  */
 
-export type IconGlyph = readonly [width: number, height: number, path: string];
+type IconGlyph = readonly [width: number, height: number, path: string];
 
 export const ICONS = {
 ${rows.join("\n")}

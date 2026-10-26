@@ -176,6 +176,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "PEeh_0QBjmc",
     title: "TryHackMe SOC Simulation: Phishing Analysis Walkthrough",
+    caseId: "email-analysis-room-report",
     description: "A practical walkthrough of solving a TryHackMe SOC Simulation focused on phishing analysis. The video demonstrates how to investigate inbound emails, extract IOCs (URLs, Domains, IPs), verify them using threat intelligence platforms, determine true/false positives, and write comprehensive case reports.",
     publishedAt: "2026-08-30",
     tags: [
@@ -192,6 +193,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "z4GbIULmsLA",
     title: "Analyzing WannaCry Malware",
+    caseId: "malware-analysis-wannacry",
     description: "A comprehensive walkthrough of analyzing the WannaCry ransomware. This video covers static and dynamic analysis techniques, exploring its propagation mechanisms, encryption payload, and network indicators. Essential for DFIR professionals and SOC analysts looking to understand, dissect, and defend against ransomware threats.",
     publishedAt: "2026-07-13",
     tags: [
@@ -302,8 +304,11 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   },
   {
     videoId: "XJ9KbMSEqGY",
-    title: "Bypassing License Key During Installing Windows Server On VMware",
-    description: "A practical tutorial on bypassing the license key requirement during the installation of Windows Server 2019 on VMware. This video walks through creating the virtual machine, selecting the 'install operating system later' option to bypass the prompt, and configuring the Windows Server Desktop Experience. It also highlights how to set up this server for a SOC home lab, including preparing for Active Directory Domain Services (AD DS) installation, Wazuh integration, and Sysmon deployment to simulate and monitor AD attacks.",
+    /* Retitled on the site: the video installs the free evaluation edition, and
+       "bypassing the license key" reads like piracy on a security portfolio.
+       Rename it on YouTube too. */
+    title: "Installing Windows Server 2019 (Evaluation) on VMware for a SOC Home Lab",
+    description: "A practical tutorial on installing the Windows Server 2019 evaluation edition on VMware without entering a product key. This video walks through creating the virtual machine, selecting the 'install operating system later' option to bypass the prompt, and configuring the Windows Server Desktop Experience. It also highlights how to set up this server for a SOC home lab, including preparing for Active Directory Domain Services (AD DS) installation, Wazuh integration, and Sysmon deployment to simulate and monitor AD attacks.",
     publishedAt: "2026-08-08",
     tags: [
       "Windows Server",
@@ -321,6 +326,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
  {
     videoId: "GwPbuYulV1U",
     title: "Configuring and Testing Wazuh With Sysmon",
+    caseId: "soc-env-depi-r3-project",
     description: "Complete guide to integrating Wazuh SIEM with Sysmon for enhanced threat detection.",
     publishedAt: "2025-11-28",
     tags: ["Wazuh", "SIEM", "Sysmon", "Configuration", "Detection"],
@@ -342,6 +348,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "4-_XHZa2lVc",
     title: "Trying AWS KMS",
+    caseId: "aws-kms-security",
     description: "Exploring and setting up AWS Key Management Service (KMS) for secure key storage and encryption.",
     publishedAt: "2026-05-02",
     tags: ["AWS", "KMS", "Cloud Security", "Encryption", "Tutorial"],

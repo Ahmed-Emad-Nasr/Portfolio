@@ -11,7 +11,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type CopyState = "idle" | "done" | "error";
+type CopyState = "idle" | "done" | "error";
 
 const RESET_MS = 1800;
 

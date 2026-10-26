@@ -36,6 +36,21 @@ const monthYear = (iso: string) => {
 
 /* One line per role, in the voice of the card's italic intro. The bullets
    underneath come straight from experience.ts. */
+/* Proof per role: the certificate in the gallery, and the case-library view
+   of the work done there */
+const ROLE_PROOF: Record<string, Pick<Experience, "proof" | "cases">> = {
+  "Banque Misr": { proof: { label: "Internship certificate", href: normalizePublicHref(galleryImagePath(1)) } },
+  "Digital Egypt Pioneers Initiative (DEPI)": {
+    proof: { label: "DEPI certificate", href: normalizePublicHref(galleryImagePath(5)) },
+    cases: { label: "LetsDefend investigations", params: { q: "LetsDefend" } },
+  },
+  "Information Technology Institute (ITI)": {
+    proof: { label: "ITI bootcamp certificate", href: normalizePublicHref(galleryImagePath(14)) },
+    cases: { label: "ITI projects", params: { q: "ITI" } },
+  },
+  "Google Developer Groups (GDG)": { proof: { label: "GDG bootcamp certificate", href: normalizePublicHref(galleryImagePath(36)) } },
+};
+
 const ROLE_INTRO: Record<string, { intro: string; japanese: string; location: string }> = {
   "AMIT Learning": {
     intro: "Teaching the security track end to end — networking and Linux first, then SOC, pentest, IAM and GRC labs.",
@@ -93,6 +108,7 @@ const experience: Experience[] = [...knowledgeEducationItems]
       details: item.desc.split("•").map((line) => line.trim()).filter(Boolean),
       kind: item.kind,
       isEducation: item.kind === "education",
+      ...(ROLE_PROOF[item.subTag] ?? {}),
     };
   });
 
@@ -150,7 +166,7 @@ const work: WorkItem[] = [
     platform: "Virtual SOC",
     status: "open-source",
     year: "2025",
-    links: { github: urlOf("SOC-Environment") },
+    links: { github: urlOf("SOC-Environment"), caseStudy: "/blog/soc-env-depi-r3-project" },
     metrics: ["Rule merged into SOC Fortress", "95%+ true positives", "50+ simulated attacks"],
     featured: true,
   },
@@ -180,7 +196,7 @@ const work: WorkItem[] = [
     platform: "Isolated lab",
     status: "open-source",
     year: "2025",
-    links: { github: urlOf("Malware-Analysis-and-Prevention-Strategy") },
+    links: { github: urlOf("Malware-Analysis-and-Prevention-Strategy"), caseStudy: "/blog/depi-r4-project" },
     metrics: ["20+ samples", "C2 behaviour mapped", "Actionable IOCs"],
     featured: true,
   },
@@ -212,6 +228,34 @@ const work: WorkItem[] = [
     links: { github: urlOf("Attack-Simulation-Security-Assessment") },
     metrics: ["15+ attacks simulated", "Kill Chain mapped", "Fixes recommended"],
   },
+  {
+    id: "cybersuite",
+    title: "3OMDA CyberSuite",
+    type: "tool",
+    tagline: "Document triage and threat intel in one desktop window.",
+    problem: "A suspicious PDF means a parser in one window and four intel sites in four tabs.",
+    role: "Merged my PDF malware-analysis toolkit and my threat-intelligence tool into one Tkinter desktop app.",
+    stack: ["Python", "Tkinter", "VirusTotal", "Hybrid Analysis", "NVD", "AbuseIPDB", "OTX"],
+    platform: "Desktop (Tkinter)",
+    status: "open-source",
+    year: "2026",
+    links: { github: `https://github.com/${GITHUB_USERNAME}/3omda-PDFparser-tool` },
+    metrics: ["Static PDF analysis", "5 intel sources", "Built from two earlier tools"],
+  },
+  {
+    id: "webp-converter",
+    title: "3omda WebP Converter",
+    type: "tool",
+    tagline: "Batch images to WebP, from the terminal or a window.",
+    problem: "Screenshots for reports and this site were heavy PNGs; converting them one by one does not scale.",
+    role: "Wrote a converter and compressor with a CLI (convert.py) and a Tkinter GUI (gui.py).",
+    stack: ["Python", "Tkinter", "CLI", "WebP"],
+    platform: "CLI + desktop",
+    status: "open-source",
+    year: "2026",
+    links: { github: `https://github.com/${GITHUB_USERNAME}/3omda-WEBP-Converter-and-compressor` },
+    metrics: ["CLI + GUI", "Batch conversion", "Compression"],
+  },
 ];
 
 /* ── Credentials: certifications, then awards ──────────────────────────── */
@@ -224,6 +268,7 @@ const certificates: Certificate[] = [
     date: String(c.year),
     kind: "certification" as const,
     link: c.verifyUrl,
+    ...(c.credential ? { credential: c.credential } : {}),
     /* The scan itself, from the gallery: the card shows it and opens it */
     image: c.galleryIndex ? normalizePublicHref(galleryImagePath(c.galleryIndex)) : undefined,
   })),
@@ -388,6 +433,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
       title: STACK_TITLE[g.id] ?? g.label,
       japanese: STACK_JP[g.id] ?? "技",
       items: [...g.items],
+      evidence: [...(g.evidence ?? [])],
     })),
   process: [
     /* The NIST CSF functions, folded into four steps */

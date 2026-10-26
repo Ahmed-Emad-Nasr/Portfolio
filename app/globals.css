@@ -1072,3 +1072,97 @@
   0% { transform: scale(1); opacity: 0.7; }
   60%, 100% { transform: scale(2.4); opacity: 0; }
 }
+
+/* ── Case pages: verdict sweep ─────────────────────────────────────────
+   One pass of light across the verdict bar when the page opens, like a
+   scanner reading the line. */
+.verdict-sweep {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 14%, transparent), transparent);
+  transform: translateX(-100%);
+  animation: verdict-sweep 2.4s cubic-bezier(0.23, 1, 0.32, 1) 0.5s 1 both;
+}
+@keyframes verdict-sweep {
+  to { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .verdict-sweep { animation: none; opacity: 0; }
+}
+
+/* ── ATT&CK matrix view: one compact cell per technique ── */
+.attack-cell {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.375rem 0.4rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  border-top: 2px solid var(--primary);
+  background: color-mix(in srgb, var(--primary) calc(var(--heat, 8%) * var(--heat-k)), var(--surface));
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.attack-cell:hover,
+.attack-cell:focus-visible {
+  border-color: var(--primary);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--primary) 55%, transparent);
+  z-index: 1;
+  position: relative;
+}
+
+/* ── Contact form: transmission bar while a message is sending ── */
+.send-progress {
+  width: 0;
+  animation: send-progress 2.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+@keyframes send-progress {
+  to { width: 92%; }
+}
+
+/* ── Palette hint: the top line runs down like a timer while it is open ── */
+.hint-timer { transform: scaleX(1); }
+.hint-timer[data-on="true"] { transform: scaleX(0); transition: transform 9s linear; }
+
+/* ── Detection library: rows cascade in (again on every filter), radar spins ── */
+.rule-row {
+  animation: rule-row-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes rule-row-in {
+  from { opacity: 0; transform: translateX(-12px); }
+}
+.radar-spin { animation: radar-spin 3s linear infinite; }
+@keyframes radar-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .rule-row, .radar-spin { animation: none; }
+}
+
+/* ── Triage challenge ── */
+.siren-pulse { animation: siren-pulse 1.4s ease-in-out infinite; }
+@keyframes siren-pulse { 50% { opacity: 0.35; transform: scale(0.9); } }
+.caret-blink { animation: caret-blink 1s steps(1) infinite; }
+@keyframes caret-blink { 50% { visibility: hidden; } }
+.answer-shake { animation: answer-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+@keyframes answer-shake {
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+.answer-in { animation: answer-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) both; }
+@keyframes answer-in { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) {
+  .siren-pulse, .caret-blink, .answer-shake, .answer-in { animation: none; }
+}
+
+/* ── Home lab diagram ── */
+.lab-flow { animation: lab-flow linear infinite; }
+@keyframes lab-flow { to { stroke-dashoffset: -32; } }
+.lab-beacon { animation: siren-pulse 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.lab-title { font-family: var(--font-display, inherit); font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; }
+.lab-sub { font-family: var(--font-mono, monospace); font-size: 10.5px; opacity: 0.6; }
+.lab-label { font-family: var(--font-mono, monospace); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.lab-node rect:first-child { transition: stroke-opacity 0.3s; }
+.lab-node:hover rect:first-child { stroke-opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .lab-flow, .lab-beacon { animation: none; }
+  .lab-packet { display: none; }
+}

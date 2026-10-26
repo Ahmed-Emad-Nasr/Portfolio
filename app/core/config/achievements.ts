@@ -12,9 +12,9 @@
  * and read by the command palette without being repeated.
  */
 
-export type AchievementKind = "rank" | "award" | "community";
+type AchievementKind = "rank" | "award" | "community";
 
-export type Achievement = {
+type Achievement = {
   id: string;
   /** The achievement itself in one line — the number first, so the eye catches it */
   title: string;

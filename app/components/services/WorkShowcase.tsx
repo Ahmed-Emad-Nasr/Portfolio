@@ -4,7 +4,8 @@ import { useState } from "react";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import type { WorkType } from "@/app/core/types/portfolio";
-import { ExternalLink, FlaskConical, Microscope, Wrench, Server, Lock, PlayCircle } from "lucide-react";
+import { ExternalLink, FlaskConical, Microscope, Wrench, Server, Lock, PlayCircle, FileText } from "lucide-react";
+import Link from "next/link";
 import { Github } from "@/app/core/icons/BrandIcons";
 import { TiltCard } from "@/app/core/components/Motion";
 import { rv } from "@/app/core/reveal";
@@ -120,7 +121,7 @@ export default function WorkShowcase() {
                     ))}
                   </div>
 
-                  <div className="flex gap-3 mt-auto pt-5 border-t border-foreground/5">
+                  <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">
                     {w.links.github && (
                       <a href={w.links.github} target="_blank" rel="noopener noreferrer" className="btn-sheen flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors">
                         <Github size={13} /> Source
@@ -136,7 +137,12 @@ export default function WorkShowcase() {
                         <PlayCircle size={13} /> Demo
                       </a>
                     )}
-                    {!w.links.github && !w.links.live && !w.links.demo && (
+                    {w.links.caseStudy && (
+                      <Link href={w.links.caseStudy} className="group/cs flex items-center gap-2 px-4 py-2.5 border border-tertiary/30 text-tertiary font-mono text-[0.625rem] uppercase tracking-[0.2em] hover:border-tertiary hover:bg-tertiary/10 transition-colors">
+                        <FileText size={13} className="transition-transform duration-300 group-hover/cs:-translate-y-0.5" /> Case study
+                      </Link>
+                    )}
+                    {!w.links.github && !w.links.live && !w.links.demo && !w.links.caseStudy && (
                       <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.2em] uppercase">Demo on request  NDA client work</span>
                     )}
                   </div>

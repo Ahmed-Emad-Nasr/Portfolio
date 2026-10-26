@@ -19,6 +19,9 @@ import WorkShowcase from "@/app/components/services/WorkShowcase";
 import ProcessSection from "@/app/components/services/ProcessSection";
 import FaqSection from "@/app/components/services/FaqSection";
 import ContributionsGrid from "@/app/components/services/ContributionsGrid";
+import RolesFit from "@/app/components/services/RolesFit";
+import HomeLab from "@/app/components/services/HomeLab";
+import TestimonialsSection from "@/app/components/experience/TestimonialsSection";
 import { getGitHubRepos } from "@/app/core/api/github";
 import StartHere from "@/app/components/cases/StartHere";
 import AttackCoverage from "@/app/components/cases/AttackCoverage";
@@ -37,6 +40,7 @@ import {
 import {
   attackCoverage,
   categoryFacets,
+  kindFacets,
   libraryCounts,
   libraryStructuredData,
   mediaById,
@@ -65,6 +69,10 @@ const ArtGallery = dynamic(
 const CaseLibrarySection = dynamic(
   () => import("@/app/components/cases/CaseLibrarySection")
 );
+const MobileActionBar = dynamic(() => import("@/app/components/home/MobileActionBar"));
+const PaletteHint = dynamic(() => import("@/app/components/home/PaletteHint"));
+const DetectionLibrary = dynamic(() => import("@/app/components/cases/DetectionLibrary"));
+const TriageChallenge = dynamic(() => import("@/app/components/cases/TriageChallenge"));
 const ContactFooter = dynamic(
   () => import("@/app/components/header/ContactFooter")
 );
@@ -271,10 +279,12 @@ export default async function Home() {
       />
 
       <SiteNav />
+      <MobileActionBar />
+      <PaletteHint />
 
       {/* 01  Who: face, name, stack in 5 seconds */}
       <div>
-        <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} />
+        <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} evidenceLabel={LIVE_COPY.heroEvidence} />
       </div>
 
       {/* 02  Trust: numbers before claims */}
@@ -284,6 +294,9 @@ export default async function Home() {
       <div>
         <ServicesSection />
       </div>
+
+      {/* 03b  Fit: the role you are hiring for, with its proof */}
+      <RolesFit />
 
       <SectionDivider text="統治 • 防御 • 検知 • 対応 • 報告" reverse={true} angle={-1.5} />
 
@@ -308,6 +321,9 @@ export default async function Home() {
       {/* 06b  Daily drivers */}
       <UsesSection />
 
+      {/* 06c  The lab the projects run on */}
+      <HomeLab />
+
       {/* 07  Authority: where this happened */}
       <div id="experience">
         <ExperienceTimeline />
@@ -325,6 +341,11 @@ export default async function Home() {
       {/* 07c  Teaching: the curriculum and where it was taught */}
       <div className={DEFER}>
         <TeachingSection />
+      </div>
+
+      {/* 07d  In other people's words (hidden until there is a quote) */}
+      <div className={DEFER}>
+        <TestimonialsSection />
       </div>
 
       <div className={DEFER}>
@@ -367,6 +388,16 @@ export default async function Home() {
         <AttackCoverage {...attackCoverage} />
       </div>
 
+      {/* 10a2  The rule pack behind the coverage */}
+      <div className={DEFER}>
+        <DetectionLibrary />
+      </div>
+
+      {/* 10a3  Try the job: one real alert, three decisions */}
+      <div className={DEFER}>
+        <TriageChallenge />
+      </div>
+
       <SectionDivider text="事件 • 調査 • 報告 • 証拠" reverse={true} angle={-1.5} />
 
       {/* 10b  The case library and the videos — what used to be the blog */}
@@ -377,6 +408,7 @@ export default async function Home() {
         mediaById={mediaById}
         categoryFacets={categoryFacets}
         toolFacets={toolFacets}
+        kindFacets={kindFacets}
         totalCasesCount={libraryCounts.total}
         investigationReportCount={libraryCounts.reports}
         casesWithScreenshotsCount={libraryCounts.withScreenshots}

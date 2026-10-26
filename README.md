@@ -23,6 +23,19 @@ npm run dev        # http://localhost:3000
 npm run build      # static site in out/
 ```
 
+For the maintenance scripts (`npm run verify`) also install, once:
+
+```bash
+pip install -r requirements.txt     # pikepdf, pillow, fonttools, brotli
+npx playwright install chromium     # the browser og:cases draws the share cards with
+```
+
+On Windows, install Python from python.org (tick "Add python.exe to PATH")
+and use `py -m pip install -r requirements.txt`. The npm scripts find Python
+through `scripts/run-python.mjs` (`py -3`, then `python3`, then `python`), so
+the Microsoft Store "python3" shortcut never breaks the build; without Python
+or Chromium the two optional steps print what to install and `verify` carries on.
+
 ## Where the content lives
 
 Everything is data in `app/core/config/` — the pages read it, nothing is
@@ -36,7 +49,11 @@ written twice.
 | Skills, languages | `skills.ts` |
 | Projects and their bullet points | `projects.ts` |
 | Cases (the library) and their screenshots | `cases.ts` |
-| ATT&CK mapping per case (also feeds the coverage section on the home page) | `attack.ts` |
+| Case files — verdict, attack chain, timeline, IOCs, response, detection code, lessons (server-only, read at build time) | `case-details.ts` |
+| Case kinds (investigation / project / lab / note), collections, `defang()` | `shared.ts` |
+| ATT&CK mapping per case, sub-techniques resolved to parents (also feeds the coverage section on the home page) | `attack.ts` |
+| The Wazuh rule pack shown in the Detection Library | `detection-rules.ts` |
+| Testimonials (the section stays hidden while the list is empty) | `testimonials.ts` |
 | "Start here" reading path | `start-here.ts` |
 | YouTube videos and playlists | `youtube.ts` |
 | CV page (summary, projects, skills) | `cv.ts` |
@@ -48,9 +65,20 @@ uses. `npm run check:assets` lists any that are missing.
 
 ## Pages
 
-- `/` — the whole portfolio on one page, ending with the ATT&CK coverage map
-  (`#attack`), the case library (`#cases`) and the videos (`#videos`).
+- `/` — the whole portfolio on one page. Sections added in this round:
+  roles I fit (`#roles`), the home lab diagram (`#lab`), the detection library
+  (`#detections`), the triage challenge (`#triage`) and testimonials (hidden
+  until there are any). It ends with the ATT&CK coverage map (`#attack`,
+  with a matrix view), the case library (`#cases`, with kind tabs, sort and
+  a list view, all kept in the URL) and the videos (`#videos`).
 - `/blog/<id>` — one page per case (shareable, indexed by search engines).
+  Cases with an entry in `case-details.ts` get the full case file: verdict
+  bar, facts, attack chain, timeline, defanged IOCs (copy as CSV), response,
+  detection code, lessons and the report inline.
+- `/collections/web-security-academy` — the PortSwigger labs grouped by
+  vulnerability class.
+- `/attack-navigator-layer.json` — the coverage as an ATT&CK Navigator layer
+  (the coverage section links to it and to the Navigator).
 - `/blog` — forwards old links to `/#cases`, keeping `?q=` filters and
   `#case-…` anchors.
 - `/cv` — the CV as HTML (prints as a clean one-column PDF).
@@ -69,6 +97,10 @@ Actions workflow:
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` **or** `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` —
   cookieless visit statistics (Plausible or Cloudflare Web Analytics). Off
   when neither is set; the privacy page updates itself either way.
+- `NEXT_PUBLIC_WEB3FORMS_KEY` — sends the contact form through Web3Forms
+  (free access key from web3forms.com). Without it the form opens the
+  visitor's mail app, as before. The CSP and the privacy page already allow
+  for it.
 
 The service worker is registered only when `public/sw.js` exists at build
 time, and the privacy page mentions it only then.
@@ -76,10 +108,30 @@ time, and the privacy page mentions it only then.
 ## Maintenance scripts
 
 ```bash
-npm run verify          # lint, types, CSS/data/responsive/asset checks, build, link check
+npm run verify          # everything below, in order — run it before every push
+npm run prepare:assets  # just the clean-up / generate step
 npm run check:links     # after a build: every internal link resolves to a file
 ```
 
+`npm run verify` runs:
+
+1. **`prepare:assets`** — the clean-up and generated files, each one only
+   touching what changed, so a second run is quick and leaves git clean:
+   - `pdf:clean` — sets the author metadata of new report PDFs to my name and
+     recompresses their images where it clearly pays off (`-- --force` redoes
+     all; skipped with a message if the Python packages from
+     `requirements.txt` aren't installed)
+   - `thumbs` — the `-thumb.webp` next to every new image
+   - `hero:sizes` — the 320–840 px hero photo variants
+   - `icons` — `app/core/icons/icon-data.ts`
+   - `og:cases` — the share card of every new or changed case, and removes
+     cards of deleted cases (`-- --force` redraws all)
+2. lint, types, and the CSS / data / responsive / contrast / asset /
+   dead-code checks
+3. the build, then the link check
+
+- **Per-case share cards** live in `public/og/cases/<id>.jpg` (1200×630);
+  case pages use them automatically.
 - **New Japanese text?** The display fonts are subset to the characters in
   use. Re-run `scripts/subset-fonts.py` (instructions at the top of the file).
 - **Share image** (`public/og-image.png`, 1200×630): made from

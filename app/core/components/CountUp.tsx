@@ -5,7 +5,7 @@ import { useInView } from "framer-motion";
 import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 /** Animated counter: eases 0 -> target when scrolled into view. */
-export function useCountUp(
+function useCountUp(
   target: number,
   ref: React.RefObject<HTMLSpanElement | null>,
   duration = 1400

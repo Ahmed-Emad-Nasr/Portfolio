@@ -19,7 +19,7 @@
 import { SITE_BASE_URL } from "./site";
 import { ANALYTICS } from "./analytics";
 
-export const SECURITY_CONTACT_EMAIL = "ahmed.em.nasr@gmail.com";
+const SECURITY_CONTACT_EMAIL = "ahmed.em.nasr@gmail.com";
 
 export const PGP = {
   /** Full fingerprint of the public key (40 hex characters). Empty = hidden. */
@@ -62,6 +62,8 @@ export const securityTxt = (built = new Date()): string => {
  *     avatars.githubusercontent.com), and the contribution calendar, read
  *     in the browser from github-contributions-api.jogruber.de (api/contributions.ts)
  *   · the analytics provider, only when one is configured (analytics.ts)
+ *   · Web3Forms, which delivers the contact form when a key is set
+ *   · 'self' frames: the case pages show their own PDF reports inline
  * 'unsafe-inline' for scripts is required by Next.js static export (its
  * hydration data and the theme / reveal bootstraps are inline scripts with
  * no build-stable hash); everything else is locked down. A meta CSP cannot
@@ -82,8 +84,8 @@ export const CONTENT_SECURITY_POLICY = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://i.ytimg.com https://github.com https://avatars.githubusercontent.com",
   "font-src 'self'",
-  `connect-src 'self' https://github-contributions-api.jogruber.de ${analyticsConnect.join(" ")}`.trim(),
-  "frame-src https://www.youtube-nocookie.com",
+  `connect-src 'self' https://github-contributions-api.jogruber.de https://api.web3forms.com ${analyticsConnect.join(" ")}`.trim(),
+  "frame-src 'self' https://www.youtube-nocookie.com",
   "media-src 'self'",
   "worker-src 'self'",
   "manifest-src 'self'",

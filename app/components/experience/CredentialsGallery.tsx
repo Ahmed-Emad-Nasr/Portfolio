@@ -161,6 +161,15 @@ export default function CredentialsGallery() {
                       <span className="font-mono text-[0.625rem] tracking-[0.3em] font-bold uppercase">
                         {cert.kind === "award" ? "Achievement" : "Certification"}
                       </span>
+                      {cert.credential && (
+                        <span
+                          className={`px-2 py-0.5 border font-mono text-[0.5rem] font-bold uppercase tracking-[0.2em] ${
+                            cert.credential === "exam" ? "text-primary-ink border-primary/40 bg-primary/10" : "text-tertiary border-tertiary/30 bg-tertiary/5"
+                          }`}
+                        >
+                          {cert.credential === "exam" ? "Exam passed" : "Course"}
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="font-display text-xl md:text-2xl xl:text-xl font-black mb-5 text-foreground group-hover:text-accent transition-colors duration-300 leading-tight uppercase tracking-tight [overflow-wrap:anywhere]">

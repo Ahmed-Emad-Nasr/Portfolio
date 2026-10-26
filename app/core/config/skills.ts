@@ -15,7 +15,7 @@
  * The ids must match `caseEvidenceLibrary[].id` in config/cases.ts.
  */
 
-export type SkillGroup = {
+type SkillGroup = {
   id: string;
   /** Group name exactly as it appears in the CV */
   label: string;
@@ -49,7 +49,7 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "siem",
     label: "SIEM & Security Monitoring",
-    items: ["Wazuh", "ELK Stack", "Splunk", "Security Onion", "Sysmon", "auditd"],
+    items: ["Wazuh", "ELK Stack", "Splunk", "Security Onion", "Sysmon", "auditd", "TheHive"],
     evidence: [
       { id: "3omda-custom-detection-rules", label: "Custom Wazuh detection rules" },
       { id: "soc-env-depi-r3-project", label: "SOC environment build" },
@@ -60,18 +60,18 @@ export const skillGroups: readonly SkillGroup[] = [
     label: "Incident Response & Threat Detection",
     items: ["Alert Triage", "Incident Detection", "IOC Analysis", "Log Analysis", "Threat Hunting", "Containment & Recovery"],
     evidence: [
-      { id: "soc326-report", label: "SOC326 — full IR lifecycle" },
-      { id: "soc336-report", label: "SOC336 — APT persistence" },
-      { id: "soc274-pdf", label: "SOC274 — lateral movement" },
+      { id: "soc342-pdf", label: "SOC342 — SharePoint ToolShell web shell" },
+      { id: "soc336-report", label: "SOC336 — Outlook zero-click RCE" },
+      { id: "soc274-pdf", label: "SOC274 — PAN-OS CVE-2024-3400" },
     ],
   },
   {
     id: "forensics",
     label: "Malware Analysis & Forensics",
-    items: ["Volatility", "Autopsy", "PEStudio", "CFF Explorer", "YARA", "FakeNet-NG", "Process Hacker"],
+    items: ["Volatility", "Autopsy", "Registry Explorer", "FTK Imager", "PEStudio", "dotPeek", "FLOSS", "capa", "YARA", "FakeNet-NG", "Process Hacker"],
     evidence: [
       { id: "data-exfiltration-investigation", label: "Memory forensics — exfiltration" },
-      { id: "autopsy", label: "Autopsy data recovery" },
+      { id: "lockbit-ransomware-forensics", label: "LockBit memory forensics" },
       { id: "ecir-registry-forensics", label: "Windows registry forensics" },
       { id: "malware-analysis-wannacry", label: "WannaCry analysis & response" },
     ],
@@ -90,9 +90,9 @@ export const skillGroups: readonly SkillGroup[] = [
     label: "Data Security",
     items: ["DLP", "DAM", "Encryption", "Key Management", "Data Classification", "Secure Storage"],
     evidence: [
-      { id: "soc282-pdf", label: "SOC282 — DLP & data exfiltration" },
+      { id: "usb-forensics-report", label: "Payroll PII on USB — DLP gaps" },
       { id: "aws-kms-security", label: "AWS KMS key management" },
-      { id: "aws-athena-healthcare", label: "Encrypted healthcare data pipeline" },
+      { id: "aws-athena-healthcare", label: "Healthcare data on S3 + Athena" },
     ],
   },
   {
@@ -117,6 +117,10 @@ export const skillGroups: readonly SkillGroup[] = [
     id: "intel",
     label: "Threat Intelligence",
     items: ["VirusTotal", "Hybrid Analysis", "NVD", "Exploit-DB", "IOC Enrichment", "Dark-Web Monitoring"],
+    evidence: [
+      { id: "apt33-threat-intel-brief", label: "APT33 threat intel brief" },
+      { id: "unload-malware-report", label: "IcedID C2 attribution" },
+    ],
   },
   {
     id: "network",

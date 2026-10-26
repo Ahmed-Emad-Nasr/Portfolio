@@ -3,6 +3,23 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Scale, Radar, ShieldAlert, Bug, KeyRound, GraduationCap } from "lucide-react";
 import { rv } from "@/app/core/reveal";
+import { ArrowRight } from "lucide-react";
+import { caseEvidenceLibrary } from "@/app/core/config/cases";
+import { caseKindOf } from "@/app/core/config/shared";
+import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
+
+/* Where each service's proof lives: a filtered view of the case library
+   (with the count it opens), or the section that shows it. Server
+   component — the counts are computed at build time. */
+const count = (test: (c: (typeof caseEvidenceLibrary)[number]) => boolean) => caseEvidenceLibrary.filter(test).length;
+const PROOF: Record<string, { label: string; params?: Record<string, string>; href?: string; count?: number }> = {
+  grc: { label: "VerifAI 360, the GRC platform", href: "#work" },
+  soc: { label: "SOC alert investigations", params: { q: "LetsDefend" }, count: count((c) => c.platform === "LetsDefend") },
+  ir: { label: "Investigation reports", params: { kind: "investigation" }, count: count((c) => caseKindOf(c) === "investigation") },
+  malware: { label: "Malware analysis cases", params: { cat: "Malware Analysis" }, count: count((c) => c.category === "Malware Analysis") },
+  iam: { label: "Identity & access cases", params: { cat: "Identity & Access" }, count: count((c) => c.category === "Identity & Access") },
+  training: { label: "The curriculum", href: "#teaching" },
+};
 
 /* One icon per service, by id — an index-based list silently gave a card
    the wrong icon as soon as a service was added or reordered. */
@@ -63,6 +80,25 @@ export default function ServicesSection() {
                 <div className="pt-4 border-t border-foreground/5 font-mono text-[0.625rem] text-accent tracking-[0.2em] uppercase">
                   → {s.deliverable}
                 </div>
+                {PROOF[s.id] && (() => {
+                  const proof = PROOF[s.id];
+                  const cls = "group/proof mt-4 inline-flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/70 hover:text-tertiary transition-colors duration-300";
+                  const inner = (
+                    <>
+                      <span className="relative">
+                        See the proof: {proof.label}
+                        {proof.count ? <span className="ml-1.5 text-tertiary tabular-nums">({proof.count})</span> : null}
+                        <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-tertiary transition-transform duration-500 group-hover/proof:scale-x-100" aria-hidden="true" />
+                      </span>
+                      <ArrowRight size={12} className="transition-transform duration-300 group-hover/proof:translate-x-1" aria-hidden="true" />
+                    </>
+                  );
+                  return proof.params ? (
+                    <CaseFilterLink params={proof.params} className={cls}>{inner}</CaseFilterLink>
+                  ) : (
+                    <a href={proof.href} className={cls}>{inner}</a>
+                  );
+                })()}
               </TiltCard>
               </div>
             );

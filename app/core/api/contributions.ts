@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-export interface ContributionDay {
+interface ContributionDay {
   date: string;
   count: number;
   level: number;
 }
 
-export type ContributionStatus = "loading" | "ready" | "empty" | "error";
+type ContributionStatus = "loading" | "ready" | "empty" | "error";
 
 export interface ContributionStats {
   status: ContributionStatus;

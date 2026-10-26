@@ -42,6 +42,8 @@ function CaseCard({
   readTime,
   date,
   detailHref,
+  verdict,
+  severity,
   cover,
   shotCount,
   onOpenGallery,
@@ -111,11 +113,24 @@ function CaseCard({
                 </div>
               </div>
             </div>
-            {difficulty && (
+            {severity ? (
+              <span
+                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] border ${
+                  severity === "Critical"
+                    ? "text-primary-ink border-primary/40 bg-primary/10"
+                    : severity === "High"
+                      ? "text-accent border-accent/30 bg-accent/10"
+                      : "text-tertiary border-tertiary/30 bg-tertiary/10"
+                }`}
+                title="Alert severity"
+              >
+                <AlertTriangle size={11} /> {severity}
+              </span>
+            ) : difficulty ? (
               <span className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-accent border border-accent/30 bg-accent/10">
                 <AlertTriangle size={11} /> {difficulty}
               </span>
-            )}
+            ) : null}
           </div>
 
           <h3 className="font-display text-xl md:text-lg lg:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
@@ -123,6 +138,12 @@ function CaseCard({
               {title}
             </Link>
           </h3>
+          {verdict && (
+            <p className="mb-3 flex items-start gap-2 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-primary-ink">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" aria-hidden="true" />
+              <span>{verdict}</span>
+            </p>
+          )}
           {description && (
             <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5 line-clamp-3">{caseCardBlurb(description)}</p>
           )}

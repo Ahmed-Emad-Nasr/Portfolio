@@ -12,12 +12,16 @@
  */
 
 import type { Metadata } from "next";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { notFound } from "next/navigation";
 import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
 import CaseArticle from "./CaseArticle";
 import { PageShell } from "@/app/components/shared/kit";
 import { absoluteUrl, caseUrl, summarize } from "@/app/core/config/site";
-import { caseAttackMapping, TECHNIQUES } from "@/app/core/config/attack";
+import { caseAttackMapping, parentTechnique, techniquesForCase } from "@/app/core/config/attack";
+import { caseDetails } from "@/app/core/config/case-details";
+import { caseKindOf, CASE_KINDS, WSA_COLLECTION } from "@/app/core/config/shared";
 import { jsonLd, PERSON_ID, PERSON_NAME, SITE_URL } from "@/app/core/config/seo";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
@@ -32,13 +36,8 @@ export const dynamicParams = false;
  * so not a single byte of them ends up in the browser bundle.
  */
 
-const TECHNIQUE_BY_ID = new Map(TECHNIQUES.map((t) => [t.id, t]));
-
-/** This case's ATT&CK techniques, with full names */
-const techniquesFor = (caseId: string) =>
-  (caseAttackMapping[caseId] ?? [])
-    .map((id) => TECHNIQUE_BY_ID.get(id))
-    .filter((t): t is NonNullable<typeof t> => Boolean(t));
+/** This case's ATT&CK techniques (sub-techniques included), with full names */
+const techniquesFor = techniquesForCase;
 
 /*
  * Reports related to this one.
@@ -48,13 +47,13 @@ const techniquesFor = (caseId: string) =>
  * overlap at all doesn't appear — random "suggestions" are worse than no suggestions.
  */
 const relatedTo = (item: (typeof caseEvidenceLibrary)[number], limit = 3) => {
-  const myTechniques = new Set(caseAttackMapping[item.id] ?? []);
+  const myTechniques = new Set((caseAttackMapping[item.id] ?? []).map(parentTechnique));
   const myTools = new Set(item.tools ?? []);
 
   return caseEvidenceLibrary
     .filter((other) => other.id !== item.id)
     .map((other) => {
-      const sharedTechniques = (caseAttackMapping[other.id] ?? [])
+      const sharedTechniques = [...new Set((caseAttackMapping[other.id] ?? []).map(parentTechnique))]
         .filter((t) => myTechniques.has(t)).length;
       const sharedTools = (other.tools ?? []).filter((t) => myTools.has(t)).length;
       const sameCategory = other.category === item.category ? 1 : 0;
@@ -89,9 +88,12 @@ export async function generateMetadata({
 
   if (!item) return { title: "Case not found" };
 
-  // The first screenshot is the share image — far more fitting than the generic logo
+  // The generated share card (scripts/og/generate-case-og.mjs) when it exists,
+  // else the first screenshot, else the portrait
   const shots = caseScreenshotsByEvidenceId[item.id] ?? [];
-  const ogImage = absoluteUrl(item.image ?? shots[0] ?? "Assets/art-gallery/Images/logo/3omda.webp");
+  const card = `og/cases/${item.id}.jpg`;
+  const hasCard = existsSync(join(process.cwd(), "public", card));
+  const ogImage = absoluteUrl(hasCard ? card : item.image ?? shots[0] ?? "Assets/art-gallery/Images/logo/3omda.webp");
   /* The root layout's title template already appends "| Ahmed Emad Nasr";
      the share cards have no template, so they carry the name themselves. */
   const shareTitle = `${item.title} | Ahmed Emad Nasr`;
@@ -116,7 +118,7 @@ export async function generateMetadata({
       authors: [SITE_URL],
       section: item.category,
       tags: [...item.tags, ...item.tools],
-      images: [{ url: ogImage, alt: `${item.title} — screenshot` }],
+      images: [{ url: ogImage, ...(hasCard ? { width: 1200, height: 630 } : {}), alt: `${item.title} — Ahmed Emad Nasr` }],
     },
     twitter: {
       card: "summary_large_image",
@@ -170,7 +172,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
             "@type": "DefinedTerm",
             termCode: t.id,
             name: t.name,
-            url: `https://attack.mitre.org/techniques/${t.id}/`,
+            url: `https://attack.mitre.org/techniques/${t.id.replace(".", "/")}/`,
             inDefinedTermSet: { "@type": "DefinedTermSet", name: "MITRE ATT&CK", url: "https://attack.mitre.org/" },
           })),
         ],
@@ -213,6 +215,9 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         next={next ? { id: next.id, title: next.title } : null}
         techniques={techniquesFor(item.id)}
         related={relatedTo(item)}
+        detail={caseDetails[item.id]}
+        kindLabel={CASE_KINDS.find((k) => k.id === caseKindOf(item))?.short ?? "Case"}
+        collection={item.platform === WSA_COLLECTION.platform ? { href: `/collections/${WSA_COLLECTION.id}`, title: WSA_COLLECTION.title } : undefined}
       />
       </PageShell>
     </>

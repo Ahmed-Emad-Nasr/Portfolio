@@ -2,6 +2,21 @@ import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { rv } from "@/app/core/reveal";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { caseEvidenceLibrary } from "@/app/core/config/cases";
+import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
+
+/* How many cases mention each tool — the same fields the library's search
+   reads, so the number on the chip is the number the click finds. Server
+   component: the case data never reaches the browser. */
+const SEARCH_TEXT = caseEvidenceLibrary.map((c) =>
+  [c.title, c.description, c.platform, c.type, c.category, ...c.tags, ...c.tools, ...c.skillsGained].join(" ").toLowerCase(),
+);
+const casesUsing = (tool: string) => {
+  const needle = tool.toLowerCase();
+  return SEARCH_TEXT.filter((t) => t.includes(needle)).length;
+};
 
 /**
  * Arsenal — static stack grid (no marquee).
@@ -27,7 +42,7 @@ export default function TechStackGrid() {
           japanese="武器庫"
           titleA="Tools of"
           titleB="The Trade."
-          description="No buzzword bingo. Every item below comes from somewhere you can check — the labs above, the reports in the case library, or the job itself."
+          description="No buzzword bingo. Every item below comes from somewhere you can check — the labs above, the reports in the case library, or the job itself. A number on a tool is how many cases use it: click it to open them."
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -50,15 +65,42 @@ export default function TechStackGrid() {
                 </div>
                 <div className="w-8 h-[2px] bg-tertiary/60 mb-5" aria-hidden="true" />
                 <ul className="flex flex-wrap gap-2" aria-label={`${g.title} tools`}>
-                  {g.items.map((item) => (
-                    <li
-                      key={item}
-                      className="px-3 py-1.5 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground bg-tertiary/10 border border-tertiary/40"
-                    >
-                      {item}
-                    </li>
-                  ))}
+                  {g.items.map((item) => {
+                    const count = casesUsing(item);
+                    const chip = "px-3 py-1.5 font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-foreground bg-tertiary/10 border border-tertiary/40";
+                    return (
+                      <li key={item}>
+                        {count > 0 ? (
+                          <CaseFilterLink
+                            params={{ q: item }}
+                            className={`${chip} group/chip inline-flex items-center gap-1.5 hover:bg-tertiary hover:text-background hover:border-tertiary transition-colors duration-300`}
+                            title={`${count} case(s) use ${item}`}
+                          >
+                            {item}
+                            <span className="text-tertiary group-hover/chip:text-background tabular-nums">{count}</span>
+                          </CaseFilterLink>
+                        ) : (
+                          <span className={`${chip} inline-block`}>{item}</span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
+                {g.evidence && g.evidence.length > 0 && (
+                  <div className="mt-6 pt-4 border-t border-foreground/5">
+                    <span className="block mb-2 font-mono text-[0.5rem] uppercase tracking-[0.3em] text-foreground/40">Proof</span>
+                    <ul className="grid gap-1.5">
+                      {g.evidence.map((e) => (
+                        <li key={e.id}>
+                          <Link href={`/blog/${e.id}`} className="group/proof flex items-start gap-1.5 text-xs text-foreground/60 hover:text-tertiary transition-colors">
+                            <ArrowUpRight size={12} className="mt-0.5 shrink-0 transition-transform duration-300 group-hover/proof:translate-x-0.5 group-hover/proof:-translate-y-0.5" aria-hidden="true" />
+                            {e.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </TiltCard>
             </div>
           ))}

@@ -15,12 +15,14 @@ import React, { useCallback, useDeferredValue, useEffect, useMemo, useRef, useSt
 import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import SectionDivider from "@/app/core/components/SectionDivider";
-import { ChevronDown } from "lucide-react";
-import { formatDate, normalizePublicHref } from "@/app/core/config/shared";
+import Link from "next/link";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { formatDate, normalizePublicHref, WSA_COLLECTION, type CaseKind } from "@/app/core/config/shared";
 import type { PdfResource, GalleryState } from "@/app/core/config/shared";
 import type { CaseMedia } from "@/app/core/config/library-data";
 import CaseFilters, { type Facet } from "./CaseFilters";
 import CaseCard from "./CaseCard";
+import CaseList from "./CaseList";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
 
 const MediaSections = dynamic(() => import("./MediaSections"));
@@ -45,6 +47,7 @@ type CaseLibrarySectionProps = {
   mediaById: Record<string, CaseMedia>;
   categoryFacets: Facet[];
   toolFacets: Facet[];
+  kindFacets: { value: CaseKind; label: string; count: number }[];
   totalCasesCount: number;
   investigationReportCount: number;
   casesWithScreenshotsCount: number;
@@ -57,6 +60,7 @@ export default function CaseLibrarySection({
   mediaById,
   categoryFacets,
   toolFacets,
+  kindFacets,
   totalCasesCount,
   investigationReportCount,
   casesWithScreenshotsCount,
@@ -68,6 +72,9 @@ export default function CaseLibrarySection({
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeTools, setActiveTools] = useState<string[]>([]);
+  const [activeKind, setActiveKind] = useState<CaseKind | null>(null);
+  const [sort, setSort] = useState<"recommended" | "newest">("recommended");
+  const [view, setView] = useState<"cards" | "list">("cards");
   const [visible, setVisible] = useState(PAGE);
 
   const deferredQuery = useDeferredValue(query);
@@ -89,14 +96,21 @@ export default function CaseLibrarySection({
   );
 
   const isFiltering =
-    deferredQuery.trim() !== "" || activeCategory !== null || activeTools.length > 0;
+    deferredQuery.trim() !== "" || activeCategory !== null || activeTools.length > 0 || activeKind !== null;
+
+  /* "Newest" re-sorts by date; "Recommended" is the build-time order */
+  const orderedPdfs = useMemo(
+    () => (sort === "newest" ? [...sortedPdfs].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? "")) : sortedPdfs),
+    [sortedPdfs, sort],
+  );
 
   const visiblePdfs = useMemo(() => {
-    if (!isFiltering) return sortedPdfs;
+    if (!isFiltering) return orderedPdfs;
 
     const needle = deferredQuery.trim().toLowerCase();
 
-    return sortedPdfs.filter((item) => {
+    return orderedPdfs.filter((item) => {
+      if (activeKind && item.kind !== activeKind) return false;
       if (needle && !(searchIndex[item.id] ?? "").includes(needle)) return false;
       if (activeCategory && item.category !== activeCategory) return false;
       if (activeTools.length > 0) {
@@ -105,7 +119,7 @@ export default function CaseLibrarySection({
       }
       return true;
     });
-  }, [sortedPdfs, isFiltering, deferredQuery, activeCategory, activeTools, searchIndex]);
+  }, [orderedPdfs, isFiltering, deferredQuery, activeCategory, activeTools, activeKind, searchIndex]);
 
   /* A new filter starts from the first page again */
   const toolsKey = activeTools.join(",");
@@ -117,7 +131,7 @@ export default function CaseLibrarySection({
       return;
     }
     setVisible(PAGE);
-  }, [deferredQuery, activeCategory, toolsKey]);
+  }, [deferredQuery, activeCategory, toolsKey, activeKind, sort]);
 
   /* Filters live in the URL (?q=…&cat=…&tools=…) so a filtered view can be
      shared and survives the back button. */
@@ -130,6 +144,10 @@ export default function CaseLibrarySection({
       setActiveCategory(params.get("cat"));
       const tools = params.get("tools");
       setActiveTools(tools ? tools.split(",").filter(Boolean) : []);
+      const kind = params.get("kind");
+      setActiveKind(kind === "investigation" || kind === "project" || kind === "lab" || kind === "note" ? kind : null);
+      setSort(params.get("sort") === "newest" ? "newest" : "recommended");
+      setView(params.get("view") === "list" ? "list" : "cards");
     };
 
     readFromUrl();
@@ -151,6 +169,9 @@ export default function CaseLibrarySection({
       if (query.trim()) params.set("q", query.trim());
       if (activeCategory) params.set("cat", activeCategory);
       if (activeTools.length) params.set("tools", activeTools.join(","));
+      if (activeKind) params.set("kind", activeKind);
+      if (sort !== "recommended") params.set("sort", sort);
+      if (view !== "cards") params.set("view", view);
 
       const search = params.toString();
       window.history.replaceState(
@@ -161,7 +182,7 @@ export default function CaseLibrarySection({
     }, 250);
 
     return () => window.clearTimeout(timer);
-  }, [query, activeCategory, activeTools]);
+  }, [query, activeCategory, activeTools, activeKind, sort, view]);
 
   const toggleTool = useCallback((tool: string) => {
     setActiveTools((current) =>
@@ -173,6 +194,7 @@ export default function CaseLibrarySection({
     setQuery("");
     setActiveCategory(null);
     setActiveTools([]);
+    setActiveKind(null);
   }, []);
 
   const channelVideos = useMemo(() => {
@@ -274,32 +296,64 @@ export default function CaseLibrarySection({
             resultCount={visiblePdfs.length}
             totalCount={totalCasesCount}
             onReset={resetFilters}
+            kinds={kindFacets}
+            activeKind={activeKind}
+            onKindChange={setActiveKind}
+            sort={sort}
+            onSortChange={setSort}
+            view={view}
+            onViewChange={setView}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {visiblePdfs.slice(0, visible).map((item, idx) => (
-              <CaseCard
-                key={item.id}
-                index={idx}
-                {...item}
-                cover={mediaById[item.id]?.cover}
-                shotCount={mediaById[item.id]?.count ?? 0}
-                onOpenGallery={openGallery}
-              />
-            ))}
-          </div>
+          {/* The 29 PortSwigger labs also read as one track */}
+          {(activeKind === null || activeKind === "lab") && !deferredQuery && (
+            <Link
+              href={`/collections/${WSA_COLLECTION.id}`}
+              className="group relative mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-tertiary/25 bg-tertiary/5 px-6 py-5 overflow-hidden hover:border-tertiary/60 transition-colors duration-500"
+              data-reveal="0,16,0.6,0"
+            >
+              <span className="absolute inset-y-0 left-0 w-[3px] bg-tertiary" aria-hidden="true" />
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-tertiary/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" aria-hidden="true" />
+              <span>
+                <span className="block font-mono text-[0.5625rem] font-bold uppercase tracking-[0.3em] text-tertiary">Collection · PortSwigger</span>
+                <span className="block mt-1 font-display text-lg md:text-xl font-black uppercase tracking-tight text-foreground">
+                  {WSA_COLLECTION.title} — {sortedPdfs.filter((c) => c.platform === WSA_COLLECTION.platform).length} labs by vulnerability class
+                </span>
+              </span>
+              <span className="flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-tertiary">
+                Open the track <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
+            </Link>
+          )}
 
-          {visible < visiblePdfs.length && (
+          {view === "list" ? (
+            <CaseList items={visiblePdfs.slice(0, Math.max(visible, 24))} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {visiblePdfs.slice(0, visible).map((item, idx) => (
+                <CaseCard
+                  key={item.id}
+                  index={idx}
+                  {...item}
+                  cover={mediaById[item.id]?.cover}
+                  shotCount={mediaById[item.id]?.count ?? 0}
+                  onOpenGallery={openGallery}
+                />
+              ))}
+            </div>
+          )}
+
+          {(view === "list" ? Math.max(visible, 24) : visible) < visiblePdfs.length && (
             <div className="mt-14 flex justify-center">
               <button
                 type="button"
-                onClick={() => setVisible((n) => Math.min(visiblePdfs.length, n + PAGE))}
+                onClick={() => setVisible((n) => Math.min(visiblePdfs.length, (view === "list" ? Math.max(n, 24) : n) + (view === "list" ? 24 : PAGE)))}
                 className="group flex items-center gap-3 px-8 py-4 border border-foreground/15 border-l-2 border-l-primary bg-foreground/[0.02] backdrop-blur-md text-foreground font-mono font-bold uppercase tracking-widest text-sm transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
               >
                 <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
                 Show more cases
                 <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">
-                  {Math.min(visible, visiblePdfs.length)}/{visiblePdfs.length}
+                  {Math.min(view === "list" ? Math.max(visible, 24) : visible, visiblePdfs.length)}/{visiblePdfs.length}
                 </span>
               </button>
             </div>

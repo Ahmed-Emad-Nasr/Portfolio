@@ -107,8 +107,14 @@ if (has("attack.ts")) {
   const src = read("attack.ts");
   const defined = new Set([...src.matchAll(/\{\s*id:\s*"(T\d+(?:\.\d+)?)"/g)].map((m) => m[1]));
   const block = src.slice(src.indexOf("caseAttackMapping"));
-  const used = new Set([...block.matchAll(/"(T\d+(?:\.\d+)?)"/g)].map((m) => m[1]));
+  /* The matrix counts parent techniques; sub-techniques (T1566.001) resolve
+     to their parent (T1566), whose name and tactic TECHNIQUES defines. */
+  const usedFull = [...block.matchAll(/"(T\d+(?:\.\d+)?)"/g)].map((m) => m[1]);
+  const used = new Set(usedFull.map((t) => t.split(".")[0]));
   coveredTechniques = used.size;
+  const subNames = new Set([...src.matchAll(/"(T\d+\.\d+)":\s*"/g)].map((m) => m[1]));
+  const unnamed = [...new Set(usedFull.filter((t) => t.includes(".") && !subNames.has(t)))];
+  if (unnamed.length) warn(`sub-techniques without a name in SUBTECHNIQUE_NAMES: ${unnamed.join(", ")}`);
 
   const undef = [...used].filter((t) => !defined.has(t));
   if (undef.length) fail(`techniques used but not defined in TECHNIQUES: ${undef.join(", ")}`);

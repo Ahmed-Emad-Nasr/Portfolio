@@ -61,6 +61,13 @@ export function FooterBar({ className = "" }: { className?: string }) {
 
 type Draft = { subject: string; body: string };
 
+/* With a Web3Forms access key the form delivers the message itself (a static
+   site has no server, and Web3Forms is a form-to-e-mail relay that works from
+   the browser). Without one it falls back to opening the visitor's mail app.
+   The key is public by design — it only allows sending to the owner's inbox. */
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
+type SendState = "idle" | "sending" | "sent" | "error";
+
 const EMAIL = PORTFOLIO_DATA.profile.contact.email;
 
 /* Gmail's web composer, prefilled — for visitors with no mail app set up,
@@ -75,6 +82,7 @@ export default function ContactFooter() {
   /* The last message handed to the mail app — kept so the fallback panel
      can offer the same text another way. */
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [sendState, setSendState] = useState<SendState>("idle");
 
   const socialLinks = [
     { name: "GitHub", icon: Github, href: `https://github.com/${PORTFOLIO_DATA.profile.contact.github}`, color: "text-primary-ink" },
@@ -273,11 +281,13 @@ export default function ContactFooter() {
 
             <form
               className="flex flex-col gap-6"
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
 
                 const form = e.currentTarget;
                 const formData = new FormData(form);
+                /* Honeypot: people never see this field, bots fill it */
+                if (formData.get("botcheck")) return;
 
                 const name = formData.get("name")?.toString() || "";
                 const email = formData.get("email")?.toString() || "";
@@ -290,10 +300,40 @@ export default function ContactFooter() {
 
                 const mailto = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
 
+                if (WEB3FORMS_KEY) {
+                  setSendState("sending");
+                  try {
+                    const res = await fetch("https://api.web3forms.com/submit", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json", Accept: "application/json" },
+                      body: JSON.stringify({
+                        access_key: WEB3FORMS_KEY,
+                        subject: `[${type}] Inquiry from ${name}`,
+                        from_name: name,
+                        name,
+                        email,
+                        reason: type,
+                        message,
+                      }),
+                    });
+                    const json = (await res.json().catch(() => ({}))) as { success?: boolean };
+                    if (res.ok && json.success) {
+                      setSendState("sent");
+                      form.reset();
+                      return;
+                    }
+                    throw new Error("send failed");
+                  } catch {
+                    setSendState("error");
+                    /* fall through to the mail-app route below */
+                  }
+                }
+
                 setDraft({ subject: `[${type}] Inquiry from ${name}`, body: fullBody });
                 window.location.assign(mailto);
               }}
             >
+              <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
               <div className="relative">
                 <label htmlFor="name" className="sr-only">
                   Name / Organization
@@ -352,10 +392,29 @@ export default function ContactFooter() {
               </div>
               <button
                 type="submit"
-                className="btn-sheen mt-4 w-full py-5 bg-primary text-white font-mono font-black uppercase tracking-[0.3em] text-sm hover:bg-foreground hover:text-background active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/20"
+                disabled={sendState === "sending"}
+                className="btn-sheen relative overflow-hidden mt-4 w-full py-5 bg-primary text-white font-mono font-black uppercase tracking-[0.3em] text-sm hover:bg-foreground hover:text-background active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/20 disabled:cursor-wait"
               >
-                DISPATCH MESSAGE
+                {/* Transmission bar while the message is on its way */}
+                {sendState === "sending" && <span className="send-progress absolute inset-y-0 left-0 bg-white/20" aria-hidden="true" />}
+                <span className="relative">
+                  {sendState === "sending" ? "TRANSMITTING…" : sendState === "sent" ? "MESSAGE DELIVERED ✓" : "DISPATCH MESSAGE"}
+                </span>
               </button>
+
+              <AnimatePresence>
+                {sendState === "sent" && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    role="status"
+                    className="border-l-2 border-tertiary bg-tertiary/5 px-5 py-4 font-mono text-[0.6875rem] leading-relaxed text-foreground/80"
+                  >
+                    Received — it is in my inbox. I reply within a day or two.
+                  </motion.p>
+                )}
+              </AnimatePresence>
 
               {/* A static site has no server to send mail: the button opens
                   the visitor's mail app. When none is set up nothing visible

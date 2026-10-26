@@ -1,0 +1,14 @@
+# Python tools used by the maintenance scripts (the site itself is Node — see package.json).
+#
+#   pip install -r requirements.txt
+#
+# On Debian/Ubuntu's system Python add  --break-system-packages , or use a venv:
+#   python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+
+# npm run pdf:clean  (scripts/pdf-clean.py) — PDF metadata + image recompression
+pikepdf>=10.0
+pillow>=12.0
+
+# scripts/subset-fonts.py — subsetting the display fonts to the characters in use (WOFF2)
+fonttools>=4.66
+brotli>=1.1

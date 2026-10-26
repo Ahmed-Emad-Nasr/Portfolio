@@ -1,6 +1,7 @@
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
-import { Calendar, MapPin, CheckCircle2, ExternalLink } from "lucide-react";
+import { Calendar, MapPin, CheckCircle2, ExternalLink, Award, FolderSearch } from "lucide-react";
+import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
 import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
 
@@ -167,6 +168,30 @@ export default function ExperienceTimeline() {
                     </div>
                   ))}
                 </div>
+
+                {/* Proof: the certificate and the work, one click away */}
+                {(item.proof || item.cases) && (
+                  <div className="relative z-10 px-6 md:px-12 pb-6 flex flex-wrap gap-3">
+                    {item.proof && (
+                      <a
+                        href={item.proof.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/proof inline-flex items-center gap-2 px-3 py-2 border border-accent/30 bg-accent/5 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-accent hover:bg-accent hover:text-background transition-colors duration-300"
+                      >
+                        <Award size={12} className="transition-transform duration-300 group-hover/proof:rotate-12" aria-hidden="true" /> {item.proof.label}
+                      </a>
+                    )}
+                    {item.cases && (
+                      <CaseFilterLink
+                        params={item.cases.params}
+                        className="group/cases inline-flex items-center gap-2 px-3 py-2 border border-tertiary/30 bg-tertiary/5 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-tertiary hover:bg-tertiary hover:text-background transition-colors duration-300"
+                      >
+                        <FolderSearch size={12} className="transition-transform duration-300 group-hover/cases:scale-110" aria-hidden="true" /> {item.cases.label}
+                      </CaseFilterLink>
+                    )}
+                  </div>
+                )}
 
                 {/* Panel Footer */}
                 <div className="px-6 md:px-12 py-4 border-t border-foreground/5 flex items-center justify-between">

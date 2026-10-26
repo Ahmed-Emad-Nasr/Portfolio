@@ -16,7 +16,7 @@
 const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 const CF_TOKEN = process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN;
 
-export type AnalyticsConfig =
+type AnalyticsConfig =
   | { provider: "Plausible"; domain: string; script: string; policy: string }
   | { provider: "Cloudflare Web Analytics"; token: string; script: string; policy: string };
 

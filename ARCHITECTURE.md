@@ -203,8 +203,13 @@ directive — and adding it may ship data you did not intend to.
 Everything in `core/config/` is typed data, not JSX:
 
 ```
-cases.ts           77 case reports (the largest file, ~118 KB)
-attack.ts          MITRE ATT&CK tactic/technique map
+cases.ts           79 case reports (the largest file)
+case-details.ts    Case files: verdict, chain, timeline, IOCs, response, detection
+                   code, lessons — server-only, every value from the report PDF
+attack.ts          ATT&CK v19 tactics/techniques, case → technique map; sub-techniques
+                   resolve to parents; unknown ids throw at build time
+detection-rules.ts The 52 Wazuh rules shown in the Detection Library
+testimonials.ts    Recommendations (empty → the section renders nothing)
 certifications.ts  Certs with issuer, year, verification URL
 skills.ts          Skill groups, each linked to the cases that prove it
 achievements.ts    Awards and recognition
@@ -216,8 +221,18 @@ cv.ts              CV structure
 portfolio-data.ts  Everything the home page renders (profile, services, process, stack)
 live-copy.ts       Home-page copy that quotes case-library numbers (server-only)
 site.ts            Absolute URLs, base path, trailing-slash policy
-shared.ts          normalizePublicHref, date formatting, thumbnails
+shared.ts          normalizePublicHref, date formatting, thumbnails, case kinds,
+                   collections, defang()
 ```
+
+**Case details stay on the server.** `case-details.ts` is imported only by
+server components (`app/blog/[slug]/page.tsx`); the client `CaseFile`
+component receives one case's detail as props, so the home-page bundle never
+carries the IOCs, timelines or detection code of 79 cases.
+
+**Case kinds.** `caseKindOf()` sorts every case into investigation, project,
+lab or note from its `type`; the library's tabs, the "Recommended" sort and
+the report counts all use it, so a new case is placed by setting `type`.
 
 **Why data and not JSX:** it can be cross-referenced. `skills.ts` links each
 skill group to the case reports that demonstrate it, which turns a list of

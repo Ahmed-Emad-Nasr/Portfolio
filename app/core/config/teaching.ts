@@ -9,7 +9,7 @@
 
 import { YOUTUBE_CHANNEL_URL } from "./shared";
 
-export type TeachingStat = { value: string; label: string; japanese: string };
+type TeachingStat = { value: string; label: string; japanese: string };
 
 export const TEACHING_STATS: TeachingStat[] = [
   { value: "300+", label: "Students at AMIT", japanese: "受講生" },
@@ -37,7 +37,7 @@ export const DIPLOMA = {
   format: ["Session summary", "Key terms", "Free hands-on labs", "Quiz"],
 };
 
-export type TeachingRole = {
+type TeachingRole = {
   org: string;
   role: string;
   period: string;

@@ -23,9 +23,15 @@ import { STATIC_PLATFORMS, THM_SNAPSHOT, tryHackMePlatform } from "@/app/core/co
 type Line = { id: number; text: string; kind: "in" | "out" | "err" | "dim" };
 
 const BANNER = [
-  "3OMDA SHELL v1.1 — information security portfolio",
-  'Type "help" for commands, "exit" to close.',
+  "3OMDA SHELL v1.2 — information security portfolio",
+  'Type "help" for commands, "exit" to close. There is a flag hidden in here.',
 ];
+
+/* The hidden challenge: `ls -a` shows a dotfile, `cat` gives Base64, and
+   `decode` (or any Base64 tool) gives the flag. Small, but it rewards exactly
+   the habit the job needs — look at what is hidden, then decode it. */
+const FLAG = "3omda{d3f3nd3rs_r34d_th3_l0gs}";
+const FLAG_B64 = typeof btoa === "function" ? btoa(FLAG) : "";
 
 /** Maximum number of lines kept — without it the DOM grows unbounded */
 const MAX_LINES = 300;
@@ -103,6 +109,8 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             "skills            — most used tools",
             "ranks             — public training profiles",
             "contact           — how to reach me",
+            "neofetch          — system info, the portfolio way",
+            "history           — commands you ran",
             "clear             — clear the screen",
             "exit              — close the terminal",
           ]);
@@ -117,6 +125,10 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           break;
 
         case "ls": {
+          if (arg === "-a" || arg === "-la" || arg === "-al") {
+            printAll(["./", "../", ".flag", "cases/", "cv.pdf", "contact.txt"], "out");
+            break;
+          }
           const filtered = arg
             ? cases.filter((c) =>
                 `${c.title} ${c.category} ${c.tools.join(" ")} ${c.tags.join(" ")}`
@@ -165,6 +177,10 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         }
 
         case "cat":
+          if (arg === ".flag") {
+            printAll([FLAG_B64, "", "hint: that is not plain text. try: decode <string>"], "out");
+            break;
+          }
           if (arg.toLowerCase() === "cv") {
             print("opening CV…", "dim");
             window.open(normalizePublicHref(CV_PDF_HREF), "_blank", "noopener");
@@ -202,8 +218,47 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           ]);
           break;
 
+        case "decode": {
+          if (!arg) {
+            print("decode: needs a Base64 string", "err");
+            break;
+          }
+          try {
+            const text = atob(arg.trim());
+            print(text, "out");
+            if (text === FLAG) {
+              printAll([
+                "",
+                "▲ flag captured. Nicely done.",
+                `If you read logs like that, we should talk: ${PORTFOLIO_DATA.profile.contact.email}`,
+              ], "dim");
+            }
+          } catch {
+            print("decode: not valid Base64", "err");
+          }
+          break;
+        }
+
+        case "neofetch":
+          printAll([
+            "   ▄▀▀▄      3omda@portfolio",
+            "  █ AE █     ───────────────",
+            "   ▀▄▄▀      role     " + PORTFOLIO_DATA.profile.title,
+            "             focus    " + PORTFOLIO_DATA.profile.focus.join(" · "),
+            "             cases    " + cases.length,
+            "             base     " + PORTFOLIO_DATA.profile.contact.location,
+            "             shell    3omda-sh 1.2",
+            "             theme    Neo-Samurai (dark)",
+          ]);
+          break;
+
+        case "history":
+          if (!history.length) print("history: empty", "dim");
+          else printAll([...history].reverse().map((h, i) => `${String(i + 1).padStart(3, " ")}  ${h}`));
+          break;
+
         case "sudo":
-          print("Nice try.", "err");
+          print("Nice try. This incident has been reported.", "err");
           break;
 
         case "clear":
@@ -218,7 +273,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           print(`${command}: command not found. Try "help".`, "err");
       }
     },
-    [cases, onClose, print, printAll, router],
+    [cases, history, onClose, print, printAll, router],
   );
 
   // ── focus + scroll lock ─────────────────────────────────────────────────

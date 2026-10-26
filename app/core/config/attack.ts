@@ -9,12 +9,10 @@
  * "I've done a lot of things" and the second says "I cover these specific tactics and I have
  * the evidence" — which is exactly the shape of the question in any SOC interview.
  *
- * ⚠️⚠️ Review this file before publishing ⚠️⚠️
- *
- * The mapping below is inferred from the case titles and tags, not from reading the reports
- * themselves — the PDFs weren't reviewed. So it's a sound starting point for the most part, but there are surely
- * techniques covered that aren't listed here, and there may be one or two that aren't
- * accurate. Read every line and correct it against the original report.
+ * The mapping was rebuilt from the reports themselves (October 2026): each
+ * technique below is something the PDF shows — an alert, a command line, a
+ * registry key, a behaviour — not something guessed from the case title.
+ * The CTF and learning-room entries have no PDF and are kept as they were.
  *
  * A wrong coverage map is worse than no map at all: anyone who reads it will open the
  * report and compare.
@@ -45,7 +43,7 @@ export const ATTACK_TACTICS = [
   { id: "impact", ta: "TA0040", name: "Impact", short: "Impact" },
 ] as const;
 
-export type TacticId = (typeof ATTACK_TACTICS)[number]["id"];
+type TacticId = (typeof ATTACK_TACTICS)[number]["id"];
 
 export type Technique = {
   /** MITRE id — T1234 or T1234.001 */
@@ -54,37 +52,103 @@ export type Technique = {
   tactic: TacticId;
 };
 
-/** Techniques referenced in the mapping below. Name and tactic from ATT&CK Enterprise v19. */
-export const TECHNIQUES: readonly Technique[] = [
+/**
+ * Techniques referenced in the mapping below, as PARENT techniques — the matrix
+ * shows one tile per parent. Name and tactic from ATT&CK Enterprise v19; where a
+ * technique sits under several tactics, the one these reports use it for.
+ */
+const TECHNIQUES: readonly Technique[] = [
   { id: "T1595", name: "Active Scanning", tactic: "reconnaissance" },
   { id: "T1566", name: "Phishing", tactic: "initial-access" },
   { id: "T1190", name: "Exploit Public-Facing Application", tactic: "initial-access" },
   { id: "T1078", name: "Valid Accounts", tactic: "initial-access" },
+  { id: "T1133", name: "External Remote Services", tactic: "initial-access" },
+  { id: "T1189", name: "Drive-by Compromise", tactic: "initial-access" },
   { id: "T1204", name: "User Execution", tactic: "execution" },
   { id: "T1059", name: "Command and Scripting Interpreter", tactic: "execution" },
+  { id: "T1203", name: "Exploitation for Client Execution", tactic: "execution" },
+  { id: "T1047", name: "Windows Management Instrumentation", tactic: "execution" },
   { id: "T1543", name: "Create or Modify System Process", tactic: "persistence" },
   { id: "T1547", name: "Boot or Logon Autostart Execution", tactic: "persistence" },
   { id: "T1098", name: "Account Manipulation", tactic: "persistence" },
+  { id: "T1505", name: "Server Software Component", tactic: "persistence" },
+  { id: "T1053", name: "Scheduled Task/Job", tactic: "persistence" },
   { id: "T1068", name: "Exploitation for Privilege Escalation", tactic: "privilege-escalation" },
   { id: "T1548", name: "Abuse Elevation Control Mechanism", tactic: "privilege-escalation" },
+  { id: "T1134", name: "Access Token Manipulation", tactic: "privilege-escalation" },
+  { id: "T1055", name: "Process Injection", tactic: "privilege-escalation" },
   { id: "T1027", name: "Obfuscated Files or Information", tactic: "stealth" },
   { id: "T1070", name: "Indicator Removal", tactic: "stealth" },
+  { id: "T1036", name: "Masquerading", tactic: "stealth" },
+  { id: "T1218", name: "System Binary Proxy Execution", tactic: "stealth" },
+  { id: "T1497", name: "Virtualization/Sandbox Evasion", tactic: "stealth" },
   { id: "T1112", name: "Modify Registry", tactic: "defense-impairment" },
+  { id: "T1562", name: "Impair Defenses", tactic: "defense-impairment" },
   { id: "T1110", name: "Brute Force", tactic: "credential-access" },
   { id: "T1003", name: "OS Credential Dumping", tactic: "credential-access" },
-  { id: "T1555", name: "Credentials from Password Stores", tactic: "credential-access" },
+  { id: "T1552", name: "Unsecured Credentials", tactic: "credential-access" },
   { id: "T1557", name: "Adversary-in-the-Middle", tactic: "credential-access" },
   { id: "T1040", name: "Network Sniffing", tactic: "credential-access" },
   { id: "T1046", name: "Network Service Discovery", tactic: "discovery" },
   { id: "T1083", name: "File and Directory Discovery", tactic: "discovery" },
+  { id: "T1082", name: "System Information Discovery", tactic: "discovery" },
+  { id: "T1016", name: "System Network Configuration Discovery", tactic: "discovery" },
+  { id: "T1057", name: "Process Discovery", tactic: "discovery" },
+  { id: "T1012", name: "Query Registry", tactic: "discovery" },
+  { id: "T1069", name: "Permission Groups Discovery", tactic: "discovery" },
   { id: "T1021", name: "Remote Services", tactic: "lateral-movement" },
+  { id: "T1550", name: "Use Alternate Authentication Material", tactic: "lateral-movement" },
+  { id: "T1210", name: "Exploitation of Remote Services", tactic: "lateral-movement" },
   { id: "T1005", name: "Data from Local System", tactic: "collection" },
+  { id: "T1074", name: "Data Staged", tactic: "collection" },
   { id: "T1071", name: "Application Layer Protocol", tactic: "command-and-control" },
   { id: "T1105", name: "Ingress Tool Transfer", tactic: "command-and-control" },
+  { id: "T1219", name: "Remote Access Tools", tactic: "command-and-control" },
+  { id: "T1090", name: "Proxy", tactic: "command-and-control" },
   { id: "T1041", name: "Exfiltration Over C2 Channel", tactic: "exfiltration" },
   { id: "T1052", name: "Exfiltration Over Physical Medium", tactic: "exfiltration" },
+  { id: "T1048", name: "Exfiltration Over Alternative Protocol", tactic: "exfiltration" },
   { id: "T1486", name: "Data Encrypted for Impact", tactic: "impact" },
+  { id: "T1490", name: "Inhibit System Recovery", tactic: "impact" },
+  { id: "T1491", name: "Defacement", tactic: "impact" },
+  { id: "T1657", name: "Financial Theft", tactic: "impact" },
 ];
+
+/** Sub-technique names, shown on the case pages ("Phishing: Spearphishing Attachment") */
+const SUBTECHNIQUE_NAMES: Record<string, string> = {
+  "T1566.001": "Spearphishing Attachment",
+  "T1566.002": "Spearphishing Link",
+  "T1078.004": "Cloud Accounts",
+  "T1204.001": "Malicious Link",
+  "T1204.002": "Malicious File",
+  "T1204.004": "Malicious Copy and Paste",
+  "T1059.001": "PowerShell",
+  "T1059.003": "Windows Command Shell",
+  "T1059.004": "Unix Shell",
+  "T1059.005": "Visual Basic",
+  "T1505.003": "Web Shell",
+  "T1547.001": "Registry Run Keys / Startup Folder",
+  "T1548.002": "Bypass User Account Control",
+  "T1027.003": "Steganography",
+  "T1070.004": "File Deletion",
+  "T1070.006": "Timestomp",
+  "T1218.005": "Mshta",
+  "T1218.010": "Regsvr32",
+  "T1218.011": "Rundll32",
+  "T1110.001": "Password Guessing",
+  "T1110.002": "Password Cracking",
+  "T1003.002": "Security Account Manager",
+  "T1552.002": "Credentials in Registry",
+  "T1557.002": "ARP Cache Poisoning",
+  "T1074.001": "Local Data Staging",
+  "T1071.001": "Web Protocols",
+  "T1052.001": "Exfiltration over USB",
+  "T1491.001": "Internal Defacement",
+  "T1090.003": "Multi-hop Proxy",
+};
+
+/** T1566.001 → T1566 */
+export const parentTechnique = (id: string): string => id.split(".")[0];
 
 /**
  * caseId → the techniques the report covers.
@@ -93,64 +157,59 @@ export const TECHNIQUES: readonly Technique[] = [
  * That's intentional: better than adding a technique we're not sure about.
  */
 export const caseAttackMapping: Record<string, readonly string[]> = {
-  // ── Ransomware ──────────────────────────────────────────────────────────
-  "malware-analysis-wannacry": ["T1486", "T1105", "T1071", "T1204"],
-  "lockbit-ransomware-forensics": ["T1486", "T1070", "T1005"],
-
-  // ── Malware & stealers ──────────────────────────────────────────────────
-  "serpent-stealer": ["T1555", "T1005", "T1041", "T1027"],
-  "unload-malware-report": ["T1027", "T1059", "T1071"],
-  "malware2-report": ["T1027", "T1059", "T1105"],
-  "hidden-backdoor-report": ["T1543", "T1547", "T1071"],
-  "depi-r4-project": ["T1204", "T1027", "T1105"],
-  "imagestegano": ["T1027"],
-
+  // ── LetsDefend SOC alerts (from each report's own findings) ─────────────
+  "soc127-pdf": ["T1190", "T1059"],
+  "soc205-pdf": ["T1566.001", "T1204.002", "T1059.005", "T1059.001", "T1105"],
+  "soc257-pdf": ["T1110", "T1133", "T1078"],
+  "soc274-pdf": ["T1190", "T1059.004"],
+  "soc282-pdf": ["T1566.001", "T1204.002", "T1082", "T1057", "T1016"],
+  "soc326-report": ["T1566.002", "T1204.001"],
+  "soc336-report": ["T1566.001", "T1203", "T1059.003", "T1218.010", "T1105"],
+  "soc338-pdf": ["T1566.002", "T1204.004", "T1059.001", "T1027", "T1218.005"],
+  "soc342-pdf": ["T1190", "T1059.001", "T1505.003", "T1071.001"],
+  // ── Malware ─────────────────────────────────────────────────────────────
+  // WannaCry: the report's own ATT&CK table (section 7)
+  "malware-analysis-wannacry": ["T1204.002", "T1059.003", "T1547.001", "T1112", "T1036", "T1012", "T1005", "T1090.003", "T1210", "T1486", "T1491.001", "T1657"],
+  "depi-r4-project": ["T1204.002", "T1059.003", "T1547.001", "T1112", "T1036", "T1012", "T1005", "T1090.003", "T1210", "T1486", "T1491.001", "T1657"],
+  "lockbit-ransomware-forensics": ["T1204.002", "T1547.001", "T1543", "T1486"],
+  "serpent-stealer": ["T1497", "T1057", "T1548.002", "T1552.002", "T1074.001", "T1005"],
+  "unload-malware-report": ["T1218.011", "T1027", "T1071.001", "T1105"],
+  "malware2-report": ["T1036", "T1027", "T1070.006"],
+  "hidden-backdoor-report": ["T1189", "T1204.002", "T1071.001"],
+  "imagestegano": ["T1027.003", "T1003"],
   // ── DFIR ────────────────────────────────────────────────────────────────
-  "ecir-registry-forensics": ["T1112", "T1070", "T1083"],
-  "data-exfiltration-investigation": ["T1052", "T1003", "T1021"],
-  "usb-forensics-report": ["T1052", "T1083"],
-  "autopsy": ["T1070", "T1083"],
-
-  // ── LetsDefend SOC rooms ────────────────────────────────────────────────
-  "soc127-pdf": ["T1190"],
-  "soc205-pdf": ["T1071", "T1046"],
-  "soc257-pdf": ["T1204", "T1105"],
-  "soc274-pdf": ["T1021", "T1078"],
-  "soc282-pdf": ["T1041", "T1005"],
-  "soc326-report": ["T1566", "T1204"],
-  "soc336-report": ["T1547", "T1543"],
-  "soc338-pdf": ["T1190", "T1059"],
-  "soc342-pdf": ["T1068", "T1548"],
-
-  // ── Blue-team rooms ─────────────────────────────────────────────────────
-  "email-analysis-room-report": ["T1566"],
-  "bruteforce-room-report": ["T1110", "T1078"],
-  "malicious-web-traffic-room-report": ["T1190", "T1071"],
-
-  // ── Network ─────────────────────────────────────────────────────────────
-  "ettercap-case": ["T1557", "T1040"],
-  "wifi-cracking-walkthrough": ["T1110"],
-
+  "ecir-registry-forensics": ["T1070.004", "T1219", "T1046"],
+  "data-exfiltration-investigation": ["T1052.001", "T1003.002", "T1110.002"],
+  "usb-forensics-report": ["T1052.001", "T1005"],
+  // ── Blue-team challenges ────────────────────────────────────────────────
+  "email-analysis-room-report": ["T1566.001", "T1204.002"],
+  "bruteforce-room-report": ["T1110.001", "T1078"],
+  "malicious-web-traffic-room-report": ["T1190", "T1110", "T1083"],
+  // ── Network & social engineering labs ───────────────────────────────────
+  "ettercap-case": ["T1557.002", "T1040"],
+  "wifi-cracking-walkthrough": ["T1110.002"],
+  "set-credential-harvesting": ["T1566.002"],
   // ── Offensive / CTF ─────────────────────────────────────────────────────
   "simple-ctf-writeup": ["T1190", "T1110", "T1548"],
   "easy-peasy-ctf-writeup": ["T1595", "T1046", "T1027"],
   "bounty-hacker-ctf-writeup": ["T1110", "T1021", "T1548"],
   "offensive-security-intro": ["T1595", "T1190"],
-  "penetration-testing-life-cycle": ["T1595", "T1046", "T1068"],
-
-  // ── Detection engineering / infrastructure ──────────────────────────────
-  "3omda-custom-detection-rules": ["T1059", "T1547", "T1110", "T1112"],
-  "soc-env-depi-r3-project": ["T1059", "T1547", "T1046"],
-
-  // ── Cloud & IAM ─────────────────────────────────────────────────────────
+  "penetration-testing-life-cycle": ["T1595", "T1046", "T1003", "T1550"],
+  // ── Detection engineering (the rule pack's own MITRE tags, by parent) ───
+  "3omda-custom-detection-rules": [
+    "T1110.001", "T1486", "T1490", "T1059.001", "T1548", "T1134", "T1053", "T1021",
+    "T1047", "T1550", "T1071", "T1190", "T1048", "T1070", "T1027", "T1055", "T1562",
+    "T1098", "T1046", "T1595",
+  ],
+  "soc-env-depi-r3-project": ["T1110", "T1003", "T1068", "T1069", "T1059", "T1055", "T1041", "T1048"],
+  // ── Cloud, IAM & threat intel ───────────────────────────────────────────
+  "apt33-threat-intel-brief": ["T1078.004"],
   "iam-access-control-room": ["T1078", "T1098"],
-  "aws-kms-security": ["T1078"],
-  "aws-guardduty-setup": ["T1078", "T1046"],
 };
 
 const TECHNIQUE_BY_ID = new Map(TECHNIQUES.map((t) => [t.id, t]));
 
-export type TacticCoverage = {
+type TacticCoverage = {
   tactic: (typeof ATTACK_TACTICS)[number];
   techniques: {
     technique: Technique;
@@ -167,7 +226,7 @@ export const buildCoverage = (): TacticCoverage[] => {
   const byTechnique = new Map<string, string[]>();
 
   for (const [caseId, techniqueIds] of Object.entries(caseAttackMapping)) {
-    for (const techniqueId of techniqueIds) {
+    for (const techniqueId of new Set(techniqueIds.map(parentTechnique))) {
       const list = byTechnique.get(techniqueId);
       if (list) list.push(caseId);
       else byTechnique.set(techniqueId, [caseId]);
@@ -186,9 +245,30 @@ export const buildCoverage = (): TacticCoverage[] => {
   })).filter((column) => column.techniques.length > 0);
 };
 
-export const techniqueName = (id: string): string =>
-  TECHNIQUE_BY_ID.get(id)?.name ?? id;
+/** "Phishing: Spearphishing Attachment" for a sub-technique, the plain name for a parent */
+const techniqueName = (id: string): string => {
+  const parent = TECHNIQUE_BY_ID.get(parentTechnique(id))?.name ?? id;
+  const sub = SUBTECHNIQUE_NAMES[id];
+  return sub ? `${parent}: ${sub}` : parent;
+};
+
+/** Every technique id a case uses, resolved to its name and tactic */
+export const techniquesForCase = (caseId: string) =>
+  (caseAttackMapping[caseId] ?? []).flatMap((id) => {
+    const parent = TECHNIQUE_BY_ID.get(parentTechnique(id));
+    return parent ? [{ id, name: techniqueName(id), tactic: parent.tactic }] : [];
+  });
 
 /** Total techniques covered — shown as a number above the matrix */
 export const coveredTechniqueCount = (): number =>
-  new Set(Object.values(caseAttackMapping).flat()).size;
+  new Set(Object.values(caseAttackMapping).flat().map(parentTechnique)).size;
+
+/* Every mapped id must resolve, or the build stops: a typo here would
+   silently drop a tile from the matrix. */
+for (const [caseId, ids] of Object.entries(caseAttackMapping)) {
+  for (const id of ids) {
+    if (!TECHNIQUE_BY_ID.has(parentTechnique(id))) {
+      throw new Error(`[attack.ts] ${caseId}: technique ${id} is not in TECHNIQUES`);
+    }
+  }
+}

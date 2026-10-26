@@ -11,14 +11,13 @@
  * longest reports and not the newest — the three clearest ones that convey
  * "this is what I can do".
  *
- * ⚠️ Review the selection and the reasons. I have not read the PDFs, so the
- * choice is based on titles and tags — you are the one who knows which
- * report actually represents you.
+ * The reasons were rewritten from the PDFs themselves (October 2026); the
+ * minutes follow the report length (about 0.6 min per page).
  *
  * The ids must match caseEvidenceLibrary[].id in config/cases.ts.
  */
 
-export type StartHereEntry = {
+type StartHereEntry = {
   id: string;
   /** A short display name — it need not be the report's full title */
   label: string;
@@ -32,19 +31,19 @@ export const startHere: readonly StartHereEntry[] = [
   {
     id: "3omda-custom-detection-rules",
     label: "Custom Wazuh detection rules",
-    why: "Detection engineering — writing, tuning, and validating rules, including one merged into SOC Fortress.",
-    minutes: 8,
+    why: "Detection engineering — 52 Wazuh rules, each mapped to ATT&CK, from SSH brute force to ransomware and DNS tunnelling.",
+    minutes: 17,
   },
   {
     id: "data-exfiltration-investigation",
     label: "Data exfiltration & credential compromise",
-    why: "A full DFIR investigation end to end: memory forensics, timeline reconstruction, and the containment call.",
-    minutes: 12,
+    why: "Memory forensics end to end: the copy to USB recovered from the console buffer, the NTLM hashes dumped and cracked, and the timeline.",
+    minutes: 16,
   },
   {
     id: "malware-analysis-wannacry",
     label: "WannaCry analysis & response",
-    why: "Static and dynamic malware analysis, IOC extraction, and the response plan built from them.",
-    minutes: 10,
+    why: "Static and dynamic analysis of a modified WannaCry build — IOCs, three YARA rules, the ATT&CK mapping and a mitigation plan.",
+    minutes: 27,
   },
 ];

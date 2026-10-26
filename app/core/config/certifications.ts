@@ -21,7 +21,7 @@
  *     as normal, but isn't linked to its image.
  */
 
-export type Certification = {
+type Certification = {
   /** Stable id — used as the key and in the JSON-LD */
   id: string;
   /** Certification name exactly as written on it */
@@ -38,19 +38,22 @@ export type Certification = {
   galleryIndex?: number;
   /** false = listed on the site but not on the CV page (it isn't in the PDF) */
   cv?: boolean;
+  /** "exam" = passed a proctored/graded exam; "course" = completion of a
+      course or learning path. Left out where it isn't certain. */
+  credential?: "exam" | "course";
 };
 
 /** Ordered newest to oldest — same order as the CV */
 /* Order and wording follow the CV PDF. */
 export const certifications: readonly Certification[] = [
-  { id: "ejpt-v2", name: "eLearnSecurity Junior Penetration Tester v2", shortName: "eJPT v2", issuer: "INE", year: 2026, galleryIndex: 2 },
+  { id: "ejpt-v2", credential: "exam", name: "eLearnSecurity Junior Penetration Tester v2", shortName: "eJPT v2", issuer: "INE", year: 2026, galleryIndex: 2 },
   { id: "ccep", name: "Certified Cybersecurity Educator Professional", shortName: "CCEP", issuer: "Red Team Leaders", year: 2026, galleryIndex: 6 },
   { id: "rh124", name: "Red Hat System Administration I (RH124)", shortName: "RH124", issuer: "Red Hat", year: 2026, galleryIndex: 10 },
   { id: "hcia-datacom", name: "HCIA-Datacom V1.0 & HCCDA-Tech Essentials", shortName: "HCIA-Datacom", issuer: "Huawei", year: 2025, galleryIndex: 24 },
-  { id: "thm-soc-l1-l2", name: "SOC Level 1 & SOC Level 2 Learning Paths", issuer: "TryHackMe", year: 2025, galleryIndex: 12 },
-  { id: "malware-analysis-fundamentals", name: "Malware Analysis Fundamentals", issuer: "Mahara-Tech (ITI)", year: 2025, galleryIndex: 27 },
-  { id: "cti-101", name: "Cyber Threat Intelligence 101", issuer: "arcX", year: 2025, galleryIndex: 15 },
-  { id: "ccna", name: "Cisco Certified Network Associate (CCNA 200-301)", shortName: "CCNA", issuer: "Cisco Systems", year: 2024 },
+  { id: "thm-soc-l1-l2", credential: "course", name: "SOC Level 1 & SOC Level 2 Learning Paths", issuer: "TryHackMe", year: 2025, galleryIndex: 12 },
+  { id: "malware-analysis-fundamentals", credential: "course", name: "Malware Analysis Fundamentals", issuer: "Mahara-Tech (ITI)", year: 2025, galleryIndex: 27 },
+  { id: "cti-101", credential: "course", name: "Cyber Threat Intelligence 101", issuer: "arcX", year: 2025, galleryIndex: 15 },
+  { id: "ccna", credential: "exam", name: "Cisco Certified Network Associate (CCNA 200-301)", shortName: "CCNA", issuer: "Cisco Systems", year: 2024 },
   { id: "hcia-cloud", name: "HCIA-Cloud Computing V5.0", shortName: "HCIA-Cloud", issuer: "Huawei", year: 2024, cv: false, galleryIndex: 25 },
 ];
 
@@ -72,7 +75,7 @@ export const GALLERY_IMAGE_COUNT = 98;
  * lightbox and as the image's alt text. Wording follows the certificate
  * itself. Numbers not listed here (the photos) keep their "Record NN" title.
  */
-export const GALLERY_TITLES: Readonly<Record<number, string>> = {
+const GALLERY_TITLES: Readonly<Record<number, string>> = {
   1: "Banque Misr — Rowad Program, Certificate of Completion",
   2: "eJPT — Junior Penetration Tester · INE Security",
   3: "Incident Handling & Response Professional · INE",
@@ -130,28 +133,6 @@ export const galleryTitle = (index: number): string =>
 /** Path (without the base path) of gallery image number `index` */
 export const galleryImagePath = (index: number): string =>
   `Assets/art-gallery/Images/image_display_thumb/${index}.webp`;
-
-/** Quick lookup by galleryIndex so we don't scan the array for every image */
-const byGalleryIndex = new Map<number, Certification>(
-  certifications
-    .filter((c): c is Certification & { galleryIndex: number } => c.galleryIndex !== undefined)
-    .map((c) => [c.galleryIndex, c]),
-);
-
-/**
- * Alt text for gallery image number `index`.
- *
- * If the image is linked to a known certification:
- *   "eJPT v2 certificate issued by INE Security"
- * If not:
- *   "Certificate 12 of 74" — not ideal, but every image now has a distinct identity
- *   instead of 74 copies of the same sentence.
- */
-export const certificationAlt = (index: number): string => {
-  const cert = byGalleryIndex.get(index);
-  if (!cert) return GALLERY_TITLES[index] ?? `Record ${index} of ${GALLERY_IMAGE_COUNT}`;
-  return `${cert.shortName ?? cert.name} certificate issued by ${cert.issuer}`;
-};
 
 /**
  * JSON-LD for every certification. Google uses this type in search results for

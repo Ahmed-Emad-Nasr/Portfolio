@@ -8,12 +8,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Play, ExternalLink, ListVideo, ChevronDown } from "lucide-react";
+import { Play, ExternalLink, ListVideo, ChevronDown, FileText } from "lucide-react";
 import { TiltCard } from "@/app/core/components/Motion";
 import { CountUp } from "@/app/core/components/CountUp";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { Youtube } from "@/app/core/icons/BrandIcons";
 import type { ChannelVideo } from "@/app/core/config/shared";
+import { normalizePublicHref } from "@/app/core/config/shared";
 import type { BlogYoutubePlaylist } from "@/app/core/config/shared";
 import { CounterBadge, KanjiWatermark, btnOutline } from "@/app/components/shared/kit";
 import { rv } from "@/app/core/reveal";
@@ -157,17 +158,30 @@ export default function MediaSections({
                       onActivate={onActivateEmbed}
                     />
                     <div className="flex flex-col flex-1 p-6">
-                      {video.publishedAt && (
-                        <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-tertiary mb-2">
-                          {formatDate(video.publishedAt)}
+                      <span className="flex items-center gap-3 mb-2">
+                        {/* The channel is narrated in Arabic — say so before someone presses play */}
+                        <span className="px-1.5 py-0.5 border border-accent/40 font-mono text-[0.5rem] font-bold uppercase tracking-[0.2em] text-accent" title="Narrated in Arabic">
+                          AR
                         </span>
-                      )}
+                        {video.publishedAt && (
+                          <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-tertiary">
+                            {formatDate(video.publishedAt)}
+                          </span>
+                        )}
+                      </span>
                       <h3 className="font-display text-lg font-black uppercase tracking-tight text-foreground leading-tight mb-5">
                         {video.title}
                       </h3>
-                      <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} mt-auto w-fit`}>
-                        <ExternalLink size={13} /> Watch on YouTube
-                      </a>
+                      <div className="mt-auto flex flex-wrap gap-3">
+                        <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} w-fit`}>
+                          <ExternalLink size={13} /> Watch on YouTube
+                        </a>
+                        {video.caseId && (
+                          <a href={normalizePublicHref(`/blog/${video.caseId}`)} className={`${btnOutline} w-fit`}>
+                            <FileText size={13} /> The case
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </TiltCard>
                 </div>

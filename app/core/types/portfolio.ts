@@ -1,4 +1,4 @@
-export interface ContactInfo {
+interface ContactInfo {
   email: string;
   phone: string;
   github: string;
@@ -10,12 +10,12 @@ export interface ContactInfo {
   x: string;
 }
 
-export interface HeroSpec {
+interface HeroSpec {
   label: string;
   value: string;
 }
 
-export interface HeroInfo {
+interface HeroInfo {
   tagline: string;
   japaneseTagline: string;
   /** The "Technical Specifications" strip in the hero */
@@ -24,7 +24,7 @@ export interface HeroInfo {
   cvUrl: string;
 }
 
-export interface Profile {
+interface Profile {
   name: string;
   title: string;
   japaneseTitle: string;
@@ -48,9 +48,13 @@ export interface Experience {
   description: string;
   details: string[];
   isEducation?: boolean;
+  /** A certificate from the gallery that proves the role */
+  proof?: { label: string; href: string };
+  /** Case-library filter with the work done in this role */
+  cases?: { label: string; params: Record<string, string> };
 }
 
-export interface ProjectHighlight {
+interface ProjectHighlight {
   name: string;
   type: string;
   description: string;
@@ -60,7 +64,7 @@ export interface ProjectHighlight {
   proofUrl?: string;
 }
 
-export interface ProjectsData {
+interface ProjectsData {
   githubUsername: string;
   pinnedRepos: string[];
   highlights: ProjectHighlight[];
@@ -68,7 +72,7 @@ export interface ProjectsData {
 
 export type WorkType = "lab" | "tool" | "research" | "platform";
 
-export interface WorkLink {
+interface WorkLink {
   github?: string;
   live?: string;
   playStore?: string;
@@ -94,7 +98,7 @@ export interface WorkItem {
   featured?: boolean;
 }
 
-export interface ServiceItem {
+interface ServiceItem {
   id: string;
   title: string;
   japanese: string;
@@ -103,14 +107,16 @@ export interface ServiceItem {
   deliverable: string;
 }
 
-export interface StackGroup {
+interface StackGroup {
   id: string;
   title: string;
   japanese: string;
   items: string[];
+  /** Case pages that show this group's skills in use */
+  evidence?: { id: string; label: string }[];
 }
 
-export interface ProcessStep {
+interface ProcessStep {
   id: string;
   index: string;
   title: string;
@@ -127,15 +133,17 @@ export interface Certificate {
   kind: "certification" | "award";
   image?: string;
   link?: string;
+  /** Exam certification or course completion, where known */
+  credential?: "exam" | "course";
 }
 
-export interface ArtGalleryItem {
+interface ArtGalleryItem {
   src: string;
   thumb: string;
   title: string;
 }
 
-export interface Contribution {
+interface Contribution {
   name: string;
   org: string;
   description: string;
@@ -147,6 +155,8 @@ export interface Stat {
   suffix: string;
   label: string;
   japanese: string;
+  /** Where the number is proven: a section anchor or an external page */
+  href?: string;
 }
 
 export interface Language {
@@ -155,7 +165,7 @@ export interface Language {
   level: string;
 }
 
-export interface UsesGroup {
+interface UsesGroup {
   id: string;
   title: string;
   japanese: string;
@@ -172,7 +182,7 @@ export interface FaqItem {
   a: string;
 }
 
-export interface Milestone {
+interface Milestone {
   year: string;
   title: string;
   detail: string;

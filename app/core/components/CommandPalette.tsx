@@ -47,7 +47,7 @@ interface Command {
 
 /* Passed in by the root layout (a server component), so the palette doesn't
    pull all of cases.ts into every page's bundle for three fields */
-export type CaseIndexEntry = { id: string; title: string; category: string };
+type CaseIndexEntry = { id: string; title: string; category: string };
 
 export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry[] }) {
   const [open, setOpen] = useState(false);
@@ -129,7 +129,9 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
     return [
       { id: "home", group: "Go to", label: "Home", icon: Home, run: () => go("#home") },
       { id: "services", group: "Go to", label: "Services", icon: Briefcase, run: () => go("#services") },
+      { id: "roles", group: "Go to", label: "Roles I fit", icon: Briefcase, run: () => go("#roles") },
       { id: "work", group: "Go to", label: "Selected work", icon: Code2, run: () => go("#work") },
+      { id: "lab", group: "Go to", label: "Home lab architecture", icon: Code2, run: () => go("#lab") },
       { id: "projects", group: "Go to", label: "Open-source projects", icon: Code2, run: () => go("#projects") },
       { id: "experience", group: "Go to", label: "Experience", icon: Briefcase, run: () => go("#experience") },
       { id: "teaching", group: "Go to", label: "Teaching", icon: GraduationCap, run: () => go("#teaching") },
@@ -138,6 +140,9 @@ export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry
       { id: "platforms", group: "Go to", label: "Practice platforms (THM, HTB …)", icon: Trophy, run: () => go("#platforms") },
       { id: "art", group: "Go to", label: "Proof gallery", icon: Palette, run: () => go("#art") },
       { id: "attack", group: "Go to", label: "MITRE ATT&CK coverage", icon: Crosshair, run: () => go("#attack") },
+      { id: "detections", group: "Go to", label: "Detection library (Wazuh rules)", icon: Crosshair, run: () => go("#detections") },
+      { id: "triage", group: "Go to", label: "Triage challenge", icon: Crosshair, run: () => go("#triage") },
+      { id: "wsa", group: "Pages", label: "Web Security Academy track", icon: FolderSearch, run: () => visit("/collections/web-security-academy") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
       { id: "videos", group: "Go to", label: "Videos", icon: PlayCircle, run: () => go("#videos") },

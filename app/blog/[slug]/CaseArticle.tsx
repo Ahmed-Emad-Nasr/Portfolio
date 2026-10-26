@@ -17,6 +17,8 @@ import { EASE } from "@/app/core/motion";
 import { normalizePublicHref, getThumbnail, formatDate } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import CaseSummary from "./CaseSummary";
+import CaseFile, { ReadingProgress, VerdictBar } from "./CaseFile";
+import type { CaseDetail } from "@/app/core/config/case-details";
 import { btnOutline, chipAccent, chipTertiary, ctaPrimary, ctaSecondary, KanjiWatermark } from "@/app/components/shared/kit";
 
 const GalleryLightbox = dynamic(() => import("@/app/components/art-gallery/GalleryLightbox"), { ssr: false });
@@ -41,6 +43,7 @@ type Sibling = { id: string; title: string } | null;
 /* Passed in from the server page — importing attack.ts or cases.ts here
    would bundle them into the browser. */
 type Technique = { id: string; name: string; tactic: string };
+type Collection = { href: string; title: string };
 type Related = { id: string; title: string; category: string; readTime: number; sharedTechniques: number };
 
 function BlockTitle({ children, japanese, id }: { children: ReactNode; japanese: string; id?: string }) {
@@ -92,6 +95,9 @@ export default function CaseArticle({
   next,
   techniques = [],
   related = [],
+  detail,
+  kindLabel,
+  collection,
 }: {
   item: CaseItem;
   screenshots: string[];
@@ -99,6 +105,9 @@ export default function CaseArticle({
   next: Sibling;
   techniques?: readonly Technique[];
   related?: readonly Related[];
+  detail?: CaseDetail;
+  kindLabel?: string;
+  collection?: Collection;
 }) {
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const { state: copyState, copy } = useCopyLink();
@@ -119,6 +128,7 @@ export default function CaseArticle({
 
   return (
     <article id="case-body" className="relative px-6 md:px-20 pt-36 md:pt-44 pb-24 overflow-hidden">
+      <ReadingProgress />
       <KanjiWatermark chars="報告書" side="right" />
 
       <div className="max-w-5xl mx-auto relative z-10">
@@ -129,6 +139,12 @@ export default function CaseArticle({
           </Link>
           <span className="text-foreground/20" aria-hidden="true">/</span>
           <span className="text-foreground/60">{item.category}</span>
+          {collection && (
+            <>
+              <span className="text-foreground/20" aria-hidden="true">/</span>
+              <Link href={collection.href} className="text-tertiary hover:text-foreground transition-colors">{collection.title}</Link>
+            </>
+          )}
         </nav>
 
         {/* Header */}
@@ -141,6 +157,9 @@ export default function CaseArticle({
           <div className="flex items-center gap-4 mb-5">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
             <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
+            {kindLabel && (
+              <span className="px-2 py-0.5 border border-foreground/15 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{kindLabel}</span>
+            )}
             <span className="jp-eyebrow text-[0.6875rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="事件" />
           </div>
           <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-[0.95] text-foreground">
@@ -153,13 +172,15 @@ export default function CaseArticle({
               <AlertTriangle size={11} /> {item.difficulty}
             </span>
             <span className="flex items-center gap-2 font-mono text-xs">
-              <Clock size={14} className="text-accent" /> {item.readTime} min read
+              <Clock size={14} className="text-accent" /> {detail?.pages ? `${detail.pages}-page report · ~${item.readTime} min` : `${item.readTime} min read`}
             </span>
             <span className="flex items-center gap-2 font-mono text-xs">
               <Calendar size={14} className="text-on-surface-variant/60" /> {formatDate(item.date)}
             </span>
           </div>
         </motion.header>
+
+        <VerdictBar verdict={detail?.verdict} severity={detail?.severity} />
 
         {/* Summary panel — the experience "service record" */}
         {/* No tilt: on a panel this tall the 3D lean read as the page wobbling */}
@@ -237,6 +258,8 @@ export default function CaseArticle({
           </div>
         </section>
 
+        {detail && <CaseFile detail={detail} href={item.href} title={item.title} />}
+
         {screenshots.length > 0 && (
           <section className="mb-16" aria-labelledby="case-evidence-title">
             <BlockTitle id="case-evidence-title" japanese="証拠">Evidence — {screenshots.length} screenshot(s)</BlockTitle>
@@ -253,9 +276,17 @@ export default function CaseArticle({
             <BlockTitle id="case-attack-title" japanese="戦術">MITRE ATT&amp;CK — {techniques.length} technique(s)</BlockTitle>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {techniques.map((t) => (
-                <li key={t.id} className="spotlight relative flex items-baseline gap-4 bg-surface/60 border border-foreground/5 px-5 py-4 hover:border-primary/40 transition-colors duration-500">
-                  <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0">{t.id}</span>
-                  <span className="text-sm text-foreground/80">{t.name}</span>
+                <li key={t.id}>
+                  <a
+                    href={`https://attack.mitre.org/techniques/${t.id.replace(".", "/")}/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group spotlight relative flex h-full items-baseline gap-4 bg-surface/60 border border-foreground/5 px-5 py-4 hover:border-primary/40 transition-colors duration-500"
+                  >
+                    <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0">{t.id}</span>
+                    <span className="flex-1 text-sm text-foreground/80 group-hover:text-foreground transition-colors">{t.name}</span>
+                    <span className="hidden sm:block font-mono text-[0.5rem] uppercase tracking-[0.2em] text-foreground/40 shrink-0">{t.tactic.replace(/-/g, " ")}</span>
+                  </a>
                 </li>
               ))}
             </ul>

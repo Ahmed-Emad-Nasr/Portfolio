@@ -51,10 +51,6 @@ export function registerLenis(instance: Lenis | null): void {
   lenis = instance;
 }
 
-export function getLenis(): Lenis | null {
-  return lenis;
-}
-
 export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -67,7 +63,7 @@ export function prefersReducedMotion(): boolean {
  * the heading ends up hidden underneath it. The number is read from the DOM, not hard-coded, because
  * the height changes with --ui-scale and with the breakpoints.
  */
-export function getHeaderOffset(): number {
+function getHeaderOffset(): number {
   if (typeof document === "undefined") return 0;
   const header = document.querySelector<HTMLElement>("[data-site-header='true']");
   return (header?.offsetHeight ?? 0) + 15;
@@ -88,7 +84,7 @@ type ScrollOpts = {
  * gives the feeling that the page "settles" rather than brakes, and it gives the images below
  * the fold time to finish loading before they reach the middle of the screen.
  */
-export const EASE_OUT_EXPO = (t: number): number => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+const EASE_OUT_EXPO = (t: number): number => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
 /*
  * Note: this curve is the same as --motion-ease-out in globals.css
@@ -98,10 +94,10 @@ export const EASE_OUT_EXPO = (t: number): number => (t === 1 ? 1 : 1 - Math.pow(
  */
 
 /** Default duration for any programmatic jump (button, shortcut, nav link). */
-export const SCROLL_DURATION = 2.1;
+const SCROLL_DURATION = 2.1;
 
 /** Scroll the page to a given vertical coordinate. */
-export function scrollToY(top: number, opts: ScrollOpts = {}): void {
+function scrollToY(top: number, opts: ScrollOpts = {}): void {
   if (typeof window === "undefined") return;
 
   const immediate = opts.immediate || prefersReducedMotion();
@@ -154,25 +150,4 @@ export function isTypingTarget(target: EventTarget | null): boolean {
     tag === "SELECT" ||
     target.isContentEditable
   );
-}
-
-/**
- * Does this element (or any ancestor) scroll internally?
- *
- * The terminal, the command palette and the gallery modal all have regions that scroll
- * on their own (`overflow-y: auto` + `overscroll-behavior: contain`). If
- * keyboard shortcuts hijacked the arrow keys inside them, those lists wouldn't scroll at all
- * and the page behind them would move instead.
- */
-export function isInScrollableRegion(target: EventTarget | null): boolean {
-  let node = target instanceof HTMLElement ? target : null;
-  while (node && node !== document.body) {
-    const style = getComputedStyle(node);
-    const scrollable = /(auto|scroll|overlay)/.test(
-      style.overflowY + style.overflow,
-    );
-    if (scrollable && node.scrollHeight > node.clientHeight + 1) return true;
-    node = node.parentElement;
-  }
-  return false;
 }

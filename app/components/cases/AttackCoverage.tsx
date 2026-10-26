@@ -24,6 +24,55 @@ import type { CSSProperties } from "react";
 import FadeIn from "@/app/core/components/FadeIn";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import { rv } from "@/app/core/reveal";
+import { normalizePublicHref } from "@/app/core/config/shared";
+import { SITE_URL } from "@/app/core/config/seo";
+
+const LAYER_PATH = "attack-navigator-layer.json";
+const NAVIGATOR_URL = `https://mitre-attack.github.io/attack-navigator/#layerURL=${encodeURIComponent(`${SITE_URL}${LAYER_PATH}`)}`;
+
+/* The whole matrix in one screen: a column per tactic, a cell per covered
+   technique, sweeping in left to right in kill-chain order the first time it
+   scrolls into view. Each cell opens the same evidence popover as the tiles
+   below, so it ships no JavaScript of its own either. */
+function MatrixView({ tactics, max }: { tactics: CoverageTactic[]; max: number }) {
+  return (
+    <div className="hidden md:block mb-14 md:mb-16">
+      <div className="mb-3 flex items-center justify-between gap-4 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60">
+        <span>Matrix view // one cell per technique</span>
+        <span>Click a cell for its reports</span>
+      </div>
+      <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${tactics.length}, minmax(0, 1fr))` }}>
+        {tactics.map((t, col) => (
+          <div key={t.id} className="flex flex-col gap-1.5 min-w-0">
+            <a
+              href={`#tactic-${t.id}`}
+              className="px-1 py-2 border-b-2 border-primary/60 font-mono text-[0.5rem] font-bold uppercase tracking-[0.12em] text-foreground/70 leading-tight text-center hover:text-primary-ink transition-colors min-h-[2.25rem] flex items-center justify-center [overflow-wrap:anywhere]"
+              title={t.name}
+            >
+              {t.short}
+            </a>
+            {t.techniques.map((x, row) => (
+              <button
+                key={x.id}
+                type="button"
+                popoverTarget={popId(x.id)}
+                className="attack-cell"
+                style={heat(x.cases.length, max)}
+                title={`${x.id} ${x.name} — ${x.cases.length} ${x.cases.length === 1 ? "report" : "reports"}`}
+                data-reveal={rv({ y: -10, duration: 0.45, delay: col * 0.06 + row * 0.04 })}
+              >
+                <span className="block font-mono text-[0.5625rem] font-bold text-accent">{x.id}</span>
+                <span className="block text-[0.5625rem] leading-tight text-foreground/70 line-clamp-3">{x.name}</span>
+              </button>
+            ))}
+            {t.techniques.length === 0 && <span className="h-10 border border-dashed border-foreground/10" aria-hidden="true" />}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export type CoverageTechnique = {
   id: string;
@@ -204,6 +253,8 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
           </ol>
         </FadeIn>
 
+        <MatrixView tactics={tactics} max={max} />
+
         {/* ─── The ledger: one row per tactic ─── */}
         <div className="border-t border-foreground/10">
           {tactics.map((t) => {
@@ -253,6 +304,25 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
               </FadeIn>
             );
           })}
+        </div>
+
+        {/* ─── Take it with you: the same coverage as an ATT&CK Navigator layer ─── */}
+        <div className="mt-10 flex flex-wrap gap-3">
+          <a
+            href={normalizePublicHref(LAYER_PATH)}
+            download="ahmed-emad-nasr-attack-layer.json"
+            className="group inline-flex items-center gap-2 px-5 py-3 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors"
+          >
+            <span className="transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true">↓</span> Navigator layer (JSON)
+          </a>
+          <a
+            href={NAVIGATOR_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 px-5 py-3 border border-foreground/15 text-foreground/80 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors"
+          >
+            Open in ATT&amp;CK Navigator <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
+          </a>
         </div>
 
         <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-foreground/60">

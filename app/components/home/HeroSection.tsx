@@ -45,9 +45,12 @@ export default function HeroSection({
   projectCount,
   starCount,
   description,
+  evidenceLabel,
 }: {
   projectCount: number;
   starCount: number;
+  /** "28 reports · 1 rule merged upstream" — the strongest proof, from live-copy.ts */
+  evidenceLabel?: string;
   /** The summary paragraph — quotes the case-library numbers (live-copy.ts) */
   description: string;
 }) {
@@ -433,6 +436,7 @@ export default function HeroSection({
               <FieldRow label="Role" value={PORTFOLIO_DATA.profile.title} />
               <FieldRow label="Base" value={PORTFOLIO_DATA.profile.contact.location} />
               <FieldRow label="Focus" value={focusLabel} />
+              {evidenceLabel && <FieldRow label="Evidence" value={evidenceLabel} />}
               <FieldRow label="Shipped" value={shippedLabel} />
               <FieldRow label="Languages" value={tongueCodes} />
             </dl>

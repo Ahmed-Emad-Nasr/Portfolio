@@ -25,9 +25,9 @@ export type SummaryStep = {
   items?: string[];
 };
 
-export type SummaryPhase = { index: number; title: string; steps: SummaryStep[] };
+type SummaryPhase = { index: number; title: string; steps: SummaryStep[] };
 
-export type ArtifactKind = "ip" | "cve" | "osvdb" | "port" | "technique";
+type ArtifactKind = "ip" | "cve" | "osvdb" | "port" | "technique";
 export type Artifact = { kind: ArtifactKind; value: string };
 
 export type CaseSummary = {
@@ -47,7 +47,7 @@ export type CaseSummary = {
    followed by a letter (so "user's" inside never closes one). */
 const CODE_SPAN = /(^|[\s([{])'([^'\n]{1,160}?)'(?=[^\w]|$)/g;
 
-export const PLACEHOLDER = /\u0000(\d+)\u0000/g;
+const PLACEHOLDER = /\u0000(\d+)\u0000/g;
 
 function maskCode(text: string): Rich {
   const code: string[] = [];

@@ -25,7 +25,7 @@
  * Format of the attribute: "x,y,duration,delay" (px, px, s, s).
  */
 
-export type RevealOptions = { x?: number; y?: number; duration?: number; delay?: number };
+type RevealOptions = { x?: number; y?: number; duration?: number; delay?: number };
 
 export const rv = ({ x = 0, y = 24, duration = 0.7, delay = 0 }: RevealOptions = {}): string =>
   `${x},${y},${duration},${+delay.toFixed(3)}`;
