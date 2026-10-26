@@ -63,7 +63,7 @@ export default function DetectionLibrary() {
               >
                 <span className={`absolute inset-0 bg-primary origin-left transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${active ? "scale-x-100" : "scale-x-0"}`} aria-hidden="true" />
                 <span className="relative">
-                  {g ? RULE_GROUP_LABEL[g] : "All rules"} <span className="opacity-70 tabular-nums">{n}</span>
+                  {g ? RULE_GROUP_LABEL[g] : "All rules"} <span className="opacity-90 tabular-nums">{n}</span>
                 </span>
               </button>
             );
@@ -76,9 +76,9 @@ export default function DetectionLibrary() {
             <span className="flex items-center gap-3 font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/60">
               <Radar size={13} className="text-primary-ink radar-spin" aria-hidden="true" /> local_rules.xml
             </span>
-            <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/40 tabular-nums">{rules.length} loaded</span>
+            <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60 tabular-nums">{rules.length} loaded</span>
           </div>
-          <div className="hidden md:grid grid-cols-[5.5rem_7rem_1fr_6.5rem] gap-4 px-5 py-2.5 border-b border-foreground/5 font-mono text-[0.5rem] uppercase tracking-[0.25em] text-foreground/40">
+          <div className="hidden md:grid grid-cols-[5.5rem_7rem_1fr_6.5rem] gap-4 px-5 py-2.5 border-b border-foreground/5 font-mono text-[0.5rem] uppercase tracking-[0.25em] text-foreground/60">
             <span>Rule</span>
             <span>Level</span>
             <span>Fires on</span>
@@ -115,7 +115,7 @@ export default function DetectionLibrary() {
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4" data-reveal={rv({ y: 12, duration: 0.5 })}>
-          <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/40">
+          <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
             $(…) = Wazuh field placeholders, filled in when the alert fires
           </p>
           <Link

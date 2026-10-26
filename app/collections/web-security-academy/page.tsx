@@ -111,7 +111,7 @@ export default function WebSecurityAcademyPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <span className="font-mono text-[0.625rem] font-bold text-primary-ink tabular-nums">{String(gi + 1).padStart(2, "0")}</span>
                   <h2 id={`wsa-${gi}`} className="font-display text-xl md:text-2xl font-black uppercase tracking-tight text-foreground">{g.name}</h2>
-                  <span className="font-mono text-[0.625rem] text-foreground/40">{g.labs.length}</span>
+                  <span className="font-mono text-[0.625rem] text-foreground/60">{g.labs.length}</span>
                   <span className="flex-1 h-px bg-gradient-to-r from-foreground/10 to-transparent" aria-hidden="true" />
                 </div>
                 <ul className="border border-foreground/10 divide-y divide-foreground/5 bg-surface/40">
@@ -120,7 +120,7 @@ export default function WebSecurityAcademyPage() {
                       <Link href={`/blog/${lab.id}`} className="group grid grid-cols-[1fr_auto] md:grid-cols-[1fr_6rem_5rem_1.5rem] items-center gap-4 px-5 py-4 hover:bg-foreground/[0.03] transition-colors">
                         <span className="text-sm md:text-base text-foreground/85 group-hover:text-foreground transition-colors">{lab.title}</span>
                         <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5625rem] uppercase tracking-[0.2em] ${DIFF_TONE[lab.difficulty] ?? "text-foreground/60 border-foreground/20"}`}>{lab.difficulty}</span>
-                        <span className="hidden md:flex items-center gap-1.5 font-mono text-[0.625rem] text-foreground/50 tabular-nums">
+                        <span className="hidden md:flex items-center gap-1.5 font-mono text-[0.625rem] text-foreground/60 tabular-nums">
                           <Images size={12} aria-hidden="true" /> {caseScreenshotsByEvidenceId[lab.id]?.length ?? 0}
                         </span>
                         <ArrowUpRight size={14} className="hidden md:block text-foreground/30 group-hover:text-primary-ink transition-colors" aria-hidden="true" />

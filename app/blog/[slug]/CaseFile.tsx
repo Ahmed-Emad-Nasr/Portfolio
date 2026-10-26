@@ -161,7 +161,7 @@ function Facts({ facts }: { facts: NonNullable<CaseDetail["facts"]> }) {
     <dl className="border border-foreground/10 bg-surface/60 divide-y divide-foreground/5">
       {facts.map((f, i) => (
         <div key={f.label} className="grid grid-cols-[7.5rem_1fr] gap-4 px-5 py-3" data-reveal={rv({ x: -12, y: 0, duration: 0.5, delay: i * 0.05 })}>
-          <dt className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/50 pt-0.5">{f.label}</dt>
+          <dt className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60 pt-0.5">{f.label}</dt>
           <dd className="text-sm text-foreground/85 [overflow-wrap:anywhere]">{f.value}</dd>
         </div>
       ))}
@@ -185,7 +185,7 @@ function Chain({ chain }: { chain: NonNullable<CaseDetail["chain"]> }) {
       {chain.map((c, i) => (
         <li key={i} className="relative pb-5 last:pb-0">
           <span
-            className="absolute -left-8 top-0.5 flex h-6 w-6 items-center justify-center border border-foreground/20 bg-background font-mono text-[0.5625rem] font-bold text-foreground/40 transition-all duration-500 data-[on=true]:border-primary data-[on=true]:text-primary-ink data-[on=true]:shadow-[0_0_14px_-2px_var(--primary)]"
+            className="absolute -left-8 top-0.5 flex h-6 w-6 items-center justify-center border border-foreground/20 bg-background font-mono text-[0.5625rem] font-bold text-foreground/60 transition-all duration-500 data-[on=true]:border-primary data-[on=true]:text-primary-ink data-[on=true]:shadow-[0_0_14px_-2px_var(--primary)]"
             style={{ transitionDelay: `${i * step}s` }}
             data-on={inView}
             aria-hidden="true"
@@ -193,7 +193,7 @@ function Chain({ chain }: { chain: NonNullable<CaseDetail["chain"]> }) {
             {String(i + 1).padStart(2, "0")}
           </span>
           <div
-            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 opacity-40 translate-x-2 transition-all duration-500 data-[on=true]:opacity-100 data-[on=true]:translate-x-0"
+            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 opacity-70 translate-x-2 transition-all duration-500 data-[on=true]:opacity-100 data-[on=true]:translate-x-0"
             style={{ transitionDelay: `${i * step}s` }}
             data-on={inView}
           >
@@ -230,7 +230,7 @@ function Timeline({ timeline }: { timeline: NonNullable<CaseDetail["timeline"]> 
       {timeline.map((t, i) => (
         <li
           key={i}
-          className="relative pl-7 pb-6 last:pb-0 opacity-30 transition-opacity duration-500 data-[on=true]:opacity-100"
+          className="relative pl-7 pb-6 last:pb-0 opacity-70 translate-y-1.5 transition-all duration-500 data-[on=true]:opacity-100 data-[on=true]:translate-y-0"
           style={{ transitionDelay: `${i * 0.3}s` }}
           data-on={inView}
         >
@@ -253,7 +253,7 @@ function Iocs({ iocs }: { iocs: NonNullable<CaseDetail["iocs"]> }) {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/50">
+        <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
           Network indicators are defanged · click a row to copy
         </p>
         <button
@@ -274,15 +274,15 @@ function Iocs({ iocs }: { iocs: NonNullable<CaseDetail["iocs"]> }) {
                 type="button"
                 onClick={() => void copy(key, value)}
                 className="group w-full text-left grid grid-cols-1 md:grid-cols-[6rem_1fr_auto] items-start gap-x-4 gap-y-1 px-4 py-3 hover:bg-foreground/[0.03] transition-colors"
-                aria-label={`Copy ${IOC_LABEL[i.type]} ${value}`}
               >
-                <span className="font-mono text-[0.5625rem] font-bold uppercase tracking-[0.25em] text-foreground/40 pt-0.5">{IOC_LABEL[i.type]}</span>
+                <span className="sr-only">Copy </span>
+                <span className="font-mono text-[0.5625rem] font-bold uppercase tracking-[0.25em] text-foreground/60 pt-0.5">{IOC_LABEL[i.type]}</span>
                 <span className="min-w-0">
                   <ScrambleText
                     text={value}
                     className={`block font-mono text-xs [overflow-wrap:anywhere] ${i.type === "hash" ? "text-primary-ink" : NETWORK_IOC.has(i.type) ? "text-accent" : "text-tertiary"}`}
                   />
-                  {i.note && <span className="block mt-1 text-xs text-foreground/50">{i.note}</span>}
+                  {i.note && <span className="block mt-1 text-xs text-foreground/60">{i.note}</span>}
                 </span>
                 <span className="hidden md:flex items-center text-foreground/30 group-hover:text-foreground/70 transition-colors" aria-hidden="true">
                   {copied === key ? <Check size={13} className="text-accent" /> : <Copy size={13} />}
@@ -350,12 +350,12 @@ function ReportViewer({ href, title }: { href: string; title: string }) {
         >
           <FileText size={28} className="text-primary-ink transition-transform duration-500 group-hover:-translate-y-1" aria-hidden="true" />
           <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-foreground">Read the report here</span>
-          <span className="text-xs text-foreground/50">Opens the PDF inside this page — or use View PDF above</span>
+          <span className="text-xs text-foreground/60">Opens the PDF inside this page — or use View PDF above</span>
         </button>
       ) : (
         <div className="border border-foreground/10 bg-surface">
           <iframe src={`${src}#view=FitH`} title={`${title} — report`} className="w-full h-[80vh]" loading="lazy" />
-          <p className="px-4 py-2 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/50">
+          <p className="px-4 py-2 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60">
             Not showing? <a href={src} target="_blank" rel="noopener noreferrer" className="text-primary-ink underline underline-offset-4">Open the PDF in a new tab</a>
           </p>
         </div>

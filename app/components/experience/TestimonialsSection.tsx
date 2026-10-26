@@ -34,10 +34,10 @@ export default function TestimonialsSection() {
                 <figcaption className="mt-auto flex items-end justify-between gap-4 pt-5 border-t border-foreground/5">
                   <span>
                     <span className="block font-display text-sm font-black uppercase tracking-tight text-foreground">{t.name}</span>
-                    <span className="block mt-1 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/50">{t.role} · {t.org}</span>
+                    <span className="block mt-1 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/60">{t.role} · {t.org}</span>
                   </span>
                   {t.link && (
-                    <a href={t.link} target="_blank" rel="noopener noreferrer" className="shrink-0 text-foreground/40 hover:text-primary-ink transition-colors" aria-label={`Verify ${t.name}'s recommendation`}>
+                    <a href={t.link} target="_blank" rel="noopener noreferrer" className="shrink-0 text-foreground/60 hover:text-primary-ink transition-colors" aria-label={`Verify ${t.name}'s recommendation`}>
                       <ArrowUpRight size={16} />
                     </a>
                   )}

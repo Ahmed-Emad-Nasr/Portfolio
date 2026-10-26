@@ -29,7 +29,7 @@ const SEVERITY_DOT: Record<string, string> = {
 export default function CaseList({ items }: { items: readonly PdfResource[] }) {
   return (
     <div className="border border-foreground/10 bg-surface/40">
-      <div className="hidden md:grid grid-cols-[1fr_7rem_10rem_9rem_6.5rem_1.5rem] gap-4 px-5 py-3 border-b border-foreground/10 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/50">
+      <div className="hidden md:grid grid-cols-[1fr_7rem_10rem_9rem_6.5rem_1.5rem] gap-4 px-5 py-3 border-b border-foreground/10 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
         <span>Case</span>
         <span>Kind</span>
         <span>Category</span>
@@ -51,7 +51,7 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
                 )}
                 <span className="min-w-0">
                   <span className="block text-sm md:text-[0.95rem] text-foreground/85 group-hover:text-foreground transition-colors">{item.title}</span>
-                  {item.verdict && <span className="block mt-0.5 text-xs text-foreground/50 truncate">{item.verdict}</span>}
+                  {item.verdict && <span className="block mt-0.5 text-xs text-foreground/60 truncate">{item.verdict}</span>}
                 </span>
               </span>
               <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5rem] uppercase tracking-[0.2em] ${KIND_TONE[item.kind ?? "lab"]}`}>
@@ -59,7 +59,7 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
               </span>
               <span className="font-mono text-[0.625rem] text-foreground/60 truncate">{item.category}</span>
               <span className="font-mono text-[0.625rem] text-foreground/60 truncate">{item.platform}</span>
-              <span className="font-mono text-[0.625rem] text-foreground/50 tabular-nums">{item.date ? formatDate(item.date) : ""}</span>
+              <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">{item.date ? formatDate(item.date) : ""}</span>
               <ArrowUpRight size={14} className="hidden md:block text-foreground/30 group-hover:text-primary-ink transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
           </li>

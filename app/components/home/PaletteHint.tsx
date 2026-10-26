@@ -60,7 +60,7 @@ export default function PaletteHint() {
         section, <kbd className="px-1.5 py-0.5 border border-foreground/20 font-mono text-xs">?</kbd> for shortcuts — or just type{" "}
         <span className="font-mono text-primary-ink">3omda</span>.
       </p>
-      <button type="button" onClick={() => setOpen(false)} className="text-foreground/40 hover:text-foreground" aria-label="Dismiss">
+      <button type="button" onClick={() => setOpen(false)} className="text-foreground/60 hover:text-foreground" aria-label="Dismiss">
         <X size={14} />
       </button>
     </div>

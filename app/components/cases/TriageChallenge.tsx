@@ -115,7 +115,7 @@ export default function TriageChallenge() {
                 <Siren size={16} className="text-primary-ink siren-pulse" aria-hidden="true" />
                 <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.3em] text-primary-ink">New alert · Critical</span>
               </span>
-              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/40">Feb 04 2025 · 16:18</span>
+              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">Feb 04 2025 · 16:18</span>
             </div>
             <dl className="px-6 py-5 grid gap-3 font-mono text-xs min-h-[17rem]">
               {ALERT.map(([k, v], i) => (
@@ -123,7 +123,7 @@ export default function TriageChallenge() {
                   key={k}
                   className={`grid grid-cols-[5.5rem_1fr] gap-3 transition-all duration-500 ${i < streamed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}
                 >
-                  <dt className="uppercase tracking-[0.2em] text-foreground/40 text-[0.5625rem] pt-0.5">{k}</dt>
+                  <dt className="uppercase tracking-[0.2em] text-foreground/60 text-[0.5625rem] pt-0.5">{k}</dt>
                   <dd className={`[overflow-wrap:anywhere] ${k === "cmdline" ? "text-accent" : k === "severity" ? "text-primary-ink font-bold" : "text-foreground/80"}`}>{v}</dd>
                 </div>
               ))}

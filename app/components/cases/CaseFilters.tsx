@@ -102,7 +102,7 @@ function CaseFilters({
                   aria-hidden="true"
                 />
                 <span className="relative">
-                  {k.label} <span className="ml-1 tabular-nums opacity-70">{k.count}</span>
+                  {k.label} <span className="ml-1 tabular-nums opacity-90">{k.count}</span>
                 </span>
               </button>
             );
@@ -129,7 +129,7 @@ function CaseFilters({
                 onClick={() => onViewChange(v)}
                 aria-pressed={view === v}
                 aria-label={v === "cards" ? "Card view" : "List view"}
-                className={`p-2 transition-colors duration-300 ${view === v ? "bg-foreground/10 text-primary-ink" : "text-foreground/50 hover:text-foreground"}`}
+                className={`p-2 transition-colors duration-300 ${view === v ? "bg-foreground/10 text-primary-ink" : "text-foreground/60 hover:text-foreground"}`}
               >
                 {v === "cards" ? <LayoutGrid size={14} /> : <List size={14} />}
               </button>

@@ -116,7 +116,7 @@ export default function HomeLab() {
           <p className="md:hidden mt-3 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-primary-ink flex items-center gap-2" aria-hidden="true">
             Swipe for the full lab <span className="inline-block animate-pulse">→</span>
           </p>
-          <figcaption className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/50">
+          <figcaption className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
             <span className="flex items-center gap-2"><span className="h-[2px] w-5 bg-primary" /> attack path</span>
             <span className="flex items-center gap-2"><span className="h-[2px] w-5 bg-foreground/40" /> telemetry</span>
             <span className="flex items-center gap-2"><span className="h-[2px] w-5 bg-tertiary" /> alerts &amp; cases</span>

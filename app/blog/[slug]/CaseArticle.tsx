@@ -192,7 +192,7 @@ export default function CaseArticle({
           <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent" />
-              <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-[0.3em] uppercase">Case summary</span>
+              <h2 className="font-mono text-[0.5625rem] font-normal text-foreground/60 tracking-[0.3em] uppercase">Case summary</h2>
               <span className="hidden sm:inline font-mono text-[0.5625rem] text-foreground/30 tracking-wider">~/cases/{item.id}/brief.md</span>
             </div>
             <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-wider uppercase">{item.category}</span>
@@ -285,7 +285,7 @@ export default function CaseArticle({
                   >
                     <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0">{t.id}</span>
                     <span className="flex-1 text-sm text-foreground/80 group-hover:text-foreground transition-colors">{t.name}</span>
-                    <span className="hidden sm:block font-mono text-[0.5rem] uppercase tracking-[0.2em] text-foreground/40 shrink-0">{t.tactic.replace(/-/g, " ")}</span>
+                    <span className="hidden sm:block font-mono text-[0.5rem] uppercase tracking-[0.2em] text-foreground/60 shrink-0">{t.tactic.replace(/-/g, " ")}</span>
                   </a>
                 </li>
               ))}
