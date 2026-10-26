@@ -15,22 +15,41 @@ import { CV_PDF_HREF, normalizePublicHref } from "@/app/core/config/shared";
 export default function MobileActionBar() {
   const [shown, setShown] = useState(false);
 
+  /* Shown between the hero and the contact section, phones only. Two
+     IntersectionObservers instead of a scroll handler that measured the
+     contact section every frame — and that ran on desktops too, where the
+     bar is never visible. */
   useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
+    const phone = window.matchMedia("(max-width: 767px)");
+    let io: IntersectionObserver | null = null;
+    const start = () => {
+      io?.disconnect();
+      if (!phone.matches) {
+        setShown(false);
+        return;
+      }
+      const hero = document.getElementById("home");
       const contact = document.getElementById("contact");
-      const nearContact = contact ? contact.getBoundingClientRect().top < window.innerHeight * 0.9 : false;
-      setShown(window.scrollY > window.innerHeight * 0.9 && !nearContact);
+      let pastHero = false;
+      let nearContact = false;
+      io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.target === hero) pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+            if (e.target === contact) nearContact = e.isIntersecting;
+          }
+          setShown(pastHero && !nearContact);
+        },
+        { rootMargin: "0px 0px -10% 0px" }
+      );
+      if (hero) io.observe(hero);
+      if (contact) io.observe(contact);
     };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    start();
+    phone.addEventListener("change", start);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
+      io?.disconnect();
+      phone.removeEventListener("change", start);
     };
   }, []);
 

@@ -196,7 +196,7 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
             {/* Who wrote it */}
             <aside className="mt-16 flex flex-col gap-5 border border-foreground/10 border-s-2 border-s-primary bg-surface/50 p-6 sm:flex-row sm:items-center">
               {/* eslint-disable-next-line @next/next/no-img-element -- static export: no image optimiser */}
-              <img src={normalizePublicHref("/Assets/art-gallery/Images/logo/3omda.webp")} alt="" width={64} height={64} className="h-16 w-16 shrink-0 rounded-full border border-foreground/10 object-cover" />
+              <img src={normalizePublicHref("/Assets/art-gallery/Images/logo/3omda.webp")} alt="" width={64} height={64} loading="lazy" decoding="async" className="h-16 w-16 shrink-0 rounded-full border border-foreground/10 object-cover" />
               <div className="min-w-0">
                 <p className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/50">{t.by}</p>
                 <p className="mt-1 font-display text-lg font-black uppercase text-foreground" dir="ltr">Ahmed Emad Nasr</p>

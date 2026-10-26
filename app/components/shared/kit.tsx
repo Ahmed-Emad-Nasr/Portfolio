@@ -107,8 +107,7 @@ export function PageShell({ children, className = "" }: { children: ReactNode; c
     <>
       <SiteNav />
       <main id="main-content" className={`relative w-full bg-background text-foreground overflow-x-hidden ${className}`}>
-        <div className="fixed inset-0 pointer-events-none z-[50] opacity-[0.015] scanlines" aria-hidden="true" />
-        <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.02] neural-grid" aria-hidden="true" />
+        {/* No full-screen fixed overlays here: see app/page.tsx */}
         {children}
       </main>
       <footer className="relative bg-background px-6 md:px-20 pb-12">

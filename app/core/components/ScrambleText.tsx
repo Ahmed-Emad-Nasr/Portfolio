@@ -15,7 +15,7 @@
  *  · Runs once, only while visible, and not at all with reduced motion.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/app/core/theme/fx";
 
 const NOISE = "0123456789ABCDEF#$%&*<>/\\|=+";
@@ -25,12 +25,19 @@ const FIXED = /[\s/·•&—:.,\-\u3000-\u9fff\uff00-\uffef]/;
 const STEP_MS = 28;
 
 export default function ScrambleText({ text, className }: { text: string; className?: string }) {
-  const [shown, setShown] = useState(text);
+  /* The noise is written straight into the span (textContent), not through
+     React state: a re-render every 28 ms per header, while the page is
+     scrolling, was React work for a purely visual effect. */
   const ref = useRef<HTMLSpanElement>(null);
+  const out = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || prefersReducedMotion() || !("IntersectionObserver" in window)) return;
+    const target = out.current;
+    if (!el || !target || prefersReducedMotion() || !("IntersectionObserver" in window)) return;
+    const setShown = (value: string) => {
+      target.textContent = value;
+    };
 
     let frame = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -70,7 +77,7 @@ export default function ScrambleText({ text, className }: { text: string; classN
   return (
     <span ref={ref} className={className}>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true">{shown}</span>
+      <span ref={out} aria-hidden="true">{text}</span>
     </span>
   );
 }

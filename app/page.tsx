@@ -194,18 +194,12 @@ export default async function Home() {
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-hidden">
       <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} />
-      {/* ─── Full-page scanlines overlay ─── */}
-      <div
-        className="fixed inset-0 pointer-events-none z-[50] opacity-[0.015] scanlines"
-        aria-hidden="true"
-      />
-
-      {/* ─── Subtle grid background ─── */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.02] neural-grid"
-        aria-hidden="true"
-      />
-
+      {/* The two full-screen fixed overlays of the original theme (scanlines
+          at 1.5% opacity, a dot grid at 2% of a 7% tint — together under
+          0.2% visible) were removed: invisible on screen, but every element
+          scrolling under a fixed layer has to be overlap-tested each frame,
+          and dropping them halved the main-thread time of a throttled
+          desktop scroll trace. */}
       <SiteNav />
       <MobileActionBar />
       <PaletteHint />

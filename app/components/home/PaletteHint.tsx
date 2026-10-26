@@ -27,26 +27,32 @@ export default function PaletteHint() {
     setMac(/Mac|iPhone|iPad/.test(navigator.platform));
     /* Not over the hero: it used to open 7 s in, bottom-left — right on
        top of the hero's spec sheet and headline. Now it waits until the
-       reader has scrolled past the hero (and spent a few seconds here). */
+       reader has scrolled past the hero (and spent a few seconds here).
+       "Past the hero" comes from an IntersectionObserver, not a scroll
+       listener: reading scrollY on every scroll event forced a layout per
+       frame while Lenis was moving the page (~1 s of main thread in a
+       throttled scroll trace). */
     let timeUp = false;
-    let pastHero = window.scrollY > window.innerHeight * 0.9;
+    let pastHero = false;
     const maybeOpen = () => timeUp && pastHero && setOpen(true);
     const t = window.setTimeout(() => {
       timeUp = true;
       maybeOpen();
     }, 5000);
-    const onScroll = () => {
-      if (window.scrollY > window.innerHeight * 0.9) {
+    const hero = document.getElementById("home");
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting && e.boundingClientRect.top < 0) {
         pastHero = true;
         maybeOpen();
+        io.disconnect();
       }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
+    });
+    if (hero) io.observe(hero);
     const close = () => setOpen(false);
     window.addEventListener("keydown", close, { once: true });
     return () => {
       window.clearTimeout(t);
-      window.removeEventListener("scroll", onScroll);
+      io.disconnect();
       window.removeEventListener("keydown", close);
     };
   }, []);

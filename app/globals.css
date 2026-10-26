@@ -265,23 +265,6 @@
   display: block;
 }
 
-.neural-grid {
-  background-image: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 0);
-  background-size: 40px 40px;
-}
-
-/* ─── JDM Overlay Effects ─── */
-
-.scanlines {
-  background-image: repeating-linear-gradient(0deg,
-      rgba(0, 0, 0, 0.1) 0px,
-      rgba(0, 0, 0, 0.1) 1px,
-      transparent 1px,
-      transparent 4px);
-  background-size: 100% 4px;
-  pointer-events: none;
-}
-
 .halftone {
   background-image: radial-gradient(circle at 2px 2px, color-mix(in srgb, var(--foreground) 5%, transparent) 1px, transparent 0);
   background-size: 8px 8px;
@@ -1392,4 +1375,31 @@
 }
 @keyframes attack-heat {
   from { background-color: var(--surface); border-color: color-mix(in srgb, var(--foreground) 6%, transparent); }
+}
+
+/* ─── backdrop-filter only where something moves behind it ─────────────
+   52 elements carried backdrop-blur. On a fixed bar or an overlay it is
+   the design (the page slides under it). On a card or a section sitting on
+   the flat page background there is nothing to blur — but the browser
+   still re-blurs the backdrop of every one on screen, every scrolled
+   frame (the largest compositing cost in a throttled scroll trace). In-flow
+   elements drop it; their translucent background looks the same over a
+   flat page. Fixed, sticky and absolutely placed elements (nav, menus,
+   badges over images) keep it. */
+:where(main, footer) [class*="backdrop-blur"]:not(.fixed, .sticky, .absolute) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ─── No hover work while the page is gliding ──────────────────────────
+   With a mouse resting on the page, every card that slides under it during
+   a smooth scroll switches its hover state — spotlight, tilt, border and
+   colour transitions — frame after frame. Lenis marks the root with
+   .lenis-scrolling while it moves the page; for that time the content
+   ignores the pointer. The nav, the menu and the toasts stay live. Touch
+   screens (no hover) are not affected. */
+@media (hover: hover) {
+  html.lenis-scrolling :where(main, footer) > :not([data-site-header], #mobile-menu, [role="status"]) {
+    pointer-events: none;
+  }
 }

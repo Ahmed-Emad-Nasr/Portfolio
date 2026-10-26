@@ -46,12 +46,25 @@ interface Command {
   run: () => void | Promise<void>;
 }
 
-/* Passed in by the root layout (a server component), so the palette doesn't
-   pull all of cases.ts into every page's bundle for three fields */
+/* Cases and posts to search, fetched from /palette-index.json when the
+   palette first opens — not shipped in every page's HTML or bundle */
 type CaseIndexEntry = { id: string; title: string; category: string };
 
-export function CommandPalette({ cases = [] }: { cases?: readonly CaseIndexEntry[] }) {
-  const [open, setOpen] = useState(false);
+/* Loaded on demand by PaletteMount (the first Ctrl/⌘K, "/" or Search) —
+   so it starts open */
+export default function CommandPalette({ initialOpen = true }: { initialOpen?: boolean }) {
+  const [open, setOpen] = useState(initialOpen);
+  const [cases, setCases] = useState<readonly CaseIndexEntry[]>([]);
+  useEffect(() => {
+    let alive = true;
+    fetch(normalizePublicHref("/palette-index.json"))
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: CaseIndexEntry[]) => alive && setCases(list))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
   const [copied, setCopied] = useState(false);

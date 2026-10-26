@@ -30,16 +30,42 @@ type RevealOptions = { x?: number; y?: number; duration?: number; delay?: number
 export const rv = ({ x = 0, y = 24, duration = 0.7, delay = 0 }: RevealOptions = {}): string =>
   `${x},${y},${duration},${+delay.toFixed(3)}`;
 
-/* Kept as plain ES5 so it runs as-is in an inline <script>. The easing is
-   core/motion.ts EASE. */
+/*
+ * The choreography (tuned to match the hero's own entrance — globals.css,
+ * .hero-content):
+ *
+ *  · late start: an element waits until it is ~15% inside the screen, so a
+ *    section is seen arriving instead of having finished before the reader
+ *    got there;
+ *  · slow, long ease-out: each component's own values (data-reveal) are
+ *    scaled to the hero's tempo — ~1–1.35 s, travel up to 56 px, the hero's
+ *    quart-out curve;
+ *  · one after another: everything that comes into view in the same frame
+ *    is sorted top-to-bottom and staggered 110 ms apart, so a grid of cards
+ *    cascades instead of popping in together (and the compositor gets a few
+ *    layers at a time, not thirty). A component's own index delay is capped
+ *    at 0.45 s — card 30 of a grid used to wait 2.4 s after scrolling in;
+ *  · phones run at 0.8× of that, a little brisker under a thumb.
+ *
+ * Transform and opacity only: the compositor animates them off the main
+ * thread, so the cascade cannot stutter the scroll.
+ *
+ * Kept as plain ES5 so it runs as-is in an inline <script>.
+ */
 export const REVEAL_SCRIPT = `(function(){try{
 var w=window,d=document;
 if(!("IntersectionObserver"in w)||!d.documentElement.animate||w.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-var E="cubic-bezier(0.23,1,0.32,1)",S=w.WeakMap?new WeakMap():null;if(!S)return;
-var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){var e=es[i];if(!e.isIntersecting)continue;var el=e.target;io.unobserve(el);var h=S.get(el);
-var p=(el.getAttribute("data-reveal")||"").split(","),x=+p[0]||0,y=p[1]===undefined?24:+p[1]||0,t=(+p[2]||0.7)*1000,dl=(+p[3]||0)*1000;
-el.animate([{opacity:0,transform:"translate("+x+"px,"+y+"px)"},{opacity:1,transform:"none"}],{duration:t,delay:dl,easing:E,fill:"backwards"});
-if(h)h.cancel();}},{rootMargin:"0px 0px -40px 0px"});
+var E="cubic-bezier(0.165,0.84,0.44,1)",S=w.WeakMap?new WeakMap():null;if(!S)return;
+var M=w.innerWidth<768?0.8:1;
+function cl(v,a,b){return v<a?a:v>b?b:v}
+function sc(v,k){var s=v<0?-1:1,a=Math.abs(v)*k;return a?s*cl(a,a,56):0}
+var io=new IntersectionObserver(function(es){var b=[];for(var i=0;i<es.length;i++){if(!es[i].isIntersecting)continue;b.push(es[i].target);io.unobserve(es[i].target);}
+if(!b.length)return;b.sort(function(a,c){return a.compareDocumentPosition(c)&4?-1:1});
+for(var j=0;j<b.length;j++){var el=b[j],h=S.get(el);
+var p=(el.getAttribute("data-reveal")||"").split(","),x=+p[0]||0,y=p[1]===undefined?24:+p[1]||0,t=+p[2]||0.7,dl=+p[3]||0;
+var dur=cl(t*1.6,0.95,1.35)*M*1000,del=(0.06+Math.min(dl,0.45)*1.2+Math.min(j,7)*0.11)*M*1000;
+el.animate([{opacity:0,transform:"translate("+sc(x,1.4)+"px,"+sc(y,1.8)+"px)"},{opacity:1,transform:"none"}],{duration:dur,delay:del,easing:E,fill:"backwards"});
+if(h)h.cancel();}},{rootMargin:"0px 0px -15% 0px"});
 var H=[],P=0;
 function add(el){if(P||S.has(el))return;var h=el.animate([{opacity:0}],{duration:1,fill:"forwards"});S.set(el,h);H.push(h);io.observe(el);}
 w.addEventListener("beforeprint",function(){P=1;for(var i=0;i<H.length;i++)H[i].cancel();io.disconnect();});

@@ -635,3 +635,52 @@ documents the front matter and every component, and is itself a draft.
 - **Motion:** the post card title morphs into the post headline (React
   `<ViewTransition name share="morph">`); case cards do the same into the
   case headline. The reading-progress bar is a CSS scroll timeline.
+
+---
+
+## 14. Loading and scroll smoothness
+
+Measured with a scripted wheel scroll through the home page (Lenis on),
+counting frames over 50 ms:
+
+| | before | after |
+|---|---|---|
+| Desktop, normal CPU | 41 | 3 |
+| Desktop, CPU ×2 | 73 | 12 |
+| Desktop, CPU ×4 | 129 | 39 |
+| Phone, CPU ×4 | 3 | 0 |
+
+What changed, in order of effect:
+
+1. **No full-screen fixed overlays.** The scanline and dot-grid layers
+   (under 0.2% visible together) made every scrolling element an overlap
+   test for the compositor each frame.
+2. **No hover work during a smooth scroll.** `html.lenis-scrolling` turns
+   off pointer events on the page content (mouse devices only) while Lenis
+   moves it, so cards sliding under a resting cursor do not run spotlight /
+   tilt / transitions every frame. Nav, menu and toasts stay live.
+3. **No layout reads in scroll handlers.** PaletteHint and MobileActionBar
+   use IntersectionObservers; the action bar does nothing on desktops.
+4. **backdrop-filter only on fixed/absolute elements** (globals.css): in-flow
+   cards over the flat page background looked the same without it.
+5. **ScrambleText writes to the DOM directly** instead of re-rendering
+   React every 28 ms.
+
+Loaded on demand instead of with every page:
+
+- the command palette (`PaletteMount` → `CommandPalette` on the first
+  Ctrl/⌘K, `/` or Search) and its search index (`/palette-index.json`,
+  cases + posts — it used to be serialised into every page's HTML);
+- the custom cursor (`CursorMount`: precise pointers only, after idle);
+- lightboxes, the terminal and the shortcuts sheet (already were);
+- images and iframes below the fold (`loading="lazy"`), section rendering
+  (`content-visibility: auto` below the experience timeline), Shiki/MDX
+  (build time only).
+
+### Section entrances (`core/reveal.ts`)
+
+Matched to the hero's tempo: an element starts when it is ~15% inside the
+screen, rises up to 56 px over ~1–1.35 s on the hero's quart-out curve,
+and everything entering in the same frame is sorted top-to-bottom and
+staggered 110 ms apart (component index delays are capped at 0.45 s).
+Phones run at 0.8×. Transform and opacity only.

@@ -26,10 +26,9 @@ import { skillGroups } from "@/app/core/config/skills";
 import { ThemeProvider } from "@/app/core/components/ThemeProvider";
 import { ThemeFxProvider } from "@/app/core/theme/ThemeFxProvider";
 import { SpotlightHost } from "@/app/core/components/Motion";
-import { CommandPalette } from "@/app/core/components/CommandPalette";
-import { caseIndex } from "@/app/core/config/library-data";
+import PaletteMount from "@/app/core/components/PaletteMount";
 import { SmoothScroll } from "@/app/core/components/SmoothScroll";
-import CursorOverlay from "@/app/core/components/CursorOverlay";
+import CursorMount from "@/app/core/components/CursorMount";
 import AppLoader from "@/app/core/components/AppLoader";
 import MotionProvider from "@/app/core/components/MotionProvider";
 import { REVEAL_SCRIPT } from "@/app/core/reveal";
@@ -317,10 +316,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             />
             <AppLoader />
             <SpotlightHost />
-            <CommandPalette cases={caseIndex} />
+            <PaletteMount />
             <KeyboardShortcuts />
             <SmoothScroll>
-              <CursorOverlay />
+              <CursorMount />
               {children}
             </SmoothScroll>
             <MotionBudget />
