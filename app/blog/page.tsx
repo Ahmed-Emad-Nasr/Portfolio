@@ -17,6 +17,7 @@ import { blogYoutubePlaylists, blogYoutubeVideos } from "@/data/youtube";
 import { CHANNEL_ID, PERSON_REF, SITE_URL, jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch } from "@/lib/seo";
 import { absoluteUrl, OG_IMAGE } from "@/lib/site";
 import { normalizePublicHref } from "@/lib/shared";
+import AppLoader from "@/components/layout/AppLoader";
 
 const DESCRIPTION =
   "Incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and Arabic cybersecurity videos by Ahmed Emad Nasr.";
@@ -131,6 +132,7 @@ export default function BlogPage() {
       />
 
       {/* ─── Start here, the case library (filters, cards) and the videos ─── */}
+      <AppLoader />
       <div className={DEFER}>
         <CaseLibrarySection />
       </div>
