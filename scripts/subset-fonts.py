@@ -2,7 +2,7 @@
 """
 scripts/subset-fonts.py — rebuild the share-card (OG image) fonts.
 
-The website itself loads the full Sensei-Dev font set from app/fonts.css
+The website itself loads the full Sensei-Dev font set through next/font (app/fonts.ts)
 (unicode-range slices, so a browser only downloads the slices a page uses).
 This script only feeds the build-time image generators in scripts/og/, which
 inline the fonts as data URIs and need small single files.

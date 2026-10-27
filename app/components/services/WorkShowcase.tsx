@@ -5,7 +5,7 @@ import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import type { WorkType } from "@/app/core/types/portfolio";
 import { ExternalLink, FlaskConical, Microscope, Wrench, Server, Lock, PlayCircle, FileText } from "lucide-react";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { Github } from "@/app/core/icons/BrandIcons";
 import { TiltCard } from "@/app/core/components/Motion";
 import FadeIn from "@/app/core/components/FadeIn";
@@ -137,9 +137,9 @@ export default function WorkShowcase() {
                       </a>
                     )}
                     {w.links.caseStudy && (
-                      <Link href={w.links.caseStudy} className="group/cs flex items-center gap-2 px-4 py-2.5 border border-tertiary/30 text-tertiary font-mono text-[0.625rem] uppercase tracking-[0.2em] hover:border-tertiary hover:bg-tertiary/10 transition-colors">
+                      <PageLink href={w.links.caseStudy} className="group/cs flex items-center gap-2 px-4 py-2.5 border border-tertiary/30 text-tertiary font-mono text-[0.625rem] uppercase tracking-[0.2em] hover:border-tertiary hover:bg-tertiary/10 transition-colors">
                         <FileText size={13} className="transition-transform duration-300 group-hover/cs:-translate-y-0.5" /> Case study
-                      </Link>
+                      </PageLink>
                     )}
                     {!w.links.github && !w.links.live && !w.links.demo && !w.links.caseStudy && (
                       <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.2em] uppercase">Demo on request  NDA client work</span>

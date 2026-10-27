@@ -1,7 +1,7 @@
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ArrowUpRight } from "lucide-react";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
@@ -93,10 +93,10 @@ export default function TechStackGrid() {
                     <ul className="grid gap-0.5">
                       {g.evidence.map((e) => (
                         <li key={e.id}>
-                          <Link href={`/blog/${e.id}`} className="group/proof flex min-h-6 items-start gap-1.5 py-1 text-xs text-foreground/65 hover:text-tertiary transition-colors">
+                          <PageLink href={`/blog/${e.id}`} className="group/proof flex min-h-6 items-start gap-1.5 py-1 text-xs text-foreground/65 hover:text-tertiary transition-colors">
                             <ArrowUpRight size={12} className="mt-0.5 shrink-0 transition-transform duration-300 group-hover/proof:translate-x-0.5 group-hover/proof:-translate-y-0.5" aria-hidden="true" />
                             {e.label}
-                          </Link>
+                          </PageLink>
                         </li>
                       ))}
                     </ul>

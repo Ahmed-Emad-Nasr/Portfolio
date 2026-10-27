@@ -27,7 +27,7 @@ import { getAllPosts, getTags } from "@/app/core/content/posts";
  * show up in Image and Video search with a link back here. Every image listed
  * is one the page actually shows.
  */
-/* The site is one page: the portrait, the share image and the proof gallery */
+/* The home page: the portrait, the share image and the proof gallery */
 const galleryImages = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1)));
 const homeImages = [PERSON_IMAGE, OG_IMAGE.url, ...galleryImages];
 
@@ -40,7 +40,7 @@ const clip = (text: string, max = 1000) => (text.length > max ? `${text.slice(0,
 const xml = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
-/* The videos are in the blog section of the home page */
+/* The videos are on the blog page */
 const blogVideos = blogYoutubeVideos.map((video) => ({
   title: xml(video.title),
   thumbnail_loc: youtubeThumb(video.videoId),
@@ -71,12 +71,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      /* The one page: pitch, about, blog, gallery */
+      /* The portfolio: pitch, about, gallery */
       url: absoluteUrl("/"),
-      lastModified: [latestCaseDate, ...getAllPosts().map((p) => parseDate(p.updated ?? p.date))].reduce((a, b) => (b > a ? b : a)),
+      lastModified: latestCaseDate,
       changeFrequency: "weekly",
       priority: 1,
       images: homeImages,
+    },
+    {
+      /* The blog: posts, the case library, ATT&CK, rules, videos */
+      url: absoluteUrl("/blog"),
+      lastModified: [latestCaseDate, ...getAllPosts().map((p) => parseDate(p.updated ?? p.date))].reduce((a, b) => (b > a ? b : a)),
+      changeFrequency: "weekly",
+      priority: 0.95,
       videos: blogVideos,
     },
     // Written posts, and the tag pages that list them

@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ArrowRight, Check, RotateCcw, Siren, X } from "lucide-react";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { KanjiWatermark } from "@/app/components/shared/kit";
@@ -186,9 +186,9 @@ export default function TriageChallenge() {
                   {score === 3 ? " — ready for the queue." : " — see how it really went."}
                 </span>
                 <span className="flex flex-wrap gap-3">
-                  <Link href="/blog/soc336-report" className="group inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors">
+                  <PageLink href="/blog/soc336-report" className="group inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors">
                     The investigation <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
+                  </PageLink>
                   <button
                     type="button"
                     onClick={() => setAnswers(QUESTIONS.map(() => null))}

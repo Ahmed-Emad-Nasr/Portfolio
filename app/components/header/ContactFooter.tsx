@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { m as motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { MessageCircle, ArrowUpRight, Mail, Copy, Check, ShieldCheck, KeyRound } from "lucide-react";
 import { Github, Linkedin, Youtube, Instagram, XLogo } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
@@ -28,11 +28,11 @@ export function FooterBar({ className = "" }: { className?: string }) {
         </span>
       </div>
       <nav aria-label="Site information" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <Link href="/cv" className="hover:text-primary-ink transition-colors">CV</Link>
+        <PageLink href="/cv" className="hover:text-primary-ink transition-colors">CV</PageLink>
         <span className="text-primary-ink" aria-hidden="true">•</span>
-        <Link href="/privacy" className="hover:text-primary-ink transition-colors">Privacy</Link>
+        <PageLink href="/privacy" className="hover:text-primary-ink transition-colors">Privacy</PageLink>
         <span className="text-primary-ink" aria-hidden="true">•</span>
-        <Link href="/terms" className="hover:text-primary-ink transition-colors">Terms</Link>
+        <PageLink href="/terms" className="hover:text-primary-ink transition-colors">Terms</PageLink>
         <span className="text-primary-ink" aria-hidden="true">•</span>
         <a href={normalizePublicHref("feed.xml")} className="hover:text-primary-ink transition-colors">RSS</a>
         <span className="text-primary-ink" aria-hidden="true">•</span>

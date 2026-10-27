@@ -1,10 +1,10 @@
 /*
- * PostsSection — the written posts (content/posts/*.mdx) on the one-page
- * site, with the tags to browse by. Server-rendered: the post links are in
+ * PostsSection — the written posts (content/posts/*.mdx) at the top of the
+ * blog, with the tags to browse by. Server-rendered: the post links are in
  * the HTML for search engines. Each post keeps its own page at /blog/<slug>.
  */
 
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { chipNeutral } from "@/app/components/shared/kit";
 import PostCard from "@/app/components/blog/PostCard";
 import { getAllPosts, getTags } from "@/app/core/content/posts";
@@ -23,17 +23,17 @@ export default function PostsSection() {
               <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
               <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">Posts</span>
             </div>
-            <h3 id="posts-title" className="font-display text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9]">
+            <h2 id="posts-title" className="font-display text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9]">
               Latest <span className="text-primary italic">write-ups.</span>
-            </h3>
+            </h2>
           </div>
           {tags.length > 0 && (
             <ul className="flex flex-wrap gap-2" aria-label="Browse by tag">
               {tags.slice(0, 10).map((t) => (
                 <li key={t.slug}>
-                  <Link href={`/blog/tag/${t.slug}`} className={`${chipNeutral} inline-flex gap-1.5 hover:border-primary hover:text-foreground transition-colors`}>
+                  <PageLink href={`/blog/tag/${t.slug}`} className={`${chipNeutral} inline-flex gap-1.5 hover:border-primary hover:text-foreground transition-colors`}>
                     {t.tag} <span className="text-accent tabular-nums">{t.count}</span>
-                  </Link>
+                  </PageLink>
                 </li>
               ))}
             </ul>

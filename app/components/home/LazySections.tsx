@@ -1,7 +1,8 @@
 "use client";
 
 /*
- * Every dynamic import on the one-page site, in one place.
+ * Every dynamic import on the home page, in one place (the blog's are in
+ * components/blog/BlogSections.tsx).
  *
  * Why here and not in app/page.tsx: next/dynamic called from a Server
  * Component does NOT code-split the Client Component it imports (see
@@ -12,13 +13,16 @@
  *
  *   Server-rendered, own chunk   in the HTML (search engines, no-JS readers),
  *                                 their JavaScript split per section.
- *   Lazy (ssr: false)             not in the HTML; code and data download
- *                                 only when the reader nears the section
- *                                 (core/components/LazySection.tsx).
+ *   Lazy                          not in the HTML; code and data download in
+ *                                 idle time, and the section mounts when the
+ *                                 reader is within three screens
+ *                                 (core/perf/lazy.tsx). The size class is the
+ *                                 expected height per screen size
+ *                                 (.lazy-h-* in globals.css).
  */
 
 import dynamic from "next/dynamic";
-import LazySection, { LazyPlaceholder } from "@/app/core/components/LazySection";
+import LazySection, { preloadable } from "@/app/core/perf/lazy";
 
 /* ── Server-rendered, split per section ── */
 export const WorkShowcase = dynamic(() => import("@/app/components/services/WorkShowcase"));
@@ -29,59 +33,21 @@ export const ContactFooter = dynamic(() => import("@/app/components/header/Conta
 export const MobileActionBar = dynamic(() => import("@/app/components/home/MobileActionBar"));
 export const PaletteHint = dynamic(() => import("@/app/components/home/PaletteHint"));
 
-/* ── Lazy: loaded near the viewport ── */
-const pending = () => <LazyPlaceholder />;
-
-const ContributionsGrid = dynamic(() => import("@/app/components/services/ContributionsGrid"), { ssr: false, loading: pending });
-const CaseLibraryBlock = dynamic(() => import("@/app/components/cases/CaseLibraryBlock"), { ssr: false, loading: pending });
-const AttackBlock = dynamic(() => import("@/app/components/cases/AttackBlock"), { ssr: false, loading: pending });
-const DetectionLibrary = dynamic(() => import("@/app/components/cases/DetectionLibrary"), { ssr: false, loading: pending });
-const TriageChallenge = dynamic(() => import("@/app/components/cases/TriageChallenge"), { ssr: false, loading: pending });
-const ArtGallery = dynamic(() => import("@/app/components/art-gallery/ArtGallery"), { ssr: false, loading: pending });
+/* ── Lazy, preloaded in idle time — in page order ── */
+const ContributionsGrid = preloadable(() => import("@/app/components/services/ContributionsGrid"));
+const ArtGallery = preloadable(() => import("@/app/components/art-gallery/ArtGallery"));
 
 export function LazyContributions() {
   return (
-    <LazySection minHeight="32rem">
+    <LazySection size="lazy-h-contributions">
       <ContributionsGrid />
-    </LazySection>
-  );
-}
-
-export function LazyCaseLibrary() {
-  return (
-    <LazySection id="cases" minHeight="200svh">
-      <CaseLibraryBlock />
-    </LazySection>
-  );
-}
-
-export function LazyAttack() {
-  return (
-    <LazySection id="attack" minHeight="120svh">
-      <AttackBlock />
-    </LazySection>
-  );
-}
-
-export function LazyDetections() {
-  return (
-    <LazySection id="detections" minHeight="100svh">
-      <DetectionLibrary />
-    </LazySection>
-  );
-}
-
-export function LazyTriage() {
-  return (
-    <LazySection id="triage" minHeight="100svh">
-      <TriageChallenge />
     </LazySection>
   );
 }
 
 export function LazyGallery() {
   return (
-    <LazySection id="art" minHeight="200svh">
+    <LazySection id="art" size="lazy-h-art">
       <ArtGallery />
     </LazySection>
   );

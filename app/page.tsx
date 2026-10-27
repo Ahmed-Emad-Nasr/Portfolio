@@ -1,22 +1,29 @@
 /*
- * app/page.tsx — the whole site, on one page.
- *
- * Everything is a section here: the pitch, the depth (toolbox, lab, path),
- * the blog (posts, case library, ATT&CK, detections, triage, videos) and the
- * gallery. Only documents that are pages by nature keep their own address:
- * each post and case (/blog/<slug>), the CV, privacy and terms. The old
- * /blog, /about and /gallery addresses hop to their section here
- * (components/shared/MovedToSection.tsx).
+ * app/page.tsx — the portfolio, on one page: the pitch (who, what, proof,
+ * experience, credentials), about (toolbox, lab, path, process), the
+ * gallery, FAQ and contact. The blog — posts, the case library, ATT&CK,
+ * detection rules, triage, videos — is its own page (app/blog/page.tsx),
+ * with a door to it here (BlogTeaser). Old links to the blog's sections on
+ * this page (/#cases, /?q=wazuh#cases …) are forwarded there before paint
+ * (core/config/routes.ts); the old /about and /gallery addresses hop to
+ * their section here (components/shared/MovedToSection.tsx).
  *
  * Loading, top to bottom:
  *   • the hero and the text sections are server-rendered (in the HTML);
  *   • interactive sections are split into their own chunks with dynamic
  *     import() (components/home/LazySections.tsx);
- *   • the heavy ones (case library, ATT&CK, detections, triage, gallery,
- *     contributions) are not in the HTML at all: their code and data load
- *     when the reader nears them (core/components/LazySection.tsx);
- *   • off-screen server sections skip style/layout/paint until they near
- *     the viewport (content-visibility: auto), and images load lazily.
+ *   • the gallery and the contributions graph are not in the HTML: their
+ *     code downloads in idle time and they mount before the reader reaches
+ *     them (core/perf/lazy.tsx);
+ *   • off-screen sections skip style/layout/paint until they near the
+ *     viewport (content-visibility: auto); each one is rendered once in idle
+ *     time so its real height is known (core/perf/Prerender.tsx);
+ *   • looping animations pause while off screen
+ *     (core/perf/OffscreenAnimations.tsx), and images load lazily.
+ *
+ * Everything that schedules background work goes through one queue that
+ * waits for idle time and for the reader to stop scrolling
+ * (core/perf/idle.ts).
  *
  * Section order and components follow the Sensei-Dev portfolio
  * (github.com/MostafaSensei106/Sensei-Dev, GPL-3.0); the content comes from
@@ -24,7 +31,6 @@
  */
 
 import type { Metadata } from "next";
-import { Rss } from "lucide-react";
 import HeroSection from "@/app/components/home/HeroSection";
 import StatsBar from "@/app/components/home/StatsBar";
 import SiteNav from "@/app/components/header/SiteNav";
@@ -41,9 +47,10 @@ import TechStackGrid from "@/app/components/services/TechStackGrid";
 import UsesSection from "@/app/components/services/UsesSection";
 import HomeLab from "@/app/components/services/HomeLab";
 import ProcessSection from "@/app/components/services/ProcessSection";
-import PostsSection from "@/app/components/blog/PostsSection";
-import AreaIntro from "@/app/components/home/AreaIntro";
-import { LazyHashNav } from "@/app/core/components/LazySection";
+import AreaIntro from "@/app/components/shared/AreaIntro";
+import BlogTeaser from "@/app/components/cases/BlogTeaser";
+import HashNav from "@/app/core/perf/HashNav";
+import Prerender from "@/app/core/perf/Prerender";
 import {
   WorkShowcase,
   ProjectsGrid,
@@ -53,35 +60,18 @@ import {
   MobileActionBar,
   PaletteHint,
   LazyContributions,
-  LazyCaseLibrary,
-  LazyAttack,
-  LazyDetections,
-  LazyTriage,
   LazyGallery,
 } from "@/app/components/home/LazySections";
 import { getGitHubRepos } from "@/app/core/api/github";
 import { getTryHackMeStats } from "@/app/core/api/tryhackme";
-import { getAllPosts } from "@/app/core/content/posts";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/app/core/config/platforms";
 import { LIVE_COPY } from "@/app/core/config/live-copy";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
-import { attackCoverage, libraryCounts, libraryStructuredData } from "@/app/core/config/library-data";
-import { blogYoutubePlaylists, blogYoutubeVideos } from "@/app/core/config/youtube";
 import { GALLERY_IMAGE_COUNT, galleryImagePath } from "@/app/core/config/certifications";
 import { absoluteUrl, OG_IMAGE } from "@/app/core/config/site";
-import {
-  CHANNEL_ID,
-  KEYWORDS,
-  PERSON_IMAGE,
-  PERSON_REF,
-  SITE_URL,
-  WEBSITE_ID,
-  jsonLd,
-  youtubeEmbed,
-  youtubeThumb,
-  youtubeWatch,
-} from "@/app/core/config/seo";
+import { KEYWORDS, PERSON_IMAGE, PERSON_REF, SITE_URL, WEBSITE_ID, jsonLd } from "@/app/core/config/seo";
 import { normalizePublicHref } from "@/app/core/config/shared";
+import { homeForwardScript } from "@/app/core/config/routes";
 
 export const metadata: Metadata = {
   title: "Ahmed Emad Nasr | Information Security Officer | GRC, SOC, DFIR & IAM",
@@ -109,7 +99,6 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/",
-    types: { "application/rss+xml": [{ url: "/feed.xml", title: "Ahmed Emad Nasr — Blog" }] },
   },
   openGraph: {
     title: "Ahmed Emad Nasr | Information Security Officer",
@@ -134,13 +123,10 @@ export const metadata: Metadata = {
   },
 };
 
-const BLOG_DESCRIPTION =
-  "Write-ups, incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and Arabic cybersecurity videos.";
 const ABOUT_DESCRIPTION =
   "The security toolbox, the home lab, the path from student to instructor, what I am doing now, and how an engagement runs.";
 
 function structuredData() {
-  const posts = getAllPosts();
   return jsonLd({
     "@context": "https://schema.org",
     "@graph": [
@@ -161,7 +147,6 @@ function structuredData() {
         hasPart: [
           { "@id": `${SITE_URL}#faq` },
           { "@id": `${SITE_URL}#experience-list` },
-          { "@id": `${SITE_URL}#blog` },
           { "@id": `${SITE_URL}#art` },
         ],
       },
@@ -221,67 +206,6 @@ function structuredData() {
         })),
       },
       {
-        "@type": "Blog",
-        "@id": `${SITE_URL}#blog`,
-        url: `${SITE_URL}#blog`,
-        name: "Ahmed Emad Nasr — Blog",
-        description: BLOG_DESCRIPTION,
-        author: PERSON_REF,
-        publisher: PERSON_REF,
-        isPartOf: { "@id": WEBSITE_ID },
-        blogPost: posts.map((p) => ({
-          "@type": "BlogPosting",
-          "@id": `${absoluteUrl(`/blog/${p.slug}`)}#article`,
-          headline: p.title,
-          description: p.description,
-          url: absoluteUrl(`/blog/${p.slug}`),
-          datePublished: p.date,
-          ...(p.updated ? { dateModified: p.updated } : {}),
-          inLanguage: p.lang,
-          keywords: p.tags.join(", "),
-          author: PERSON_REF,
-        })),
-      },
-      libraryStructuredData,
-      {
-        "@type": "ItemList",
-        "@id": `${SITE_URL}#videos`,
-        name: "Cybersecurity video tutorials by Ahmed Emad Nasr (Arabic)",
-        numberOfItems: blogYoutubeVideos.length,
-        itemListElement: blogYoutubeVideos.map((video, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          item: {
-            "@type": "VideoObject",
-            "@id": `${youtubeWatch(video.videoId)}#video`,
-            name: video.title,
-            description: video.description ?? video.title,
-            thumbnailUrl: [youtubeThumb(video.videoId)],
-            uploadDate: video.publishedAt,
-            embedUrl: youtubeEmbed(video.videoId),
-            url: youtubeWatch(video.videoId),
-            inLanguage: "ar",
-            keywords: (video.tags ?? []).join(", "),
-            creator: PERSON_REF,
-            author: PERSON_REF,
-            publisher: { "@id": CHANNEL_ID },
-            isFamilyFriendly: true,
-          },
-        })),
-      },
-      ...blogYoutubePlaylists.map((playlist) => ({
-        "@type": "CreativeWorkSeries",
-        "@id": `${playlist.sourceUrl.split("&")[0]}#series`,
-        name: playlist.title,
-        description: playlist.description,
-        url: playlist.sourceUrl.split("&")[0],
-        ...(playlist.thumbnailVideoId ? { image: youtubeThumb(playlist.thumbnailVideoId) } : {}),
-        keywords: (playlist.tags ?? []).join(", "),
-        inLanguage: "ar",
-        author: PERSON_REF,
-        publisher: { "@id": CHANNEL_ID },
-      })),
-      {
         "@type": "ImageGallery",
         "@id": `${SITE_URL}#art`,
         url: `${SITE_URL}#art`,
@@ -295,6 +219,10 @@ function structuredData() {
   });
 }
 
+/* Links made when the blog's sections lived on this page (/#cases,
+   /?q=wazuh#cases, /#case-…) open the blog page instead */
+const FORWARD_SCRIPT = homeForwardScript(normalizePublicHref("/").replace(/\/$/, ""));
+
 /* Off-screen sections skip rendering until they near the viewport;
    `auto` in contain-intrinsic-size remembers each one's real height. */
 const DEFER = "cv-defer [content-visibility:auto] [contain-intrinsic-size:auto_1200px]";
@@ -303,12 +231,13 @@ export default async function Home() {
   const [repos, thm] = await Promise.all([getGitHubRepos(), getTryHackMeStats()]);
   const projectCount = repos.length;
   const starCount = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
-  const postCount = getAllPosts().length;
 
   return (
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-clip">
+      <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
-      <LazyHashNav />
+      <HashNav />
+      <Prerender />
       <SiteNav />
       <MobileActionBar />
       <PaletteHint />
@@ -386,46 +315,16 @@ export default async function Home() {
         <LazyContributions />
       </div>
 
-      {/* ═══ 03 · Blog: posts, case library, videos, ATT&CK, rules, triage ═══ */}
+      {/* ═══ 03 · The door to the blog: latest posts, three reports to start with ═══ */}
       <SectionDivider text="事件 • 調査 • 報告 • 証拠" angle={-1.5} />
-
-      <AreaIntro
-        id="blog"
-        eyebrow="Blog // Writing & evidence"
-        japanese="記録"
-        titleA="The"
-        titleB="Blog."
-        description={BLOG_DESCRIPTION}
-        links={[
-          ...(postCount ? [{ href: "#posts", label: "Posts", n: postCount }] : []),
-          { href: "#cases", label: "Case library", n: libraryCounts.total },
-          { href: "#videos", label: "Videos", n: blogYoutubeVideos.length },
-          { href: "#attack", label: "ATT&CK coverage", n: attackCoverage.techniqueCount },
-          { href: "#detections", label: "Detection rules" },
-          { href: "#triage", label: "Triage challenge" },
-        ]}
-        extra={
-          <a
-            href={normalizePublicHref("/feed.xml")}
-            className="inline-flex items-center gap-2 px-3.5 py-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/60 transition-colors hover:text-primary-ink"
-          >
-            <Rss size={12} aria-hidden="true" /> RSS
-          </a>
-        }
-      />
       <div className={DEFER}>
-        <PostsSection />
+        <BlogTeaser />
       </div>
-      <LazyCaseLibrary />
-
-      <SectionDivider text="戦術 • 技術 • 網羅 • 証拠" reverse={true} angle={-1.5} />
-
-      <LazyAttack />
-      <LazyDetections />
-      <LazyTriage />
 
       {/* ═══ 04 · Gallery, questions, contact ═══ */}
-      <SectionDivider text="記録 • 証明 • 瞬間" angle={-1.5} />
+      {/* Kanji already in the site's Yuji Syuku cut (fonts-yuji-site.css) — a new
+          character would fetch a whole Google slice for one divider */}
+      <SectionDivider text="記録 • 証明 • 実績" reverse={true} angle={-1.5} />
 
       <LazyGallery />
       <div className={DEFER}>

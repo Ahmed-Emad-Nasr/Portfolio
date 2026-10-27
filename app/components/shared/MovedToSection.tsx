@@ -1,6 +1,6 @@
 /*
  * MovedToSection — what the old addresses (/blog, /about, /gallery) serve
- * now that the site is one page: an instant hop to the section on the home
+ * now that they are sections of the home page: an instant hop to the section on the home
  * page, keeping any filters and anchor (/blog?q=wazuh#cases → /?q=wazuh#cases).
  * Links shared on LinkedIn, in a CV or in search results keep working.
  * Without JavaScript the meta refresh does the same.

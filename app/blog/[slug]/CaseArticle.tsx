@@ -9,6 +9,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState, ViewTransition, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
@@ -135,9 +136,9 @@ export default function CaseArticle({
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Breadcrumb */}
         <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
-          <Link href="/#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
+          <PageLink href="/blog#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
             <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
-          </Link>
+          </PageLink>
           <span className="text-foreground/20" aria-hidden="true">/</span>
           <span className="text-foreground/60">{item.category}</span>
           {collection && (
@@ -337,9 +338,9 @@ export default function CaseArticle({
         </nav>
 
         <div className="mt-10 flex justify-center">
-          <Link href="/#cases" className={btnOutline}>
+          <PageLink href="/blog#cases" className={btnOutline}>
             <ArrowLeft size={13} /> Back to the library
-          </Link>
+          </PageLink>
         </div>
       </div>
 

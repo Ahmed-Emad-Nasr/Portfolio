@@ -1,4 +1,4 @@
-/* /gallery is now the #art section of the one-page site */
+/* /gallery is now the #art section of the home page */
 import MovedToSection, { movedMetadata } from "@/app/components/shared/MovedToSection";
 
 export const metadata = movedMetadata;

@@ -4,10 +4,10 @@ import { m as motion, AnimatePresence, useScroll, useTransform } from "framer-mo
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { lockScroll } from "@/app/core/utils/scroll";
 import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/app/core/components/ThemeToggle";
-import { LAZY_MOUNTED } from "@/app/core/components/LazySection";
+import { LAZY_MOUNTED } from "@/app/core/perf/reveal";
 import {
   Menu,
   X,
@@ -22,8 +22,8 @@ import {
   Command,
 } from "lucide-react";
 
-/* The site is one page: every item is a section of it (hash links — from
-   a post or case page they become /#work …). */
+/* The home page's sections (hash links — from another page they become
+   /#work …) plus the blog, which is its own page. */
 const navItems = [
   { name: "Home", href: "#home", icon: Home, katakana: "ホーム" },
   { name: "Services", href: "#services", icon: Briefcase, katakana: "役務" },
@@ -31,13 +31,13 @@ const navItems = [
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
   { name: "Honors", href: "#certificates", icon: Award, katakana: "認定" },
   { name: "About", href: "#about", icon: UserRound, katakana: "人物" },
-  { name: "Blog", href: "#blog", icon: BookOpen, katakana: "記録" },
+  { name: "Blog", href: "/blog", icon: BookOpen, katakana: "記録" },
   { name: "Gallery", href: "#art", icon: Images, katakana: "写真" },
   { name: "Contact", href: "#contact", icon: Mail, katakana: "連絡" },
 ];
 
-/* Where each item's part of the page ends: "About" stays lit through the
-   toolbox, lab and path sections, "Blog" through the case library … */
+/* Where each item's part of the home page ends: "About" stays lit through
+   the toolbox, lab and path sections; the blog teaser lights "Blog" */
 const AREA_OF: Record<string, string> = {
   roles: "#services",
   projects: "#work",
@@ -51,11 +51,7 @@ const AREA_OF: Record<string, string> = {
   now: "#about",
   process: "#about",
   contributions: "#about",
-  posts: "#blog",
-  cases: "#blog",
-  attack: "#blog",
-  detections: "#blog",
-  triage: "#blog",
+  blog: "/blog",
   faq: "#contact",
 };
 
@@ -80,10 +76,13 @@ function NavLink({
       </a>
     );
   }
+  /* Another page (or the home page from the blog): fetched on intent —
+     the nav is always on screen, so viewport prefetching would download
+     the other page on every load */
   return (
-    <Link href={href.startsWith("#") ? `/${href}` : href} className={className} {...rest}>
+    <PageLink href={href.startsWith("#") ? `/${href}` : href} className={className} {...rest}>
       {children}
-    </Link>
+    </PageLink>
   );
 }
 
@@ -101,11 +100,11 @@ export default function SiteNav() {
 
   useEffect(() => {
     if (!onHome) {
-      /* A post or case page belongs to the blog */
-      setActive(pathname.startsWith("/blog") ? "#blog" : "");
+      /* The blog, and every post or case page, light "Blog" */
+      setActive(pathname.startsWith("/blog") ? "/blog" : "");
       return;
     }
-    const ids = [...navItems.map((i) => i.href.slice(1)), ...Object.keys(AREA_OF)];
+    const ids = [...navItems.filter((i) => i.href.startsWith("#")).map((i) => i.href.slice(1)), ...Object.keys(AREA_OF)];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {

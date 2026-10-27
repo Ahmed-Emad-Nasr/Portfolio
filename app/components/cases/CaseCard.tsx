@@ -8,7 +8,7 @@
 
 import React, { useCallback, useState, ViewTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { Check, Copy, ExternalLink, FileText, Download, Images, ShieldAlert, AlertTriangle, ArrowRight } from "lucide-react";
 import { TiltCard } from "@/app/core/components/Motion";
 import { TRAILING_SLASH } from "@/app/core/config/site";
@@ -136,9 +136,9 @@ function CaseCard({
               title into the page headline (React <ViewTransition>) */}
           <ViewTransition name={`case-title-${id}`} share="morph" default="none">
             <h3 className="font-display text-xl md:text-lg lg:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
-              <Link href={detailPath} className="hover:text-primary-ink transition-colors duration-300">
+              <PageLink href={detailPath} className="hover:text-primary-ink transition-colors duration-300">
                 {title}
-              </Link>
+              </PageLink>
             </h3>
           </ViewTransition>
           {verdict && (
@@ -168,9 +168,9 @@ function CaseCard({
           )}
 
           <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">
-            <Link href={detailPath} className={btnPrimary}>
+            <PageLink href={detailPath} className={btnPrimary}>
               {category ? "Open case" : "Open"} <ArrowRight size={13} />
-            </Link>
+            </PageLink>
             {href && (
               <>
                 <a href={normalizePublicHref(href)} target="_blank" rel="noopener noreferrer" className={btnOutline}>

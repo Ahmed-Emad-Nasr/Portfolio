@@ -1,7 +1,7 @@
 /*
  * Arabic text (blog posts in Arabic, the "ar" UI strings).
  *
- * app/fonts.css is the Sensei-Dev set unchanged — it has no Arabic face, so
+ * app/fonts.ts is the Sensei-Dev set (next/font) — it has no Arabic face, so
  * Arabic fell back to whatever the device had (Tahoma, Arial…). IBM Plex
  * Sans Arabic (SIL OFL 1.1) is added here, limited to the Arabic block by
  * unicode-range: Latin and Japanese text still use the original faces, and

@@ -18,7 +18,8 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { isTypingTarget, scrollToTop } from "@/app/core/utils/scroll";
-import { scrollToHash } from "@/app/core/components/LazySection";
+import { scrollToHash } from "@/app/core/perf/jump";
+import { pageOf } from "@/app/core/config/routes";
 
 const ShortcutsHelp = dynamic(() => import("./ShortcutsHelp"), { ssr: false });
 const Terminal = dynamic(() => import("./Terminal"), { ssr: false });
@@ -50,9 +51,11 @@ export default function KeyboardShortcuts() {
 
   const goToSection = useCallback(
     (id: string) => {
-      /* Every section is on the home page; from a post or case page, go there */
-      if (pathname !== "/") {
-        router.push(`/#${id}`);
+      /* A section lives on the home page or the blog (core/config/routes.ts):
+         jump to it here, or open its page at the anchor */
+      const page = pageOf(id);
+      if (pathname !== page) {
+        router.push(`${page}#${id}`);
         return;
       }
       scrollToHash(id);

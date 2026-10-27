@@ -11,7 +11,7 @@ import FadeIn from "@/app/core/components/FadeIn";
 
 const GalleryLightbox = dynamic(() => import("./GalleryLightbox"), { ssr: false });
 
-/* A lazy section of the one-page site: six rows to start, three more per
+/* A lazy section of the home page: six rows to start, three more per
    click — images below the fold load lazily either way */
 const FIRST = 18;
 const PAGE = 9;

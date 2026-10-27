@@ -14,6 +14,7 @@
  */
 
 import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ViewTransition } from "react";
 import { ArrowLeft, ArrowRight, Calendar, Clock, RefreshCw } from "lucide-react";
 import type { Post, PostMeta } from "@/app/core/content/posts";
@@ -79,10 +80,10 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* ─── Header ─── */}
         <header className="max-w-3xl">
-          <Link href="/#posts" className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-primary-ink hover:text-foreground transition-colors">
+          <PageLink href="/blog#posts" className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-primary-ink hover:text-foreground transition-colors">
             <Back size={14} className="transition-transform duration-300 group-hover:-translate-x-1 rtl:group-hover:translate-x-1" aria-hidden="true" />
             {t.back}
-          </Link>
+          </PageLink>
 
           <div className="mb-5 flex flex-wrap items-center gap-2">
             {post.draft && <span className="border border-primary px-2 py-1 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-primary-ink">Draft — not published</span>}

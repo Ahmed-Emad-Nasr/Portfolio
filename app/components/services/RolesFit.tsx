@@ -9,7 +9,7 @@
  * and titles are read at build time.
  */
 
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ArrowUpRight, ClipboardCheck, Radar, Microscope, KeyRound, Download } from "lucide-react";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { TiltCard } from "@/app/core/components/Motion";
@@ -130,7 +130,7 @@ export default function RolesFit() {
                           ) : p.href?.startsWith("#") ? (
                             <a href={p.href} className={cls}>{inner}</a>
                           ) : (
-                            <Link href={p.href ?? "/"} className={cls}>{inner}</Link>
+                            <PageLink href={p.href ?? "/"} className={cls}>{inner}</PageLink>
                           )}
                         </li>
                       );

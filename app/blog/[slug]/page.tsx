@@ -137,8 +137,8 @@ function PostPage({ post }: { post: Post }) {
         author: AUTHOR,
         publisher: AUTHOR,
         isPartOf: post.series
-          ? [{ "@id": `${absoluteUrl("/")}#blog` }, { "@type": "CreativeWorkSeries", name: post.series }]
-          : { "@id": `${absoluteUrl("/")}#blog` },
+          ? [{ "@id": `${absoluteUrl("/blog")}#blog` }, { "@type": "CreativeWorkSeries", name: post.series }]
+          : { "@id": `${absoluteUrl("/blog")}#blog` },
         mainEntityOfPage: { "@type": "WebPage", "@id": url },
         ...(post.cover ? { image: absoluteUrl(post.cover) } : {}),
       },
@@ -146,7 +146,7 @@ function PostPage({ post }: { post: Post }) {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Blog", item: `${absoluteUrl("/")}#blog` },
+          { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
           { "@type": "ListItem", position: 3, name: post.title, item: url },
         ],
       },
@@ -251,7 +251,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         author: AUTHOR,
         publisher: AUTHOR,
         copyrightHolder: AUTHOR,
-        isPartOf: { "@id": `${absoluteUrl("/")}#cases` },
+        isPartOf: { "@id": `${absoluteUrl("/blog")}#cases` },
         mainEntityOfPage: { "@type": "WebPage", "@id": caseUrl(item.id) },
         about: [
           ...[...new Set([item.category, ...item.tags])].map((name) => ({ "@type": "Thing", name })),
@@ -285,7 +285,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Case library", item: `${absoluteUrl("/")}#cases` },
+          { "@type": "ListItem", position: 2, name: "Case library", item: `${absoluteUrl("/blog")}#cases` },
           { "@type": "ListItem", position: 3, name: item.title, item: caseUrl(item.id) },
         ],
       },

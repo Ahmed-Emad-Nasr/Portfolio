@@ -13,12 +13,10 @@ import React from "react";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
-/* The Sensei-Dev font set, exactly as that site loads it: self-hosted
-   @font-face rules split by unicode-range (app/fonts/<family>/*.woff2). */
-import "./fonts.css";
+/* The Sensei-Dev font set through next/font (app/fonts.ts); the Arabic face
+   and the site's own Yuji Syuku cut are plain @font-face files */
+import { fontVariables } from "./fonts";
 import "./fonts-arabic.css";
-/* Yuji Syuku cut to the characters in use — after fonts.css on purpose:
-   the last-declared face wins, so the 23 kanji slices are never fetched */
 import "./fonts-yuji-site.css";
 import "./globals.css";
 
@@ -36,6 +34,7 @@ import AppLoader from "@/app/core/components/AppLoader";
 import MotionProvider from "@/app/core/components/MotionProvider";
 import { CONTENT_SECURITY_POLICY } from "@/app/core/config/security";
 import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
+import OffscreenAnimations from "@/app/core/perf/OffscreenAnimations";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
@@ -288,6 +287,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       dir="ltr"
+      className={fontVariables}
       suppressHydrationWarning
     >
       <head>
@@ -326,6 +326,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <SpotlightHost />
             <PaletteMount />
             <KeyboardShortcuts />
+            <OffscreenAnimations />
             <SmoothScroll>
               <CursorMount />
               {children}

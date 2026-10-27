@@ -11,7 +11,7 @@
  */
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ArrowUpRight, Radar } from "lucide-react";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { KanjiWatermark, CounterBadge } from "@/app/components/shared/kit";
@@ -120,12 +120,12 @@ export default function DetectionLibrary() {
           <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
             $(…) = Wazuh field placeholders, filled in when the alert fires
           </p>
-          <Link
+          <PageLink
             href="/blog/3omda-custom-detection-rules"
             className="group inline-flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-primary-ink"
           >
             The full rule pack (XML) <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
+          </PageLink>
         </FadeIn>
       </div>
     </section>

@@ -17,6 +17,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { RotateCcw } from "lucide-react";
 import {
   statusActions, statusCode, statusInner, statusLede, statusPage, statusReport, statusTitle,
@@ -65,7 +66,7 @@ export default function Error({
               <RotateCcw size={16} /> Try again
             </button>
             <Link href="/" className={ctaSecondary}>Portfolio</Link>
-            <Link href="/#cases" className={ctaSecondary}>Case library</Link>
+            <PageLink href="/blog#cases" className={ctaSecondary}>Case library</PageLink>
           </nav>
 
           {/* digest is the hash Next generates for the error. It's shown so that if someone

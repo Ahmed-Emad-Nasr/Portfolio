@@ -72,7 +72,9 @@ export default function ContributionsGrid() {
           ))}
         </div>
 
-        <div className="mt-6">
+        {/* Same height while loading, when ready and if GitHub is down — the
+            graph arriving must not move the page (it sits above the blog) */}
+        <div className="mt-6 flex min-h-[255px] flex-col md:min-h-[236px] [&>*]:flex-1">
           <ContributionGraph stats={stats} />
         </div>
       </div>

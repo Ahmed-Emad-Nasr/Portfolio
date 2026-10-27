@@ -19,7 +19,7 @@
  * Styling for the repeated parts lives in globals.css (.attack-*).
  */
 
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import type { CSSProperties } from "react";
 import FadeIn from "@/app/core/components/FadeIn";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
@@ -158,11 +158,11 @@ function TechniqueTile({ technique, tactic, max }: { technique: CoverageTechniqu
         <ol className="attack-pop-cases">
           {technique.cases.map((c, i) => (
             <li key={c.id}>
-              <Link href={`/blog/${c.id}`}>
+              <PageLink href={`/blog/${c.id}`}>
                 <span className="attack-pop-n">{pad(i + 1)}</span>
                 <span className="flex-1">{c.title}</span>
                 <span className="attack-pop-go" aria-hidden="true">→</span>
-              </Link>
+              </PageLink>
             </li>
           ))}
         </ol>

@@ -68,7 +68,7 @@ ${categories}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ahmed Emad Nasr — Blog: write-ups and the information security case library</title>
-    <link>${absoluteUrl("/")}#blog</link>
+    <link>${absoluteUrl("/blog")}</link>
     <description>Write-ups, incident response reports, DFIR investigations, malware analysis, IAM, data and cloud security, and web security cases.</description>
     <language>en</language>
     <lastBuildDate>${toRfc822()}</lastBuildDate>

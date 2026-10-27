@@ -65,7 +65,8 @@ let checkedLinks = 0;
 for (const f of files.filter((f) => f.endsWith(".html"))) {
   /* <link rel="preconnect"> / dns-prefetch name an origin, not a file. Next
      emits <link rel="preconnect" href="/"> itself when a layout's CSS has
-     @font-face files that are not next/font preloads (app/fonts.css) — a
+     @font-face files that are not next/font preloads (fonts-arabic.css,
+     fonts-yuji-site.css) — a
      same-origin hint, not a link to check. */
   const html = readFileSync(f, "utf8").replace(/<link\b[^>]*\brel="(?:preconnect|dns-prefetch)"[^>]*>/g, "");
   const from = relative(OUT, f);

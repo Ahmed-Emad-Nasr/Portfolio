@@ -11,7 +11,7 @@ Design, motion and component structure: the Neo-Samurai theme from
 
 Next.js 16 (App Router, static export) · React 19 · TypeScript · Tailwind CSS v4 ·
 framer-motion (lazy `m` + `LazyMotion`) · Lenis · next-themes · lucide-react ·
-yet-another-react-lightbox. Fonts are Sensei-Dev's `app/fonts.css` (self-hosted woff2).
+yet-another-react-lightbox. Fonts are the Sensei-Dev set through `next/font/google` (`app/fonts.ts`).
 Scroll entrances are framer-motion (`FadeIn`), the library of
 Sensei-Dev, on a calmer, one-after-another tempo; the hero entrance is GSAP,
 imported on demand.
@@ -67,19 +67,23 @@ uses. `npm run check:assets` lists any that are missing.
 
 ## Pages
 
-- `/` — **the whole site, one page of sections**:
+- `/` — **the portfolio**, in the order a hiring manager reads it:
   - the pitch: hero, numbers, services, roles I fit, selected work,
     repositories, experience, teaching, testimonials (hidden until there
     are any), certifications, practice platforms;
   - About (`#about`): the toolbox, daily drivers, home lab, the path, now,
     how an engagement runs, contributions;
-  - Blog (`#blog`): posts, "Start here", the case library (`#cases`, with
-    kind tabs, sort and a list view, all kept in the URL), the videos, the
-    ATT&CK coverage map (`#attack`), the detection library (`#detections`)
-    and the triage challenge (`#triage`);
+  - the door to the blog (`#blog`): latest posts and three reports to start
+    with;
   - the proof gallery (`#art`), FAQ, contact.
-- `/blog`, `/about`, `/gallery` — old addresses; they hop to their section
-  of the home page, keeping filters and the anchor.
+- `/blog` — **the writing and the evidence**: posts, "Start here", the case
+  library (`#cases`, with kind tabs, sort and a list view, all kept in the
+  URL), the videos, the ATT&CK coverage map (`#attack`), the detection
+  library (`#detections`) and the triage challenge (`#triage`). Old links to
+  these sections on the home page (`/#cases`, `/?q=…#cases`, `/#case-…`)
+  are forwarded here.
+- `/about`, `/gallery` — old addresses; they hop to their section of the
+  home page, keeping the anchor.
 - `/blog/<slug>` — a written post (`content/posts/<slug>.mdx`) or a case.
   Cases with an entry in `case-details.ts` get the full case file: verdict
   bar, facts, attack chain, timeline, defanged IOCs (copy as CSV), response,
@@ -94,8 +98,11 @@ uses. `npm run check:assets` lists any that are missing.
 - `/privacy`, `/terms`, 404.
 
 How the one page loads — what is in the HTML, what is split into its own
-chunk, and what only downloads when the reader nears it — is described at
-the top of `app/page.tsx` and in `app/components/home/LazySections.tsx`.
+chunk, what downloads and renders in idle time — is described at the top of
+`app/page.tsx`, in `app/components/home/LazySections.tsx`, and in
+`app/core/perf/` (one folder for everything that decides *when* work
+happens: the idle queue, lazy sections, jumps, idle pre-rendering and
+pausing off-screen animations). ARCHITECTURE.md has the measurements.
 
 ## Writing a blog post
 
@@ -166,8 +173,8 @@ npm run check:links     # after a build: every internal link resolves to a file
 
 - **Per-case share cards** live in `public/og/cases/<id>.jpg` (1200×630);
   case pages use them automatically.
-- **New Japanese text?** It renders straight away (`app/fonts.css` covers
-  every character). To keep the page light, re-run
+- **New Japanese text?** It renders straight away (next/font's Yuji Syuku
+  and Noto Sans JP cover every character). To keep the page light, re-run
   `scripts/subset-yuji-site.py` (one small Yuji Syuku file with exactly the
   characters in use — instructions at the top of the file), and
   `scripts/subset-fonts.py` before regenerating OG images.

@@ -16,6 +16,7 @@
  */
 
 import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import type { Metadata } from "next";
 import { startHere } from "@/app/core/config/start-here";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
@@ -57,9 +58,9 @@ export default function NotFound() {
             <Link href="/" className={ctaPrimary}>
               <Home size={16} /> Portfolio
             </Link>
-            <Link href="/#cases" className={ctaSecondary}>
+            <PageLink href="/blog#cases" className={ctaSecondary}>
               <FolderSearch size={14} className="text-primary-ink" /> Case library
-            </Link>
+            </PageLink>
             <Link href="/cv" className={ctaSecondary}>
               <FileText size={14} className="text-primary-ink" /> CV
             </Link>

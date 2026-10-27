@@ -1,12 +1,12 @@
 "use client";
 
 /*
- * components/cases/CaseLibrarySection.tsx — the case library, as the last
- * sections of the one-page portfolio (#cases, then #videos).
+ * components/cases/CaseLibrarySection.tsx — the case library on the blog
+ * page (#start-here, #cases, then #videos).
  *
  * State lives here (filters synced to the URL, the screenshot lightbox,
  * which video embeds were activated); the pieces only render. The cards
- * are paged — six at a time — so the home page does not mount 75 tilt
+ * are paged — a few at a time — so the page does not mount 75 tilt
  * cards at once; filtering always searches the whole library.
  */
 
@@ -15,14 +15,14 @@ import React, { useCallback, useDeferredValue, useEffect, useMemo, useRef, useSt
 import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUTUBE_CHANNEL_URL } from "@/app/core/config/youtube";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import SectionDivider from "@/app/core/components/SectionDivider";
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import FadeIn from "@/app/core/components/FadeIn";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { formatDate, normalizePublicHref, WSA_COLLECTION, type CaseKind } from "@/app/core/config/shared";
 import type { PdfResource, GalleryState } from "@/app/core/config/shared";
 import type { CaseMedia } from "@/app/core/config/library-data";
 import CaseFilters, { type Facet } from "./CaseFilters";
-import { scrollToHash } from "@/app/core/components/LazySection";
+import { scrollToHash } from "@/app/core/perf/jump";
 import CaseCard from "./CaseCard";
 import CaseList from "./CaseList";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
@@ -235,7 +235,7 @@ export default function CaseLibrarySection({
       const el = document.getElementById(hash.slice(1));
       if (el) {
         /* The site's one jump: under the fixed header, with the late-shift
-           correction (core/components/LazySection.tsx) */
+           check (core/perf/jump.ts) */
         scrollToHash(hash);
         return;
       }
@@ -312,7 +312,7 @@ export default function CaseLibrarySection({
           {/* The 29 PortSwigger labs also read as one track */}
           {(activeKind === null || activeKind === "lab") && !deferredQuery && (
             <FadeIn y={16} duration={0.6} className="mb-10">
-            <Link
+            <PageLink
               href={`/collections/${WSA_COLLECTION.id}`}
               className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-tertiary/25 bg-tertiary/5 px-6 py-5 overflow-hidden hover:border-tertiary/60 transition-colors duration-500"
             >
@@ -327,7 +327,7 @@ export default function CaseLibrarySection({
               <span className="flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-tertiary">
                 Open the track <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
-            </Link>
+            </PageLink>
             </FadeIn>
           )}
 

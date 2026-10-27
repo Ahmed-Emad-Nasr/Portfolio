@@ -3,7 +3,7 @@
  * original theme's Process section.
  */
 
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { startHere } from "@/app/core/config/start-here";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { Eyebrow } from "@/app/components/shared/kit";
@@ -31,7 +31,7 @@ export default function StartHere({
       <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {ENTRIES.map((entry, idx) => (
           <li key={entry.id}>
-            <Link
+            <PageLink
               href={`/blog/${entry.id}`}
               className="relative spotlight block h-full bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500 group"
             >
@@ -43,7 +43,7 @@ export default function StartHere({
                 {entry.label}
               </h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{entry.why}</p>
-            </Link>
+            </PageLink>
           </li>
         ))}
       </ol>

@@ -19,6 +19,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import type { ReactNode } from "react";
 import { knowledgeEducationItems } from "@/app/core/config/experience";
 import { certifications } from "@/app/core/config/certifications";
@@ -387,7 +388,7 @@ export default function CvPage() {
           <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[0.625rem] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 print:hidden">
             Generated from the same data as the{" "}
             <Link className="text-primary-ink underline underline-offset-4" href="/">portfolio</Link> and the{" "}
-            <Link className="text-primary-ink underline underline-offset-4" href="/#cases">case library</Link> — print it (Ctrl/Cmd + P) for a clean PDF.
+            <PageLink className="text-primary-ink underline underline-offset-4" href="/blog#cases">case library</PageLink> — print it (Ctrl/Cmd + P) for a clean PDF.
           </p>
         </div>
       </article>

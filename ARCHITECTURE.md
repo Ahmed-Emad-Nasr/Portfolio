@@ -29,17 +29,18 @@ used unchanged; the content is this site's own.
   `LazyMotion`, see `core/components/MotionProvider.tsx`), Lenis smooth
   scroll (its own rAF loop), calm staggered scroll entrances with framer-motion
   (`core/components/FadeIn.tsx`), next-themes (dark default + light "washi" theme with the water-drop
-  transition), lucide-react, yet-another-react-lightbox. Fonts are
-  Sensei-Dev's `app/fonts.css` (self-hosted woff2).
+  transition), lucide-react, yet-another-react-lightbox. Fonts are the
+  Sensei-Dev set through `next/font/google` (`app/fonts.ts`), self-hosted at
+  build time.
 - **Home page:** `app/page.tsx` composes the sections in `app/components/`
   (home, services, experience, art-gallery, header). All their content comes
   from `app/core/config/portfolio-data.ts`, which reads the existing config
   files (experience, certifications, achievements, skills, projects, cases).
-- **One page:** the case library and the YouTube hub are the last sections
-  of the home page (`#cases`, `#videos`, `components/cases/`), computed at
-  build time in `core/config/library-data.ts` and paged six cards at a time.
-  `/blog` only forwards old links to `/#cases` (keeping `?q=` filters and
-  `#case-…` anchors); every case still has its own page at `/blog/<id>`.
+- **Blog page:** posts, the case library and the YouTube hub, ATT&CK
+  coverage, detection rules and the triage challenge live on `/blog`
+  (`components/cases/`, data from `core/config/library-data.ts`); the home
+  page has a door to it (`BlogTeaser`). Every case and post has its own page
+  at `/blog/<id>`.
 - **Other pages** (case pages, CV, privacy, terms, 404) use
   `app/components/shared/kit.tsx`: the same classes and building blocks,
   copied from the original components, plus `PageShell` (nav + footer bar).
@@ -65,48 +66,74 @@ server at runtime. Every decision below follows from that:
 
 ## 2. Pages and directory layout
 
-The site is **one page of sections**, plus one page per post and per case
-(documents that are pages by nature) and the CV / legal pages:
+Two long pages, plus one page per post and per case (documents that are
+pages by nature) and the CV / legal pages:
 
 | Route | What | Notes |
 |---|---|---|
-| `/` | Everything: the pitch (hero → platforms), About (`#about`: toolbox, uses, lab, path, now, process, contributions), Blog (`#blog`: posts, Start here, case library, videos, ATT&CK, detections, triage), the gallery (`#art`), FAQ, contact | see "Loading" below |
-| `/blog`, `/about`, `/gallery` | Old addresses | `components/shared/MovedToSection.tsx` hops to `/#blog`, `/#about`, `/#art`, keeping `?q=…` filters and any anchor; `noindex`, canonical `/` |
+| `/` | The portfolio: the pitch (hero → platforms), About (`#about`: toolbox, uses, lab, path, now, process, contributions), the blog teaser (`#blog`), the gallery (`#art`), FAQ, contact | what a recruiter skims |
+| `/blog` | Posts, Start here, the case library, videos, ATT&CK coverage, detection rules, triage challenge | what someone checking the work reads; the library, ATT&CK and rules are server-rendered for search engines |
+| `/about`, `/gallery` | Old addresses | `components/shared/MovedToSection.tsx` hops to `/#about`, `/#art`, keeping any anchor; `noindex`, canonical `/` |
 | `/blog/<slug>` | A written post (`content/posts/<slug>.mdx`) **or** a case (`core/config/cases.ts`) | one URL space; the build fails if a post slug reuses a case id |
 | `/blog/tag/<tag>` | Posts with one tag | |
 | `/cv`, `/privacy`, `/terms`, `/collections/web-security-academy` | as before | |
 
-Everything that links to a section — the nav, the command palette, the `g`
-shortcuts, the stats bar, `CaseFilterLink` — links to `#id` on the home
-page (`/#id` from a post or case page).
+Which page a section lives on is decided in `core/config/routes.ts`
+(`pageOf(id)`); the nav, the command palette, the `g` shortcuts and the
+stats bar ask it. Old links to the blog's sections on the home page
+(`/#cases`, `/?q=wazuh#cases`, `/#case-…`, `/#attack` …) are forwarded to
+`/blog` by `homeForwardScript()` before the home page paints.
 
-### Loading the one page
+### Loading the pages (`app/core/perf/`)
+
+Everything that decides *when* work happens lives in one folder:
+
+| File | Job |
+|---|---|
+| `idle.ts` | One background queue: runs one small task at a time, only after load, in idle time, while nobody is scrolling, with the tab visible |
+| `lazy.tsx` | `preloadable(import)` + `<LazySection>`: placeholder → chunk preloaded in idle → mounted in idle (or 3 screens ahead) inside a transition and a `content-visibility` box of the same expected height → rendered once off screen so its real height is known. A failed chunk costs one section a "could not load" note |
+| `reveal.ts` | The "mount every lazy section now" switch a jump uses |
+| `jump.ts` | `scrollToHash`: mount what is above the target, measure never-rendered sections above it, jump instantly under the header, re-check a few times for late shifts |
+| `HashNav.tsx` | Routes in-page `#links`, filter links and arrivals with a hash through `jump.ts` |
+| `Prerender.tsx` | Renders each deferred (`.cv-defer`) section once, off screen, in idle time — real heights known, layout warm, never for sections already above the reader |
+| `OffscreenAnimations.tsx` | Pauses infinite animations of off-screen blocks: loops are tagged once on `animationstart`, the observer only toggles `data-offscreen` on the block, CSS does the pausing |
 
 | Kind | Sections | How |
 |---|---|---|
-| Server-rendered | hero, stats, services, roles, experience, teaching, testimonials, platforms, the About sections, posts | in the HTML; off-screen ones carry `content-visibility: auto` (`cv-defer`) |
-| Server-rendered, own chunk | work, projects, credentials, FAQ, contact, mobile bar, palette hint | `dynamic(() => import(…))` in `components/home/LazySections.tsx` — a **Client** file, because `next/dynamic` called from a Server Component does not code-split |
-| Lazy (not in the HTML) | case library + videos, ATT&CK, detections, triage, gallery, contributions | `dynamic(…, { ssr: false })` inside `core/components/LazySection.tsx`: a placeholder that keeps the section id and roughly its height until the reader is ~1.5 screens away, then the chunk (code **and** data) downloads |
+| Server-rendered | home: hero, stats, services, roles, experience, teaching, testimonials, platforms, the About sections, blog teaser · blog: header, posts | in the HTML; off-screen ones carry `content-visibility: auto` (`cv-defer`) |
+| Server-rendered, own chunk | home: work, projects, credentials, FAQ, contact, mobile bar, palette hint · blog: case library + videos, ATT&CK, detection rules | `dynamic(() => import(…))` in `components/home/LazySections.tsx` and `components/blog/BlogSections.tsx` — **Client** files, because `next/dynamic` called from a Server Component does not code-split. The blog's data is imported by its chunk, not sent again as props in the page payload |
+| Lazy (not in the HTML) | home: gallery, contributions · blog: triage challenge | `preloadable(() => import(…))` + `<LazySection>` (above). Expected heights per screen size: `.lazy-h-*` in globals.css |
 | On demand | command palette, terminal, shortcuts sheet, lightboxes, cursor | loaded on first use |
 
-Jumps (`scrollToHash` in `LazySection.tsx`): any in-page `#link`, the
-palette, the `g` shortcuts, or arriving with a hash first mounts every lazy
-section, lets every deferred section render once so its real height
-replaces the 1200px guess, then jumps there instantly — no smooth glide — (after
-`lenis.resize()` — Lenis clamps to the page height it last measured).
-A lazy chunk that fails to download (offline) shows a "could not load"
-note in that one section instead of taking the page down.
+Other rules that keep scrolling smooth:
+
+- **Links to other pages prefetch on intent** (`components/shared/PageLink.tsx`): pointer, focus or touch — not on sight. With 100+ case links on the blog, viewport prefetching started dozens of downloads mid-scroll; the nav (always on screen) would otherwise download the other long page on every load.
+- **Section-divider drift is a CSS scroll-driven animation** (`animation-timeline`, on the compositor); browsers without it get the framer-motion version after mount.
+- **The contributions graph keeps one height** while loading, when ready and when GitHub is unreachable, so its arrival never moves the page.
+
+Measured on the built site (headless Chromium, no GPU, median of 3; "4×" =
+CPU slowed 4×). "One page" is the site with everything on `/` before this
+work; the last two columns are today's two pages:
+
+| | one page, before | `/` now | `/blog` now |
+|---|---|---|---|
+| desktop scroll — worst frame | 145 ms | 66 ms | under 50 ms |
+| desktop scroll — long-frame time | 428 ms | 131 ms | 0 ms |
+| desktop scroll 4× — worst frame | 759 ms | 252 ms | 195 ms |
+| desktop scroll 4× — layout shift (CLS) | 1.093 | 0.001 | 0.001 |
+| phone scroll 4× — long-frame time | 423 ms | 198 ms | 54 ms |
 
 ```
 app/
-├── layout.tsx            Root layout — fonts.css, metadata, JSON-LD, reveal script
-├── fonts.css             The Sensei-Dev font set (unicode-range slices), unchanged
+├── layout.tsx            Root layout — fonts, metadata, JSON-LD, reveal script
+├── fonts.ts              The Sensei-Dev font set through next/font/google
 ├── fonts-arabic.css      IBM Plex Sans Arabic, Arabic block only
-├── fonts/<family>/       The woff2 slices both files point at
-├── page.tsx              The one page (Server Component)
+├── fonts-yuji-site.css   Yuji Syuku cut to the characters the site uses
+├── fonts/                The woff2 files of those two
+├── page.tsx              Home: the portfolio (Server Component)
 ├── about/, gallery/      Old addresses → /#about, /#art
 ├── blog/
-│   ├── page.tsx          Old address → /#blog
+│   ├── page.tsx          The blog: posts, case library, ATT&CK, rules, triage
 │   ├── [slug]/           A post (PostArticle) or a case (CaseArticle)
 │   └── tag/[tag]/        Tag pages
 ├── cv/, privacy/, terms/, collections/   Other pages
@@ -114,20 +141,23 @@ app/
 │
 ├── components/           Sections, one folder per area
 │   ├── home/             Hero (LCP image), stats, mascot, mobile action bar,
-│   │                     AreaIntro, LazySections (every dynamic import)
+│   │                     LazySections (the home page's dynamic imports)
 │   ├── header/           SiteNav (desktop bar + mobile menu), ContactFooter
 │   ├── services/         Services, roles, work, repos, stack, uses, lab, process, FAQ
 │   ├── experience/       Timeline, teaching, credentials, platforms, milestones, now
-│   ├── cases/            Case library, ATT&CK, detections, triage (+ lazy Blocks)
-│   ├── blog/             PostCard, PostArticle, PostToc, CodeBlock, MDX components
+│   ├── cases/            Case library, ATT&CK, detections, triage, BlogTeaser
+│   ├── blog/             PostsSection, PostCard, PostArticle, PostToc, CodeBlock,
+│   │                     MDX components, BlogSections (the blog's dynamic imports)
 │   ├── art-gallery/      Proof gallery + lightbox
 │   └── shared/           kit.tsx (classes, PageShell for non-home pages),
-│                         MovedToSection (old addresses)
+│                         AreaIntro, MovedToSection (old addresses), PageLink
 │
 └── core/
+    ├── perf/             When work happens: idle queue, lazy sections, jumps,
+    │                     idle pre-render, off-screen animation pausing
     ├── components/       Motion, reveal text, section header/divider, palette,
     │                     terminal, shortcuts, FadeIn, theme
-    ├── config/           All content as typed data (see §4)
+    ├── config/           All content as typed data (see §4), routes.ts
     ├── content/          posts.ts (reads content/posts), render-mdx.tsx (MDX + Shiki)
     ├── api/              Build-time fetches (GitHub, TryHackMe) with fallbacks
     ├── icons/            Inline SVG path data
@@ -458,30 +488,36 @@ that will not notice it.
 
 ### Fonts
 
-Exactly the Sensei-Dev set, loaded the way that site loads it:
-`app/fonts.css` (imported in `layout.tsx`) declares Dela Gothic One, Outfit,
-JetBrains Mono, Noto Sans JP (400/700/900) and Yuji Syuku as `@font-face`
-rules split by `unicode-range`, pointing at `app/fonts/<family>/N.woff2`. The
-bundler fingerprints the files and adds the `/Portfolio` base path. A browser
-downloads only the slices whose characters a page uses (about 30 small files
-on the home page, mostly kanji slices of Yuji Syuku for the ornaments).
+The Sensei-Dev set, loaded the way that site now loads it: `app/fonts.ts`
+declares Dela Gothic One, Outfit, JetBrains Mono, Noto Sans JP and Yuji
+Syuku with `next/font/google`. At build time Next downloads them from
+Google and self-hosts them under `/_next/static/media` (no request to
+Google from the visitor's browser, so the CSP keeps `font-src 'self'`).
+`fontVariables` goes on `<html>` (`layout.tsx`); the `--font-*` stacks in
+`globals.css` read the `--font-*-google` variables. What next/font adds:
 
-`app/fonts-arabic.css` adds IBM Plex Sans Arabic for Arabic text only (the
-Sensei-Dev set has no Arabic glyphs); `:lang(ar)` in `globals.css` selects it.
+- a **size-matched fallback** per family ("Outfit Fallback" …), so text
+  barely moves when the real face arrives on a cold first visit;
+- **preloads** for the Latin files of Dela Gothic One, Outfit and JetBrains
+  Mono — the first screen's text; the Japanese families are not preloaded
+  and download only the unicode-range slices a page actually uses.
 
-`app/fonts-yuji-site.css` (generated by `scripts/subset-yuji-site.py`)
-declares Yuji Syuku once more, cut to the ~330 characters the site writes
-in it, after `fonts.css`. For overlapping unicode-ranges the last-declared
-face wins, so the decorative kanji no longer pull 23 slices (~620 KB): the
-home page loads 4 font files, ~300 KB in all, instead of 24 / ~650 KB. The
-glyphs are the same font (compared outline for outline). A character added
-later that is not in the subset still renders — from its original slice —
-so re-running the script after new Japanese text is an optimisation, not a
-requirement.
+Two faces stay plain `@font-face` files on purpose:
 
-Trade-off vs. the previous `next/font` setup: no generated size-matched
-fallback, so text can shift slightly when a face arrives on a cold first
-visit. `font-display: swap` keeps text visible meanwhile.
+- `app/fonts-arabic.css` — IBM Plex Sans Arabic for Arabic text only (the
+  Sensei-Dev set has no Arabic glyphs); `:lang(ar)` selects it.
+- `app/fonts-yuji-site.css` (generated by `scripts/subset-yuji-site.py`) —
+  Yuji Syuku cut to the ~330 characters the site writes in it, under its own
+  family name "Yuji Syuku Site", first in the Japanese stacks. For those
+  characters the browser uses this one small file and never fetches
+  next/font's slices (the decorative kanji are spread across ~23 of them,
+  ~620 KB). A page loads 4 font files in all. A character that is not in
+  the cut still renders — from next/font's slice — so re-running the script
+  after new Japanese text is an optimisation, not a requirement.
+
+The build needs network access to Google Fonts (GitHub Actions has it). To
+build offline, point `NEXT_FONT_GOOGLE_MOCKED_RESPONSES` at a module that
+maps the font CSS URLs to local `@font-face` CSS and build with `--webpack`.
 
 ### `content-visibility`
 

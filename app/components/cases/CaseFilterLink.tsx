@@ -2,9 +2,9 @@
 
 /*
  * CaseFilterLink — a link anywhere on the site that opens the case library
- * (/#cases) already filtered ("Wazuh → the 6 cases that use it").
+ * (/blog#cases) already filtered ("Wazuh → the 6 cases that use it").
  *
- * From another page it is a plain link to /?q=…#cases. On the home page
+ * From another page it is a plain link to /blog?q=…#cases. On the blog page
  * itself a next/link to "?q=…" would not remount the library and its filters
  * would not change. Instead the link writes the query
  * into the URL, fires the same popstate event the back button does (which the
@@ -14,7 +14,8 @@
 
 import type { ReactNode } from "react";
 import { normalizePublicHref } from "@/app/core/config/shared";
-import { revealAll, scrollToHash } from "@/app/core/components/LazySection";
+import { revealAll } from "@/app/core/perf/reveal";
+import { scrollToHash } from "@/app/core/perf/jump";
 
 type Props = {
   /** URL search params for the library: { q: "Wazuh" } or { kind: "investigation" } */
@@ -27,17 +28,17 @@ type Props = {
 
 export default function CaseFilterLink({ params, className, children, ...rest }: Props) {
   const search = new URLSearchParams(params).toString();
-  const href = `${normalizePublicHref("/")}?${search}#cases`;
+  const href = `${normalizePublicHref("/blog")}?${search}#cases`;
   return (
     <a
       href={href}
       className={className}
       onClick={(e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-        if (!document.getElementById("cases")) return; // not on the home page: follow the link
+        if (!document.getElementById("cases")) return; // not on the blog page: follow the link
         e.preventDefault();
         window.history.pushState(null, "", `${window.location.pathname}?${search}#cases`);
-        /* The library may not be loaded yet (core/components/LazySection.tsx) */
+        /* The library may not be loaded yet (core/perf/lazy.tsx) */
         revealAll().then(() => {
           window.dispatchEvent(new PopStateEvent("popstate"));
           scrollToHash("#cases");

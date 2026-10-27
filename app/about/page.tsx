@@ -1,4 +1,4 @@
-/* /about is now the #about section of the one-page site */
+/* /about is now the #about section of the home page */
 import MovedToSection, { movedMetadata } from "@/app/components/shared/MovedToSection";
 
 export const metadata = movedMetadata;

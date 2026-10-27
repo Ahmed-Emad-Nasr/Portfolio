@@ -5,7 +5,7 @@
  * portfolio (github.com/MostafaSensei106/Sensei-Dev, GPL-3.0), used here
  * with its tokens, effects and motion unchanged (utility classes no component
  * here uses were left out). Content is Ahmed Emad Nasr's.
- * Fonts: app/fonts.css — the Sensei-Dev self-hosted set, imported in layout.tsx.
+ * Fonts: app/fonts.ts — the Sensei-Dev set through next/font (variables on <html>).
  */
 /* source("./"): Tailwind looks for class names in app/ only. Left to itself
    it scans the whole repository, so example class names in the scripts'
@@ -41,12 +41,14 @@
   --radius-katana: 0.5rem 2rem 0.5rem 2rem;
 
   /* Font Families */
-  /* Exactly the Sensei-Dev font stacks; the faces come from app/fonts.css */
-  --font-display: 'Dela Gothic One', 'Noto Sans JP', sans-serif;
-  --font-body: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-jp: 'Yuji Syuku', 'Noto Sans JP', sans-serif;
-  --font-jp-brush: 'Yuji Syuku', 'Noto Sans JP', serif;
+  /* The Sensei-Dev font stacks; the faces come from next/font (app/fonts.ts).
+     'Yuji Syuku Site' is the site's own small cut (fonts-yuji-site.css):
+     first, so the characters it has never fetch the Google slices behind it. */
+  --font-display: var(--font-display-google), var(--font-jp-google), sans-serif;
+  --font-body: var(--font-body-google), sans-serif;
+  --font-mono: var(--font-mono-google), monospace;
+  --font-jp: 'Yuji Syuku Site', var(--font-jp-brush-google), var(--font-jp-google), sans-serif;
+  --font-jp-brush: 'Yuji Syuku Site', var(--font-jp-brush-google), var(--font-jp-google), serif;
 }
 
 @layer base {
@@ -1364,11 +1366,80 @@
   }
 }
 
-/* One-page jumps (core/components/LazySection.tsx): for a frame, every
-   deferred section renders once, so `contain-intrinsic-size: auto` swaps
-   its 1200px guess for the real height before the page scrolls — a jump
-   to #art lands on #art, not wherever the guesses put it. */
-html[data-cv-measure] .cv-defer {
+/* ─── Loading the pages (app/core/perf/) ──────────────────────────────────
+   Deferred sections (.cv-defer) skip style, layout and paint until they
+   near the screen. For one frame each — in idle time (Prerender.tsx) or
+   before a jump (jump.ts) — a section renders anyway, so
+   `contain-intrinsic-size: auto` swaps its guessed height for the real
+   one and keeps it. */
+.cv-defer[data-cv-measure] {
   content-visibility: visible !important;
+}
+
+/* Lazy sections (lazy.tsx): the placeholder and the box the section
+   mounts into share one expected height, so the swap moves nothing; once
+   the section has rendered, its real height takes over. */
+.lazy-pending {
+  min-height: var(--lazy-h, 100svh);
+}
+.lazy-box {
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--lazy-h, 100svh);
+}
+/* Expected heights, measured on the built site (phone / tablet / desktop) */
+.lazy-h-contributions { --lazy-h: 1110px; }
+.lazy-h-triage        { --lazy-h: 1600px; }
+.lazy-h-art           { --lazy-h: 7400px; }
+@media (min-width: 48rem) {
+  .lazy-h-contributions { --lazy-h: 870px; }
+  .lazy-h-triage        { --lazy-h: 1400px; }
+  .lazy-h-art           { --lazy-h: 3000px; }
+}
+@media (min-width: 64rem) {
+  .lazy-h-contributions { --lazy-h: 680px; }
+  .lazy-h-triage        { --lazy-h: 1300px; }
+  .lazy-h-art           { --lazy-h: 3400px; }
+}
+
+/* Section dividers: the brush text drifts with the page, on the compositor
+   (SectionDivider.tsx; browsers without scroll timelines use framer-motion).
+   The timeline runs while the divider crosses the screen, bottom to top. */
+@supports (animation-timeline: view()) {
+  /* The banner clips its track (overflow: hidden makes it a scroll
+     container), so the timeline is named on the banner itself — its view of
+     the page — and the track inside follows it */
+  .divider-frame {
+    view-timeline-name: --divider;
+  }
+  .divider-drift {
+    animation: divider-drift linear both;
+    animation-timeline: --divider;
+  }
+  .divider-drift-reverse {
+    animation-name: divider-drift-reverse;
+  }
+}
+@keyframes divider-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-25%); }
+}
+@keyframes divider-drift-reverse {
+  from { transform: translateX(-25%); }
+  to { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .divider-drift { animation: none; }
+}
+
+/* Looping animations of a block that is off screen wait where they are.
+   OffscreenAnimations.tsx tags only elements whose animations all loop
+   forever (data-loop*), and marks off-screen blocks (data-offscreen). */
+[data-offscreen] [data-loop],
+[data-offscreen][data-loop],
+[data-offscreen] [data-loop-before]::before,
+[data-offscreen][data-loop-before]::before,
+[data-offscreen] [data-loop-after]::after,
+[data-offscreen][data-loop-after]::after {
+  animation-play-state: paused !important;
 }
 

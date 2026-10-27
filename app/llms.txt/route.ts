@@ -75,10 +75,10 @@ ${certifications.map((cert) => `- ${cert.name} — ${cert.issuer}, ${cert.year}`
 
 ## Pages
 
-- [Home](${absoluteUrl("/")}): the whole portfolio on one page — who I am, services, selected work, experience, credentials
-- [About](${absoluteUrl("/")}#about): toolbox, home lab, path, process, contributions
-- [Blog](${absoluteUrl("/")}#blog): posts, the case library, ATT&CK coverage, detection rules, videos
-- [Gallery](${absoluteUrl("/")}#art): certificates, events and moments
+- [Home](${absoluteUrl("/")}): the portfolio — who I am, services, selected work, experience, credentials
+- [About](${absoluteUrl("/")}#about): toolbox, home lab, path, process, contributions (a section of the home page)
+- [Gallery](${absoluteUrl("/")}#art): certificates, events and moments (a section of the home page)
+- [Blog](${absoluteUrl("/blog")}): posts, the case library, ATT&CK coverage, detection rules, videos
 - [CV](${absoluteUrl("/cv")})
 ${getAllPosts().length ? `
 ## Posts

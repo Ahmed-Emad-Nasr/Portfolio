@@ -4,7 +4,7 @@
  * text runs right-to-left inside the card, the card itself stays in place.
  */
 
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ViewTransition } from "react";
 import { Clock, Calendar } from "lucide-react";
 import type { PostMeta } from "@/app/core/content/posts";
@@ -19,7 +19,7 @@ export default function PostCard({ post, index = 0, headingLevel: H = "h3" }: { 
       className="@container spotlight group relative h-full bg-surface/60 border border-foreground/5 hover:border-primary/40 transition-colors duration-500"
     >
       <span className="absolute top-0 left-0 h-[2px] w-0 bg-primary transition-[width] duration-500 group-hover:w-full" aria-hidden="true" />
-      <Link href={`/blog/${post.slug}`} className="flex h-full flex-col gap-4 p-6 @md:p-7">
+      <PageLink href={`/blog/${post.slug}`} className="flex h-full flex-col gap-4 p-6 @md:p-7">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-foreground/60">
           <span className="inline-flex items-center gap-1.5">
             <Calendar size={11} aria-hidden="true" />
@@ -55,7 +55,7 @@ export default function PostCard({ post, index = 0, headingLevel: H = "h3" }: { 
             ))}
           </ul>
         )}
-      </Link>
+      </PageLink>
     </FadeIn>
   );
 }

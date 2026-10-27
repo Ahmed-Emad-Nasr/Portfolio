@@ -7,7 +7,7 @@
  * another the first time they scroll into view.
  */
 
-import Link from "next/link";
+import PageLink from "@/app/components/shared/PageLink";
 import { ArrowUpRight } from "lucide-react";
 import { CASE_KINDS, formatDate, type PdfResource } from "@/app/core/config/shared";
 import FadeIn from "@/app/core/components/FadeIn";
@@ -40,7 +40,7 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
       <ul className="divide-y divide-foreground/5">
         {items.map((item, i) => (
           <FadeIn as="li" x={-16} y={0} duration={0.45} delay={Math.min(i % 12, 10) * 0.03} key={item.id} id={`case-${item.id}`} className="scroll-mt-28">
-            <Link
+            <PageLink
               href={item.detailHref ?? `/blog/${item.id}`}
               className="group relative grid grid-cols-1 md:grid-cols-[1fr_7rem_10rem_9rem_6.5rem_1.5rem] items-center gap-x-4 gap-y-1.5 px-5 py-4 hover:bg-foreground/[0.03] transition-colors"
             >
@@ -61,7 +61,7 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
               <span className="font-mono text-[0.625rem] text-foreground/60 truncate">{item.platform}</span>
               <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">{item.date ? formatDate(item.date) : ""}</span>
               <ArrowUpRight size={14} className="hidden md:block text-foreground/30 group-hover:text-primary-ink transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-            </Link>
+            </PageLink>
           </FadeIn>
         ))}
       </ul>

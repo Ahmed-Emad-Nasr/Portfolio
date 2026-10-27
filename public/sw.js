@@ -50,22 +50,24 @@
  *     case links); caching those payloads filled the 60-page cache with
  *     pages nobody opened and pushed out the ones they had.
  *
- *   · Offline, a page opened with a query string (/?q=wazuh#cases) falls
+ *   · Offline, a page opened with a query string (/blog?q=wazuh#cases) falls
  *     back to the same page without it before falling back to the home page.
  *
- * ═══ v4 — the one-page site ═══
+ * ═══ v4 — the new site layout ═══
  *
- *   · /blog, /about and /gallery became sections of the home page (the old
- *     addresses only hop to their section). The version bump drops the old
- *     multi-page HTML from the page cache, so an offline visitor is never
- *     handed a stale copy of a page that no longer exists.
+ *   · /about and /gallery became sections of the home page (the old
+ *     addresses only hop to their section); /blog stays a page of its own.
+ *     The version bump drops the old HTML from the page cache, so an
+ *     offline visitor is never handed a stale copy of a page that changed
+ *     shape.
  *
- *   · The lazy sections (case library, ATT&CK, detections, triage, gallery,
- *     contributions) are separate /_next/static/ chunks, fetched when the
- *     reader nears them — cache-first like every other build file. A section
+ *   · The lazy sections (the gallery and contributions on the home page,
+ *     the triage challenge on the blog) are separate /_next/static/ chunks,
+ *     fetched in idle time after the page loads — cache-first like every
+ *     other build file. A section
  *     never opened online is simply not in the cache; offline it shows a
  *     "could not load" note instead of breaking the page
- *     (core/components/LazySection.tsx).
+ *     (core/perf/lazy.tsx).
  *
  * ═══ Deliberate limits ═══
  *

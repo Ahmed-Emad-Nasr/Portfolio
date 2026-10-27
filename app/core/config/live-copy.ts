@@ -51,9 +51,9 @@ export const LIVE_COPY: LiveCopy = {
     /* The full investigation reports, not every library entry: "79 cases"
        counted 42 web labs and 9 notes too, and a recruiter who filtered the
        library found the gap. The hero still gives both numbers. */
-    { target: CASE_STATS.reports, suffix: "", label: "IR / DFIR reports", japanese: "記録", href: `${normalizePublicHref("/")}?kind=investigation#cases` },
+    { target: CASE_STATS.reports, suffix: "", label: "IR / DFIR reports", japanese: "記録", href: `${normalizePublicHref("/blog")}?kind=investigation#cases` },
     { target: certifications.length, suffix: "", label: "Certifications", japanese: "認定", href: "#certificates" },
     { target: 300, suffix: "+", label: "Students taught", japanese: "指導", href: "#teaching" },
-    { target: 60, suffix: "K+", label: "Channel views", japanese: "動画", href: "#videos" },
+    { target: 60, suffix: "K+", label: "Channel views", japanese: "動画", href: `${normalizePublicHref("/blog")}#videos` },
   ],
 };

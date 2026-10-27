@@ -33,7 +33,8 @@ import {
 import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
-import { scrollToHash } from "@/app/core/components/LazySection";
+import { scrollToHash } from "@/app/core/perf/jump";
+import { pageOf } from "@/app/core/config/routes";
 import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import { useThemeFx } from "@/app/core/theme/ThemeFxProvider";
 import { FX_DURATIONS, getFxDuration, setFxDuration } from "@/app/core/theme/fx";
@@ -118,13 +119,14 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
     return () => window.removeEventListener("sensei-fx-duration", onFx);
   }, []);
 
-  /* Every section is on the home page: scroll to it there (lazy sections
-     are mounted first), or open the home page at the anchor. */
+  /* A section lives on the home page or the blog (core/config/routes.ts):
+     jump to it on this page, or open its page at the anchor. */
   const go = useCallback(
     (hash: string) => {
       setOpen(false);
-      if (pathname !== "/") {
-        router.push(`/${hash}`);
+      const page = pageOf(hash.slice(1));
+      if (pathname !== page) {
+        router.push(`${page}${hash}`);
         return;
       }
       requestAnimationFrame(() => {
@@ -163,7 +165,7 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
       { id: "triage", group: "Go to", label: "Triage challenge", icon: Crosshair, run: () => go("#triage") },
       { id: "wsa", group: "Pages", label: "Web Security Academy track", icon: FolderSearch, run: () => visit("/collections/web-security-academy") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
-      { id: "blog-area", group: "Go to", label: "Blog — posts, cases, videos", icon: FileText, run: () => go("#blog") },
+      { id: "blog-page", group: "Pages", label: "Blog — posts, cases, videos", icon: FileText, run: () => visit("/blog") },
       { id: "about-area", group: "Go to", label: "About — toolbox, lab, path", icon: FileText, run: () => go("#about") },
       { id: "posts", group: "Go to", label: "Blog posts", icon: FileText, run: () => go("#posts") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
