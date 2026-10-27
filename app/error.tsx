@@ -1,28 +1,15 @@
 "use client";
 
-/*
- * error.tsx — route-level error boundary
- *
- * The site only had not-found.tsx. So if any client component threw an
- * exception — and the site has 28 of them — the visitor saw **a blank white page**:
- * no message, no back button, not even a hint that something went wrong.
- *
- * The App Router looks for this file automatically. It must be a client component
- * (a Next requirement) and it receives `reset` to try re-rendering the part that crashed without
- * a full reload.
- *
- * It reads the same classes as not-found.tsx (core/status-page-ui.ts) so both
- * pages look the same.
- */
+/* Route-level error boundary: a message and a retry instead of a blank page */
 
 import { useEffect } from "react";
 import Link from "next/link";
-import PageLink from "@/app/components/shared/PageLink";
+import PageLink from "@/components/ui/PageLink";
 import { RotateCcw } from "lucide-react";
 import {
   statusActions, statusCode, statusInner, statusLede, statusPage, statusReport, statusTitle,
-} from "@/app/core/status-page-ui";
-import { PageShell, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
+} from "@/components/ui/kit";
+import { PageShell, ctaPrimary, ctaSecondary } from "@/components/ui/kit";
 
 export default function Error({
   error,

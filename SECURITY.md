@@ -28,9 +28,6 @@ Email: ahmed.em.nasr@gmail.com
 
 Machine-readable contact (RFC 9116): https://ahmed-emad-nasr.github.io/Portfolio/.well-known/security.txt
 
-To encrypt a report, use the PGP key linked from security.txt (the `Encryption` field) and check its fingerprint
-against the one shown in the site's contact section.
-
 ## Disclosure
 
 I will review responsible reports privately and work on a fix before any public disclosure.

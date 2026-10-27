@@ -1,20 +1,7 @@
 "use client";
 
-/*
- * global-error.tsx — the last line of defence
- *
- * error.tsx catches errors that happen inside pages. But if the error
- * happens in app/layout.tsx itself, that boundary never mounts — because it
- * lives inside the layout that failed.
- *
- * global-error.tsx solves that: it replaces the entire document, which is
- * why it is the only file in the project that renders <html> and <body>
- * itself.
- *
- * Note: it uses neither globals.css nor any CSS module. If the layout
- * failed, something in the loading chain is most likely broken — so the
- * styling here is inline, to work even if no stylesheet arrived.
- */
+/* Errors in the root layout itself: replaces the whole document, with inline
+   styles in case no stylesheet loaded. */
 
 export default function GlobalError({
   error,

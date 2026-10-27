@@ -5,8 +5,8 @@
  *   npm run build && npm run check:a11y
  *
  * Serves out/ (scripts/lib/serve-out.mjs), opens one page of every kind the
- * site has (home, blog, about, a case with a full case file, a case without,
- * a post, a tag page, the collection, CV, legal pages, 404) on a phone and
+ * site has (home, blog, cases with and without a case file, the collection,
+ * CV, legal pages, 404) on a phone and
  * a desktop, in the dark and the light theme, and runs axe-core against WCAG
  * 2.2 A/AA. Each page is scrolled to the end and given time for every
  * scroll entrance to finish before it is measured.

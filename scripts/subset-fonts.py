@@ -14,7 +14,7 @@ ever shows Latin text and the ~190 kanji/kana written in its own source, so
 this script cuts each font down to exactly that and writes small woff2 files
 to scripts/og/fonts/.
 
-Run it again whenever new Japanese text is added anywhere under app/:
+Run it again whenever new Japanese text is added anywhere in the site's code:
 
     npm pack @expo-google-fonts/dela-gothic-one @expo-google-fonts/yuji-syuku
     (extract both .tgz files, then)
@@ -29,13 +29,13 @@ import sys
 from fontTools import subset
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-APP = ROOT / "app"
+SOURCE_DIRS = [ROOT / d for d in ("app", "components", "lib", "data")]
 OUT = ROOT / "scripts" / "og" / "fonts"
 
 
 def used_cjk() -> str:
     chars = set()
-    for f in APP.rglob("*.ts*"):
+    for f in (f for d in SOURCE_DIRS for f in d.rglob("*.ts*")):
         text = f.read_text(encoding="utf8")
         text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
         for c in text:

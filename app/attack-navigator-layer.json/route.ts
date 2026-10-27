@@ -1,17 +1,10 @@
-/*
- * /attack-navigator-layer.json — the case library as a MITRE ATT&CK
- * Navigator layer. Load it at https://mitre-attack.github.io/attack-navigator/
- * ("Open Existing Layer" → upload, or the #layerURL= link on the home page)
- * to see the same coverage in the tool every SOC team already uses.
- *
- * Built at export time from core/config/attack.ts: one entry per technique or
- * sub-technique, scored by the number of cases behind it, with the case titles
- * in the comment.
- */
+/* The case library as a MITRE ATT&CK Navigator layer (scored by the number
+   of cases behind each technique). Open it at
+   https://mitre-attack.github.io/attack-navigator/ */
 
-import { caseAttackMapping } from "@/app/core/config/attack";
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import { SITE_URL } from "@/app/core/config/seo";
+import { caseAttackMapping } from "@/data/attack";
+import { caseEvidenceLibrary } from "@/data/cases";
+import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-static";
 

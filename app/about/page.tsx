@@ -1,5 +1,5 @@
 /* /about is now the #about section of the home page */
-import MovedToSection, { movedMetadata } from "@/app/components/shared/MovedToSection";
+import MovedToSection, { movedMetadata } from "@/components/ui/MovedToSection";
 
 export const metadata = movedMetadata;
 

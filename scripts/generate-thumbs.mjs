@@ -1,29 +1,12 @@
 /*
- * scripts/generate-thumbs.mjs
+ * generate-thumbs.mjs — an "X-thumb.webp" next to every case image in
+ * public/Assets (getThumbnail() in lib/shared.ts points at them; without
+ * one, the full-size image is downloaded instead).
  *
- * Generates an "X-thumb.webp" thumbnail next to every image in public/Assets.
- *
- * ── Why this file exists ──────────────────────────────────────────────────
- *
- * getThumbnail() in the code turns "1.webp" into "1-thumb.webp", and every component
- * that shows an image goes through it. **Not a single image in the case library had
- * a thumbnail — zero out of 762.**
- *
- * Components fall back to the full image when the thumb is missing, so nobody noticed:
- * the page looks fine. But the blog page loads 78 full-size images (39 cards
- * × 2 images), which is about 32 MB served to the visitor as "thumbnails".
- *
- * ── Why sharp ─────────────────────────────────────────────────────────────
- *
- * It's already in devDependencies (Next uses it for image processing), so there's
- * nothing new to install. And no need for a separate Python script.
- *
- * ── Usage ─────────────────────────────────────────────────────────────────
- *
- *   npm run thumbs             generate only what's missing
- *   npm run thumbs -- --dry    show what it would do without writing
+ *   npm run thumbs             only what's missing
+ *   npm run thumbs -- --dry    show what it would do
  *   npm run thumbs -- --force  regenerate everything
- *   npm run thumbs -- --all    include PNG/JPEG and the remaining folders too
+ *   npm run thumbs -- --all    include PNG/JPEG and the other folders
  */
 
 import { readdirSync, statSync, existsSync } from "node:fs";
@@ -34,13 +17,7 @@ import sharp from "sharp";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC = join(ROOT, "public");
 
-/*
- * The widest size a thumbnail is shown at in the design is the featured card on the
- * blog page (~40vw). On a 1920px screen that's about 770px — but the image is shown
- * with object-fit inside a fixed box, so 640 is more than enough and saves more.
- *
- * If any thumbnail ever looks blurry, raise this number and run with --force.
- */
+/* Cards show thumbnails with object-fit in a fixed box: 640px is plenty */
 const THUMB_WIDTH = 640;
 const THUMB_QUALITY = 72;
 
@@ -55,44 +32,15 @@ if (!existsSync(PUBLIC)) {
 
 const SOURCE_EXT = /\.(webp|png|jpe?g)$/i;
 
-/*
- * Not every image in public/ needs a thumbnail. The ones that do are those the code
- * passes through getThumbnail() — i.e. case images only.
- *
- * What's excluded and why:
- *
- *  • Non-.webp — every image path in the config is .webp. The 452 PNG files
- *    in public/ aren't referenced by any code (old copies sitting next to the webp),
- *    so generating thumbs for them is wasted work and wasted space.
- *
- *  • image_display_thumb/ — the gallery references this folder directly, not via
- *    getThumbnail. The images inside it **are** the thumbnails, so generating
- *    "9-thumb.webp" inside a folder named _thumb is pointless duplication.
- *
- * `--all` disables these exclusions if you need it.
- */
+/* Only case images go through getThumbnail(): .webp/.jpeg under Assets/Cases/
+   (not the gallery's own _thumb folder or old Assets/Cases/thumbnails/).
+   --all lifts these limits. */
 const ALL = args.has("--all");
 
 const shouldProcess = (relPath) => {
   if (ALL) return true;
-  /*
-   * .webp and .jpeg only.
-   *
-   * The 452 PNG files in public/ aren't referenced by any code — old copies sitting next to
-   * the webp. Generating thumbs for them wastes work and space.
-   *
-   * .jpeg is included because at least one image in the config uses that extension
-   * (Depi R4 Project/1.jpeg), and getThumbnail preserves the extension.
-   */
   if (!/\.(webp|jpe?g)$/i.test(relPath)) return false;
   if (relPath.includes("image_display_thumb/")) return false;
-  /*
-   * Assets/Cases/thumbnails/ holds 232 thumbnails from an earlier attempt, with
-   * flat names like "Folder__File.webp". The code never references them — it
-   * looks for "X-thumb.webp" next to the original image.
-   *
-   * So they're neither a source (not originals) nor in need of thumbnails themselves.
-   */
   if (relPath.startsWith("Assets/Cases/thumbnails/")) return false;
   return relPath.startsWith("Assets/Cases/");
 };

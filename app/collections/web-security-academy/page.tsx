@@ -1,23 +1,15 @@
-/*
- * app/collections/web-security-academy/page.tsx
- *
- * The PortSwigger Web Security Academy labs as one track. Twenty-nine short
- * labs listed one by one in the library read as twenty-nine cases; grouped by
- * vulnerability class they read as what they are — a structured web-security
- * curriculum worked through end to end. Every lab keeps its own page.
- *
- * Server Component, static: built from cases.ts at build time.
- */
+/* The PortSwigger Web Security Academy labs as one track, grouped by
+   vulnerability class (each lab keeps its own page). */
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import PageLink from "@/app/components/shared/PageLink";
+import PageLink from "@/components/ui/PageLink";
 import { ArrowLeft, ArrowUpRight, Images } from "lucide-react";
-import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
-import { WSA_COLLECTION } from "@/app/core/config/shared";
-import { PageShell, KanjiWatermark, CounterBadge, btnOutline } from "@/app/components/shared/kit";
-import { absoluteUrl } from "@/app/core/config/site";
-import { jsonLd, PERSON_REF } from "@/app/core/config/seo";
+import { caseEvidenceLibrary, caseScreenshotsByEvidenceId } from "@/data/cases";
+import { WSA_COLLECTION } from "@/lib/shared";
+import { PageShell, KanjiWatermark, CounterBadge, btnOutline } from "@/components/ui/kit";
+import { absoluteUrl } from "@/lib/site";
+import { jsonLd, PERSON_REF } from "@/lib/seo";
 
 /* Vulnerability class per lab, in the order the Academy teaches them */
 const CLASSES: { name: string; ids: string[] }[] = [

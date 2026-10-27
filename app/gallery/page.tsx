@@ -1,5 +1,5 @@
 /* /gallery is now the #art section of the home page */
-import MovedToSection, { movedMetadata } from "@/app/components/shared/MovedToSection";
+import MovedToSection, { movedMetadata } from "@/components/ui/MovedToSection";
 
 export const metadata = movedMetadata;
 

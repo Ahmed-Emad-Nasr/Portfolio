@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { normalizePublicHref } from "@/app/core/config/shared";
+import { normalizePublicHref } from "@/lib/shared";
 
 // Required with output: "export" — exactly like sitemap.ts and robots.ts.
 // Without it, next build fails during "Collecting page data" with:
@@ -7,18 +7,7 @@ import { normalizePublicHref } from "@/app/core/config/shared";
 //    on route /manifest.webmanifest with output: export"
 export const dynamic = "force-static";
 
-/*
- * manifest.ts
- *
- * The metadata in layout.tsx contains `appleWebApp: { capable: true }` —
- * the site declares itself installable to the home screen. Without a
- * manifest that declaration was incomplete: Android showed no install
- * option at all, and iOS took a screenshot of the page and used it as the
- * icon.
- *
- * Next generates /manifest.webmanifest from this file at build time, and
- * prefixes the paths with the basePath on its own.
- */
+/* /manifest.webmanifest (installable app; Next adds the basePath to the paths) */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Ahmed Emad Nasr — Information Security Officer",

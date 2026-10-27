@@ -1,15 +1,9 @@
 /*
- * scripts/check-links.mjs
+ * check-links.mjs — crawls out/ after the build and checks that every
+ * internal link resolves to a file. Missing thumbnails are warnings only
+ * (the components fall back to the full image).
  *
- * Crawls `out/` after the build and checks that every internal link resolves to a file
- * that actually exists.
- *
- * This check would have caught the two bugs that reached production:
- *  - /blog/soc-analyst-cv — a card linking to a page generateStaticParams
- *    doesn't generate
- *  - any asset path changed in code but not on disk
- *
- * Run:  npm run build && node scripts/check-links.mjs
+ *   npm run build && npm run check:links
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
@@ -49,25 +43,12 @@ for (const f of files) {
 }
 
 const broken = new Map();
-/*
- * Thumbnails are a special case.
- *
- * getThumbnail() generates "X-thumb.webp" for every image. If the file is missing,
- * components fall back to the full image — so the page works and the visitor sees nothing
- * broken. The browser just downloads a larger image than necessary.
- *
- * If we counted them as errors, CI would stay red over something non-breaking — and any check that stays
- * red gets ignored. So they count as warnings, and the count is shown so you know the size of the problem.
- */
+/* Missing thumbnails are warnings: the components fall back to the full image */
 const missingThumbs = new Map();
 let checkedLinks = 0;
 
 for (const f of files.filter((f) => f.endsWith(".html"))) {
-  /* <link rel="preconnect"> / dns-prefetch name an origin, not a file. Next
-     emits <link rel="preconnect" href="/"> itself when a layout's CSS has
-     @font-face files that are not next/font preloads (fonts-arabic.css,
-     fonts-yuji-site.css) — a
-     same-origin hint, not a link to check. */
+  /* preconnect / dns-prefetch name an origin, not a file */
   const html = readFileSync(f, "utf8").replace(/<link\b[^>]*\brel="(?:preconnect|dns-prefetch)"[^>]*>/g, "");
   const from = relative(OUT, f);
 
@@ -79,13 +60,7 @@ for (const f of files.filter((f) => f.endsWith(".html"))) {
   }
 
   for (const href of urls) {
-    /*
-     * Every root-relative URL must carry the base path. Without it the link
-     * works on `localhost:3000` and 404s on GitHub Pages, where "/" is the
-     * github.io root — exactly the bug that hid the CSS, JS and fonts when
-     * basePath was only injected in CI. The old check stripped the prefix
-     * when present and silently accepted it when missing.
-     */
+    /* Every root-relative URL must carry the base path (else it 404s on GitHub Pages) */
     if (BASE_PATH && !(href === BASE_PATH || href.startsWith(`${BASE_PATH}/`))) {
       checkedLinks++;
       const key = `${href}  (missing ${BASE_PATH})`;

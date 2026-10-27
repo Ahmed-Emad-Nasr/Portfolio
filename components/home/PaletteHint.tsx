@@ -1,0 +1,87 @@
+"use client";
+
+/*
+ * PaletteHint — on a first visit with a keyboard, a one-time toast pointing
+ * at ⌘K, the shortcuts and the terminal (remembered per browser).
+ */
+
+import { useEffect, useState } from "react";
+import { Command, X } from "lucide-react";
+
+const KEY = "palette-hint-seen";
+
+export default function PaletteHint() {
+  const [open, setOpen] = useState(false);
+  const [mac, setMac] = useState(false);
+
+  useEffect(() => {
+    /* Keyboard users only: on touch screens there is nothing to press */
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    try {
+      if (localStorage.getItem(KEY)) return;
+    } catch {
+      return; // storage blocked: better to never show than to show every time
+    }
+    setMac(/Mac|iPhone|iPad/.test(navigator.platform));
+    /* Shown once the reader is past the hero (IntersectionObserver, not a
+       scroll listener) and has spent a few seconds on the page */
+    let timeUp = false;
+    let pastHero = false;
+    const maybeOpen = () => timeUp && pastHero && setOpen(true);
+    const t = window.setTimeout(() => {
+      timeUp = true;
+      maybeOpen();
+    }, 5000);
+    const hero = document.getElementById("home");
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting && e.boundingClientRect.top < 0) {
+        pastHero = true;
+        maybeOpen();
+        io.disconnect();
+      }
+    });
+    if (hero) io.observe(hero);
+    const close = () => setOpen(false);
+    window.addEventListener("keydown", close, { once: true });
+    return () => {
+      window.clearTimeout(t);
+      io.disconnect();
+      window.removeEventListener("keydown", close);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    try {
+      localStorage.setItem(KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    const t = window.setTimeout(() => setOpen(false), 9000);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
+  return (
+    <div
+      role="status"
+      /* Out of the tab order and the accessibility tree while it is hidden —
+         its Dismiss button was reachable by Tab at opacity 0 */
+      inert={!open}
+      className={`hidden md:flex fixed left-6 bottom-6 z-[85] max-w-sm items-start gap-4 border border-foreground/10 bg-surface/90 backdrop-blur-xl px-5 py-4 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+        open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0 pointer-events-none"
+      }`}
+    >
+      <span className="absolute top-0 left-0 h-[2px] w-full origin-left bg-primary hint-timer" data-on={open} aria-hidden="true" />
+      <Command size={16} className="mt-0.5 text-primary-ink shrink-0" aria-hidden="true" />
+      <p className="text-sm text-foreground/80 leading-relaxed">
+        Press{" "}
+        <kbd className="px-1.5 py-0.5 border border-foreground/20 font-mono text-xs">{mac ? "⌘" : "Ctrl"} K</kbd> to search every case and
+        section, <kbd className="px-1.5 py-0.5 border border-foreground/20 font-mono text-xs">?</kbd> for shortcuts — or just type{" "}
+        <span className="font-mono text-primary-ink">3omda</span>.
+      </p>
+      <button type="button" onClick={() => setOpen(false)} className="text-foreground/60 hover:text-foreground" aria-label="Dismiss">
+        <X size={14} />
+      </button>
+    </div>
+  );
+}

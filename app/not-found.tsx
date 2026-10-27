@@ -1,30 +1,15 @@
-/*
- * app/not-found.tsx
- *
- * The site used to use Next's default 404 page — the small black text
- * in the middle of an empty screen.
- *
- * And this isn't a marginal page here: GitHub Pages returns `404.html` for any path that
- * doesn't exist, so this is the page anyone sees coming from an old link, from a URL
- * with a typo, or from a URL that changed (exactly what happened with
- * /blog/soc-analyst-cv). In those cases the visitor is usually someone looking for your work
- * — the worst thing you can give them is a dead end.
- *
- * This page gives them real ways to continue.
- *
- * Server Component: zero JavaScript.
- */
+/* The 404 page (GitHub Pages serves it for any unknown path): ways to continue, no dead end */
 
 import Link from "next/link";
-import PageLink from "@/app/components/shared/PageLink";
+import PageLink from "@/components/ui/PageLink";
 import type { Metadata } from "next";
-import { startHere } from "@/app/core/config/start-here";
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
+import { startHere } from "@/data/start-here";
+import { caseEvidenceLibrary } from "@/data/cases";
 import { Home, FolderSearch, FileText } from "lucide-react";
 import {
   statusActions, statusCode, statusInner, statusLede, statusPage, statusReport, statusTitle,
-} from "@/app/core/status-page-ui";
-import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
+} from "@/components/ui/kit";
+import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/components/ui/kit";
 
 export const metadata: Metadata = {
   title: "Page not found",

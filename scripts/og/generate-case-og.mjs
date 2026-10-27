@@ -1,10 +1,9 @@
 /*
  * scripts/og/generate-case-og.mjs — one share card per case.
  *
- * A case link on LinkedIn used to preview with its first screenshot, which at
- * thumbnail size is grey noise. This renders a 1200×630 card per case in the
- * site's own style — category, title, verdict, severity, ATT&CK ids — into
- * public/og/cases/<id>.jpg. The case page uses it when the file exists.
+ * Renders a 1200×630 card per case in the site's style (category, title,
+ * verdict, severity, ATT&CK ids) into public/og/cases/<id>.jpg; the case
+ * page uses it when the file exists.
  *
  *   npm run og:cases              only cards whose case changed (part of npm run prepare:assets)
  *   npm run og:cases -- --force   redraw every card
@@ -33,14 +32,18 @@ try {
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
-/* Minimal CommonJS loader for the config's .ts files */
+/* Minimal CommonJS loader for the data's .ts files ("./x" and "@/x" imports) */
+const tsFile = (base) => (existsSync(`${base}.ts`) ? `${base}.ts` : `${base}.tsx`);
 function load(file) {
   const out = ts.transpileModule(readFileSync(file, "utf8"), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
   }).outputText;
   const mod = { exports: {} };
   new Function("require", "module", "exports", "process", out)(
-    (p) => (p.startsWith(".") ? load(resolve(dirname(file), `${p}.ts`)) : require(p)),
+    (p) =>
+      p.startsWith(".") ? load(tsFile(resolve(dirname(file), p)))
+      : p.startsWith("@/") ? load(tsFile(join(ROOT, p.slice(2))))
+      : require(p),
     mod,
     mod.exports,
     process,
@@ -48,7 +51,7 @@ function load(file) {
   return mod.exports;
 }
 
-const cfg = join(ROOT, "app/core/config");
+const cfg = join(ROOT, "data");
 const { caseEvidenceLibrary } = load(join(cfg, "cases.ts"));
 const { caseDetails } = load(join(cfg, "case-details.ts"));
 const { caseAttackMapping } = load(join(cfg, "attack.ts"));

@@ -1,82 +1,16 @@
 /*
- * sw.js — a small service worker for offline support
- * Author: Ahmed Emad Nasr
+ * sw.js — offline support by runtime caching (no precache list: build file
+ * names change every deploy, so the worker only remembers what was fetched).
  *
- * ═══ Why there is no precache list ═══
- *
- * The site is a static export, and Next.js puts a content hash in the name
- * of every JS/CSS file, so the names change on every build. Without the
- * build manifest at runtime, any precache list written by hand would be out
- * of date after the first deploy.
- *
- * So this is runtime caching only: every same-origin request is stored as it
- * is made. A second visit works offline for anything the visitor has already
- * seen. Nothing is downloaded ahead of time — the worker only remembers.
- *
- * ═══ Strategy ═══
- *
- *   · Pages (navigation requests): network-first, with navigation preload.
+ *   · Pages and RSC payloads: network-first (navigation preload), cached copy
+ *     offline; a URL with a query falls back to the same page without it.
  *   · /_next/static/ (hashed names): cache-first.
- *   · Images and other fixed-name files (Assets/…): stale-while-revalidate.
+ *   · Images with fixed names: stale-while-revalidate.
+ *   · Link prefetches, PDFs and anything else: network only.
  *
- * ═══ v3 ═══
- *
- *   · Navigation preload. Without it every page load waited for the worker
- *     to boot (50–300 ms on a phone) before the HTML request even started —
- *     the worker was slowing down the first byte of every visit. Now the
- *     browser sends the page request in parallel with starting the worker,
- *     and the worker uses that response.
- *
- *   · The build-file cache is bounded. Every deploy produces JS/CSS files
- *     with new names, and the old ones stayed in 3omda-runtime-v2 forever
- *     (the cache name never changed, so it was never cleared) — after a few
- *     deploys the cache grew without limit. Now the oldest entries are
- *     dropped once the count passes MAX_ASSETS.
- *
- *   · Pages have their own bounded cache (MAX_PAGES): 76 case pages at
- *     ~200 KB each would otherwise add up.
- *
- *   · Cache-first applies to /_next/static/ only. Before, any .js/.css/.woff2
- *     on the site — even with a fixed name — was served from the cache
- *     forever, so an edited file with the same name never reached the
- *     visitor.
- *
- *   · RSC payloads (`*.txt?_rsc=…`), which Next.js fetches when navigating
- *     inside the site without a reload: network-first with a copy in the
- *     page cache, so moving between pages already visited works offline too.
- *
- *   · Link prefetches are left to the network. Next.js prefetches every
- *     internal link that scrolls into view (the case library alone has 76
- *     case links); caching those payloads filled the 60-page cache with
- *     pages nobody opened and pushed out the ones they had.
- *
- *   · Offline, a page opened with a query string (/blog?q=wazuh#cases) falls
- *     back to the same page without it before falling back to the home page.
- *
- * ═══ v4 — the new site layout ═══
- *
- *   · /about and /gallery became sections of the home page (the old
- *     addresses only hop to their section); /blog stays a page of its own.
- *     The version bump drops the old HTML from the page cache, so an
- *     offline visitor is never handed a stale copy of a page that changed
- *     shape.
- *
- *   · The lazy sections (the gallery and contributions on the home page,
- *     the triage challenge on the blog) are separate /_next/static/ chunks,
- *     fetched in idle time after the page loads — cache-first like every
- *     other build file. A section
- *     never opened online is simply not in the cache; offline it shows a
- *     "could not load" note instead of breaking the page
- *     (core/perf/lazy.tsx).
- *
- * ═══ Deliberate limits ═══
- *
- *   · Same-origin and GET only. A POST (the contact form, for example) goes
- *     to the network untouched.
- *   · skipWaiting / clients.claim: a new version of the worker takes over
- *     immediately. Worst case, an open tab loads a few files from a newer
- *     build next to an older page — harmless here, because the older files
- *     are still in the cache (MAX_ASSETS is generous).
+ * Every cache is bounded (MAX_*). Bump VERSION when cached pages would be
+ * stale in shape — the old caches are dropped on activate. A lazy section
+ * whose chunk was never fetched online shows a "could not load" note offline.
  */
 
 const VERSION = "v4";
@@ -106,7 +40,6 @@ self.addEventListener("activate", (event) => {
   const keep = new Set([PAGE_CACHE, ASSET_CACHE, IMAGE_CACHE]);
   event.waitUntil(
     (async () => {
-      /* Drops every older cache (v2's unbounded one, v3's multi-page HTML) */
       const keys = await caches.keys();
       await Promise.all(keys.filter((key) => !keep.has(key)).map((key) => caches.delete(key)));
       if (self.registration.navigationPreload) {
@@ -171,7 +104,7 @@ self.addEventListener("fetch", (event) => {
 
   // ── RSC payloads for in-site navigation (?_rsc=…) ──────────────────────
   if (url.searchParams.has("_rsc") || request.headers.get("RSC") === "1") {
-    /* Prefetches of links in view: not cached (see v3 notes) */
+    /* Prefetches are not cached: they would push out pages actually visited */
     if (request.headers.has("Next-Router-Prefetch")) return;
     event.respondWith(networkFirst(event, fetch(request)));
     return;

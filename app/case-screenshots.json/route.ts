@@ -1,13 +1,7 @@
-/*
- * /case-screenshots.json — every case's screenshot list, as one static file.
- *
- * The home page used to ship all ~950 screenshot paths inside its HTML (and
- * again in the React payload) so that any card could open its gallery. The
- * cards only need a cover and a count; the full list is fetched from here the
- * first time a visitor actually opens a gallery.
- */
+/* Every case's screenshot list, fetched the first time a gallery opens
+   (the cards only carry a cover and a count). */
 
-import { caseScreenshotsByEvidenceId } from "@/app/core/config/cases";
+import { caseScreenshotsByEvidenceId } from "@/data/cases";
 
 export const dynamic = "force-static";
 

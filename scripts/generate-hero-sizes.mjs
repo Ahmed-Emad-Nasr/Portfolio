@@ -1,29 +1,9 @@
 /*
- * scripts/generate-hero-sizes.mjs
+ * generate-hero-sizes.mjs — the hero portrait at 320/420/560/840px for its
+ * srcset (a static export has no image optimizer). Run after changing
+ * public/Assets/art-gallery/Images/logo/3omda.webp, and commit the output.
  *
- * Generates multi-size variants of the hero image.
- *
- * ═══ Why ═══
- *
- * The site is exported with output: "export" and hosted on GitHub Pages, so
- * `images.unoptimized: true` is mandatory. In that mode Next's <Image> renders
- * a plain <img> **without srcset** — the `sizes` prop is present
- * in the code but has no effect, because there are no other image sizes to choose
- * from.
- *
- * Result: a phone with a 360px screen downloads exactly the same file as a
- * 4K screen. This image is the LCP element, so it feeds directly into the score.
- *
- * ═══ Usage ═══
- *
- *   npm i -D sharp
- *   node scripts/generate-hero-sizes.mjs
- *
- * Reads:   public/Assets/art-gallery/Images/logo/3omda.webp
- * Writes:  3omda-320.webp / 3omda-420.webp / 3omda-560.webp / 3omda-840.webp
- *          (next to the original, so the original still works as a fallback and as the OG image)
- *
- * Run it once after any change to the original image, and commit the output.
+ *   npm run hero:sizes
  */
 
 import sharp from "sharp";
@@ -71,7 +51,7 @@ async function main() {
     console.log(`[hero-sizes] ${out} — ${(info.size / 1024).toFixed(1)} KB`);
   }
 
-  console.log("[hero-sizes] done. Update HERO_PHOTO in app/components/home/HeroSection.tsx if you changed the sizes.");
+  console.log("[hero-sizes] done. Update HERO_PHOTO in components/home/HeroSection.tsx if you changed the sizes.");
 }
 
 main().catch((err) => {

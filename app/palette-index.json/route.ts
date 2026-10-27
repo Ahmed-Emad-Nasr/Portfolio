@@ -1,18 +1,10 @@
-/*
- * /palette-index.json — what the command palette searches: every case and
- * every published post (id, title, category). A static file fetched the
- * first time the palette opens, instead of being serialised into the HTML of
- * every page (it was ~10 KB on each one).
- */
+/* What the command palette searches (every case), fetched the first time it
+   opens instead of being inlined into every page */
 
-import { caseIndex } from "@/app/core/config/library-data";
-import { getAllPosts } from "@/app/core/content/posts";
+import { caseIndex } from "@/lib/library-data";
 
 export const dynamic = "force-static";
 
 export function GET() {
-  const posts = getAllPosts()
-    .filter((p) => !p.draft)
-    .map((p) => ({ id: p.slug, title: p.title, category: "Post" }));
-  return Response.json([...posts, ...caseIndex]);
+  return Response.json(caseIndex);
 }

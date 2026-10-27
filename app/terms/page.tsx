@@ -1,26 +1,10 @@
-/*
- * app/terms/page.tsx — Terms of Use
- *
- * Server Component, static text.
- *
- * ⚠️ It's called "Terms of Use", not "Terms and Conditions", on purpose.
- *
- * "Terms and Conditions" is the conventional name for a sales/service contract — it covers
- * orders, payment, delivery and refunds. This site doesn't sell anything, so a document
- * with that name would promise things that don't exist and open the door to unnecessary obligations.
- *
- * "Terms of Use" is right for a content site: rules for using the site, intellectual
- * property, limitation of liability.
- *
- * ⚠️ Not legal advice.
- */
+/* Terms of use (not "terms and conditions": nothing is sold here). Not legal advice. */
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
-import { LEGAL_CONTACT, LEGAL_LAST_UPDATED } from "@/app/core/config/legal";
-import { PageShell } from "@/app/components/shared/kit";
-import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
+import { SITE_BASE_URL, OG_IMAGE } from "@/lib/site";
+import { LEGAL_CONTACT, LEGAL_LAST_UPDATED } from "@/data/legal";
+import { PageShell, legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/components/ui/kit";
 
 export const metadata: Metadata = {
   title: "Terms of Use",

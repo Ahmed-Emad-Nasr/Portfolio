@@ -1,26 +1,14 @@
-/*
- * llms.txt/route.ts
- * Author: Ahmed Emad Nasr
- *
- * /llms.txt — the llmstxt.org convention: a plain Markdown summary of the
- * site for AI assistants and AI search (ChatGPT search, Perplexity, Claude,
- * Gemini). They read it instead of parsing a 1 MB single-page app, so when
- * someone asks one of them "who is Ahmed Emad Nasr?" or "Egyptian GRC / SOC
- * analysts", the answer comes from this text.
- *
- * Built from the same config as the pages, so it cannot drift from them.
- * Like feed.xml, "force-static" is required with output: "export".
- */
+/* /llms.txt (llmstxt.org): a plain Markdown summary of the site for AI
+   assistants, built from the same data as the pages */
 
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import { getAllPosts } from "@/app/core/content/posts";
-import { certifications } from "@/app/core/config/certifications";
-import { knowledgeEducationItems } from "@/app/core/config/experience";
-import { skillGroups } from "@/app/core/config/skills";
-import { blogYoutubePlaylists } from "@/app/core/config/youtube";
-import { absoluteUrl, caseUrl } from "@/app/core/config/site";
-import { CV_PDF_HREF, YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
-import { SAME_AS, SITE_URL } from "@/app/core/config/seo";
+import { caseEvidenceLibrary } from "@/data/cases";
+import { certifications } from "@/data/certifications";
+import { knowledgeEducationItems } from "@/data/experience";
+import { skillGroups } from "@/data/skills";
+import { blogYoutubePlaylists } from "@/data/youtube";
+import { absoluteUrl, caseUrl } from "@/lib/site";
+import { CV_PDF_HREF, YOUTUBE_CHANNEL_URL } from "@/lib/shared";
+import { SAME_AS, SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
@@ -78,13 +66,9 @@ ${certifications.map((cert) => `- ${cert.name} — ${cert.issuer}, ${cert.year}`
 - [Home](${absoluteUrl("/")}): the portfolio — who I am, services, selected work, experience, credentials
 - [About](${absoluteUrl("/")}#about): toolbox, home lab, path, process, contributions (a section of the home page)
 - [Gallery](${absoluteUrl("/")}#art): certificates, events and moments (a section of the home page)
-- [Blog](${absoluteUrl("/blog")}): posts, the case library, ATT&CK coverage, detection rules, videos
+- [Blog](${absoluteUrl("/blog")}): the case library, ATT&CK coverage, detection rules, videos
 - [CV](${absoluteUrl("/cv")})
-${getAllPosts().length ? `
-## Posts
 
-${getAllPosts().map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.description}`).join("\n")}
-` : ""}
 ## Case library (${caseEvidenceLibrary.length} reports)
 
 ${caseEvidenceLibrary.map((item) => `- [${item.title}](${caseUrl(item.id)}): ${item.category}, ${item.platform}`).join("\n")}

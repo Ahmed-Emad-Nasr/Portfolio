@@ -1,19 +1,8 @@
-/*
- * robots.ts
- * Author: Ahmed Emad Nasr
- *
- * ⚠️ Important: crawlers read robots.txt from the domain root only — i.e.
- * https://ahmed-emad-nasr.github.io/robots.txt, not /Portfolio/robots.txt.
- * That root is shared across all your GitHub Pages projects, so it is not
- * under this repository's control.
- *
- * This file is useful in two cases: if you put a custom domain on the root,
- * or as a reference stating your intent. The sitemap itself works fine —
- * submit it manually from Search Console.
- */
+/* robots.txt. Crawlers only read it at the domain root (the github.io root is
+   shared), so submit the sitemap in Search Console too. */
 
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/app/core/config/site";
+import { absoluteUrl } from "@/lib/site";
 
 // Required with output: "export" — Next 16 rejects any metadata route
 // without it, even when the function contains nothing dynamic.

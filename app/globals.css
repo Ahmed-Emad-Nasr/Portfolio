@@ -7,10 +7,15 @@
  * here uses were left out). Content is Ahmed Emad Nasr's.
  * Fonts: app/fonts.ts — the Sensei-Dev set through next/font (variables on <html>).
  */
-/* source("./"): Tailwind looks for class names in app/ only. Left to itself
-   it scans the whole repository, so example class names in the scripts'
-   comments (e.g. mb-[var(--space-xl)]) were compiled into the site CSS. */
-@import "tailwindcss" source("./");
+/* Tailwind looks for class names in the site's code only — app/ (routes),
+   components/, lib/ and data/. Left to itself it scans the whole repository,
+   so example class names in the scripts' comments (e.g. mb-[var(--space-xl)])
+   were compiled into the site CSS. */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+@source "../lib";
+@source "../data";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -594,7 +599,7 @@
 }
 
 
-/* ATT&CK coverage (components/cases/AttackCoverage.tsx). Server-rendered,
+/* ATT&CK coverage (components/blog/AttackCoverage.tsx). Server-rendered,
    ~30 tiles, ~30 popovers and ~90 links, so the repeated styling is written
    once here instead of as long utility lists. Same tokens as the rest. */
 
@@ -1062,170 +1067,8 @@
   .lab-packet { display: none; }
 }
 
-/* ─── Blog posts (components/blog/PostArticle.tsx) ──────────────────────
-   Long-form reading: a 68ch column, 400 weight (the 300-weight legal copy
-   is too faint for ten minutes of reading on sumi black), 1.8 line height,
-   and the same red / gold / sky roles as the rest of the site. */
-.prose-post {
-  max-width: 68ch;
-  font-size: 1.0625rem;
-  line-height: 1.8;
-  color: color-mix(in srgb, var(--foreground) 84%, transparent);
-  text-wrap: pretty;
-  overflow-wrap: break-word;
-}
-.prose-post > * + * { margin-top: 1.25em; }
-.prose-post :where(h2) {
-  margin-top: 2.6em;
-  margin-bottom: 0.2em;
-  font-family: var(--font-display);
-  font-size: clamp(1.375rem, 1.1rem + 1.2vw, 1.875rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--foreground);
-  text-wrap: balance;
-}
-.prose-post :where(h2)::before {
-  content: "";
-  display: block;
-  width: 2rem;
-  height: 2px;
-  margin-bottom: 0.9rem;
-  background: var(--primary);
-}
-.prose-post :where(h3) {
-  margin-top: 2em;
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--foreground);
-}
-.prose-post :where(strong) { color: var(--foreground); font-weight: 600; }
-.prose-post :where(a:not(.not-prose a, .heading-anchor)) {
-  color: var(--primary-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent);
-  transition: text-decoration-color 0.2s;
-}
-.prose-post :where(a:not(.not-prose a, .heading-anchor)):hover { text-decoration-color: currentColor; }
-.prose-post :where(ul, ol) { padding-inline-start: 1.4em; }
-.prose-post :where(ul) { list-style: square; }
-.prose-post :where(ol) { list-style: decimal; }
-.prose-post :where(li) { margin-top: 0.4em; padding-inline-start: 0.25em; }
-.prose-post :where(li)::marker { color: var(--primary-ink); font-family: var(--font-mono); font-size: 0.85em; }
-.prose-post :where(li:has(> input[type="checkbox"])) { list-style: none; margin-inline-start: -1.4em; }
-.prose-post :where(input[type="checkbox"]) { accent-color: var(--primary); margin-inline-end: 0.5em; }
-.prose-post :where(blockquote) {
-  border-inline-start: 2px solid var(--primary);
-  padding: 0.25em 0 0.25em 1.25em;
-  padding-inline-start: 1.25em;
-  font-size: 1.15em;
-  font-style: italic;
-  color: var(--foreground);
-}
-.prose-post :where(hr) {
-  border: 0;
-  height: 1px;
-  margin-block: 3em;
-  background: linear-gradient(90deg, var(--primary), transparent);
-}
-.prose-post :where(:not(pre) > code) {
-  padding: 0.12em 0.4em;
-  font-family: var(--font-mono);
-  font-size: 0.86em;
-  color: var(--foreground);
-  background: color-mix(in srgb, var(--foreground) 7%, transparent);
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  unicode-bidi: isolate;
-}
-.prose-post :where(img) { border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent); }
-.prose-post :where(.table-wrap) { border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent); }
-.prose-post :where(table) { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
-.prose-post :where(th) {
-  padding: 0.75em 1em;
-  text-align: start;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--primary-ink);
-  background: color-mix(in srgb, var(--foreground) 4%, transparent);
-}
-.prose-post :where(td) { padding: 0.7em 1em; border-top: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent); vertical-align: top; }
-.prose-post :where(.footnotes) { margin-top: 3em; font-size: 0.875rem; color: color-mix(in srgb, var(--foreground) 65%, transparent); }
-
-/* Code blocks: Shiki writes both themes as variables; the site theme picks */
-.prose-post pre,
-.code-block pre {
-  margin: 0;
-  overflow-x: auto;
-  padding: 1.1rem 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  line-height: 1.7;
-  tab-size: 2;
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  background: color-mix(in srgb, var(--surface) 70%, var(--background)) !important;
-  direction: ltr;
-  text-align: left;
-}
-.code-block pre:focus-visible { outline-offset: -2px; }
-.shiki,
-.shiki span { color: var(--shiki-light); }
-.dark .shiki,
-.dark .shiki span { color: var(--shiki-dark); }
-
-/* Callout body spacing */
-.callout-body > * + * { margin-top: 0.6em; }
-
-/* Arabic posts: the Arabic face for text and headings (Dela Gothic has no
-   Arabic), no uppercase or negative tracking — they mean nothing in Arabic
-   and break the joins between letters. Code stays left-to-right. */
-:lang(ar) { font-family: 'IBM Plex Sans Arabic', var(--font-body); }
-:lang(ar) :is(.font-display, .font-mono, .jp-eyebrow) { letter-spacing: 0; }
-.prose-post:lang(ar) { line-height: 1.95; font-size: 1.125rem; }
-.prose-post:lang(ar) :where(h2) {
-  font-family: 'IBM Plex Sans Arabic', var(--font-body);
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0;
-  line-height: 1.4;
-}
-.prose-post:lang(ar) :where(blockquote) { font-style: normal; }
-.post-title-ar { font-family: 'IBM Plex Sans Arabic', var(--font-body); letter-spacing: 0; }
-
-/* Reading progress: a 2px bar under the nav that fills as the page scrolls.
-   A CSS scroll timeline — no script, no scroll listener. Browsers without
-   scroll-driven animations simply do not show it. */
-.read-progress { display: none; }
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .read-progress {
-      display: block;
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: 2px;
-      z-index: 120;
-      background: var(--primary);
-      transform-origin: 0 50%;
-      animation: read-progress linear both;
-      animation-timeline: scroll(root block);
-    }
-    [dir="rtl"] .read-progress { transform-origin: 100% 50%; }
-  }
-}
-@keyframes read-progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-/* View transitions: a post card's title morphs into the post headline
-   (React <ViewTransition share="morph">) — short, with a blur mid-flight to
-   hide the scaling of the text. */
+/* View transitions: a case card's title morphs into the case page headline
+   (React <ViewTransition share="morph">), with a blur mid-flight. */
 ::view-transition-group(.morph) {
   animation-duration: 420ms;
   animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
@@ -1366,9 +1209,9 @@
   }
 }
 
-/* ─── Loading the pages (app/core/perf/) ──────────────────────────────────
+/* ─── Loading the pages (lib/perf/) ──────────────────────────────────────
    Deferred sections (.cv-defer) skip style, layout and paint until they
-   near the screen. For one frame each — in idle time (Prerender.tsx) or
+   near the screen. For one frame each — in idle time (PageEffects.tsx) or
    before a jump (jump.ts) — a section renders anyway, so
    `contain-intrinsic-size: auto` swaps its guessed height for the real
    one and keeps it. */

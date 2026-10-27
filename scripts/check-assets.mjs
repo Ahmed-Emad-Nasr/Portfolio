@@ -1,19 +1,9 @@
 /*
- * scripts/check-assets.mjs
+ * check-assets.mjs — every Assets/ path named in the data and components
+ * exists in public/ (exact case: GitHub Pages is case-sensitive). The build
+ * and TypeScript cannot catch a missing image or PDF.
  *
- * Verifies that every file referenced by any config actually exists in public/.
- *
- * Why is this the most important check in the project? Because this is exactly the kind of bug that stays invisible:
- * the build succeeds, TypeScript doesn't complain, the page opens fine — and an image or
- * PDF returns 404 only for the one visitor who clicks it. And you'll never know.
- *
- * Bugs this check would have caught:
- *  - a case folder was renamed but the paths weren't
- *  - a PDF was never uploaded
- *  - an image was deleted from public/
- *  - an uppercase letter in a file name (works on Windows, breaks on Linux/GitHub Pages)
- *
- * Run:  node scripts/check-assets.mjs
+ *   npm run check:assets
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
@@ -28,35 +18,22 @@ if (!existsSync(PUBLIC)) {
   process.exit(1);
 }
 
-/*
- * We read asset paths from the config files as text instead of importing them: the files are
- * TypeScript, and importing them would need a compiler. A regex is enough — we're looking
- * for any string that looks like a path inside Assets/.
- */
+/* Every file that names a path under public/Assets/ (data, and the few
+   components and pages that point at an image directly) */
 const CONFIG_FILES = [
-  "app/core/config/cases.ts",
-  "app/core/config/projects.ts",
-  "app/core/config/youtube.ts",
-  "app/core/config/cv.ts",
-  "app/core/config/experience.ts",
-  "app/blog/page.tsx",
-  "app/blog/page-client.tsx",
-  "app/components/home/sensei-home.tsx",
-  "app/components/art_gallery/sensei-art.tsx",
+  "data/cases.ts",
+  "data/case-details.ts",
+  "data/certifications.ts",
+  "data/cv.ts",
+  "data/experience.ts",
+  "data/portfolio-data.ts",
+  "data/projects.ts",
+  "data/youtube.ts",
+  "components/home/HeroSection.tsx",
   "app/layout.tsx",
 ];
 
-/*
- * Comments are stripped before checking.
- *
- * Without this, any comment explaining a path counts as a real reference. The first version reported
- * "Assets/..." and "Assets/…" as missing files — both came from comments
- * explaining old paths. Noise that hides the real problems.
- *
- * The stripping is deliberately simple (not a full parser): it removes /* … *\/ and // … to end of
- * line. It may wrongly strip "//" inside a string containing a URL, but that doesn't matter — we're
- * looking for local Assets/ paths, not external links.
- */
+/* Comments are stripped first, so a path mentioned in a comment is not a reference */
 const stripComments = (source) =>
   source
     .replace(/\/\*[\s\S]*?\*\//g, " ")
@@ -67,18 +44,8 @@ const ASSET_RE = /["'`](\/?Assets\/[^"'`\\$]+)["'`]/g;
    can't be read statically — we extract the folder and at least confirm it exists. */
 const TEMPLATE_RE = /["'`](\/?Assets\/[^"'`]*?)\$\{/g;
 
-/*
- * This pattern repeats throughout the config:
- *
- *   Array.from({ length: 24 }, (_, i) => `Assets/Cases/X/Screenshot (${343 + i}).webp`)
- *
- * Checking the folder alone isn't enough: the folder exists, but the numbering assumes the files
- * are consecutive with no gaps — and that assumption has actually broken (Screenshot 349 and 353
- * missing in the middle of the 343–366 series).
- *
- * So instead of checking the folder, we unroll the loop and check each file by name. This covers
- * both forms in use: `${i + 1}` and `${BASE + i}`.
- */
+/* Array.from ranges (`Screenshot (${343 + i}).webp`) are expanded and every
+   file checked: a gap in the numbering is a missing image */
 const LOOP_RE =
   /Array\.from\(\s*\{\s*length:\s*(\d+)\s*\}\s*,\s*\(_,\s*i\)\s*=>\s*`([^`]*?)\$\{\s*(?:(\d+)\s*\+\s*i|i\s*\+\s*(\d+))\s*\}([^`]*?)`/g;
 
@@ -89,15 +56,7 @@ const expandLoop = (length, prefix, base, suffix) => {
   return out;
 };
 
-/*
- * When a file is missing, the very next question is always: "so what IS in the folder?"
- *
- * Without that answer, every missing file becomes a manual trip: open the folder, look,
- * compare. The script already sees the folder — so it should just tell you.
- *
- * This turns "file not found" into "file not found, and here's what is there" —
- * which usually makes it immediately clear whether the name differs or the file is really missing.
- */
+/* For a missing file, show what IS in its folder (usually makes the fix obvious) */
 const listDir = (dir, limit = 12) => {
   const entries = [...realPaths]
     .filter((p) => p.startsWith(`${dir}/`) && !p.slice(dir.length + 1).includes("/"))
@@ -149,18 +108,7 @@ for (const file of CONFIG_FILES) {
     });
   }
 
-  /*
-   * Images are displayed through getThumbnail(), which turns "1.webp" into
-   * "1-thumb.webp". So every image in the config has **two** paths on
-   * the site, and the check used to look at only one.
-   *
-   * That's what let nine broken images on a case page slip past this check and only get caught
-   * by the link check after the build. Better to catch them here — faster and clearer.
-   *
-   * Thumbnails are reported as warnings, not errors: components fall back to the full
-   * image if the thumb is missing, so the page works — but it loads a larger image
-   * than necessary, and we want to know about that.
-   */
+  /* Images are shown through getThumbnail() ("1.webp" → "1-thumb.webp"), so check the thumbnail too */
   for (const [, raw] of src.matchAll(ASSET_RE)) {
     const rel = raw.replace(/^\//, "");
     if (!/\.(webp|png|jpe?g)$/i.test(rel)) continue;
@@ -232,16 +180,7 @@ if (missing.length === 0) {
   process.exit(0);
 }
 
-/*
- * Group results before printing.
- *
- * Reason: if an entire case folder is missing, the first version would print one line per image
- * in it — 40 lines for one problem. Worse, GitHub only shows the first 10 annotations,
- * so the important one could get cut off.
- *
- * Now: a fully missing folder = one line with its file count. Stray files
- * are listed by name.
- */
+/* A fully missing folder is one line (with its file count), not one per file */
 const byDir = new Map();
 for (const m of missing) {
   const dir = m.path.replace(/\/[^/]*$/, "");

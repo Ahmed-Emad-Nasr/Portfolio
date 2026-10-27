@@ -1,44 +1,28 @@
 /*
- * app/blog/page.tsx — the blog: written posts, "start here", the case
- * library and the videos, the ATT&CK coverage, the detection rules and the
- * triage challenge.
- *
- * Its own page because its reader is not the home page's: the home page is
- * the pitch a recruiter skims in a minute; this is where someone checks the
- * work. It is also what search engines should index for the case library,
- * so the library, the ATT&CK matrix and the rules are server-rendered here
- * (on the one-page site they had to load lazily, outside the HTML).
- *
- * Loading follows the home page: each interactive section is its own chunk
- * (components/blog/BlogSections.tsx), off-screen sections skip rendering
- * (content-visibility) and are pre-rendered in idle time
- * (core/perf/Prerender.tsx), in-page jumps go through core/perf/jump.ts.
- * Every post and case keeps its own page at /blog/<slug>; old links to
- * these sections on the home page (/#cases, /?q=wazuh#cases …) are
- * forwarded here (core/config/routes.ts).
+ * /blog — the case library (with "start here" and the videos), ATT&CK
+ * coverage, detection rules and the triage challenge. Server-rendered for
+ * search; each section is its own chunk (components/blog/dynamic.tsx).
+ * Old home-page links (/#cases …) are forwarded here (lib/routes.ts).
  */
 
 import type { Metadata } from "next";
 import { Rss } from "lucide-react";
-import { PageShell } from "@/app/components/shared/kit";
-import AreaIntro from "@/app/components/shared/AreaIntro";
-import SectionDivider from "@/app/core/components/SectionDivider";
-import PostsSection from "@/app/components/blog/PostsSection";
-import { CaseLibraryBlock, AttackBlock, DetectionLibrary, LazyTriage } from "@/app/components/blog/BlogSections";
-import HashNav from "@/app/core/perf/HashNav";
-import Prerender from "@/app/core/perf/Prerender";
-import { getAllPosts } from "@/app/core/content/posts";
-import { attackCoverage, libraryCounts, libraryStructuredData } from "@/app/core/config/library-data";
-import { blogYoutubePlaylists, blogYoutubeVideos } from "@/app/core/config/youtube";
-import { CHANNEL_ID, PERSON_REF, SITE_URL, jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch } from "@/app/core/config/seo";
-import { absoluteUrl, OG_IMAGE } from "@/app/core/config/site";
-import { normalizePublicHref } from "@/app/core/config/shared";
+import { DEFER, PageShell } from "@/components/ui/kit";
+import AreaIntro from "@/components/ui/AreaIntro";
+import SectionDivider from "@/components/ui/SectionDivider";
+import { CaseLibrarySection, AttackCoverage, DetectionLibrary, LazyTriage } from "@/components/blog/dynamic";
+import PageEffects from "@/lib/perf/PageEffects";
+import { attackCoverage, libraryCounts, libraryStructuredData } from "@/lib/library-data";
+import { blogYoutubePlaylists, blogYoutubeVideos } from "@/data/youtube";
+import { CHANNEL_ID, PERSON_REF, SITE_URL, jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch } from "@/lib/seo";
+import { absoluteUrl, OG_IMAGE } from "@/lib/site";
+import { normalizePublicHref } from "@/lib/shared";
 
 const DESCRIPTION =
-  "Write-ups, incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and Arabic cybersecurity videos by Ahmed Emad Nasr.";
+  "Incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and Arabic cybersecurity videos by Ahmed Emad Nasr.";
 
 export const metadata: Metadata = {
-  title: "Blog — Write-ups, Case Library & Videos",
+  title: "Blog — Case Library, ATT&CK & Videos",
   description: DESCRIPTION,
   alternates: {
     canonical: "/blog",
@@ -56,12 +40,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: "Blog — Ahmed Emad Nasr", description: DESCRIPTION, images: [OG_IMAGE.url] },
 };
 
-/* Off-screen sections skip rendering until they near the viewport;
-   `auto` in contain-intrinsic-size remembers each one's real height. */
-const DEFER = "cv-defer [content-visibility:auto] [contain-intrinsic-size:auto_1200px]";
-
 function structuredData() {
-  const posts = getAllPosts();
   const blogUrl = absoluteUrl("/blog");
   return jsonLd({
     "@context": "https://schema.org",
@@ -75,18 +54,6 @@ function structuredData() {
         author: PERSON_REF,
         publisher: PERSON_REF,
         isPartOf: { "@id": `${SITE_URL}#website` },
-        blogPost: posts.map((p) => ({
-          "@type": "BlogPosting",
-          "@id": `${absoluteUrl(`/blog/${p.slug}`)}#article`,
-          headline: p.title,
-          description: p.description,
-          url: absoluteUrl(`/blog/${p.slug}`),
-          datePublished: p.date,
-          ...(p.updated ? { dateModified: p.updated } : {}),
-          inLanguage: p.lang,
-          keywords: p.tags.join(", "),
-          author: PERSON_REF,
-        })),
       },
       libraryStructuredData,
       {
@@ -132,24 +99,20 @@ function structuredData() {
 }
 
 export default function BlogPage() {
-  const postCount = getAllPosts().length;
-
   return (
     <PageShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
-      <HashNav />
-      <Prerender />
+      <PageEffects />
 
       <AreaIntro
         as="h1"
         id="blog-top"
-        eyebrow="Blog // Writing & evidence"
+        eyebrow="Blog // The evidence"
         japanese="記録"
         titleA="The"
         titleB="Blog."
         description={DESCRIPTION}
         links={[
-          ...(postCount ? [{ href: "#posts", label: "Posts", n: postCount }] : []),
           { href: "#start-here", label: "Start here" },
           { href: "#cases", label: "Case library", n: libraryCounts.total },
           { href: "#videos", label: "Videos", n: blogYoutubeVideos.length },
@@ -167,21 +130,16 @@ export default function BlogPage() {
         }
       />
 
-      {/* ─── Written posts (content/posts/*.mdx) ─── */}
-      <PostsSection />
-
-      <SectionDivider text="事件 • 調査 • 報告 • 証拠" reverse={true} angle={-1.5} />
-
       {/* ─── Start here, the case library (filters, cards) and the videos ─── */}
       <div className={DEFER}>
-        <CaseLibraryBlock />
+        <CaseLibrarySection />
       </div>
 
       <SectionDivider text="戦術 • 技術 • 網羅 • 証拠" angle={-1.5} />
 
       {/* ─── The library on MITRE ATT&CK, the rule pack, one real alert ─── */}
       <div className={DEFER}>
-        <AttackBlock />
+        <AttackCoverage />
       </div>
       <div className={DEFER}>
         <DetectionLibrary />

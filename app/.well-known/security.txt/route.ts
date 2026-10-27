@@ -1,9 +1,9 @@
 /*
  * .well-known/security.txt — RFC 9116, emitted as a static file at build.
- * The content lives in core/config/security.ts.
+ * The content lives in lib/security.ts.
  */
 
-import { securityTxt } from "@/app/core/config/security";
+import { securityTxt } from "@/lib/security";
 
 export const dynamic = "force-static";
 

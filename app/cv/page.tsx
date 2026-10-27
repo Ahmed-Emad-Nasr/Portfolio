@@ -1,44 +1,30 @@
 /*
- * app/cv/page.tsx — the CV page in HTML
- *
- * Why a page at all when we already have a PDF?
- *
- *  1. **ATS systems read HTML far better than PDF.** Most applicant-tracking systems
- *     fail to extract text from a multi-column PDF or one with icons, and produce
- *     a scrambled mix. HTML is read as-is.
- *  2. **Google indexes it as a page.** A PDF gets indexed, but ranks lower and with a worse experience.
- *  3. **Mobile.** Someone opening a link from LinkedIn won't sit and zoom into a PDF.
- *  4. **It can never go stale.** The page is built from the same config as the site,
- *     so any number you change changes in both. The printed version of this page
- *     (Ctrl+P) gives you a PDF that automatically matches the site.
- *
- * Server Component: all the data is read at build time and the visitor gets HTML only.
- * The look is the Sensei-Dev design (experience "service record" panels);
- * print: variants turn it back into a plain one-column page on paper.
+ * /cv — the CV as an HTML page (ATS and search engines read it better than
+ * the PDF), built from the same data as the site. print: variants make
+ * Ctrl+P produce a plain one-column CV.
  */
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import PageLink from "@/app/components/shared/PageLink";
+import PageLink from "@/components/ui/PageLink";
 import type { ReactNode } from "react";
-import { knowledgeEducationItems } from "@/app/core/config/experience";
-import { certifications } from "@/app/core/config/certifications";
-import { achievements } from "@/app/core/config/achievements";
-import { languages } from "@/app/core/config/skills";
-import { normalizePublicHref, formatDate } from "@/app/core/config/shared";
+import { knowledgeEducationItems } from "@/data/experience";
+import { certifications } from "@/data/certifications";
+import { achievements } from "@/data/achievements";
+import { languages } from "@/data/skills";
+import { CV_PDF_HREF, normalizePublicHref } from "@/lib/shared";
 import {
   CV_CONTACT,
   CV_SUMMARY,
-  CV_PDF_HREF,
   CV_PROJECTS,
   CV_SKILLS,
   RELEVANT_COURSEWORK,
-} from "@/app/core/config/cv";
-import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
-import { jsonLd, KEYWORDS, PERSON_REF, SITE_URL, WEBSITE_ID } from "@/app/core/config/seo";
+} from "@/data/cv";
+import { SITE_BASE_URL, OG_IMAGE } from "@/lib/site";
+import { jsonLd, KEYWORDS, PERSON_REF, SITE_URL, WEBSITE_ID } from "@/lib/seo";
 import { Download, ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
-import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
-import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
+import { Github, Linkedin } from "@/components/ui/BrandIcons";
+import { PageShell, KanjiWatermark, ctaPrimary, ctaSecondary } from "@/components/ui/kit";
 
 /* ── classes ─────────────────────────────────────────────────────────── */
 /* print: = the Ctrl/Cmd+P version — a compact, single-column CV on paper */
@@ -323,12 +309,6 @@ export default function CvPage() {
                     <span className="text-sm text-foreground print:text-[9pt] print:text-black">
                       <span className="font-bold">{cert.name}</span>
                       <span className="text-on-surface-variant print:text-black"> — {cert.issuer}</span>
-                      {cert.verifyUrl && (
-                        <>
-                          {" "}
-                          <a className="text-primary-ink underline underline-offset-4" href={cert.verifyUrl} target="_blank" rel="noopener noreferrer">verify</a>
-                        </>
-                      )}
                     </span>
                     <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0 print:text-black print:text-[8.5pt]">{cert.year}</span>
                   </li>

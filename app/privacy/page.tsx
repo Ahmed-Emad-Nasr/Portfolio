@@ -1,25 +1,12 @@
-/*
- * app/privacy/page.tsx — Privacy Policy
- *
- * Server Component. All the text is static and built at build time.
- *
- * ⚠️ This page describes the site's actual behaviour. The facts come from
- * core/config/legal.ts so they're not written twice — if you change the code (enable
- * analytics, add a form, add an embed) change it there and the page updates by itself.
- *
- * ⚠️ And this is **not legal advice**. The text is written based on the site's actual
- * state, but if the site becomes a business or starts collecting data, a
- * lawyer must review it.
- */
+/* Privacy policy. Its facts come from data/legal.ts — update that file when
+   the site starts loading or storing something new. Not legal advice. */
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_BASE_URL, OG_IMAGE } from "@/app/core/config/site";
-import { LEGAL_CONTACT, LEGAL_LAST_UPDATED, SITE_FACTS } from "@/app/core/config/legal";
-import { ANALYTICS } from "@/app/core/config/analytics";
-import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
-import { PageShell } from "@/app/components/shared/kit";
-import { legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/app/core/legal-ui";
+import { SITE_BASE_URL, OG_IMAGE } from "@/lib/site";
+import { LEGAL_CONTACT, LEGAL_LAST_UPDATED, SITE_FACTS } from "@/data/legal";
+import { ANALYTICS } from "@/lib/analytics";
+import { PageShell, legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/components/ui/kit";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -103,13 +90,11 @@ export default function PrivacyPage() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-          {HAS_SERVICE_WORKER && (
-            <p>
-              A service worker also caches pages and images so the site loads
-              faster on repeat visits and keeps working offline. That cache lives
-              on your device. Clearing your browser data removes all of it.
-            </p>
-          )}
+          <p>
+            A service worker also caches pages and images so the site loads
+            faster on repeat visits and keeps working offline. That cache lives
+            on your device. Clearing your browser data removes all of it.
+          </p>
           <p>
             This is functional storage that the site needs to work as intended.
             It is not used to identify you, follow you, or build any profile.

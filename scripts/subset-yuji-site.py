@@ -34,9 +34,10 @@ OUT_CSS = ROOT / "app" / "fonts-yuji-site.css"
 
 def used_chars() -> set[int]:
     chars: set[int] = set()
-    files = [*ROOT.joinpath("app").rglob("*.ts*"), *ROOT.joinpath("app").rglob("*.css"), *ROOT.joinpath("content").rglob("*.md*")]
+    dirs = [ROOT.joinpath(d) for d in ("app", "components", "lib", "data")]
+    files = [*(f for d in dirs for f in d.rglob("*.ts*")), *(f for d in dirs for f in d.rglob("*.css"))]
     for f in files:
-        if f.name in ("fonts.css", "fonts-yuji-site.css", "fonts-arabic.css"):
+        if f.name == "fonts-yuji-site.css":
             continue
         text = re.sub(r"/\*.*?\*/", "", f.read_text(encoding="utf8"), flags=re.S)
         for c in text:

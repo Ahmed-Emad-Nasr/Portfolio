@@ -1,17 +1,7 @@
-/*
- * feed.xml/route.ts
- * Author: Ahmed Emad Nasr
- *
- * An RSS feed for the blog: the written posts and the cases, newest first.
- * Emitted as a static file at build time.
- *
- * "force-static" is not optional here: with output: "export" a route
- * handler has to be fully static, so anything dynamic breaks the build.
- */
+/* RSS feed of the case library, newest first (static file at build time) */
 
-import { caseEvidenceLibrary } from "@/app/core/config/cases";
-import { absoluteUrl, caseUrl } from "@/app/core/config/site";
-import { getAllPosts } from "@/app/core/content/posts";
+import { caseEvidenceLibrary } from "@/data/cases";
+import { absoluteUrl, caseUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -32,18 +22,13 @@ const toRfc822 = (value?: string): string => {
 type FeedItem = { title: string; link: string; date?: string; description: string; categories: string[] };
 
 export function GET() {
-  const entries: FeedItem[] = [
-    ...getAllPosts()
-      .filter((p) => !p.draft)
-      .map((p) => ({ title: p.title, link: absoluteUrl(`/blog/${p.slug}`), date: p.date, description: p.description, categories: p.tags })),
-    ...caseEvidenceLibrary.map((item) => ({
-      title: item.title,
-      link: caseUrl(item.id),
-      date: item.date,
-      description: item.description ?? item.title,
-      categories: [...(item.tags ?? []), ...(item.tools ?? [])],
-    })),
-  ];
+  const entries: FeedItem[] = caseEvidenceLibrary.map((item) => ({
+    title: item.title,
+    link: caseUrl(item.id),
+    date: item.date,
+    description: item.description ?? item.title,
+    categories: [...(item.tags ?? []), ...(item.tools ?? [])],
+  }));
   const items = entries
     .sort((a, b) => {
       const aTime = a.date ? new Date(a.date).getTime() : 0;
@@ -67,9 +52,9 @@ ${categories}
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ahmed Emad Nasr — Blog: write-ups and the information security case library</title>
+    <title>Ahmed Emad Nasr — Blog: the information security case library</title>
     <link>${absoluteUrl("/blog")}</link>
-    <description>Write-ups, incident response reports, DFIR investigations, malware analysis, IAM, data and cloud security, and web security cases.</description>
+    <description>Incident response reports, DFIR investigations, malware analysis, IAM, data and cloud security, and web security cases.</description>
     <language>en</language>
     <lastBuildDate>${toRfc822()}</lastBuildDate>
     <atom:link href="${absoluteUrl("/feed.xml")}" rel="self" type="application/rss+xml" />

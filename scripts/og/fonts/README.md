@@ -4,8 +4,8 @@ Small single-file fonts used only by the build-time image generators in
 `scripts/og/` (case OG images, the share card, the app icon). They are inlined
 as data URIs, so they have to be small single files.
 
-The website does not use these: it loads the Sensei-Dev font set from
-`app/fonts.css` and `app/fonts/<family>/*.woff2`.
+The website does not use these: it loads its fonts through next/font
+(`app/fonts.ts`).
 
 All four families are licensed under the SIL Open Font License 1.1
 (https://openfontlicense.org): Outfit, JetBrains Mono, Dela Gothic One,

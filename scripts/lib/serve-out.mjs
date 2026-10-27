@@ -6,7 +6,7 @@
  */
 
 import { createServer } from "node:http";
-import { createReadStream, existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
 const TYPES = {
@@ -63,19 +63,7 @@ export function samplePages(root = join(process.cwd(), "out")) {
   const pages = ["/", "/blog", "/cv", "/privacy", "/terms", "/collections/web-security-academy", "/this-page-does-not-exist"];
   const blogDir = join(root, "blog");
   const html = (name) => existsSync(join(blogDir, `${name}.html`));
-  /* A case with a full case file, one without, and a post if any is published */
+  /* A case with a full case file and ones without */
   for (const id of ["soc336-report", "3omda-custom-detection-rules", "owasp-juice-shop"]) if (html(id)) pages.push(`/blog/${id}`);
-  try {
-    const index = JSON.parse(readFileSync(join(root, "palette-index.json"), "utf8"));
-    const post = index.find((e) => e.category === "Post");
-    if (post) pages.push(`/blog/${post.id}`);
-  } catch {
-    /* no index: skip posts */
-  }
-  const tagDir = join(blogDir, "tag");
-  if (existsSync(tagDir)) {
-    const tag = readdirSync(tagDir).find((f) => f.endsWith(".html") && f !== "_.html");
-    if (tag) pages.push(`/blog/tag/${tag.replace(/\.html$/, "")}`);
-  }
   return pages;
 }

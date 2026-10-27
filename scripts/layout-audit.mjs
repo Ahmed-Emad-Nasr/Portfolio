@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
- * layout-audit.mjs — the live companion of responsive-audit.mjs: the built
- * site in a real browser at every kind of screen.
+ * layout-audit.mjs — the built site in a real browser at every kind of
+ * screen.
  *
  *   npm run build && npm run check:layout
  *
