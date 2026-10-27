@@ -42,7 +42,6 @@ export const Github = make("faGithub", "Github");
 export const Linkedin = make("faLinkedin", "Linkedin");
 export const Youtube = make("faYoutube", "Youtube");
 export const Instagram = make("faInstagram", "Instagram");
-export const Whatsapp = make("faWhatsapp", "Whatsapp");
 
 /* X (formerly Twitter) — path from Simple Icons (CC0) */
 export function XLogo({ size = 24, strokeWidth: _ignored, className, ...rest }: BrandProps) {

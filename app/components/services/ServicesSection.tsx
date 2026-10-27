@@ -2,11 +2,11 @@ import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Scale, Radar, ShieldAlert, Bug, KeyRound, GraduationCap } from "lucide-react";
-import { rv } from "@/app/core/reveal";
 import { ArrowRight } from "lucide-react";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { caseKindOf } from "@/app/core/config/shared";
 import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /* Where each service's proof lives: a filtered view of the case library
    (with the count it opens), or the section that shows it. Server
@@ -50,9 +50,8 @@ export default function ServicesSection() {
           {PORTFOLIO_DATA.services.map((s, idx) => {
             const Icon = ICONS[s.id as keyof typeof ICONS] ?? ShieldAlert;
             return (
-              <div
+              <FadeIn y={32} duration={0.7} delay={idx * 0.08}
   key={s.id}
-  data-reveal={rv({ y: 32, duration: 0.7, delay: idx * 0.08 })}
 >
               <TiltCard className="group spotlight spotlight-blue relative bg-surface/60 border border-foreground/5 p-7 flex flex-col h-full hover:border-tertiary/50 transition-colors duration-500"
               >
@@ -100,7 +99,7 @@ export default function ServicesSection() {
                   );
                 })()}
               </TiltCard>
-              </div>
+              </FadeIn>
             );
           })}
         </div>

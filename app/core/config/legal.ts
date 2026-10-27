@@ -72,15 +72,6 @@ export const SITE_FACTS = {
       when: "When you scroll near the GitHub contribution graph on the about page, to draw it",
       note: "A public, open-source service; it receives your IP address like any web request, and nothing else",
     },
-    ...(process.env.NEXT_PUBLIC_GISCUS_REPO_ID
-      ? [
-          {
-            name: "Giscus (giscus.app) and GitHub",
-            when: "Only when you press \"Load comments\" under a blog post",
-            note: "Loads the post's comment thread, stored as a GitHub Discussion; posting a comment needs a GitHub sign-in, handled by GitHub",
-          },
-        ]
-      : []),
     ...(process.env.NEXT_PUBLIC_WEB3FORMS_KEY
       ? [
           {

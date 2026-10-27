@@ -45,6 +45,14 @@
  *     inside the site without a reload: network-first with a copy in the
  *     page cache, so moving between pages already visited works offline too.
  *
+ *   · Link prefetches are left to the network. Next.js prefetches every
+ *     internal link that scrolls into view (the blog alone has 76 case
+ *     links); caching those payloads filled the 60-page cache with pages
+ *     nobody opened and pushed out the ones they had.
+ *
+ *   · Offline, a page opened with a query string (/blog?q=wazuh) falls back
+ *     to the same page without it before falling back to the home page.
+ *
  * ═══ Deliberate limits ═══
  *
  *   · Same-origin and GET only. A POST (the contact form, for example) goes
@@ -116,7 +124,9 @@ const networkFirst = (event, network) =>
       return response;
     })
     .catch(async () => {
-      const cached = await caches.match(event.request);
+      const cached =
+        (await caches.match(event.request)) ??
+        (event.request.mode === "navigate" ? await caches.match(event.request, { ignoreSearch: true }) : undefined);
       if (cached) return cached;
       if (event.request.mode !== "navigate") return Response.error();
       const home = (await caches.match(SCOPE)) ?? (await caches.match(`${SCOPE}index.html`));
@@ -145,6 +155,8 @@ self.addEventListener("fetch", (event) => {
 
   // ── RSC payloads for in-site navigation (?_rsc=…) ──────────────────────
   if (url.searchParams.has("_rsc") || request.headers.get("RSC") === "1") {
+    /* Prefetches of links in view: not cached (see v3 notes) */
+    if (request.headers.has("Next-Router-Prefetch")) return;
     event.respondWith(networkFirst(event, fetch(request)));
     return;
   }

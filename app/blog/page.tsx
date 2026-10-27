@@ -34,7 +34,7 @@ import { blogYoutubePlaylists, blogYoutubeVideos } from "@/app/core/config/youtu
 import { CHANNEL_ID, PERSON_REF, SITE_URL, jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch } from "@/app/core/config/seo";
 import { absoluteUrl, OG_IMAGE } from "@/app/core/config/site";
 import { normalizePublicHref } from "@/app/core/config/shared";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const CaseLibrarySection = dynamic(() => import("@/app/components/cases/CaseLibrarySection"));
 const DetectionLibrary = dynamic(() => import("@/app/components/cases/DetectionLibrary"));
@@ -163,7 +163,7 @@ export default function BlogPage() {
             titleB="Blog."
             description={DESCRIPTION}
           />
-          <nav aria-label="On this page" className="-mt-8 md:-mt-10 flex flex-wrap items-center gap-2" data-reveal={rv({ y: 16, duration: 0.6, delay: 0.1 })}>
+          <FadeIn as="nav" y={16} duration={0.6} delay={0.1} aria-label="On this page" className="-mt-8 md:-mt-10 flex flex-wrap items-center gap-2">
             {jump.map((j) => (
               <a
                 key={j.href}
@@ -180,7 +180,7 @@ export default function BlogPage() {
             >
               <Rss size={12} aria-hidden="true" /> RSS
             </a>
-          </nav>
+          </FadeIn>
         </div>
       </header>
 

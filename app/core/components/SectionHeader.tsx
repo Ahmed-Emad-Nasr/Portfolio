@@ -1,5 +1,5 @@
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 interface SectionHeaderProps {
   eyebrow: string;
@@ -22,9 +22,8 @@ export default function SectionHeader({
   as: Heading = "h2",
 }: SectionHeaderProps) {
   return (
-    <div
+    <FadeIn x={-32} y={0} duration={0.7}
   className={align === "split" ? "mb-16 md:mb-20" : "mb-16 md:mb-20 max-w-3xl"}
-  data-reveal={rv({ x: -32, y: 0, duration: 0.7 })}
 >
       <div className="flex items-center gap-4 mb-5">
         <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
@@ -42,6 +41,6 @@ export default function SectionHeader({
           {description}
         </p>
       ) : null}
-    </div>
+    </FadeIn>
   );
 }

@@ -1,11 +1,11 @@
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
-import { rv } from "@/app/core/reveal";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /* How many cases mention each tool — the same fields the library's search
    reads, so the number on the chip is the number the click finds. Server
@@ -47,9 +47,8 @@ export default function TechStackGrid() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {PORTFOLIO_DATA.stack.map((g, idx) => (
-            <div
+            <FadeIn y={28} duration={0.65} delay={idx * 0.08}
   key={g.id}
-  data-reveal={rv({ y: 28, duration: 0.65, delay: idx * 0.08 })}
 >
               <TiltCard className="group spotlight spotlight-blue relative bg-surface/60 border border-foreground/5 p-7 h-full hover:border-tertiary/50 transition-colors duration-500"
               >
@@ -104,7 +103,7 @@ export default function TechStackGrid() {
                   </div>
                 )}
               </TiltCard>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

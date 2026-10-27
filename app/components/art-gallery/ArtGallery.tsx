@@ -6,8 +6,8 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import dynamic from "next/dynamic";
 import { Sparkles, Maximize2, ChevronDown } from "lucide-react";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const GalleryLightbox = dynamic(() => import("./GalleryLightbox"), { ssr: false });
 
@@ -45,9 +45,8 @@ export default function ArtGallery() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <div
+          <FadeIn x={-40} y={0} duration={0.8}
   className="max-w-3xl"
-  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
 >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
@@ -62,11 +61,10 @@ export default function ArtGallery() {
             <p className="mt-6 max-w-2xl text-base md:text-lg font-light leading-relaxed text-foreground/65 [text-wrap:pretty]">
               Certificates, events, the classroom and moments along the way. Open any picture to see it full size.
             </p>
-          </div>
+          </FadeIn>
 
           {/* Counter Badge */}
-          <div
-  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+          <FadeIn y={20} duration={0.6} delay={0.3}
 >
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
@@ -85,16 +83,15 @@ export default function ArtGallery() {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
 
         {/* Art Grid  masonry columns */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
           {items.map((img, idx) => (
-            <div
+            <FadeIn y={0} scale={0.95} duration={0.8} delay={(idx % 6) * 0.08}
               key={idx}
               /* Visible without JavaScript; the site's own entrance */
-              data-reveal={rv({ y: 24, duration: 0.8, delay: (idx % 6) * 0.08 })}
               onClick={() => {
                 setIndex(idx);
                 setOpen(true);
@@ -151,7 +148,7 @@ export default function ArtGallery() {
                   </div>
                 </div>
               </TiltCard>
-            </div>
+            </FadeIn>
           ))}
         </div>
 

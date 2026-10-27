@@ -16,7 +16,7 @@
  */
 
 /** Text with inline code spans swapped for \u0000N\u0000 placeholders */
-export type Rich = { text: string; code: readonly string[] };
+type Rich = { text: string; code: readonly string[] };
 
 export type SummaryStep = {
   /** The sentence or clause */
@@ -30,7 +30,7 @@ type SummaryPhase = { index: number; title: string; steps: SummaryStep[] };
 type ArtifactKind = "ip" | "cve" | "osvdb" | "port" | "technique";
 export type Artifact = { kind: ArtifactKind; value: string };
 
-export type CaseSummary = {
+type CaseSummary = {
   /** Shared code-span table — every text field below may hold placeholders */
   code: readonly string[];
   objective: string;

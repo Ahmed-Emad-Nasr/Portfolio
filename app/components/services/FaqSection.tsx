@@ -5,8 +5,8 @@ import { m as motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/app/core/motion";
 import type { FaqItem } from "@/app/core/types/portfolio";
 import { Plus } from "lucide-react";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function FaqSection({ items }: { items: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(0);
@@ -24,9 +24,8 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <div
+          <FadeIn x={-40} y={0} duration={0.8}
   className="max-w-3xl"
-  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
 >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
@@ -42,10 +41,9 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               The answers recruiters and teams usually need before the first call.
             </p>
-          </div>
+          </FadeIn>
 
-          <div
-  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+          <FadeIn y={20} duration={0.6} delay={0.3}
 >
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
@@ -64,16 +62,15 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
         <div className="max-w-4xl flex flex-col border-t border-foreground/10">
           {items.map((f, i) => {
             const isOpen = open === i;
             return (
-              <div
+              <FadeIn y={20} duration={0.55} delay={i * 0.05}
   key={i}
   className="border-b border-foreground/10"
-  data-reveal={rv({ y: 20, duration: 0.55, delay: i * 0.05 })}
 >
                 <button
                   type="button"
@@ -112,7 +109,7 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </FadeIn>
             );
           })}
         </div>

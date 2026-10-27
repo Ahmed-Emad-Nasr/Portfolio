@@ -24,10 +24,8 @@ import type { CSSProperties } from "react";
 import FadeIn from "@/app/core/components/FadeIn";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
 import ScrambleText from "@/app/core/components/ScrambleText";
-import { rv } from "@/app/core/reveal";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { SITE_URL } from "@/app/core/config/seo";
-import PopoverFallback from "@/app/components/cases/PopoverFallback";
 
 const LAYER_PATH = "attack-navigator-layer.json";
 const NAVIGATOR_URL = `https://mitre-attack.github.io/attack-navigator/#layerURL=${encodeURIComponent(`${SITE_URL}${LAYER_PATH}`)}`;
@@ -54,18 +52,17 @@ function MatrixView({ tactics, max }: { tactics: CoverageTactic[]; max: number }
               {t.short}
             </a>
             {t.techniques.map((x, row) => (
-              <button
+              <FadeIn as="button" y={-10} duration={0.45} delay={col * 0.06 + row * 0.04}
                 key={x.id}
                 type="button"
                 popoverTarget={popId(x.id)}
                 className="attack-cell"
                 style={heat(x.cases.length, max)}
                 title={`${x.id} ${x.name} — ${x.cases.length} ${x.cases.length === 1 ? "report" : "reports"}`}
-                data-reveal={rv({ y: -10, duration: 0.45, delay: col * 0.06 + row * 0.04 })}
               >
                 <span className="block font-mono text-[0.5625rem] font-bold text-accent">{x.id}</span>
                 <span className="block text-[0.5625rem] leading-tight text-foreground/70 line-clamp-3">{x.name}</span>
-              </button>
+              </FadeIn>
             ))}
             {t.techniques.length === 0 && <span className="h-10 border border-dashed border-foreground/10" aria-hidden="true" />}
           </div>
@@ -75,13 +72,13 @@ function MatrixView({ tactics, max }: { tactics: CoverageTactic[]; max: number }
   );
 }
 
-export type CoverageTechnique = {
+type CoverageTechnique = {
   id: string;
   name: string;
   cases: { id: string; title: string }[];
 };
 
-export type CoverageTactic = {
+type CoverageTactic = {
   id: string;
   /** ATT&CK tactic id, e.g. TA0002 */
   ta: string;
@@ -190,7 +187,6 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
       className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-clip"
     >
       <KanjiWatermark chars="網羅" side="left" />
-      <PopoverFallback />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* ─── Header: same layout as every other section ─── */}

@@ -1,7 +1,7 @@
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function UsesSection() {
   const toolCount = PORTFOLIO_DATA.uses.reduce((s, g) => s + g.items.length, 0);
@@ -19,9 +19,8 @@ export default function UsesSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <div
+          <FadeIn x={-40} y={0} duration={0.8}
   className="max-w-3xl"
-  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
 >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
@@ -37,10 +36,9 @@ export default function UsesSection() {
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               The tools behind the work above — govern, detect, investigate, and where the practice happens.
             </p>
-          </div>
+          </FadeIn>
 
-          <div
-  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+          <FadeIn y={20} duration={0.6} delay={0.3}
 >
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
@@ -59,13 +57,12 @@ export default function UsesSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {PORTFOLIO_DATA.uses.map((g, idx) => (
-            <div
+            <FadeIn y={28} duration={0.65} delay={idx * 0.08}
   key={g.id}
-  data-reveal={rv({ y: 28, duration: 0.65, delay: idx * 0.08 })}
 >
               <TiltCard className="spotlight spotlight-blue group relative bg-surface/60 border border-foreground/5 p-7 h-full hover:border-tertiary/50 transition-colors duration-500"
               >
@@ -91,7 +88,7 @@ export default function UsesSection() {
                   ))}
                 </ul>
               </TiltCard>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

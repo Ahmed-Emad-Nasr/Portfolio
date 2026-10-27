@@ -17,7 +17,7 @@ import { KanjiWatermark } from "@/app/components/shared/kit";
 import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
 import { caseEvidenceLibrary } from "@/app/core/config/cases";
 import { CV_PDF_HREF, caseKindOf, normalizePublicHref } from "@/app/core/config/shared";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const TITLE = new Map(caseEvidenceLibrary.map((c) => [c.id, c.title]));
 const letsDefend = caseEvidenceLibrary.filter((c) => c.platform === "LetsDefend").length;
@@ -98,7 +98,7 @@ export default function RolesFit() {
           {ROLES.map((r, idx) => {
             const Icon = r.icon;
             return (
-              <div key={r.id} data-reveal={rv({ y: 36, duration: 0.7, delay: idx * 0.1 })}>
+              <FadeIn y={36} duration={0.7} delay={idx * 0.1} key={r.id}>
                 <TiltCard className="group spotlight relative h-full flex flex-col bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500 overflow-hidden">
                   {/* The role's number climbs into view on hover */}
                   <span className="absolute -right-2 -bottom-6 font-display text-[7rem] font-black leading-none text-foreground/[0.03] group-hover:text-primary/10 group-hover:-translate-y-3 transition-all duration-700 select-none" aria-hidden="true" data-deco={`0${idx + 1}`} />
@@ -151,7 +151,7 @@ export default function RolesFit() {
                     </a>
                   </div>
                 </TiltCard>
-              </div>
+              </FadeIn>
             );
           })}
         </div>

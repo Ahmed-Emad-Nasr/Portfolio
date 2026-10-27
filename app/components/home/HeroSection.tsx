@@ -1,7 +1,7 @@
 "use client";
 
 import { preload } from "react-dom";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { m as motion, useScroll, useTransform } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
@@ -9,6 +9,7 @@ import { RevealText } from "@/app/core/components/RevealText";
 import { HeroMascot } from "@/app/components/home/HeroMascot";
 import { RoleTicker } from "@/app/components/home/RoleTicker";
 import { MessageCircle, Download, ArrowDown } from "lucide-react";
+import { prefersReducedMotion } from "@/app/core/theme/fx";
 import { Github, Linkedin, Youtube } from "@/app/core/icons/BrandIcons";
 
 
@@ -71,12 +72,80 @@ export default function HeroSection({
   });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 140]);
 
-  /* The entrance (content stack, portrait, sun, kanji, spec sheet, speed
-     lines) is CSS — globals.css, "Hero entrance". It used to be GSAP, which
-     ran only after hydration: on a phone the server-rendered hero was shown,
-     then hidden and replayed seconds later, and GSAP's style reads forced a
-     layout of the whole page during load. CSS starts with the first paint
-     and needs no JavaScript at all. */
+  /* Entrance — GSAP, as in Sensei-Dev. Loaded on demand (its own chunk,
+     fetched after the page is up, while the intro screen still covers it). */
+  useEffect(() => {
+    if (prefersReducedMotion()) return; // final state is the natural layout
+    let ctx: { revert: () => void } | undefined;
+    let cancelled = false;
+    void import("gsap").then(({ gsap }) => {
+      if (cancelled) return;
+      ctx = gsap.context(() => {
+      /* Entrance: content stack */
+      gsap.from(".hero-content > *", {
+        y: 60,
+        opacity: 0,
+        duration: 1.5,
+        stagger: 0.15,
+        ease: "power4.out",
+        delay: 0.5,
+      });
+
+      /* Entrance: portrait */
+      gsap.from(".hero-image", {
+        scale: 1.1,
+        opacity: 0,
+        duration: 2,
+        ease: "power2.out",
+        delay: 0.2,
+      });
+
+      /* Entrance: background kanji */
+      gsap.from(".japanese-bg", {
+        x: 100,
+        opacity: 0,
+        duration: 2,
+        ease: "expo.out",
+        delay: 1,
+      });
+
+      /* Entrance: hinomaru sun */
+      gsap.from(".hinomaru-sun", {
+        scale: 0,
+        opacity: 0,
+        duration: 2.5,
+        ease: "expo.out",
+        delay: 0.3,
+      });
+
+      /* Entrance: spec sheet */
+      gsap.from(".spec-item", {
+        x: -30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 1.2,
+      });
+
+      /* Entrance: speed lines */
+      gsap.from(".speed-line", {
+        scaleX: 0,
+        opacity: 0,
+        duration: 1.5,
+        stagger: 0.05,
+        ease: "expo.out",
+        delay: 1.5,
+        transformOrigin: "left center",
+      });
+      }, containerRef);
+    });
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
+  }, []);
 
   const socials = [{
     name: "GitHub",

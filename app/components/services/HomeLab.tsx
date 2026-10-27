@@ -13,7 +13,7 @@
 
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { KanjiWatermark } from "@/app/components/shared/kit";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 type Node = { id: string; x: number; y: number; w: number; h: number; title: string; sub: string; tone: "primary" | "accent" | "tertiary" | "muted" };
 
@@ -64,7 +64,7 @@ export default function HomeLab() {
 
         {/* Scrolls sideways on narrow screens — focusable so keyboard users can
             scroll it too (arrow keys), and named for screen readers */}
-        <figure className="relative border border-foreground/10 bg-surface/40 p-4 md:p-8 overflow-x-auto" data-reveal={rv({ y: 30, duration: 0.8 })} tabIndex={0} aria-labelledby="lab-title" data-lenis-prevent="">
+        <FadeIn as="figure" y={30} duration={0.8} className="relative border border-foreground/10 bg-surface/40 p-4 md:p-8 overflow-x-auto" tabIndex={0} aria-labelledby="lab-title" data-lenis-prevent="">
           <svg viewBox="0 0 1040 440" className="min-w-[760px] w-full h-auto" role="img" aria-labelledby="lab-title lab-desc">
             <title id="lab-title">SOC home lab architecture</title>
             <desc id="lab-desc">
@@ -124,7 +124,7 @@ export default function HomeLab() {
             <span className="flex items-center gap-2"><span className="h-[2px] w-5 bg-tertiary" /> alerts &amp; cases</span>
             <span className="flex items-center gap-2"><span className="h-[2px] w-5 bg-accent" /> enrichment &amp; response</span>
           </figcaption>
-        </figure>
+        </FadeIn>
       </div>
     </section>
   );

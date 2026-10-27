@@ -11,9 +11,10 @@ Design, motion and component structure: the Neo-Samurai theme from
 
 Next.js 16 (App Router, static export) · React 19 · TypeScript · Tailwind CSS v4 ·
 framer-motion (lazy `m` + `LazyMotion`) · Lenis · next-themes · lucide-react ·
-yet-another-react-lightbox. Fonts are self-hosted with `next/font/local`.
-Scroll entrances are one inline script (`app/core/reveal.ts`), the hero
-entrance is CSS — no GSAP.
+yet-another-react-lightbox. Fonts are Sensei-Dev's `app/fonts.css` (self-hosted woff2).
+Scroll entrances are framer-motion (`FadeIn`), the library of
+Sensei-Dev, on a calmer, one-after-another tempo; the hero entrance is GSAP,
+imported on demand.
 
 ## Run it
 
@@ -108,8 +109,7 @@ Which page a section lives on is decided in one place:
    to `false`) to publish — drafts are never built.
 
 The post appears on `/blog`, on the home page's "From the blog", in the
-RSS feed, the sitemap and its tag pages automatically. Comments: see
-`app/core/config/comments.ts` (off until configured).
+RSS feed, the sitemap and its tag pages automatically.
 
 Hidden extras: `Ctrl/⌘ K` command palette (also searches cases), `?` keyboard
 shortcuts, and type `3omda` anywhere for the terminal.
@@ -131,9 +131,6 @@ Actions workflow:
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` **or** `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` —
   cookieless visit statistics (Plausible or Cloudflare Web Analytics). Off
   when neither is set; the privacy page updates itself either way.
-- `NEXT_PUBLIC_GISCUS_REPO`, `_REPO_ID`, `_CATEGORY`, `_CATEGORY_ID` —
-  comments under blog posts through Giscus (GitHub Discussions). Off when
-  unset; when set, the CSP and the privacy page include it.
 - `NEXT_PUBLIC_WEB3FORMS_KEY` — sends the contact form through Web3Forms
   (free access key from web3forms.com). Without it the form opens the
   visitor's mail app, as before. The CSP and the privacy page already allow
@@ -242,18 +239,11 @@ What changed:
   `case-stats.ts`, so all 18 client sections that read it pulled the whole
   library into every page's JS. The numbers now live in `live-copy.ts`
   (server-only) and reach the sections as props.
-- GSAP and ScrollTrigger are gone. The hero entrance is CSS (it starts at
-  the first paint instead of hiding the server-rendered hero at hydration
-  and replaying it), the timeline uses the reveal script, and Lenis drives
-  itself (`autoRaf`) instead of riding GSAP's ticker.
-- ~40 framer-motion `whileInView` components became `data-reveal`
-  attributes played by one IntersectionObserver (`core/reveal.ts`), and
-  framer-motion loads its animation engine lazily (`MotionProvider`).
-  Ten static sections became server components.
-- The intro screen keeps Sensei-Dev's timing (fill 1.9 s, hold 0.2 s, slide
-  0.5 s), but the bar, the 000 → 100 % counter, the kanji and the slide are
-  all CSS from the first paint, so a slow phone doesn't add hydration time
-  on top. First visit per tab only.
+- Animations use Sensei-Dev's libraries: GSAP for the hero entrance
+  (imported on demand), framer-motion for the section entrances
+  (`core/components/FadeIn.tsx` — calm, staggered, compositor-only), the
+  nav spring, the word reveal and the divider drift, and Sensei-Dev's
+  intro screen on every page load. Lenis drives itself (`autoRaf`).
 - Accessibility: decorative Japanese labels are painted from `data-jp`
   (generated content), the ATT&CK links are underlined, accessible names
   match visible text, the cursor overlay is hidden from assistive tech.

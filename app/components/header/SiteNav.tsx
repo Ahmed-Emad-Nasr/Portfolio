@@ -139,13 +139,16 @@ export default function SiteNav() {
       <motion.nav
         ref={navRef}
         data-site-header="true"
-        className="nav-enter fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-[width,background-color,border-color] duration-500 ease-out"
+        className="fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-[width,background-color,border-color] duration-500 ease-out"
         style={{
           width: navWidth,
           top: 20,
           borderTop: "2px solid #BC002D",
           clipPath: "polygon(0 0, 100% 0, 98% 100%, 2% 100%)",
         }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
       >
         {/* Logo */}
         <NavLink

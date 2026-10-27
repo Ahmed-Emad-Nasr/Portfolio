@@ -34,12 +34,9 @@ import { SmoothScroll } from "@/app/core/components/SmoothScroll";
 import CursorMount from "@/app/core/components/CursorMount";
 import AppLoader from "@/app/core/components/AppLoader";
 import MotionProvider from "@/app/core/components/MotionProvider";
-import { REVEAL_SCRIPT } from "@/app/core/reveal";
 import { CONTENT_SECURITY_POLICY } from "@/app/core/config/security";
 import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
-import MotionBudget from "@/app/core/components/MotionBudget";
-import DividerDrift from "@/app/core/components/DividerDrift";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
@@ -298,11 +295,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {process.env.NODE_ENV === "production" && (
           <meta httpEquiv="Content-Security-Policy" content={CONTENT_SECURITY_POLICY} />
         )}
-        {/* Before first paint: skip the intro screen if it already played in this tab */}
+        {/* Before first paint */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              'try{if(sessionStorage.getItem("sensei-booted"))document.documentElement.classList.add("booted")}catch(e){}' +
               /* Large text: the reader has raised the browser's / phone's
                  default font size (16px unless they did). "medium" is that
                  default — unlike the root size, which globals.css itself
@@ -311,11 +307,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               'try{var d=document.documentElement,e=document.createElement("i");e.style.cssText="position:absolute;font-size:medium";d.appendChild(e);if(parseFloat(getComputedStyle(e).fontSize)>=20)d.classList.add("large-text");d.removeChild(e)}catch(e){}',
           }}
         />
+        {/* framer-motion entrances start at opacity 0 in the HTML; without
+            JavaScript they would never play, so show them as they are */}
+        <noscript>
+          <style>{'[style*="opacity:0"],[style*="translateY(110%)"]{opacity:1!important;transform:none!important}'}</style>
+        </noscript>
       </head>
       <body className="font-body antialiased bg-background text-foreground overflow-x-clip">
-        {/* Scroll entrances (core/reveal.ts) — first in <body> so it sees every
-            element as the parser inserts it, before any of them is painted */}
-        <script dangerouslySetInnerHTML={{ __html: REVEAL_SCRIPT }} />
         <MotionProvider>
         <ThemeProvider>
           <ThemeFxProvider>
@@ -332,8 +330,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <CursorMount />
               {children}
             </SmoothScroll>
-            <MotionBudget />
-            <DividerDrift />
             <Analytics />
             <ServiceWorkerRegister enabled={HAS_SERVICE_WORKER} />
           </ThemeFxProvider>

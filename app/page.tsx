@@ -13,8 +13,6 @@ import StatsBar from "@/app/components/home/StatsBar";
 import SiteNav from "@/app/components/header/SiteNav";
 import SectionDivider from "@/app/core/components/SectionDivider";
 import ServicesSection from "@/app/components/services/ServicesSection";
-import WorkShowcase from "@/app/components/services/WorkShowcase";
-import FaqSection from "@/app/components/services/FaqSection";
 import RolesFit from "@/app/components/services/RolesFit";
 import TestimonialsSection from "@/app/components/experience/TestimonialsSection";
 import { getGitHubRepos } from "@/app/core/api/github";
@@ -41,6 +39,10 @@ const CredentialsGallery = dynamic(
 );
 const MobileActionBar = dynamic(() => import("@/app/components/home/MobileActionBar"));
 const PaletteHint = dynamic(() => import("@/app/components/home/PaletteHint"));
+/* The two interactive sections below the fold (filters, accordion) get
+   their own chunks too, like the ones above */
+const WorkShowcase = dynamic(() => import("@/app/components/services/WorkShowcase"));
+const FaqSection = dynamic(() => import("@/app/components/services/FaqSection"));
 const ContactFooter = dynamic(
   () => import("@/app/components/header/ContactFooter")
 );

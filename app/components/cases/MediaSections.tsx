@@ -17,7 +17,7 @@ import type { ChannelVideo } from "@/app/core/config/shared";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import type { BlogYoutubePlaylist } from "@/app/core/config/shared";
 import { CounterBadge, KanjiWatermark, btnOutline } from "@/app/components/shared/kit";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const VIDEO_PAGE = 6;
 
@@ -99,10 +99,9 @@ export default function MediaSections({
       <section aria-label="Library in numbers" className="relative">
         <div className="grid grid-cols-1 sm:grid-cols-3 border border-foreground/10 bg-surface/50 backdrop-blur-md divide-y sm:divide-y-0 sm:divide-x divide-foreground/5">
           {stats.map((s, i) => (
-            <div
+            <FadeIn y={16} duration={0.55} delay={i * 0.07}
   key={s.label}
   className="px-6 py-5 flex items-center gap-4"
-  data-reveal={rv({ y: 16, duration: 0.55, delay: i * 0.07 })}
 >
               <span className="font-mono text-xl md:text-2xl font-black text-accent tabular-nums">
                 <CountUp target={s.value} />
@@ -111,7 +110,7 @@ export default function MediaSections({
                 <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">{s.label}</span>
                 <span className="jp-eyebrow text-[0.5625rem] text-foreground/25" lang="ja" aria-hidden="true" data-jp={s.japanese} />
               </span>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </section>
@@ -141,10 +140,9 @@ export default function MediaSections({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {videos.slice(0, visible).map((video, idx) => (
-                <div
+                <FadeIn y={32} duration={0.7} delay={(idx % 3) * 0.1}
   key={video.videoId}
   className="flex"
-  data-reveal={rv({ y: 32, duration: 0.7, delay: (idx % 3) * 0.1 })}
 >
                   <TiltCard className="spotlight group relative w-full flex flex-col bg-surface/60 border border-foreground/5 hover:border-primary/40 transition-colors duration-500 overflow-hidden">
                     <div className="absolute top-0 left-0 z-10 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-70" aria-hidden="true" />
@@ -184,7 +182,7 @@ export default function MediaSections({
                       </div>
                     </div>
                   </TiltCard>
-                </div>
+                </FadeIn>
               ))}
             </div>
           )}
@@ -216,10 +214,9 @@ export default function MediaSections({
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {playlists.map((playlist, idx) => (
-                  <div
+                  <FadeIn y={24} duration={0.65} delay={idx * 0.08}
   key={playlist.playlistId}
   className="group spotlight spotlight-blue relative bg-surface/60 border border-foreground/5 hover:border-tertiary/50 transition-colors duration-500 flex flex-col overflow-hidden"
-  data-reveal={rv({ y: 24, duration: 0.65, delay: idx * 0.08 })}
 >
                     <div className="absolute top-0 left-0 z-10 w-full h-[2px] bg-tertiary/0 group-hover:bg-tertiary transition-colors duration-500" aria-hidden="true" />
                     <Embed
@@ -245,7 +242,7 @@ export default function MediaSections({
                         <ExternalLink size={13} /> Open playlist
                       </a>
                     </div>
-                  </div>
+                  </FadeIn>
                 ))}
               </div>
             </div>

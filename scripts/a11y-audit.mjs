@@ -8,8 +8,8 @@
  * site has (home, blog, about, a case with a full case file, a case without,
  * a post, a tag page, the collection, CV, legal pages, 404) on a phone and
  * a desktop, in the dark and the light theme, and runs axe-core against WCAG
- * 2.2 A/AA. Pages load with reduced motion, so the scroll entrances do not
- * hide anything from the check.
+ * 2.2 A/AA. Each page is scrolled to the end and given time for every
+ * scroll entrance to finish before it is measured.
  *
  * Fails (exit 1) on any violation axe rates serious or critical. Moderate
  * and minor ones are listed as warnings. Extra paths: EXTRA_PAGES=/a,/b
@@ -61,21 +61,23 @@ for (const vp of VIEWPORTS) {
     await ctx.addInitScript((t) => {
       try {
         localStorage.setItem("theme", t);
-        sessionStorage.setItem("sensei-booted", "1");
         localStorage.setItem("palette-hint-seen", "1");
       } catch {}
     }, theme);
     for (const path of pages) {
       const page = await ctx.newPage();
       await page.goto(base + path, { waitUntil: "networkidle" });
-      /* Let lazy sections render (content-visibility) before measuring */
+      /* Let lazy sections render (content-visibility) and every scroll
+         entrance play to the end (framer-motion fades opacity even with
+         reduced motion) — a half-faded element measures as low contrast */
       await page.evaluate(async () => {
-        for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight) {
+        for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight * 0.7) {
           scrollTo(0, y);
-          await new Promise((r) => setTimeout(r, 30));
+          await new Promise((r) => setTimeout(r, 120));
         }
         scrollTo(0, 0);
       });
+      await page.waitForTimeout(2500);
       await page.addScriptTag({ content: AXE });
       const result = await page.evaluate(async (tags) => {
         const r = await axe.run(document, { runOnly: { type: "tag", values: tags }, resultTypes: ["violations"] });

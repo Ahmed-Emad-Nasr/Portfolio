@@ -25,7 +25,7 @@ import {
 import ScrambleText from "@/app/core/components/ScrambleText";
 import { defang, normalizePublicHref } from "@/app/core/config/shared";
 import type { CaseDetail, IocType } from "@/app/core/config/case-details";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /* ── Shared bits ─────────────────────────────────────────────────────── */
 
@@ -132,9 +132,8 @@ export function ReadingProgress() {
 export function VerdictBar({ verdict, severity }: Pick<CaseDetail, "verdict" | "severity">) {
   if (!verdict) return null;
   return (
-    <div
+    <FadeIn y={16} duration={0.6}
       className="relative mb-10 flex flex-col sm:flex-row sm:items-center gap-4 border border-foreground/10 bg-surface/60 px-6 py-5 overflow-hidden"
-      data-reveal={rv({ y: 16, duration: 0.6 })}
     >
       <div className="absolute inset-y-0 left-0 w-[3px] bg-primary" aria-hidden="true" />
       <div className="verdict-sweep absolute inset-0 pointer-events-none" aria-hidden="true" />
@@ -150,7 +149,7 @@ export function VerdictBar({ verdict, severity }: Pick<CaseDetail, "verdict" | "
           <AlertOctagon size={12} aria-hidden="true" /> {severity}
         </span>
       )}
-    </div>
+    </FadeIn>
   );
 }
 
@@ -160,10 +159,10 @@ function Facts({ facts }: { facts: NonNullable<CaseDetail["facts"]> }) {
   return (
     <dl className="border border-foreground/10 bg-surface/60 divide-y divide-foreground/5">
       {facts.map((f, i) => (
-        <div key={f.label} className="grid grid-cols-[7.5rem_1fr] gap-4 px-5 py-3" data-reveal={rv({ x: -12, y: 0, duration: 0.5, delay: i * 0.05 })}>
+        <FadeIn x={-12} y={0} duration={0.5} delay={i * 0.05} key={f.label} className="grid grid-cols-[7.5rem_1fr] gap-4 px-5 py-3">
           <dt className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60 pt-0.5">{f.label}</dt>
           <dd className="text-sm text-foreground/85 [overflow-wrap:anywhere]">{f.value}</dd>
-        </div>
+        </FadeIn>
       ))}
     </dl>
   );
@@ -303,7 +302,7 @@ function Detection({ items }: { items: NonNullable<CaseDetail["detection"]> }) {
   return (
     <div className="grid gap-6">
       {items.map((d, k) => (
-        <figure key={d.title} className="border border-foreground/10 bg-[#0a0a0c] overflow-hidden" data-reveal={rv({ y: 20, duration: 0.6 })}>
+        <FadeIn as="figure" y={20} duration={0.6} key={d.title} className="border border-foreground/10 bg-[#0a0a0c] overflow-hidden">
           <figcaption className="flex items-center justify-between gap-4 px-4 py-2.5 border-b border-white/5">
             <span className="flex items-center gap-2">
               <span className="flex gap-1.5" aria-hidden="true">
@@ -329,7 +328,7 @@ function Detection({ items }: { items: NonNullable<CaseDetail["detection"]> }) {
               </span>
             ))}
           </pre>
-        </figure>
+        </FadeIn>
       ))}
     </div>
   );
@@ -371,10 +370,10 @@ export default function CaseFile({ detail, href, title }: { detail: CaseDetail; 
   return (
     <div className="grid gap-14 mb-16">
       {detail.team && (
-        <div className="flex items-start gap-3 border border-tertiary/30 bg-tertiary/5 px-5 py-4" data-reveal={rv({ y: 12, duration: 0.5 })}>
+        <FadeIn y={12} duration={0.5} className="flex items-start gap-3 border border-tertiary/30 bg-tertiary/5 px-5 py-4">
           <Users size={16} className="text-tertiary mt-0.5 shrink-0" aria-hidden="true" />
           <p className="text-sm text-foreground/80"><span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-tertiary mr-2">Team project</span>{detail.team}</p>
-        </div>
+        </FadeIn>
       )}
 
       {hasChainOrFacts && (
@@ -413,10 +412,10 @@ export default function CaseFile({ detail, href, title }: { detail: CaseDetail; 
           <SectionTitle icon={<ShieldCheck size={13} />} japanese="対応" id="case-response-title">Containment &amp; remediation</SectionTitle>
           <ul className="grid sm:grid-cols-2 gap-3">
             {detail.response.map((r, i) => (
-              <li key={i} className="flex gap-3 border border-foreground/5 bg-surface/40 px-4 py-3" data-reveal={rv({ y: 14, duration: 0.5, delay: Math.min(i, 6) * 0.06 })}>
+              <FadeIn as="li" y={14} duration={0.5} delay={Math.min(i, 6) * 0.06} key={i} className="flex gap-3 border border-foreground/5 bg-surface/40 px-4 py-3">
                 <ListChecks size={14} className="text-accent shrink-0 mt-0.5" aria-hidden="true" />
                 <span className="text-sm text-foreground/80 leading-relaxed">{r}</span>
-              </li>
+              </FadeIn>
             ))}
           </ul>
         </section>

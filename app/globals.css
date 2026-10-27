@@ -218,15 +218,19 @@
 
   /* Standard scrollbar properties (Firefox, and Chrome/Edge 121+, where they
      take precedence over the ::-webkit rules above). scrollbar-color is
-     inherited, so setting it once on the root colours every scrollbar.
-     scrollbar-width is not inherited, so it goes on the elements that
-     actually scroll — instead of a `*` rule matched against every element
-     on the page (~5,000 on the home page). */
-  :root {
-    scrollbar-color: var(--primary) var(--background);
-  }
+     set on the root and on the elements that actually scroll — instead of a
+     `*` rule matched against every element on the page. */
   :where(html, .overflow-x-auto, .overflow-y-auto, .attack-pop) {
+    scrollbar-color: var(--primary) var(--background);
     scrollbar-width: thin;
+  }
+  /* …but not inherited by the whole page. Every element with transition-all
+     (dozens of cards and buttons) treated the inherited value as changed on
+     each root style change — Lenis toggles a class on <html> whenever a
+     scroll starts and stops — and ran a transition: ~25 at once, at the
+     start and the end of every scroll. */
+  body {
+    scrollbar-color: auto;
   }
 
   /* Selection Styling */
@@ -533,166 +537,17 @@
   font-weight: 600;
 }
 
-/* The intro screen plays once per tab (see AppLoader.tsx), and leaves on
-   its own schedule — never held hostage by hydration on a slow phone. */
-.booted [data-app-loader] {
-  display: none;
-}
+/* The intro screen (AppLoader.tsx). Without JavaScript it would never
+   leave, so it slides away on its own at 4 s — after the script has
+   normally removed it. */
 [data-app-loader] {
-  /* Sensei-Dev's timing: fill 1.9 s, hold 0.2 s, slide up 0.5 s */
-  animation: app-loader-out 0.5s cubic-bezier(0.76, 0, 0.24, 1) 2.1s forwards;
+  animation: app-loader-out 0.5s cubic-bezier(0.76, 0, 0.24, 1) 4s forwards;
 }
 @keyframes app-loader-out {
   to {
     transform: translateY(-100%);
     visibility: hidden;
   }
-}
-/* The hairline fills with the counter's ease-out-cubic */
-.app-loader-fill {
-  transform-origin: 0 50%;
-  animation: app-loader-fill 1.9s cubic-bezier(0.33, 1, 0.68, 1) both;
-}
-@keyframes app-loader-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-/* The kanji: five words stacked in one grid cell, each taking over as the
-   counter passes 20 / 40 / 60 / 80 % (--in / --out from AppLoader.tsx) */
-.app-loader-words {
-  display: grid;
-  justify-items: center;
-}
-.app-loader-words > span {
-  grid-area: 1 / 1;
-  animation:
-    app-loader-word-in 0.35s ease-out var(--in, 0s) both,
-    app-loader-word-out 0.01s linear var(--out, 99s) forwards;
-}
-@keyframes app-loader-word-in {
-  from { opacity: 0; translate: 0 8px; }
-  to { opacity: 1; translate: 0 0; }
-}
-@keyframes app-loader-word-out {
-  to { opacity: 0; }
-}
-/* The percentage: an animated integer property shown as a counter,
-   padded to three digits (000 → 100) */
-@property --loader-p {
-  syntax: "<integer>";
-  inherits: false;
-  initial-value: 0;
-}
-@counter-style loader-pad {
-  system: extends decimal;
-  pad: 3 "0";
-}
-.app-loader-count {
-  animation: app-loader-count 1.9s cubic-bezier(0.33, 1, 0.68, 1) both;
-  counter-reset: loader-p var(--loader-p);
-}
-.app-loader-count::after {
-  content: counter(loader-p, loader-pad) "%";
-}
-@keyframes app-loader-count {
-  from { --loader-p: 0; }
-  to { --loader-p: 100; }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-app-loader] {
-    animation-duration: 0.01s;
-    animation-delay: 0.8s;
-  }
-  .app-loader-fill,
-  .app-loader-count { animation-duration: 0.6s; }
-  /* One still word instead of five */
-  .app-loader-words > span { animation: none; opacity: 0; }
-  .app-loader-words > span:first-child { opacity: 1; }
-}
-
-/*
- * Hero entrance (HeroSection.tsx) — was GSAP after hydration, now CSS from the
- * first paint. Same choreography: content stack, portrait, sun, kanji, spec
- * sheet, speed lines. --hero-lead holds everything back while the intro
- * screen is up (first visit only; the head script adds .booted on the next
- * page load), --hero-t is the phone tempo (the GSAP version ran at half time
- * below 768px). Individual transform properties (translate / scale) compose
- * with the elements' own transforms instead of replacing them.
- */
-:root {
-  --hero-lead: 2.3s; /* the hero starts as the intro screen lifts */
-  --hero-t: 1;
-}
-.booted {
-  --hero-lead: 0s;
-}
-@media (max-width: 767px) {
-  :root {
-    --hero-t: 0.5;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-content > * {
-    animation: hero-rise calc(1.5s * var(--hero-t)) cubic-bezier(0.165, 0.84, 0.44, 1) both;
-    animation-delay: calc(var(--hero-lead) + 0.5s * var(--hero-t) + var(--hero-i, 0) * 0.15s * var(--hero-t));
-  }
-  .hero-content > :nth-child(2) { --hero-i: 1; }
-  .hero-content > :nth-child(3) { --hero-i: 2; }
-  .hero-content > :nth-child(4) { --hero-i: 3; }
-  .hero-content > :nth-child(5) { --hero-i: 4; }
-  .hero-image {
-    animation: hero-portrait calc(2s * var(--hero-t)) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    animation-delay: calc(var(--hero-lead) + 0.2s * var(--hero-t));
-  }
-  .japanese-bg {
-    animation: hero-kanji 2s cubic-bezier(0.19, 1, 0.22, 1) both;
-    animation-delay: calc(var(--hero-lead) + 1s);
-  }
-  .hinomaru-sun {
-    animation: hero-sun 2.5s cubic-bezier(0.19, 1, 0.22, 1) both;
-    animation-delay: calc(var(--hero-lead) + 0.3s);
-  }
-  .spec-item {
-    animation: hero-spec 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
-    animation-delay: calc(var(--hero-lead) + 1.2s + var(--hero-i, 0) * 0.1s);
-  }
-  .spec-item:nth-child(2) { --hero-i: 1; }
-  .spec-item:nth-child(3) { --hero-i: 2; }
-  .spec-item:nth-child(4) { --hero-i: 3; }
-  .speed-line {
-    transform-origin: left center;
-    animation: hero-line 1.5s cubic-bezier(0.19, 1, 0.22, 1) both;
-    animation-delay: calc(var(--hero-lead) + 1.5s + var(--hero-i, 0) * 0.05s);
-  }
-  .speed-line:nth-child(2) { --hero-i: 1; }
-  .speed-line:nth-child(3) { --hero-i: 2; }
-  .speed-line:nth-child(4) { --hero-i: 3; }
-  .speed-line:nth-child(5) { --hero-i: 4; }
-  .speed-line:nth-child(6) { --hero-i: 5; }
-  .speed-line:nth-child(7) { --hero-i: 6; }
-  .speed-line:nth-child(8) { --hero-i: 7; }
-}
-/* 0.01, not 0: Chrome ignores paints at opacity 0 for LCP, and an opacity
-   animation on the compositor never repaints — so a hero that starts fully
-   transparent is never measured, and a later, smaller paint (the role
-   ticker typing) became the page's LCP. Invisible to the eye either way. */
-@keyframes hero-rise {
-  from { opacity: 0.01; translate: 0 60px; }
-}
-@keyframes hero-portrait {
-  from { opacity: 0; scale: 1.1; }
-}
-@keyframes hero-kanji {
-  from { opacity: 0; transform: translateX(100px); }
-}
-@keyframes hero-sun {
-  from { opacity: 0; scale: 0; }
-}
-@keyframes hero-spec {
-  from { opacity: 0; translate: -30px 0; }
-}
-@keyframes hero-line {
-  from { opacity: 0; scale: 0 1; }
 }
 
 /* Lightbox: follow the theme's red instead of the library's default blue */
@@ -714,6 +569,12 @@
   canvas {
     display: none !important;
   }
+  /* Entrances that have not played yet (below the fold) print as they are */
+  [style*="opacity:0"],
+  [style*="translateY(110%)"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /*
@@ -730,22 +591,6 @@
   }
 }
 
-/* RevealText (core/components/RevealText.tsx): each word rises out of its
-   mask from the first paint. --w is the word's own delay; --hero-lead waits
-   for the intro screen on a first visit. Reduced motion: words in place. */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-word {
-    animation: reveal-word 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
-    animation-delay: calc(var(--hero-lead, 0s) + var(--w, 0) * 1s);
-  }
-}
-/* Starts with the top of the word just inside its mask (not fully clipped),
-   for the same LCP reason as hero-rise above. */
-@keyframes reveal-word {
-  from {
-    translate: 0 92%;
-  }
-}
 
 /* ATT&CK coverage (components/cases/AttackCoverage.tsx). Server-rendered,
    ~30 tiles, ~30 popovers and ~90 links, so the repeated styling is written
@@ -1071,7 +916,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .hero-scan {
     animation: hero-scan 5.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-    animation-delay: calc(var(--hero-lead, 0s) + 2.5s);
+    animation-delay: 2.5s;
   }
   .hud-rec {
     animation: hud-blink 1.6s steps(1, end) infinite;
@@ -1399,27 +1244,6 @@
 :where(p, li, dd, figcaption) { text-wrap: pretty; }
 :lang(ja) { word-break: auto-phrase; }
 
-/* ─── Section dividers drift with the page (SectionDivider.tsx) ──────── */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .divider-track {
-      animation: divider-drift linear both;
-      animation-timeline: view();
-    }
-    .divider-track[data-reverse] { animation-name: divider-drift-reverse; }
-  }
-}
-@keyframes divider-drift { from { translate: 0 0; } to { translate: -25% 0; } }
-@keyframes divider-drift-reverse { from { translate: -25% 0; } to { translate: 0 0; } }
-
-/* ─── Looping decorations pause while their section is off screen
-   (MotionBudget.tsx sets data-idle). Listed classes only — no universal
-   selector on every element of the page. */
-[data-idle] :is(.hero-scan, .hud-rec, .process-packet, .radar-spin, .siren-pulse, .lab-flow, .lab-beacon, .caret-blink, .animate-pulse, .animate-ping, .cell-pop),
-[data-idle] :is(.live-dot, .brief-node)::after {
-  animation-play-state: paused;
-}
-
 /* ─── ATT&CK: the heat fills in as the tiles scroll into view ──────────
    Each tile starts as a plain surface and reaches its own heat (more
    reports = deeper red) as it crosses the lower part of the screen. Pure
@@ -1466,21 +1290,11 @@
   }
 }
 
-/* ─── ATT&CK popovers without native popover support ───────────────────
-   Safari < 17 and Firefox < 125 ignore [popover]: every evidence popover
-   would sit on the page at once. Hide them from the first paint, show the
-   one PopoverFallback.tsx marks open, and stand in for ::backdrop. The
-   section's lazy-render containment would trap the fixed popover inside
-   it, so it is lifted there (native popovers render in the top layer and
-   do not need this). */
+/* ─── Browsers without [popover] (Safari < 17, Firefox < 125) ignore the
+   attribute and would show every ATT&CK evidence popover at once: keep them
+   hidden there. The tiles and their counts still read fine. */
 @supports not selector(:popover-open) {
-  [popover]:not([data-open]) { display: none; }
-  .attack-pop[data-open] {
-    display: block;
-    z-index: 400;
-    box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.65), 0 30px 80px -20px rgb(0 0 0 / 0.6);
-  }
-  div:has(> #attack) { content-visibility: visible; contain: none; }
+  [popover] { display: none; }
 }
 
 /* ─── Form fields: a focus mark you can see ────────────────────────────
@@ -1528,7 +1342,7 @@
    overflowed. In this mode only: flex rows may wrap, flex items may shrink
    below their content, nothing is forced onto one line, and long words
    break. Everyone else sees the design unchanged. */
-.large-text :where(.flex, .inline-flex):not(.flex-col, .flex-nowrap) { flex-wrap: wrap; }
+.large-text :where(.flex, .inline-flex):not(.flex-col) { flex-wrap: wrap; }
 .large-text :where(.flex, .inline-flex, .grid) > * { min-width: 0; }
 .large-text .whitespace-nowrap { white-space: normal; }
 .large-text :where(h1, h2, h3, h4, p, a, button, span, dd, dt, li, label) { overflow-wrap: anywhere; }
@@ -1550,13 +1364,3 @@
   }
 }
 
-/* The nav drops in on load — CSS, not a framer-motion spring: that one
-   rendered the bar at opacity 0 in the HTML, so without JavaScript the
-   site had no navigation at all. (transform composes with the bar's own
-   translate, which centres it.) */
-@media (prefers-reduced-motion: no-preference) {
-  .nav-enter { animation: nav-enter 0.8s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
-}
-@keyframes nav-enter {
-  from { transform: translateY(-100px); opacity: 0; }
-}

@@ -6,8 +6,8 @@ import dynamic from "next/dynamic";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Award, ExternalLink, Calendar, ShieldCheck } from "lucide-react";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /* Lightbox + its CSS load only when a certificate is opened (CertLightbox.tsx) */
 const Lightbox = dynamic(() => import("./CertLightbox"), { ssr: false });
@@ -49,9 +49,8 @@ export default function CredentialsGallery() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div
+        <FadeIn x={-40} y={0} duration={0.8}
   className="mb-16 md:mb-20 flex flex-col lg:flex-row justify-between lg:items-end gap-8"
-  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
 >
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-4 mb-6">
@@ -79,17 +78,13 @@ export default function CredentialsGallery() {
               </span>
             </div>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Certificate Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {PORTFOLIO_DATA.certificates.map((cert, idx) => (
-            <div
+            <FadeIn y={40} duration={0.8} delay={(idx % 2) * 0.15}
               key={idx}
-              /* The site's own entrance (core/reveal.ts): visible without
-                 JavaScript, and off with reduced motion — the framer-motion
-                 fade it replaced left the cards at opacity 0 until hydration */
-              data-reveal={rv({ y: 40, duration: 0.8, delay: (idx % 2) * 0.15 })}
               onClick={() => openCert(cert)}
               /* The card was mouse-only: a clickable <div> with no role or
                  tab stop, so keyboard and screen-reader users could not open
@@ -201,7 +196,7 @@ export default function CredentialsGallery() {
                 <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/0 group-hover:border-primary/40 transition-colors duration-500" />
                 <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/40 transition-colors duration-500" />
               </TiltCard>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

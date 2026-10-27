@@ -15,7 +15,7 @@ import { getAllPosts } from "@/app/core/content/posts";
 import { libraryCounts } from "@/app/core/config/library-data";
 import { blogYoutubeVideos } from "@/app/core/config/youtube";
 import { KanjiWatermark, ctaPrimary, ctaSecondary } from "@/app/components/shared/kit";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function BlogTeaser() {
   const posts = getAllPosts().slice(0, 3);
@@ -49,7 +49,7 @@ export default function BlogTeaser() {
 
         <StartHere headingLevel="h3" note="Short on time? Three reports to start with — detection engineering, a full DFIR investigation and a malware teardown. The rest of the library is on the blog." />
 
-        <div className="flex flex-wrap gap-4" data-reveal={rv({ y: 20, duration: 0.6 })}>
+        <FadeIn y={20} duration={0.6} className="flex flex-wrap gap-4">
           <Link href="/blog" className={ctaPrimary}>
             <BookOpen size={16} aria-hidden="true" />
             Open the blog
@@ -58,7 +58,7 @@ export default function BlogTeaser() {
           <Link href="/blog#cases" className={ctaSecondary}>
             Case library <span className="font-mono text-accent tabular-nums">{libraryCounts.total}</span>
           </Link>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

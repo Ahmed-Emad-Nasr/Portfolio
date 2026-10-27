@@ -15,7 +15,7 @@ import { SITE_BASE_URL, caseUrl } from "./site";
 import { ATTACK_TACTICS, buildCoverage, caseAttackMapping, coveredTechniqueCount } from "./attack";
 import { PERSON_ID } from "./seo";
 
-export type Facet = { value: string; count: number };
+type Facet = { value: string; count: number };
 
 /* What a card shows of its screenshots: the cover and the count. The full
    lists are served once as /case-screenshots.json and fetched only when a

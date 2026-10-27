@@ -27,10 +27,10 @@ used unchanged; the content is this site's own.
 - **Stack:** Tailwind CSS v4 (utility classes in the JSX, tokens in `@theme`
   in `app/globals.css`), framer-motion (lazy `m` components under
   `LazyMotion`, see `core/components/MotionProvider.tsx`), Lenis smooth
-  scroll (its own rAF loop), scroll entrances from `core/reveal.ts` (one
-  inline IntersectionObserver script, no per-element components), next-themes (dark default + light "washi" theme with the water-drop
+  scroll (its own rAF loop), calm staggered scroll entrances with framer-motion
+  (`core/components/FadeIn.tsx`), next-themes (dark default + light "washi" theme with the water-drop
   transition), lucide-react, yet-another-react-lightbox. Fonts are
-  self-hosted through @fontsource.
+  Sensei-Dev's `app/fonts.css` (self-hosted woff2).
 - **Home page:** `app/page.tsx` composes the sections in `app/components/`
   (home, services, experience, art-gallery, header). All their content comes
   from `app/core/config/portfolio-data.ts`, which reads the existing config
@@ -104,14 +104,14 @@ app/
 │   ├── services/         Services, roles, work, repos, stack, uses, lab, process, FAQ
 │   ├── experience/       Timeline, teaching, credentials, platforms, milestones, now
 │   ├── cases/            Case library, ATT&CK, detections, triage, blog teaser
-│   ├── blog/             PostCard, PostArticle, PostToc, CodeBlock, Comments, MDX components
+│   ├── blog/             PostCard, PostArticle, PostToc, CodeBlock, MDX components
 │   ├── art-gallery/      Proof gallery + lightbox
 │   └── shared/kit.tsx    Shared classes and PageShell for non-home pages
 │
 └── core/
     ├── components/       Motion, reveal text, section header/divider, palette,
-    │                     terminal, shortcuts, MotionBudget, theme
-    ├── config/           All content as typed data (see §4), routes.ts, comments.ts
+    │                     terminal, shortcuts, FadeIn, theme
+    ├── config/           All content as typed data (see §4), routes.ts
     ├── content/          posts.ts (reads content/posts), render-mdx.tsx (MDX + Shiki)
     ├── api/              Build-time fetches (GitHub, TryHackMe) with fallbacks
     ├── icons/            Inline SVG path data
@@ -382,53 +382,22 @@ add a variant to section 14 rather than a one-off rule in a module.
 
 ## 7. Animation
 
-### `Reveal.tsx`
+### Scroll entrances (`core/components/FadeIn.tsx`)
 
-Elements fade and slide in as they enter the viewport. The API mirrors what
-it replaced:
+Elements fade and slide in as they enter the viewport (framer-motion; the
+timing is under "Scroll feel" below):
 
 ```tsx
-<Reveal variant="up" delay={100}>…</Reveal>
-
-<RevealGroup variant="scale" staggerMs={50}>
-  {items.map(item => <Card key={item.id} {...item} />)}
-</RevealGroup>
+<FadeIn y={32} duration={0.7} delay={idx * 0.08}>…</FadeIn>
+<FadeIn as="li" x={-24} y={0}>…</FadeIn>   {/* keeps the real tag */}
 ```
 
-**How it works.** One IntersectionObserver, shared by the whole page, sets
-`data-reveal="in"` on an element once. Everything else is a CSS transition.
-JavaScript's total contribution is one attribute write per element.
+Once per element; only `opacity` and `transform` move.
 
-The previous implementation used framer-motion's `whileInView`, which creates
-an observer **per element** and subscribes each one to the animation engine.
-The certificate gallery renders up to 50 items — 50 observers and 50 engine
-subscriptions, all on the main thread during scroll. `RevealGroup` watches
-only the container and staggers children through a `--i` custom property, so
-that page now has one observer entry.
-
-**Only `opacity` and `transform` are animated.** These are the only two
-properties the browser can handle on the compositor without layout or paint.
-This is why the animation is genuinely free on mobile — it is not an
-aesthetic preference.
-
-### The three-layer fallback
-
-The initial `opacity: 0` is server-rendered. Without protection, a failed
-bundle would leave the entire site invisible.
-
-```css
-/* 1. JavaScript fully disabled → html[data-tier] never appears,
-      the hiding rule never matches, content renders normally */
-html[data-tier] [data-reveal="pending"] { opacity: 0; }
-
-/* 2. JavaScript on but the bundle failed → everything appears after 4s */
-html[data-tier]:not([data-reveal-ready]) [data-reveal="pending"] {
-  animation: revealSafety 1ms linear 4s forwards;
-}
-```
-
-`Reveal` sets `data-reveal-ready` on `<html>` when it first mounts, which
-makes rule 2 stop matching. In the normal case it never fires.
+framer-motion renders the starting state (`opacity: 0`) into the HTML. A
+`<noscript>` style in `layout.tsx` and a print rule in `globals.css` show
+those elements as they are, so the page is complete without JavaScript and
+on paper.
 
 ### Interaction effects
 
@@ -630,16 +599,13 @@ documents the front matter and every component, and is itself a draft.
   `@mdx-js/mdx` + remark-gfm + rehype-slug + Shiki (JavaScript regex engine,
   two themes as CSS variables, switched by the site theme). No MDX runtime
   ships to the browser; only `CodeBlock` (copy button), `PostToc`
-  (scrollspy), `ShareRow` and `Comments` are client components.
+  (scrollspy) and `ShareRow` are client components.
 - **Drafts** (`draft: true`) render under `next dev` with a Draft badge and
   are left out of `next build` (unless `SHOW_DRAFTS=1`).
 - **Arabic** (`lang: ar`) sets `lang`/`dir="rtl"` on the article; logical
   properties (`ps-`, `ms-`, `text-start`, `border-s`) flip the layout, code
   blocks stay LTR, headings switch from Dela Gothic (no Arabic glyphs) to
   IBM Plex Sans Arabic.
-- **Comments** (Giscus) are off until the four `NEXT_PUBLIC_GISCUS_*`
-  variables are set (`core/config/comments.ts`); then the CSP, the privacy
-  page and a click-to-load button under each post switch on together.
 - **Everywhere else:** posts are in the RSS feed, the sitemap, `llms.txt`,
   the blog page's `Blog` JSON-LD, and each post page has `BlogPosting` +
   breadcrumb JSON-LD.
@@ -688,13 +654,20 @@ Loaded on demand instead of with every page:
   (`content-visibility: auto` below the experience timeline), Shiki/MDX
   (build time only).
 
-### Section entrances (`core/reveal.ts`)
+### Scroll feel
 
-Matched to the hero's tempo: an element starts when it is ~15% inside the
-screen, rises up to 56 px over ~1–1.35 s on the hero's quart-out curve,
-and everything entering in the same frame is sorted top-to-bottom and
-staggered 110 ms apart (component index delays are capped at 0.45 s).
-Phones run at 0.8×. Transform and opacity only.
+Calm and one after another (`FadeIn`, framer-motion): an element starts
+when it is ~15% inside the screen, plays over ~1–1.35 s with up to 56 px of
+travel on a quart-out curve (0.8× on phones), and everything entering in the
+same frame cascades 110 ms apart. Only `opacity` and the whole `transform`
+are animated, which framer hands to the browser (off the main thread).
+GSAP plays the hero entrance and is imported on demand. Lenis at lerp 0.1;
+the intro screen on every page load.
+
+`scrollbar-color` is set on the scrolling elements and reset on `<body>`: as
+an inherited property it made every `transition-all` element run a
+transition each time Lenis toggled its class on `<html>` (start and end of
+every scroll).
 
 ---
 
@@ -715,12 +688,12 @@ Features newer than that floor, and what happens without them:
 
 | Feature | Used for | Without it |
 |---|---|---|
-| `[popover]` (Safari 17, Firefox 125) | ATT&CK evidence | `PopoverFallback.tsx` + CSS `@supports not selector(:popover-open)` |
-| Scroll-driven animations | dividers, ATT&CK heat, reading bar | still banner, filled tiles, no bar |
+| `[popover]` (Safari 17, Firefox 125) | ATT&CK evidence | popovers stay hidden (`@supports not selector(:popover-open)`); tiles and counts still read |
+| Scroll-driven animations | ATT&CK heat, reading bar | filled tiles, no bar |
 | View Transitions | card → page title morph | normal navigation |
 | `text-wrap: balance / pretty`, `word-break: auto-phrase` | headings, Japanese line breaks | ordinary wrapping |
 | `requestIdleCallback` (not in Safari) | cursor load | `setTimeout` |
-| `:has()` (Firefox 121) | task-list checkboxes, popover fallback | bullets |
+| `:has()` (Firefox 121) | task-list checkboxes | bullets |
 
 ### Accessibility checks
 
@@ -740,14 +713,14 @@ What they and the manual checks covered:
 - **Keyboard:** every stop has a visible ring (fields get a 2px underline);
   nothing invisible is focusable (`inert` on the hidden toast); the mobile
   menu, palette, terminal and shortcuts sheet keep Tab inside
-  (`core/utils/use-focus-trap.ts`) and Esc returns focus to the opener.
+  (the focus-trap library, `core/utils/use-focus-trap.ts`) and Esc returns focus to the opener.
 - **Touch targets** ≥ 24px; hover-only captions show on touch screens and
   on keyboard focus (`.hover-reveal`).
-- **Reduced motion:** entrances, loops, transitions and framer-motion
-  (`MotionConfig reducedMotion="user"`) all stop; nothing stays hidden.
-- **No JavaScript:** content is visible (no framer-motion `opacity: 0`
-  in the server HTML — the nav, case header, certificates and gallery use
-  CSS or `data-reveal`, which only hides things once the script runs).
+- **Reduced motion:** CSS loops and transitions stop; framer-motion
+  (`MotionConfig reducedMotion="user"`) drops the movement and keeps a
+  short fade; nothing stays hidden.
+- **No JavaScript:** content is visible — the framer-motion entrances
+  start at `opacity: 0` in the HTML, and a `<noscript>` style shows them.
 - **Large text** (browser/OS default font raised): `html.large-text` lets
   rows wrap instead of overflow; checked at 150% and 200%.
 - **Windows high contrast:** ornaments are dropped, the hero name gets line

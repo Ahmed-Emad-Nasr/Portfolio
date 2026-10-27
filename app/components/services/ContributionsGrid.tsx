@@ -7,8 +7,8 @@ import { useContributionStats } from "@/app/core/api/contributions";
 import { ContributionGraph } from "./ContributionGraph";
 import { CountUp } from "@/app/core/components/CountUp";
 import { ExternalLink } from "lucide-react";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /**
  * Upstream contributions  fixes shipped to projects I don't own.
@@ -22,9 +22,8 @@ export default function ContributionsGrid() {
   return (
     <section ref={sectionRef} aria-label="Open-source contributions" className="relative py-16 md:py-20 px-6 md:px-20 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div
+        <FadeIn x={-32} y={0} duration={0.7}
   className="mb-10 flex flex-wrap items-center gap-4"
-  data-reveal={rv({ x: -32, y: 0, duration: 0.7 })}
 >
           <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
           <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">
@@ -41,17 +40,16 @@ export default function ContributionsGrid() {
               </span>
             </span>
           )}
-        </div>
+        </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {PORTFOLIO_DATA.contributions.map((c, idx) => (
-            <a
+            <FadeIn as="a" y={24} duration={0.65} delay={idx * 0.08}
   key={c.name}
   href={c.link}
   target="_blank"
   rel="noopener noreferrer"
   className="group spotlight relative bg-surface/60 border border-foreground/5 p-6 hover:border-tertiary/50 transition-colors duration-500 flex flex-col"
-  data-reveal={rv({ y: 24, duration: 0.65, delay: idx * 0.08 })}
 >
               <div
                 className="absolute top-0 left-0 w-full h-[2px] bg-tertiary/0 group-hover:bg-tertiary transition-colors duration-500"
@@ -70,7 +68,7 @@ export default function ContributionsGrid() {
                 {c.org}
               </span>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{c.description}</p>
-            </a>
+            </FadeIn>
           ))}
         </div>
 

@@ -12,13 +12,13 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState, ViewTransition, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
-import { rv } from "@/app/core/reveal";
 import { normalizePublicHref, getThumbnail, formatDate } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import CaseSummary from "./CaseSummary";
 import CaseFile, { ReadingProgress, VerdictBar } from "./CaseFile";
 import type { CaseDetail } from "@/app/core/config/case-details";
 import { btnOutline, chipAccent, chipTertiary, ctaPrimary, ctaSecondary, KanjiWatermark } from "@/app/components/shared/kit";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const GalleryLightbox = dynamic(() => import("@/app/components/art-gallery/GalleryLightbox"), { ssr: false });
 
@@ -149,10 +149,7 @@ export default function CaseArticle({
         </nav>
 
         {/* Header */}
-        {/* The site's entrance (core/reveal.ts), not a framer-motion fade: that
-            one rendered the whole header — title, date, platform — at
-            opacity 0 in the HTML, so without JavaScript it never appeared */}
-        <header className="mb-12" data-reveal={rv({ x: -32, y: 0, duration: 0.7 })}>
+        <FadeIn as="header" x={-32} y={0} duration={0.7} className="mb-12">
           <div className="flex items-center gap-4 mb-5">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
             <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
@@ -179,7 +176,7 @@ export default function CaseArticle({
               <Calendar size={14} className="text-on-surface-variant/60" /> {formatDate(item.date)}
             </span>
           </div>
-        </header>
+        </FadeIn>
 
         <VerdictBar verdict={detail?.verdict} severity={detail?.severity} />
 

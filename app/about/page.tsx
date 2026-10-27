@@ -23,9 +23,9 @@ import ContributionsGrid from "@/app/components/services/ContributionsGrid";
 import { LIVE_COPY } from "@/app/core/config/live-copy";
 import { absoluteUrl, OG_IMAGE } from "@/app/core/config/site";
 import { PERSON_REF, SITE_URL, jsonLd } from "@/app/core/config/seo";
-import { rv } from "@/app/core/reveal";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { hashForwardScript } from "@/app/core/config/routes";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const MilestonesSection = dynamic(() => import("@/app/components/experience/MilestonesSection"));
 const NowSection = dynamic(() => import("@/app/components/experience/NowSection"));
@@ -92,7 +92,7 @@ export default function AboutPage() {
             titleB="Work."
             description={DESCRIPTION}
           />
-          <nav aria-label="On this page" className="-mt-8 md:-mt-10 flex flex-wrap gap-2" data-reveal={rv({ y: 16, duration: 0.6, delay: 0.1 })}>
+          <FadeIn as="nav" y={16} duration={0.6} delay={0.1} aria-label="On this page" className="-mt-8 md:-mt-10 flex flex-wrap gap-2">
             {JUMP.map((j) => (
               <a
                 key={j.href}
@@ -102,7 +102,7 @@ export default function AboutPage() {
                 {j.label}
               </a>
             ))}
-          </nav>
+          </FadeIn>
         </div>
       </header>
 

@@ -8,7 +8,7 @@ import { ExternalLink, FlaskConical, Microscope, Wrench, Server, Lock, PlayCircl
 import Link from "next/link";
 import { Github } from "@/app/core/icons/BrandIcons";
 import { TiltCard } from "@/app/core/components/Motion";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const FILTERS: { id: WorkType | "all"; label: string; japanese: string }[] = [
   { id: "all", label: "All", japanese: "全部" },
@@ -69,9 +69,8 @@ export default function WorkShowcase() {
           {items.map((w, idx) => {
             const Icon = TYPE_ICON[w.type];
             return (
-              <div
+              <FadeIn y={32} duration={0.7} delay={(idx % 2) * 0.1}
   key={w.id}
-  data-reveal={rv({ y: 32, duration: 0.7, delay: (idx % 2) * 0.1 })}
 >
                 <TiltCard className="spotlight group relative bg-surface/60 border border-foreground/5 p-8 hover:border-primary/40 transition-colors duration-500 flex flex-col h-full"
                 >
@@ -147,7 +146,7 @@ export default function WorkShowcase() {
                     )}
                   </div>
                 </TiltCard>
-              </div>
+              </FadeIn>
             );
           })}
         </div>

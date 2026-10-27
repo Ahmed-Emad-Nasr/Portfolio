@@ -1,6 +1,6 @@
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function ProcessSection() {
   return (
@@ -24,10 +24,9 @@ export default function ProcessSection() {
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {PORTFOLIO_DATA.process.map((p, idx) => (
-            <div
+            <FadeIn y={28} duration={0.65} delay={idx * 0.08}
   key={p.id}
   className="relative spotlight bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500"
-  data-reveal={rv({ y: 28, duration: 0.65, delay: idx * 0.08 })}
 >
               <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true" data-deco={p.index} />
               <div className="font-mono text-[0.625rem] text-primary-ink tracking-[0.3em] uppercase mb-1">{p.index}</div>
@@ -40,7 +39,7 @@ export default function ProcessSection() {
                   <span className="process-packet absolute -top-[2px] left-0 h-[6px] w-[6px] bg-primary" style={{ animationDelay: `${idx * 0.45}s` }} />
                 </div>
               )}
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

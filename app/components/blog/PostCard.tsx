@@ -10,14 +10,13 @@ import { Clock, Calendar } from "lucide-react";
 import type { PostMeta } from "@/app/core/content/posts";
 import { formatDate } from "@/app/core/config/shared";
 import { chipTertiary, chipNeutral } from "@/app/components/shared/kit";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function PostCard({ post, index = 0, headingLevel: H = "h3" }: { post: PostMeta; index?: number; headingLevel?: "h2" | "h3" }) {
   const rtl = post.lang === "ar";
   return (
-    <article
+    <FadeIn as="article" y={24} duration={0.6} delay={Math.min(index, 5) * 0.06}
       className="@container spotlight group relative h-full bg-surface/60 border border-foreground/5 hover:border-primary/40 transition-colors duration-500"
-      data-reveal={rv({ y: 24, duration: 0.6, delay: Math.min(index, 5) * 0.06 })}
     >
       <span className="absolute top-0 left-0 h-[2px] w-0 bg-primary transition-[width] duration-500 group-hover:w-full" aria-hidden="true" />
       <Link href={`/blog/${post.slug}`} className="flex h-full flex-col gap-4 p-6 @md:p-7">
@@ -57,6 +56,6 @@ export default function PostCard({ post, index = 0, headingLevel: H = "h3" }: { 
           </ul>
         )}
       </Link>
-    </article>
+    </FadeIn>
   );
 }

@@ -116,7 +116,6 @@ async function check(w, h, font) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: Math.min(w, h) < 600, hasTouch: w < 1024, reducedMotion: "reduce", colorScheme: "dark" });
   await ctx.addInitScript(() => {
     try {
-      sessionStorage.setItem("sensei-booted", "1");
       localStorage.setItem("palette-hint-seen", "1");
     } catch {}
   });
@@ -127,14 +126,16 @@ async function check(w, h, font) {
       await cdp.send("Page.setFontSizes", { fontSizes: { standard: font, fixed: Math.round(font * 0.8125) } });
     }
     await page.goto(base + path, { waitUntil: "networkidle" });
+    /* Scroll to the end so lazy sections take their real size and every
+       scroll entrance plays out (mid-slide, a card can sit off screen) */
     await page.evaluate(async () => {
       for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight * 0.8) {
         scrollTo(0, y);
-        await new Promise((r) => setTimeout(r, 40));
+        await new Promise((r) => setTimeout(r, 100));
       }
       scrollTo(0, 0);
-      await new Promise((r) => setTimeout(r, 200));
     });
+    await page.waitForTimeout(2500);
     const r = await page.evaluate(measure);
     const where = `${path} @ ${w}×${h}${font ? ` · text ${Math.round((font / 16) * 100)}%` : ""}`;
     if (r.docOverflow > 0) findings.push(`${where}: page scrolls sideways by ${r.docOverflow}px`);

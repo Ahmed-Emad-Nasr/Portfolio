@@ -16,6 +16,7 @@ import { blogYoutubeVideos, blogYoutubePlaylists, blogFeaturedYoutubeVideo, YOUT
 import SectionHeader from "@/app/core/components/SectionHeader";
 import SectionDivider from "@/app/core/components/SectionDivider";
 import Link from "next/link";
+import FadeIn from "@/app/core/components/FadeIn";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { formatDate, normalizePublicHref, WSA_COLLECTION, type CaseKind } from "@/app/core/config/shared";
 import type { PdfResource, GalleryState } from "@/app/core/config/shared";
@@ -307,10 +308,10 @@ export default function CaseLibrarySection({
 
           {/* The 29 PortSwigger labs also read as one track */}
           {(activeKind === null || activeKind === "lab") && !deferredQuery && (
+            <FadeIn y={16} duration={0.6} className="mb-10">
             <Link
               href={`/collections/${WSA_COLLECTION.id}`}
-              className="group relative mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-tertiary/25 bg-tertiary/5 px-6 py-5 overflow-hidden hover:border-tertiary/60 transition-colors duration-500"
-              data-reveal="0,16,0.6,0"
+              className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-tertiary/25 bg-tertiary/5 px-6 py-5 overflow-hidden hover:border-tertiary/60 transition-colors duration-500"
             >
               <span className="absolute inset-y-0 left-0 w-[3px] bg-tertiary" aria-hidden="true" />
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-tertiary/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" aria-hidden="true" />
@@ -324,6 +325,7 @@ export default function CaseLibrarySection({
                 Open the track <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
             </Link>
+            </FadeIn>
           )}
 
           {view === "list" ? (

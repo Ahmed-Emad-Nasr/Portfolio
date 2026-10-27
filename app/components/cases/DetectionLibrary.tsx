@@ -16,7 +16,7 @@ import { ArrowUpRight, Radar } from "lucide-react";
 import SectionHeader from "@/app/core/components/SectionHeader";
 import { KanjiWatermark, CounterBadge } from "@/app/components/shared/kit";
 import { detectionRules, RULE_GROUP_LABEL } from "@/app/core/config/detection-rules";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const GROUPS = Object.keys(RULE_GROUP_LABEL).filter((g) => detectionRules.some((r) => r.group === g));
 const attackUrl = (id: string) => `https://attack.mitre.org/techniques/${id.replace(".", "/")}/`;
@@ -116,7 +116,7 @@ export default function DetectionLibrary() {
           </ul>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4" data-reveal={rv({ y: 12, duration: 0.5 })}>
+        <FadeIn y={12} duration={0.5} className="mt-6 flex flex-wrap items-center justify-between gap-4">
           <p className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/60">
             $(…) = Wazuh field placeholders, filled in when the alert fires
           </p>
@@ -126,7 +126,7 @@ export default function DetectionLibrary() {
           >
             The full rule pack (XML) <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

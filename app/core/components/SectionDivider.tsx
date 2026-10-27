@@ -1,3 +1,8 @@
+"use client";
+
+import { m as motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+
 interface SectionDividerProps {
   text?: string;
   reverse?: boolean;
@@ -6,29 +11,27 @@ interface SectionDividerProps {
 
 /**
  * Noren divider — a calm black banner with a red katana edge.
- * Brush Japanese drifts with page scroll; small red diamonds
- * mark the 3OMDA seal. No hazard stripes, no flicker.
- *
- * The drift is a CSS scroll-driven animation (.divider-track in
- * globals.css, animation-timeline: view()) — it used to be framer-motion's
- * useScroll, which ran JavaScript on every scroll event for each of the
- * dividers on a page. Same travel (25%), same direction; browsers without
- * scroll timelines get the same drift from DividerDrift.tsx. Decoration
- * only, so the whole banner is hidden from assistive tech.
- *
- * overflow: clip, not hidden — a hidden box is a scroll container, and
- * view() follows the nearest one: the banner itself, which never scrolls,
- * so the drift sat frozen half-way. Same for <main> and <body>.
+ * Brush Japanese drifts with page scroll (framer-motion useScroll, as in
+ * Sensei-Dev); small red diamonds mark the 3OMDA seal. Decoration only, so
+ * the whole banner is hidden from assistive tech.
  */
 export default function SectionDivider({
   text = "武士道 • 継続は力なり • 改善 • 不撓不屈 • 七転八起",
   reverse = false,
   angle = -1,
 }: SectionDividerProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  const x = useTransform(scrollYProgress, [0, 1], reverse ? ["-25%", "0%"] : ["0%", "-25%"]);
+
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
-      className="relative z-20 flex h-20 md:h-24 w-full items-center overflow-clip border-y border-foreground/10 bg-background/70 backdrop-blur-sm"
+      className="relative z-20 flex h-20 md:h-24 w-full items-center overflow-hidden border-y border-foreground/10 bg-background/70 backdrop-blur-sm"
       style={{
         transform: `rotate(${angle}deg) scale(1.05)`,
         margin: "2.5rem 0",
@@ -38,7 +41,7 @@ export default function SectionDivider({
       <div className="absolute top-0 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-primary to-transparent" />
       <div className="absolute bottom-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      <div className="divider-track relative flex items-center gap-10 whitespace-nowrap select-none" data-reverse={reverse || undefined}>
+      <motion.div style={{ x }} className="relative flex items-center gap-10 whitespace-nowrap select-none">
         {[...Array(8)].map((_, i) => (
           <span key={i} className="flex items-center gap-10">
             <span className="brush-jp text-2xl md:text-3xl text-foreground/35" lang="ja" data-jp={text} />
@@ -49,7 +52,7 @@ export default function SectionDivider({
             </span>
           </span>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

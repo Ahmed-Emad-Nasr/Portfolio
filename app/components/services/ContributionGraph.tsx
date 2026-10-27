@@ -1,7 +1,7 @@
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { CountUp } from "@/app/core/components/CountUp";
 import type { ContributionStats } from "@/app/core/api/contributions";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 const LEVEL_BG = [
   "bg-foreground/[0.06]",
@@ -51,9 +51,8 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
   }
 
   return (
-    <div
+    <FadeIn y={24} duration={0.65}
   className="border border-foreground/10 bg-surface/60 p-6"
-  data-reveal={rv({ y: 24, duration: 0.65 })}
 >
       <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-2xl font-black text-accent tabular-nums">
@@ -88,6 +87,6 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
         ))}
         <span>More</span>
       </div>
-    </div>
+    </FadeIn>
   );
 }

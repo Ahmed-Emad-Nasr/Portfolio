@@ -6,7 +6,7 @@
  *           opened from — React <ViewTransition>), dek, date, reading time
  *   body:   the MDX, with a sticky table of contents beside it on desktop
  *           and a collapsible one above it on smaller screens
- *   after:  share, the series, previous / next, related posts, comments,
+ *   after:  share, the series, previous / next, related posts
  *           and who wrote it
  *
  * An Arabic post (lang: ar) is laid out right-to-left: the text, the TOC
@@ -22,9 +22,7 @@ import { renderMdx } from "@/app/core/content/render-mdx";
 import { postComponents } from "@/app/components/blog/mdx-components";
 import PostToc from "@/app/components/blog/PostToc";
 import ShareRow from "@/app/components/blog/ShareRow";
-import Comments from "@/app/components/blog/Comments";
 import PostCard from "@/app/components/blog/PostCard";
-import { GISCUS } from "@/app/core/config/comments";
 import { formatDate, normalizePublicHref } from "@/app/core/config/shared";
 import { absoluteUrl } from "@/app/core/config/site";
 import { KanjiWatermark, chipNeutral } from "@/app/components/shared/kit";
@@ -190,8 +188,6 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
                 )}
               </nav>
             )}
-
-            {GISCUS && <Comments config={GISCUS} term={`blog/${post.slug}`} lang={post.lang} />}
 
             {/* Who wrote it */}
             <aside className="mt-16 flex flex-col gap-5 border border-foreground/10 border-s-2 border-s-primary bg-surface/50 p-6 sm:flex-row sm:items-center">

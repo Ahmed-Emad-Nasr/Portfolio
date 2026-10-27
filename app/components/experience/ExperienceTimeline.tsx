@@ -2,8 +2,8 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
 import { Calendar, MapPin, CheckCircle2, ExternalLink, Award, FolderSearch } from "lucide-react";
 import CaseFilterLink from "@/app/components/cases/CaseFilterLink";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function ExperienceTimeline() {
   return (
@@ -35,31 +35,30 @@ export default function ExperienceTimeline() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* ─── Section Header ─── */}
         <div className="exp-header mb-16 md:mb-20">
-          <div className="flex items-center gap-4 mb-6" data-reveal={rv({ y: 40, duration: 1 })}>
+          <FadeIn y={40} duration={1} className="flex items-center gap-4 mb-6">
             <div className="w-12 h-[2px] bg-primary" />
             <span className="text-primary-ink text-[0.625rem] font-mono font-bold tracking-[0.4em] uppercase">
               <ScrambleText text="Professional Path // 職歴" />
             </span>
-          </div>
-          <h2 className="font-display title-fit [--title-n:12] font-black tracking-tighter uppercase leading-[0.85]" data-reveal={rv({ y: 40, duration: 1, delay: 0.15 })}>
+          </FadeIn>
+          <FadeIn as="h2" y={40} duration={1} delay={0.15} className="font-display title-fit [--title-n:12] font-black tracking-tighter uppercase leading-[0.85]">
             <span className="text-foreground">Professional</span> <br />
             <span className="text-primary italic">Experience.</span>
-          </h2>
-          <div className="mt-6 flex items-center gap-3" data-reveal={rv({ y: 40, duration: 1, delay: 0.3 })}>
+          </FadeIn>
+          <FadeIn y={40} duration={1} delay={0.3} className="mt-6 flex items-center gap-3">
             <div className="w-2 h-2 bg-primary" />
             <span className="font-mono text-[0.625rem] text-foreground/60 tracking-[0.2em] uppercase">
               Service Record // Maintenance Log
             </span>
-          </div>
+          </FadeIn>
         </div>
 
         {/* ─── Experience Cards ─── */}
         <div className="flex flex-col gap-14 md:gap-20">
           {PORTFOLIO_DATA.experience.map((item, idx) => (
-            <div
+            <FadeIn x={idx % 2 === 0 ? -100 : 100} y={0} duration={1.2}
               key={idx}
               className="exp-item group relative grid grid-cols-1 lg:grid-cols-[1fr_1.7fr] gap-10 lg:gap-16 items-start"
-              data-reveal={rv({ x: idx % 2 === 0 ? -100 : 100, y: 0, duration: 1.2 })}
             >
               {/* Left Column: Metadata */}
               <div className="flex flex-col gap-4">
@@ -203,7 +202,7 @@ export default function ExperienceTimeline() {
                   </div>
                 </div>
               </TiltCard>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

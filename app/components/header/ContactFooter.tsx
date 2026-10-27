@@ -9,8 +9,8 @@ import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import { PGP, SECURITY_TXT_PATH, formattedFingerprint, hasPgpKey } from "@/app/core/config/security";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /* The last line of every page: the mark, the copyright, the legal pages and
    the design credit. On the home page it closes the contact section; the
@@ -122,8 +122,7 @@ export default function ContactFooter() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           {/* Brand Column */}
           <div className="flex flex-col">
-            <div
-  data-reveal={rv({ y: 30, duration: 0.8 })}
+            <FadeIn y={30} duration={0.8}
 >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-[2px] bg-primary" />
@@ -246,13 +245,12 @@ export default function ContactFooter() {
                   </span>
                 ))}
               </div>
-            </div>
+            </FadeIn>
           </div>
 
           {/* Form Column  Mission Briefing style */}
-          <div
+          <FadeIn y={40} duration={0.8} delay={0.2}
   className="relative bg-surface/60 backdrop-blur-xl border border-foreground/5 p-8 md:p-12 group"
-  data-reveal={rv({ y: 40, duration: 0.8, delay: 0.2 })}
 >
             {/* Corner bracket accents */}
             <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-primary/40" />
@@ -453,7 +451,7 @@ export default function ContactFooter() {
                 )}
               </AnimatePresence>
             </form>
-          </div>
+          </FadeIn>
         </div>
 
         {/* Bottom bar */}

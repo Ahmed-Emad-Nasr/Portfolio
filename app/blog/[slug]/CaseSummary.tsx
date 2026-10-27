@@ -11,7 +11,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Check, Copy, Crosshair, ListChecks, Route, ShieldCheck, Fingerprint } from "lucide-react";
 import { parseCaseSummary, type Artifact, type SummaryStep } from "@/app/core/utils/case-summary";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 /* ── Inline highlighting ───────────────────────────────────────────────── */
 
@@ -72,7 +72,7 @@ function Steps({ steps, code, start = 1 }: { steps: SummaryStep[]; code: readonl
   return (
     <ol className="relative ml-1 border-l border-foreground/10">
       {steps.map((step, i) => (
-        <li key={i} className="relative pl-6 md:pl-8 pb-5 last:pb-0" data-reveal={rv({ x: -14, y: 0, duration: 0.55, delay: Math.min(i, 8) * 0.07 })}>
+        <FadeIn as="li" x={-14} y={0} duration={0.55} delay={Math.min(i, 8) * 0.07} key={i} className="relative pl-6 md:pl-8 pb-5 last:pb-0">
           <span
             className="brief-node absolute -left-[5px] top-[0.55em] w-[9px] h-[9px] bg-background border border-primary rotate-45"
             style={{ animationDelay: `${i * 0.3}s` }}
@@ -94,7 +94,7 @@ function Steps({ steps, code, start = 1 }: { steps: SummaryStep[]; code: readonl
               ))}
             </ul>
           )}
-        </li>
+        </FadeIn>
       ))}
     </ol>
   );
@@ -204,9 +204,9 @@ export default function CaseSummary({ description }: { description: string }) {
           <Label index={next()} icon={<Fingerprint size={13} />}>Artifacts &amp; indicators</Label>
           <div className="flex flex-wrap gap-2">
             {s.artifacts.map((a, i) => (
-              <div key={`${a.kind}:${a.value}`} data-reveal={rv({ y: 10, duration: 0.45, delay: Math.min(i, 10) * 0.04 })}>
+              <FadeIn y={10} duration={0.45} delay={Math.min(i, 10) * 0.04} key={`${a.kind}:${a.value}`}>
                 <ArtifactChip artifact={a} />
-              </div>
+              </FadeIn>
             ))}
           </div>
           <p className="mt-3 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/65">Click an indicator to copy it</p>

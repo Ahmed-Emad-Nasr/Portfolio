@@ -1,6 +1,6 @@
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
-import { rv } from "@/app/core/reveal";
 import ScrambleText from "@/app/core/components/ScrambleText";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function MilestonesSection() {
   const items = PORTFOLIO_DATA.milestones;
@@ -9,9 +9,8 @@ export default function MilestonesSection() {
     <section aria-label="Milestones" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <div
+          <FadeIn x={-40} y={0} duration={0.8}
   className="max-w-3xl"
-  data-reveal={rv({ x: -40, y: 0, duration: 0.8 })}
 >
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
@@ -27,10 +26,9 @@ export default function MilestonesSection() {
             <p className="mt-5 text-foreground/60 max-w-xl font-light leading-relaxed">
               Every step below is documented somewhere above — experience, work, or credentials.
             </p>
-          </div>
+          </FadeIn>
 
-          <div
-  data-reveal={rv({ y: 20, duration: 0.6, delay: 0.3 })}
+          <FadeIn y={20} duration={0.6} delay={0.3}
 >
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
@@ -49,16 +47,15 @@ export default function MilestonesSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
         <div className="max-w-4xl">
           <ol className="relative flex flex-col">
             <div className="absolute left-[7px] top-2 bottom-2 w-px bg-foreground/10" aria-hidden="true" />
             {items.map((m, idx) => (
-              <li
+              <FadeIn as="li" x={-24} y={0} duration={0.6} delay={idx * 0.06}
   key={`${m.year}-${m.title}`}
   className="relative flex gap-6 pb-10 last:pb-0"
-  data-reveal={rv({ x: -24, y: 0, duration: 0.6, delay: idx * 0.06 })}
 >
                 <span
                   className={`relative z-10 mt-1.5 h-[15px] w-[15px] shrink-0 rotate-45 border-2 transition-colors ${idx === items.length - 1
@@ -80,7 +77,7 @@ export default function MilestonesSection() {
                     </p>
                   </div>
                 </div>
-              </li>
+              </FadeIn>
             ))}
           </ol>
         </div>

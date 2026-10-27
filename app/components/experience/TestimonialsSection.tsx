@@ -10,7 +10,7 @@ import SectionHeader from "@/app/core/components/SectionHeader";
 import { TiltCard } from "@/app/core/components/Motion";
 import { KanjiWatermark } from "@/app/components/shared/kit";
 import { testimonials } from "@/app/core/config/testimonials";
-import { rv } from "@/app/core/reveal";
+import FadeIn from "@/app/core/components/FadeIn";
 
 export default function TestimonialsSection() {
   if (testimonials.length === 0) return null;
@@ -27,7 +27,7 @@ export default function TestimonialsSection() {
         />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <div key={t.name} data-reveal={rv({ y: 32, duration: 0.7, delay: i * 0.1 })}>
+            <FadeIn y={32} duration={0.7} delay={i * 0.1} key={t.name}>
               <TiltCard className="group spotlight relative h-full flex flex-col bg-surface/60 border border-foreground/5 p-8 hover:border-primary/40 transition-colors duration-500 overflow-hidden">
                 <Quote size={96} className="absolute -top-4 -right-4 text-foreground/[0.04] group-hover:text-primary/10 transition-colors duration-700" aria-hidden="true" />
                 <blockquote className="relative text-base text-foreground/85 font-light leading-relaxed mb-8">“{t.quote}”</blockquote>
@@ -43,7 +43,7 @@ export default function TestimonialsSection() {
                   )}
                 </figcaption>
               </TiltCard>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>

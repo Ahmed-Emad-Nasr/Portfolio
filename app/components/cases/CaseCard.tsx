@@ -16,8 +16,8 @@ import { getThumbnail, normalizePublicHref } from "@/app/core/config/shared";
 import type { PdfResource } from "@/app/core/config/shared";
 import { useCopyLink } from "./useCopyLink";
 import { btnOutline, btnPrimary, chipAccent, chipNeutral, chipTertiary } from "@/app/components/shared/kit";
-import { rv } from "@/app/core/reveal";
 import { caseCardBlurb } from "@/app/core/utils/case-summary";
+import FadeIn from "@/app/core/components/FadeIn";
 
 type CaseCardProps = PdfResource & {
   index: number;
@@ -62,10 +62,9 @@ function CaseCard({
   const moreTools = Math.max(0, (tools ?? []).length - shownTools.length);
 
   return (
-    <div
+    <FadeIn y={32} duration={0.7} delay={(index % 2) * 0.1}
   id={`case-${id}`}
   className="scroll-mt-28"
-  data-reveal={rv({ y: 32, duration: 0.7, delay: (index % 2) * 0.1 })}
 >
       <TiltCard className="spotlight group relative bg-surface/60 border border-foreground/5 hover:border-primary/40 transition-colors duration-500 flex flex-col h-full overflow-hidden">
         <div className="absolute top-0 left-0 z-10 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-70" aria-hidden="true" />
@@ -196,7 +195,7 @@ function CaseCard({
           </div>
         </div>
       </TiltCard>
-    </div>
+    </FadeIn>
   );
 }
 

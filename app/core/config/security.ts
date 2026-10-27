@@ -18,7 +18,6 @@
 
 import { SITE_BASE_URL } from "./site";
 import { ANALYTICS } from "./analytics";
-import { GISCUS, GISCUS_ORIGIN } from "./comments";
 
 const SECURITY_CONTACT_EMAIL = "ahmed.em.nasr@gmail.com";
 
@@ -65,15 +64,13 @@ export const securityTxt = (built = new Date()): string => {
  *   · the analytics provider, only when one is configured (analytics.ts)
  *   · Web3Forms, which delivers the contact form when a key is set
  *   · 'self' frames: the case pages show their own PDF reports inline
- *   · giscus.app, only when post comments are configured (comments.ts)
  * 'unsafe-inline' for scripts is required by Next.js static export (its
- * hydration data and the theme / reveal bootstraps are inline scripts with
+ * hydration data and the theme bootstrap are inline scripts with
  * no build-stable hash); everything else is locked down. A meta CSP cannot
  * set frame-ancestors — clickjacking protection needs a header (a custom
  * domain behind Cloudflare could add it).
  */
 const analyticsOrigins = ANALYTICS ? [new URL(ANALYTICS.script).origin] : [];
-const commentOrigins = GISCUS ? [GISCUS_ORIGIN] : [];
 const analyticsConnect =
   ANALYTICS?.provider === "Plausible"
     ? ["https://plausible.io"]
@@ -83,12 +80,12 @@ const analyticsConnect =
 
 export const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${[...analyticsOrigins, ...commentOrigins].join(" ")}`.trim(),
+  `script-src 'self' 'unsafe-inline' ${analyticsOrigins.join(" ")}`.trim(),
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://i.ytimg.com https://github.com https://avatars.githubusercontent.com",
   "font-src 'self'",
   `connect-src 'self' https://github-contributions-api.jogruber.de https://api.web3forms.com ${analyticsConnect.join(" ")}`.trim(),
-  `frame-src 'self' https://www.youtube-nocookie.com ${commentOrigins.join(" ")}`.trim(),
+  "frame-src 'self' https://www.youtube-nocookie.com",
   "media-src 'self'",
   "worker-src 'self'",
   "manifest-src 'self'",

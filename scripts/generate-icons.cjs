@@ -23,7 +23,7 @@ const brands = require("@fortawesome/free-brands-svg-icons");
  */
 const SOLID = [];
 
-const BRANDS = ["faGithub", "faInstagram", "faLinkedin", "faWhatsapp", "faYoutube"];
+const BRANDS = ["faGithub", "faInstagram", "faLinkedin", "faYoutube"];
 
 const rows = [];
 let bytes = 0;

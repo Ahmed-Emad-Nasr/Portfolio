@@ -45,7 +45,7 @@ export const ATTACK_TACTICS = [
 
 type TacticId = (typeof ATTACK_TACTICS)[number]["id"];
 
-export type Technique = {
+type Technique = {
   /** MITRE id — T1234 or T1234.001 */
   id: string;
   name: string;
