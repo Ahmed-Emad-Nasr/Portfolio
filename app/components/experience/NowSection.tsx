@@ -53,7 +53,7 @@ export default function NowSection({ items }: { items: NowItem[] }) {
                 Live
               </span>
               {/* The build date: a "now" list is only as good as its date */}
-              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/50 border-l border-foreground/10 pl-3">
+              <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/65 border-l border-foreground/10 pl-3">
                 Updated {UPDATED}
               </span>
             </div>

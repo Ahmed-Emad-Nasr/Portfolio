@@ -28,8 +28,8 @@ import { getAllPosts, getTags } from "@/app/core/content/posts";
  * is one the page actually shows.
  */
 const homeImages = [PERSON_IMAGE, OG_IMAGE.url];
-/* The proof gallery is on the about page */
-const aboutImages = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1)));
+/* The proof gallery has its own page */
+const galleryImages = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1)));
 
 /* Google allows 2,048 characters of description; keep well under */
 const clip = (text: string, max = 1000) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
@@ -89,7 +89,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: latestCaseDate,
       changeFrequency: "monthly",
       priority: 0.7,
-      images: aboutImages,
+    },
+    {
+      url: absoluteUrl("/gallery"),
+      lastModified: latestCaseDate,
+      changeFrequency: "monthly",
+      priority: 0.6,
+      images: galleryImages,
     },
     // Written posts, and the tag pages that list them
     ...getAllPosts().map((p) => ({

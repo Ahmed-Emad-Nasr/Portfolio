@@ -82,7 +82,9 @@ uses. `npm run check:assets` lists any that are missing.
   detection code, lessons and the report inline.
 - `/blog/tag/<tag>` — posts with one tag.
 - `/about` — the toolbox, daily drivers, home lab, the path, now, how an
-  engagement runs, contributions and the proof gallery.
+  engagement runs and contributions.
+- `/gallery` — the proof gallery: certificates, events and moments, each
+  opening full size.
 - `/collections/web-security-academy` — the PortSwigger labs grouped by
   vulnerability class.
 - `/attack-navigator-layer.json` — the coverage as an ATT&CK Navigator layer.
@@ -111,6 +113,15 @@ RSS feed, the sitemap and its tag pages automatically. Comments: see
 
 Hidden extras: `Ctrl/⌘ K` command palette (also searches cases), `?` keyboard
 shortcuts, and type `3omda` anywhere for the terminal.
+
+## Browser support and accessibility
+
+Works on every browser from spring 2023 on (Chrome/Edge 111+, Safari/iOS
+16.4+, Firefox 111+, Samsung Internet 22+), on screens from a 280px fold to
+5K, with large text, high contrast, reduced motion, keyboard only and no
+JavaScript. `npm run check:a11y` (axe, WCAG 2.2 AA) and
+`npm run check:layout` (16 screen sizes + 200% text) keep it that way; both
+run in `verify`. Details: ARCHITECTURE.md §15.
 
 ## Configuration (build time)
 
@@ -158,9 +169,10 @@ npm run check:links     # after a build: every internal link resolves to a file
 
 - **Per-case share cards** live in `public/og/cases/<id>.jpg` (1200×630);
   case pages use them automatically.
-- **New Japanese text?** Nothing to do for the site: `app/fonts.css` (the
-  Sensei-Dev font set) covers every character through unicode-range slices.
-  Only the share-card generators use subsets — re-run
+- **New Japanese text?** It renders straight away (`app/fonts.css` covers
+  every character). To keep the page light, re-run
+  `scripts/subset-yuji-site.py` (one small Yuji Syuku file with exactly the
+  characters in use — instructions at the top of the file), and
   `scripts/subset-fonts.py` before regenerating OG images.
 - **Share image** (`public/og-image.png`, 1200×630): made from
   `scripts/og/og-image.html` — edit and re-screenshot it.
@@ -238,8 +250,10 @@ What changed:
   attributes played by one IntersectionObserver (`core/reveal.ts`), and
   framer-motion loads its animation engine lazily (`MotionProvider`).
   Ten static sections became server components.
-- The intro screen leaves on a CSS timer (~1.2 s) instead of waiting for
-  hydration plus 1.9 s.
+- The intro screen keeps Sensei-Dev's timing (fill 1.9 s, hold 0.2 s, slide
+  0.5 s), but the bar, the 000 → 100 % counter, the kanji and the slide are
+  all CSS from the first paint, so a slow phone doesn't add hydration time
+  on top. First visit per tab only.
 - Accessibility: decorative Japanese labels are painted from `data-jp`
   (generated content), the ATT&CK links are underlined, accessible names
   match visible text, the cursor overlay is hidden from assistive tech.

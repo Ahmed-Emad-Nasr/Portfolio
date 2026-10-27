@@ -22,7 +22,7 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
   const username = PORTFOLIO_DATA.projects.githubUsername;
   if (status === "loading") {
     return (
-      <div role="status" aria-label="Loading contribution graph" className="border border-foreground/10 bg-surface/60 p-6">
+      <div role="status" aria-label="Loading contribution graph" className="border border-foreground/10 bg-surface/60 p-6 overflow-hidden">
         <div className="mb-4 h-4 w-48 animate-pulse bg-foreground/10" />
         <div className="grid grid-flow-col grid-rows-7 gap-1">
           {Array.from({ length: 130 }).map((_, i) => (

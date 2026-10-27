@@ -65,7 +65,7 @@ export default function DetectionLibrary() {
               >
                 <span className={`absolute inset-0 bg-primary origin-left transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${active ? "scale-x-100" : "scale-x-0"}`} aria-hidden="true" />
                 <span className="relative">
-                  {g ? RULE_GROUP_LABEL[g] : "All rules"} <span className="opacity-90 tabular-nums">{n}</span>
+                  {g ? RULE_GROUP_LABEL[g] : "All rules"} <span className="tabular-nums">{n}</span>
                 </span>
               </button>
             );

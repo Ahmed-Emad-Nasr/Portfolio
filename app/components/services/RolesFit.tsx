@@ -101,9 +101,7 @@ export default function RolesFit() {
               <div key={r.id} data-reveal={rv({ y: 36, duration: 0.7, delay: idx * 0.1 })}>
                 <TiltCard className="group spotlight relative h-full flex flex-col bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500 overflow-hidden">
                   {/* The role's number climbs into view on hover */}
-                  <span className="absolute -right-2 -bottom-6 font-display text-[7rem] font-black leading-none text-foreground/[0.03] group-hover:text-primary/10 group-hover:-translate-y-3 transition-all duration-700 select-none" aria-hidden="true">
-                    0{idx + 1}
-                  </span>
+                  <span className="absolute -right-2 -bottom-6 font-display text-[7rem] font-black leading-none text-foreground/[0.03] group-hover:text-primary/10 group-hover:-translate-y-3 transition-all duration-700 select-none" aria-hidden="true" data-deco={`0${idx + 1}`} />
                   <div className="absolute top-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-primary group-hover:scale-x-100 transition-transform duration-700" aria-hidden="true" />
                   <div className="flex items-center justify-between mb-6">
                     <div className="p-2.5 bg-primary/10 border border-primary/30">

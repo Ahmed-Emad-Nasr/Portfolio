@@ -34,6 +34,7 @@ import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { pageOfSection } from "@/app/core/config/routes";
+import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import { useThemeFx } from "@/app/core/theme/ThemeFxProvider";
 import { FX_DURATIONS, getFxDuration, setFxDuration } from "@/app/core/theme/fx";
 
@@ -70,6 +71,8 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
   const [copied, setCopied] = useState(false);
   const [fxDuration, setFxDurationState] = useState(getFxDuration());
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap([dialogRef], open);
   const { resolvedTheme } = useTheme();
   const { transitionTo } = useThemeFx();
   const router = useRouter();
@@ -163,6 +166,7 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
       { id: "blog-page", group: "Pages", label: "Blog — posts, cases, videos", icon: FileText, run: () => visit("/blog") },
       { id: "about-page", group: "Pages", label: "About — toolbox, lab, path", icon: FileText, run: () => visit("/about") },
+      { id: "gallery-page", group: "Pages", label: "Gallery — certificates & moments", icon: Palette, run: () => visit("/gallery") },
       { id: "posts", group: "Go to", label: "Blog posts", icon: FileText, run: () => go("#posts") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
       { id: "stack", group: "Go to", label: "Tools of the trade", icon: Code2, run: () => go("#stack") },
@@ -283,6 +287,7 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-[300] flex items-start justify-center bg-background/70 px-4 pt-[14vh] backdrop-blur-sm"
           onClick={() => setOpen(false)}
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Command palette"
@@ -303,7 +308,7 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
                 placeholder="Type a command or search…"
-                className="w-full bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-foreground/30"
+                className="w-full bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-foreground/60"
                 aria-label="Search commands"
               />
               <kbd className="shrink-0 border border-foreground/15 px-1.5 py-0.5 font-mono text-[0.625rem] text-foreground/60">

@@ -13,8 +13,12 @@ interface SectionDividerProps {
  * globals.css, animation-timeline: view()) — it used to be framer-motion's
  * useScroll, which ran JavaScript on every scroll event for each of the
  * dividers on a page. Same travel (25%), same direction; browsers without
- * scroll timelines show the banner still. Decoration only, so the whole
- * banner is hidden from assistive tech.
+ * scroll timelines get the same drift from DividerDrift.tsx. Decoration
+ * only, so the whole banner is hidden from assistive tech.
+ *
+ * overflow: clip, not hidden — a hidden box is a scroll container, and
+ * view() follows the nearest one: the banner itself, which never scrolls,
+ * so the drift sat frozen half-way. Same for <main> and <body>.
  */
 export default function SectionDivider({
   text = "武士道 • 継続は力なり • 改善 • 不撓不屈 • 七転八起",
@@ -24,7 +28,7 @@ export default function SectionDivider({
   return (
     <div
       aria-hidden="true"
-      className="relative z-20 flex h-20 md:h-24 w-full items-center overflow-hidden border-y border-foreground/10 bg-background/70 backdrop-blur-sm"
+      className="relative z-20 flex h-20 md:h-24 w-full items-center overflow-clip border-y border-foreground/10 bg-background/70 backdrop-blur-sm"
       style={{
         transform: `rotate(${angle}deg) scale(1.05)`,
         margin: "2.5rem 0",

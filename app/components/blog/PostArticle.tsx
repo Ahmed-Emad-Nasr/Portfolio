@@ -157,7 +157,7 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
                 <ol className="flex flex-col gap-2">
                   {neighbours.series.map((p, i) => (
                     <li key={p.slug} className="flex gap-3 text-sm">
-                      <span className="font-mono text-foreground/40 tabular-nums">{String(p.seriesPart ?? i + 1).padStart(2, "0")}</span>
+                      <span className="font-mono text-foreground/65 tabular-nums">{String(p.seriesPart ?? i + 1).padStart(2, "0")}</span>
                       {p.slug === post.slug ? (
                         <span className="text-foreground" aria-current="page">{p.title}</span>
                       ) : (
@@ -174,18 +174,18 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
               <nav aria-label="More posts" className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {neighbours.older ? (
                   <Link href={`/blog/${neighbours.older.slug}`} className="group border border-foreground/10 p-5 transition-colors hover:border-primary/50">
-                    <span className="mb-2 flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/50">
+                    <span className="mb-2 flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/65">
                       <Back size={12} aria-hidden="true" /> {t.older}
                     </span>
-                    <span className="block font-medium text-foreground group-hover:text-primary transition-colors">{neighbours.older.title}</span>
+                    <span className="block font-medium text-foreground group-hover:text-primary-ink transition-colors">{neighbours.older.title}</span>
                   </Link>
                 ) : <span />}
                 {neighbours.newer && (
                   <Link href={`/blog/${neighbours.newer.slug}`} className="group border border-foreground/10 p-5 text-end transition-colors hover:border-primary/50">
-                    <span className="mb-2 flex items-center justify-end gap-2 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/50">
+                    <span className="mb-2 flex items-center justify-end gap-2 font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/65">
                       {t.newer} <Fwd size={12} aria-hidden="true" />
                     </span>
-                    <span className="block font-medium text-foreground group-hover:text-primary transition-colors">{neighbours.newer.title}</span>
+                    <span className="block font-medium text-foreground group-hover:text-primary-ink transition-colors">{neighbours.newer.title}</span>
                   </Link>
                 )}
               </nav>
@@ -198,7 +198,7 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
               {/* eslint-disable-next-line @next/next/no-img-element -- static export: no image optimiser */}
               <img src={normalizePublicHref("/Assets/art-gallery/Images/logo/3omda.webp")} alt="" width={64} height={64} loading="lazy" decoding="async" className="h-16 w-16 shrink-0 rounded-full border border-foreground/10 object-cover" />
               <div className="min-w-0">
-                <p className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/50">{t.by}</p>
+                <p className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/65">{t.by}</p>
                 <p className="mt-1 font-display text-lg font-black uppercase text-foreground" dir="ltr">Ahmed Emad Nasr</p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/65">{t.bio}</p>
               </div>

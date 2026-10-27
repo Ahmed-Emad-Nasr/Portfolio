@@ -85,7 +85,7 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
                   <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums w-6 shrink-0">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className={`flex-1 font-display text-lg md:text-xl font-black uppercase tracking-tight transition-colors ${isOpen ? "text-primary" : "text-foreground group-hover:text-primary"}`}>
+                  <span className={`flex-1 min-w-0 [overflow-wrap:anywhere] font-display text-lg md:text-xl font-black uppercase tracking-tight transition-colors ${isOpen ? "text-primary-ink" : "text-foreground group-hover:text-primary-ink"}`}>
                     {f.q}
                   </span>
                   <motion.span

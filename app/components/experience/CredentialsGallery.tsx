@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { m as motion } from "framer-motion";
-import { EASE } from "@/app/core/motion";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
@@ -86,12 +84,12 @@ export default function CredentialsGallery() {
         {/* Certificate Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {PORTFOLIO_DATA.certificates.map((cert, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: (idx % 2) * 0.15, duration: 0.8, ease: EASE }}
+              /* The site's own entrance (core/reveal.ts): visible without
+                 JavaScript, and off with reduced motion — the framer-motion
+                 fade it replaced left the cards at opacity 0 until hydration */
+              data-reveal={rv({ y: 40, duration: 0.8, delay: (idx % 2) * 0.15 })}
               onClick={() => openCert(cert)}
               /* The card was mouse-only: a clickable <div> with no role or
                  tab stop, so keyboard and screen-reader users could not open
@@ -195,15 +193,15 @@ export default function CredentialsGallery() {
                 <div
                   className="absolute bottom-4 right-6 text-foreground/[0.04] font-black text-7xl select-none group-hover:text-accent/15 transition-colors duration-700 pointer-events-none"
                   aria-hidden="true"
-                >
-                  認定
-                </div>
+                  lang="ja"
+                  data-jp="認定"
+                />
 
                 {/* Corner accents */}
                 <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/0 group-hover:border-primary/40 transition-colors duration-500" />
                 <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/40 transition-colors duration-500" />
               </TiltCard>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { m as motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { lockScroll } from "@/app/core/utils/scroll";
+import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/app/core/components/ThemeToggle";
@@ -14,14 +15,15 @@ import {
   Code2,
   Award,
   BookOpen,
+  Images,
   UserRound,
   Mail,
   Command,
 } from "lucide-react";
 
 /* The home page's sections (hash links — from another page they become
-   /#work …) plus the two other top-level pages: the blog (case library,
-   write-ups, videos) and the about page (toolbox, lab, path, profiles). */
+   /#work …) plus the other top-level pages: the blog (case library,
+   write-ups, videos), the gallery and the about page (toolbox, lab, path). */
 const navItems = [
   { name: "Home", href: "#home", icon: Home, katakana: "ホーム" },
   { name: "Services", href: "#services", icon: Briefcase, katakana: "役務" },
@@ -29,6 +31,7 @@ const navItems = [
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
   { name: "Honors", href: "#certificates", icon: Award, katakana: "認定" },
   { name: "Blog", href: "/blog", icon: BookOpen, katakana: "記録" },
+  { name: "Gallery", href: "/gallery", icon: Images, katakana: "写真" },
   { name: "About", href: "/about", icon: UserRound, katakana: "人物" },
   { name: "Contact", href: "#contact", icon: Mail, katakana: "連絡" },
 ];
@@ -100,6 +103,9 @@ export default function SiteNav() {
      button that opened it. */
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  /* Tab cycles through the bar's own buttons (close, theme) and the menu */
+  useFocusTrap([navRef, menuRef], isOpen);
   useEffect(() => {
     if (!isOpen) return;
     lockScroll(true);
@@ -131,17 +137,15 @@ export default function SiteNav() {
     <>
       {/* ─── Main Navigation Bar ─── */}
       <motion.nav
+        ref={navRef}
         data-site-header="true"
-        className="fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-[width,background-color,border-color] duration-500 ease-out"
+        className="nav-enter fixed z-[100] left-1/2 -translate-x-1/2 backdrop-blur-xl bg-background/60 border border-foreground/10 px-4 md:px-8 py-2 md:py-3 flex items-center justify-between transition-[width,background-color,border-color] duration-500 ease-out"
         style={{
           width: navWidth,
           top: 20,
           borderTop: "2px solid #BC002D",
           clipPath: "polygon(0 0, 100% 0, 98% 100%, 2% 100%)",
         }}
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
       >
         {/* Logo */}
         <NavLink

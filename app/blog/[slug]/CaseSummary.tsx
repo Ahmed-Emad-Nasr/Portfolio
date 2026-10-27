@@ -78,7 +78,7 @@ function Steps({ steps, code, start = 1 }: { steps: SummaryStep[]; code: readonl
             style={{ animationDelay: `${i * 0.3}s` }}
             aria-hidden="true"
           />
-          <span className="block font-mono text-[0.5625rem] font-bold tracking-[0.25em] text-foreground/40 mb-1 tabular-nums" aria-hidden="true">
+          <span className="block font-mono text-[0.5625rem] font-bold tracking-[0.25em] text-foreground/65 mb-1 tabular-nums" aria-hidden="true">
             STEP {String(start + i).padStart(2, "0")}
           </span>
           <p className="text-[0.95rem] md:text-base text-foreground/85 leading-relaxed font-light">
@@ -124,10 +124,14 @@ function ArtifactChip({ artifact }: { artifact: Artifact }) {
       type="button"
       onClick={() => void copy()}
       className="group inline-flex items-center gap-2 px-3 py-1.5 font-mono text-[0.6875rem] border border-foreground/10 bg-background/40 hover:border-accent/50 transition-colors"
-      aria-label={`Copy ${ARTIFACT_LABEL[artifact.kind]} ${artifact.value}`}
     >
-      <span className="text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-foreground/40">{ARTIFACT_LABEL[artifact.kind]}</span>
+      {/* The accessible name is the visible text with "Copy" in front — an
+          aria-label that only resembled it ("Copy IP 1.2.3.4" vs the visible
+          "IP1.2.3.4") broke voice control ("click IP …") */}
+      <span className="sr-only">Copy </span>
+      <span className="text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-foreground/65">{ARTIFACT_LABEL[artifact.kind]}</span>{" "}
       <span className={artifact.kind === "cve" || artifact.kind === "osvdb" ? "text-primary-ink" : "text-accent"}>{artifact.value}</span>
+      <span className="sr-only" aria-live="polite">{copied ? " — copied" : ""}</span>
       {copied ? (
         <Check size={11} className="text-accent" aria-hidden="true" />
       ) : (
@@ -205,7 +209,7 @@ export default function CaseSummary({ description }: { description: string }) {
               </div>
             ))}
           </div>
-          <p className="mt-3 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/40">Click an indicator to copy it</p>
+          <p className="mt-3 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-foreground/65">Click an indicator to copy it</p>
         </section>
       )}
     </div>

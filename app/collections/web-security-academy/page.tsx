@@ -105,7 +105,7 @@ export default function WebSecurityAcademyPage() {
             </div>
           </header>
 
-          <div className="grid gap-12">
+          <div className="grid grid-cols-1 gap-12 [&>*]:min-w-0">
             {GROUPS.map((g, gi) => (
               <section key={g.name} aria-labelledby={`wsa-${gi}`}>
                 <div className="flex items-center gap-3 mb-4">
@@ -117,7 +117,7 @@ export default function WebSecurityAcademyPage() {
                 <ul className="border border-foreground/10 divide-y divide-foreground/5 bg-surface/40">
                   {g.labs.map((lab) => (
                     <li key={lab.id}>
-                      <Link href={`/blog/${lab.id}`} className="group grid grid-cols-[1fr_auto] md:grid-cols-[1fr_6rem_5rem_1.5rem] items-center gap-4 px-5 py-4 hover:bg-foreground/[0.03] transition-colors">
+                      <Link href={`/blog/${lab.id}`} className="group grid grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[1fr_6rem_5rem_1.5rem] items-center gap-4 px-5 py-4 hover:bg-foreground/[0.03] transition-colors">
                         <span className="text-sm md:text-base text-foreground/85 group-hover:text-foreground transition-colors">{lab.title}</span>
                         <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5625rem] uppercase tracking-[0.2em] ${DIFF_TONE[lab.difficulty] ?? "text-foreground/60 border-foreground/20"}`}>{lab.difficulty}</span>
                         <span className="hidden md:flex items-center gap-1.5 font-mono text-[0.625rem] text-foreground/60 tabular-nums">

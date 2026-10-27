@@ -191,7 +191,7 @@ export default async function Home() {
   const starCount = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
 
   return (
-    <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-hidden">
+    <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-clip">
       <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }} />
       {/* The two full-screen fixed overlays of the original theme (scanlines

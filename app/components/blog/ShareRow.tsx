@@ -16,7 +16,7 @@ export default function ShareRow({ url, title, lang }: { url: string; title: str
     "inline-flex items-center gap-2 border border-foreground/15 px-3.5 py-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/70 transition-colors hover:border-primary hover:text-primary-ink";
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="me-2 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/50">{ar ? "شارك" : "Share"}</span>
+      <span className="me-2 font-mono text-[0.625rem] uppercase tracking-[0.3em] text-foreground/65">{ar ? "شارك" : "Share"}</span>
       <button type="button" className={btn} onClick={() => copy(url)}>
         {state === "done" ? <Check size={12} aria-hidden="true" /> : <Link2 size={12} aria-hidden="true" />}
         <span aria-live="polite">

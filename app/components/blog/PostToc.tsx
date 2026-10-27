@@ -60,7 +60,7 @@ export default function PostToc({ headings, label, variant = "sticky" }: { headi
             }}
             aria-current={active === h.id ? "location" : undefined}
             className={`-ms-px block border-s-2 py-1.5 text-[0.8125rem] leading-snug transition-colors duration-300 ${h.depth === 3 ? "ps-6" : "ps-4"} ${
-              active === h.id ? "border-primary text-foreground" : "border-transparent text-foreground/55 hover:text-foreground"
+              active === h.id ? "border-primary text-foreground" : "border-transparent text-foreground/65 hover:text-foreground"
             }`}
           >
             {h.text}

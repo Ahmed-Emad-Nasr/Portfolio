@@ -27,6 +27,7 @@ import ScrambleText from "@/app/core/components/ScrambleText";
 import { rv } from "@/app/core/reveal";
 import { normalizePublicHref } from "@/app/core/config/shared";
 import { SITE_URL } from "@/app/core/config/seo";
+import PopoverFallback from "@/app/components/cases/PopoverFallback";
 
 const LAYER_PATH = "attack-navigator-layer.json";
 const NAVIGATOR_URL = `https://mitre-attack.github.io/attack-navigator/#layerURL=${encodeURIComponent(`${SITE_URL}${LAYER_PATH}`)}`;
@@ -186,9 +187,10 @@ export default function AttackCoverage({ tactics, techniqueCount, mappedCaseCoun
     <section
       id="attack"
       aria-labelledby="attack-title"
-      className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden"
+      className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-clip"
     >
       <KanjiWatermark chars="網羅" side="left" />
+      <PopoverFallback />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* ─── Header: same layout as every other section ─── */}

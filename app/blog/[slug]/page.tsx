@@ -88,7 +88,11 @@ export function generateStaticParams() {
 
 function postMetadata(post: Post): Metadata {
   const url = absoluteUrl(`/blog/${post.slug}`);
-  const image = post.cover ? absoluteUrl(post.cover) : absoluteUrl("og-image.png");
+  /* The post's own cover, else its generated share card
+     (scripts/og/generate-post-og.mjs), else the site card */
+  const card = `og/posts/${post.slug}.jpg`;
+  const hasCard = existsSync(join(process.cwd(), "public", card));
+  const image = post.cover ? absoluteUrl(post.cover) : absoluteUrl(hasCard ? card : "og-image.png");
   const shareTitle = `${post.title} | Ahmed Emad Nasr`;
   return {
     title: post.title,
@@ -108,7 +112,7 @@ function postMetadata(post: Post): Metadata {
       modifiedTime: post.updated ?? post.date,
       authors: [SITE_URL],
       tags: post.tags,
-      images: [{ url: image, alt: post.title }],
+      images: [{ url: image, ...(hasCard && !post.cover ? { width: 1200, height: 630 } : {}), alt: post.title }],
     },
     twitter: { card: "summary_large_image", title: shareTitle, description: summarize(post.description, 200), site: "@0x3omda", creator: "@0x3omda", images: [image] },
   };

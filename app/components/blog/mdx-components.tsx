@@ -69,7 +69,7 @@ function CaseRef({ id }: { id: string }) {
         <span className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-primary-ink">
           {item.category} · {item.readTime} min
         </span>
-        <span className="font-display text-base font-black uppercase leading-tight text-foreground group-hover:text-primary transition-colors">
+        <span className="font-display text-base font-black uppercase leading-tight text-foreground group-hover:text-primary-ink transition-colors">
           {item.title}
         </span>
       </span>
@@ -124,7 +124,15 @@ function Table(props: ComponentProps<"table">) {
   );
 }
 
+/* GitHub task lists render disabled checkboxes with no name; a screen
+   reader then announces "checkbox, not checked" with nothing to say what */
+function Input(props: ComponentProps<"input">) {
+  if (props.type === "checkbox") return <input {...props} aria-label={props.checked ? "Done" : "To do"} />;
+  return <input {...props} />;
+}
+
 export const postComponents: MDXComponents = {
+  input: Input,
   a: Anchor,
   img: Img,
   pre: CodeBlock as MDXComponents["pre"],

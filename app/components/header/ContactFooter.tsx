@@ -96,7 +96,7 @@ export default function ContactFooter() {
   return (
     <footer className="relative bg-background pt-24 md:pt-32 pb-12 px-6 md:px-20 overflow-hidden border-t border-foreground/5">
       {/* Background Torii Silhouette */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140vw] h-[70vh] opacity-[0.02] pointer-events-none select-none z-0">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140vw] h-[70vh] opacity-[0.02] pointer-events-none select-none z-0" aria-hidden="true">
         <svg viewBox="0 0 100 100" className="w-full h-full fill-foreground">
           <path d="M5,25 Q50,15 95,25 L95,32 Q50,22 5,32 Z M20,32 L20,100 M80,32 L80,100 M15,50 L85,50" />
         </svg>
@@ -343,7 +343,7 @@ export default function ContactFooter() {
                   type="text"
                   name="name"
                   required
-                  className="w-full bg-transparent border-b border-foreground/10 py-4 focus:outline-none focus:border-primary transition-all duration-300 text-lg font-light placeholder:text-foreground/30 font-mono"
+                  className="w-full bg-transparent border-b border-foreground/10 py-4 focus:outline-none focus:border-primary transition-all duration-300 text-lg font-light placeholder:text-foreground/60 font-mono"
                   placeholder="Name / Organization"
                 />
               </div>
@@ -356,7 +356,7 @@ export default function ContactFooter() {
                   type="email"
                   name="email"
                   required
-                  className="w-full bg-transparent border-b border-foreground/10 py-4 focus:outline-none focus:border-primary transition-all duration-300 text-lg font-light placeholder:text-foreground/30 font-mono"
+                  className="w-full bg-transparent border-b border-foreground/10 py-4 focus:outline-none focus:border-primary transition-all duration-300 text-lg font-light placeholder:text-foreground/60 font-mono"
                   placeholder="Email"
                 />
               </div>
@@ -386,7 +386,7 @@ export default function ContactFooter() {
                   name="message"
                   required
                   rows={3}
-                  className="w-full bg-transparent border-b border-foreground/10 py-4 focus:outline-none focus:border-primary transition-all duration-300 text-lg font-light resize-none placeholder:text-foreground/30 font-mono"
+                  className="w-full bg-transparent border-b border-foreground/10 py-4 focus:outline-none focus:border-primary transition-all duration-300 text-lg font-light resize-none placeholder:text-foreground/60 font-mono"
                   placeholder="The role or the project: team, timeline, links"
                 />
               </div>

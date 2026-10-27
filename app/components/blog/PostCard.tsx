@@ -43,7 +43,7 @@ export default function PostCard({ post, index = 0, headingLevel: H = "h3" }: { 
           {/* Same name as the post page's <h1>: opening the post morphs this
               title into the headline (React <ViewTransition>, Next 16) */}
           <ViewTransition name={`post-title-${post.slug}`} share="morph" default="none">
-            <H className={`text-foreground group-hover:text-primary transition-colors duration-300 [text-wrap:balance] ${rtl ? "text-xl @md:text-2xl font-bold leading-snug" : "font-display text-lg @md:text-xl font-black uppercase leading-tight tracking-tight"}`}>
+            <H className={`text-foreground group-hover:text-primary-ink transition-colors duration-300 [text-wrap:balance] ${rtl ? "text-xl @md:text-2xl font-bold leading-snug" : "font-display text-lg @md:text-xl font-black uppercase leading-tight tracking-tight"}`}>
               {post.title}
             </H>
           </ViewTransition>

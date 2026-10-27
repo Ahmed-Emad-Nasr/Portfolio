@@ -17,6 +17,9 @@ import type { ReactNode } from "react";
    @font-face rules split by unicode-range (app/fonts/<family>/*.woff2). */
 import "./fonts.css";
 import "./fonts-arabic.css";
+/* Yuji Syuku cut to the characters in use — after fonts.css on purpose:
+   the last-declared face wins, so the 23 kanji slices are never fetched */
+import "./fonts-yuji-site.css";
 import "./globals.css";
 
 import { knowledgeEducationItems } from "@/app/core/config/experience";
@@ -36,6 +39,7 @@ import { CONTENT_SECURITY_POLICY } from "@/app/core/config/security";
 import KeyboardShortcuts from "@/app/core/components/KeyboardShortcuts";
 import ServiceWorkerRegister from "@/app/core/components/ServiceWorkerRegister";
 import MotionBudget from "@/app/core/components/MotionBudget";
+import DividerDrift from "@/app/core/components/DividerDrift";
 import Analytics from "@/app/core/components/Analytics";
 import { HAS_SERVICE_WORKER } from "@/app/core/config/build-facts";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/app/core/config/shared";
@@ -298,11 +302,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              'try{if(sessionStorage.getItem("sensei-booted"))document.documentElement.classList.add("booted")}catch(e){}',
+              'try{if(sessionStorage.getItem("sensei-booted"))document.documentElement.classList.add("booted")}catch(e){}' +
+              /* Large text: the reader has raised the browser's / phone's
+                 default font size (16px unless they did). "medium" is that
+                 default — unlike the root size, which globals.css itself
+                 raises on 1800px+ screens. globals.css lets layouts wrap
+                 instead of overflow in that mode only. */
+              'try{var d=document.documentElement,e=document.createElement("i");e.style.cssText="position:absolute;font-size:medium";d.appendChild(e);if(parseFloat(getComputedStyle(e).fontSize)>=20)d.classList.add("large-text");d.removeChild(e)}catch(e){}',
           }}
         />
       </head>
-      <body className="font-body antialiased bg-background text-foreground overflow-x-hidden">
+      <body className="font-body antialiased bg-background text-foreground overflow-x-clip">
         {/* Scroll entrances (core/reveal.ts) — first in <body> so it sees every
             element as the parser inserts it, before any of them is painted */}
         <script dangerouslySetInnerHTML={{ __html: REVEAL_SCRIPT }} />
@@ -323,6 +333,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               {children}
             </SmoothScroll>
             <MotionBudget />
+            <DividerDrift />
             <Analytics />
             <ServiceWorkerRegister enabled={HAS_SERVICE_WORKER} />
           </ThemeFxProvider>

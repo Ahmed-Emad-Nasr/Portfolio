@@ -12,6 +12,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import { m as motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -48,6 +49,8 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap([dialogRef], true);
   /* `npm run lint` failed on this: the lazy initialiser read and mutated
      lineId.current DURING render (react-hooks/refs). Under a concurrent
      render React may throw the result away — the ref keeps the increments
@@ -333,6 +336,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
       className="fixed inset-0 z-[300] flex items-start justify-center bg-background/70 px-4 pt-[12vh] backdrop-blur-sm"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Terminal"

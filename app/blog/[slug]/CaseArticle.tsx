@@ -11,9 +11,8 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState, ViewTransition, type ReactNode } from "react";
-import { m as motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
-import { EASE } from "@/app/core/motion";
+import { rv } from "@/app/core/reveal";
 import { normalizePublicHref, getThumbnail, formatDate } from "@/app/core/config/shared";
 import { useCopyLink } from "@/app/components/cases/useCopyLink";
 import CaseSummary from "./CaseSummary";
@@ -64,7 +63,9 @@ function Shot({ shot, index, total, title, onOpen }: { shot: string; index: numb
     <button
       type="button"
       onClick={() => onOpen(index)}
-      aria-label={`Open screenshot ${index + 1} of ${total}`}
+      /* Starts with the visible caption ("Evidence 03") so voice control
+         ("click evidence 03") and the name agree */
+      aria-label={`Evidence ${String(index + 1).padStart(2, "0")} — open screenshot ${index + 1} of ${total}`}
       className="spotlight group relative aspect-[16/10] overflow-hidden bg-surface border border-foreground/5 hover:border-primary/40 transition-all duration-700"
     >
       <Image
@@ -78,7 +79,7 @@ function Shot({ shot, index, total, title, onOpen }: { shot: string; index: numb
       />
       <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-between p-3 z-10">
+      <div className="hover-reveal absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-between p-3 z-10">
         <span className="font-mono text-[0.5625rem] font-bold tracking-[0.3em] uppercase text-white">
           Evidence {String(index + 1).padStart(2, "0")}
         </span>
@@ -148,12 +149,10 @@ export default function CaseArticle({
         </nav>
 
         {/* Header */}
-        <motion.header
-          initial={{ opacity: 0, x: -32 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="mb-12"
-        >
+        {/* The site's entrance (core/reveal.ts), not a framer-motion fade: that
+            one rendered the whole header — title, date, platform — at
+            opacity 0 in the HTML, so without JavaScript it never appeared */}
+        <header className="mb-12" data-reveal={rv({ x: -32, y: 0, duration: 0.7 })}>
           <div className="flex items-center gap-4 mb-5">
             <div className="w-12 h-[2px] bg-primary" aria-hidden="true" />
             <span className="text-primary-ink text-[0.6875rem] font-mono font-bold tracking-[0.35em] uppercase">{item.type}</span>
@@ -180,7 +179,7 @@ export default function CaseArticle({
               <Calendar size={14} className="text-on-surface-variant/60" /> {formatDate(item.date)}
             </span>
           </div>
-        </motion.header>
+        </header>
 
         <VerdictBar verdict={detail?.verdict} severity={detail?.severity} />
 
@@ -188,14 +187,12 @@ export default function CaseArticle({
         {/* No tilt: on a panel this tall the 3D lean read as the page wobbling */}
         <div className="spotlight relative bg-surface/60 border border-foreground/5 backdrop-blur-sm hover:border-primary/20 transition-all duration-700 overflow-hidden mb-14">
           <div className="absolute top-0 left-0 w-[3px] h-full bg-primary" />
-          <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none" aria-hidden="true">
-            {screenshots.length ? String(screenshots.length).padStart(2, "0") : "00"}
-          </div>
+          <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none" aria-hidden="true" data-deco={screenshots.length ? String(screenshots.length).padStart(2, "0") : "00"} />
           <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent" />
               <h2 className="font-mono text-[0.5625rem] font-normal text-foreground/60 tracking-[0.3em] uppercase">Case summary</h2>
-              <span className="hidden sm:inline font-mono text-[0.5625rem] text-foreground/30 tracking-wider">~/cases/{item.id}/brief.md</span>
+              <span className="hidden sm:inline font-mono text-[0.5625rem] text-foreground/65 tracking-wider">~/cases/{item.id}/brief.md</span>
             </div>
             <span className="font-mono text-[0.5625rem] text-foreground/60 tracking-wider uppercase">{item.category}</span>
           </div>

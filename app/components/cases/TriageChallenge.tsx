@@ -58,7 +58,10 @@ const QUESTIONS: Q[] = [
 
 export default function TriageChallenge() {
   const [answers, setAnswers] = useState<(number | null)[]>(QUESTIONS.map(() => null));
-  const [streamed, setStreamed] = useState(0);
+  /* Starts fully shown (the server HTML, and any browser without JavaScript,
+     shows the whole alert); after hydration, with motion allowed, it is
+     reset and streamed in line by line when it scrolls into view. */
+  const [streamed, setStreamed] = useState<number>(ALERT.length);
   const cardRef = useRef<HTMLDivElement>(null);
 
   /* Stream the alert in, line by line, when it scrolls into view */
@@ -70,6 +73,7 @@ export default function TriageChallenge() {
       return;
     }
     let timer: number | undefined;
+    setStreamed(0);
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;

@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { m as motion } from "framer-motion";
-import { EASE } from "@/app/core/motion";
 import { useState } from "react";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { TiltCard } from "@/app/core/components/Motion";
@@ -13,13 +11,15 @@ import ScrambleText from "@/app/core/components/ScrambleText";
 
 const GalleryLightbox = dynamic(() => import("./GalleryLightbox"), { ssr: false });
 
-/* 73 images: show three rows, then three more per click */
+/* The gallery has its own page (/gallery): six rows to start, three more
+   per click — images below the fold load lazily either way */
+const FIRST = 18;
 const PAGE = 9;
 
 export default function ArtGallery() {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
-  const [visible, setVisible] = useState(PAGE);
+  const [visible, setVisible] = useState(FIRST);
   const items = PORTFOLIO_DATA.artGallery.slice(0, visible);
 
   const lightboxSlides = PORTFOLIO_DATA.artGallery.map((img) => ({
@@ -29,7 +29,7 @@ export default function ArtGallery() {
   }));
 
   return (
-    <section id="art" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
+    <section id="art" aria-labelledby="art-title" className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 md:px-20 bg-background overflow-hidden">
       {/* Background Decorative Kanji */}
       <div
         className="absolute right-10 top-20 pointer-events-none select-none text-foreground/[0.03] text-[15vw] font-black z-0 vertical-text uppercase"
@@ -55,10 +55,13 @@ export default function ArtGallery() {
                 <ScrambleText text="Visual Archive" />
               </span>
             </div>
-            <h2 className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">
+            <h1 id="art-title" className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Proof</span> <br />
               <span className="text-primary italic">Gallery.</span>
-            </h2>
+            </h1>
+            <p className="mt-6 max-w-2xl text-base md:text-lg font-light leading-relaxed text-foreground/65 [text-wrap:pretty]">
+              Certificates, events, the classroom and moments along the way. Open any picture to see it full size.
+            </p>
           </div>
 
           {/* Counter Badge */}
@@ -88,16 +91,10 @@ export default function ArtGallery() {
         {/* Art Grid  masonry columns */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
           {items.map((img, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{
-                duration: 0.8,
-                delay: (idx % 6) * 0.08,
-                ease: EASE,
-              }}
+              /* Visible without JavaScript; the site's own entrance */
+              data-reveal={rv({ y: 24, duration: 0.8, delay: (idx % 6) * 0.08 })}
               onClick={() => {
                 setIndex(idx);
                 setOpen(true);
@@ -127,7 +124,7 @@ export default function ArtGallery() {
                 />
 
                 {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 z-10">
+                <div className="hover-reveal absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 z-10">
                   {/* Diagonal line accent */}
                   <div
                     className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20"
@@ -154,7 +151,7 @@ export default function ArtGallery() {
                   </div>
                 </div>
               </TiltCard>
-            </motion.div>
+            </div>
           ))}
         </div>
 

@@ -52,12 +52,14 @@ const LANGS = [
   import("shiki/langs/asm.mjs"),
 ];
 
-const CODE_THEMES = { light: "github-light", dark: "github-dark-dimmed" } as const;
+/* Light: GitHub's high-contrast variant — plain github-light has tokens
+   (orange, light blue) under 4.5:1 on a light background */
+const CODE_THEMES = { light: "github-light-high-contrast", dark: "github-dark-dimmed" } as const;
 
 let highlighter: Promise<HighlighterCore> | null = null;
 const getHighlighter = () =>
   (highlighter ??= createHighlighterCore({
-    themes: [import("shiki/themes/github-light.mjs"), import("shiki/themes/github-dark-dimmed.mjs")],
+    themes: [import("shiki/themes/github-light-high-contrast.mjs"), import("shiki/themes/github-dark-dimmed.mjs")],
     langs: LANGS,
     engine: createJavaScriptRegexEngine(),
   }));

@@ -68,7 +68,7 @@ function CaseFilters({
           aria-label="Search cases"
           autoComplete="off"
           spellCheck={false}
-          className="w-full bg-transparent py-4 focus:outline-none text-lg font-light placeholder:text-foreground/30 font-mono"
+          className="w-full bg-transparent py-4 focus:outline-none text-lg font-light placeholder:text-foreground/60 font-mono"
         />
         {isFiltered && (
           <button
@@ -102,7 +102,7 @@ function CaseFilters({
                   aria-hidden="true"
                 />
                 <span className="relative">
-                  {k.label} <span className="ml-1 tabular-nums opacity-90">{k.count}</span>
+                  {k.label} <span className="ml-1 tabular-nums">{k.count}</span>
                 </span>
               </button>
             );

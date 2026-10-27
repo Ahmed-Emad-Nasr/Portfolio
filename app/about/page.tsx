@@ -1,7 +1,8 @@
 /*
  * app/about/page.tsx — the depth behind the home page's pitch: the toolbox,
  * daily drivers, the home lab, the path so far, what I am doing now, how an
- * engagement runs, open-source contributions and the proof gallery.
+ * engagement runs and open-source contributions. The proof gallery has its
+ * own page (/gallery).
  *
  * These were sections 06–10 of the one-page portfolio. A recruiter skimming
  * the home page does not need them; someone who wants to know how I work
@@ -23,13 +24,14 @@ import { LIVE_COPY } from "@/app/core/config/live-copy";
 import { absoluteUrl, OG_IMAGE } from "@/app/core/config/site";
 import { PERSON_REF, SITE_URL, jsonLd } from "@/app/core/config/seo";
 import { rv } from "@/app/core/reveal";
+import { normalizePublicHref } from "@/app/core/config/shared";
+import { hashForwardScript } from "@/app/core/config/routes";
 
 const MilestonesSection = dynamic(() => import("@/app/components/experience/MilestonesSection"));
 const NowSection = dynamic(() => import("@/app/components/experience/NowSection"));
-const ArtGallery = dynamic(() => import("@/app/components/art-gallery/ArtGallery"));
 
 const DESCRIPTION =
-  "How Ahmed Emad Nasr works: the security toolbox, the home lab, the path from student to instructor, what he is doing now, how an engagement runs, and the proof gallery.";
+  "How Ahmed Emad Nasr works: the security toolbox, the home lab, the path from student to instructor, what he is doing now, and how an engagement runs.";
 
 export const metadata: Metadata = {
   title: "About — Toolbox, Home Lab & Path",
@@ -56,8 +58,10 @@ const JUMP = [
   { href: "#now", label: "Now" },
   { href: "#process", label: "Process" },
   { href: "#contributions", label: "Contributions" },
-  { href: "#art", label: "Gallery" },
 ];
+
+/* /about#art (the gallery's old address) opens /gallery#art */
+const FORWARD_SCRIPT = hashForwardScript(normalizePublicHref("/").replace(/\/$/, ""), "/about");
 
 const STRUCTURED_DATA = jsonLd({
   "@context": "https://schema.org",
@@ -75,6 +79,7 @@ const STRUCTURED_DATA = jsonLd({
 export default function AboutPage() {
   return (
     <PageShell>
+      <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA }} />
 
       <header className="relative pt-36 md:pt-44 pb-4 px-6 md:px-20">
@@ -128,13 +133,6 @@ export default function AboutPage() {
       {/* Community contributions */}
       <div id="contributions" className={DEFER}>
         <ContributionsGrid />
-      </div>
-
-      <SectionDivider text="記録 • 証明 • 実績" reverse={true} angle={-1.5} />
-
-      {/* Certificates and moments */}
-      <div className={DEFER}>
-        <ArtGallery />
       </div>
     </PageShell>
   );

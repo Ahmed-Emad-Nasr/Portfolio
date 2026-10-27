@@ -174,8 +174,11 @@
    * when a single word cannot fit; hyphens: auto lets English words break at
    * a real syllable first.
    */
+  /* anywhere, not break-word: it also lowers the heading's minimum width,
+     so a heading inside a flex row or grid cell can shrink and wrap a word
+     too long for a 280px fold screen instead of pushing past the edge */
   h1, h2, h3, h4 {
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
   }
   .font-display:is(h1, h2, h3, h4) {
     hyphens: auto;
@@ -309,6 +312,11 @@
  */
 [data-jp]::before {
   content: attr(data-jp);
+}
+/* The same for decorative numerals (the giant 01/02/03 behind cards): ornament
+   drawn by CSS, so it is not read out or audited as text. */
+[data-deco]::before {
+  content: attr(data-deco);
 }
 
 .jp-eyebrow {
@@ -531,9 +539,8 @@
   display: none;
 }
 [data-app-loader] {
-  /* Shortened from 1.2 s + 0.55 s: the first visit is the recruiter's
-     visit, and the intro held the whole hero back for ~1.75 s. */
-  animation: app-loader-out 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.6s forwards;
+  /* Sensei-Dev's timing: fill 1.9 s, hold 0.2 s, slide up 0.5 s */
+  animation: app-loader-out 0.5s cubic-bezier(0.76, 0, 0.24, 1) 2.1s forwards;
 }
 @keyframes app-loader-out {
   to {
@@ -541,11 +548,66 @@
     visibility: hidden;
   }
 }
+/* The hairline fills with the counter's ease-out-cubic */
+.app-loader-fill {
+  transform-origin: 0 50%;
+  animation: app-loader-fill 1.9s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+@keyframes app-loader-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+/* The kanji: five words stacked in one grid cell, each taking over as the
+   counter passes 20 / 40 / 60 / 80 % (--in / --out from AppLoader.tsx) */
+.app-loader-words {
+  display: grid;
+  justify-items: center;
+}
+.app-loader-words > span {
+  grid-area: 1 / 1;
+  animation:
+    app-loader-word-in 0.35s ease-out var(--in, 0s) both,
+    app-loader-word-out 0.01s linear var(--out, 99s) forwards;
+}
+@keyframes app-loader-word-in {
+  from { opacity: 0; translate: 0 8px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes app-loader-word-out {
+  to { opacity: 0; }
+}
+/* The percentage: an animated integer property shown as a counter,
+   padded to three digits (000 → 100) */
+@property --loader-p {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+@counter-style loader-pad {
+  system: extends decimal;
+  pad: 3 "0";
+}
+.app-loader-count {
+  animation: app-loader-count 1.9s cubic-bezier(0.33, 1, 0.68, 1) both;
+  counter-reset: loader-p var(--loader-p);
+}
+.app-loader-count::after {
+  content: counter(loader-p, loader-pad) "%";
+}
+@keyframes app-loader-count {
+  from { --loader-p: 0; }
+  to { --loader-p: 100; }
+}
 @media (prefers-reduced-motion: reduce) {
   [data-app-loader] {
     animation-duration: 0.01s;
-    animation-delay: 0.3s;
+    animation-delay: 0.8s;
   }
+  .app-loader-fill,
+  .app-loader-count { animation-duration: 0.6s; }
+  /* One still word instead of five */
+  .app-loader-words > span { animation: none; opacity: 0; }
+  .app-loader-words > span:first-child { opacity: 1; }
 }
 
 /*
@@ -558,7 +620,7 @@
  * with the elements' own transforms instead of replacing them.
  */
 :root {
-  --hero-lead: 0.8s;
+  --hero-lead: 2.3s; /* the hero starts as the intro screen lifts */
   --hero-t: 1;
 }
 .booted {
@@ -1402,4 +1464,99 @@
   html.lenis-scrolling :where(main, footer) > :not([data-site-header], #mobile-menu, [role="status"]) {
     pointer-events: none;
   }
+}
+
+/* ─── ATT&CK popovers without native popover support ───────────────────
+   Safari < 17 and Firefox < 125 ignore [popover]: every evidence popover
+   would sit on the page at once. Hide them from the first paint, show the
+   one PopoverFallback.tsx marks open, and stand in for ::backdrop. The
+   section's lazy-render containment would trap the fixed popover inside
+   it, so it is lifted there (native popovers render in the top layer and
+   do not need this). */
+@supports not selector(:popover-open) {
+  [popover]:not([data-open]) { display: none; }
+  .attack-pop[data-open] {
+    display: block;
+    z-index: 400;
+    box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.65), 0 30px 80px -20px rgb(0 0 0 / 0.6);
+  }
+  div:has(> #attack) { content-visibility: visible; contain: none; }
+}
+
+/* ─── Form fields: a focus mark you can see ────────────────────────────
+   The fields remove the outline (focus:outline-none) and only recolour a
+   1px bottom border — too faint to find the caret's field by keyboard. A
+   2px red underline drawn with an inset shadow: clearly visible, no layout
+   shift, same look as the design's underline fields. */
+:where(input, select, textarea):focus-visible {
+  box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+/* ─── Hover-only captions, for touch and keyboard too ──────────────────
+   The gallery and evidence captions appeared only on mouse hover (Tailwind's
+   group-hover applies only where hover exists), so a phone never showed
+   them and a keyboard user never saw them on focus. On touch screens they
+   are always shown; with a keyboard, when their card has focus. */
+@media (hover: none) {
+  .hover-reveal { opacity: 1; }
+}
+.group:focus-visible .hover-reveal,
+.group:focus-within .hover-reveal { opacity: 1; }
+
+/* ─── Windows high contrast (forced colors) ────────────────────────────
+   The ornaments are drawn at 2–6% opacity; forced colors repaint them in
+   full CanvasText, so giant kanji and numerals sat on top of the headings.
+   They are decoration (aria-hidden) and are dropped in this mode. The hero
+   name's lines overlap (line-height 0.85) and forced colors paints an
+   opaque backplate behind each line, which cut the line above — the lines
+   get room. Focus rings use the system highlight colour. */
+@media (forced-colors: active) {
+  .japanese-bg,
+  [data-deco],
+  .vertical-text[aria-hidden="true"],
+  [aria-hidden="true"]:is([class*="text-foreground/[0.0"], [class*="text-foreground/[0.1"]) {
+    display: none;
+  }
+  #home h1 { line-height: 1.12; }
+  #home h1 [class*="clip-path"] { clip-path: none; }
+  :focus-visible { outline-color: Highlight; }
+}
+
+/* ─── Large text (OS / browser text size raised — layout.tsx sets it) ───
+   The design is tuned for the default size; at 150–200% text on a phone,
+   rows of labels, badges, buttons and flex headings no longer fit and
+   overflowed. In this mode only: flex rows may wrap, flex items may shrink
+   below their content, nothing is forced onto one line, and long words
+   break. Everyone else sees the design unchanged. */
+.large-text :where(.flex, .inline-flex):not(.flex-col, .flex-nowrap) { flex-wrap: wrap; }
+.large-text :where(.flex, .inline-flex, .grid) > * { min-width: 0; }
+.large-text .whitespace-nowrap { white-space: normal; }
+.large-text :where(h1, h2, h3, h4, p, a, button, span, dd, dt, li, label) { overflow-wrap: anywhere; }
+.large-text .btn-sheen { height: auto; }
+/* Buttons: never wider than the screen; the label wraps inside instead */
+.large-text .btn-sheen { flex: 1 1 auto; min-width: 0; max-width: 100%; white-space: normal; }
+
+/* ─── Reduced motion: transitions too ──────────────────────────────────
+   The entrances, loops and the hero already stop under reduced motion;
+   hover, menu and toast transitions still slid and faded. With the OS
+   setting on, every transition and CSS animation finishes at once (only
+   while that media query matches, so nobody else pays for the selector). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* The nav drops in on load — CSS, not a framer-motion spring: that one
+   rendered the bar at opacity 0 in the HTML, so without JavaScript the
+   site had no navigation at all. (transform composes with the bar's own
+   translate, which centres it.) */
+@media (prefers-reduced-motion: no-preference) {
+  .nav-enter { animation: nav-enter 0.8s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
+}
+@keyframes nav-enter {
+  from { transform: translateY(-100px); opacity: 0; }
 }

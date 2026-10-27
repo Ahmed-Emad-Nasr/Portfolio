@@ -29,9 +29,7 @@ export default function ProcessSection() {
   className="relative spotlight bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500"
   data-reveal={rv({ y: 28, duration: 0.65, delay: idx * 0.08 })}
 >
-              <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true">
-                {p.index}
-              </div>
+              <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true" data-deco={p.index} />
               <div className="font-mono text-[0.625rem] text-primary-ink tracking-[0.3em] uppercase mb-1">{p.index}</div>
               <div className="jp-eyebrow text-[0.625rem] text-foreground/30 mb-3" lang="ja" aria-hidden="true" data-jp={p.japanese} />
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3">{p.title}</h3>

@@ -113,9 +113,7 @@ export default function ExperienceTimeline() {
                 <div className="absolute top-0 left-0 w-[3px] h-full bg-primary" />
 
                 {/* Large Index Number */}
-                <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none group-hover:text-primary/10 transition-colors duration-700">
-                  0{idx + 1}
-                </div>
+                <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none group-hover:text-primary/10 transition-colors duration-700" aria-hidden="true" data-deco={`0${idx + 1}`} />
 
                 {/* Panel Header */}
                 <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
@@ -195,7 +193,7 @@ export default function ExperienceTimeline() {
 
                 {/* Panel Footer */}
                 <div className="px-6 md:px-12 py-4 border-t border-foreground/5 flex items-center justify-between">
-                  <span className="font-mono text-[0.5625rem] text-foreground/15 tracking-[0.2em] uppercase">
+                  <span className="font-mono text-[0.5625rem] text-foreground/65 tracking-[0.2em] uppercase">
                     {item.details.length} {item.details.length === 1 ? "entry" : "entries"} logged
                   </span>
                   <div className="flex items-center gap-2">

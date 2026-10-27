@@ -78,6 +78,7 @@ ${certifications.map((cert) => `- ${cert.name} — ${cert.issuer}, ${cert.year}`
 - [Home](${absoluteUrl("/")}): who I am, services, selected work, experience, credentials
 - [Blog](${absoluteUrl("/blog")}): posts, the case library, ATT&CK coverage, detection rules, videos
 - [About](${absoluteUrl("/about")}): toolbox, home lab, path, process, contributions
+- [Gallery](${absoluteUrl("/gallery")}): certificates, events and moments
 - [CV](${absoluteUrl("/cv")})
 ${getAllPosts().length ? `
 ## Posts

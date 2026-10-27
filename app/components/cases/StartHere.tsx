@@ -35,13 +35,11 @@ export default function StartHere({
               href={`/blog/${entry.id}`}
               className="relative spotlight block h-full bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500 group"
             >
-              <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true">
-                {String(idx + 1).padStart(2, "0")}
-              </div>
+              <div className="font-mono text-5xl font-black text-foreground/[0.06] absolute top-4 right-5 select-none" aria-hidden="true" data-deco={String(idx + 1).padStart(2, "0")} />
               <div className="font-mono text-[0.625rem] text-primary-ink tracking-[0.3em] uppercase mb-3">
                 {String(idx + 1).padStart(2, "0")} • {entry.minutes} min
               </div>
-              <h3 className="font-display text-xl font-black uppercase text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
+              <h3 className="font-display text-xl font-black uppercase text-foreground mb-3 group-hover:text-primary-ink transition-colors duration-300">
                 {entry.label}
               </h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{entry.why}</p>

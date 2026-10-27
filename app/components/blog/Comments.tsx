@@ -62,7 +62,7 @@ export default function Comments({ config, term, lang }: { config: GiscusConfig;
           >
             {lang === "ar" ? "اعرض التعليقات" : "Load comments"}
           </button>
-          <p className="text-xs text-foreground/50">
+          <p className="text-xs text-foreground/65">
             {lang === "ar" ? "بتتحمل من GitHub Discussions عن طريق giscus.app." : "Loads the thread from GitHub Discussions via giscus.app."}
           </p>
         </div>

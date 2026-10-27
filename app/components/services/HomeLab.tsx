@@ -62,7 +62,9 @@ export default function HomeLab() {
           description="The SOC lab most of the projects run on: attacked from Kali with Atomic Red Team, watched by Sysmon, auditd, Suricata and Zeek, correlated in Wazuh, enriched by VirusTotal, answered by a YARA scan and a quarantine script, and handed to TheHive as a case."
         />
 
-        <figure className="relative border border-foreground/10 bg-surface/40 p-4 md:p-8 overflow-x-auto" data-reveal={rv({ y: 30, duration: 0.8 })}>
+        {/* Scrolls sideways on narrow screens — focusable so keyboard users can
+            scroll it too (arrow keys), and named for screen readers */}
+        <figure className="relative border border-foreground/10 bg-surface/40 p-4 md:p-8 overflow-x-auto" data-reveal={rv({ y: 30, duration: 0.8 })} tabIndex={0} aria-labelledby="lab-title" data-lenis-prevent="">
           <svg viewBox="0 0 1040 440" className="min-w-[760px] w-full h-auto" role="img" aria-labelledby="lab-title lab-desc">
             <title id="lab-title">SOC home lab architecture</title>
             <desc id="lab-desc">

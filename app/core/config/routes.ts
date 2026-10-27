@@ -2,13 +2,14 @@
  * core/config/routes.ts — which page each section lives on.
  *
  * The site used to be one 44,000px page (26 sections, the blog starting
- * ~40 screens down). It is now three:
+ * ~40 screens down). It is now four:
  *
- *   /       the pitch: who, what, proof, experience, credentials, contact
- *   /blog   the writing: posts, the case library, ATT&CK coverage,
- *           detection rules, the triage challenge, videos
- *   /about  the depth: toolbox, daily drivers, home lab, path, process,
- *           practice profiles, contributions, proof gallery
+ *   /         the pitch: who, what, proof, experience, credentials, contact
+ *   /blog     the writing: posts, the case library, ATT&CK coverage,
+ *             detection rules, the triage challenge, videos
+ *   /about    the depth: toolbox, daily drivers, home lab, path, process,
+ *             practice profiles, contributions
+ *   /gallery  the proof gallery: certificates, events, moments
  *
  * Everything that links to a section (nav, command palette, g-shortcuts,
  * the stats bar, filter links) asks this file where the section is, so a
@@ -19,7 +20,7 @@
 
 import { normalizePublicHref } from "./shared";
 
-type SitePage = "/" | "/blog" | "/about";
+type SitePage = "/" | "/blog" | "/about" | "/gallery";
 
 /** Sections that are not on the home page, by element id */
 const SECTION_PAGE: Record<string, SitePage> = {
@@ -38,7 +39,7 @@ const SECTION_PAGE: Record<string, SitePage> = {
   now: "/about",
   process: "/about",
   contributions: "/about",
-  art: "/about",
+  art: "/gallery",
 };
 
 /** The page a section id lives on ("/" for everything on the home page) */
@@ -64,6 +65,16 @@ export function homeForwardScript(base: string): string {
   return `(function(){try{var m=${map},h=location.hash.slice(1),s=location.search,p=m[h]||(/^(case|tactic)-/.test(h)?"/blog":null);
 if(!p&&s){var q=new URLSearchParams(s),k=${params};for(var i=0;i<k.length;i++)if(q.has(k[i])){p="/blog";break}}
 if(p)location.replace(${JSON.stringify(base)}+p+s+location.hash);}catch(e){}})();`;
+}
+
+/**
+ * Inline script for the other pages: a link to a section that has since
+ * moved off this page (/about#art, from before the gallery got its own
+ * page) opens the page it lives on now.
+ */
+export function hashForwardScript(base: string, here: SitePage): string {
+  const map = JSON.stringify(SECTION_PAGE);
+  return `(function(){try{var p=${map}[location.hash.slice(1)];if(p&&p!==${JSON.stringify(here)})location.replace(${JSON.stringify(base)}+p+location.hash);}catch(e){}})();`;
 }
 
 /**

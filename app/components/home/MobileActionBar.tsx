@@ -58,6 +58,8 @@ export default function MobileActionBar() {
   return (
     <nav
       aria-label="Quick actions"
+      /* Hidden (slid off screen) = out of the tab order too */
+      inert={!shown}
       className={`md:hidden fixed inset-x-3 z-[80] flex border border-foreground/10 bg-background/85 backdrop-blur-xl shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.6)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
         shown ? "translate-y-0 opacity-100" : "translate-y-[150%] opacity-0 pointer-events-none"
       }`}

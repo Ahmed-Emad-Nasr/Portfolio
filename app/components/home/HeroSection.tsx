@@ -231,9 +231,9 @@ export default function HeroSection({
           </div>
 
           {/* Portrait */}
-          <div className="hero-image relative w-[13.75rem] sm:w-[16.25rem] lg:w-[20rem] aspect-square shrink-0 order-1 md:order-2 md:ml-auto">
+          <div className="hero-image relative max-w-[78vw] w-[13.75rem] sm:w-[16.25rem] lg:w-[20rem] aspect-square shrink-0 order-1 md:order-2 md:ml-auto">
             {/* Hinomaru  Red Sun */}
-            <div className="hinomaru-sun absolute inset-[-20%] flex items-center justify-center pointer-events-none">
+            <div className="hinomaru-sun absolute inset-[-20%] flex items-center justify-center pointer-events-none" aria-hidden="true">
               <div
                 className="w-[80%] h-[80%] rounded-full opacity-[0.07]"
                 style={{
@@ -280,10 +280,13 @@ export default function HeroSection({
               href={PORTFOLIO_DATA.profile.contact.youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="group/photo block"
+              /* The link is the circle itself (absolute inset-5): as a plain
+                 block around absolutely placed content it was 0px tall, so
+                 its keyboard focus ring could not be seen */
+              className="group/photo absolute inset-5 block rounded-full"
               aria-label="Watch the YouTube channel"
             >
-              <div className="absolute inset-5 rounded-full overflow-hidden border-2 border-foreground/10 group-hover/photo:border-primary/40 transition-colors duration-700 shadow-2xl shadow-primary/10">
+              <div className="absolute inset-0 rounded-full overflow-hidden border-2 border-foreground/10 group-hover/photo:border-primary/40 transition-colors duration-700 shadow-2xl shadow-primary/10">
                 {/* A plain <img> on purpose: with `images.unoptimized` (required
                     by the static export) next/image never writes a srcset, so
                     every phone downloaded the 2048px original (318 KB) for a

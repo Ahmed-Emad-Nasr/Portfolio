@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useRef } from "react";
+import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import { m as motion } from "framer-motion";
 import { Keyboard } from "lucide-react";
 
@@ -45,6 +46,8 @@ const GROUPS: { title: string; items: { keys: string[]; label: string }[] }[] = 
 
 export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap([dialogRef], true);
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -66,6 +69,7 @@ export default function ShortcutsHelp({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
       className="fixed inset-0 z-[300] flex items-start justify-center bg-background/70 px-4 pt-[14vh] backdrop-blur-sm"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Keyboard shortcuts"

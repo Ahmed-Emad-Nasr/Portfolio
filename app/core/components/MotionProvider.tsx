@@ -14,7 +14,7 @@
  * the import in motion-features.ts to domMax.
  */
 
-import { LazyMotion } from "framer-motion";
+import { LazyMotion, MotionConfig } from "framer-motion";
 import type { ReactNode } from "react";
 
 const loadFeatures = () => import("./motion-features").then((mod) => mod.default);
@@ -22,7 +22,10 @@ const loadFeatures = () => import("./motion-features").then((mod) => mod.default
 export default function MotionProvider({ children }: { children: ReactNode }) {
   return (
     <LazyMotion features={loadFeatures} strict>
-      {children}
+      {/* reducedMotion="user": with the OS "reduce motion" setting on, every
+          framer-motion animation skips its movement (transforms, layout) —
+          the default was to ignore the setting */}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </LazyMotion>
   );
 }

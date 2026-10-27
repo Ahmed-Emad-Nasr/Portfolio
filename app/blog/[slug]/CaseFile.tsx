@@ -193,7 +193,7 @@ function Chain({ chain }: { chain: NonNullable<CaseDetail["chain"]> }) {
             {String(i + 1).padStart(2, "0")}
           </span>
           <div
-            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 opacity-70 translate-x-2 transition-all duration-500 data-[on=true]:opacity-100 data-[on=true]:translate-x-0"
+            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 opacity-70 translate-x-2 transition-all duration-500 data-[on=true]:opacity-100 data-[on=true]:translate-x-0 motion-reduce:opacity-100 motion-reduce:translate-x-0 motion-reduce:transition-none"
             style={{ transitionDelay: `${i * step}s` }}
             data-on={inView}
           >
@@ -321,7 +321,7 @@ function Detection({ items }: { items: NonNullable<CaseDetail["detection"]> }) {
               {copied === `${k}` ? <Check size={12} /> : <Copy size={12} />} {copied === `${k}` ? "Copied" : d.lang}
             </button>
           </figcaption>
-          <pre className="overflow-x-auto p-4 text-[0.75rem] leading-relaxed text-white/85 font-mono">
+          <pre className="overflow-x-auto p-4 text-[0.75rem] leading-relaxed text-white/85 font-mono" tabIndex={0} aria-label={`${d.title} — code`} data-lenis-prevent="">
             {d.code.split("\n").map((line, i) => (
               <span key={i} className="block">
                 <span className="inline-block w-8 select-none text-right pr-4 text-white/20" aria-hidden="true">{i + 1}</span>
