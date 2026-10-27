@@ -1364,3 +1364,11 @@
   }
 }
 
+/* One-page jumps (core/components/LazySection.tsx): for a frame, every
+   deferred section renders once, so `contain-intrinsic-size: auto` swaps
+   its 1200px guess for the real height before the page scrolls — a jump
+   to #art lands on #art, not wherever the guesses put it. */
+html[data-cv-measure] .cv-defer {
+  content-visibility: visible !important;
+}
+

@@ -135,7 +135,7 @@ export default function CaseArticle({
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Breadcrumb */}
         <nav className="mb-10 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.3em]" aria-label="Breadcrumb">
-          <Link href="/blog#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
+          <Link href="/#cases" className="group flex items-center gap-2 text-primary-ink hover:text-foreground transition-colors">
             <ArrowLeft size={12} className="transition-transform duration-300 group-hover:-translate-x-1" /> All cases
           </Link>
           <span className="text-foreground/20" aria-hidden="true">/</span>
@@ -337,7 +337,7 @@ export default function CaseArticle({
         </nav>
 
         <div className="mt-10 flex justify-center">
-          <Link href="/blog#cases" className={btnOutline}>
+          <Link href="/#cases" className={btnOutline}>
             <ArrowLeft size={13} /> Back to the library
           </Link>
         </div>

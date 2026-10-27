@@ -46,12 +46,26 @@
  *     page cache, so moving between pages already visited works offline too.
  *
  *   · Link prefetches are left to the network. Next.js prefetches every
- *     internal link that scrolls into view (the blog alone has 76 case
- *     links); caching those payloads filled the 60-page cache with pages
- *     nobody opened and pushed out the ones they had.
+ *     internal link that scrolls into view (the case library alone has 76
+ *     case links); caching those payloads filled the 60-page cache with
+ *     pages nobody opened and pushed out the ones they had.
  *
- *   · Offline, a page opened with a query string (/blog?q=wazuh) falls back
- *     to the same page without it before falling back to the home page.
+ *   · Offline, a page opened with a query string (/?q=wazuh#cases) falls
+ *     back to the same page without it before falling back to the home page.
+ *
+ * ═══ v4 — the one-page site ═══
+ *
+ *   · /blog, /about and /gallery became sections of the home page (the old
+ *     addresses only hop to their section). The version bump drops the old
+ *     multi-page HTML from the page cache, so an offline visitor is never
+ *     handed a stale copy of a page that no longer exists.
+ *
+ *   · The lazy sections (case library, ATT&CK, detections, triage, gallery,
+ *     contributions) are separate /_next/static/ chunks, fetched when the
+ *     reader nears them — cache-first like every other build file. A section
+ *     never opened online is simply not in the cache; offline it shows a
+ *     "could not load" note instead of breaking the page
+ *     (core/components/LazySection.tsx).
  *
  * ═══ Deliberate limits ═══
  *
@@ -63,7 +77,7 @@
  *     are still in the cache (MAX_ASSETS is generous).
  */
 
-const VERSION = "v3";
+const VERSION = "v4";
 const PAGE_CACHE = `3omda-pages-${VERSION}`;
 const ASSET_CACHE = `3omda-assets-${VERSION}`;
 const IMAGE_CACHE = `3omda-images-${VERSION}`;
@@ -90,7 +104,7 @@ self.addEventListener("activate", (event) => {
   const keep = new Set([PAGE_CACHE, ASSET_CACHE, IMAGE_CACHE]);
   event.waitUntil(
     (async () => {
-      /* Drops v2's unbounded runtime cache along with any other old one */
+      /* Drops every older cache (v2's unbounded one, v3's multi-page HTML) */
       const keys = await caches.keys();
       await Promise.all(keys.filter((key) => !keep.has(key)).map((key) => caches.delete(key)));
       if (self.registration.navigationPreload) {

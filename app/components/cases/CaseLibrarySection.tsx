@@ -22,6 +22,7 @@ import { formatDate, normalizePublicHref, WSA_COLLECTION, type CaseKind } from "
 import type { PdfResource, GalleryState } from "@/app/core/config/shared";
 import type { CaseMedia } from "@/app/core/config/library-data";
 import CaseFilters, { type Facet } from "./CaseFilters";
+import { scrollToHash } from "@/app/core/components/LazySection";
 import CaseCard from "./CaseCard";
 import CaseList from "./CaseList";
 import { CounterBadge, KanjiWatermark } from "@/app/components/shared/kit";
@@ -155,7 +156,7 @@ export default function CaseLibrarySection({
     filtersHydrated.current = true;
     /* Arriving with a filter in the URL (a tag link on a case page): bring the library into view */
     if (window.location.search && !window.location.hash.startsWith("#case-")) {
-      window.setTimeout(() => document.getElementById("cases")?.scrollIntoView({ block: "start" }), 400);
+      window.setTimeout(() => scrollToHash("#cases"), 400);
     }
 
     window.addEventListener("popstate", readFromUrl);
@@ -233,7 +234,9 @@ export default function CaseLibrarySection({
       if (cancelled) return;
       const el = document.getElementById(hash.slice(1));
       if (el) {
-        el.scrollIntoView({ block: "start", behavior: "auto" });
+        /* The site's one jump: under the fixed header, with the late-shift
+           correction (core/components/LazySection.tsx) */
+        scrollToHash(hash);
         return;
       }
       if (attempts++ < 20) hashTimer.current = window.setTimeout(tryScroll, 100);

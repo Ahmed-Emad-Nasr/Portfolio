@@ -104,6 +104,11 @@ function scrollToY(top: number, opts: ScrollOpts = {}): void {
   const target = Math.max(0, top);
 
   if (lenis) {
+    /* Lenis clamps every target to the page height it last measured (its
+       ResizeObserver is debounced). Lazy sections that have just mounted can
+       make the page thousands of pixels taller in the same moment, and the
+       jump would stop at the old bottom — so measure first. */
+    lenis.resize();
     lenis.scrollTo(target, {
       immediate,
       duration: opts.duration ?? SCROLL_DURATION,
@@ -123,11 +128,15 @@ function scrollToY(top: number, opts: ScrollOpts = {}): void {
   window.scrollTo({ top: target, behavior: immediate ? "auto" : "smooth" });
 }
 
+/** The scroll position that puts an element just under the fixed header. */
+export function scrollTargetOf(el: Element): number {
+  return Math.max(0, window.scrollY + el.getBoundingClientRect().top - getHeaderOffset());
+}
+
 /** Scroll the page to an element, accounting for the fixed header. */
 export function scrollToElement(el: Element | null, opts: ScrollOpts = {}): void {
   if (!el || typeof window === "undefined") return;
-  const top = window.scrollY + el.getBoundingClientRect().top - getHeaderOffset();
-  scrollToY(top, opts);
+  scrollToY(scrollTargetOf(el), opts);
 }
 
 /** Scroll to the top of the page. */

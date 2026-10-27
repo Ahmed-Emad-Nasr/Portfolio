@@ -65,23 +65,37 @@ server at runtime. Every decision below follows from that:
 
 ## 2. Pages and directory layout
 
-The site is three pages plus one page per post and per case
-(`core/config/routes.ts` is the single map of which section lives where):
+The site is **one page of sections**, plus one page per post and per case
+(documents that are pages by nature) and the CV / legal pages:
 
 | Route | What | Notes |
 |---|---|---|
-| `/` | The pitch: hero, stats, services, roles, selected work, repos, experience, teaching, credentials, platforms, blog teaser, FAQ, contact | ~22,000 px on desktop (was ~44,000 px as one page) |
-| `/blog` | Posts, Start here, the case library, videos, ATT&CK coverage, detection rules, triage challenge | old `/#cases`, `/?q=…#cases`, `/#case-…` links are forwarded here by the home page's `homeForwardScript` |
+| `/` | Everything: the pitch (hero → platforms), About (`#about`: toolbox, uses, lab, path, now, process, contributions), Blog (`#blog`: posts, Start here, case library, videos, ATT&CK, detections, triage), the gallery (`#art`), FAQ, contact | see "Loading" below |
+| `/blog`, `/about`, `/gallery` | Old addresses | `components/shared/MovedToSection.tsx` hops to `/#blog`, `/#about`, `/#art`, keeping `?q=…` filters and any anchor; `noindex`, canonical `/` |
 | `/blog/<slug>` | A written post (`content/posts/<slug>.mdx`) **or** a case (`core/config/cases.ts`) | one URL space; the build fails if a post slug reuses a case id |
 | `/blog/tag/<tag>` | Posts with one tag | |
-| `/about` | Toolbox, daily drivers, home lab, path, now, process, contributions | |
-| `/gallery` | The proof gallery (certificates, events, moments) with its lightbox — 18 pictures first, 9 more per click | old `/#art` and `/about#art` links are forwarded here (`homeForwardScript`, `hashForwardScript`) |
 | `/cv`, `/privacy`, `/terms`, `/collections/web-security-academy` | as before | |
 
-Anything that links to a section — the nav, the command palette, the `g`
-shortcuts, the stats bar, `CaseFilterLink` — asks `pageOfSection(id)` or
-`sectionAnchor(id)` where it is. Move a section by
-changing one line in `SECTION_PAGE`.
+Everything that links to a section — the nav, the command palette, the `g`
+shortcuts, the stats bar, `CaseFilterLink` — links to `#id` on the home
+page (`/#id` from a post or case page).
+
+### Loading the one page
+
+| Kind | Sections | How |
+|---|---|---|
+| Server-rendered | hero, stats, services, roles, experience, teaching, testimonials, platforms, the About sections, posts | in the HTML; off-screen ones carry `content-visibility: auto` (`cv-defer`) |
+| Server-rendered, own chunk | work, projects, credentials, FAQ, contact, mobile bar, palette hint | `dynamic(() => import(…))` in `components/home/LazySections.tsx` — a **Client** file, because `next/dynamic` called from a Server Component does not code-split |
+| Lazy (not in the HTML) | case library + videos, ATT&CK, detections, triage, gallery, contributions | `dynamic(…, { ssr: false })` inside `core/components/LazySection.tsx`: a placeholder that keeps the section id and roughly its height until the reader is ~1.5 screens away, then the chunk (code **and** data) downloads |
+| On demand | command palette, terminal, shortcuts sheet, lightboxes, cursor | loaded on first use |
+
+Jumps (`scrollToHash` in `LazySection.tsx`): any in-page `#link`, the
+palette, the `g` shortcuts, or arriving with a hash first mounts every lazy
+section, lets every deferred section render once so its real height
+replaces the 1200px guess, then jumps there instantly — no smooth glide — (after
+`lenis.resize()` — Lenis clamps to the page height it last measured).
+A lazy chunk that fails to download (offline) shows a "could not load"
+note in that one section instead of taking the page down.
 
 ```
 app/
@@ -89,29 +103,31 @@ app/
 ├── fonts.css             The Sensei-Dev font set (unicode-range slices), unchanged
 ├── fonts-arabic.css      IBM Plex Sans Arabic, Arabic block only
 ├── fonts/<family>/       The woff2 slices both files point at
-├── page.tsx              Home (Server Component)
-├── about/page.tsx        About
+├── page.tsx              The one page (Server Component)
+├── about/, gallery/      Old addresses → /#about, /#art
 ├── blog/
-│   ├── page.tsx          Blog index
+│   ├── page.tsx          Old address → /#blog
 │   ├── [slug]/           A post (PostArticle) or a case (CaseArticle)
 │   └── tag/[tag]/        Tag pages
 ├── cv/, privacy/, terms/, collections/   Other pages
 ├── feed.xml/, sitemap.ts, robots.ts, manifest.ts, llms.txt/   Generated at build
 │
 ├── components/           Sections, one folder per area
-│   ├── home/             Hero (LCP image), stats, mascot, mobile action bar
+│   ├── home/             Hero (LCP image), stats, mascot, mobile action bar,
+│   │                     AreaIntro, LazySections (every dynamic import)
 │   ├── header/           SiteNav (desktop bar + mobile menu), ContactFooter
 │   ├── services/         Services, roles, work, repos, stack, uses, lab, process, FAQ
 │   ├── experience/       Timeline, teaching, credentials, platforms, milestones, now
-│   ├── cases/            Case library, ATT&CK, detections, triage, blog teaser
+│   ├── cases/            Case library, ATT&CK, detections, triage (+ lazy Blocks)
 │   ├── blog/             PostCard, PostArticle, PostToc, CodeBlock, MDX components
 │   ├── art-gallery/      Proof gallery + lightbox
-│   └── shared/kit.tsx    Shared classes and PageShell for non-home pages
+│   └── shared/           kit.tsx (classes, PageShell for non-home pages),
+│                         MovedToSection (old addresses)
 │
 └── core/
     ├── components/       Motion, reveal text, section header/divider, palette,
     │                     terminal, shortcuts, FadeIn, theme
-    ├── config/           All content as typed data (see §4), routes.ts
+    ├── config/           All content as typed data (see §4)
     ├── content/          posts.ts (reads content/posts), render-mdx.tsx (MDX + Shiki)
     ├── api/              Build-time fetches (GitHub, TryHackMe) with fallbacks
     ├── icons/            Inline SVG path data
@@ -607,7 +623,7 @@ documents the front matter and every component, and is itself a draft.
   blocks stay LTR, headings switch from Dela Gothic (no Arabic glyphs) to
   IBM Plex Sans Arabic.
 - **Everywhere else:** posts are in the RSS feed, the sitemap, `llms.txt`,
-  the blog page's `Blog` JSON-LD, and each post page has `BlogPosting` +
+  the home page's `Blog` JSON-LD (`/#blog`), and each post page has `BlogPosting` +
   breadcrumb JSON-LD.
 - **Motion:** the post card title morphs into the post headline (React
   `<ViewTransition name share="morph">`); case cards do the same into the

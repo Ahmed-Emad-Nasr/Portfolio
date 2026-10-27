@@ -33,7 +33,7 @@ import {
 import { Github, Linkedin } from "@/app/core/icons/BrandIcons";
 import { PORTFOLIO_DATA } from "@/app/core/config/portfolio-data";
 import { normalizePublicHref } from "@/app/core/config/shared";
-import { pageOfSection } from "@/app/core/config/routes";
+import { scrollToHash } from "@/app/core/components/LazySection";
 import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import { useThemeFx } from "@/app/core/theme/ThemeFxProvider";
 import { FX_DURATIONS, getFxDuration, setFxDuration } from "@/app/core/theme/fx";
@@ -118,18 +118,17 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
     return () => window.removeEventListener("sensei-fx-duration", onFx);
   }, []);
 
-  /* A section lives on one of three pages (core/config/routes.ts): scroll
-     to it when it is on this page, otherwise open its page at the anchor. */
+  /* Every section is on the home page: scroll to it there (lazy sections
+     are mounted first), or open the home page at the anchor. */
   const go = useCallback(
     (hash: string) => {
       setOpen(false);
-      const page = pageOfSection(hash.slice(1));
-      if (pathname !== page) {
-        router.push(`${page}${hash}`);
+      if (pathname !== "/") {
+        router.push(`/${hash}`);
         return;
       }
       requestAnimationFrame(() => {
-        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
+        scrollToHash(hash);
       });
     },
     [pathname, router]
@@ -164,9 +163,8 @@ export default function CommandPalette({ initialOpen = true }: { initialOpen?: b
       { id: "triage", group: "Go to", label: "Triage challenge", icon: Crosshair, run: () => go("#triage") },
       { id: "wsa", group: "Pages", label: "Web Security Academy track", icon: FolderSearch, run: () => visit("/collections/web-security-academy") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
-      { id: "blog-page", group: "Pages", label: "Blog — posts, cases, videos", icon: FileText, run: () => visit("/blog") },
-      { id: "about-page", group: "Pages", label: "About — toolbox, lab, path", icon: FileText, run: () => visit("/about") },
-      { id: "gallery-page", group: "Pages", label: "Gallery — certificates & moments", icon: Palette, run: () => visit("/gallery") },
+      { id: "blog-area", group: "Go to", label: "Blog — posts, cases, videos", icon: FileText, run: () => go("#blog") },
+      { id: "about-area", group: "Go to", label: "About — toolbox, lab, path", icon: FileText, run: () => go("#about") },
       { id: "posts", group: "Go to", label: "Blog posts", icon: FileText, run: () => go("#posts") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
       { id: "stack", group: "Go to", label: "Tools of the trade", icon: Code2, run: () => go("#stack") },

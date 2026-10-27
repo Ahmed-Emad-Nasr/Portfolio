@@ -7,6 +7,7 @@ import { useFocusTrap } from "@/app/core/utils/use-focus-trap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/app/core/components/ThemeToggle";
+import { LAZY_MOUNTED } from "@/app/core/components/LazySection";
 import {
   Menu,
   X,
@@ -21,20 +22,42 @@ import {
   Command,
 } from "lucide-react";
 
-/* The home page's sections (hash links — from another page they become
-   /#work …) plus the other top-level pages: the blog (case library,
-   write-ups, videos), the gallery and the about page (toolbox, lab, path). */
+/* The site is one page: every item is a section of it (hash links — from
+   a post or case page they become /#work …). */
 const navItems = [
   { name: "Home", href: "#home", icon: Home, katakana: "ホーム" },
   { name: "Services", href: "#services", icon: Briefcase, katakana: "役務" },
   { name: "Work", href: "#work", icon: Code2, katakana: "仕事" },
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
   { name: "Honors", href: "#certificates", icon: Award, katakana: "認定" },
-  { name: "Blog", href: "/blog", icon: BookOpen, katakana: "記録" },
-  { name: "Gallery", href: "/gallery", icon: Images, katakana: "写真" },
-  { name: "About", href: "/about", icon: UserRound, katakana: "人物" },
+  { name: "About", href: "#about", icon: UserRound, katakana: "人物" },
+  { name: "Blog", href: "#blog", icon: BookOpen, katakana: "記録" },
+  { name: "Gallery", href: "#art", icon: Images, katakana: "写真" },
   { name: "Contact", href: "#contact", icon: Mail, katakana: "連絡" },
 ];
+
+/* Where each item's part of the page ends: "About" stays lit through the
+   toolbox, lab and path sections, "Blog" through the case library … */
+const AREA_OF: Record<string, string> = {
+  roles: "#services",
+  projects: "#work",
+  teaching: "#experience",
+  testimonials: "#experience",
+  platforms: "#certificates",
+  stack: "#about",
+  uses: "#about",
+  lab: "#about",
+  path: "#about",
+  now: "#about",
+  process: "#about",
+  contributions: "#about",
+  posts: "#blog",
+  cases: "#blog",
+  attack: "#blog",
+  detections: "#blog",
+  triage: "#blog",
+  faq: "#contact",
+};
 
 function NavLink({
   href,
@@ -78,24 +101,37 @@ export default function SiteNav() {
 
   useEffect(() => {
     if (!onHome) {
-      setActive(navItems.find((i) => i.href !== "/" && i.href.startsWith("/") && pathname.startsWith(i.href))?.href ?? "");
+      /* A post or case page belongs to the blog */
+      setActive(pathname.startsWith("/blog") ? "#blog" : "");
       return;
     }
-    const ids = [...navItems.filter((i) => i.href.startsWith("#")).map((i) => i.href.slice(1)), "blog"];
+    const ids = [...navItems.map((i) => i.href.slice(1)), ...Object.keys(AREA_OF)];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          /* The home page's blog teaser lights up the "Blog" item */
-          if (e.isIntersecting) setActive(e.target.id === "blog" ? "/blog" : `#${e.target.id}`);
+          if (e.isIntersecting) setActive(AREA_OF[e.target.id] ?? `#${e.target.id}`);
         });
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
+    /* Lazy sections replace their placeholder when they load, so the
+       observed elements are looked up again whenever the page grows */
+    const observed = new Set<Element>();
+    const watch = () => {
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && !observed.has(el)) {
+          observed.add(el);
+          observer.observe(el);
+        }
+      });
+    };
+    watch();
+    window.addEventListener(LAZY_MOUNTED, watch);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener(LAZY_MOUNTED, watch);
+    };
   }, [mounted, onHome, pathname]);
 
   /* While the menu is open: freeze the page (Lenis included), close on

@@ -79,7 +79,7 @@ export default async function PostArticle({ post, neighbours }: { post: Post; ne
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* ─── Header ─── */}
         <header className="max-w-3xl">
-          <Link href="/blog#posts" className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-primary-ink hover:text-foreground transition-colors">
+          <Link href="/#posts" className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-primary-ink hover:text-foreground transition-colors">
             <Back size={14} className="transition-transform duration-300 group-hover:-translate-x-1 rtl:group-hover:translate-x-1" aria-hidden="true" />
             {t.back}
           </Link>

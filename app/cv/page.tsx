@@ -387,7 +387,7 @@ export default function CvPage() {
           <p className="mt-16 pt-8 border-t border-foreground/5 font-mono text-[0.625rem] uppercase tracking-[0.25em] leading-relaxed text-foreground/60 print:hidden">
             Generated from the same data as the{" "}
             <Link className="text-primary-ink underline underline-offset-4" href="/">portfolio</Link> and the{" "}
-            <Link className="text-primary-ink underline underline-offset-4" href="/blog#cases">case library</Link> — print it (Ctrl/Cmd + P) for a clean PDF.
+            <Link className="text-primary-ink underline underline-offset-4" href="/#cases">case library</Link> — print it (Ctrl/Cmd + P) for a clean PDF.
           </p>
         </div>
       </article>

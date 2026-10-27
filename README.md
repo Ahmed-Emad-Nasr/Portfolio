@@ -52,14 +52,13 @@ written twice.
 | Cases (the library) and their screenshots | `cases.ts` |
 | Case files — verdict, attack chain, timeline, IOCs, response, detection code, lessons (server-only, read at build time) | `case-details.ts` |
 | Case kinds (investigation / project / lab / note), collections, `defang()` | `shared.ts` |
-| ATT&CK mapping per case, sub-techniques resolved to parents (also feeds the coverage section on the blog page) | `attack.ts` |
+| ATT&CK mapping per case, sub-techniques resolved to parents (also feeds the coverage section) | `attack.ts` |
 | The Wazuh rule pack shown in the Detection Library | `detection-rules.ts` |
 | Testimonials (the section stays hidden while the list is empty) | `testimonials.ts` |
 | "Start here" reading path | `start-here.ts` |
 | YouTube videos and playlists | `youtube.ts` |
 | CV page (summary, projects, skills) | `cv.ts` |
 | Home page sections (services, process, FAQ, now, milestones …) | `portfolio-data.ts` |
-| Which page each section lives on | `routes.ts` |
 | Blog posts | `content/posts/*.mdx` (repo root) |
 | Privacy page facts | `legal.ts` |
 
@@ -68,24 +67,24 @@ uses. `npm run check:assets` lists any that are missing.
 
 ## Pages
 
-- `/` — the pitch, in the order a hiring manager reads it: hero, numbers,
-  services, roles I fit, selected work, repositories, experience, teaching,
-  testimonials (hidden until there are any), certifications, practice
-  platforms, the latest from the blog, FAQ, contact.
-- `/blog` — posts, "Start here", the case library (`#cases`, with kind
-  tabs, sort and a list view, all kept in the URL), the videos, the ATT&CK
-  coverage map (`#attack`, with a matrix view), the detection library
-  (`#detections`) and the triage challenge (`#triage`). Old links to
-  `/#cases`, `/?q=…#cases` or `/#case-…` are forwarded here.
+- `/` — **the whole site, one page of sections**:
+  - the pitch: hero, numbers, services, roles I fit, selected work,
+    repositories, experience, teaching, testimonials (hidden until there
+    are any), certifications, practice platforms;
+  - About (`#about`): the toolbox, daily drivers, home lab, the path, now,
+    how an engagement runs, contributions;
+  - Blog (`#blog`): posts, "Start here", the case library (`#cases`, with
+    kind tabs, sort and a list view, all kept in the URL), the videos, the
+    ATT&CK coverage map (`#attack`), the detection library (`#detections`)
+    and the triage challenge (`#triage`);
+  - the proof gallery (`#art`), FAQ, contact.
+- `/blog`, `/about`, `/gallery` — old addresses; they hop to their section
+  of the home page, keeping filters and the anchor.
 - `/blog/<slug>` — a written post (`content/posts/<slug>.mdx`) or a case.
   Cases with an entry in `case-details.ts` get the full case file: verdict
   bar, facts, attack chain, timeline, defanged IOCs (copy as CSV), response,
   detection code, lessons and the report inline.
 - `/blog/tag/<tag>` — posts with one tag.
-- `/about` — the toolbox, daily drivers, home lab, the path, now, how an
-  engagement runs and contributions.
-- `/gallery` — the proof gallery: certificates, events and moments, each
-  opening full size.
 - `/collections/web-security-academy` — the PortSwigger labs grouped by
   vulnerability class.
 - `/attack-navigator-layer.json` — the coverage as an ATT&CK Navigator layer.
@@ -94,8 +93,9 @@ uses. `npm run check:assets` lists any that are missing.
   library the first time a gallery is opened.
 - `/privacy`, `/terms`, 404.
 
-Which page a section lives on is decided in one place:
-`app/core/config/routes.ts`.
+How the one page loads — what is in the HTML, what is split into its own
+chunk, and what only downloads when the reader nears it — is described at
+the top of `app/page.tsx` and in `app/components/home/LazySections.tsx`.
 
 ## Writing a blog post
 

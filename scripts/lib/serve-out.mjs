@@ -60,7 +60,7 @@ export function serveOut(root = join(process.cwd(), "out")) {
 
 /** One page of each kind the site has, from the build itself */
 export function samplePages(root = join(process.cwd(), "out")) {
-  const pages = ["/", "/blog", "/about", "/gallery", "/cv", "/privacy", "/terms", "/collections/web-security-academy", "/this-page-does-not-exist"];
+  const pages = ["/", "/cv", "/privacy", "/terms", "/collections/web-security-academy", "/this-page-does-not-exist"];
   const blogDir = join(root, "blog");
   const html = (name) => existsSync(join(blogDir, `${name}.html`));
   /* A case with a full case file, one without, and a post if any is published */

@@ -105,11 +105,11 @@ const absoluteAsset = (href: string) => `${SITE_BASE_URL}/${href.replace(/^\/+/,
 export const libraryStructuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "@id": `${SITE_BASE_URL}/blog#cases`,
+  "@id": `${SITE_BASE_URL}/#cases`,
   name: "Ahmed Emad Nasr — Case Library: incident reports, DFIR, malware analysis, IAM, data & cloud security",
   description:
     "Information security cases with screenshots and documentation: SOC incident reports, DFIR investigations, malware analysis, detection engineering, IAM, data and cloud security, and web security labs.",
-  url: `${SITE_BASE_URL}/blog`,
+  url: `${SITE_BASE_URL}/#cases`,
   inLanguage: "en",
   author: { "@id": PERSON_ID },
   isPartOf: { "@id": `${SITE_BASE_URL}/#website` },

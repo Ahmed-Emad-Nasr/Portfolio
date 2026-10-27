@@ -50,7 +50,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
     <PageShell>
       <section className="relative px-6 md:px-20 pt-36 md:pt-44 pb-24">
         <div className="relative z-10 mx-auto max-w-7xl">
-          <Link href="/blog#posts" className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-primary-ink hover:text-foreground transition-colors">
+          <Link href="/#posts" className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.3em] text-primary-ink hover:text-foreground transition-colors">
             <ArrowLeft size={14} className="transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
             Blog
           </Link>

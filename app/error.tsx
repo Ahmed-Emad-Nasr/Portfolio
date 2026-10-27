@@ -65,7 +65,7 @@ export default function Error({
               <RotateCcw size={16} /> Try again
             </button>
             <Link href="/" className={ctaSecondary}>Portfolio</Link>
-            <Link href="/blog#cases" className={ctaSecondary}>Case library</Link>
+            <Link href="/#cases" className={ctaSecondary}>Case library</Link>
           </nav>
 
           {/* digest is the hash Next generates for the error. It's shown so that if someone
