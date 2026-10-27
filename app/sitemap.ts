@@ -8,9 +8,9 @@ import { GALLERY_IMAGE_COUNT, galleryImagePath } from "@/data/certifications";
 import { blogYoutubeVideos } from "@/data/youtube";
 import { PERSON_IMAGE, SITE_URL, youtubeEmbed, youtubeThumb } from "@/lib/seo";
 
-/* The home page: the portrait, the share image and the proof gallery */
+/* The home page: the portrait and share image */
 const galleryImages = Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1)));
-const homeImages = [PERSON_IMAGE, OG_IMAGE.url, ...galleryImages];
+const homeImages = [PERSON_IMAGE, OG_IMAGE.url];
 
 /* Google allows 2,048 characters of description; keep well under */
 const clip = (text: string, max = 1000) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
@@ -61,6 +61,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.95,
       videos: blogVideos,
+    },
+    {
+      url: absoluteUrl("/gallery"),
+      lastModified: latestCaseDate,
+      changeFrequency: "monthly",
+      priority: 0.85,
+      images: galleryImages,
     },
     {
       url: absoluteUrl("/cv"),

@@ -1,7 +1,6 @@
 /*
- * MovedToSection — what the old addresses /about and /gallery serve now that
- * they are home-page sections: an instant hop to the section (meta refresh
- * without JavaScript), so old shared links keep working.
+ * MovedToSection — compatibility page for old section addresses such as
+ * /about: an instant hop to the current home-page section.
  */
 
 import type { Metadata } from "next";

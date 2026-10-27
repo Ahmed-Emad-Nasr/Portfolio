@@ -4,10 +4,8 @@
  * (numbers from the case library live in live-copy.ts, server-only).
  */
 
-import type { Certificate, Experience, PortfolioData, WorkItem } from "@/data/types";
+import type { Experience, PortfolioData, WorkItem } from "@/data/types";
 import { knowledgeEducationItems } from "@/data/experience";
-import { certifications } from "@/data/certifications";
-import { achievements } from "@/data/achievements";
 import { languages, skillGroups } from "@/data/skills";
 import { GITHUB_USERNAME, projectBullets, staticProjectFallback } from "@/data/projects";
 import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryTitle } from "@/data/certifications";
@@ -245,31 +243,6 @@ const work: WorkItem[] = [
   },
 ];
 
-/* ── Credentials: certifications, then awards ──────────────────────────── */
-
-const certificates: Certificate[] = [
-  ...certifications.map((c) => ({
-    title: c.name,
-    mark: c.shortName ?? c.issuer,
-    issuer: c.issuer,
-    date: String(c.year),
-    kind: "certification" as const,
-    ...(c.credential ? { credential: c.credential } : {}),
-    /* The scan itself, from the gallery: the card shows it and opens it */
-    image: c.galleryIndex ? normalizePublicHref(galleryImagePath(c.galleryIndex)) : undefined,
-  })),
-  ...achievements
-    .filter((a) => a.cv !== false)
-    .map((a) => ({
-      title: a.title,
-      mark: a.kind === "rank" ? "Rank" : a.kind === "award" ? "Award" : "Community",
-      issuer: a.context,
-      date: a.year ? String(a.year) : "",
-      kind: "award" as const,
-      link: a.proofUrl,
-    })),
-];
-
 /* ── Stack: the skill groups, minus soft skills ────────────────────────── */
 
 const STACK_JP: Record<string, string> = {
@@ -463,7 +436,6 @@ export const PORTFOLIO_DATA: PortfolioData = {
       link: YOUTUBE_CHANNEL_URL,
     },
   ],
-  certificates,
   artGallery: Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
     src: normalizePublicHref(galleryImagePath(k + 1)),
     thumb: normalizePublicHref(galleryImagePath(k + 1)),

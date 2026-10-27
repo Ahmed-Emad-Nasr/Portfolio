@@ -63,9 +63,9 @@ ${certifications.map((cert) => `- ${cert.name} — ${cert.issuer}, ${cert.year}`
 
 ## Pages
 
-- [Home](${absoluteUrl("/")}): the portfolio — who I am, services, selected work, experience, credentials
+- [Home](${absoluteUrl("/")}): the portfolio — who I am, services, selected work and experience
 - [About](${absoluteUrl("/")}#about): toolbox, home lab, path, process, contributions (a section of the home page)
-- [Gallery](${absoluteUrl("/")}#art): certificates, events and moments (a section of the home page)
+- [Gallery](${absoluteUrl("/gallery")}): certificates, events and moments
 - [Blog](${absoluteUrl("/blog")}): the case library, ATT&CK coverage, detection rules, videos
 - [CV](${absoluteUrl("/cv")})
 

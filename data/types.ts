@@ -124,19 +124,6 @@ interface ProcessStep {
   description: string;
 }
 
-export interface Certificate {
-  title: string;
-  /** Short mark shown on the card's seal panel when there is no scan (eJPT, CCNA …) */
-  mark: string;
-  issuer: string;
-  date: string;
-  kind: "certification" | "award";
-  image?: string;
-  link?: string;
-  /** Exam certification or course completion, where known */
-  credential?: "exam" | "course";
-}
-
 interface ArtGalleryItem {
   src: string;
   thumb: string;
@@ -198,7 +185,6 @@ export interface PortfolioData {
   process: ProcessStep[];
   contributions: Contribution[];
   languages: Language[];
-  certificates: Certificate[];
   artGallery: ArtGalleryItem[];
   uses: UsesGroup[];
   milestones: Milestone[];

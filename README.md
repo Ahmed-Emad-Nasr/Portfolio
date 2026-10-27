@@ -1,128 +1,214 @@
-# Ahmed Emad Nasr — Portfolio
+<div align="center">
 
-Information security portfolio (GRC, SOC, IR/DFIR, malware analysis, IAM,
-data security) with a library of case reports. Live at
-<https://ahmed-emad-nasr.github.io/Portfolio/>.
+# AHMED EMAD NASR
 
-Design, motion and component structure: the Neo-Samurai theme from
-[Sensei-Dev](https://github.com/MostafaSensei106/Sensei-Dev) by Mostafa Mahmoud
-(GPL-3.0, the same licence as this repository). Content is my own.
+### Information Security Portfolio
 
-**Stack:** Next.js 16 (App Router, static export) · React 19 · TypeScript ·
-Tailwind CSS v4 · framer-motion · GSAP (hero entrance) · Lenis · next-themes ·
-lucide-react · yet-another-react-lightbox. Fonts via `next/font/google`.
+`GRC` · `SOC` · `IR/DFIR` · `Malware Analysis` · `IAM` · `Data Security`
 
-## Run it
+<a href="https://ahmed-emad-nasr.github.io/Portfolio/">
+  <img src="https://img.shields.io/badge/LIVE_PORTFOLIO-visit-cc0033?style=for-the-badge&logo=github&logoColor=white" alt="Visit the live portfolio">
+</a>
+<a href="https://github.com/Ahmed-Emad-Nasr">
+  <img src="https://img.shields.io/badge/GITHUB-Ahmed--Emad--Nasr-111111?style=for-the-badge&logo=github&logoColor=white" alt="GitHub profile">
+</a>
+<a href="mailto:ahmed.em.nasr@gmail.com">
+  <img src="https://img.shields.io/badge/CONTACT-email-00a6b2?style=for-the-badge&logo=gmail&logoColor=white" alt="Send an email">
+</a>
+
+<br>
+<br>
+
+> **FIELD NOTE:** A security-focused portfolio for turning risk registers,
+> alerts, and forensic evidence into clear decisions and actionable outcomes.
+
+</div>
+
+---
+
+## `01 // SYSTEM OVERVIEW`
+
+This repository contains my personal information security portfolio. It is
+designed as a case library rather than a static resume: each project connects
+the finding, evidence, analysis, response, and lessons learned.
+
+The portfolio covers:
+
+- Governance, risk, compliance, and ISO 27001 / PCI DSS / NIST CSF thinking
+- SOC alert triage, Wazuh, Splunk, detection engineering, and ATT&CK mapping
+- Incident response, digital forensics, malware analysis, and chain of custody
+- IAM, PAM, DLP, cloud security, data security, and security assessments
+- Practical web security labs, attack simulations, and technical write-ups
+
+**Live system:** <https://ahmed-emad-nasr.github.io/Portfolio/>
+
+---
+
+## `02 // VISUAL TELEMETRY`
+
+### Portfolio interface
+
+<p align="center">
+  <img src="./screenshots/home.png" alt="Portfolio home page" width="100%">
+</p>
+
+### Gallery loading sequence
+
+<p align="center">
+  <img src="./screenshots/art_gallery.png" alt="Gallery loading screen" width="100%">
+</p>
+
+### Operator signal feed
+
+<p align="center">
+  <img src="./gif/anime-frieren.gif" alt="Animated visual" width="240">
+  &nbsp;&nbsp;&nbsp;
+  <img src="./gif/giphy.gif" alt="Animated visual" width="240">
+</p>
+
+---
+
+## `03 // CAPABILITIES`
+
+| Domain        | Focus                                                           |
+| ------------- | --------------------------------------------------------------- |
+| `GOVERN`      | GRC, ISO 27001, PCI DSS, NIST CSF, risk and compliance          |
+| `DETECT`      | Wazuh, Splunk, ATT&CK, custom rules, alert triage               |
+| `RESPOND`     | NIST 800-61, Volatility, YARA, incident reporting               |
+| `INVESTIGATE` | DFIR, malware analysis, email analysis, timeline reconstruction |
+| `PROTECT`     | IAM, PAM, DLP, cloud security, data security                    |
+| `ASSESS`      | Web security testing, threat intelligence, attack simulation    |
+
+The site includes a searchable case library, evidence screenshots, detection
+rules, ATT&CK coverage, videos, a proof gallery, and a printable CV.
+
+---
+
+## `04 // STACK`
+
+```text
+Next.js 16       App Router + static export
+React 19         TypeScript
+Tailwind CSS v4  Framer Motion + GSAP
+Lenis            next-themes
+Lucide React     Yet Another React Lightbox
+```
+
+The application is exported as a static site and deployed to GitHub Pages.
+Non-critical sections use dynamic imports, lazy sections, and deferred global
+effects to keep the initial route focused on the critical content.
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for route boundaries, loading rules,
+code splitting, and asset ownership.
+
+---
+
+## `05 // QUICK START`
 
 ```bash
+git clone https://github.com/Ahmed-Emad-Nasr/Portfolio.git
+cd Portfolio
 npm install
-npm run dev        # http://localhost:3000
-npm run build      # static site in out/ (needs network: fonts come from Google at build time)
+npm run dev
 ```
 
-Deploys to GitHub Pages from `master` (`.github/workflows/nextjs.yml`).
+Open <http://localhost:3000>.
 
-## Project layout
-
-```
-app/          routes only (pages, sitemap, feed, JSON routes), globals.css, fonts
-components/
-  layout/     on every page: nav, footer, theme, cursor, palette, terminal, shortcuts
-  ui/         small shared pieces: FadeIn, SectionHeader, PageLink, Lightbox, kit.tsx
-  home/       the home page's sections (+ dynamic.tsx: what is split / lazy)
-  blog/       the blog page and case pages (+ dynamic.tsx)
-data/         all the content, as TypeScript
-lib/          helpers: URLs, SEO, scrolling, case parsing, build-time API calls
-lib/perf/     when work happens: idle queue, lazy sections, jumps, pausing animations
-scripts/      checks and asset generators (npm run …)
-public/       images, PDFs, icons, sw.js
-```
-
-ARCHITECTURE.md explains how the pages load.
-
-## Editing content
-
-Everything the site shows is in `data/`; nothing is written twice.
-
-| What | File |
-|---|---|
-| Home page sections (services, process, FAQ, now, milestones …) | `portfolio-data.ts` |
-| Numbers quoted from the case library on the home page | `live-copy.ts` |
-| Experience and education | `experience.ts` |
-| Certifications | `certifications.ts` |
-| Awards and rankings | `achievements.ts` |
-| Skills and languages | `skills.ts` |
-| Projects | `projects.ts` |
-| Cases and their screenshots | `cases.ts` |
-| Case files (verdict, chain, timeline, IOCs, response, detections) | `case-details.ts` |
-| ATT&CK mapping per case | `attack.ts` |
-| Wazuh rule pack (Detection Library) | `detection-rules.ts` |
-| "Start here" reports | `start-here.ts` |
-| YouTube videos and playlists | `youtube.ts` |
-| Training platforms | `platforms.ts` |
-| Teaching section | `teaching.ts` |
-| CV page | `cv.ts` |
-| Privacy / terms facts | `legal.ts` |
-
-Images, PDFs and screenshots go in `public/Assets/` at the paths the data
-uses (`npm run check:assets` lists anything missing).
-
-**Adding a case:** add it to `cases.ts` (the `id` becomes `/blog/<id>`, so
-lowercase letters, digits and hyphens), its screenshots to
-`caseScreenshotsByEvidenceId` in the same file, optionally a case file in
-`case-details.ts` and an ATT&CK mapping in `attack.ts`, then run
-`npm run thumbs` and `npm run og:cases`.
-
-## Pages
-
-- `/` — the portfolio: hero, services, roles, work, repositories,
-  experience, teaching, certifications, platforms, About (`#about`), a door
-  to the blog, the proof gallery (`#art`), FAQ, contact.
-- `/blog` — the case library (`#cases`, filters kept in the URL), videos,
-  ATT&CK coverage (`#attack`), detection rules (`#detections`), triage
-  challenge (`#triage`). Old `/#cases…` links are forwarded here.
-- `/blog/<case-id>` — one page per case.
-- `/collections/web-security-academy` — the PortSwigger labs as a track.
-- `/cv` — the CV as HTML (prints as a one-column PDF).
-- `/privacy`, `/terms`, 404; `/about` and `/gallery` hop to their section.
-- Files: `/feed.xml`, `/sitemap.xml`, `/llms.txt`, `/.well-known/security.txt`,
-  `/attack-navigator-layer.json`.
-
-Hidden extras: `Ctrl/⌘ K` command palette, `?` keyboard shortcuts, and type
-`3omda` anywhere for the terminal.
-
-## Configuration (build time, optional)
-
-Copy `.env.example` to `.env.local`, or set them in the workflow:
-
-- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` or `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` —
-  cookieless analytics; the privacy page and the CSP follow automatically.
-- `NEXT_PUBLIC_WEB3FORMS_KEY` — the contact form sends through Web3Forms;
-  without it the form opens the visitor's mail app.
-
-## Scripts
+### Production checks
 
 ```bash
-npm run verify          # lint, types, data, assets, build, links, a11y, layout
-npm run prepare:assets  # pdf:clean, thumbs, hero:sizes, icons, og:cases
+npm run lint
+npm run type-check
+npm run check:data
+npm run check:assets
+npm run build
+npm run check:links
+npm run check:a11y
 ```
 
-| Script | Does |
-|---|---|
-| `check:data` | every case id referenced in the data exists; ATT&CK and YouTube ids are valid |
-| `check:assets` | every `Assets/` path in the data exists in `public/` (exact case) |
-| `check:links` | after a build: every internal link in `out/` resolves |
-| `check:a11y` | axe-core (WCAG 2.2 AA) on every kind of page, phone and desktop, both themes |
-| `check:layout` | no overflow or clipped text from a 280px fold to 5K, and at 200% text |
-| `thumbs` / `hero:sizes` | image variants (sharp) |
-| `og:cases` | a 1200×630 share card per case (Playwright) |
-| `pdf:clean` | report PDF metadata and image recompression (Python, `requirements.txt`) |
-| `icons` | `components/ui/icon-data.ts` from FontAwesome |
+The complete verification command is:
 
-New Japanese text renders straight away; to keep it light re-run
-`scripts/subset-yuji-site.py` (and `scripts/subset-fonts.py` before
-regenerating share cards). The app icons come from `scripts/og/app-icon.html`.
+```bash
+npm run verify
+```
 
-## Licence
+The build output is written to `out/`. Deployment runs from `master` through
+`.github/workflows/nextjs.yml`.
 
-GPL-3.0 — see `LICENSE`. Fonts are under the SIL Open Font License 1.1.
+---
+
+## `06 // PROJECT MAP`
+
+```text
+app/          routes, metadata, feeds, sitemap, JSON endpoints
+components/
+  layout/     navigation, theme, terminal, shortcuts, global effects
+  ui/         shared UI primitives and page shell
+  home/       home sections and dynamic imports
+  blog/       case library, filters, and case pages
+  gallery/    proof gallery and lightbox
+data/         portfolio content as typed TypeScript
+lib/          routes, SEO, scrolling, parsing, and performance helpers
+scripts/      audits, asset generation, and build checks
+public/       images, reports, icons, and service worker
+screenshots/  README visual previews
+gif/          README animated visuals
+```
+
+### Content workflow
+
+Site content lives in `data/`; it is not duplicated across page components.
+To add a case:
+
+1. Add the case record to [`data/cases.ts`](./data/cases.ts).
+2. Add evidence screenshots to the matching asset directory.
+3. Add optional case details and ATT&CK mappings.
+4. Run `npm run thumbs` and `npm run og:cases`.
+5. Run `npm run check:data` and `npm run check:assets`.
+
+---
+
+## `07 // ROUTES`
+
+- `/` — portfolio home, services, experience, projects, and contact
+- `/blog` — case library, videos, ATT&CK coverage, detections, and triage
+- `/blog/<case-id>` — detailed case report
+- `/gallery` — certificates, events, classroom, and security journey
+- `/collections/web-security-academy` — PortSwigger learning track
+- `/cv` — printable HTML CV
+- `/privacy` and `/terms` — legal pages
+- `/feed.xml`, `/sitemap.xml`, `/llms.txt` — machine-readable resources
+
+Hidden operator tools include `Ctrl/⌘ K` for the command palette, `?` for
+keyboard shortcuts, and the `3omda` terminal easter egg.
+
+---
+
+## `08 // CONFIGURATION`
+
+Copy `.env.example` to `.env.local` when local configuration is needed:
+
+- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` or `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` for
+  cookieless analytics
+- `NEXT_PUBLIC_WEB3FORMS_KEY` for the contact form
+
+Without a Web3Forms key, the contact form opens the visitor's mail app.
+
+---
+
+## `09 // ATTRIBUTION`
+
+The Neo-Samurai design language and component structure are based on
+[Sensei-Dev](https://github.com/MostafaSensei106/Sensei-Dev) by Mostafa
+Mahmoud, licensed under GPL-3.0. Portfolio content is original.
+
+## `10 // LICENSE`
+
+This repository is licensed under [GPL-3.0](./LICENSE). Fonts are provided under
+the SIL Open Font License 1.1.
+
+<div align="center">
+
+`SECURITY IS A PROCESS. EVIDENCE MAKES IT REPEATABLE.`
+
+</div>

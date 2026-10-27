@@ -15,19 +15,16 @@ import "./globals.css";
 
 import { knowledgeEducationItems } from "@/data/experience";
 import { certificationsJsonLd } from "@/data/certifications";
-import { achievements } from "@/data/achievements";
 import { skillGroups } from "@/data/skills";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ThemeFxProvider } from "@/components/layout/ThemeFxProvider";
-import { SpotlightHost } from "@/components/ui/Motion";
 import PaletteMount from "@/components/layout/PaletteMount";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import CursorMount from "@/components/layout/CursorMount";
-import AppLoader from "@/components/layout/AppLoader";
 import MotionProvider from "@/components/layout/MotionProvider";
 import { CONTENT_SECURITY_POLICY } from "@/lib/security";
 import KeyboardShortcuts from "@/components/layout/KeyboardShortcuts";
-import OffscreenAnimations from "@/lib/perf/OffscreenAnimations";
+import DeferredGlobalEffects from "@/components/layout/DeferredGlobalEffects";
 import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
 import Analytics from "@/components/layout/Analytics";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/lib/shared";
@@ -172,7 +169,6 @@ const STRUCTURED_DATA_JSON = jsonLd({
         { "@type": "Language", name: "English", alternateName: "en" },
       ],
       hasCredential: certificationsJsonLd(PERSON_ID),
-      award: achievements.map((item) => `${item.title} — ${item.context}`),
       description: "Information security officer working across governance, risk and compliance, security operations, incident response and DFIR, malware analysis, identity and access management, and data security.",
       /* Where he works and studied, as organisations rather than strings — the
          current roles are the ones without an endDate. */
@@ -254,11 +250,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               type="application/ld+json"
               dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_JSON }}
             />
-            <AppLoader />
-            <SpotlightHost />
             <PaletteMount />
             <KeyboardShortcuts />
-            <OffscreenAnimations />
+            <DeferredGlobalEffects />
             <SmoothScroll>
               <CursorMount />
               {children}

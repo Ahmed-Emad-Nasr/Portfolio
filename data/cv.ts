@@ -1,7 +1,6 @@
 /*
  * What only the /cv page needs: the PDF's condensed projects and skills.
- * Experience, certifications and awards are read from their own files
- * (entries with `cv: false` are on the site but not on the CV).
+ * Experience and certifications are read from their own files.
  */
 
 import { investigationReportCount, publishedCaseCount } from "@/data/cases";

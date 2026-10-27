@@ -1,9 +1,10 @@
 /*
  * lib/routes.ts — which page each section lives on.
  *
- *   /       the portfolio: pitch, about, gallery, FAQ, contact
+ *   /       the portfolio: pitch, about, FAQ, contact
  *   /blog   the evidence: start here, the case
  *           library, videos, ATT&CK coverage, detection rules, triage
+ *   /gallery the visual proof archive
  *
  * Everything that links to a section by id (nav, command palette,
  * g-shortcuts, the stats bar, filter links) asks this file where it is.
@@ -12,7 +13,7 @@
  * homeForwardScript() before the home page paints.
  */
 
-type SitePage = "/" | "/blog";
+type SitePage = "/" | "/blog" | "/gallery";
 
 /** Section ids that live on /blog (plus every #case-… and #tactic-… anchor) */
 const BLOG_IDS = new Set(["start-here", "cases", "videos", "youtube", "attack", "detections", "triage"]);
@@ -23,6 +24,7 @@ export const LIBRARY_PARAMS = ["q", "cat", "tools", "kind", "sort", "view"] as c
 
 /** The page a section id lives on */
 export function pageOf(id: string): SitePage {
+  if (id === "art") return "/gallery";
   return BLOG_IDS.has(id) || BLOG_PREFIX.test(id) ? "/blog" : "/";
 }
 
@@ -37,6 +39,7 @@ export function homeForwardScript(base: string): string {
   const ids = JSON.stringify([...BLOG_IDS]);
   const params = JSON.stringify(LIBRARY_PARAMS);
   return `(function(){try{var h=location.hash.slice(1),s=location.search,b=${ids}.indexOf(h)>-1||/^(case|tactic)-/.test(h);
+if(h==="art"){location.replace(${JSON.stringify(base)}+"/gallery"+s);return}
 if(!b&&s){var q=new URLSearchParams(s),k=${params};for(var i=0;i<k.length;i++)if(q.has(k[i])){b=true;break}}
 if(b)location.replace(${JSON.stringify(base)}+"/blog"+s+location.hash);}catch(e){}})();`;
 }

@@ -14,7 +14,6 @@ import {
   Home,
   Briefcase,
   Code2,
-  Award,
   BookOpen,
   Images,
   UserRound,
@@ -29,10 +28,9 @@ const navItems = [
   { name: "Services", href: "#services", icon: Briefcase, katakana: "役務" },
   { name: "Work", href: "#work", icon: Code2, katakana: "仕事" },
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
-  { name: "Honors", href: "#certificates", icon: Award, katakana: "認定" },
   { name: "About", href: "#about", icon: UserRound, katakana: "人物" },
   { name: "Blog", href: "/blog", icon: BookOpen, katakana: "記録" },
-  { name: "Gallery", href: "#art", icon: Images, katakana: "写真" },
+  { name: "Gallery", href: "/gallery", icon: Images, katakana: "写真" },
   { name: "Contact", href: "#contact", icon: Mail, katakana: "連絡" },
 ];
 
@@ -42,7 +40,7 @@ const AREA_OF: Record<string, string> = {
   roles: "#services",
   projects: "#work",
   teaching: "#experience",
-  platforms: "#certificates",
+  platforms: "#platforms",
   stack: "#about",
   uses: "#about",
   lab: "#about",
@@ -99,8 +97,8 @@ export default function SiteNav() {
 
   useEffect(() => {
     if (!onHome) {
-      /* The blog and every case page light "Blog" */
-      setActive(pathname.startsWith("/blog") ? "/blog" : "");
+      /* Blog and gallery pages each light their own top-level destination. */
+      setActive(pathname.startsWith("/blog") ? "/blog" : pathname.startsWith("/gallery") ? "/gallery" : "");
       return;
     }
     const ids = [...navItems.filter((i) => i.href.startsWith("#")).map((i) => i.href.slice(1)), ...Object.keys(AREA_OF)];

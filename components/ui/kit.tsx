@@ -10,6 +10,7 @@
 import type { ReactNode } from "react";
 import SiteNav from "@/components/layout/SiteNav";
 import { FooterBar } from "@/components/layout/ContactFooter";
+import AppLoader from "@/components/layout/AppLoader";
 
 /* Chips — WorkShowcase / ServicesSection */
 export const chipTertiary =
@@ -106,6 +107,7 @@ export function PageShell({ children, className = "" }: { children: ReactNode; c
   return (
     <>
       <SiteNav />
+      <AppLoader />
       <main id="main-content" className={`relative w-full bg-background text-foreground overflow-x-clip ${className}`}>
         {children}
       </main>

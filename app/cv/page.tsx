@@ -10,7 +10,6 @@ import PageLink from "@/components/ui/PageLink";
 import type { ReactNode } from "react";
 import { knowledgeEducationItems } from "@/data/experience";
 import { certifications } from "@/data/certifications";
-import { achievements } from "@/data/achievements";
 import { languages } from "@/data/skills";
 import { CV_PDF_HREF, normalizePublicHref } from "@/lib/shared";
 import {
@@ -299,47 +298,21 @@ export default function CvPage() {
             </div>
           </section>
 
-          {/* ── Certifications & awards ────────────────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 print:grid-cols-1">
-            <section className={sectionWrap}>
-              <SectionTitle japanese="認定">Certifications</SectionTitle>
-              <ul className="flex flex-col border-t border-foreground/10 print:border-0">
-                {certifications.filter(onCv).map((cert) => (
-                  <li key={cert.id} className="flex items-baseline justify-between gap-4 py-3 border-b border-foreground/10 print:py-[1pt] print:border-0">
-                    <span className="text-sm text-foreground print:text-[9pt] print:text-black">
-                      <span className="font-bold">{cert.name}</span>
-                      <span className="text-on-surface-variant print:text-black"> — {cert.issuer}</span>
-                    </span>
-                    <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0 print:text-black print:text-[8.5pt]">{cert.year}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className={sectionWrap}>
-              <SectionTitle japanese="実績">Awards &amp; Rankings</SectionTitle>
-              <ul className="flex flex-col border-t border-foreground/10 print:border-0">
-                {achievements.filter(onCv).map((item) => (
-                  <li key={item.id} className="flex items-baseline justify-between gap-4 py-3 border-b border-foreground/10 print:py-[1pt] print:border-0">
-                    <span className="text-sm text-foreground print:text-[9pt] print:text-black">
-                      <span className="font-bold">{item.title}</span>
-                      <span className="text-on-surface-variant print:text-black">
-                        {" — "}
-                        {item.proofUrl ? (
-                          <a className="text-primary-ink underline underline-offset-4" href={item.proofUrl} target="_blank" rel="noopener noreferrer">{item.context}</a>
-                        ) : (
-                          item.context
-                        )}
-                      </span>
-                    </span>
-                    {item.year ? (
-                      <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0 print:text-black print:text-[8.5pt]">{item.year}</span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </div>
+          {/* ── Certifications ─────────────────────────────────────── */}
+          <section className={sectionWrap}>
+            <SectionTitle japanese="認定">Certifications</SectionTitle>
+            <ul className="flex flex-col border-t border-foreground/10 print:border-0">
+              {certifications.filter(onCv).map((cert) => (
+                <li key={cert.id} className="flex items-baseline justify-between gap-4 py-3 border-b border-foreground/10 print:py-[1pt] print:border-0">
+                  <span className="text-sm text-foreground print:text-[9pt] print:text-black">
+                    <span className="font-bold">{cert.name}</span>
+                    <span className="text-on-surface-variant print:text-black"> — {cert.issuer}</span>
+                  </span>
+                  <span className="font-mono text-xs font-black text-accent tabular-nums shrink-0 print:text-black print:text-[8.5pt]">{cert.year}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
 
           {/* ── Skills ─────────────────────────────────────────────── */}
           <section className={sectionWrap}>

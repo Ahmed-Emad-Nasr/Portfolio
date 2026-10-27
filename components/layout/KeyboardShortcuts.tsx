@@ -27,7 +27,6 @@ const GO_TO_SECTION: Record<string, string> = {
   h: "home",
   w: "work",
   e: "experience",
-  c: "certificates",
   a: "attack",
   l: "teaching",
   p: "platforms",

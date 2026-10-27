@@ -64,7 +64,11 @@ export function ContributionGraph({ stats }: { stats: ContributionStats }) {
           contributions in the last year
         </span>
       </div>
-      <div className="overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+      <div
+        className="overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]"
+        tabIndex={0}
+        aria-label="GitHub contribution activity"
+      >
         <div className="relative">
           <div
             className="grid min-w-[560px] grid-flow-col grid-rows-7 gap-1"

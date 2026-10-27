@@ -1,12 +1,11 @@
 /*
- * The home page: the pitch (who, what, proof, experience, credentials),
- * about (toolbox, lab, path, process), the gallery, FAQ and contact, with a
+ * The home page: the pitch (who, what, proof, experience),
+ * about (toolbox, lab, path, process), FAQ and contact, with a
  * door to /blog. Section order follows the Sensei-Dev portfolio
  * (github.com/MostafaSensei106/Sensei-Dev, GPL-3.0).
  *
  * Loading: text sections are in the HTML; interactive ones are split
- * per section, the gallery and contributions mount lazily
- * (components/home/dynamic.tsx); off-screen sections use
+ * per section; off-screen sections use
  * content-visibility (DEFER) and off-screen loops pause (lib/perf/).
  */
 
@@ -15,38 +14,36 @@ import HeroSection from "@/components/home/HeroSection";
 import StatsBar from "@/components/home/StatsBar";
 import SiteNav from "@/components/layout/SiteNav";
 import SectionDivider from "@/components/ui/SectionDivider";
-import ServicesSection from "@/components/home/ServicesSection";
-import RolesFit from "@/components/home/RolesFit";
-import ExperienceTimeline from "@/components/home/ExperienceTimeline";
-import TeachingSection from "@/components/home/TeachingSection";
-import PlatformsSection from "@/components/home/PlatformsSection";
-import MilestonesSection from "@/components/home/MilestonesSection";
-import NowSection from "@/components/home/NowSection";
-import TechStackGrid from "@/components/home/TechStackGrid";
-import UsesSection from "@/components/home/UsesSection";
-import HomeLab from "@/components/home/HomeLab";
-import ProcessSection from "@/components/home/ProcessSection";
 import AreaIntro from "@/components/ui/AreaIntro";
 import BlogTeaser from "@/components/home/BlogTeaser";
 import PageEffects from "@/lib/perf/PageEffects";
+import AppLoader from "@/components/layout/AppLoader";
 import {
   WorkShowcase,
   ProjectsGrid,
-  CredentialsGallery,
+  ServicesSection,
+  RolesFit,
+  ExperienceTimeline,
+  TeachingSection,
+  PlatformsSection,
+  MilestonesSection,
+  NowSection,
+  TechStackGrid,
+  UsesSection,
+  HomeLab,
+  ProcessSection,
   FaqSection,
   ContactFooter,
   MobileActionBar,
   PaletteHint,
   LazyContributions,
-  LazyGallery,
 } from "@/components/home/dynamic";
 import { getGitHubRepos } from "@/lib/api/github";
 import { getTryHackMeStats } from "@/lib/api/tryhackme";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/data/platforms";
 import { LIVE_COPY } from "@/data/live-copy";
 import { knowledgeEducationItems } from "@/data/experience";
-import { GALLERY_IMAGE_COUNT, galleryImagePath } from "@/data/certifications";
-import { absoluteUrl, OG_IMAGE } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/site";
 import { KEYWORDS, PERSON_IMAGE, PERSON_REF, SITE_URL, WEBSITE_ID, jsonLd } from "@/lib/seo";
 import { normalizePublicHref } from "@/lib/shared";
 import { DEFER } from "@/components/ui/kit";
@@ -125,7 +122,6 @@ function structuredData() {
         hasPart: [
           { "@id": `${SITE_URL}#faq` },
           { "@id": `${SITE_URL}#experience-list` },
-          { "@id": `${SITE_URL}#art` },
         ],
       },
       {
@@ -181,16 +177,6 @@ function structuredData() {
           acceptedAnswer: { "@type": "Answer", text: item.a },
         })),
       },
-      {
-        "@type": "ImageGallery",
-        "@id": `${SITE_URL}#art`,
-        url: `${SITE_URL}#art`,
-        name: "Proof gallery — Ahmed Emad Nasr",
-        description: "Certificates, events, the classroom and moments from the path in information security.",
-        about: PERSON_REF,
-        author: PERSON_REF,
-        image: Array.from({ length: GALLERY_IMAGE_COUNT }, (_, i) => absoluteUrl(galleryImagePath(i + 1))),
-      },
     ],
   });
 }
@@ -207,12 +193,13 @@ export default async function Home() {
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-clip">
       <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
+      <AppLoader />
       <PageEffects />
       <SiteNav />
       <MobileActionBar />
       <PaletteHint />
 
-      {/* ═══ 01 · The pitch: who → what → proof → where → credentials ═══ */}
+      {/* ═══ 01 · The pitch: who → what → proof → where ═══ */}
       <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} evidenceLabel={LIVE_COPY.heroEvidence} />
       <StatsBar stats={LIVE_COPY.stats} />
       <ServicesSection />
@@ -232,11 +219,6 @@ export default async function Home() {
         <TeachingSection />
       </div>
 
-      <SectionDivider text="認定 • 実績 • 知識 • 技能" angle={-1.5} />
-
-      <div className={DEFER}>
-        <CredentialsGallery />
-      </div>
       <div className={DEFER}>
         <PlatformsSection featured={tryHackMePlatform(thm)} thm={thm} others={STATIC_PLATFORMS} />
       </div>
@@ -288,11 +270,7 @@ export default async function Home() {
         <BlogTeaser />
       </div>
 
-      {/* ═══ 04 · Gallery, questions, contact ═══ */}
-      {/* Divider kanji must exist in the site's Yuji cut (scripts/subset-yuji-site.py) */}
-      <SectionDivider text="記録 • 証明 • 実績" reverse={true} angle={-1.5} />
-
-      <LazyGallery />
+      {/* ═══ 04 · Questions and contact ═══ */}
       <div className={DEFER}>
         <FaqSection items={LIVE_COPY.faq} />
       </div>

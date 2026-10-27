@@ -7,7 +7,6 @@
 import type { FaqItem, NowItem, Stat } from "@/data/types";
 import { investigationReportCount, publishedCaseCount } from "@/data/cases";
 import { coveredTechniqueCount } from "@/data/attack";
-import { certifications } from "@/data/certifications";
 import { CV_SUMMARY } from "@/data/cv";
 import { normalizePublicHref } from "@/lib/shared";
 
@@ -35,8 +34,6 @@ export const LIVE_COPY: LiveCopy = {
     { q: "Are the cases real work?", a: `They are my own work on training platforms and in labs — ${investigationReportCount} incident and forensics reports (LetsDefend SOC alerts, DFIR and malware challenges, INE labs), plus capstones, rule packs and lab write-ups. Team projects are marked as team work, and every case links its original report or screenshots so you can check it.` },
     { q: "Which tools and frameworks do you use?", a: "ISO 27001, PCI DSS and NIST CSF for governance; Wazuh, ELK and Splunk for SIEM; Suricata and Zeek on the network; Volatility, Autopsy and YARA for forensics; Python and Bash to automate the rest." },
     { q: "Do you teach?", a: "Yes — instructor at AMIT Learning and NTI, with 300+ students taught. Before that, 35+ sessions with Google Developer Groups." },
-    /* Read from certifications.ts — the hand-written list had fallen behind it */
-    { q: "Which certifications do you hold?", a: `${certifications.map((c) => c.shortName ?? c.name).join(", ")}.` },
     { q: "How do I reach you?", a: "Email or LinkedIn. The form at the bottom of the page opens a pre-filled email — nothing is sent anywhere else." },
   ],
   stats: [
@@ -44,7 +41,6 @@ export const LIVE_COPY: LiveCopy = {
        counted 42 web labs and 9 notes too, and a recruiter who filtered the
        library found the gap. The hero still gives both numbers. */
     { target: investigationReportCount, suffix: "", label: "IR / DFIR reports", japanese: "記録", href: `${normalizePublicHref("/blog")}?kind=investigation#cases` },
-    { target: certifications.length, suffix: "", label: "Certifications", japanese: "認定", href: "#certificates" },
     { target: 300, suffix: "+", label: "Students taught", japanese: "指導", href: "#teaching" },
     { target: 60, suffix: "K+", label: "Channel views", japanese: "動画", href: `${normalizePublicHref("/blog")}#videos` },
   ],

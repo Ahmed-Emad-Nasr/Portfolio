@@ -279,10 +279,6 @@
   display: block;
 }
 
-.halftone {
-  background-image: radial-gradient(circle at 2px 2px, color-mix(in srgb, var(--foreground) 5%, transparent) 1px, transparent 0);
-  background-size: 8px 8px;
-}
 
 /* ─── Button sheen  one delight, used by every primary CTA ─── */
 
@@ -1232,16 +1228,13 @@
 /* Expected heights, measured on the built site (phone / tablet / desktop) */
 .lazy-h-contributions { --lazy-h: 1110px; }
 .lazy-h-triage        { --lazy-h: 1600px; }
-.lazy-h-art           { --lazy-h: 7400px; }
 @media (min-width: 48rem) {
   .lazy-h-contributions { --lazy-h: 870px; }
   .lazy-h-triage        { --lazy-h: 1400px; }
-  .lazy-h-art           { --lazy-h: 3000px; }
 }
 @media (min-width: 64rem) {
   .lazy-h-contributions { --lazy-h: 680px; }
   .lazy-h-triage        { --lazy-h: 1300px; }
-  .lazy-h-art           { --lazy-h: 3400px; }
 }
 
 /* Section dividers: the brush text drifts with the page, on the compositor
@@ -1285,4 +1278,3 @@
 [data-offscreen][data-loop-after]::after {
   animation-play-state: paused !important;
 }
-

@@ -1,7 +1,8 @@
 # Architecture
 
 A static Next.js 16 export (`output: "export"`) served by GitHub Pages under
-`/Portfolio`. Two long pages (`/` and `/blog`) plus one static page per case.
+`/Portfolio`. Three primary pages (`/`, `/blog` and `/gallery`) plus one
+static page per case.
 Everything is built at build time; there is no server.
 
 ## Folders
@@ -11,7 +12,7 @@ Everything is built at build time; there is no server.
 | `app/` | Routes only. Pages are Server Components that read `data/` and pass finished values down. |
 | `components/layout/` | Mounted on every page (from `app/layout.tsx` or `PageShell`). |
 | `components/ui/` | Small shared building blocks; `kit.tsx` holds the shared class strings. |
-| `components/home/`, `components/blog/` | One file per section. Each folder has a `dynamic.tsx`. |
+| `components/home/`, `components/blog/`, `components/gallery/` | One file per section. Home and blog have a `dynamic.tsx`; the gallery is a page-owned interactive surface. |
 | `data/` | Content only. `cases.ts`, `case-details.ts` and `attack.ts` are large — keep them out of client components (see below). |
 | `lib/` | Helpers with no UI: URLs (`site.ts`), JSON-LD (`seo.ts`), paths and case kinds (`shared.ts`), section → page routing (`routes.ts`), scrolling (`scroll.ts`). |
 | `lib/perf/` | Everything that decides *when* work happens. |
@@ -32,15 +33,18 @@ server. A client component pulls everything it imports into the browser, so:
 
 1. **In the HTML:** the hero and every text section (search engines and
    no-JS readers see them).
-2. **Split per section:** interactive sections are `next/dynamic` imports in
+2. **Split per section:** sections with client behavior, heavy visual
+   dependencies, or below-the-fold content are `next/dynamic` imports in
    `components/home/dynamic.tsx` and `components/blog/dynamic.tsx`.
+   The dynamic imports keep server-rendered HTML while separating the client
+   code into route chunks.
+   Global visual effects that are not needed for first paint are deferred by
+   `components/layout/DeferredGlobalEffects.tsx` until the browser is idle.
    (`next/dynamic` only code-splits when called from a Client Component,
    which is why those files exist.)
-3. **Lazy:** the gallery and contributions graph (home) and the triage quiz
-   (blog) are not in the HTML. `lib/perf/lazy.tsx` keeps a placeholder of the
-   right height (`.lazy-h-*` in `globals.css`), downloads the chunk in idle
-   time, and mounts it before the reader gets within three screens. A failed
-   chunk shows "could not load" for that section only.
+3. **Lazy:** the contributions graph (home) and the triage quiz (blog) are
+   not in the HTML. The gallery is isolated on `/gallery`, so its client chunk
+   and image grid are not loaded by the home page at all.
 4. **Deferred rendering:** sections below the fold carry `DEFER`
    (`content-visibility: auto`). `lib/perf/PageEffects.tsx` renders each one
    once in idle time so its real height is known before anyone scrolls there.

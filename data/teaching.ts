@@ -1,4 +1,4 @@
-/* The Teaching section. Its numbers are also stated in experience.ts / achievements.ts — keep them in step. */
+/* The Teaching section. Its numbers are also stated in experience.ts — keep them in step. */
 
 import { YOUTUBE_CHANNEL_URL } from "@/lib/shared";
 

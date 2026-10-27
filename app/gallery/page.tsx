@@ -1,8 +1,47 @@
-/* /gallery is now the #art section of the home page */
-import MovedToSection, { movedMetadata } from "@/components/ui/MovedToSection";
+import type { Metadata } from "next";
+import { PageShell } from "@/components/ui/kit";
+import ArtGallery from "@/components/gallery/ArtGallery";
+import { absoluteUrl, OG_IMAGE } from "@/lib/site";
+import { jsonLd, PERSON_REF, SITE_URL } from "@/lib/seo";
 
-export const metadata = movedMetadata;
+const DESCRIPTION = "Certificates, events, the classroom and moments from Ahmed Emad Nasr's information security journey.";
 
-export default function Page() {
-  return <MovedToSection section="art" />;
+export const metadata: Metadata = {
+  title: "Gallery — Proof, Certificates & Moments",
+  description: DESCRIPTION,
+  alternates: { canonical: "/gallery" },
+  openGraph: {
+    title: "Gallery — Ahmed Emad Nasr",
+    description: DESCRIPTION,
+    url: absoluteUrl("/gallery"),
+    type: "website",
+    siteName: "Ahmed Emad Nasr Portfolio",
+    locale: "en_US",
+    images: [OG_IMAGE],
+  },
+  twitter: { card: "summary_large_image", title: "Gallery — Ahmed Emad Nasr", description: DESCRIPTION, images: [OG_IMAGE.url] },
+};
+
+function structuredData() {
+  const galleryUrl = absoluteUrl("/gallery");
+  return jsonLd({
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `${galleryUrl}#gallery`,
+    url: galleryUrl,
+    name: "Proof gallery — Ahmed Emad Nasr",
+    description: DESCRIPTION,
+    about: PERSON_REF,
+    author: PERSON_REF,
+    isPartOf: { "@id": `${SITE_URL}#website` },
+  });
+}
+
+export default function GalleryPage() {
+  return (
+    <PageShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
+      <ArtGallery />
+    </PageShell>
+  );
 }

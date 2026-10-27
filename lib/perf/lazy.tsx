@@ -4,8 +4,9 @@
  * lib/perf/lazy.tsx — sections whose code AND data load only when needed,
  * and that never cost a dropped frame when they arrive.
  *
- * The heavy client-only sections (the gallery and contributions on the home
- * page, the triage challenge on the blog) are not in the server HTML. Their life:
+ * The heavy client-only sections (the contributions graph on the home page
+ * and the triage challenge on the blog) are not in the server HTML. The
+ * gallery has its own route and is therefore isolated from the home page.
  *
  *   1. Placeholder. An empty box that keeps the section's id (so #cases has
  *      a target) and its expected height per screen size (globals.css,
