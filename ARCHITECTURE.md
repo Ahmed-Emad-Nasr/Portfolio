@@ -42,9 +42,10 @@ server. A client component pulls everything it imports into the browser, so:
    `components/layout/DeferredGlobalEffects.tsx` until the browser is idle.
    (`next/dynamic` only code-splits when called from a Client Component,
    which is why those files exist.)
-3. **Lazy:** the contributions graph (home) and the triage quiz (blog) are
-   not in the HTML. The gallery is isolated on `/gallery`, so its client chunk
-   and image grid are not loaded by the home page at all.
+3. **Lazy:** the contributions graph (home), ATT&CK coverage, detection library
+   and triage quiz (blog) are mounted by `LazySection` when they approach the
+   viewport. The gallery is isolated on `/gallery`, so its client chunk and
+   image grid are not loaded by the home page at all.
 4. **Deferred rendering:** sections below the fold carry `DEFER`
    (`content-visibility: auto`). `lib/perf/PageEffects.tsx` renders each one
    once in idle time so its real height is known before anyone scrolls there.

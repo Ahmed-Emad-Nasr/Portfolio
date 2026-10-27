@@ -10,7 +10,7 @@ import { Rss } from "lucide-react";
 import { DEFER, PageShell } from "@/components/ui/kit";
 import AreaIntro from "@/components/ui/AreaIntro";
 import SectionDivider from "@/components/ui/SectionDivider";
-import { CaseLibrarySection, AttackCoverage, DetectionLibrary, LazyTriage } from "@/components/blog/dynamic";
+import { CaseLibrarySection, LazyAttackCoverage, LazyDetectionLibrary, LazyTriage } from "@/components/blog/dynamic";
 import PageEffects from "@/lib/perf/PageEffects";
 import { attackCoverage, libraryCounts, libraryStructuredData } from "@/lib/library-data";
 import { blogYoutubePlaylists, blogYoutubeVideos } from "@/data/youtube";
@@ -138,12 +138,8 @@ export default function BlogPage() {
       <SectionDivider text="戦術 • 技術 • 網羅 • 証拠" angle={-1.5} />
 
       {/* ─── The library on MITRE ATT&CK, the rule pack, one real alert ─── */}
-      <div className={DEFER}>
-        <AttackCoverage />
-      </div>
-      <div className={DEFER}>
-        <DetectionLibrary />
-      </div>
+      <LazyAttackCoverage />
+      <LazyDetectionLibrary />
       <LazyTriage />
     </PageShell>
   );

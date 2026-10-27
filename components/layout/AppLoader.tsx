@@ -9,7 +9,7 @@ const BOOT_WORDS = ["起動中", "武士道", "鍛錬", "技術調整", "出陣"
 /**
  * Minimal boot screen: monogram, cycling kanji, hairline progress.
  * Click anywhere to skip. Respects reduced-motion (short + static).
- * Sensei-Dev's loader, as is: 1.9 s fill, 0.2 s hold, 0.5 s slide, on
+ * Sensei-Dev's loader, as is: 1.8 s fill, 0.2 s hold, 0.5 s slide, on
  * every page load (it also covers the hero's GSAP set-up).
  */
 export default function AppLoader() {
@@ -21,7 +21,7 @@ export default function AppLoader() {
     let raf = 0;
     let doneTimer: NodeJS.Timeout | undefined;
     const start = performance.now();
-    const DURATION = reduced ? 600 : 1900;
+    const DURATION = reduced ? 600 : 1800;
 
     const tick = (now: number) => {
       const t = Math.min(1, Math.max(0, (now - start) / DURATION));

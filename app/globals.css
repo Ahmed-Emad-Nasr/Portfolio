@@ -1228,13 +1228,19 @@
 /* Expected heights, measured on the built site (phone / tablet / desktop) */
 .lazy-h-contributions { --lazy-h: 1110px; }
 .lazy-h-triage        { --lazy-h: 1600px; }
+.lazy-h-attack        { --lazy-h: 1800px; }
+.lazy-h-detection     { --lazy-h: 1500px; }
 @media (min-width: 48rem) {
   .lazy-h-contributions { --lazy-h: 870px; }
   .lazy-h-triage        { --lazy-h: 1400px; }
+  .lazy-h-attack        { --lazy-h: 1500px; }
+  .lazy-h-detection     { --lazy-h: 1200px; }
 }
 @media (min-width: 64rem) {
   .lazy-h-contributions { --lazy-h: 680px; }
   .lazy-h-triage        { --lazy-h: 1300px; }
+  .lazy-h-attack        { --lazy-h: 1200px; }
+  .lazy-h-detection     { --lazy-h: 1000px; }
 }
 
 /* Section dividers: the brush text drifts with the page, on the compositor

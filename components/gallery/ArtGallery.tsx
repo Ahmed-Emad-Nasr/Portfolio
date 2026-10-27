@@ -13,7 +13,7 @@ const Lightbox = dynamic(() => import("@/components/ui/Lightbox"), { ssr: false 
 
 /* A lazy section of the home page: six rows to start, three more per
    click — images below the fold load lazily either way */
-const FIRST = 18;
+const FIRST = 6;
 const PAGE = 9;
 
 export default function ArtGallery() {
@@ -117,6 +117,8 @@ export default function ArtGallery() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
                   loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
                   unoptimized={true}
                 />
 

@@ -73,6 +73,8 @@ function Shot({ shot, index, total, title, onOpen }: { shot: string; index: numb
         fill
         sizes="(max-width: 768px) 50vw, 25vw"
         loading="lazy"
+        decoding="async"
+        fetchPriority="low"
         onError={() => setThumbFailed(true)}
         className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
       />

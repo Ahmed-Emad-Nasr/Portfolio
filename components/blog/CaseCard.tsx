@@ -71,6 +71,8 @@ function CaseCard({
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               loading="lazy"
+              decoding="async"
+              fetchPriority="low"
               onError={() => setCoverFailed(true)}
               className="object-cover object-top grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
             />

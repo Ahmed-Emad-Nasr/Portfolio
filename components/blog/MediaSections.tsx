@@ -64,6 +64,8 @@ function Embed({
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
             loading="lazy"
+            decoding="async"
+            fetchPriority="low"
             unoptimized
             className="object-cover grayscale group-hover/play:grayscale-0 group-hover/play:scale-105 transition-all duration-1000"
           />
