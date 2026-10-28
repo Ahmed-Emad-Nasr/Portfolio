@@ -367,6 +367,14 @@
   letter-spacing: 0.35em;
 }
 
+.site-texture {
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--foreground) 5%, transparent) 1px, transparent 0),
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 2%, transparent), transparent 42%);
+  background-size: 36px 36px, 100% 100%;
+  opacity: 0.35;
+}
+
 /* ─── Mouse spotlight cards  radial highlight follows the cursor.
    TiltCard sets --mx/--my. Zero JS cost beyond the tilt handler. */
 .spotlight {
@@ -419,6 +427,30 @@
       transparent 70%);
 }
 
+.gallery-halftone {
+  background-image: radial-gradient(circle at 2px 2px, color-mix(in srgb, var(--primary) 28%, transparent) 1px, transparent 0);
+  background-size: 8px 8px;
+  mix-blend-mode: screen;
+}
+
+.ticker-track {
+  display: flex;
+  min-width: max-content;
+  animation: ticker-scroll 56s linear infinite;
+}
+
+.ticker-strip:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  to { transform: translateX(-50%); }
+}
+
+.chapter-slash {
+  margin: 2rem 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   button:not(:disabled),
   a[role="button"] {
@@ -427,6 +459,10 @@
 
   .spotlight::before {
     display: none;
+  }
+
+  .ticker-track {
+    animation: none;
   }
 }
 
@@ -1269,36 +1305,6 @@
   .lazy-h-triage        { --lazy-h: 1300px; }
   .lazy-h-attack        { --lazy-h: 1200px; }
   .lazy-h-detection     { --lazy-h: 1000px; }
-}
-
-/* Section dividers: the brush text drifts with the page, on the compositor
-   (SectionDivider.tsx; browsers without scroll timelines use framer-motion).
-   The timeline runs while the divider crosses the screen, bottom to top. */
-@supports (animation-timeline: view()) {
-  /* The banner clips its track (overflow: hidden makes it a scroll
-     container), so the timeline is named on the banner itself — its view of
-     the page — and the track inside follows it */
-  .divider-frame {
-    view-timeline-name: --divider;
-  }
-  .divider-drift {
-    animation: divider-drift linear both;
-    animation-timeline: --divider;
-  }
-  .divider-drift-reverse {
-    animation-name: divider-drift-reverse;
-  }
-}
-@keyframes divider-drift {
-  from { transform: translateX(0); }
-  to { transform: translateX(-25%); }
-}
-@keyframes divider-drift-reverse {
-  from { transform: translateX(-25%); }
-  to { transform: translateX(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .divider-drift { animation: none; }
 }
 
 /* Looping animations of a block that is off screen wait where they are.

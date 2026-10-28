@@ -11,6 +11,7 @@
 
 import { m, useAnimationControls } from "framer-motion";
 import { useRef, type ComponentProps } from "react";
+import { MOTION_EASE, MOTION_ENTER_DURATION, MOTION_STAGGER_STEP } from "@/lib/motion";
 
 type Tag = "div" | "li" | "ul" | "ol" | "dl" | "nav" | "header" | "figure" | "span" | "section" | "p" | "article" | "aside" | "footer" | "button" | "a" | "h1" | "h2" | "h3" | "h4";
 
@@ -29,7 +30,6 @@ type FadeInProps = Omit<ComponentProps<typeof m.div>, "initial" | "animate" | "w
   popoverTarget?: string;
 };
 
-const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 const travel = (v: number, k: number) => (v ? Math.sign(v) * Math.min(Math.abs(v) * k, 56) : 0);
 
@@ -66,9 +66,9 @@ export default function FadeIn({ as = "div", x = 0, y = 24, scale = 1, duration 
             opacity: 1,
             transform: "translate(0px, 0px) scale(1)",
             transition: {
-              duration: clamp(duration * 1.6, 0.95, 1.35) * tempo,
-              delay: (0.06 + Math.min(delay, 0.45) * 1.2 + Math.min(order, 7) * 0.11) * tempo,
-              ease: EASE_OUT_QUART,
+              duration: clamp(duration || MOTION_ENTER_DURATION, 0.7, 1.35) * tempo,
+              delay: (MOTION_STAGGER_STEP + Math.min(delay, 0.45) * 1.2 + Math.min(order, 7) * MOTION_STAGGER_STEP) * tempo,
+              ease: MOTION_EASE,
             },
           });
         })

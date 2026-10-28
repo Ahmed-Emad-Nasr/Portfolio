@@ -95,12 +95,7 @@ export default function ArtGallery() {
           {items.map((img, idx) => (
             <FadeIn y={0} scale={0.95} duration={0.8} delay={(idx % 6) * 0.08}
               key={idx}
-              /* Visible without JavaScript; the site's own entrance */
-              onClick={() => {
-                setIndex(idx);
-                setOpen(true);
-              }}
-              className="cursor-pointer break-inside-avoid"
+              className="break-inside-avoid"
             >
               <TiltCard
                 max={5}
@@ -111,6 +106,16 @@ export default function ArtGallery() {
                 <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
                 <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/60 transition-colors duration-500 z-20 pointer-events-none" />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIndex(idx);
+                    setOpen(true);
+                  }}
+                  aria-label={`Open ${img.title} in lightbox`}
+                  className="absolute inset-0 z-30 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-4px]"
+                />
 
                 {/* Image */}
                 <Image
@@ -124,6 +129,11 @@ export default function ArtGallery() {
                   decoding="async"
                   fetchPriority="low"
                   unoptimized={true}
+                />
+
+                <div
+                  className="gallery-halftone pointer-events-none absolute inset-0 z-[5] opacity-0 transition-[opacity,transform] duration-[900ms] ease-out group-hover:scale-[1.2] group-hover:opacity-100"
+                  aria-hidden="true"
                 />
 
                 {/* Hover overlay */}

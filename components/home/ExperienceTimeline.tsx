@@ -91,7 +91,7 @@ export default function ExperienceTimeline() {
                 {/* Japanese Role Tag */}
                 {item.japaneseRole && (
                   <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 bg-foreground/[0.03] border-l-2 border-primary text-[0.625rem] font-mono font-bold text-foreground/60 tracking-[0.15em] w-fit">
-                    <span className="text-primary-ink/60">JP</span>
+                    <span className="text-primary-ink">JP</span>
                     <span>{item.japaneseRole}</span>
                   </div>
                 )}

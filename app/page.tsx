@@ -13,7 +13,6 @@ import type { Metadata } from "next";
 import HeroSection from "@/components/home/HeroSection";
 import StatsBar from "@/components/home/StatsBar";
 import SiteNav from "@/components/layout/SiteNav";
-import SectionDivider from "@/components/ui/SectionDivider";
 import AreaIntro from "@/components/ui/AreaIntro";
 import BlogTeaser from "@/components/home/BlogTeaser";
 import PageEffects from "@/lib/perf/PageEffects";
@@ -48,6 +47,8 @@ import { KEYWORDS, PERSON_IMAGE, PERSON_REF, SITE_URL, WEBSITE_ID, jsonLd } from
 import { normalizePublicHref } from "@/lib/shared";
 import { DEFER } from "@/components/ui/kit";
 import { homeForwardScript } from "@/lib/routes";
+import SlashDivider from "@/components/ui/SlashDivider";
+import TickerStrip from "@/components/ui/TickerStrip";
 
 export const metadata: Metadata = {
   title: "Ahmed Emad Nasr | Information Security Officer | GRC, SOC, DFIR & IAM",
@@ -191,6 +192,7 @@ export default async function Home() {
 
   return (
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-clip">
+      <div className="site-texture fixed inset-0 pointer-events-none z-0" aria-hidden="true" />
       <script dangerouslySetInnerHTML={{ __html: FORWARD_SCRIPT }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
       <AppLoader />
@@ -205,7 +207,8 @@ export default async function Home() {
       <ServicesSection />
       <RolesFit />
 
-      <SectionDivider text="統治 • 防御 • 検知 • 対応 • 報告" reverse={true} angle={-1.5} />
+      <SlashDivider label="01 // Evidence" japanese="証拠" origin="left" />
+      <TickerStrip />
 
       <WorkShowcase />
       <ProjectsGrid repos={repos} />
@@ -224,7 +227,8 @@ export default async function Home() {
       </div>
 
       {/* ═══ 02 · About: toolbox, lab, path, now, process, contributions ═══ */}
-      <SectionDivider text="継続は力なり • 改善 • 実務 • 計測" reverse={true} angle={-1.5} />
+      <SlashDivider label="02 // Operating model" japanese="実務" origin="right" />
+      <TickerStrip reverse items={["継続", "改善", "実務", "計測", "BUILD THE RECORD"]} />
 
       <AreaIntro
         id="about"
@@ -265,7 +269,8 @@ export default async function Home() {
       </div>
 
       {/* ═══ 03 · The door to the blog ═══ */}
-      <SectionDivider text="事件 • 調査 • 報告 • 証拠" angle={-1.5} />
+      <SlashDivider label="03 // Field notes" japanese="記録" origin="left" />
+      <TickerStrip items={["事件", "調査", "報告", "証拠", "FIELD NOTES"]} />
       <div className={DEFER}>
         <BlogTeaser />
       </div>

@@ -4,7 +4,7 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 export default defineConfig([
   /* .next and out are build output — linting them slows lint down and reports
      false errors from generated code. */
-  { ignores: [".venv/**", ".next/**", "out/**", "node_modules/**"] },
+  { ignores: [".venv/**", ".next/**", "out/**", "node_modules/**", "Sensei-Dev/**"] },
   ...nextVitals,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],

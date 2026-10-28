@@ -44,12 +44,12 @@ export function FooterBar({ className = "" }: { className?: string }) {
         <span>
           Design{" "}
           <a
-            href="https://github.com/MostafaSensei106/Sensei-Dev"
+            href={`https://github.com/${PORTFOLIO_DATA.profile.contact.github}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-primary-ink transition-colors"
           >
-            Sensei-Dev
+            Ahmed Emad Nasr
           </a>
         </span>
         <span className="text-primary-ink">•</span>

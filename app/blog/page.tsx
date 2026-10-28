@@ -9,7 +9,8 @@ import type { Metadata } from "next";
 import { Rss } from "lucide-react";
 import { DEFER, PageShell } from "@/components/ui/kit";
 import AreaIntro from "@/components/ui/AreaIntro";
-import SectionDivider from "@/components/ui/SectionDivider";
+import SlashDivider from "@/components/ui/SlashDivider";
+import TickerStrip from "@/components/ui/TickerStrip";
 import { CaseLibrarySection, LazyAttackCoverage, LazyDetectionLibrary, LazyTriage } from "@/components/blog/dynamic";
 import PageEffects from "@/lib/perf/PageEffects";
 import { attackCoverage, libraryCounts, libraryStructuredData } from "@/lib/library-data";
@@ -135,7 +136,8 @@ export default function BlogPage() {
         <CaseLibrarySection />
       </div>
 
-      <SectionDivider text="戦術 • 技術 • 網羅 • 証拠" angle={-1.5} />
+      <SlashDivider label="01 // Detection" japanese="検知" origin="right" />
+      <TickerStrip items={["戦術", "技術", "網羅", "証拠", "READ THE RECORD"]} />
 
       {/* ─── The library on MITRE ATT&CK, the rule pack, one real alert ─── */}
       <LazyAttackCoverage />

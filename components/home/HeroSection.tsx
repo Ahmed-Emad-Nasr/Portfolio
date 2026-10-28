@@ -184,7 +184,7 @@ export default function HeroSection({
     >
       {/* ─── Speed Lines Background ─── */}
       <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
+        className="absolute inset-0 pointer-events-none overflow-hidden hidden md:block"
         aria-hidden="true"
       >
         {Array.from({ length: 8 }).map((_, i) => (
@@ -203,7 +203,7 @@ export default function HeroSection({
 
       {/* ─── Floating Particles (CSS-only) ─── */}
       <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
+        className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"
         aria-hidden="true"
       >
         {Array.from({ length: 12 }).map((_, i) => (
@@ -305,7 +305,7 @@ export default function HeroSection({
 
             {/* Orbit inscription  stack names circling the portrait */}
             <div
-              className="absolute -inset-3 animate-[spin_36s_linear_infinite] pointer-events-none"
+              className="absolute -inset-3 hidden sm:block animate-[spin_36s_linear_infinite] pointer-events-none"
               aria-hidden="true"
             >
               <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -330,7 +330,7 @@ export default function HeroSection({
             <div className="absolute bottom-2 right-2 w-7 h-7 border-r-2 border-b-2 border-foreground/20 pointer-events-none" />
 
             {/* HUD readout on the viewfinder: subject id, blinking REC */}
-            <div className="absolute -top-7 left-2 flex items-center gap-2 font-mono text-[0.5625rem] font-bold tracking-[0.3em] text-foreground/50 pointer-events-none" aria-hidden="true">
+            <div className="absolute -top-7 left-2 flex items-center gap-2 bg-background/80 px-2 py-1 font-mono text-[0.5625rem] font-bold tracking-[0.3em] text-foreground pointer-events-none" aria-hidden="true">
               <span className="hud-rec inline-block h-1.5 w-1.5 rounded-full bg-primary" />
               ID // 0x3omda
             </div>
@@ -393,7 +393,7 @@ export default function HeroSection({
         </div>
 
         {/* ─── Content: proof + field record ─── */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] gap-10 items-start w-full">
+        <div className="hero-secondary mt-20 md:mt-24 grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] gap-10 items-start w-full">
           <div>
             {/* Tech Spec Sheet */}
             <div className="mb-8 w-full border border-foreground/5 bg-foreground/[0.02] backdrop-blur-sm">
@@ -517,7 +517,7 @@ export default function HeroSection({
         role="img"
       >
         <div className="w-8 h-[1px] bg-primary/40" />
-        <p className="text-[0.625rem] text-foreground/15 font-mono font-bold uppercase tracking-[0.5em]">
+        <p className="text-[0.625rem] text-foreground/60 font-mono font-bold uppercase tracking-[0.5em]">
           継続は力なり · PERSEVERANCE IS POWER
         </p>
       </div>

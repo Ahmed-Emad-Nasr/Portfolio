@@ -8,8 +8,11 @@
 
 import dynamic from "next/dynamic";
 import LazySection, { preloadable } from "@/lib/perf/lazy";
+import SectionSkeleton from "@/components/ui/SectionSkeleton";
 
-export const CaseLibrarySection = dynamic(() => import("@/components/blog/CaseLibrarySection"));
+export const CaseLibrarySection = dynamic(() => import("@/components/blog/CaseLibrarySection"), {
+  loading: () => <SectionSkeleton lines={4} tall />,
+});
 const AttackCoverage = preloadable(() => import("@/components/blog/AttackCoverage"));
 const DetectionLibrary = preloadable(() => import("@/components/blog/DetectionLibrary"));
 

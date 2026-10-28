@@ -10,7 +10,8 @@
 import dynamic from "next/dynamic";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import SectionDivider from "@/components/ui/SectionDivider";
+import SlashDivider from "@/components/ui/SlashDivider";
+import TickerStrip from "@/components/ui/TickerStrip";
 import PageLink from "@/components/ui/PageLink";
 import FadeIn from "@/components/ui/FadeIn";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
@@ -339,7 +340,8 @@ export default function CaseLibrarySection() {
         </div>
       </section>
 
-      <SectionDivider text="報告 • 証拠 • 調査 • 記録" reverse angle={-1.5} />
+      <SlashDivider label="02 // Case files" japanese="調査" origin="left" />
+      <TickerStrip reverse items={["報告", "証拠", "調査", "記録", "FOLLOW THE EVIDENCE"]} />
 
       <div id="videos" className="px-6 md:px-20 pt-16 bg-background">
         <div className="max-w-7xl mx-auto">
