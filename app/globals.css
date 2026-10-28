@@ -447,6 +447,10 @@
   to { transform: translateX(-50%); }
 }
 
+/* Smart motion stays active only where it is useful: the site already pauses
+   off-screen loops, keeps the marquee paused on hover, and respects reduced
+   motion. No blanket disable here. */
+
 .chapter-slash {
   margin: 2rem 0;
 }
