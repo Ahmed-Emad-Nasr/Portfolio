@@ -128,6 +128,10 @@ interface ArtGalleryItem {
   src: string;
   thumb: string;
   title: string;
+  description: string;
+  category: string;
+  keywords: readonly string[];
+  creator: string;
 }
 
 interface Contribution {

@@ -6,7 +6,7 @@
  * after a click (see the privacy page).
  */
 
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import Image from "next/image";
 import { Play, ExternalLink, ListVideo, ChevronDown, FileText } from "lucide-react";
 import { TiltCard } from "@/components/ui/Motion";
@@ -18,6 +18,7 @@ import { blogFeaturedYoutubeVideo, blogYoutubePlaylists as playlists, blogYoutub
 import { libraryCounts } from "@/lib/library-data";
 import { CounterBadge, KanjiWatermark, btnOutline } from "@/components/ui/kit";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 const VIDEO_PAGE = 6;
 
@@ -35,7 +36,7 @@ const stats = [
   { value: libraryCounts.screenshots, label: "Screenshot assets", japanese: "画像" },
 ];
 
-function Embed({
+const Embed = memo(function Embed({
   id,
   src,
   thumb,
@@ -77,13 +78,15 @@ function Embed({
       )}
     </div>
   );
-}
+});
 
 export default function MediaSections() {
   const [visible, setVisible] = useState(VIDEO_PAGE);
   /* Which embeds were clicked (the iframe replaces the thumbnail) */
   const [activeEmbeds, setActiveEmbeds] = useState<Record<string, boolean>>({});
-  const onActivateEmbed = (key: string) => setActiveEmbeds((c) => ({ ...c, [key]: true }));
+  const onActivateEmbed = useCallback((key: string) => {
+    setActiveEmbeds((c) => ({ ...c, [key]: true }));
+  }, []);
 
   return (
     <>
@@ -153,6 +156,21 @@ export default function MediaSections() {
                       <h3 className="font-display text-lg font-black uppercase tracking-tight text-foreground leading-tight mb-5">
                         {video.title}
                       </h3>
+                      {video.description && (
+                        <p className="mb-5 text-sm text-foreground/60 font-light leading-relaxed">{video.description}</p>
+                      )}
+                      {video.tags && video.tags.length > 0 && (
+                        <ul className="mb-6 flex flex-wrap gap-2" aria-label={`${video.title} topics`}>
+                          {video.tags.slice(0, 6).map((tag) => (
+                            <li key={tag} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-tertiary bg-tertiary/10 border border-tertiary/20">
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <BilingualNote label="ملخص عربي">
+                        فيديو تعليمي يشرح الموضوع خطوة بخطوة مع أمثلة عملية مناسبة للتعلم والتطبيق الآمن.
+                      </BilingualNote>
                       <div className="mt-auto flex flex-wrap gap-3">
                         <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} w-fit`}>
                           <ExternalLink size={13} /> Watch on YouTube
@@ -223,6 +241,21 @@ export default function MediaSections() {
                       {playlist.description && (
                         <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5 line-clamp-3">{playlist.description}</p>
                       )}
+                      <div className="mb-5 flex flex-wrap items-center gap-2">
+                        {playlist.videoCount && (
+                          <span className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent bg-accent/10 border border-accent/20">
+                            {playlist.videoCount} videos
+                          </span>
+                        )}
+                        {playlist.tags?.slice(0, 4).map((tag) => (
+                          <span key={tag} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <BilingualNote label="ملخص عربي">
+                        قائمة تشغيل تجمع دروسًا مترابطة حول الموضوع من الإعداد إلى التطبيق والتحليل.
+                      </BilingualNote>
                       <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} mt-auto w-fit`}>
                         <ExternalLink size={13} /> Open playlist
                       </a>

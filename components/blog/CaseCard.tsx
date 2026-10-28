@@ -2,7 +2,7 @@
 
 /* CaseCard — one case in the library (card view) */
 
-import React, { useCallback, useState, ViewTransition } from "react";
+import { memo, useCallback, useState, ViewTransition } from "react";
 import Image from "next/image";
 import PageLink from "@/components/ui/PageLink";
 import { Check, Copy, ExternalLink, Download, Images, ShieldAlert, AlertTriangle, ArrowRight } from "lucide-react";
@@ -13,6 +13,7 @@ import { useCopyLink } from "@/lib/use-copy-link";
 import { btnOutline, btnPrimary, chipAccent, chipNeutral, chipTertiary } from "@/components/ui/kit";
 import { caseCardBlurb } from "@/lib/case-summary";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 type CaseCardProps = PdfResource & {
   index: number;
@@ -153,6 +154,9 @@ function CaseCard({
               ))}
             </div>
           )}
+          <BilingualNote label="ملخص عربي">
+            بطاقة حالة موثقة توضح المجال والأدوات والمهارات والنتيجة، ويمكن فتح التقرير لمراجعة الأدلة والتفاصيل الكاملة.
+          </BilingualNote>
 
           <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">
             <PageLink href={detailPath} className={btnPrimary}>
@@ -186,4 +190,4 @@ function CaseCard({
   );
 }
 
-export default React.memo(CaseCard);
+export default memo(CaseCard);

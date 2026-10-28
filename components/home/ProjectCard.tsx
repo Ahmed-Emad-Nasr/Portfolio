@@ -1,10 +1,12 @@
 "use client";
 
 import { ExternalLink, Star } from "lucide-react";
+import { memo } from "react";
 import { Github } from "@/components/ui/BrandIcons";
 import { Repo } from "@/lib/api/github";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { TiltCard } from "@/components/ui/Motion";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 interface ProjectCardProps {
   repo: Repo;
@@ -19,7 +21,7 @@ const TYPE_JP: Record<string, string> = {
   Assessment: "評価",
 };
 
-export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
+function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
   const highlight = PORTFOLIO_DATA.projects.highlights.find((h) =>
     repo.name.toLowerCase().includes(h.name.toLowerCase())
   );
@@ -110,6 +112,9 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
           ))}
         </div>
       )}
+      <BilingualNote>
+        مشروع مفتوح المصدر في مجال الأمن السيبراني يوضح المشكلة التي يعالجها، الأدوات المستخدمة، والنتائج القابلة للتحقق من المستودع.
+      </BilingualNote>
 
       {/* Actions */}
       <div className="flex gap-3 mt-auto pt-5 border-t border-foreground/5">
@@ -136,3 +141,5 @@ export default function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
     </TiltCard>
   );
 }
+
+export default memo(ProjectCard);

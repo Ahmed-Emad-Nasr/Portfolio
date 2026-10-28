@@ -7,6 +7,7 @@ import { caseEvidenceLibrary } from "@/data/cases";
 import { caseKindOf } from "@/lib/shared";
 import CaseFilterLink from "@/components/blog/CaseFilterLink";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 /* Where each service's proof lives: a filtered view of the case library
    (with the count it opens), or the section that shows it. Server
@@ -79,6 +80,9 @@ export default function ServicesSection() {
                 <div className="pt-4 border-t border-foreground/5 font-mono text-[0.625rem] text-accent tracking-[0.2em] uppercase">
                   → {s.deliverable}
                 </div>
+                <BilingualNote>
+                  خدمة أمن معلومات تبدأ بفهم المخاطر وتنتهي بمخرج مكتوب يمكن مراجعته وقياسه وتحسينه.
+                </BilingualNote>
                 {PROOF[s.id] && (() => {
                   const proof = PROOF[s.id];
                   const cls = "group/proof mt-4 inline-flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/70 hover:text-tertiary transition-colors duration-300";

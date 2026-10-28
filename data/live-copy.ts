@@ -25,10 +25,10 @@ export const LIVE_COPY: LiveCopy = {
     { label: "Teaching", detail: "Cybersecurity instructor at AMIT Learning and NTI — Linux, networking, SOC, pentest, IAM and GRC tracks." },
     { label: "Writing", detail: `Case reports for the library — ${publishedCaseCount} published, ${investigationReportCount} of them full investigations.` },
     { label: "Recording", detail: "Security walkthroughs on the YouTube channel, free for anyone starting out." },
-    { label: "Open to", detail: "Information security roles — GRC and compliance, SOC, incident response and DFIR, IAM and data security." },
+    { label: "Open to", detail: "Information Security Officer and Engineer roles, plus GRC, SOC, incident response, DFIR, IAM and cybersecurity education." },
   ],
   faq: [
-    { q: "What kind of role are you after?", a: "Information security, end to end: GRC and compliance, SOC and incident response, DFIR and malware analysis, IAM and data security. Penetration testing only at a beginner level (eJPT)." },
+    { q: "What kind of role are you after?", a: "Information Security Officer or Engineer roles, with hands-on depth across GRC and compliance, SOC and incident response, DFIR and malware analysis, IAM and data security. I also work as a Cybersecurity Instructor; penetration testing is at a beginner level (eJPT)." },
     { q: "Do you do GRC and compliance work?", a: "Yes. At Banque Misr I assessed GRC gaps across three units against ISO 27001, PCI DSS, COBIT and SWIFT, and audited IAM, PAM and DevSecOps architecture. VerifAI 360, my open-source GRC platform, automates control mapping and gap analysis across 150+ frameworks." },
     { q: "Where can I see real work?", a: `In the case library: ${publishedCaseCount} documented cases, ${investigationReportCount} of them full investigation reports, with screenshots and ATT&CK mapping where it applies.` },
     { q: "Are the cases real work?", a: `They are my own work on training platforms and in labs — ${investigationReportCount} incident and forensics reports (LetsDefend SOC alerts, DFIR and malware challenges, INE labs), plus capstones, rule packs and lab write-ups. Team projects are marked as team work, and every case links its original report or screenshots so you can check it.` },

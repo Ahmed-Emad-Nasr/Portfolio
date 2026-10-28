@@ -3,6 +3,7 @@ import { PageShell } from "@/components/ui/kit";
 import ArtGallery from "@/components/gallery/ArtGallery";
 import { absoluteUrl, OG_IMAGE } from "@/lib/site";
 import { jsonLd, PERSON_REF, SITE_URL } from "@/lib/seo";
+import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 
 const DESCRIPTION = "Certificates, events, the classroom and moments from Ahmed Emad Nasr's information security journey.";
 
@@ -34,6 +35,15 @@ function structuredData() {
     about: PERSON_REF,
     author: PERSON_REF,
     isPartOf: { "@id": `${SITE_URL}#website` },
+    image: PORTFOLIO_DATA.artGallery.map((item) => ({
+      "@type": "ImageObject",
+      contentUrl: absoluteUrl(item.src.replace(/^\/Portfolio/, "")),
+      name: item.title,
+      description: item.description,
+      caption: item.title,
+      creator: { "@type": "Person", name: item.creator },
+      keywords: item.keywords.join(", "),
+    })),
   });
 }
 

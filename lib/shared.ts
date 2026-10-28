@@ -38,6 +38,7 @@ export type ChannelVideo = {
   publishedAt?: string;
   sourceUrl: string;
   caseId?: string;
+  tags?: readonly string[];
 };
 
 export type CaseEvidence = {

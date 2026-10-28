@@ -32,7 +32,9 @@ export async function getTryHackMeStats(): Promise<TryHackMeStats> {
       live: true,
     };
   } catch (error) {
-    console.warn("TryHackMe stats unavailable, using the snapshot:", error instanceof Error ? error.message : error);
+    if (!(error instanceof Error && error.message === "TryHackMe API error: 429")) {
+      console.warn("TryHackMe stats unavailable, using the snapshot:", error instanceof Error ? error.message : error);
+    }
     return { ...THM_SNAPSHOT, live: false };
   }
 }

@@ -10,7 +10,7 @@ import Link from "next/link";
 import PageLink from "@/components/ui/PageLink";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState, ViewTransition, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, Images, Clock, Calendar, AlertTriangle, Maximize2, PlayCircle } from "lucide-react";
 import { normalizePublicHref, getThumbnail, formatDate } from "@/lib/shared";
 import { useCopyLink } from "@/lib/use-copy-link";
 import CaseSummary from "@/components/blog/CaseSummary";
@@ -43,6 +43,7 @@ type Sibling = { id: string; title: string } | null;
 type Technique = { id: string; name: string; tactic: string };
 type Collection = { href: string; title: string };
 type Related = { id: string; title: string; category: string; readTime: number; sharedTechniques: number };
+type RelatedVideo = { videoId: string; title: string; description?: string; sourceUrl: string };
 
 function BlockTitle({ children, japanese, id }: { children: ReactNode; japanese: string; id?: string }) {
   return (
@@ -97,6 +98,7 @@ export default function CaseArticle({
   next,
   techniques = [],
   related = [],
+  relatedVideos = [],
   detail,
   kindLabel,
   collection,
@@ -107,6 +109,7 @@ export default function CaseArticle({
   next: Sibling;
   techniques?: readonly Technique[];
   related?: readonly Related[];
+  relatedVideos?: readonly RelatedVideo[];
   detail?: CaseDetail;
   kindLabel?: string;
   collection?: Collection;
@@ -287,6 +290,30 @@ export default function CaseArticle({
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+
+        {relatedVideos.length > 0 && (
+          <section className="mb-16" aria-labelledby="case-videos-title">
+            <BlockTitle id="case-videos-title" japanese="動画">Related walkthroughs</BlockTitle>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {relatedVideos.map((video) => (
+                <a
+                  key={video.videoId}
+                  href={video.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group spotlight flex gap-4 bg-surface/60 border border-foreground/5 p-5 hover:border-primary/40 transition-colors"
+                >
+                  <PlayCircle size={18} className="mt-0.5 shrink-0 text-primary-ink" aria-hidden="true" />
+                  <span className="min-w-0">
+                    <span className="block font-display text-base font-black uppercase tracking-tight text-foreground group-hover:text-primary-ink transition-colors">{video.title}</span>
+                    {video.description && <span className="mt-2 block text-sm text-foreground/60 leading-relaxed line-clamp-3">{video.description}</span>}
+                    <span className="mt-3 block font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-tertiary">Watch on YouTube</span>
+                  </span>
+                </a>
+              ))}
+            </div>
           </section>
         )}
 

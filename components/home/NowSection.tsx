@@ -1,6 +1,7 @@
 import type { NowItem } from "@/data/types";
 import ScrambleText from "@/components/ui/ScrambleText";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 /* Server component: this runs at build time, so it is the deploy date */
 const UPDATED = new Date().toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Africa/Cairo" });
@@ -75,6 +76,9 @@ export default function NowSection({ items }: { items: NowItem[] }) {
               <p className="border-l-2 border-primary/70 pl-4 text-sm text-foreground/75 font-light leading-relaxed">
                 {n.detail}
               </p>
+              <BilingualNote label="ملخص عربي">
+                تحديث مختصر يوضح النشاط الحالي ومكانه ضمن المسار المهني والتقني.
+              </BilingualNote>
             </FadeIn>
           ))}
         </div>

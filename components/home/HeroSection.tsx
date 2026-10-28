@@ -21,7 +21,7 @@ function FieldRow({ label, value, hot = false, live = false, wide = false }: { l
       <dt className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-foreground/60 shrink-0">
         {label}
       </dt>
-      <dd className={`font-mono text-xs text-right leading-relaxed xl:whitespace-nowrap ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
+      <dd className={`max-w-[72%] font-mono text-xs text-right leading-relaxed break-words ${hot ? "text-accent font-bold" : "text-foreground/80"}`}>
         {live && (
           <span className="live-dot relative mr-2 inline-block h-1.5 w-1.5 translate-y-[-1px] rounded-full bg-accent align-middle" aria-hidden="true" />
         )}
@@ -250,7 +250,7 @@ export default function HeroSection({
       />
 
       {/* ─── Flow ─── */}
-      <div className="hero-content relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start">
+      <div className="hero-content relative z-10 w-full max-w-[90rem] mx-auto flex flex-col items-start">
         {/* Badge */}
         <div className="flex items-center gap-3 px-4 py-2 bg-foreground/[0.03] border border-foreground/10 mb-8 backdrop-blur-sm">
           <div className="w-2 h-2 bg-primary animate-pulse" />
@@ -404,10 +404,7 @@ export default function HeroSection({
         </div>
 
         {/* ─── Content: proof + field record ─── */}
-        {/* From xl up the field record takes the width its longest row needs
-            (auto column + nowrap values), so no row breaks onto a second
-            line; the left column gets the rest. */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-[1.35fr_.65fr] xl:grid-cols-[minmax(0,1fr)_auto] gap-10 items-start w-full">
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] gap-10 items-start w-full">
           <div>
             {/* Tech Spec Sheet */}
             <div className="mb-8 w-full border border-foreground/5 bg-foreground/[0.02] backdrop-blur-sm">
@@ -499,7 +496,7 @@ export default function HeroSection({
 
           {/* Field record  live portfolio data, zero hardcodes */}
           <aside
-            className="relative border border-foreground/10 bg-foreground/[0.02] backdrop-blur-sm p-6 md:p-7"
+            className="relative border border-foreground/10 bg-foreground/[0.02] backdrop-blur-sm p-5 md:p-6"
             aria-label="Field record"
           >
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/50 pointer-events-none" />

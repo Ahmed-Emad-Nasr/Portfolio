@@ -8,7 +8,7 @@ import type { Experience, PortfolioData, WorkItem } from "@/data/types";
 import { knowledgeEducationItems } from "@/data/experience";
 import { languages, skillGroups } from "@/data/skills";
 import { GITHUB_USERNAME, projectBullets, staticProjectFallback } from "@/data/projects";
-import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryTitle } from "@/data/certifications";
+import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryMetadata } from "@/data/certifications";
 import { CV_PDF_HREF, YOUTUBE_CHANNEL_URL, normalizePublicHref } from "@/lib/shared";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -281,12 +281,13 @@ export const PORTFOLIO_DATA: PortfolioData = {
     name: "Ahmed Emad Nasr",
     title: "Information Security Officer",
     japaneseTitle: "情報セキュリティ担当 • Information Security Officer",
-    availability: "Open to InfoSec roles: GRC, SOC, IR/DFIR, IAM",
+    availability: "Open to InfoSec roles: Officer, Engineer, GRC, SOC, IR/DFIR, IAM and Security Education",
     /* The areas shown on the hero's "Focus" row */
     focus: ["GRC", "SOC", "IR & DFIR", "Malware", "IAM", "Data Security"],
     /* The jobs typed one after another under the name */
     roles: [
       "Information Security Officer",
+      "Information Security Engineer",
       "GRC & Compliance Analyst",
       "SOC Analyst",
       "DFIR & Malware Analyst",
@@ -439,6 +440,6 @@ export const PORTFOLIO_DATA: PortfolioData = {
   artGallery: Array.from({ length: GALLERY_IMAGE_COUNT }, (_, k) => ({
     src: normalizePublicHref(galleryImagePath(k + 1)),
     thumb: normalizePublicHref(galleryImagePath(k + 1)),
-    title: galleryTitle(k + 1),
+    ...galleryMetadata(k + 1),
   })),
 };

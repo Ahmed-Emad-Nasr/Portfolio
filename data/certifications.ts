@@ -113,6 +113,31 @@ const GALLERY_TITLES: Readonly<Record<number, string>> = {
 export const galleryTitle = (index: number): string =>
   GALLERY_TITLES[index] ?? `Record ${String(index).padStart(2, "0")}`;
 
+export type GalleryMetadata = {
+  title: string;
+  description: string;
+  category: string;
+  keywords: readonly string[];
+  creator: string;
+};
+
+const CERTIFICATE_KEYWORDS = ["Ahmed Emad Nasr", "Cybersecurity", "Information Security", "Professional Development"];
+
+/** Metadata for the gallery card, accessible image alt, lightbox and JSON-LD. */
+export const galleryMetadata = (index: number): GalleryMetadata => {
+  const title = galleryTitle(index);
+  const isCertificate = Boolean(GALLERY_TITLES[index]);
+  return {
+    title,
+    description: isCertificate
+      ? `${title}. A proof-of-learning or professional development record from Ahmed Emad Nasr's information security journey.`
+      : `Portfolio record ${String(index).padStart(2, "0")} from Ahmed Emad Nasr's information security, teaching and professional development archive.`,
+    category: isCertificate ? "Certificate and learning evidence" : "Professional portfolio record",
+    keywords: isCertificate ? [...CERTIFICATE_KEYWORDS, title] : ["Ahmed Emad Nasr", "Portfolio", "Professional Record", "Cybersecurity"],
+    creator: "Ahmed Emad Nasr",
+  };
+};
+
 /** Path (without the base path) of gallery image number `index` */
 export const galleryImagePath = (index: number): string =>
   `Assets/art-gallery/Images/image_display_thumb/${index}.webp`;

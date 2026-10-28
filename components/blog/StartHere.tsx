@@ -4,6 +4,7 @@ import PageLink from "@/components/ui/PageLink";
 import { startHere } from "@/data/start-here";
 import { caseEvidenceLibrary } from "@/data/cases";
 import { Eyebrow } from "@/components/ui/kit";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 const KNOWN_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
 const ENTRIES = startHere.filter((entry) => KNOWN_IDS.has(entry.id));
@@ -40,6 +41,9 @@ export default function StartHere({
                 {entry.label}
               </h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{entry.why}</p>
+              <BilingualNote label="ملخص عربي">
+                ابدأ بهذا التقرير لفهم الحالة والنتيجة والمنهجية قبل الانتقال إلى بقية مكتبة الحالات.
+              </BilingualNote>
             </PageLink>
           </li>
         ))}

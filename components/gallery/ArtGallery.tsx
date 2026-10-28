@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { TiltCard } from "@/components/ui/Motion";
 import dynamic from "next/dynamic";
@@ -22,11 +22,15 @@ export default function ArtGallery() {
   const [visible, setVisible] = useState(FIRST);
   const items = PORTFOLIO_DATA.artGallery.slice(0, visible);
 
-  const lightboxSlides = PORTFOLIO_DATA.artGallery.map((img) => ({
-    src: img.src,
-    title: img.title,
-    description: "Ahmed Emad Nasr — certificates & moments",
-  }));
+  const lightboxSlides = useMemo(
+    () =>
+      PORTFOLIO_DATA.artGallery.map((img) => ({
+        src: img.src,
+        title: img.title,
+        description: `${img.description} Topics: ${img.keywords.join(", ")}.`,
+      })),
+    [],
+  );
 
   return (
     <section id="art" aria-labelledby="art-title" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
@@ -111,7 +115,7 @@ export default function ArtGallery() {
                 {/* Image */}
                 <Image
                   src={img.thumb}
-                  alt={img.title}
+                  alt={img.description}
                   width={500}
                   height={500}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -143,6 +147,8 @@ export default function ArtGallery() {
                     <h3 className="font-display text-lg font-black text-foreground uppercase tracking-tight">
                       {img.title}
                     </h3>
+                    <p className="mt-2 text-xs text-foreground/70 leading-relaxed">{img.description}</p>
+                    <p className="mt-2 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-tertiary">{img.category}</p>
                     <div className="mt-4 flex items-center justify-between">
                       <div className="w-10 h-[1px] bg-primary/40" />
                       <Maximize2 size={14} className="text-on-surface-variant" />

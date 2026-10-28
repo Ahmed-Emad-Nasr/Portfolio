@@ -9,6 +9,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import { CounterBadge, KanjiWatermark, cardSurface } from "@/components/ui/kit";
 import type { Platform, TryHackMeStats } from "@/data/platforms";
 import ScrambleText from "@/components/ui/ScrambleText";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 function Mark({ children }: { children: string }) {
   return (
@@ -50,6 +51,9 @@ function FeaturedCard({ platform, stats }: { platform: Platform; stats: TryHackM
         </h3>
         <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
         <p className="mt-5 text-sm md:text-base text-foreground/60 font-light leading-relaxed">{platform.focus}</p>
+        <BilingualNote label="ملخص عربي">
+          ملف تدريبي عام يوضح منصة التطبيق ومجال التركيز والأرقام التي يمكن مراجعتها من المصدر مباشرة.
+        </BilingualNote>
         <div className="mt-auto pt-6">
           <ProfileLink label="View profile" />
         </div>
@@ -98,6 +102,9 @@ function PlatformCard({ platform }: { platform: Platform }) {
       </h3>
       <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
       <p className="mt-4 text-sm text-foreground/60 font-light leading-relaxed">{platform.focus}</p>
+      <BilingualNote label="ملخص عربي">
+        منصة تدريبية تعرض مجال الممارسة والأرقام المسجلة والملف العام المرتبط بها.
+      </BilingualNote>
 
       {platform.stats.length > 0 && (
         <dl className="mt-5 flex flex-wrap gap-x-6 gap-y-3">

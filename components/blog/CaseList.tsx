@@ -6,6 +6,7 @@ import PageLink from "@/components/ui/PageLink";
 import { ArrowUpRight } from "lucide-react";
 import { CASE_KINDS, formatDate, type PdfResource } from "@/lib/shared";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 const KIND_SHORT = new Map(CASE_KINDS.map((k) => [k.id, k.short]));
 const KIND_TONE: Record<string, string> = {
@@ -40,15 +41,18 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
               className="group relative grid grid-cols-1 md:grid-cols-[1fr_7rem_10rem_9rem_6.5rem_1.5rem] items-center gap-x-4 gap-y-1.5 px-5 py-4 hover:bg-foreground/[0.03] transition-colors"
             >
               <span className="absolute inset-y-0 left-0 w-[2px] bg-primary scale-y-0 origin-top transition-transform duration-300 group-hover:scale-y-100" aria-hidden="true" />
-              <span className="flex items-start gap-3 min-w-0">
+              <div className="flex items-start gap-3 min-w-0">
                 {item.severity && (
                   <span className={`mt-1.5 h-2 w-2 shrink-0 rotate-45 ${SEVERITY_DOT[item.severity] ?? "bg-foreground/30"}`} title={`Severity: ${item.severity}`} aria-hidden="true" />
                 )}
-                <span className="min-w-0">
+                <div className="min-w-0">
                   <span className="block text-sm md:text-[0.95rem] text-foreground/85 group-hover:text-foreground transition-colors">{item.title}</span>
                   {item.verdict && <span className="block mt-0.5 text-xs text-foreground/60 truncate">{item.verdict}</span>}
-                </span>
-              </span>
+                  <BilingualNote label="ملخص عربي">
+                    حالة موثقة تتضمن التصنيف والمنصة والنتيجة، مع تفاصيل أوسع داخل صفحة التقرير.
+                  </BilingualNote>
+                </div>
+              </div>
               <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5625rem] uppercase tracking-[0.2em] ${KIND_TONE[item.kind ?? "lab"]}`}>
                 {KIND_SHORT.get(item.kind ?? "lab")}
               </span>

@@ -8,6 +8,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import { CounterBadge, KanjiWatermark, cardSurface, chipNeutral, chipTertiary } from "@/components/ui/kit";
 import { DIPLOMA, TEACHING_ROLES, TEACHING_STATS } from "@/data/teaching";
 import ScrambleText from "@/components/ui/ScrambleText";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 export default function TeachingSection() {
   return (
@@ -160,6 +161,9 @@ export default function TeachingSection() {
                       </li>
                     ))}
                   </ul>
+                  <BilingualNote label="ملخص عربي">
+                    تجربة تدريسية تجمع المنهج المنظم والمعامل العملية والنتائج القابلة للقياس للمتعلمين.
+                  </BilingualNote>
                 </article>
               </FadeIn>
             ))}

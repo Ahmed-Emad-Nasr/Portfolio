@@ -15,6 +15,7 @@ import { caseAttackMapping, parentTechnique, techniquesForCase } from "@/data/at
 import { caseDetails } from "@/data/case-details";
 import { caseKindOf, CASE_KINDS, WSA_COLLECTION } from "@/lib/shared";
 import { jsonLd, PERSON_ID, PERSON_NAME, SITE_URL } from "@/lib/seo";
+import { blogYoutubeVideos } from "@/data/youtube";
 
 const findCase = (slug: string) => caseEvidenceLibrary.find((item) => item.id === slug);
 
@@ -113,6 +114,14 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   if (!item) notFound();
 
   const screenshots = [...(caseScreenshotsByEvidenceId[item.id] ?? [])];
+  const relatedVideos = blogYoutubeVideos
+    .filter((video) => video.caseId === item.id)
+    .map((video) => ({
+      videoId: video.videoId,
+      title: video.title,
+      description: video.description,
+      sourceUrl: `https://youtu.be/${video.videoId}`,
+    }));
 
   /* Previous / next follow the library order */
   const index = caseEvidenceLibrary.findIndex((c) => c.id === item.id);
@@ -187,6 +196,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         next={next ? { id: next.id, title: next.title } : null}
         techniques={techniquesForCase(item.id)}
         related={relatedTo(item)}
+        relatedVideos={relatedVideos}
         detail={caseDetails[item.id]}
         kindLabel={CASE_KINDS.find((k) => k.id === caseKindOf(item))?.short ?? "Case"}
         collection={item.platform === WSA_COLLECTION.platform ? { href: `/collections/${WSA_COLLECTION.id}`, title: WSA_COLLECTION.title } : undefined}

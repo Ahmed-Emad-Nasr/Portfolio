@@ -9,6 +9,7 @@ import PageLink from "@/components/ui/PageLink";
 import { Github } from "@/components/ui/BrandIcons";
 import { TiltCard } from "@/components/ui/Motion";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 const FILTERS: { id: WorkType | "all"; label: string; japanese: string }[] = [
   { id: "all", label: "All", japanese: "全部" },
@@ -119,6 +120,9 @@ export default function WorkShowcase() {
                       </span>
                     ))}
                   </div>
+                  <BilingualNote>
+                    عمل تطبيقي يوضح المشكلة والدور الذي تم تنفيذه والأدوات والقياسات المستخدمة لإثبات النتيجة.
+                  </BilingualNote>
 
                   <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">
                     {w.links.github && (

@@ -20,6 +20,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Shared site sections use a wider reading frame on large screens. */
+  --container-7xl: 82rem;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -118,14 +121,20 @@
    * max-w-7xl column), so growing the root grows the whole layout in
    * proportion — the same page, bigger, instead of an 80rem column floating
    * in empty space. Below 1800px nothing changes (16px root).
-   *   1800px+  (1920 monitors)        18px → column 1440px
-   *   2400px+  (2560 / 1440p)         20px → column 1600px
-   *   3200px+  (4K at 100% scaling)   24px → column 1920px
+   *   1800px+  (1920 monitors)        18px → column 1512px
+   *   2400px+  (2560 / 1440p)         20px → column 1680px
+   *   3200px+  (4K at 100% scaling)   24px → column 2016px
    * Users who set a bigger default font in their browser keep it: these are
    * percentages of their setting, not fixed pixels.
    */
   html {
     font-size: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   @media (min-width: 1800px) {
     html {
@@ -145,6 +154,32 @@
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+  }
+
+  :where([id]) {
+    scroll-margin-top: 6rem;
+  }
+
+  button:not(:disabled),
+  a[role="button"] {
+    transition:
+      transform 0.3s var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    button:not(:disabled):hover,
+    a[role="button"]:hover {
+      transform: translateY(-2px);
+    }
+
+    button:not(:disabled):active,
+    a[role="button"]:active {
+      transform: translateY(0);
+    }
   }
 
   /* Custom cursor only on precise pointers; touch keeps native cursor */
@@ -354,6 +389,29 @@
   opacity: 1;
 }
 
+@media (hover: hover) {
+  .spotlight {
+    transition:
+      border-color 0.5s ease,
+      box-shadow 0.5s ease,
+      background-color 0.5s ease;
+  }
+
+  .spotlight:hover {
+    border-color: color-mix(in srgb, var(--primary) 38%, transparent);
+    box-shadow:
+      0 18px 45px -24px color-mix(in srgb, var(--primary) 55%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 10%, transparent);
+  }
+
+  .spotlight-blue:hover {
+    border-color: color-mix(in srgb, var(--tertiary) 45%, transparent);
+    box-shadow:
+      0 18px 45px -24px color-mix(in srgb, var(--tertiary) 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 10%, transparent);
+  }
+}
+
 /* Blue variant  tools-flavored glow (tertiary) instead of red. */
 .spotlight-blue::before {
   background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
@@ -362,6 +420,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  button:not(:disabled),
+  a[role="button"] {
+    transition: none;
+  }
+
   .spotlight::before {
     display: none;
   }
@@ -585,7 +648,7 @@
  * text-8xl from md), shrunk only when the longest word would not fit the
  * column. --title-n is that word's length in letters (set per heading); 0.86em
  * per letter is Dela Gothic One's widest-case advance. 3rem / 10rem are the
- * section's side padding (px-6 / md:px-20); 80rem is max-w-7xl.
+ * section's side padding (px-6 / md:px-20); 84rem is max-w-7xl.
  */
 @utility title-fit {
   font-size: min(3rem, calc((100vw - 3rem) / (var(--title-n, 10) * 0.86)));

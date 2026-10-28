@@ -19,14 +19,72 @@ const forensics = caseEvidenceLibrary.filter((c) => c.category === "Digital Fore
 const malware = caseEvidenceLibrary.filter((c) => caseKindOf(c) === "investigation" && c.category === "Malware Analysis").length;
 
 type Proof = { label: string; href?: string; params?: Record<string, string> };
+type Role = {
+  id: string;
+  title: string;
+  japanese: string;
+  icon: typeof Radar;
+  pitch: string;
+  pitchAr: string;
+  focus: string[];
+  proof: Proof[];
+  credential: string;
+};
 
-const ROLES: { id: string; title: string; japanese: string; icon: typeof Radar; pitch: string; proof: Proof[]; credential: string }[] = [
+const ROLES: Role[] = [
+  {
+    id: "information-security-officer",
+    title: "Information Security Officer",
+    japanese: "統制",
+    icon: ClipboardCheck,
+    pitch: "Build a risk-led security program: governance, compliance, control ownership, remediation tracking and executive-ready evidence.",
+    pitchAr: "بناء برنامج أمن معلومات قائم على المخاطر: الحوكمة والامتثال وملكية الضوابط ومتابعة المعالجة والأدلة المناسبة للإدارة.",
+    focus: ["Risk & compliance", "Control assurance", "Security governance"],
+    proof: [
+      { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
+      { label: "VerifAI 360 — compliance and risk platform", href: "#work" },
+      { label: "PCI DSS & GDPR detection coverage", href: "/blog/3omda-custom-detection-rules" },
+    ],
+    credential: "ISO 27001 · PCI DSS · COBIT · SWIFT",
+  },
+  {
+    id: "information-security-engineer",
+    title: "Information Security Engineer",
+    japanese: "設計",
+    icon: Radar,
+    pitch: "Turn security requirements into working controls across SIEM, endpoint telemetry, network detection, IAM and cloud services.",
+    pitchAr: "تحويل متطلبات الأمن إلى ضوابط عملية في SIEM وتليمترية الأجهزة واكتشاف الشبكات وIAM والخدمات السحابية.",
+    focus: ["Security architecture", "Detection engineering", "Hardening & integration"],
+    proof: [
+      { label: "Wazuh + Sysmon detection environment", href: "/blog/soc-env-depi-r3-project" },
+      { label: "Custom Wazuh detection rule pack", href: "/blog/3omda-custom-detection-rules" },
+      { label: "AWS KMS security lab", href: "/blog/aws-kms-security" },
+    ],
+    credential: "Wazuh · Suricata · Sysmon · YARA · AWS KMS",
+  },
+  {
+    id: "cybersecurity-instructor",
+    title: "Cybersecurity Instructor",
+    japanese: "指導",
+    icon: Microscope,
+    pitch: "Make difficult security concepts usable: structured curricula, hands-on labs, assessment and feedback for beginners and practitioners.",
+    pitchAr: "تبسيط مفاهيم الأمن المعقدة من خلال مناهج منظمة ومعامل عملية وتقييم وملاحظات للمتعلمين والممارسين.",
+    focus: ["Curriculum design", "Hands-on labs", "Mentoring & communication"],
+    proof: [
+      { label: "300+ students at AMIT Learning", href: "#teaching" },
+      { label: "35+ GDG sessions and CTF challenges", href: "#experience" },
+      { label: "Arabic security walkthroughs", href: "/blog#videos" },
+    ],
+    credential: "SOC & Cybersecurity Diploma · 160 hours",
+  },
   {
     id: "grc",
     title: "GRC / Compliance Analyst",
     japanese: "統治",
     icon: ClipboardCheck,
     pitch: "Gap assessments against ISO 27001, PCI DSS, COBIT and SWIFT, and the remediation plan after them.",
+    pitchAr: "تقييم الفجوات مقابل ISO 27001 وPCI DSS وCOBIT وSWIFT مع خطة المعالجة.",
+    focus: ["GRC assessments", "Remediation planning", "Compliance evidence"],
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
       { label: "VerifAI 360 — my GRC platform", href: "#work" },
@@ -40,6 +98,8 @@ const ROLES: { id: string; title: string; japanese: string; icon: typeof Radar; 
     japanese: "監視",
     icon: Radar,
     pitch: "Alert triage to a written verdict, and the Wazuh rules that catch the next one.",
+    pitchAr: "من فرز التنبيه إلى حكم مكتوب، ثم بناء قواعد Wazuh التي تلتقط الحالة التالية.",
+    focus: ["Alert triage", "SIEM operations", "Incident reporting"],
     proof: [
       { label: `${letsDefend} LetsDefend alerts investigated`, params: { q: "LetsDefend" } },
       { label: TITLE.get("3omda-custom-detection-rules") ?? "Custom Wazuh rules", href: "/blog/3omda-custom-detection-rules" },
@@ -53,6 +113,8 @@ const ROLES: { id: string; title: string; japanese: string; icon: typeof Radar; 
     japanese: "鑑識",
     icon: Microscope,
     pitch: "Memory, disk, registry and browser artifacts to a timeline; samples taken apart to IOCs and YARA.",
+    pitchAr: "تحويل آثار الذاكرة والقرص والـ registry والمتصفح إلى خط زمني، وتحليل العينات إلى IOCs وYARA.",
+    focus: ["DFIR timelines", "Malware analysis", "IOC extraction"],
     proof: [
       { label: `${forensics} digital forensics cases`, params: { cat: "Digital Forensics" } },
       { label: `${malware} malware analysis reports`, params: { kind: "investigation", cat: "Malware Analysis" } },
@@ -66,6 +128,8 @@ const ROLES: { id: string; title: string; japanese: string; icon: typeof Radar; 
     japanese: "認証",
     icon: KeyRound,
     pitch: "Access reviews, PAM and least privilege; where sensitive data goes and what stops it leaving.",
+    pitchAr: "مراجعات الوصول وPAM وأقل صلاحية، مع فهم مسار البيانات الحساسة وما يمنع تسريبها.",
+    focus: ["IAM & PAM", "Least privilege", "Data protection"],
     proof: [
       { label: "Banque Misr — IAM, PAM & DevSecOps audit", href: "#experience" },
       { label: TITLE.get("soc257-pdf") ?? "Compromised VPN account", href: "/blog/soc257-pdf" },
@@ -85,7 +149,7 @@ export default function RolesFit() {
           japanese="適任"
           titleA="Roles"
           titleB="I Fit."
-          description="One discipline, four entry points. Pick the role you are hiring for — each comes with the three things on this site that prove it."
+          description="One discipline, seven entry points. Pick the role you are hiring for — each comes with focus areas, bilingual context and evidence from the site."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -107,7 +171,14 @@ export default function RolesFit() {
                   <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6">{r.pitch}</p>
 
                   <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/60 mb-2">Proof</span>
-                  <ul className="grid gap-2 mb-6">
+                          <ul className="mb-5 flex flex-wrap gap-2" aria-label={`${r.title} focus areas`}>
+                            {r.focus.map((focus) => (
+                              <li key={focus} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-tertiary bg-tertiary/10 border border-tertiary/20">
+                                {focus}
+                              </li>
+                            ))}
+                          </ul>
+                          <ul className="grid gap-2 mb-6">
                     {r.proof.map((p, i) => {
                       const cls = "group/p flex items-start gap-2 text-sm text-foreground/80 hover:text-primary-ink transition-colors";
                       const inner = (
@@ -130,6 +201,7 @@ export default function RolesFit() {
                       );
                     })}
                   </ul>
+                  <p className="mb-6 text-xs text-foreground/70 leading-relaxed" lang="ar" dir="rtl">{r.pitchAr}</p>
 
                   <div className="mt-auto pt-4 border-t border-foreground/5 flex items-center justify-between gap-3">
                     <span className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent leading-snug">{r.credential}</span>
