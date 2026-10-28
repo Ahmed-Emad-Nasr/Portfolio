@@ -49,7 +49,7 @@ function structuredData() {
 
 export default function GalleryPage() {
   return (
-    <PageShell>
+    <PageShell showLoader>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
       <ArtGallery />
     </PageShell>

@@ -108,7 +108,6 @@ export function VerdictBar({ verdict, severity }: Pick<CaseDetail, "verdict" | "
       className="relative mb-10 flex flex-col sm:flex-row sm:items-center gap-4 border border-foreground/10 bg-surface/60 px-6 py-5 overflow-hidden"
     >
       <div className="absolute inset-y-0 left-0 w-[3px] bg-primary" aria-hidden="true" />
-      <div className="verdict-sweep absolute inset-0 pointer-events-none" aria-hidden="true" />
       <div className="flex items-center gap-3 shrink-0">
         <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
           <span className="live-dot absolute inline-flex h-full w-full rounded-full bg-primary" />

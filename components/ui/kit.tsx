@@ -103,11 +103,11 @@ export function KanjiWatermark({ chars, side = "right" }: { chars: string; side?
 
 /* Page frame for every route except the home page: the floating nav, the
    page itself, and the footer bar. */
-export function PageShell({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function PageShell({ children, className = "", showLoader = false }: { children: ReactNode; className?: string; showLoader?: boolean }) {
   return (
     <>
       <SiteNav />
-      <AppLoader />
+      {showLoader && <AppLoader />}
       <main id="main-content" className={`relative w-full bg-background text-foreground overflow-x-clip ${className}`}>
         {children}
       </main>

@@ -240,15 +240,6 @@ export default function HeroSection({
         </div>
       </motion.div>
 
-      {/* ─── Scanline Overlay ─── */}
-      <div
-        className="absolute inset-0 pointer-events-none z-[1] opacity-[0.03]"
-        aria-hidden="true" style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)", filter: "grayscale(100%)"
-        }}
-      />
-
       {/* ─── Flow ─── */}
       <div className="hero-content relative z-10 w-full max-w-[90rem] mx-auto flex flex-col items-start">
         {/* Badge */}
@@ -374,8 +365,6 @@ export default function HeroSection({
                   className="w-full h-full object-cover object-top grayscale group-hover/photo:grayscale-0 group-hover/photo:scale-105 transition-all duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/25 via-transparent to-transparent group-hover/photo:from-transparent transition-all duration-700" />
-                {/* Scanner sweep — a red line passing over the portrait */}
-                <div className="hero-scan pointer-events-none absolute inset-x-0 top-0 h-[22%]" aria-hidden="true" />
               </div>
             </a>
 

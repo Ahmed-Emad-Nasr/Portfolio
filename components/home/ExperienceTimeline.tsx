@@ -23,16 +23,6 @@ export default function ExperienceTimeline() {
         <span>験</span>
       </div>
 
-      {/* ─── Scanline Overlay ─── */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 opacity-[0.02]"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.04) 2px, rgba(255,255,255,0.04) 4px)",
-        }}
-      />
-
       <div className="max-w-7xl mx-auto relative z-10">
         {/* ─── Section Header ─── */}
         <div className="exp-header mb-16 md:mb-20">

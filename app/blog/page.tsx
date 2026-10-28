@@ -100,7 +100,7 @@ function structuredData() {
 
 export default function BlogPage() {
   return (
-    <PageShell>
+    <PageShell showLoader>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
       <PageEffects />
 

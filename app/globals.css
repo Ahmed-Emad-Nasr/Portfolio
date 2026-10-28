@@ -966,24 +966,10 @@
   .attack-tile:hover { transform: none; }
 }
 
-/* ─── Security HUD motion (hero scanner, REC/live dots, process packets,
-       case-briefing steps). Everything here is decoration: with reduced
+/* ─── Security HUD motion (REC/live dots, process packets, case-briefing
+       steps). Everything here is decoration: with reduced
        motion none of it runs and nothing is hidden. ─────────────────── */
-.hero-scan {
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(188, 0, 45, 0.18) 70%,
-    rgba(255, 60, 90, 0.75) 97%,
-    transparent 100%
-  );
-  opacity: 0;
-}
 @media (prefers-reduced-motion: no-preference) {
-  .hero-scan {
-    animation: hero-scan 5.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-    animation-delay: 2.5s;
-  }
   .hud-rec {
     animation: hud-blink 1.6s steps(1, end) infinite;
   }
@@ -1009,12 +995,6 @@
     animation-delay: inherit;
   }
 }
-@keyframes hero-scan {
-  0% { transform: translateY(-100%); opacity: 0; }
-  10% { opacity: 1; }
-  55% { transform: translateY(460%); opacity: 1; }
-  62%, 100% { transform: translateY(460%); opacity: 0; }
-}
 @keyframes hud-blink {
   50% { opacity: 0.15; }
 }
@@ -1030,21 +1010,6 @@
 @keyframes brief-node {
   0% { transform: scale(1); opacity: 0.7; }
   60%, 100% { transform: scale(2.4); opacity: 0; }
-}
-
-/* ── Case pages: verdict sweep ─────────────────────────────────────────
-   One pass of light across the verdict bar when the page opens, like a
-   scanner reading the line. */
-.verdict-sweep {
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 14%, transparent), transparent);
-  transform: translateX(-100%);
-  animation: verdict-sweep 2.4s cubic-bezier(0.23, 1, 0.32, 1) 0.5s 1 both;
-}
-@keyframes verdict-sweep {
-  to { transform: translateX(100%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .verdict-sweep { animation: none; opacity: 0; }
 }
 
 /* ── ATT&CK matrix view: one compact cell per technique ── */
