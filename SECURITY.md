@@ -26,7 +26,6 @@ Ahmed Emad Nasr
 
 Email: ahmed.em.nasr@gmail.com
 
-Machine-readable contact (RFC 9116): https://ahmed-emad-nasr.github.io/Portfolio/.well-known/security.txt
 
 ## Disclosure
 

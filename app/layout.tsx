@@ -77,7 +77,6 @@ export const metadata: Metadata = {
   publisher: "Ahmed Emad Nasr",
   alternates: {
     canonical: "/",
-    types: { "application/rss+xml": "/feed.xml" },
   },
   category: "technology",
   robots: {

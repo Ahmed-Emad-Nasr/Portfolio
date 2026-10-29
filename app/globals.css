@@ -615,30 +615,6 @@
 /* ─── Additions for the pages the original theme does not have
    (case library, case pages, CV, legal pages). Same tokens. ─── */
 
-/* Long-form text on the legal pages */
-.legal-copy p,
-.legal-copy li {
-  color: color-mix(in srgb, var(--foreground) 65%, transparent);
-  line-height: 1.75;
-  font-weight: 300;
-}
-.legal-copy ul {
-  list-style: square;
-  padding-left: 1.25rem;
-}
-.legal-copy li::marker {
-  color: var(--primary-ink);
-}
-.legal-copy a {
-  color: var(--primary-ink);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.legal-copy strong {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
 /* The intro screen (AppLoader.tsx). Without JavaScript it would never
    leave, so it slides away on its own at 4 s — after the script has
    normally removed it. */

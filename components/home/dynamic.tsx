@@ -14,17 +14,12 @@ import LazySection, { preloadable } from "@/lib/perf/lazy";
 import SectionSkeleton from "@/components/ui/SectionSkeleton";
 
 /* ── Server-rendered, split per section ── */
-export const WorkShowcase = dynamic(() => import("@/components/home/WorkShowcase"), { loading: () => <SectionSkeleton lines={2} /> });
-export const ProjectsGrid = dynamic(() => import("@/components/home/ProjectsGrid"), { loading: () => <SectionSkeleton lines={3} tall /> });
-export const ServicesSection = dynamic(() => import("@/components/home/ServicesSection"), { loading: () => <SectionSkeleton lines={3} /> });
 export const RolesFit = dynamic(() => import("@/components/home/RolesFit"), { loading: () => <SectionSkeleton lines={3} /> });
+export const WorkShowcase = dynamic(() => import("@/components/home/WorkShowcase"), { loading: () => <SectionSkeleton lines={2} /> });
 export const ExperienceTimeline = dynamic(() => import("@/components/home/ExperienceTimeline"), { loading: () => <SectionSkeleton lines={3} tall /> });
 export const TeachingSection = dynamic(() => import("@/components/home/TeachingSection"), { loading: () => <SectionSkeleton lines={3} /> });
 export const PlatformsSection = dynamic(() => import("@/components/home/PlatformsSection"), { loading: () => <SectionSkeleton lines={3} /> });
-export const MilestonesSection = dynamic(() => import("@/components/home/MilestonesSection"), { loading: () => <SectionSkeleton lines={3} /> });
-export const NowSection = dynamic(() => import("@/components/home/NowSection"), { loading: () => <SectionSkeleton lines={2} /> });
 export const TechStackGrid = dynamic(() => import("@/components/home/TechStackGrid"), { loading: () => <SectionSkeleton lines={4} /> });
-export const UsesSection = dynamic(() => import("@/components/home/UsesSection"), { loading: () => <SectionSkeleton lines={3} /> });
 export const HomeLab = dynamic(() => import("@/components/home/HomeLab"), { loading: () => <SectionSkeleton lines={3} /> });
 export const ProcessSection = dynamic(() => import("@/components/home/ProcessSection"), { loading: () => <SectionSkeleton lines={3} /> });
 export const FaqSection = dynamic(() => import("@/components/home/FaqSection"), { loading: () => <SectionSkeleton lines={4} /> });

@@ -3,12 +3,10 @@
 import { useState } from "react";
 import { m as motion, AnimatePresence } from "framer-motion";
 import PageLink from "@/components/ui/PageLink";
-import { MessageCircle, ArrowUpRight, Mail, Copy, Check, ShieldCheck } from "lucide-react";
+import { MessageCircle, ArrowUpRight, Mail, Copy, Check } from "lucide-react";
 import { Github, Linkedin, Youtube, Instagram, XLogo } from "@/components/ui/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
-import { normalizePublicHref } from "@/lib/shared";
 import { useCopyLink } from "@/lib/use-copy-link";
-import { SECURITY_TXT_PATH } from "@/lib/security";
 import ScrambleText from "@/components/ui/ScrambleText";
 import FadeIn from "@/components/ui/FadeIn";
 
@@ -28,17 +26,11 @@ export function FooterBar({ className = "" }: { className?: string }) {
         </span>
       </div>
       <nav aria-label="Site information" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <PageLink href="/blog" className="hover:text-primary-ink transition-colors">Blog</PageLink>
+        <span className="text-primary-ink" aria-hidden="true">•</span>
+        <PageLink href="/gallery" className="hover:text-primary-ink transition-colors">Gallery</PageLink>
+        <span className="text-primary-ink" aria-hidden="true">•</span>
         <PageLink href="/cv" className="hover:text-primary-ink transition-colors">CV</PageLink>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <PageLink href="/privacy" className="hover:text-primary-ink transition-colors">Privacy</PageLink>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <PageLink href="/terms" className="hover:text-primary-ink transition-colors">Terms</PageLink>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <a href={normalizePublicHref("feed.xml")} className="hover:text-primary-ink transition-colors">RSS</a>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <a href={normalizePublicHref(SECURITY_TXT_PATH)} className="hover:text-primary-ink transition-colors normal-case tracking-[0.2em]">
-          security.txt
-        </a>
       </nav>
       <div className="flex items-center gap-2 text-on-surface-variant">
         <span>
@@ -179,27 +171,6 @@ export default function ContactFooter() {
                     />
                   </a>
                 ))}
-              </div>
-
-              {/* Responsible disclosure */}
-              <div className="relative mb-12 max-w-xl border border-foreground/10 border-l-2 border-l-primary bg-foreground/[0.02] px-5 py-4">
-                <div className="flex items-center gap-3">
-                  <ShieldCheck size={16} className="shrink-0 text-primary-ink" aria-hidden="true" />
-                  <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-foreground">
-                    Responsible disclosure
-                  </span>
-                  <span className="jp-eyebrow text-[0.5625rem] text-foreground/30" lang="ja" aria-hidden="true" data-jp="開示" />
-                </div>
-                <p className="mt-2 text-sm text-foreground/60 font-light leading-relaxed">
-                  Found something on this site? Report it privately —{" "}
-                  <a
-                    href={normalizePublicHref(SECURITY_TXT_PATH)}
-                    className="font-mono text-[0.8125rem] text-foreground/80 underline underline-offset-4 decoration-primary/50 hover:text-primary-ink"
-                  >
-                    security.txt
-                  </a>{" "}
-                  has the details.
-                </p>
               </div>
 
               {/* Languages  from portfolio data */}

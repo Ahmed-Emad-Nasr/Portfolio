@@ -54,22 +54,6 @@ export interface Experience {
   cases?: { label: string; params: Record<string, string> };
 }
 
-interface ProjectHighlight {
-  name: string;
-  type: string;
-  description: string;
-  metrics: string[];
-  link: string;
-  githubRepo?: string;
-  proofUrl?: string;
-}
-
-interface ProjectsData {
-  githubUsername: string;
-  pinnedRepos: string[];
-  highlights: ProjectHighlight[];
-}
-
 export type WorkType = "lab" | "tool" | "research" | "platform";
 
 interface WorkLink {
@@ -96,15 +80,6 @@ export interface WorkItem {
   links: WorkLink;
   metrics: string[];
   featured?: boolean;
-}
-
-interface ServiceItem {
-  id: string;
-  title: string;
-  japanese: string;
-  description: string;
-  stack: string[];
-  deliverable: string;
 }
 
 interface StackGroup {
@@ -156,40 +131,18 @@ export interface Language {
   level: string;
 }
 
-interface UsesGroup {
-  id: string;
-  title: string;
-  japanese: string;
-  items: string[];
-}
-
-export interface NowItem {
-  label: string;
-  detail: string;
-}
-
 export interface FaqItem {
   q: string;
   a: string;
 }
 
-interface Milestone {
-  year: string;
-  title: string;
-  detail: string;
-}
-
 export interface PortfolioData {
   profile: Profile;
   experience: Experience[];
-  projects: ProjectsData;
   work: WorkItem[];
-  services: ServiceItem[];
   stack: StackGroup[];
   process: ProcessStep[];
   contributions: Contribution[];
   languages: Language[];
   artGallery: ArtGalleryItem[];
-  uses: UsesGroup[];
-  milestones: Milestone[];
 }

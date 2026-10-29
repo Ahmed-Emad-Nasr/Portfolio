@@ -1,6 +1,6 @@
 /*
- * The home page: the pitch (who, what, proof, experience),
- * about (toolbox, lab, path, process), FAQ and contact, with a
+ * The home page: the pitch (who, roles, proof, experience),
+ * about (toolbox, lab, process, contributions), FAQ and contact, with a
  * door to /blog. Section order follows the Sensei-Dev portfolio
  * (github.com/MostafaSensei106/Sensei-Dev, GPL-3.0).
  *
@@ -19,16 +19,11 @@ import PageEffects from "@/lib/perf/PageEffects";
 import AppLoader from "@/components/layout/AppLoader";
 import {
   WorkShowcase,
-  ProjectsGrid,
-  ServicesSection,
   RolesFit,
   ExperienceTimeline,
   TeachingSection,
   PlatformsSection,
-  MilestonesSection,
-  NowSection,
   TechStackGrid,
-  UsesSection,
   HomeLab,
   ProcessSection,
   FaqSection,
@@ -37,7 +32,6 @@ import {
   PaletteHint,
   LazyContributions,
 } from "@/components/home/dynamic";
-import { getGitHubRepos } from "@/lib/api/github";
 import { getTryHackMeStats } from "@/lib/api/tryhackme";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/data/platforms";
 import { LIVE_COPY } from "@/data/live-copy";
@@ -98,7 +92,7 @@ export const metadata: Metadata = {
 };
 
 const ABOUT_DESCRIPTION =
-  "The security toolbox, the home lab, the path from student to instructor, what I am doing now, and how an engagement runs.";
+  "The security toolbox, the home lab architecture, how an engagement runs, and open-source contributions.";
 
 function structuredData() {
   return jsonLd({
@@ -161,7 +155,7 @@ function structuredData() {
         areaServed: [{ "@type": "Country", name: "Egypt" }, "Worldwide"],
         availableLanguage: ["en"],
         serviceType: ["Governance, Risk & Compliance", "SOC Monitoring", "Incident Response", "Digital Forensics", "Malware Analysis", "Identity & Access Management", "Data Security", "Security Training"],
-        url: `${SITE_URL}#services`,
+        url: `${SITE_URL}#roles`,
       },
       {
         /* The FAQ exactly as shown on the page */
@@ -184,9 +178,7 @@ function structuredData() {
 const FORWARD_SCRIPT = homeForwardScript(normalizePublicHref("/").replace(/\/$/, ""));
 
 export default async function Home() {
-  const [repos, thm] = await Promise.all([getGitHubRepos(), getTryHackMeStats()]);
-  const projectCount = repos.length;
-  const starCount = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+  const thm = await getTryHackMeStats();
 
   return (
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-clip">
@@ -199,17 +191,15 @@ export default async function Home() {
       <MobileActionBar />
       <PaletteHint />
 
-      {/* ═══ 01 · The pitch: who → what → proof → where ═══ */}
-      <HeroSection projectCount={projectCount} starCount={starCount} description={LIVE_COPY.heroDescription} evidenceLabel={LIVE_COPY.heroEvidence} />
+      {/* ═══ 01 · The pitch: who → roles → proof → experience ═══ */}
+      <HeroSection description={LIVE_COPY.heroDescription} evidenceLabel={LIVE_COPY.heroEvidence} />
       <StatsBar stats={LIVE_COPY.stats} />
-      <ServicesSection />
       <RolesFit />
 
       <SlashDivider label="01 // Evidence" japanese="証拠" origin="left" />
       <TickerStrip />
 
       <WorkShowcase />
-      <ProjectsGrid repos={repos} />
       <div id="experience">
         <ExperienceTimeline />
       </div>
@@ -224,7 +214,7 @@ export default async function Home() {
         <PlatformsSection featured={tryHackMePlatform(thm)} thm={thm} others={STATIC_PLATFORMS} />
       </div>
 
-      {/* ═══ 02 · About: toolbox, lab, path, now, process, contributions ═══ */}
+      {/* ═══ 02 · About: toolbox, lab, process, contributions ═══ */}
       <SlashDivider label="02 // Operating model" japanese="実務" origin="right" />
       <TickerStrip reverse items={["継続", "改善", "実務", "計測", "BUILD THE RECORD"]} />
 
@@ -238,8 +228,6 @@ export default async function Home() {
         links={[
           { href: "#stack", label: "Toolbox" },
           { href: "#lab", label: "Home lab" },
-          { href: "#path", label: "The path" },
-          { href: "#now", label: "Now" },
           { href: "#process", label: "Process" },
           { href: "#contributions", label: "Contributions" },
         ]}
@@ -247,17 +235,8 @@ export default async function Home() {
       <div id="stack" className={DEFER}>
         <TechStackGrid />
       </div>
-      <div id="uses" className={DEFER}>
-        <UsesSection />
-      </div>
       <div className={DEFER}>
         <HomeLab />
-      </div>
-      <div id="path" className={DEFER}>
-        <MilestonesSection />
-      </div>
-      <div id="now" className={DEFER}>
-        <NowSection items={LIVE_COPY.now} />
       </div>
       <div className={DEFER}>
         <ProcessSection />

@@ -19,7 +19,7 @@ const LEVEL_BG = [
  */
 export function ContributionGraph({ stats }: { stats: ContributionStats }) {
   const { status, days, total } = stats;
-  const username = PORTFOLIO_DATA.projects.githubUsername;
+  const username = PORTFOLIO_DATA.profile.contact.github;
   if (status === "loading") {
     return (
       <div role="status" aria-label="Loading contribution graph" className="border border-foreground/10 bg-surface/60 p-6 overflow-hidden">

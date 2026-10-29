@@ -28,8 +28,7 @@ const LADDER = [360, 380, 430, 480, 600, 640, 672, 767, 768, 900, 991, 992, 1024
  * Root 62.5% × 0.9 = 9px, so any value under 1.2rem renders below 11px.
  * 53 such values were once bumped to tokens; that made the whole site larger, so it was fully reverted.
  *
- * This is a design decision, not a technical one, and it's the owner's call. To see the list at any
- * time without changing anything:  node scripts/fix-type-scale.mjs
+ * This is a design decision, not a technical one, and it's the owner's call. 
  */
 const MIN_REM = 0;
 
@@ -155,7 +154,7 @@ section("3. font-size below the minimum");
       if (parseFloat(m[1]) < MIN_REM) {
         console.log(
           `   ${RED("error")} ${rel(f)}:${lineOf(masked, m.index)} — ${m[1]}rem ≈ ${(parseFloat(m[1]) * 9.5).toFixed(1)}px.` +
-            ` Use var(--text-xs) or larger. (run: node scripts/fix-type-scale.mjs --write)`,
+            ` Use var(--text-xs) or larger.`,
         );
         n++;
       }

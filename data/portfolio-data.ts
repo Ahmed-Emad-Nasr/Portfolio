@@ -7,7 +7,7 @@
 import type { Experience, PortfolioData, WorkItem } from "@/data/types";
 import { knowledgeEducationItems } from "@/data/experience";
 import { languages, skillGroups } from "@/data/skills";
-import { GITHUB_USERNAME, projectBullets, staticProjectFallback } from "@/data/projects";
+import { GITHUB_USERNAME, staticProjectFallback } from "@/data/projects";
 import { GALLERY_IMAGE_COUNT, galleryImagePath, galleryMetadata } from "@/data/certifications";
 import { CV_PDF_HREF, YOUTUBE_CHANNEL_URL, normalizePublicHref } from "@/lib/shared";
 
@@ -19,8 +19,6 @@ const monthYear = (iso: string) => {
 
 /* ── Experience ─────────────────────────────────────────────────────────── */
 
-/* One line per role, in the voice of the card's italic intro. The bullets
-   underneath come straight from experience.ts. */
 /* Proof per role: the certificate in the gallery, and the case-library view
    of the work done there */
 const ROLE_PROOF: Record<string, Pick<Experience, "proof" | "cases">> = {
@@ -97,32 +95,10 @@ const experience: Experience[] = [...knowledgeEducationItems]
     };
   });
 
-/* ── Projects ───────────────────────────────────────────────────────────── */
+/* ── Selected work ──────────────────────────────────────────────────────── */
 
-const repoName = (url: string) => url.replace(/\/+$/, "").split("/").pop() ?? url;
 const repoByName = (name: string) => staticProjectFallback.find((r) => r.name === name);
 const urlOf = (name: string) => repoByName(name)?.html_url ?? `https://github.com/${GITHUB_USERNAME}`;
-
-/* One pick per area: GRC, detection, insider/data risk, malware, intel, VA */
-const PINNED = [
-  "Compliance-Framework",
-  "SOC-Environment",
-  "insider-threat-detection-deception",
-  "Malware-Analysis-and-Prevention-Strategy",
-  "Threat-Intelligence-Tool",
-  "Attack-Simulation-Security-Assessment",
-];
-
-const HIGHLIGHT_META: Record<string, { name: string; type: string; metrics: string[] }> = {
-  "SOC-Environment": { name: "SOC-Environment", type: "Detection Lab", metrics: ["Wazuh", "Suricata + Zeek", "Rule merged upstream"] },
-  "insider-threat-detection-deception": { name: "Insider-Threat-Deception", type: "Detection Lab", metrics: ["Honeytokens", "pfSense", "Auto-quarantine"] },
-  "Malware-Analysis-and-Prevention-Strategy": { name: "Malware-Analysis", type: "Research", metrics: ["20+ samples", "C2 traffic", "IOCs"] },
-  "Compliance-Framework": { name: "VerifAI-360", type: "GRC Platform", metrics: ["150+ frameworks", "Gap analysis", "AI-assisted"] },
-  "Threat-Intelligence-Tool": { name: "Threat-Intelligence-Tool", type: "CLI Tool", metrics: ["VirusTotal", "Hybrid Analysis", "NVD + Exploit-DB"] },
-  "Attack-Simulation-Security-Assessment": { name: "Attack-Simulation", type: "Assessment", metrics: ["Nessus", "ATT&CK", "Kill Chain"] },
-};
-
-/* ── Selected work ──────────────────────────────────────────────────────── */
 
 const work: WorkItem[] = [
   {
@@ -320,72 +296,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
     },
   },
   experience,
-  projects: {
-    githubUsername: GITHUB_USERNAME,
-    pinnedRepos: PINNED.map((name) => repoName(urlOf(name))),
-    highlights: PINNED.map((name) => {
-      const repo = repoByName(name);
-      const meta = HIGHLIGHT_META[name];
-      return {
-        name: repoName(urlOf(name)),
-        type: meta?.type ?? "Project",
-        description: projectBullets[name]?.[0] ?? repo?.description ?? "",
-        metrics: meta?.metrics ?? [],
-        link: urlOf(name),
-      };
-    }),
-  },
   work,
-  services: [
-    {
-      id: "grc",
-      title: "Governance, Risk & Compliance",
-      japanese: "統治",
-      description: "Gap assessments against ISO 27001, PCI DSS, NIST CSF, COBIT and SWIFT CSP — then the risk register, the policies and a remediation plan someone can actually follow.",
-      stack: ["ISO 27001", "PCI DSS", "NIST CSF", "COBIT"],
-      deliverable: "Gap report + remediation plan",
-    },
-    {
-      id: "soc",
-      title: "Security Operations",
-      japanese: "監視",
-      description: "Alert triage, log analysis and SIEM tuning — telling the real alert from the noise, then writing the rule that keeps the noise down.",
-      stack: ["Wazuh", "ELK", "Splunk", "Sysmon"],
-      deliverable: "Triage notes + tuned rules",
-    },
-    {
-      id: "ir",
-      title: "Incident Response & DFIR",
-      japanese: "対応",
-      description: "The NIST 800-61 lifecycle with the evidence behind it: memory, disk and registry forensics, a timeline, and a report the next analyst can act on.",
-      stack: ["NIST 800-61", "Volatility", "Autopsy", "TheHive"],
-      deliverable: "IR report + timeline + IOCs",
-    },
-    {
-      id: "malware",
-      title: "Malware & Threat Intel",
-      japanese: "解析",
-      description: "Static and dynamic analysis in an isolated lab, then the intelligence around it — enriched IOCs, YARA rules and the ATT&CK techniques behind them.",
-      stack: ["YARA", "FakeNet-NG", "VirusTotal", "ATT&CK"],
-      deliverable: "Findings + YARA rules",
-    },
-    {
-      id: "iam",
-      title: "IAM & Data Security",
-      japanese: "認証",
-      description: "Access reviews, least privilege and PAM; data classification, DLP and encryption — the right people reach the right data, and nobody else does.",
-      stack: ["IAM", "PAM", "DLP", "AWS KMS"],
-      deliverable: "Access review + control gaps",
-    },
-    {
-      id: "training",
-      title: "Security Training",
-      japanese: "指導",
-      description: "Courses and hands-on labs, from Linux and networking up to SOC, pentest, IAM and GRC tracks — 300+ students so far.",
-      stack: ["Curriculum", "Labs", "CTFs"],
-      deliverable: "Course + labs",
-    },
-  ],
   stack: skillGroups
     .filter((g) => g.id !== "soft")
     .map((g) => ({
@@ -403,20 +314,6 @@ export const PORTFOLIO_DATA: PortfolioData = {
     { id: "respond", index: "04", title: "Respond", japanese: "対応", description: "Contain, eradicate, recover — NIST 800-61, not instinct — then a report with the root cause and the fix." },
   ],
   languages: languages.map((l) => ({ code: l.code, name: l.name, level: l.short })),
-  uses: [
-    { id: "govern", title: "Govern", japanese: "統治", items: ["ISO 27001", "NIST CSF", "PCI DSS", "VerifAI 360"] },
-    { id: "detect", title: "Detect", japanese: "検知", items: ["Wazuh", "Splunk", "Suricata", "Sysmon"] },
-    { id: "investigate", title: "Investigate", japanese: "調査", items: ["Volatility", "Autopsy", "Wireshark", "Python"] },
-    { id: "practice", title: "Practice", japanese: "修練", items: ["TryHackMe", "LetsDefend", "Hack The Box", "PortSwigger"] },
-  ],
-  milestones: [
-    { year: "2022", title: "Started CS", detail: "Benha University — Information Security & Digital Forensics." },
-    { year: "2023", title: "First teaching role", detail: "IEEE: C and Python training for robotics teams." },
-    { year: "2024", title: "CCNA", detail: "Networking foundations, then GDG security sessions and CTF challenges." },
-    { year: "2025", title: "Blue and red", detail: "Incident response internship at DEPI, penetration testing track at ITI." },
-    { year: "2025", title: "Detection lab", detail: "Built the SOC environment; a custom Wazuh rule was merged into SOC Fortress." },
-    { year: "2026", title: "Instructor & graduate", detail: "Teaching at AMIT and NTI, graduated 8th of 900, GRC & information security internship at Banque Misr." },
-  ],
   contributions: [
     {
       name: "SOC Fortress",

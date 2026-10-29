@@ -176,8 +176,7 @@ To add a case:
 - `/gallery` — certificates, events, classroom, and security journey
 - `/collections/web-security-academy` — PortSwigger learning track
 - `/cv` — printable HTML CV
-- `/privacy` and `/terms` — legal pages
-- `/feed.xml`, `/sitemap.xml`, `/llms.txt` — machine-readable resources
+- `/sitemap.xml` — machine-readable sitemap
 
 Hidden operator tools include `Ctrl/⌘ K` for the command palette, `?` for
 keyboard shortcuts, and the `3omda` terminal easter egg.

@@ -4,7 +4,7 @@
  * strings to the client sections as props.
  */
 
-import type { FaqItem, NowItem, Stat } from "@/data/types";
+import type { FaqItem, Stat } from "@/data/types";
 import { investigationReportCount, publishedCaseCount } from "@/data/cases";
 import { coveredTechniqueCount } from "@/data/attack";
 import { CV_SUMMARY } from "@/data/cv";
@@ -13,7 +13,6 @@ import { normalizePublicHref } from "@/lib/shared";
 type LiveCopy = {
   heroDescription: string;
   heroEvidence: string;
-  now: NowItem[];
   faq: FaqItem[];
   stats: Stat[];
 };
@@ -21,12 +20,6 @@ type LiveCopy = {
 export const LIVE_COPY: LiveCopy = {
   heroDescription: CV_SUMMARY,
   heroEvidence: `${investigationReportCount} IR/DFIR reports · ${coveredTechniqueCount()} ATT&CK techniques`,
-  now: [
-    { label: "Teaching", detail: "Cybersecurity instructor at AMIT Learning and NTI — Linux, networking, SOC, pentest, IAM and GRC tracks." },
-    { label: "Writing", detail: `Case reports for the library — ${publishedCaseCount} published, ${investigationReportCount} of them full investigations.` },
-    { label: "Recording", detail: "Security walkthroughs on the YouTube channel, free for anyone starting out." },
-    { label: "Open to", detail: "Information Security Officer and Engineer roles, plus GRC, SOC, incident response, DFIR, IAM and cybersecurity education." },
-  ],
   faq: [
     { q: "What kind of role are you after?", a: "Information Security Officer or Engineer roles, with hands-on depth across GRC and compliance, SOC and incident response, DFIR and malware analysis, IAM and data security. I also work as a Cybersecurity Instructor; penetration testing is at a beginner level (eJPT)." },
     { q: "Do you do GRC and compliance work?", a: "Yes. At Banque Misr I assessed GRC gaps across three units against ISO 27001, PCI DSS, COBIT and SWIFT, and audited IAM, PAM and DevSecOps architecture. VerifAI 360, my open-source GRC platform, automates control mapping and gap analysis across 150+ frameworks." },

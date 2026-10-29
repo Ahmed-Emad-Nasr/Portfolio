@@ -99,7 +99,7 @@ stale-while-revalidate, all bounded. Registered after load, production only.
 ## Security
 
 A Content-Security-Policy `<meta>` (`lib/security.ts`; GitHub Pages cannot
-send headers), `security.txt`, strict referrer policy, no third-party scripts, and YouTube embeds load only after a click.
+send headers), strict referrer policy, no third-party scripts, and YouTube embeds load only after a click.
 
 ## Measurements
 

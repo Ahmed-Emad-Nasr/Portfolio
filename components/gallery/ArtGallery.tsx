@@ -33,18 +33,7 @@ export default function ArtGallery() {
   );
 
   return (
-    <section id="art" aria-labelledby="art-title" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
-      {/* Background Decorative Kanji */}
-      <div
-        className="absolute right-10 top-20 pointer-events-none select-none text-foreground/[0.03] text-[15vw] font-black z-0 vertical-text uppercase"
-        aria-hidden="true"
-        role="img"
-      >
-        <span>記</span>
-        <span>録</span>
-        <span>証</span>
-        <span>明</span>
-      </div>
+    <section id="art" aria-labelledby="art-title" className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 md:px-20 bg-background overflow-hidden">
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
@@ -58,10 +47,10 @@ export default function ArtGallery() {
                 <ScrambleText text="Visual Archive" />
               </span>
             </div>
-            <h2 id="art-title" className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">
+            <h1 id="art-title" className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Proof</span> <br />
               <span className="text-primary italic">Gallery.</span>
-            </h2>
+            </h1>
             <p className="mt-6 max-w-2xl text-base md:text-lg font-light leading-relaxed text-foreground/65 [text-wrap:pretty]">
               Certificates, events, the classroom and moments along the way. Open any picture to see it full size.
             </p>

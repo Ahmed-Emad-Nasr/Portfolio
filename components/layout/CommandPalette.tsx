@@ -27,7 +27,6 @@ import {
   Crosshair,
   GraduationCap,
   Trophy,
-  ShieldCheck,
 } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
@@ -146,11 +145,9 @@ export default function CommandPalette() {
     const isDark = resolvedTheme === "dark";
     return [
       { id: "home", group: "Go to", label: "Home", icon: Home, run: () => go("#home") },
-      { id: "services", group: "Go to", label: "Services", icon: Briefcase, run: () => go("#services") },
       { id: "roles", group: "Go to", label: "Roles I fit", icon: Briefcase, run: () => go("#roles") },
       { id: "work", group: "Go to", label: "Selected work", icon: Code2, run: () => go("#work") },
       { id: "lab", group: "Go to", label: "Home lab architecture", icon: Code2, run: () => go("#lab") },
-      { id: "projects", group: "Go to", label: "Open-source projects", icon: Code2, run: () => go("#projects") },
       { id: "experience", group: "Go to", label: "Experience", icon: Briefcase, run: () => go("#experience") },
       { id: "teaching", group: "Go to", label: "Teaching", icon: GraduationCap, run: () => go("#teaching") },
       { id: "faq", group: "Go to", label: "FAQ", icon: MessageCircle, run: () => go("#faq") },
@@ -162,19 +159,12 @@ export default function CommandPalette() {
       { id: "wsa", group: "Pages", label: "Web Security Academy track", icon: FolderSearch, run: () => visit("/collections/web-security-academy") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
       { id: "blog-page", group: "Pages", label: "Blog — cases, ATT&CK, videos", icon: FileText, run: () => visit("/blog") },
-      { id: "about-area", group: "Go to", label: "About — toolbox, lab, path", icon: FileText, run: () => go("#about") },
+      { id: "about-area", group: "Go to", label: "About — toolbox, lab, process", icon: FileText, run: () => go("#about") },
       { id: "blog", group: "Go to", label: "Case library", icon: FolderSearch, run: () => go("#cases") },
       { id: "stack", group: "Go to", label: "Tools of the trade", icon: Code2, run: () => go("#stack") },
       { id: "process", group: "Go to", label: "How I work (process)", icon: Briefcase, run: () => go("#process") },
       { id: "videos", group: "Go to", label: "Videos", icon: PlayCircle, run: () => go("#videos") },
       { id: "cv-page", group: "Pages", label: "CV", icon: FileText, run: () => visit("/cv") },
-      {
-        id: "security-txt", group: "Pages", label: "security.txt", icon: ShieldCheck,
-        run: () => {
-          setOpen(false);
-          window.open(normalizePublicHref(".well-known/security.txt"), "_blank", "noopener");
-        },
-      },
       {
         id: "theme", group: "Appearance", label: isDark ? "Switch to light mode" : "Switch to dark mode",
         icon: isDark ? Sun : Moon,

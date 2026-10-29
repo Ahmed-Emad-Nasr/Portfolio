@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/ui/kit";
 import ArtGallery from "@/components/gallery/ArtGallery";
-import SlashDivider from "@/components/ui/SlashDivider";
-import TickerStrip from "@/components/ui/TickerStrip";
 import { absoluteUrl, OG_IMAGE } from "@/lib/site";
 import { jsonLd, PERSON_REF, SITE_URL } from "@/lib/seo";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
@@ -53,8 +51,6 @@ export default function GalleryPage() {
   return (
     <PageShell showLoader>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
-      <SlashDivider label="01 // Visual archive" japanese="記録" origin="left" />
-      <TickerStrip items={["証明", "記録", "軌跡", "PROOF IN FRAME"]} />
       <ArtGallery />
     </PageShell>
   );

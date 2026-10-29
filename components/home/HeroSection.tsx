@@ -45,13 +45,9 @@ const HERO_PHOTO = {
 };
 
 export default function HeroSection({
-  projectCount,
-  starCount,
   description,
   evidenceLabel,
 }: {
-  projectCount: number;
-  starCount: number;
   /** "28 reports · 1 rule merged upstream" — the strongest proof, from live-copy.ts */
   evidenceLabel?: string;
   /** The summary paragraph — quotes the case-library numbers (live-copy.ts) */
@@ -173,7 +169,7 @@ export default function HeroSection({
      "+0" with exactly two services and fell back to the template's
      "Full-Stack" with none. The areas are now stated in the data. */
   const focusLabel = PORTFOLIO_DATA.profile.focus.join(" · ");
-  const shippedLabel = `${projectCount} repos · ${starCount} stars`;
+  const shippedLabel = `${PORTFOLIO_DATA.work.length} open-source projects`;
   const tongueCodes = PORTFOLIO_DATA.languages.map((l) => l.code).join(" · ");
 
   return (

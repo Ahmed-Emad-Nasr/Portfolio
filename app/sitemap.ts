@@ -77,18 +77,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [PERSON_IMAGE],
     },
     {
-      url: absoluteUrl("/privacy"),
-      lastModified: latestCaseDate,
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-    {
-      url: absoluteUrl("/terms"),
-      lastModified: latestCaseDate,
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-    {
       url: absoluteUrl("/Assets/cv/AhmedEmadNasr_CV.pdf"),
       lastModified: latestCaseDate,
       changeFrequency: "monthly",

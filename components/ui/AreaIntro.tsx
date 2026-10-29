@@ -5,7 +5,6 @@
  * (lib/perf/PageEffects.tsx mounts lazy targets before jumping).
  */
 
-import type { ReactNode } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import FadeIn from "@/components/ui/FadeIn";
 
@@ -19,7 +18,6 @@ export default function AreaIntro({
   titleB,
   description,
   links,
-  extra,
   as = "h2",
 }: {
   id: string;
@@ -29,8 +27,6 @@ export default function AreaIntro({
   titleB: string;
   description: string;
   links: AreaLink[];
-  /** Anything after the jump links (the RSS link on the blog) */
-  extra?: ReactNode;
   /** h1 when this is the page's own title (the blog page) */
   as?: "h1" | "h2";
 }) {
@@ -51,7 +47,6 @@ export default function AreaIntro({
               {j.n !== undefined && <span className="text-accent tabular-nums">{j.n}</span>}
             </a>
           ))}
-          {extra}
         </FadeIn>
       </div>
     </header>

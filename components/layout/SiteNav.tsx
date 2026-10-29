@@ -25,7 +25,7 @@ import {
    /#work …) plus the blog, which is its own page. */
 const navItems = [
   { name: "Home", href: "#home", icon: Home, katakana: "ホーム" },
-  { name: "Services", href: "#services", icon: Briefcase, katakana: "役務" },
+  { name: "Roles", href: "#roles", icon: Briefcase, katakana: "適任" },
   { name: "Work", href: "#work", icon: Code2, katakana: "仕事" },
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
   { name: "About", href: "#about", icon: UserRound, katakana: "人物" },
@@ -37,15 +37,10 @@ const navItems = [
 /* Where each item's part of the home page ends: "About" stays lit through
    the toolbox, lab and path sections; the blog teaser lights "Blog" */
 const AREA_OF: Record<string, string> = {
-  roles: "#services",
-  projects: "#work",
   teaching: "#experience",
   platforms: "#platforms",
   stack: "#about",
-  uses: "#about",
   lab: "#about",
-  path: "#about",
-  now: "#about",
   process: "#about",
   contributions: "#about",
   blog: "/blog",

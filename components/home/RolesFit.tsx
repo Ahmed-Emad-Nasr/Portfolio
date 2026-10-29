@@ -33,7 +33,7 @@ type Role = {
 const ROLES: Role[] = [
   {
     id: "information-security-officer",
-    title: "Information Security Officer",
+    title: " Information Security Officer",
     japanese: "統制",
     icon: ClipboardCheck,
     pitch: "Build a risk-led security program: governance, compliance, control ownership, remediation tracking and executive-ready evidence.",

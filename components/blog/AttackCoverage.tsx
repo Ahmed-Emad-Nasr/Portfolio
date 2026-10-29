@@ -10,12 +10,7 @@ import type { CSSProperties } from "react";
 import FadeIn from "@/components/ui/FadeIn";
 import { CounterBadge, KanjiWatermark } from "@/components/ui/kit";
 import ScrambleText from "@/components/ui/ScrambleText";
-import { normalizePublicHref } from "@/lib/shared";
-import { SITE_URL } from "@/lib/seo";
 import { attackCoverage } from "@/lib/library-data";
-
-const LAYER_PATH = "attack-navigator-layer.json";
-const NAVIGATOR_URL = `https://mitre-attack.github.io/attack-navigator/#layerURL=${encodeURIComponent(`${SITE_URL}${LAYER_PATH}`)}`;
 
 /* The whole matrix in one screen: a column per tactic, a cell per covered
    technique, sweeping in left to right in kill-chain order the first time it
@@ -293,25 +288,6 @@ export default function AttackCoverage() {
               </FadeIn>
             );
           })}
-        </div>
-
-        {/* ─── Take it with you: the same coverage as an ATT&CK Navigator layer ─── */}
-        <div className="mt-10 flex flex-wrap gap-3">
-          <a
-            href={normalizePublicHref(LAYER_PATH)}
-            download="ahmed-emad-nasr-attack-layer.json"
-            className="group inline-flex items-center gap-2 px-5 py-3 bg-primary text-white font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors"
-          >
-            <span className="transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true">↓</span> Navigator layer (JSON)
-          </a>
-          <a
-            href={NAVIGATOR_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 px-5 py-3 border border-foreground/15 text-foreground/80 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] hover:border-primary hover:text-foreground transition-colors"
-          >
-            Open in ATT&amp;CK Navigator <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
-          </a>
         </div>
 
         <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-foreground/60">

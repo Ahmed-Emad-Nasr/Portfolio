@@ -15,7 +15,7 @@ import FadeIn from "@/components/ui/FadeIn";
 export default function ContributionsGrid() {
   const sectionRef = useRef<HTMLElement>(null);
   const near = useInView(sectionRef, { once: true, margin: "600px 0px" });
-  const stats = useContributionStats(PORTFOLIO_DATA.projects.githubUsername, near);
+  const stats = useContributionStats(PORTFOLIO_DATA.profile.contact.github, near);
 
   return (
     <section ref={sectionRef} aria-label="Open-source contributions" className="relative py-16 md:py-20 px-6 md:px-20 bg-background overflow-hidden">

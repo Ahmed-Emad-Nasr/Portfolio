@@ -6,7 +6,6 @@
  */
 
 import type { Metadata } from "next";
-import { Rss } from "lucide-react";
 import { DEFER, PageShell } from "@/components/ui/kit";
 import AreaIntro from "@/components/ui/AreaIntro";
 import SlashDivider from "@/components/ui/SlashDivider";
@@ -17,7 +16,6 @@ import { attackCoverage, libraryCounts, libraryStructuredData } from "@/lib/libr
 import { blogYoutubePlaylists, blogYoutubeVideos } from "@/data/youtube";
 import { CHANNEL_ID, PERSON_REF, SITE_URL, jsonLd, youtubeEmbed, youtubeThumb, youtubeWatch } from "@/lib/seo";
 import { absoluteUrl, OG_IMAGE } from "@/lib/site";
-import { normalizePublicHref } from "@/lib/shared";
 
 const DESCRIPTION =
   "Incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and cybersecurity videos by Ahmed Emad Nasr.";
@@ -27,7 +25,6 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: {
     canonical: "/blog",
-    types: { "application/rss+xml": [{ url: "/feed.xml", title: "Ahmed Emad Nasr — Blog" }] },
   },
   openGraph: {
     title: "Blog — Ahmed Emad Nasr",
@@ -121,14 +118,6 @@ export default function BlogPage() {
           { href: "#detections", label: "Detection rules" },
           { href: "#triage", label: "Triage challenge" },
         ]}
-        extra={
-          <a
-            href={normalizePublicHref("/feed.xml")}
-            className="inline-flex items-center gap-2 px-3.5 py-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.2em] text-foreground/60 transition-colors hover:text-primary-ink"
-          >
-            <Rss size={12} aria-hidden="true" /> RSS
-          </a>
-        }
       />
 
       {/* ─── Start here, the case library (filters, cards) and the videos ─── */}
