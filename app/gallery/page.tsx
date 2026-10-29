@@ -54,7 +54,7 @@ export default function GalleryPage() {
     <PageShell showLoader>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData() }} />
       <SlashDivider label="01 // Visual archive" japanese="記録" origin="left" />
-      <TickerStrip items={["証明", "記録", "رحلة", "PROOF IN FRAME"]} />
+      <TickerStrip items={["証明", "記録", "軌跡", "PROOF IN FRAME"]} />
       <ArtGallery />
     </PageShell>
   );

@@ -26,7 +26,6 @@ import { CONTENT_SECURITY_POLICY } from "@/lib/security";
 import KeyboardShortcuts from "@/components/layout/KeyboardShortcuts";
 import DeferredGlobalEffects from "@/components/layout/DeferredGlobalEffects";
 import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
-import Analytics from "@/components/layout/Analytics";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/lib/shared";
 import { OG_IMAGE } from "@/lib/site";
 import {
@@ -155,7 +154,7 @@ const STRUCTURED_DATA_JSON = jsonLd({
       givenName: "Ahmed",
       additionalName: "Emad",
       familyName: "Nasr",
-      alternateName: ["Ahmed Emad", "3omda", "0x3omda", "أحمد عماد نصر"],
+      alternateName: ["Ahmed Emad", "3omda", "0x3omda"],
       url: SITE_URL,
       mainEntityOfPage: { "@id": `${SITE_URL}#profilepage` },
       image: { "@type": "ImageObject", "@id": `${SITE_URL}#person-image`, url: PERSON_IMAGE, caption: PERSON_NAME },
@@ -165,7 +164,6 @@ const STRUCTURED_DATA_JSON = jsonLd({
       hasOccupation: { ...OCCUPATION, skills: skillGroups.flatMap((group) => group.items).join(", ") },
       knowsAbout: [...new Set([...KEYWORDS.grc, ...KEYWORDS.operations, ...KEYWORDS.response, ...KEYWORDS.identityData, ...skillGroups.flatMap((group) => group.items)])],
       knowsLanguage: [
-        { "@type": "Language", name: "Arabic", alternateName: "ar" },
         { "@type": "Language", name: "English", alternateName: "en" },
       ],
       hasCredential: certificationsJsonLd(PERSON_ID),
@@ -181,7 +179,7 @@ const STRUCTURED_DATA_JSON = jsonLd({
       address: { "@type": "PostalAddress", addressLocality: "Cairo/Benha", addressCountry: "EG" },
       contactPoint: {
         "@type": "ContactPoint", contactType: "professional inquiry",
-        email: "ahmed.em.nasr@gmail.com", availableLanguage: ["en", "ar"],
+        email: "ahmed.em.nasr@gmail.com", availableLanguage: ["en"],
       },
       /* Every public profile that is the same person — the identity graph
          a knowledge panel is built from. */
@@ -197,8 +195,8 @@ const STRUCTURED_DATA_JSON = jsonLd({
       url: YOUTUBE_CHANNEL_URL,
       sameAs: [YOUTUBE_CHANNEL_URL],
       founder: PERSON_REF,
-      description: "Arabic-language cybersecurity tutorials: SOC labs, Wazuh SIEM, malware analysis, attack simulation, GRC and security fundamentals.",
-      knowsLanguage: ["ar", "en"],
+      description: "Cybersecurity tutorials: SOC labs, Wazuh SIEM, malware analysis, attack simulation, GRC and security fundamentals.",
+      knowsLanguage: ["en"],
     },
     {
       "@type": "WebSite",
@@ -257,7 +255,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <CursorMount />
               {children}
             </SmoothScroll>
-            <Analytics />
             <ServiceWorkerRegister />
           </ThemeFxProvider>
         </ThemeProvider>

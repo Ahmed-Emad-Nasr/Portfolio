@@ -6,7 +6,6 @@ import { ArrowUpRight } from "lucide-react";
 import { caseEvidenceLibrary } from "@/data/cases";
 import CaseFilterLink from "@/components/blog/CaseFilterLink";
 import FadeIn from "@/components/ui/FadeIn";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 /* How many cases mention each tool — the same fields the library's search
    reads, so the number on the chip is the number the click finds. Server
@@ -86,9 +85,6 @@ export default function TechStackGrid() {
                     );
                   })}
                 </ul>
-                <BilingualNote label="ملخص عربي">
-                  مجموعة أدوات مرتبطة بحالات وتقارير فعلية، ويمكن فتح الأدلة لمعرفة أين استُخدمت كل أداة.
-                </BilingualNote>
                 {g.evidence && g.evidence.length > 0 && (
                   <div className="mt-6 pt-4 border-t border-foreground/5">
                     <span className="block mb-2 font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/65">Proof</span>

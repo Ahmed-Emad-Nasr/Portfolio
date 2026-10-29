@@ -20,7 +20,7 @@ import { absoluteUrl, OG_IMAGE } from "@/lib/site";
 import { normalizePublicHref } from "@/lib/shared";
 
 const DESCRIPTION =
-  "Incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and Arabic cybersecurity videos by Ahmed Emad Nasr.";
+  "Incident reports, DFIR investigations, malware analysis, detection rules mapped to MITRE ATT&CK, and cybersecurity videos by Ahmed Emad Nasr.";
 
 export const metadata: Metadata = {
   title: "Blog — Case Library, ATT&CK & Videos",
@@ -60,7 +60,7 @@ function structuredData() {
       {
         "@type": "ItemList",
         "@id": `${blogUrl}#videos`,
-        name: "Cybersecurity video tutorials by Ahmed Emad Nasr (Arabic)",
+        name: "Cybersecurity video tutorials by Ahmed Emad Nasr",
         numberOfItems: blogYoutubeVideos.length,
         itemListElement: blogYoutubeVideos.map((video, index) => ({
           "@type": "ListItem",
@@ -74,7 +74,7 @@ function structuredData() {
             uploadDate: video.publishedAt,
             embedUrl: youtubeEmbed(video.videoId),
             url: youtubeWatch(video.videoId),
-            inLanguage: "ar",
+            inLanguage: "en",
             keywords: (video.tags ?? []).join(", "),
             creator: PERSON_REF,
             author: PERSON_REF,
@@ -91,7 +91,7 @@ function structuredData() {
         url: playlist.sourceUrl.split("&")[0],
         ...(playlist.thumbnailVideoId ? { image: youtubeThumb(playlist.thumbnailVideoId) } : {}),
         keywords: (playlist.tags ?? []).join(", "),
-        inLanguage: "ar",
+        inLanguage: "en",
         author: PERSON_REF,
         publisher: { "@id": CHANNEL_ID },
       })),

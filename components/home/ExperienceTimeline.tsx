@@ -4,7 +4,6 @@ import { Calendar, MapPin, CheckCircle2, ExternalLink, Award, FolderSearch } fro
 import CaseFilterLink from "@/components/blog/CaseFilterLink";
 import ScrambleText from "@/components/ui/ScrambleText";
 import FadeIn from "@/components/ui/FadeIn";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 export default function ExperienceTimeline() {
   return (
@@ -155,9 +154,6 @@ export default function ExperienceTimeline() {
                       )}
                     </div>
                   ))}
-                  <BilingualNote label="ملخص عربي">
-                    سجل خبرة يوضح الدور والجهة والنتائج العملية والتفاصيل التي يمكن التحقق منها من الأدلة المرتبطة.
-                  </BilingualNote>
                 </div>
 
                 {/* Proof: the certificate and the work, one click away */}

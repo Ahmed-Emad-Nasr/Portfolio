@@ -11,7 +11,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "d2eWKWp6cnQ",
     title: "False Positive vs False Negative vs True Positive vs True Negative",
-    description: "The four outcomes of every detection, explained with SOC examples (Arabic narration). What each one means, which one is the dangerous miss, and why the balance between them drives alert fatigue, rule tuning and how a SIEM is judged — the vocabulary every analyst uses from the first day of triage.",
+    description: "The four outcomes of every detection, explained with SOC examples. What each one means, which one is the dangerous miss, and why the balance between them drives alert fatigue, rule tuning and how a SIEM is judged — the vocabulary every analyst uses from the first day of triage.",
     publishedAt: "2026-10-21",
     tags: [
       "SOC",
@@ -27,7 +27,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "1VM05WrTkJ0",
     title: "Setting Up Burp Suite on Firefox from Scratch — FoxyProxy, CA Certificate & Proxy",
-    description: "A beginner-friendly setup guide for intercepting web traffic with Burp Suite (Arabic narration). Covers configuring the Burp proxy listener, routing Firefox through it with the FoxyProxy extension, downloading and trusting the Burp CA certificate so HTTPS can be intercepted, testing the setup, and fixing the most common errors — the starting point for any web application test. For authorized testing only.",
+    description: "A beginner-friendly setup guide for intercepting web traffic with Burp Suite. Covers configuring the Burp proxy listener, routing Firefox through it with the FoxyProxy extension, downloading and trusting the Burp CA certificate so HTTPS can be intercepted, testing the setup, and fixing the most common errors — the starting point for any web application test. For authorized testing only.",
     publishedAt: "2026-10-20",
     tags: [
       "Burp Suite",
@@ -43,7 +43,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "GhzG0_IJqJY",
     title: "Connecting Kali Linux to the TryHackMe VPN with OpenVPN — Step by Step",
-    description: "A short, step-by-step guide for beginners (Arabic narration): download the VPN configuration file from TryHackMe, connect from Kali Linux with OpenVPN in the terminal (sudo openvpn your-file.ovpn), confirm the tunnel is up and the target machines are reachable, and troubleshoot the usual connection problems.",
+    description: "A short, step-by-step guide for beginners: download the VPN configuration file from TryHackMe, connect from Kali Linux with OpenVPN in the terminal (sudo openvpn your-file.ovpn), confirm the tunnel is up and the target machines are reachable, and troubleshoot the usual connection problems.",
     publishedAt: "2026-10-18",
     tags: [
       "TryHackMe",
@@ -59,7 +59,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "_NHM4bJwVIg",
     title: "Active Directory, LDAP, RADIUS & TACACS+ Explained — How They Connect in AAA",
-    description: "How the four pieces of enterprise authentication fit together (Arabic narration). Active Directory as the central store for users, computers and groups; LDAP as the protocol applications use to query it; RADIUS for centralized AAA on network access, VPN and Wi-Fi; and TACACS+ for administrator access and per-command authorization on network devices — with where each one shows up in a real environment and in an analyst's logs.",
+    description: "How the four pieces of enterprise authentication fit together. Active Directory as the central store for users, computers and groups; LDAP as the protocol applications use to query it; RADIUS for centralized AAA on network access, VPN and Wi-Fi; and TACACS+ for administrator access and per-command authorization on network devices — with where each one shows up in a real environment and in an analyst's logs.",
     publishedAt: "2026-10-14",
     tags: [
       "Active Directory",
@@ -75,7 +75,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "xpRs11z2_3Y",
     title: "Compensating Controls Explained | Cybersecurity Basics",
-    description: "What a compensating control is and when an organization needs one (Arabic narration): when the primary control isn't feasible, how an alternative control reduces the same risk, a real-world example, and how compensating controls are documented and accepted in compliance frameworks such as PCI DSS. Aimed at beginners in SOC, GRC and information security.",
+    description: "What a compensating control is and when an organization needs one: when the primary control isn't feasible, how an alternative control reduces the same risk, a real-world example, and how compensating controls are documented and accepted in compliance frameworks such as PCI DSS. Aimed at beginners in SOC, GRC and information security.",
     publishedAt: "2026-10-11",
     tags: [
       "Compensating Controls",
@@ -90,7 +90,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "ggD8ON2KZF4",
     title: "Hashing and Salting Explained",
-    description: "Why passwords are never stored in plain text (Arabic narration). What hashing is and how it differs from encryption and encoding, what a salt adds and how it defeats rainbow-table attacks, and how real systems store credentials with slow hashing algorithms such as bcrypt, scrypt and Argon2.",
+    description: "Why passwords are never stored in plain text. What hashing is and how it differs from encryption and encoding, what a salt adds and how it defeats rainbow-table attacks, and how real systems store credentials with slow hashing algorithms such as bcrypt, scrypt and Argon2.",
     publishedAt: "2026-10-07",
     tags: [
       "Hashing",
@@ -106,7 +106,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
   {
     videoId: "Rk3MaVVwUqE",
     title: "Asymmetric Encryption Explained",
-    description: "Public and private keys from the ground up (Arabic narration): what asymmetric encryption is, how encryption and decryption work with a key pair, how it compares with symmetric encryption, and why protocols such as HTTPS/TLS depend on it — explained to be understood, not memorized.",
+    description: "Public and private keys from the ground up: what asymmetric encryption is, how encryption and decryption work with a key pair, how it compares with symmetric encryption, and why protocols such as HTTPS/TLS depend on it — explained to be understood, not memorized.",
     publishedAt: "2026-10-04",
     tags: [
       "Asymmetric Encryption",
@@ -366,7 +366,7 @@ export const blogYoutubeVideos: BlogYoutubeVideo[] = [
 export const blogFeaturedYoutubeVideo: FeaturedYoutubeVideo = {
   videoId: "orw_kiHZvhU",
   title: "How to Download and Install the Wazuh SIEM",
-  description: "A from-scratch walkthrough of downloading and installing Wazuh — the first step of the SOC lab series (Arabic narration).",
+  description: "A from-scratch walkthrough of downloading and installing Wazuh — the first step of the SOC lab series.",
   sourceUrl: "https://youtu.be/orw_kiHZvhU?si=0D4Ri-NSCzCB-Bg_",
 };
 

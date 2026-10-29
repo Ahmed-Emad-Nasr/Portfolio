@@ -19,7 +19,7 @@ export default function BlogTeaser() {
           japanese="記録"
           titleA="From the"
           titleB="Blog."
-          description={`${libraryCounts.reports} full investigation reports, ${libraryCounts.total} documented cases and ${blogYoutubeVideos.length} Arabic videos — the evidence behind everything above.`}
+          description={`${libraryCounts.reports} full investigation reports, ${libraryCounts.total} documented cases and ${blogYoutubeVideos.length} videos — the evidence behind everything above.`}
         />
 
         <StartHere headingLevel="h3" note="Short on time? Three reports to start with — detection engineering, a full DFIR investigation and a malware teardown. The rest of the library is on the blog." />

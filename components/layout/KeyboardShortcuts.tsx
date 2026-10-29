@@ -5,7 +5,7 @@
  *
  *   /        open the palette
  *   ?        the shortcuts sheet
- *   g + h/w/e/c/b/t   jump to a section, the case library, or the top
+ *   g + h/w/e/l/p/a/b/t   jump to a section, the case library, or the top
  *   3omda    the hidden terminal
  *
  * Both overlays are lazy — none of their code loads until first use.

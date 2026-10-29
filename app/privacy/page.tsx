@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_BASE_URL, OG_IMAGE } from "@/lib/site";
 import { LEGAL_CONTACT, LEGAL_LAST_UPDATED, SITE_FACTS } from "@/data/legal";
-import { ANALYTICS } from "@/lib/analytics";
 import { PageShell, legalBackLink, legalPage, legalSection, legalSheet, legalSummary, legalTitle, legalUpdated } from "@/components/ui/kit";
 
 export const metadata: Metadata = {
@@ -35,10 +34,7 @@ export default function PrivacyPage() {
           <p>
             <strong>The short version.</strong> This is a personal portfolio. It
             sets no cookies, runs no tracking, and nothing you type is sent to a
-            server.{" "}
-            {ANALYTICS
-              ? `It counts visits with ${ANALYTICS.provider}, which is cookieless and keeps no profile of you.`
-              : "It has no analytics, so nothing you do here is recorded by me."}
+            server. Nothing you do here is recorded by me.
           </p>
           <p>
             The exceptions are ordinary server logs kept by the host, a public
@@ -65,11 +61,7 @@ export default function PrivacyPage() {
             <strong>not</strong> do:
           </p>
           <ul>
-            {ANALYTICS ? (
-              <li>No Google Analytics, no advertising pixels, no session recording.</li>
-            ) : (
-              <li>No analytics of any kind. No Google Analytics, no Plausible, no pixels.</li>
-            )}
+            <li>No tracking scripts, no advertising pixels, no session recording.</li>
             <li>No cookies. The site sets none, first-party or third-party.</li>
             <li>No advertising, no advertising networks, no profiling.</li>
             <li>No newsletter, sign-up, or server-side form. The contact form on the home page does not submit anywhere — it only opens your own email app with the message filled in.</li>
@@ -132,20 +124,6 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {ANALYTICS && (
-          <section className={legalSection}>
-            <h2>Visit statistics</h2>
-            <p>
-              To see which pages and cases are read, the site uses{" "}
-              <strong>{ANALYTICS.provider}</strong>. It counts page views, the
-              referring site, the browser and operating system, and the country
-              — in aggregate. It sets no cookies, uses no fingerprinting, and does
-              not follow you across other sites. Its own data policy is{" "}
-              <a href={ANALYTICS.policy} target="_blank" rel="noopener noreferrer">here</a>.
-            </p>
-          </section>
-        )}
-
         <section className={legalSection}>
           <h2>Cookies</h2>
           <p>
@@ -158,7 +136,7 @@ export default function PrivacyPage() {
             interface preferences on your own device. Under the ePrivacy Directive
             and comparable rules, storage that is strictly necessary for a
             service the user has requested does not require consent. If tracking
-            or cookie-based analytics are ever added to this site, this section and
+            or non-essential cookies are ever added to this site, this section and
             the consent position will be revisited before they go live.
           </p>
         </section>
@@ -204,7 +182,7 @@ export default function PrivacyPage() {
           <h2>Changes</h2>
           <p>
             If the site changes in a way that affects this policy — for example
-            if analytics or a server-side form are added — this page will be updated
+            if a server-side form is added — this page will be updated
             and the date at the top changed before that feature goes live.
           </p>
         </section>

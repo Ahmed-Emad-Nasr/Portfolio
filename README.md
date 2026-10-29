@@ -188,8 +188,6 @@ keyboard shortcuts, and the `3omda` terminal easter egg.
 
 Copy `.env.example` to `.env.local` when local configuration is needed:
 
-- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` or `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` for
-  cookieless analytics
 - `NEXT_PUBLIC_WEB3FORMS_KEY` for the contact form
 
 Without a Web3Forms key, the contact form opens the visitor's mail app.

@@ -6,7 +6,6 @@ import PageLink from "@/components/ui/PageLink";
 import { ArrowUpRight } from "lucide-react";
 import { CASE_KINDS, formatDate, type PdfResource } from "@/lib/shared";
 import FadeIn from "@/components/ui/FadeIn";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 const KIND_SHORT = new Map(CASE_KINDS.map((k) => [k.id, k.short]));
 const KIND_TONE: Record<string, string> = {
@@ -48,9 +47,6 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
                 <div className="min-w-0">
                   <span className="block text-sm md:text-[0.95rem] text-foreground/85 group-hover:text-foreground transition-colors">{item.title}</span>
                   {item.verdict && <span className="block mt-0.5 text-xs text-foreground/60 truncate">{item.verdict}</span>}
-                  <BilingualNote label="ملخص عربي">
-                    حالة موثقة تتضمن التصنيف والمنصة والنتيجة، مع تفاصيل أوسع داخل صفحة التقرير.
-                  </BilingualNote>
                 </div>
               </div>
               <span className={`justify-self-start px-2 py-0.5 border font-mono text-[0.5625rem] uppercase tracking-[0.2em] ${KIND_TONE[item.kind ?? "lab"]}`}>

@@ -27,7 +27,7 @@ const body = `# Ahmed Emad Nasr — Information Security Officer
 
 > Egyptian information security professional (Cairo / Benha) working across governance, risk and compliance (GRC), SOC operations, incident response and digital forensics (DFIR), malware analysis, identity and access management (IAM) and data security. Cybersecurity instructor. Penetration testing at beginner level only (eJPT).
 
-Also known as: Ahmed Emad, 3omda, 0x3omda, أحمد عماد نصر.
+Also known as: Ahmed Emad, 3omda, 0x3omda.
 
 ## Contact
 
@@ -35,7 +35,7 @@ Also known as: Ahmed Emad, 3omda, 0x3omda, أحمد عماد نصر.
 - CV (HTML): ${absoluteUrl("/cv")}
 - CV (PDF): ${absoluteUrl(CV_PDF_HREF)}
 - Email: ahmed.em.nasr@gmail.com
-- Languages: Arabic (native), English
+- Languages: English
 
 ## Profiles
 
@@ -73,7 +73,7 @@ ${certifications.map((cert) => `- ${cert.name} — ${cert.issuer}, ${cert.year}`
 
 ${caseEvidenceLibrary.map((item) => `- [${item.title}](${caseUrl(item.id)}): ${item.category}, ${item.platform}`).join("\n")}
 
-## Videos (Arabic)
+## Videos
 
 YouTube channel: ${YOUTUBE_CHANNEL_URL}
 

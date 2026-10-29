@@ -1,7 +1,6 @@
 import SectionHeader from "@/components/ui/SectionHeader";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import FadeIn from "@/components/ui/FadeIn";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 export default function ProcessSection() {
   return (
@@ -34,9 +33,6 @@ export default function ProcessSection() {
               <div className="jp-eyebrow text-[0.625rem] text-foreground/30 mb-3" lang="ja" aria-hidden="true" data-jp={p.japanese} />
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3">{p.title}</h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{p.description}</p>
-              <BilingualNote label="ملخص عربي">
-                مرحلة من منهج العمل تبدأ بفهم المخاطر وتنتهي بقرار موثق واستجابة قابلة للقياس.
-              </BilingualNote>
               {idx < PORTFOLIO_DATA.process.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-[2px] bg-primary/40 overflow-visible" aria-hidden="true">
                   {/* A packet travelling to the next step */}

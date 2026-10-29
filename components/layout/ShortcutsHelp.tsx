@@ -23,7 +23,6 @@ const GROUPS: { title: string; items: { keys: string[]; label: string }[] }[] = 
       { keys: ["g", "h"], label: "Home" },
       { keys: ["g", "w"], label: "Selected work" },
       { keys: ["g", "e"], label: "Experience" },
-      { keys: ["g", "c"], label: "Certifications" },
       { keys: ["g", "l"], label: "Teaching" },
       { keys: ["g", "p"], label: "Practice platforms" },
       { keys: ["g", "a"], label: "ATT&CK coverage" },

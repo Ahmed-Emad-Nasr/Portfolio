@@ -1170,7 +1170,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Stored XSS Identification", "Persistent Payload Injection", "Output Encoding Analysis"],
     readTime: 4,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab Stored XSS into HTML context with nothing encoded/Screenshot (252).webp", // صورة الـ Alert كغلاف
+    image: "Assets/Cases/Lab Stored XSS into HTML context with nothing encoded/Screenshot (252).webp",
   },
   {
     id: "reflected-xss-html-context",
@@ -1185,7 +1185,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["XSS Identification", "Payload Crafting", "Input Validation Testing"],
     readTime: 4,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab Reflected XSS into HTML context with nothing encoded/Screenshot (246).webp", // صورة الـ Alert كغلاف
+    image: "Assets/Cases/Lab Reflected XSS into HTML context with nothing encoded/Screenshot (246).webp",
   },
   {
     id: "dom-xss-document-write",
@@ -1200,7 +1200,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["DOM Vulnerability Analysis", "Source-to-Sink Tracing", "Context-Aware Payload Crafting"],
     readTime: 5,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab DOM XSS in document.write sink using source location.search/Screenshot (260).webp", // صورة الـ Alert كغلاف
+    image: "Assets/Cases/Lab DOM XSS in document.write sink using source location.search/Screenshot (260).webp",
   },
   {
     id: "dom-xss-innerhtml-sink",
@@ -1215,7 +1215,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["DOM Vulnerability Analysis", "Event Handler Exploitation", "innerHTML Bypass"],
     readTime: 5,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab DOM XSS in innerHTML sink using source location.search/Screenshot (267).webp", // صورة الـ Alert كغلاف
+    image: "Assets/Cases/Lab DOM XSS in innerHTML sink using source location.search/Screenshot (267).webp",
   },
   {
     id: "dom-xss-jquery-href",
@@ -1230,7 +1230,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Source-to-Sink Tracing", "href Exploitation", "JavaScript Pseudo-protocol"],
     readTime: 4,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab DOM XSS in jQuery anchor href attribute sink using location.search source/Screenshot (273).webp", // صورة الـ URL Payload كغلاف
+    image: "Assets/Cases/Lab DOM XSS in jQuery anchor href attribute sink using location.search source/Screenshot (273).webp",
   },
   {
     id: "xxe-retrieve-files",
@@ -1245,7 +1245,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["XXE Identification", "External Entity Injection", "XML Payload Crafting"],
     readTime: 5,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab Exploiting XXE using external entities to retrieve files/Screenshot (283).webp", // صورة الـ Response اللي فيه /etc/passwd كغلاف
+    image: "Assets/Cases/Lab Exploiting XXE using external entities to retrieve files/Screenshot (283).webp",
   },
   {
     id: "xxe-ssrf-aws-metadata",
@@ -1260,7 +1260,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["XXE-to-SSRF Escalation", "Cloud Metadata Exploitation (AWS)", "IAM Credential Theft"],
     readTime: 8,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (297).webp", // صورة اللي فيها مفاتيح AWS كغلاف
+    image: "Assets/Cases/Lab Exploiting XXE to perform SSRF attacks/Screenshot (297).webp",
   },
   {
     id: "jwt-unverified-signature",
@@ -1275,7 +1275,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["JWT Manipulation", "Authentication Bypass", "Session Management Exploitation"],
     readTime: 6,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab JWT authentication bypass via unverified signature/Screenshot (308).webp", // صورة تعديل الـ Request في Burp كغلاف
+    image: "Assets/Cases/Lab JWT authentication bypass via unverified signature/Screenshot (308).webp",
   },
   {
     id: "jwt-flawed-signature",
@@ -1290,7 +1290,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["JWT Manipulation", "Algorithm Confusion Attacks", "Authentication Bypass"],
     readTime: 6,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (328).webp", // صورة تعديل خوارزمية التشفير لـ none كغلاف
+    image: "Assets/Cases/Lab JWT authentication bypass via flawed signature verification/Screenshot (328).webp",
   },
   {
     id: "oauth-implicit-flow-bypass",
@@ -1305,7 +1305,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["OAuth Vulnerability Analysis", "Authentication Bypass", "API Parameter Tampering"],
     readTime: 6,
     date: "2026-10-20",
-    image: "Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (348).webp", // صورة تعديل الريكوست في Repeater كغلاف
+    image: "Assets/Cases/Lab Authentication bypass via OAuth implicit flow/Screenshot (348).webp",
   },
   {
     id: "2fa-simple-bypass",
@@ -1320,7 +1320,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Authentication Flow Analysis", "Logic Flaw Exploitation", "Forced Browsing"],
     readTime: 4,
     date: "2026-10-21",
-    image: "Assets/Cases/Lab 2FA simple bypass/Screenshot (353).webp", // صورة صفحة My account كغلاف
+    image: "Assets/Cases/Lab 2FA simple bypass/Screenshot (353).webp",
   },
   {
     id: "password-reset-broken-logic",
@@ -1335,7 +1335,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Logic Flaw Exploitation", "Parameter Tampering", "Authentication Flow Analysis", "Account Hijacking"],
     readTime: 6,
     date: "2026-10-21",
-    image: "Assets/Cases/Lab Password reset broken logic/Screenshot (379).webp", // صورة تعديل الـ username في الريكوست كغلاف
+    image: "Assets/Cases/Lab Password reset broken logic/Screenshot (379).webp",
   },
   {
     id: "guided-pentest-infrastructure",
@@ -1350,7 +1350,7 @@ export const caseEvidenceLibrary: CaseEvidence[] = [
     skillsGained: ["Network Enumeration", "Vulnerability Exploitation", "Initial Access", "Privilege Escalation via Plaintext Credentials", "Pentest Reporting"],
     readTime: 15,
     date: "2026-10-21",
-    image: "Assets/Cases/Guided Pentest Infrastructure/Screenshot (415).webp", // صورة إتمام الروم كغلاف
+    image: "Assets/Cases/Guided Pentest Infrastructure/Screenshot (415).webp",
   },
   {
     id: "vulnerability-scanning-tools",

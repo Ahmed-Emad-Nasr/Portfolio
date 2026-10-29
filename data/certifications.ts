@@ -110,10 +110,10 @@ const GALLERY_TITLES: Readonly<Record<number, string>> = {
 };
 
 /** A gallery image's title: its certificate name, or "Record NN" for photos */
-export const galleryTitle = (index: number): string =>
+const galleryTitle = (index: number): string =>
   GALLERY_TITLES[index] ?? `Record ${String(index).padStart(2, "0")}`;
 
-export type GalleryMetadata = {
+type GalleryMetadata = {
   title: string;
   description: string;
   category: string;

@@ -18,7 +18,6 @@ import { blogFeaturedYoutubeVideo, blogYoutubePlaylists as playlists, blogYoutub
 import { libraryCounts } from "@/lib/library-data";
 import { CounterBadge, KanjiWatermark, btnOutline } from "@/components/ui/kit";
 import FadeIn from "@/components/ui/FadeIn";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 const VIDEO_PAGE = 6;
 
@@ -117,7 +116,7 @@ export default function MediaSections() {
               japanese="動画"
               titleA="Watch &"
               titleB="Learn."
-              description="Arabic walkthroughs and labs from the channel — SIEM, malware analysis, web security and GRC basics, all in one place."
+              description="Walkthroughs and labs from the channel — SIEM, malware analysis, web security and GRC basics, all in one place."
             />
             <div className="mb-16 md:mb-20 flex flex-col items-start gap-4">
               <CounterBadge value={videos.length} top="Videos" bottom="Indexed" />
@@ -143,10 +142,6 @@ export default function MediaSections() {
                     />
                     <div className="flex flex-col flex-1 p-6">
                       <span className="flex items-center gap-3 mb-2">
-                        {/* The channel is narrated in Arabic — say so before someone presses play */}
-                        <span className="px-1.5 py-0.5 border border-accent/40 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-accent" title="Narrated in Arabic">
-                          AR
-                        </span>
                         {video.publishedAt && (
                           <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-tertiary">
                             {formatDate(video.publishedAt)}
@@ -168,9 +163,6 @@ export default function MediaSections() {
                           ))}
                         </ul>
                       )}
-                      <BilingualNote label="ملخص عربي">
-                        فيديو تعليمي يشرح الموضوع خطوة بخطوة مع أمثلة عملية مناسبة للتعلم والتطبيق الآمن.
-                      </BilingualNote>
                       <div className="mt-auto flex flex-wrap gap-3">
                         <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} w-fit`}>
                           <ExternalLink size={13} /> Watch on YouTube
@@ -253,9 +245,6 @@ export default function MediaSections() {
                           </span>
                         ))}
                       </div>
-                      <BilingualNote label="ملخص عربي">
-                        قائمة تشغيل تجمع دروسًا مترابطة حول الموضوع من الإعداد إلى التطبيق والتحليل.
-                      </BilingualNote>
                       <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} mt-auto w-fit`}>
                         <ExternalLink size={13} /> Open playlist
                       </a>

@@ -46,7 +46,6 @@ export const KEYWORDS = {
     "Ahmed Nasr",
     "3omda",
     "0x3omda",
-    "أحمد عماد نصر",
   ],
   roles: [
     "Information Security Officer",
@@ -103,8 +102,6 @@ export const KEYWORDS = {
     "information security Cairo",
     "SOC analyst Egypt",
     "GRC analyst Egypt",
-    "أمن المعلومات",
-    "الأمن السيبراني",
   ],
 } as const;
 

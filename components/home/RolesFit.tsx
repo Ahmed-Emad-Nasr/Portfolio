@@ -25,7 +25,6 @@ type Role = {
   japanese: string;
   icon: typeof Radar;
   pitch: string;
-  pitchAr: string;
   focus: string[];
   proof: Proof[];
   credential: string;
@@ -38,7 +37,6 @@ const ROLES: Role[] = [
     japanese: "統制",
     icon: ClipboardCheck,
     pitch: "Build a risk-led security program: governance, compliance, control ownership, remediation tracking and executive-ready evidence.",
-    pitchAr: "بناء برنامج أمن معلومات قائم على المخاطر: الحوكمة والامتثال وملكية الضوابط ومتابعة المعالجة والأدلة المناسبة للإدارة.",
     focus: ["Risk & compliance", "Control assurance", "Security governance"],
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
@@ -53,7 +51,6 @@ const ROLES: Role[] = [
     japanese: "設計",
     icon: Radar,
     pitch: "Turn security requirements into working controls across SIEM, endpoint telemetry, network detection, IAM and cloud services.",
-    pitchAr: "تحويل متطلبات الأمن إلى ضوابط عملية في SIEM وتليمترية الأجهزة واكتشاف الشبكات وIAM والخدمات السحابية.",
     focus: ["Security architecture", "Detection engineering", "Hardening & integration"],
     proof: [
       { label: "Wazuh + Sysmon detection environment", href: "/blog/soc-env-depi-r3-project" },
@@ -68,12 +65,11 @@ const ROLES: Role[] = [
     japanese: "指導",
     icon: Microscope,
     pitch: "Make difficult security concepts usable: structured curricula, hands-on labs, assessment and feedback for beginners and practitioners.",
-    pitchAr: "تبسيط مفاهيم الأمن المعقدة من خلال مناهج منظمة ومعامل عملية وتقييم وملاحظات للمتعلمين والممارسين.",
     focus: ["Curriculum design", "Hands-on labs", "Mentoring & communication"],
     proof: [
       { label: "300+ students at AMIT Learning", href: "#teaching" },
       { label: "35+ GDG sessions and CTF challenges", href: "#experience" },
-      { label: "Arabic security walkthroughs", href: "/blog#videos" },
+      { label: "Security walkthroughs", href: "/blog#videos" },
     ],
     credential: "SOC & Cybersecurity Diploma · 160 hours",
   },
@@ -83,7 +79,6 @@ const ROLES: Role[] = [
     japanese: "統治",
     icon: ClipboardCheck,
     pitch: "Gap assessments against ISO 27001, PCI DSS, COBIT and SWIFT, and the remediation plan after them.",
-    pitchAr: "تقييم الفجوات مقابل ISO 27001 وPCI DSS وCOBIT وSWIFT مع خطة المعالجة.",
     focus: ["GRC assessments", "Remediation planning", "Compliance evidence"],
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
@@ -98,7 +93,6 @@ const ROLES: Role[] = [
     japanese: "監視",
     icon: Radar,
     pitch: "Alert triage to a written verdict, and the Wazuh rules that catch the next one.",
-    pitchAr: "من فرز التنبيه إلى حكم مكتوب، ثم بناء قواعد Wazuh التي تلتقط الحالة التالية.",
     focus: ["Alert triage", "SIEM operations", "Incident reporting"],
     proof: [
       { label: `${letsDefend} LetsDefend alerts investigated`, params: { q: "LetsDefend" } },
@@ -113,7 +107,6 @@ const ROLES: Role[] = [
     japanese: "鑑識",
     icon: Microscope,
     pitch: "Memory, disk, registry and browser artifacts to a timeline; samples taken apart to IOCs and YARA.",
-    pitchAr: "تحويل آثار الذاكرة والقرص والـ registry والمتصفح إلى خط زمني، وتحليل العينات إلى IOCs وYARA.",
     focus: ["DFIR timelines", "Malware analysis", "IOC extraction"],
     proof: [
       { label: `${forensics} digital forensics cases`, params: { cat: "Digital Forensics" } },
@@ -128,7 +121,6 @@ const ROLES: Role[] = [
     japanese: "認証",
     icon: KeyRound,
     pitch: "Access reviews, PAM and least privilege; where sensitive data goes and what stops it leaving.",
-    pitchAr: "مراجعات الوصول وPAM وأقل صلاحية، مع فهم مسار البيانات الحساسة وما يمنع تسريبها.",
     focus: ["IAM & PAM", "Least privilege", "Data protection"],
     proof: [
       { label: "Banque Misr — IAM, PAM & DevSecOps audit", href: "#experience" },
@@ -149,7 +141,7 @@ export default function RolesFit() {
           japanese="適任"
           titleA="Roles"
           titleB="I Fit."
-          description="One discipline, seven entry points. Pick the role you are hiring for — each comes with focus areas, bilingual context and evidence from the site."
+          description="One discipline, seven entry points. Pick the role you are hiring for — each comes with focus areas and evidence from the site."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -201,7 +193,6 @@ export default function RolesFit() {
                       );
                     })}
                   </ul>
-                  <p className="mb-6 text-xs text-foreground/70 leading-relaxed" lang="ar" dir="rtl">{r.pitchAr}</p>
 
                   <div className="mt-auto pt-4 border-t border-foreground/5 flex items-center justify-between gap-3">
                     <span className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent leading-snug">{r.credential}</span>

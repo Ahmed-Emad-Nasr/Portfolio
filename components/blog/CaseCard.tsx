@@ -13,7 +13,6 @@ import { useCopyLink } from "@/lib/use-copy-link";
 import { btnOutline, btnPrimary, chipAccent, chipNeutral, chipTertiary } from "@/components/ui/kit";
 import { caseCardBlurb } from "@/lib/case-summary";
 import FadeIn from "@/components/ui/FadeIn";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 type CaseCardProps = PdfResource & {
   index: number;
@@ -154,9 +153,6 @@ function CaseCard({
               ))}
             </div>
           )}
-          <BilingualNote label="ملخص عربي">
-            بطاقة حالة موثقة توضح المجال والأدوات والمهارات والنتيجة، ويمكن فتح التقرير لمراجعة الأدلة والتفاصيل الكاملة.
-          </BilingualNote>
 
           <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">
             <PageLink href={detailPath} className={btnPrimary}>

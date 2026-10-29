@@ -6,7 +6,6 @@ import { Github } from "@/components/ui/BrandIcons";
 import { Repo } from "@/lib/api/github";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { TiltCard } from "@/components/ui/Motion";
-import BilingualNote from "@/components/ui/BilingualNote";
 
 interface ProjectCardProps {
   repo: Repo;
@@ -112,9 +111,6 @@ function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
           ))}
         </div>
       )}
-      <BilingualNote>
-        مشروع مفتوح المصدر في مجال الأمن السيبراني يوضح المشكلة التي يعالجها، الأدوات المستخدمة، والنتائج القابلة للتحقق من المستودع.
-      </BilingualNote>
 
       {/* Actions */}
       <div className="flex gap-3 mt-auto pt-5 border-t border-foreground/5">
