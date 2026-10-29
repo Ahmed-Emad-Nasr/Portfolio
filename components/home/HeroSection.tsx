@@ -270,17 +270,11 @@ export default function HeroSection({
                   letting it wrap on its own made the whole hero jump (a layout
                   shift of up to 0.75 on phones) when the font arrived. */}
               <RevealText
-                text="Emad"
-                delay={0.72}
-                className="block md:ml-10 text-transparent"
-                style={{ WebkitTextStroke: "2px #BC002D" }}
-              />
-              <RevealText
-                text="Nasr"
-                delay={0.78}
-                className="block md:ml-10 text-transparent"
-                style={{ WebkitTextStroke: "2px #BC002D" }}
-              />
+  text="Emad  Nasr"
+  delay={0.72}
+  className="block md:ml-10 text-transparent whitespace-pre-wrap"
+  style={{ WebkitTextStroke: "2px #BC002D" }}
+/>
             </h1>
             <p className="brush-jp text-xl md:text-2xl text-foreground/40 mt-4 [word-break:auto-phrase] [text-wrap:balance]" lang="ja" aria-hidden="true" data-jp="アハメド・エマド・ナスル  情報セキュリティ" />
             {/* The jobs, typed one after another (from the old site's hero) */}
