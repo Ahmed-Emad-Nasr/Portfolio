@@ -246,13 +246,13 @@ export default function CaseArticle({
             <BlockTitle japanese="標識">Tags</BlockTitle>
             <div className="flex flex-wrap gap-2">
               {item.tags.map((tag) => (
-                <Link
+                <PageLink
                   key={tag}
-                  href={`/?q=${encodeURIComponent(tag)}#cases`}
+                  href={`/blog?q=${encodeURIComponent(tag)}#cases`}
                   className="px-2.5 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-foreground/60 bg-foreground/[0.04] border border-foreground/10 hover:border-primary hover:text-primary-ink transition-colors"
                 >
                   #{tag}
-                </Link>
+                </PageLink>
               ))}
             </div>
           </div>

@@ -11,25 +11,42 @@ import FadeIn from "@/components/ui/FadeIn";
 
 const Lightbox = dynamic(() => import("@/components/ui/Lightbox"), { ssr: false });
 
-/* A lazy section of the home page: six rows to start, three more per
-   click — images below the fold load lazily either way */
-const FIRST = 6;
+const FIRST = 9;
 const PAGE = 9;
+
+type GalleryFilter = "all" | "Certificate & credential" | "Exam score & verified badge" | "Teaching, events & field record";
+
+const FILTERS: { id: GalleryFilter; label: string; japanese: string }[] = [
+  { id: "all", label: "All records", japanese: "全部" },
+  { id: "Certificate & credential", label: "Certificates", japanese: "認定" },
+  { id: "Exam score & verified badge", label: "Exams & badges", japanese: "成績" },
+  { id: "Teaching, events & field record", label: "Teaching & events", japanese: "現場" },
+];
 
 export default function ArtGallery() {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
+  const [filter, setFilter] = useState<GalleryFilter>("all");
   const [visible, setVisible] = useState(FIRST);
-  const items = PORTFOLIO_DATA.artGallery.slice(0, visible);
+
+  const filteredItems = useMemo(
+    () =>
+      PORTFOLIO_DATA.artGallery.filter(
+        (img) => filter === "all" || img.category === filter,
+      ),
+    [filter],
+  );
+
+  const items = filteredItems.slice(0, visible);
 
   const lightboxSlides = useMemo(
     () =>
-      PORTFOLIO_DATA.artGallery.map((img) => ({
+      filteredItems.map((img) => ({
         src: img.src,
         title: img.title,
         description: `${img.description} Topics: ${img.keywords.join(", ")}.`,
       })),
-    [],
+    [filteredItems],
   );
 
   return (
@@ -48,10 +65,8 @@ export default function ArtGallery() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="mb-16 md:mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <FadeIn x={-40} y={0} duration={0.8}
-            className="max-w-3xl"
-          >
+        <div className="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-end gap-8">
+          <FadeIn x={-40} y={0} duration={0.8} className="max-w-3xl">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-primary" />
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
@@ -63,26 +78,25 @@ export default function ArtGallery() {
               <span className="text-primary italic">Gallery.</span>
             </h2>
             <p className="mt-6 max-w-2xl text-base md:text-lg font-light leading-relaxed text-foreground/65 [text-wrap:pretty]">
-              Certificates, events, the classroom and moments along the way. Open any picture to see it full size.
+              Certificates, exam transcripts, verified badges, classroom sessions and moments along the way. Filter by category or open any record full size.
             </p>
           </FadeIn>
 
           {/* Counter Badge */}
-          <FadeIn y={20} duration={0.6} delay={0.3}
->
+          <FadeIn y={20} duration={0.6} delay={0.3}>
             <div className="relative px-6 py-3 border border-foreground/10 bg-surface/60 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-primary" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-primary" />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-primary-ink text-2xl font-black">
-                  {String(PORTFOLIO_DATA.artGallery.length).padStart(2, "0")}
+                <span className="font-mono text-primary-ink text-2xl font-black tabular-nums">
+                  {String(filteredItems.length).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col">
                   <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
                     Items
                   </span>
                   <span className="font-mono text-[0.5625rem] text-on-surface-variant tracking-[0.3em] uppercase">
-                    Indexed
+                    Shown
                   </span>
                 </div>
               </div>
@@ -90,11 +104,42 @@ export default function ArtGallery() {
           </FadeIn>
         </div>
 
-        {/* Art Grid  masonry columns */}
+        {/* Category Filter Tabs */}
+        <div className="mb-12 flex flex-wrap gap-3" role="tablist" aria-label="Filter gallery by category">
+          {FILTERS.map((f) => {
+            const count =
+              f.id === "all"
+                ? PORTFOLIO_DATA.artGallery.length
+                : PORTFOLIO_DATA.artGallery.filter((img) => img.category === f.id).length;
+            const active = filter === f.id;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => {
+                  setFilter(f.id);
+                  setVisible(FIRST);
+                }}
+                className={`px-5 py-2.5 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-foreground/[0.03] text-foreground/70 border-foreground/10 hover:border-primary/50 hover:text-foreground"
+                }`}
+              >
+                {f.label} <span className="ml-1.5 tabular-nums opacity-80">({count})</span>
+                <span className="ml-2 text-[0.5625rem]" lang="ja" aria-hidden="true" data-jp={f.japanese} />
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Art Grid — masonry columns */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
           {items.map((img, idx) => (
             <FadeIn y={0} scale={0.95} duration={0.8} delay={(idx % 6) * 0.08}
-              key={idx}
+              key={img.src}
               className="break-inside-avoid"
             >
               <TiltCard
@@ -138,7 +183,6 @@ export default function ArtGallery() {
 
                 {/* Hover overlay */}
                 <div className="hover-reveal absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 z-10">
-                  {/* Diagonal line accent */}
                   <div
                     className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20"
                     style={{
@@ -170,17 +214,17 @@ export default function ArtGallery() {
           ))}
         </div>
 
-        {visible < PORTFOLIO_DATA.artGallery.length && (
+        {visible < filteredItems.length && (
           <div className="mt-14 flex justify-center">
             <button
               type="button"
-              onClick={() => setVisible((n) => Math.min(PORTFOLIO_DATA.artGallery.length, n + PAGE))}
+              onClick={() => setVisible((n) => Math.min(filteredItems.length, n + PAGE))}
               className="group flex items-center gap-3 px-8 py-4 border border-foreground/15 border-l-2 border-l-primary bg-foreground/[0.02] backdrop-blur-md text-foreground font-mono font-bold uppercase tracking-widest text-sm transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
             >
               <ChevronDown size={14} className="text-primary-ink transition-transform duration-300 group-hover:translate-y-0.5" />
               Show more
               <span className="font-mono text-[0.625rem] text-foreground/60 tabular-nums">
-                {visible}/{PORTFOLIO_DATA.artGallery.length}
+                {visible}/{filteredItems.length}
               </span>
             </button>
           </div>

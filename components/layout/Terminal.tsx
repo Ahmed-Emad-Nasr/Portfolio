@@ -15,6 +15,8 @@ import { caseEvidenceLibrary } from "@/data/cases";
 import { CV_PDF_HREF, normalizePublicHref } from "@/lib/shared";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { STATIC_PLATFORMS, THM_SNAPSHOT, tryHackMePlatform } from "@/data/platforms";
+import { certifications } from "@/data/certifications";
+import { caseAttackMapping } from "@/data/attack";
 
 type Line = { id: number; text: string; kind: "in" | "out" | "err" | "dim" };
 
@@ -98,6 +100,8 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             "ls                — list all cases",
             "ls <keyword>      — filter the list",
             "open <n|id>       — open a case page",
+            "mitre <T1xxx>     — cases mapped to a MITRE ATT&CK technique",
+            "certs             — list industry certifications",
             "cat cv            — open the CV",
             "skills            — most used tools",
             "ranks             — public training profiles",
@@ -108,6 +112,31 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             "exit              — close the terminal",
           ]);
           break;
+
+        case "certs":
+          printAll(
+            certifications.map((c) => `${c.year}  ${c.name} — ${c.issuer}`),
+          );
+          break;
+
+        case "mitre": {
+          if (!arg) {
+            print("mitre: pass a technique id, e.g. mitre T1190", "err");
+            break;
+          }
+          const needle = arg.toUpperCase();
+          const matched = cases.filter((c) =>
+            (caseAttackMapping[c.id] ?? []).some((t) => t.toUpperCase().startsWith(needle)),
+          );
+          if (!matched.length) {
+            print(`mitre: no case mapped to "${needle}"`, "err");
+            break;
+          }
+          printAll(
+            matched.map((c) => `${c.id}  —  ${c.title}`),
+          );
+          break;
+        }
 
         case "whoami":
           printAll([

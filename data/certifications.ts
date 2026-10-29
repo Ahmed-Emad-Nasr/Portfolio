@@ -36,7 +36,7 @@ export const certifications: readonly Certification[] = [
   { id: "thm-soc-l1-l2", credential: "course", name: "SOC Level 1 & SOC Level 2 Learning Paths", issuer: "TryHackMe", year: 2025, galleryIndex: 12 },
   { id: "malware-analysis-fundamentals", credential: "course", name: "Malware Analysis Fundamentals", issuer: "Mahara-Tech (ITI)", year: 2025, galleryIndex: 27 },
   { id: "cti-101", credential: "course", name: "Cyber Threat Intelligence 101", issuer: "arcX", year: 2025, galleryIndex: 15 },
-  { id: "ccna", credential: "exam", name: "Cisco Certified Network Associate (CCNA 200-301)", shortName: "CCNA", issuer: "Cisco Systems", year: 2024 },
+  { id: "ccna", credential: "exam", name: "Cisco Certified Network Associate (CCNA 200-301)", shortName: "CCNA", issuer: "Cisco Systems", year: 2024, galleryIndex: 7 },
   { id: "hcia-cloud", name: "HCIA-Cloud Computing V5.0", shortName: "HCIA-Cloud", issuer: "Huawei", year: 2024, cv: false, galleryIndex: 25 },
 ];
 
@@ -80,6 +80,7 @@ const GALLERY_TITLES: Readonly<Record<number, string>> = {
   19: "Security+ SY0-601 Prep · NetRiders Academy",
   20: "Red Teaming, Ethical Hacking, Bug Hunting & Penetration Test · Udemy",
   21: "SEC504 — GCIH Prep · NetRiders",
+  22: "Cybersecurity & Incident Response Training Record · NetRiders",
   23: "HCCDA-Tech Essentials · Huawei ICT Academy",
   24: "HCIA-Datacom V1.0 · Huawei Talent Online",
   25: "HCIA-Cloud Computing V5.0 · Huawei ICT Academy",
@@ -127,13 +128,19 @@ const CERTIFICATE_KEYWORDS = ["Ahmed Emad Nasr", "Cybersecurity", "Information S
 export const galleryMetadata = (index: number): GalleryMetadata => {
   const title = galleryTitle(index);
   const isCertificate = Boolean(GALLERY_TITLES[index]);
+  const isExamOrBadge = index >= 37 && index <= 49;
+  const category = isExamOrBadge
+    ? "Exam score & verified badge"
+    : isCertificate
+      ? "Certificate & credential"
+      : "Teaching, events & field record";
   return {
     title,
     description: isCertificate
       ? `${title}. A proof-of-learning or professional development record from Ahmed Emad Nasr's information security journey.`
-      : `Portfolio record ${String(index).padStart(2, "0")} from Ahmed Emad Nasr's information security, teaching and professional development archive.`,
-    category: isCertificate ? "Certificate and learning evidence" : "Professional portfolio record",
-    keywords: isCertificate ? [...CERTIFICATE_KEYWORDS, title] : ["Ahmed Emad Nasr", "Portfolio", "Professional Record", "Cybersecurity"],
+      : `Field archive record ${String(index).padStart(2, "0")} — cybersecurity instruction, technical workshops, and community events from Ahmed Emad Nasr's archive.`,
+    category,
+    keywords: isCertificate ? [...CERTIFICATE_KEYWORDS, title] : ["Ahmed Emad Nasr", "Portfolio", "Teaching & Events", "Cybersecurity"],
     creator: "Ahmed Emad Nasr",
   };
 };

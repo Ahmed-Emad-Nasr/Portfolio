@@ -191,6 +191,34 @@ export const caseAttackMapping: Record<string, readonly string[]> = {
   // ── Cloud, IAM & threat intel ───────────────────────────────────────────
   "apt33-threat-intel-brief": ["T1078.004"],
   "iam-access-control-room": ["T1078", "T1098"],
+  "aws-guardduty-setup": ["T1078.004", "T1595"],
+  "aws-kms-security": ["T1098", "T1562"],
+  "aws-athena-healthcare": ["T1005"],
+  "monitoring-active-directory": ["T1078", "T1098", "T1069"],
+  // ── Infrastructure pentesting & vulnerability scanning ──────────────────
+  "guided-pentest-infrastructure": ["T1046", "T1190", "T1059.004", "T1552", "T1078"],
+  "vulnerability-scanning-tools": ["T1595", "T1046", "T1190", "T1083"],
+  "owasp-juice-shop": ["T1190", "T1059", "T1083", "T1078"],
+  // ── Web Security Academy (PortSwigger) ──────────────────────────────────
+  "rce-web-shell-upload": ["T1190", "T1505.003", "T1059"],
+  "web-shell-content-type-bypass": ["T1190", "T1505.003", "T1036"],
+  "os-command-injection-simple": ["T1190", "T1059.004"],
+  "blind-os-injection-time-delays": ["T1190", "T1059.004"],
+  "blind-os-injection-output": ["T1190", "T1059.004", "T1005"],
+  "sqli-login-bypass": ["T1190", "T1078"],
+  "xxe-retrieve-files": ["T1190", "T1005", "T1083"],
+  "xxe-ssrf-aws-metadata": ["T1190", "T1552", "T1078.004"],
+  "basic-ssrf-local-server": ["T1190", "T1090"],
+  "jwt-unverified-signature": ["T1550", "T1078"],
+  "jwt-flawed-signature": ["T1550", "T1078"],
+  "oauth-implicit-flow-bypass": ["T1550", "T1078"],
+  "2fa-simple-bypass": ["T1078", "T1550"],
+  "password-reset-broken-logic": ["T1098", "T1078"],
+  "information-disclosure-module": ["T1552", "T1083", "T1190"],
+  "idor-live-chat": ["T1005", "T1552", "T1078"],
+  "user-id-password-disclosure": ["T1552", "T1078"],
+  "user-role-request-parameter": ["T1078", "T1548"],
+  "user-role-modified-profile": ["T1098", "T1078"],
 };
 
 const TECHNIQUE_BY_ID = new Map(TECHNIQUES.map((t) => [t.id, t]));

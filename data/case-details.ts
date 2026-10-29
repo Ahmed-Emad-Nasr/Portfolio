@@ -129,6 +129,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "soc274-pdf": {
+    lessons: "Management and VPN interfaces on perimeter firewalls should never allow unrestricted outbound connections from the appliance OS itself; egress ACLs on the management plane break command-injection callbacks.",
+
     verdict: "True positive — root-level code execution on the firewall",
     severity: "Critical",
     pages: 2,
@@ -224,6 +226,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "soc336-report": {
+    lessons: "Zero-click RTF/OLE rendering flaws bypass user training completely; blocking outbound SMB/WebDAV/scriptlet fetches from Office processes via ASR rules and firewall egress filtering stops the second stage even on unpatched hosts.",
+
     verdict: "True positive — zero-click RCE, host compromised",
     severity: "Critical",
     pages: 9,
@@ -294,6 +298,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "soc342-pdf": {
+    lessons: "Internet-facing collaboration servers require strict WAF virtual patching and file-integrity monitoring (FIM) on web-accessible directories like LAYOUTS so any dropped .aspx web shell triggers immediate host isolation.",
+
     verdict: "True positive — server compromised with a persistent web shell",
     severity: "Critical",
     pages: 7,
@@ -485,6 +491,8 @@ export const caseDetails: Record<string, CaseDetail> = {
 
   /* ── Malware analysis ──────────────────────────────────────────────── */
   "malware-analysis-wannacry": {
+    lessons: "Even without EternalBlue SMB propagation or a kill-switch domain, ransomware succeeds when manually staged after initial access; behavioral detection on mass CryptoAPI calls and shadow-copy deletion is far more resilient than hash blacklisting.",
+
     verdict: "Ransomware — modified WannaCry, delivered manually",
     severity: "Critical",
     pages: 45,
@@ -545,7 +553,7 @@ export const caseDetails: Record<string, CaseDetail> = {
       { label: "Sample", value: "Modified WannaCry (SHA-256 b547dc7a…790bf)" },
       { label: "Prevention", value: "Wazuh manager, indexer, Filebeat and dashboard" },
     ],
-    attachments: [{ label: "Video walkthrough (YouTube playlist)", href: "https://youtube.com/playlist?list=PLO1VSSKnwZUgGaiDZXU-mKuh8CUZxgAd" }],
+    attachments: [{ label: "Video walkthrough (YouTube playlist)", href: "https://youtube.com/playlist?list=PLO1VSSKnwZUgGaiDZXU-mKuh8CUZx-gAd" }],
   },
   "malware2-report": {
     verdict: "Malicious loader hiding a stage-two payload in its overlay",
@@ -595,6 +603,8 @@ export const caseDetails: Record<string, CaseDetail> = {
 
   /* ── Forensics ─────────────────────────────────────────────────────── */
   "data-exfiltration-investigation": {
+    lessons: "Volatile memory preserves command-line history and console buffers that never touch disk logs; pairing endpoint USB storage restrictions (GPO/DLP) with rapid RAM acquisition is critical for proving insider exfiltration.",
+
     verdict: "Confirmed exfiltration to USB, then credential theft",
     severity: "High",
     pages: 27,
@@ -624,6 +634,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "usb-forensics-report": {
+    lessons: "Registry hives (USBSTOR), ShellBags, and JumpLists reconstruct removable-media access down to the second even after the drive is unplugged; preventive DLP and hardware allow-listing by serial number eliminate the exposure.",
+
     verdict: "Deliberate insider access to payroll PII from a USB drive",
     severity: "High",
     pages: 12,
@@ -651,6 +663,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "lockbit-ransomware-forensics": {
+    lessons: "Extracting the live executable from memory via procdump recovers unpacked indicators and persistence keys that static disk inspection alone can miss.",
+
     verdict: "LockBit infection confirmed from memory",
     severity: "Critical",
     pages: 12,
@@ -675,6 +689,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "ecir-registry-forensics": {
+    lessons: "Anti-forensic wiping tools (BCWipe, CCleaner) leave their own unmistakable execution artifacts in UserAssist, AppCompatCache, and registry hive timestamps.",
+
     verdict: "Tip substantiated — unauthorized and trace-wiping software",
     pages: 25,
     facts: [
@@ -708,6 +724,8 @@ export const caseDetails: Record<string, CaseDetail> = {
 
   /* ── Projects ──────────────────────────────────────────────────────── */
   "3omda-custom-detection-rules": {
+    lessons: "Writing custom SIEM rules requires pairing every detection with a simulated attack (Atomic Red Team) and tuning frequency/timeframe thresholds to keep high-severity alerts free of routine administrative noise.",
+
     pages: 28,
     facts: [
       { label: "Rules", value: "52 custom (110001–110083) + Suricata/VirusTotal integration" },
@@ -740,6 +758,8 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "soc-env-depi-r3-project": {
+    lessons: "Correlating network IDS alerts (Suricata) with host telemetry (Sysmon + FIM) and automated VirusTotal/YARA active response cuts analyst triage time from minutes to seconds.",
+
     pages: 37,
     facts: [
       { label: "Programme", value: "Digital Egypt Pioneers Initiative, Round 3" },
@@ -778,6 +798,139 @@ export const caseDetails: Record<string, CaseDetail> = {
       { step: "Google sign-in page cloned on 192.168.10.200:80", technique: "T1566.002" },
       { step: "Victim submits e-mail and password over HTTP POST" },
       { step: "Credentials printed in plain text; victim redirected to google.com" },
+    ],
+  },
+  "aws-guardduty-setup": {
+    verdict: "Operationalized continuous AWS threat detection and triaged simulated cloud findings",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "AWS Cloud Lab" },
+      { label: "Service", value: "Amazon GuardDuty · AWS Console" },
+      { label: "Telemetry", value: "CloudTrail management events, VPC Flow Logs, DNS logs" },
+      { label: "Focus", value: "Anomalous API calls, EC2 compromise, S3 unauthorized access" },
+    ],
+    chain: [
+      { step: "Enable Amazon GuardDuty across the AWS account", technique: "T1595" },
+      { step: "Generate and simulate high-severity cloud threat findings" },
+      { step: "Investigate anomalous IAM API invocations and unauthorized S3 access", technique: "T1078.004" },
+      { step: "Triage compromised EC2 instance behavior and document remediation" },
+    ],
+    response: [
+      "Restrict overly permissive IAM roles and rotate exposed access keys",
+      "Enforce S3 Block Public Access and bucket policies with least privilege",
+      "Isolate suspicious EC2 instances via security group quarantine rules",
+    ],
+    lessons: "Continuous cloud threat detection depends on unified visibility across CloudTrail, VPC Flow Logs, and DNS logs so anomalous IAM API calls are caught before data exfiltration.",
+  },
+  "aws-kms-security": {
+    verdict: "Resolved External Key Store (XKS) failure caused by an explicit deny in AWS Organizations SCP",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "AWS Cloud Lab" },
+      { label: "Services", value: "AWS KMS, AWS IAM, AWS Organizations (SCP)" },
+      { label: "Key Type", value: "Customer Managed Keys (CMKs) & External Key Store (XKS)" },
+      { label: "Root Cause", value: "Explicit deny rule in Service Control Policy (SCP)" },
+    ],
+    chain: [
+      { step: "Provision Customer Managed Keys (CMKs) and define granular key policies", technique: "T1098" },
+      { step: "Diagnose External Key Store (XKS) cryptographic operation failures", technique: "T1562" },
+      { step: "Audit AWS Organizations Service Control Policies (SCPs) across organizational units" },
+      { step: "Identify and remediate the explicit deny statement blocking KMS actions" },
+    ],
+    response: [
+      "Updated the AWS Organizations SCP to permit authorized KMS cryptographic operations",
+      "Applied least-privilege key policies separating key administrators from key users",
+      "Verified key rotation and CloudTrail auditing for all CMK usage",
+    ],
+    lessons: "In multi-account AWS environments, an explicit deny in an Organizations Service Control Policy (SCP) overrides every account-level IAM and KMS key policy.",
+  },
+  "aws-athena-healthcare": {
+    verdict: "Built an encrypted S3 + Athena serverless query pipeline for healthcare records",
+    severity: "Low",
+    pages: 10,
+    facts: [
+      { label: "Platform", value: "AWS Cloud Lab" },
+      { label: "Services", value: "Amazon S3 (us-east-1), Amazon Athena" },
+      { label: "Dataset", value: "healthcaredata.patient_data (6 typed columns, LazySimpleSerDe)" },
+      { label: "Protection", value: "Athena-managed S3 server-side encryption for query results" },
+    ],
+    chain: [
+      { step: "Store healthcare CSV dataset in an encrypted Amazon S3 bucket", technique: "T1005" },
+      { step: "Define the Hive table schema in Amazon Athena using LazySimpleSerDe" },
+      { step: "Execute SQL queries and store encrypted query outputs back to S3" },
+      { step: "Document SerDe table property tuning (skip.header.line.count)" },
+    ],
+    response: [
+      "Set table property 'skip.header.line.count'='1' so the CSV header row is excluded from query results",
+      "Enforce S3 encryption at rest and strict IAM bucket policies for healthcare data",
+    ],
+  },
+  "guided-pentest-infrastructure": {
+    verdict: "Full system compromise — UnrealIRCd backdoor (port 6667) to root via exposed /etc/password.txt",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "TryHackMe" },
+      { label: "Service", value: "UnrealIRCd 3.2.8.1 on TCP 6667" },
+      { label: "Initial Access", value: "Metasploit UnrealIRCd backdoor command execution (webmaster)" },
+      { label: "Privilege Escalation", value: "Plaintext root credentials in /etc/password.txt → SSH" },
+    ],
+    chain: [
+      { step: "Nmap service enumeration identifies UnrealIRCd on port 6667", technique: "T1046" },
+      { step: "Weaponize UnrealIRCd 3.2.8.1 backdoor via Metasploit for foothold as webmaster", technique: "T1190" },
+      { step: "Post-exploitation file system enumeration locates /etc/password.txt", technique: "T1552" },
+      { step: "Escalate privileges to root over SSH using the recovered credentials", technique: "T1078" },
+    ],
+    response: [
+      "Decommission or replace the backdoored UnrealIRCd 3.2.8.1 binary with a verified release",
+      "Remove plaintext credential files (/etc/password.txt) and rotate root and user passwords",
+      "Restrict SSH root login (PermitRootLogin no) and enforce key-based authentication",
+    ],
+    lessons: "Outdated services with known supply-chain backdoors grant immediate shell access, and plaintext credential files on disk turn a low-privilege foothold into full root compromise.",
+  },
+  "vulnerability-scanning-tools": {
+    verdict: "Identified 7 web misconfigurations (including RFI & phpinfo) and anonymous FTP across 169,731 NVTs",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe" },
+      { label: "Target", value: "10.128.147.232 (Ubuntu 24.04 · Apache 2.4.58 · vsftpd 3.0.5)" },
+      { label: "Scanner Stack", value: "Nmap (NSE), Nikto v2.1.5, OpenVAS / Greenbone v26.7.0" },
+      { label: "Key Findings", value: "CVE-1999-0497 (Anon FTP), OSVDB-5292 (RFI), OSVDB-3233 (phpinfo)" },
+    ],
+    chain: [
+      { step: "Aggressive Nmap + NSE scan ('nmap -A') reveals Anonymous FTP (port 21), OpenSSH (22), WebSockify (80)", technique: "T1046" },
+      { step: "Nikto audit on port 8080 uncovers 7 issues including exposed /info.php and RFI", technique: "T1595" },
+      { step: "OpenVAS enterprise scan correlates findings against 169,731 NVTs (CVSS 5.3 for phpinfo)", technique: "T1190" },
+    ],
+    iocs: [
+      { type: "ip", value: "10.128.147.232", note: "Scanned target host" },
+      { type: "other", value: "CVE-1999-0497", note: "Anonymous FTP login enabled" },
+      { type: "other", value: "OSVDB-5292", note: "Remote File Inclusion on /info.php?file=" },
+    ],
+    response: [
+      "Disable anonymous FTP access in vsftpd.conf (anonymous_enable=NO)",
+      "Remove /info.php, disable directory listing on /static/, and disable the HTTP DEBUG verb",
+      "Set HttpOnly on PHPSESSID cookies and add X-Frame-Options headers",
+    ],
+    lessons: "Combining fast NSE script enumeration, web-specific Nikto checks, and full OpenVAS credentialed/uncredentialed NVT feeds prevents blind spots between network and web layers.",
+  },
+  "owasp-juice-shop": {
+    verdict: "Multi-stage exploitation across OWASP Top 10: SQLi auth bypass, DOM/Reflected XSS, and IDOR",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "OWASP Juice Shop" },
+      { label: "Tools", value: "Burp Suite, Browser DevTools" },
+      { label: "Vulnerability Classes", value: "SQL Injection, XSS (DOM & Reflected), IDOR, Sensitive Data Exposure" },
+    ],
+    chain: [
+      { step: "Client-side JavaScript inspection uncovers hidden routes (/score-board, admin panel)", technique: "T1083" },
+      { step: "SQL Injection payload bypasses authentication and extracts database records", technique: "T1190" },
+      { step: "DOM and Reflected XSS payloads execute arbitrary JavaScript in victim context", technique: "T1059" },
+      { step: "IDOR parameter manipulation accesses unauthorized user shopping baskets", technique: "T1078" },
+    ],
+    response: [
+      "Use parameterized queries (prepared statements) for all authentication and search endpoints",
+      "Enforce server-side object-level authorization checks on basket and profile IDs",
+      "Sanitize and contextually encode all user input before rendering in the DOM",
     ],
   },
 };
