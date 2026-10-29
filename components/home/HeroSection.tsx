@@ -270,15 +270,9 @@ export default function HeroSection({
                   letting it wrap on its own made the whole hero jump (a layout
                   shift of up to 0.75 on phones) when the font arrived. */}
               <RevealText
-                text="Emad"
+                text="Emad Nasr"
                 delay={0.72}
-                className="block md:ml-10 text-transparent"
-                style={{ WebkitTextStroke: "2px #BC002D" }}
-              />
-              <RevealText
-                text="Nasr"
-                delay={0.78}
-                className="block md:ml-10 text-transparent"
+                className="block md:ml-10 text-transparent whitespace-pre"
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
             </h1>
