@@ -23,6 +23,32 @@ type CaseCardProps = PdfResource & {
   onOpenGallery: (title: string, id: string, index?: number) => void;
 };
 
+const CAT_AR: Record<string, string> = {
+  "Digital Forensics": "تحقيق جنائي رقمي (DFIR)",
+  "Malware Analysis": "تحليل برمجيات خبيثة",
+  "SOC Analysis": "عمليات مركز الأمن (SOC) وهندسة الكشف",
+  "Incident Response": "استجابة للحوادث الأمنية",
+  "Web Security": "أمن تطبيقات الويب واختبار الثغرات",
+  "Penetration Testing": "اختبار اختراق وتقييم ثغرات",
+  "Cloud Security": "أمن البنية السحابية (Cloud Security)",
+  "Identity & Access": "أمن الهويات والتحكم في الوصول (IAM)",
+  "Email Security": "أمن البريد الإلكتروني وتحليل التصيد (Phishing)",
+  "Network Security": "أمن الشبكات وتحليل الحزم",
+  "Wireless Security": "أمن الشبكات اللاسلكية",
+  "Vulnerability Management": "إدارة وفحص الثغرات الأمنية",
+  "Threat Intelligence": "استخبارات التهديدات السيبرانية (CTI)",
+  "Defensive Security": "الأمن الدفاعي وعمليات الفريق الأزرق",
+};
+
+function buildArabicCaseBrief(item: Pick<PdfResource, "category" | "platform" | "tools" | "severity" | "href">): string {
+  const cat = CAT_AR[item.category ?? ""] ?? "تحليل أمن سيبراني";
+  const toolsList = item.tools?.slice(0, 3).join(" و");
+  const toolsPart = toolsList ? ` باستخدام ${toolsList}` : "";
+  const severityPart = item.severity ? ` (درجة الخطورة: ${item.severity})` : "";
+  const reportPart = item.href ? " — مرفق بالتقرير الفني الكامل بصيغة PDF ولقطات الإثبات." : " — موثق بالخطوات العملية ولقطات الإثبات.";
+  return `${cat} على منصة ${item.platform}${toolsPart}${severityPart}${reportPart}`;
+}
+
 function CaseCard({
   index,
   id,
@@ -120,8 +146,6 @@ function CaseCard({
             ) : null}
           </div>
 
-          {/* Named like the case page's <h1>: opening the case morphs this
-              title into the page headline (React <ViewTransition>) */}
           <ViewTransition name={`case-title-${id}`} share="morph" default="none">
             <h3 className="font-display text-xl md:text-lg lg:text-2xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">
               <PageLink href={detailPath} className="hover:text-primary-ink transition-colors duration-300">
@@ -154,8 +178,8 @@ function CaseCard({
               ))}
             </div>
           )}
-          <BilingualNote label="ملخص عربي">
-            بطاقة حالة موثقة توضح المجال والأدوات والمهارات والنتيجة، ويمكن فتح التقرير لمراجعة الأدلة والتفاصيل الكاملة.
+          <BilingualNote label="بطاقة الحالة // AR">
+            {buildArabicCaseBrief({ category, platform, tools, severity, href })}
           </BilingualNote>
 
           <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">

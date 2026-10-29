@@ -11,6 +11,13 @@ import type { Platform, TryHackMeStats } from "@/data/platforms";
 import ScrambleText from "@/components/ui/ScrambleText";
 import BilingualNote from "@/components/ui/BilingualNote";
 
+const PLATFORM_AR: Record<string, string> = {
+  tryhackme: "ضمن أعلى 1% عالمياً على منصة TryHackMe مع إتمام مساري SOC Level 1 وSOC Level 2 وأكثر من 315 غرفة تدريبية و51 شارة موثقة.",
+  hackthebox: "تطبيقات عملية في اختبار الاختراق (Enumeration, Exploitation, Privilege Escalation) ضمن مسار ITI والتأهيل لشهادة eJPT.",
+  cyberdefenders: "تحقيقات جنائية رقمية (DFIR) وتحديات فرق دفاعية (Blue Team) تحاكي حوادث الاختراق الحقيقية وتحليل الأدلة.",
+  cybertalents: "المشاركة في مسابقات التحديات الأمنية (CTFs) ومعسكر الأمن السيبراني، وتحقيق المركز 44 من أصل 450 متسابقاً في منافسة ITI × CyberTalents.",
+};
+
 function Mark({ children }: { children: string }) {
   return (
     <span
@@ -51,8 +58,8 @@ function FeaturedCard({ platform, stats }: { platform: Platform; stats: TryHackM
         </h3>
         <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
         <p className="mt-5 text-sm md:text-base text-foreground/60 font-light leading-relaxed">{platform.focus}</p>
-        <BilingualNote label="ملخص عربي">
-          ملف تدريبي عام يوضح منصة التطبيق ومجال التركيز والأرقام التي يمكن مراجعتها من المصدر مباشرة.
+        <BilingualNote label="سجل المنصة // AR">
+          {PLATFORM_AR[platform.id] ?? "ملف تدريبي عام موثق يمكن التحقق من نتائجه مباشرة عبر المنصة."}
         </BilingualNote>
         <div className="mt-auto pt-6">
           <ProfileLink label="View profile" />
@@ -60,7 +67,6 @@ function FeaturedCard({ platform, stats }: { platform: Platform; stats: TryHackM
       </div>
 
       <div className="flex flex-col flex-1 min-w-0 justify-center">
-        {/* gap-px over a tinted backing draws the hairlines between cells */}
         <dl className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-foreground/10 border border-foreground/10">
           {platform.stats.map((s) => (
             <div key={s.label} className="flex flex-col gap-2 px-4 py-6 bg-surface last:col-span-2 sm:last:col-span-1">
@@ -102,8 +108,8 @@ function PlatformCard({ platform }: { platform: Platform }) {
       </h3>
       <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.15em] text-foreground/60">@{platform.handle}</p>
       <p className="mt-4 text-sm text-foreground/60 font-light leading-relaxed">{platform.focus}</p>
-      <BilingualNote label="ملخص عربي">
-        منصة تدريبية تعرض مجال الممارسة والأرقام المسجلة والملف العام المرتبط بها.
+      <BilingualNote label="سجل المنصة // AR">
+        {PLATFORM_AR[platform.id] ?? "منصة تدريب عملي لتطبيق مهارات الفحص والتحليل الأمني."}
       </BilingualNote>
 
       {platform.stats.length > 0 && (

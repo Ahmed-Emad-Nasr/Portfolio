@@ -1,8 +1,7 @@
 import SectionHeader from "@/components/ui/SectionHeader";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { TiltCard } from "@/components/ui/Motion";
-import { Scale, Radar, ShieldAlert, Bug, KeyRound, GraduationCap } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { Scale, Radar, ShieldAlert, Bug, KeyRound, GraduationCap, ArrowRight } from "lucide-react";
 import { caseEvidenceLibrary } from "@/data/cases";
 import { caseKindOf } from "@/lib/shared";
 import CaseFilterLink from "@/components/blog/CaseFilterLink";
@@ -22,8 +21,15 @@ const PROOF: Record<string, { label: string; params?: Record<string, string>; hr
   training: { label: "The curriculum", href: "#teaching" },
 };
 
-/* One icon per service, by id — an index-based list silently gave a card
-   the wrong icon as soon as a service was added or reordered. */
+const SERVICE_AR: Record<string, string> = {
+  grc: "تقييم الفجوات الأمنية ومطابقة الضوابط وفق معايير ISO 27001 وPCI DSS وNIST CSF وCOBIT وSWIFT CSP، مع إعداد سجل المخاطر والسياسات وخطط المعالجة القابلة للتنفيذ.",
+  soc: "فرز وتحليل التنبيهات الأمنية، وفحص السجلات، وهندسة وضبط قواعد الكشف في Wazuh وSplunk وELK لتقليل الإنذارات الكاذبة ورفع دقة الرصد.",
+  ir: "الاستجابة للحوادث والتحقيق الجنائي الرقمي وفق منهجية NIST 800-61: تحليل الذاكرة والقرص وسجل النظام (Registry) وبناء الخط الزمني الكامل للحادثة.",
+  malware: "التحليل الثابت والديناميكي للبرمجيات الخبيثة داخل بيئة معزولة، واستخراج مؤشرات الاختراق (IOCs)، وكتابة قواعد YARA وربط السلوك بتكتيكات MITRE ATT&CK.",
+  iam: "مراجعة صلاحيات الوصول وتطبيق مبدأ الصلاحية الأدنى (Least Privilege) وحلول PAM، مع تصنيف البيانات وتفعيل ضوابط منع التسريب (DLP) وإدارة مفاتيح التشفير.",
+  training: "تصميم وتقديم مناهج تدريبية ومعامل تطبيقية متكاملة من أساسيات الشبكات وLinux حتى مسارات SOC وPentesting وIAM وGRC لأكثر من 300 متدرب.",
+};
+
 const ICONS = { grc: Scale, soc: Radar, ir: ShieldAlert, malware: Bug, iam: KeyRound, training: GraduationCap } as const;
 const COUNT_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 
@@ -81,7 +87,7 @@ export default function ServicesSection() {
                   → {s.deliverable}
                 </div>
                 <BilingualNote>
-                  خدمة أمن معلومات تبدأ بفهم المخاطر وتنتهي بمخرج مكتوب يمكن مراجعته وقياسه وتحسينه.
+                  {SERVICE_AR[s.id] ?? "خدمة أمن معلومات متكاملة تبدأ بتحليل المخاطر وتنتهي بتقرير فني وخطة عمل قابلة للتنفيذ."}
                 </BilingualNote>
                 {PROOF[s.id] && (() => {
                   const proof = PROOF[s.id];

@@ -26,6 +26,17 @@ const TYPE_ICON = {
   platform: Server,
 } as const;
 
+const WORK_AR: Record<string, string> = {
+  "verifai-360": "منصة حوكمة ومخاطر وامتثال (GRC) مدعومة بالذكاء الاصطناعي لأتمتة مطابقة الضوابط الأمنية عبر أكثر من 150 إطاراً معيارياً (مثل ISO 27001 وPCI DSS وNIST وGDPR) وتقليل الجهد اليدوي بنسبة 30%.",
+  "soc-environment": "بنية مركز عمليات أمنية (SOC) متكاملة تدمج Wazuh وSuricata وZeek وYARA وFIM وauditd وSysmon، مع محاكاة 50+ هجمة بنسبة كشف إيجابي حقيقي 95%+ ودمج قاعدة كشف رسمياً في مستودع SOC Fortress.",
+  "insider-threat": "مختبر كشف التهديدات الداخلية باستخدام مصائد Honeytokens في Wazuh مع مراقبة الشبكة عبر pfSense وSuricata وأتمتة العزل بـ Python، مما حقق رصداً بنسبة 100% وخفض الإنذارات الكاذبة بـ 30%.",
+  "malware-analysis": "مختبر معزول لتحليل أكثر من 20 عينة برمجيات خبيثة ثباتياً وديناميكياً باستخدام DIE وCFF Explorer وWireshark وFakeNet-NG لاستخلاص سلوكيات C2 ومؤشرات الاختراق (IOCs).",
+  "threat-intel-tool": "أداة استخبارات تهديدات بـ Python تدمج VirusTotal وHybrid Analysis وNVD وExploit-DB في استعلام موحد لتسريع إثراء مؤشرات الاختراق وفحص الثغرات.",
+  "attack-simulation": "مختبر محاكاة هجمات وتقييم ثغرات شامل باستخدام Nessus وKali Linux على أنظمة Metasploitable وDVWA، مع ربط أكثر من 15 سيناريو هجومي بإطار MITRE ATT&CK وتقديم توصيات المعالجة.",
+  "cybersuite": "تطبيق سطح مكتب متكامل بـ Python/Tkinter يجمع بين التحليل الثابت لملفات PDF المشبوهة واستخبارات التهديدات عبر 5 مصادر (VirusTotal وHybrid Analysis وNVD وAbuseIPDB وOTX).",
+  "webp-converter": "أداة بواجهة رسومية (Tkinter) وواجهة سطر أوامر (CLI) لتحويل وضغط الصور دفعة واحدة إلى صيغة WebP لتقليل حجم تقارير الفحص ومحتوى الويب.",
+};
+
 export default function WorkShowcase() {
   const [filter, setFilter] = useState<WorkType | "all">("all");
   const items = PORTFOLIO_DATA.work.filter((w) => filter === "all" || w.type === filter);
@@ -121,7 +132,7 @@ export default function WorkShowcase() {
                     ))}
                   </div>
                   <BilingualNote>
-                    عمل تطبيقي يوضح المشكلة والدور الذي تم تنفيذه والأدوات والقياسات المستخدمة لإثبات النتيجة.
+                    {WORK_AR[w.id] ?? `${w.title}: مشروع تطبيقي موثق بالأدوات (${w.stack.slice(0, 3).join(" · ")}) والنتائج القياسية في المستودع.`}
                   </BilingualNote>
 
                   <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-foreground/5">

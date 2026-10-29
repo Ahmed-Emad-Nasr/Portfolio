@@ -22,6 +22,23 @@ const SEVERITY_DOT: Record<string, string> = {
   Low: "bg-foreground/40",
 };
 
+const CAT_AR: Record<string, string> = {
+  "Digital Forensics": "تحقيق جنائي رقمي (DFIR)",
+  "Malware Analysis": "تحليل برمجيات خبيثة",
+  "SOC Analysis": "عمليات مركز الأمن (SOC)",
+  "Incident Response": "استجابة للحوادث الأمنية",
+  "Web Security": "أمن تطبيقات الويب",
+  "Penetration Testing": "اختبار اختراق",
+  "Cloud Security": "أمن البنية السحابية",
+  "Identity & Access": "أمن الهويات والوصول (IAM)",
+  "Email Security": "أمن البريد وتحليل التصيد",
+  "Network Security": "أمن الشبكات",
+  "Wireless Security": "أمن الشبكات اللاسلكية",
+  "Vulnerability Management": "إدارة وفحص الثغرات",
+  "Threat Intelligence": "استخبارات التهديدات (CTI)",
+  "Defensive Security": "الأمن الدفاعي",
+};
+
 export default function CaseList({ items }: { items: readonly PdfResource[] }) {
   return (
     <div className="border border-foreground/10 bg-surface/40">
@@ -48,8 +65,8 @@ export default function CaseList({ items }: { items: readonly PdfResource[] }) {
                 <div className="min-w-0">
                   <span className="block text-sm md:text-[0.95rem] text-foreground/85 group-hover:text-foreground transition-colors">{item.title}</span>
                   {item.verdict && <span className="block mt-0.5 text-xs text-foreground/60 truncate">{item.verdict}</span>}
-                  <BilingualNote label="ملخص عربي">
-                    حالة موثقة تتضمن التصنيف والمنصة والنتيجة، مع تفاصيل أوسع داخل صفحة التقرير.
+                  <BilingualNote label="ملخص الحالة // AR">
+                    {`${CAT_AR[item.category ?? ""] ?? "تحليل أمني"} على منصة ${item.platform}${item.tools?.length ? ` (${item.tools.slice(0, 2).join(" · ")})` : ""}.`}
                   </BilingualNote>
                 </div>
               </div>

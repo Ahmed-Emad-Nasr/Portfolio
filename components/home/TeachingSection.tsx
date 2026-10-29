@@ -10,6 +10,14 @@ import { DIPLOMA, TEACHING_ROLES, TEACHING_STATS } from "@/data/teaching";
 import ScrambleText from "@/components/ui/ScrambleText";
 import BilingualNote from "@/components/ui/BilingualNote";
 
+const TEACHING_AR: Record<string, string> = {
+  "AMIT Learning": "تدريب أكثر من 300 طالب في مسارات الشبكات وLinux وSecurity+ ومقررات SANS SEC450 / SEC504 مع معامل عملية في SOC وPentesting وIAM وGRC، وتدريس إدارة أنظمة Red Hat I & II بنسبة اجتياز 100%.",
+  "National Telecommunication Institute (NTI)": "تدريس أكثر من 42 متدرباً في المعهد القومي للاتصالات (NTI) عبر أكثر من 120 ساعة معملية تطبيقية في Linux والشبكات وأساسيات SOC واختبار الاختراق.",
+  "Google Developer Groups (GDG)": "تقديم أكثر من 35 محاضرة وجلسة عملية لأكثر من 120 طالباً، وتصميم أكثر من 10 تحديات CTF، والحصول على المركز الأول بين 250 محاضراً.",
+  "IEEE": "تدريب أكثر من 5 فرق هندسية (20+ طالباً) على البرمجة بلغتي C وPython لبناء وبرمجة سيارات روبوتية ذاتية القيادة باستخدام Arduino.",
+  "YouTube — @AhmedEmad-0x3omda": "قناة تعليمية باللغة العربية لشرح معامل الأمن السيبراني وإعداد Wazuh SIEM وتحليل البرمجيات الخبيثة وحلول TryHackMe (أكثر من 500 مشترك و60,000+ مشاهدة).",
+};
+
 export default function TeachingSection() {
   return (
     <section
@@ -117,6 +125,10 @@ export default function TeachingSection() {
                 ))}
               </ul>
             </div>
+
+            <BilingualNote label="منهج الدبلومة // 160 ساعة">
+              منهج تدريبي متكامل من تأسيسي الشبكات وأنظمة Linux وWindows مروراً بـ Security+ وتقنيات الهجوم وصولاً إلى SANS SEC450 وإدارة أنظمة SIEM (Splunk &amp; QRadar) ومشاريع التخرج العملية.
+            </BilingualNote>
           </FadeIn>
 
           {/* ─── Where it was taught ─── */}
@@ -161,8 +173,8 @@ export default function TeachingSection() {
                       </li>
                     ))}
                   </ul>
-                  <BilingualNote label="ملخص عربي">
-                    تجربة تدريسية تجمع المنهج المنظم والمعامل العملية والنتائج القابلة للقياس للمتعلمين.
+                  <BilingualNote label="الأثر التدريبي // AR">
+                    {TEACHING_AR[r.org] ?? "تدريب تقني تطبيقي يجمع بين الشرح النظري والمعامل العملية وتقييم الأداء."}
                   </BilingualNote>
                 </article>
               </FadeIn>

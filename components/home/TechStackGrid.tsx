@@ -19,11 +19,21 @@ const casesUsing = (tool: string) => {
   return SEARCH_TEXT.filter((t) => t.includes(needle)).length;
 };
 
-/**
- * Arsenal — static stack grid (no marquee).
- * Same card language as Services: red structure, sky stack chips.
- * Hover edge turns sky to mark it as the "tools" section.
- */
+const STACK_AR: Record<string, string> = {
+  grc: "أطر الحوكمة والامتثال وإدارة المخاطر وتقييم الفجوات الأمنية وبناء السياسات وفق المعايير الدولية.",
+  siem: "منصات إدارة المعلومات والأحداث الأمنية (SIEM) وجمع سجلات الأنظمة (Sysmon / auditd) وإدارة الحوادث عبر TheHive.",
+  ir: "فرز التنبيهات، والتحقق من مؤشرات الاختراق (IOCs)، والتقصي الاستباقي للتهديدات، وإجراءات الاحتواء والتعافي.",
+  forensics: "أدوات التحقيق الجنائي الرقمي للذاكرة والأقراص وسجل النظام، وتفكيك البرمجيات الخبيثة ثباتياً وديناميكياً.",
+  identity: "إدارة الهويات والصلاحيات (IAM / PAM)، ونماذج التحكم في الوصول (RBAC / ABAC)، ومراقبة Active Directory.",
+  data: "حماية البيانات ومنع تسريبها (DLP / DAM)، وتصنيف البيانات، وإدارة مفاتيح التشفير والتخزين الآمن.",
+  vuln: "فحص وتقييم الثغرات الأمنية بـ Nessus وBurp Suite، وتطبيق معايير التقوية CIS Benchmarks واختبارات OWASP Top 10.",
+  cloud: "تأمين البنية السحابية على AWS، ورصد التهديدات عبر GuardDuty، وإدارة مفاتيح التشفير بـ KMS وتأمين S3 وAthena.",
+  intel: "إثراء مؤشرات الاختراق وفحص السمعة الأمنية للبصمات والنطاقات عبر VirusTotal وHybrid Analysis وNVD وExploit-DB.",
+  network: "تحليل الحزم الشبكية بـ Wireshark وZeek، وأنظمة كشف ومنع التسلل (Suricata IDS/IPS)، وإدارة الجدران النارية pfSense.",
+  frameworks: "الأطر المرجعية لهندسة الكشف والاستجابة للحوادث وتوصيف التهديدات (MITRE ATT&CK وNIST 800-61 وCyber Kill Chain).",
+  automation: "أتمتة المهام الأمنية وبناء أدوات التحليل والفحص بـ Python وBash وPowerShell وإدارة بيئات Linux وWindows Server.",
+};
+
 export default function TechStackGrid() {
   return (
     <section aria-label="Tech stack" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
@@ -86,14 +96,12 @@ export default function TechStackGrid() {
                     );
                   })}
                 </ul>
-                <BilingualNote label="ملخص عربي">
-                  مجموعة أدوات مرتبطة بحالات وتقارير فعلية، ويمكن فتح الأدلة لمعرفة أين استُخدمت كل أداة.
+                <BilingualNote label="مجال الأدوات // AR">
+                  {STACK_AR[g.id] ?? "مجموعة أدوات تقنية موثقة ومرتبطة بحالات عملية وتقارير داخل المكتبة."}
                 </BilingualNote>
                 {g.evidence && g.evidence.length > 0 && (
                   <div className="mt-6 pt-4 border-t border-foreground/5">
                     <span className="block mb-2 font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/65">Proof</span>
-                    {/* min-h-6 / py-1: each link is at least 24px tall (WCAG 2.2
-                        target size) — two lines of text-xs were 16px apart */}
                     <ul className="grid gap-0.5">
                       {g.evidence.map((e) => (
                         <li key={e.id}>

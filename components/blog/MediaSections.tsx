@@ -143,7 +143,6 @@ export default function MediaSections() {
                     />
                     <div className="flex flex-col flex-1 p-6">
                       <span className="flex items-center gap-3 mb-2">
-                        {/* The channel is narrated in Arabic — say so before someone presses play */}
                         <span className="px-1.5 py-0.5 border border-accent/40 font-mono text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-accent" title="Narrated in Arabic">
                           AR
                         </span>
@@ -168,10 +167,12 @@ export default function MediaSections() {
                           ))}
                         </ul>
                       )}
-                      <BilingualNote label="ملخص عربي">
-                        فيديو تعليمي يشرح الموضوع خطوة بخطوة مع أمثلة عملية مناسبة للتعلم والتطبيق الآمن.
+                      <BilingualNote label="شرح عربي // AR">
+                        {video.tags && video.tags.length > 0
+                          ? `شرح تطبيقي باللغة العربية يتناول ${video.tags.slice(0, 3).join(" و")} مع خطوات الإعداد والتحليل العملي.`
+                          : "شرح عملي باللغة العربية يوضح خطوات الإعداد والتطبيق والتحليل الأمني بالتفصيل."}
                       </BilingualNote>
-                      <div className="mt-auto flex flex-wrap gap-3">
+                      <div className="mt-auto pt-5 flex flex-wrap gap-3">
                         <a href={video.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} w-fit`}>
                           <ExternalLink size={13} /> Watch on YouTube
                         </a>
@@ -253,10 +254,10 @@ export default function MediaSections() {
                           </span>
                         ))}
                       </div>
-                      <BilingualNote label="ملخص عربي">
-                        قائمة تشغيل تجمع دروسًا مترابطة حول الموضوع من الإعداد إلى التطبيق والتحليل.
+                      <BilingualNote label="سلسلة تعليمية // AR">
+                        {`سلسلة دروس عربية متكاملة (${playlist.videoCount ?? 5} فيديوهات) لتعلم وتطبيق ${playlist.title} عملياً خطوة بخطوة.`}
                       </BilingualNote>
-                      <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} mt-auto w-fit`}>
+                      <a href={playlist.sourceUrl} target="_blank" rel="noopener noreferrer" className={`${btnOutline} mt-auto pt-5 w-fit`}>
                         <ExternalLink size={13} /> Open playlist
                       </a>
                     </div>

@@ -6,6 +6,13 @@ import BilingualNote from "@/components/ui/BilingualNote";
 /* Server component: this runs at build time, so it is the deploy date */
 const UPDATED = new Date().toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Africa/Cairo" });
 
+const NOW_AR: Record<string, string> = {
+  Teaching: "التدريس حالياً كمحاضر أمن سيبراني في AMIT Learning والمعهد القومي للاتصالات (NTI) لتدريب الطلاب على مسارات Linux والشبكات وSOC وPentesting وIAM وGRC.",
+  Writing: "كتابة وتوثيق تقارير التحقيق الجنائي الرقمي والاستجابة للحوادث ومعامل الويب والأمن السحابي داخل مكتبة الحالات.",
+  Recording: "تسجيل ونشر شروحات ومعامل عملية باللغة العربية على قناة يوتيوب لمساعدة المبتدئين والممارسين في مجال أمن المعلومات.",
+  "Open to": "متاح للانضمام إلى فرق أمن المعلومات في أدوار Information Security Officer / Engineer وGRC وSOC وDFIR وIAM والتدريب التقني.",
+};
+
 export default function NowSection({ items }: { items: NowItem[] }) {
   return (
     <section aria-label="What I am doing now" className="relative py-24 md:py-32 px-6 md:px-20 bg-surface/30 border-y border-foreground/5 overflow-hidden">
@@ -51,7 +58,6 @@ export default function NowSection({ items }: { items: NowItem[] }) {
               <span className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.35em] text-primary-ink">
                 Live
               </span>
-              {/* The build date: a "now" list is only as good as its date */}
               <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-foreground/65 border-l border-foreground/10 pl-3">
                 Updated {UPDATED}
               </span>
@@ -76,8 +82,8 @@ export default function NowSection({ items }: { items: NowItem[] }) {
               <p className="border-l-2 border-primary/70 pl-4 text-sm text-foreground/75 font-light leading-relaxed">
                 {n.detail}
               </p>
-              <BilingualNote label="ملخص عربي">
-                تحديث مختصر يوضح النشاط الحالي ومكانه ضمن المسار المهني والتقني.
+              <BilingualNote label="التركيز الحالي // AR">
+                {NOW_AR[n.label] ?? "نشاط مستمر ضمن المسار المهني والتقني."}
               </BilingualNote>
             </FadeIn>
           ))}

@@ -12,6 +12,7 @@ import CaseFilterLink from "@/components/blog/CaseFilterLink";
 import { caseEvidenceLibrary } from "@/data/cases";
 import { CV_PDF_HREF, caseKindOf, normalizePublicHref } from "@/lib/shared";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
 const TITLE = new Map(caseEvidenceLibrary.map((c) => [c.id, c.title]));
 const letsDefend = caseEvidenceLibrary.filter((c) => c.platform === "LetsDefend").length;
@@ -38,7 +39,7 @@ const ROLES: Role[] = [
     japanese: "統制",
     icon: ClipboardCheck,
     pitch: "Build a risk-led security program: governance, compliance, control ownership, remediation tracking and executive-ready evidence.",
-    pitchAr: "بناء برنامج أمن معلومات قائم على المخاطر: الحوكمة والامتثال وملكية الضوابط ومتابعة المعالجة والأدلة المناسبة للإدارة.",
+    pitchAr: "قيادة برنامج أمن معلومات قائم على المخاطر: الحوكمة والامتثال، وتحديد ملكية الضوابط، ومتابعة خطط المعالجة، وتجهيز أدلة التدقيق للإدارة التنفيذية.",
     focus: ["Risk & compliance", "Control assurance", "Security governance"],
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
@@ -53,7 +54,7 @@ const ROLES: Role[] = [
     japanese: "設計",
     icon: Radar,
     pitch: "Turn security requirements into working controls across SIEM, endpoint telemetry, network detection, IAM and cloud services.",
-    pitchAr: "تحويل متطلبات الأمن إلى ضوابط عملية في SIEM وتليمترية الأجهزة واكتشاف الشبكات وIAM والخدمات السحابية.",
+    pitchAr: "تحويل المتطلبات الأمنية إلى ضوابط تقنية فعالة عبر أنظمة SIEM، وتليمترية الأنظمة الطرفية (Sysmon / auditd)، وكشف التسلل الشبكي، وIAM والبيئات السحابية.",
     focus: ["Security architecture", "Detection engineering", "Hardening & integration"],
     proof: [
       { label: "Wazuh + Sysmon detection environment", href: "/blog/soc-env-depi-r3-project" },
@@ -68,7 +69,7 @@ const ROLES: Role[] = [
     japanese: "指導",
     icon: Microscope,
     pitch: "Make difficult security concepts usable: structured curricula, hands-on labs, assessment and feedback for beginners and practitioners.",
-    pitchAr: "تبسيط مفاهيم الأمن المعقدة من خلال مناهج منظمة ومعامل عملية وتقييم وملاحظات للمتعلمين والممارسين.",
+    pitchAr: "تبسيط المفاهيم الأمنية المتقدمة عبر مناهج تدريبية متدرجة ومعامل تطبيقية وتقييمات عملية لتأهيل المبتدئين والممارسين لسوق العمل.",
     focus: ["Curriculum design", "Hands-on labs", "Mentoring & communication"],
     proof: [
       { label: "300+ students at AMIT Learning", href: "#teaching" },
@@ -83,7 +84,7 @@ const ROLES: Role[] = [
     japanese: "統治",
     icon: ClipboardCheck,
     pitch: "Gap assessments against ISO 27001, PCI DSS, COBIT and SWIFT, and the remediation plan after them.",
-    pitchAr: "تقييم الفجوات مقابل ISO 27001 وPCI DSS وCOBIT وSWIFT مع خطة المعالجة.",
+    pitchAr: "تقييم الفجوات الأمنية ومطابقة الضوابط مقابل معايير ISO 27001 وPCI DSS وCOBIT وSWIFT مع إعداد خطط المعالجة والتقارير الرقابية.",
     focus: ["GRC assessments", "Remediation planning", "Compliance evidence"],
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
@@ -98,7 +99,7 @@ const ROLES: Role[] = [
     japanese: "監視",
     icon: Radar,
     pitch: "Alert triage to a written verdict, and the Wazuh rules that catch the next one.",
-    pitchAr: "من فرز التنبيه إلى حكم مكتوب، ثم بناء قواعد Wazuh التي تلتقط الحالة التالية.",
+    pitchAr: "فرز وتحليل التنبيهات الأمنية للوصول إلى حكم فني موثق بالأدلة، وبناء قواعد كشف Wazuh مخصصة لرصد الهجمات المماثلة مستقبلاً.",
     focus: ["Alert triage", "SIEM operations", "Incident reporting"],
     proof: [
       { label: `${letsDefend} LetsDefend alerts investigated`, params: { q: "LetsDefend" } },
@@ -113,7 +114,7 @@ const ROLES: Role[] = [
     japanese: "鑑識",
     icon: Microscope,
     pitch: "Memory, disk, registry and browser artifacts to a timeline; samples taken apart to IOCs and YARA.",
-    pitchAr: "تحويل آثار الذاكرة والقرص والـ registry والمتصفح إلى خط زمني، وتحليل العينات إلى IOCs وYARA.",
+    pitchAr: "تحليل آثار الذاكرة العشوائية والأقراص وسجل النظام والمتصفح لبناء الخط الزمني للحادثة، وتفكيك العينات الخبيثة لاستخراج IOCs وكتابة قواعد YARA.",
     focus: ["DFIR timelines", "Malware analysis", "IOC extraction"],
     proof: [
       { label: `${forensics} digital forensics cases`, params: { cat: "Digital Forensics" } },
@@ -128,7 +129,7 @@ const ROLES: Role[] = [
     japanese: "認証",
     icon: KeyRound,
     pitch: "Access reviews, PAM and least privilege; where sensitive data goes and what stops it leaving.",
-    pitchAr: "مراجعات الوصول وPAM وأقل صلاحية، مع فهم مسار البيانات الحساسة وما يمنع تسريبها.",
+    pitchAr: "مراجعة صلاحيات الوصول وتطبيق حلول PAM ومبدأ الصلاحية الأدنى، مع تتبع مسارات البيانات الحساسة وتفعيل ضوابط التشفير ومنع التسريب (DLP).",
     focus: ["IAM & PAM", "Least privilege", "Data protection"],
     proof: [
       { label: "Banque Misr — IAM, PAM & DevSecOps audit", href: "#experience" },
@@ -158,7 +159,6 @@ export default function RolesFit() {
             return (
               <FadeIn y={36} duration={0.7} delay={idx * 0.1} key={r.id}>
                 <TiltCard className="group spotlight relative h-full flex flex-col bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500 overflow-hidden">
-                  {/* The role's number climbs into view on hover */}
                   <span className="absolute -right-2 -bottom-6 font-display text-[7rem] font-black leading-none text-foreground/[0.03] group-hover:text-primary/10 group-hover:-translate-y-3 transition-all duration-700 select-none" aria-hidden="true" data-deco={`0${idx + 1}`} />
                   <div className="absolute top-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-primary group-hover:scale-x-100 transition-transform duration-700" aria-hidden="true" />
                   <div className="flex items-center justify-between mb-6">
@@ -171,14 +171,14 @@ export default function RolesFit() {
                   <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6">{r.pitch}</p>
 
                   <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/60 mb-2">Proof</span>
-                          <ul className="mb-5 flex flex-wrap gap-2" aria-label={`${r.title} focus areas`}>
-                            {r.focus.map((focus) => (
-                              <li key={focus} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-tertiary bg-tertiary/10 border border-tertiary/20">
-                                {focus}
-                              </li>
-                            ))}
-                          </ul>
-                          <ul className="grid gap-2 mb-6">
+                  <ul className="mb-5 flex flex-wrap gap-2" aria-label={`${r.title} focus areas`}>
+                    {r.focus.map((focus) => (
+                      <li key={focus} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-tertiary bg-tertiary/10 border border-tertiary/20">
+                        {focus}
+                      </li>
+                    ))}
+                  </ul>
+                  <ul className="grid gap-2 mb-2">
                     {r.proof.map((p, i) => {
                       const cls = "group/p flex items-start gap-2 text-sm text-foreground/80 hover:text-primary-ink transition-colors";
                       const inner = (
@@ -201,7 +201,9 @@ export default function RolesFit() {
                       );
                     })}
                   </ul>
-                  <p className="mb-6 text-xs text-foreground/70 leading-relaxed" lang="ar" dir="rtl">{r.pitchAr}</p>
+                  <div className="mb-6">
+                    <BilingualNote label="المسار الوظيفي // AR">{r.pitchAr}</BilingualNote>
+                  </div>
 
                   <div className="mt-auto pt-4 border-t border-foreground/5 flex items-center justify-between gap-3">
                     <span className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-accent leading-snug">{r.credential}</span>

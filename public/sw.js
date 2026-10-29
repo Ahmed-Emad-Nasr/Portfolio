@@ -2,19 +2,19 @@
  * sw.js — offline support by runtime caching (no precache list: build file
  * names change every deploy, so the worker only remembers what was fetched).
  *
- *   · Pages and RSC payloads: network-first (navigation preload), cached copy
- *     offline; a URL with a query falls back to the same page without it.
+ *   · Pages (HTML) and RSC payloads: network-first (navigation preload),
+ *     separated into distinct caches so ignoreSearch on document navigation
+ *     never serves an RSC payload as a page.
  *   · /_next/static/ (hashed names): cache-first.
  *   · Images with fixed names: stale-while-revalidate.
  *   · Link prefetches, PDFs and anything else: network only.
  *
- * Every cache is bounded (MAX_*). Bump VERSION when cached pages would be
- * stale in shape — the old caches are dropped on activate. A lazy section
- * whose chunk was never fetched online shows a "could not load" note offline.
+ * Every cache is bounded (MAX_*) using true LRU order (delete before put).
  */
 
 const VERSION = "v4";
 const PAGE_CACHE = `3omda-pages-${VERSION}`;
+const RSC_CACHE = `3omda-rsc-${VERSION}`;
 const ASSET_CACHE = `3omda-assets-${VERSION}`;
 const IMAGE_CACHE = `3omda-images-${VERSION}`;
 
@@ -23,8 +23,9 @@ const MAX_IMAGES = 120;
 /* A home page load is ~25 hashed files; this keeps several deploys' worth,
    so a tab still open on an older build can finish loading its chunks. */
 const MAX_ASSETS = 150;
-/* HTML + RSC payloads of the pages a visitor has opened */
+/* HTML documents and RSC payloads of the pages a visitor has opened */
 const MAX_PAGES = 60;
+const MAX_RSC = 60;
 
 /* The registration scope is the site root — /Portfolio/ in production. */
 const SCOPE = new URL(self.registration.scope).pathname;
@@ -37,7 +38,7 @@ self.addEventListener("install", () => {
 });
 
 self.addEventListener("activate", (event) => {
-  const keep = new Set([PAGE_CACHE, ASSET_CACHE, IMAGE_CACHE]);
+  const keep = new Set([PAGE_CACHE, RSC_CACHE, ASSET_CACHE, IMAGE_CACHE]);
   event.waitUntil(
     (async () => {
       const keys = await caches.keys();
@@ -50,8 +51,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-const trim = async (cacheName, max) => {
-  const cache = await caches.open(cacheName);
+const trim = async (cache, max) => {
   const keys = await cache.keys();
   /* cache.keys() is in insertion order: drop the oldest */
   await Promise.all(keys.slice(0, Math.max(0, keys.length - max)).map((key) => cache.delete(key)));
@@ -59,27 +59,44 @@ const trim = async (cacheName, max) => {
 
 const put = async (cacheName, request, response, max) => {
   const cache = await caches.open(cacheName);
+  /* Delete first so re-insertion moves the entry to the newest position (LRU) */
+  await cache.delete(request);
   await cache.put(request, response);
-  if (max) await trim(cacheName, max);
+  if (max) await trim(cache, max);
 };
 
-/* Network-first for documents and RSC payloads; the cached copy offline. */
-const networkFirst = (event, network) =>
+/* Network-first for HTML documents; falls back to cached copy or home page offline. */
+const networkFirstPage = (event, network) =>
   network
     .then((response) => {
-      /* Only real pages: a cached 404 would be served offline as if it
-         were the page. */
-      if (response && response.ok) event.waitUntil(put(PAGE_CACHE, event.request, response.clone(), MAX_PAGES));
+      if (response && response.ok) {
+        event.waitUntil(put(PAGE_CACHE, event.request, response.clone(), MAX_PAGES));
+      }
       return response;
     })
     .catch(async () => {
+      const pageCache = await caches.open(PAGE_CACHE);
       const cached =
-        (await caches.match(event.request)) ??
-        (event.request.mode === "navigate" ? await caches.match(event.request, { ignoreSearch: true }) : undefined);
+        (await pageCache.match(event.request)) ??
+        (await pageCache.match(event.request, { ignoreSearch: true }));
       if (cached) return cached;
-      if (event.request.mode !== "navigate") return Response.error();
-      const home = (await caches.match(SCOPE)) ?? (await caches.match(`${SCOPE}index.html`));
+      const home = (await pageCache.match(SCOPE)) ?? (await pageCache.match(`${SCOPE}index.html`));
       return home ?? Response.error();
+    });
+
+/* Network-first for Next.js RSC payloads in a dedicated cache. */
+const networkFirstRsc = (event, network) =>
+  network
+    .then((response) => {
+      if (response && response.ok) {
+        event.waitUntil(put(RSC_CACHE, event.request, response.clone(), MAX_RSC));
+      }
+      return response;
+    })
+    .catch(async () => {
+      const rscCache = await caches.open(RSC_CACHE);
+      const cached = await rscCache.match(event.request);
+      return cached ?? Response.error();
     });
 
 self.addEventListener("fetch", (event) => {
@@ -94,7 +111,7 @@ self.addEventListener("fetch", (event) => {
   // ── Pages: network-first, using the navigation preload response ────────
   if (request.mode === "navigate") {
     event.respondWith(
-      networkFirst(
+      networkFirstPage(
         event,
         Promise.resolve(event.preloadResponse).then((preloaded) => preloaded || fetch(request)),
       ),
@@ -106,7 +123,7 @@ self.addEventListener("fetch", (event) => {
   if (url.searchParams.has("_rsc") || request.headers.get("RSC") === "1") {
     /* Prefetches are not cached: they would push out pages actually visited */
     if (request.headers.has("Next-Router-Prefetch")) return;
-    event.respondWith(networkFirst(event, fetch(request)));
+    event.respondWith(networkFirstRsc(event, fetch(request)));
     return;
   }
 
@@ -131,10 +148,9 @@ self.addEventListener("fetch", (event) => {
       caches.open(IMAGE_CACHE).then(async (cache) => {
         const cached = await cache.match(request);
         const refresh = fetch(request)
-          .then(async (response) => {
+          .then((response) => {
             if (response.ok) {
-              await cache.put(request, response.clone());
-              await trim(IMAGE_CACHE, MAX_IMAGES);
+              event.waitUntil(put(IMAGE_CACHE, request, response.clone(), MAX_IMAGES));
             }
             return response;
           })

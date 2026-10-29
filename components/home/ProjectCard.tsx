@@ -21,6 +21,18 @@ const TYPE_JP: Record<string, string> = {
   Assessment: "評価",
 };
 
+const REPO_AR: Record<string, string> = {
+  "verifai360-compliance-framwork": "منصة VerifAI 360 لأتمتة الحوكمة والامتثال (GRC) وتقييم الفجوات الأمنية بالذكاء الاصطناعي عبر أكثر من 150 إطاراً تنظيمياً.",
+  "compliance-framework": "منصة VerifAI 360 لأتمتة الحوكمة والامتثال (GRC) وتقييم الفجوات الأمنية بالذكاء الاصطناعي عبر أكثر من 150 إطاراً تنظيمياً.",
+  "soc-environment": "مختبر مركز عمليات أمنية (SOC) متكامل يجمع Wazuh وSuricata وZeek وYARA وSysmon مع قاعدة كشف مدمجة في مستودع SOC Fortress.",
+  "insider-threat-detection-deception": "بيئة كشف التهديدات الداخلية عبر مصائد Honeytokens في Wazuh ومراقبة pfSense/Suricata وسكربتات عزل آلي بـ Python.",
+  "malware-analysis-and-prevention-strategy": "تحليل معمّق لأكثر من 20 عينة برمجيات خبيثة واستخراج مؤشرات الاختراق (IOCs) وبناء قواعد الكشف والوقاية بـ YARA وFIM.",
+  "threat-intelligence-tool": "أداة سطر أوامر بـ Python لجمع استخبارات التهديدات من VirusTotal وHybrid Analysis وNIST CVEs وExploit-DB في خطوة واحدة.",
+  "attack-simulation-security-assessment": "مختبر محاكاة الهجمات وتقييم الثغرات الأمنية (VAPT) باستخدام Nessus وKali Linux مع ربط النتائج بـ MITRE ATT&CK.",
+  "3omda-pdfparser-tool": "أداة تحليل ثابت لملفات PDF المشبوهة واستخراج الحمولات البرمجية ومؤشرات الاختراق لأغراض التحقيق الجنائي الرقمي.",
+  "portfolio": "المستودع الرسمي لمعرض الأعمال والمدونة التقنية المبني بـ Next.js 16 وTypeScript لتوثيق 79 حالة وتقريراً أمنياً.",
+};
+
 function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
   const highlight = PORTFOLIO_DATA.projects.highlights.find((h) =>
     repo.name.toLowerCase().includes(h.name.toLowerCase())
@@ -29,19 +41,17 @@ function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
   const displayIndex = String(index + 1).padStart(2, "0");
   const typeLabel = highlight?.type ?? "Library";
   const metrics = highlight?.metrics ?? [];
+  const repoKey = repo.name.toLowerCase();
 
   return (
     <TiltCard className="spotlight group relative w-full min-h-[23.75rem] md:min-h-[21.25rem] flex flex-col bg-surface/60 border border-foreground/5 p-8 hover:border-primary/40 transition-colors duration-500">
-      {/* Top katana line */}
       <div
         className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-500"
         aria-hidden="true"
       />
-      {/* Corner brackets on hover */}
       <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/0 group-hover:border-primary/50 transition-colors duration-500 pointer-events-none" aria-hidden="true" />
       <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/0 group-hover:border-primary/50 transition-colors duration-500 pointer-events-none" aria-hidden="true" />
 
-      {/* Faded index */}
       <div
         className="absolute -bottom-3 right-2 font-display text-[7rem] font-black text-foreground/[0.04] leading-none select-none pointer-events-none group-hover:text-primary/[0.07] transition-colors duration-700"
         aria-hidden="true"
@@ -62,8 +72,6 @@ function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
             <span className="brush-jp text-sm text-foreground/30 leading-none" lang="ja" aria-hidden="true" data-jp={TYPE_JP[typeLabel] ?? "庫"} />
           </div>
         </div>
-        {/* A "★ 0" badge advertises the absence of stars — show it only once
-            there is something to show. */}
         {repo.stargazers_count > 0 && (
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/10 border border-accent/25">
             <span className="sr-only">{`${repo.stargazers_count} GitHub ${repo.stargazers_count === 1 ? "star" : "stars"}`}</span>
@@ -87,8 +95,6 @@ function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
 
       {/* Language + metrics */}
       <div className="flex flex-wrap gap-2 mb-3">
-        {/* GitHub reports no language for docs/config-only repos — the
-            template showed "Native" there, which means nothing here */}
         {repo.language && (
           <span className="px-3 py-1 text-[0.5625rem] font-bold uppercase tracking-[0.15em] font-mono text-tertiary bg-tertiary/10 border border-tertiary/25">
             {repo.language}
@@ -113,7 +119,7 @@ function ProjectCard({ repo, index = 0 }: ProjectCardProps) {
         </div>
       )}
       <BilingualNote>
-        مشروع مفتوح المصدر في مجال الأمن السيبراني يوضح المشكلة التي يعالجها، الأدوات المستخدمة، والنتائج القابلة للتحقق من المستودع.
+        {REPO_AR[repoKey] ?? `مستودع مفتوح المصدر (${repo.language || "Security"}) يضم الكود المصدري وخطوات التشغيل والنتائج الموثقة.`}
       </BilingualNote>
 
       {/* Actions */}

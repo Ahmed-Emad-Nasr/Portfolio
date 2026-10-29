@@ -6,12 +6,21 @@ import ScrambleText from "@/components/ui/ScrambleText";
 import FadeIn from "@/components/ui/FadeIn";
 import BilingualNote from "@/components/ui/BilingualNote";
 
+const EXP_AR: Record<string, string> = {
+  "Banque Misr": "تدريب أمن المعلومات في بنك مصر: تقييم فجوات الحوكمة والامتثال (GRC) عبر 3 قطاعات وفق معايير ISO 27001 وPCI DSS وCOBIT وSWIFT، وتدقيق معمارية IAM وPAM وDevSecOps ومسارات SIEM وDFIR وVAPT.",
+  "AMIT Learning": "محاضر أمن سيبراني: إعداد المناهج وتدريب أكثر من 300 طالب في الشبكات وLinux وSecurity+ ومقررات SANS SEC450 / SEC504 ومعامل SOC وPentesting وIAM وGRC بتقييم 10/10، وتدريس Red Hat بالتعاون مع NTI بنسبة اجتياز 100%.",
+  "Digital Egypt Pioneers Initiative (DEPI)": "محلل استجابة للحوادث متدرب بمبادرة رواد مصر الرقمية: فرز أكثر من 30 تنبيهاً أمنياً وفق NIST 800-61 بدقة تتجاوز 95%، وتصميم مختبر كشف بـ Wazuh وSuricata وSysmon وYARA وتطبيق تقوية الأنظمة وفق CIS Benchmarks.",
+  "Information Technology Institute (ITI)": "متدرب اختبار اختراق بالمعهد القومي لتكنولوجيا المعلومات (ITI): استغلال 15+ ثغرة في تحديات CTF وربطها بـ MITRE ATT&CK، وإتمام معامل ومسار شهادة eJPT v2 بدرجة 90%، وحل 100% من معامل PortSwigger وHTB.",
+  "Google Developer Groups (GDG)": "محاضر أمن سيبراني متطوع في GDG: تقديم أكثر من 35 جلسة تدريبية لأكثر من 120 متعلماً، وتحقيق المركز الأول من بين 250 محاضراً، والمشاركة في تصميم 10+ تحديات CTF.",
+  "IEEE": "محاضر تقني وعضو لجنة في فرع IEEE الطلابي: قيادة التدريب البرمجي بلغتي C وPython لأكثر من 5 فرق هندسية وتأهيل 20+ طالباً لبناء سيارات روبوتية ذاتية بـ Arduino.",
+  "Benha University": "بكالوريوس علوم الحاسب (تخصص أمن المعلومات والتحقيق الجنائي الرقمي) من كلية الحاسبات والذكاء الاصطناعي بجامعة بنها — بتقدير امتياز مع مرتبة الشرف (GPA: 3.78/4.0) والترتيب الثامن على دفعة تضم 900 طالب.",
+};
+
 export default function ExperienceTimeline() {
   return (
     <section
       className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden"
     >
-      {/* ─── Background Decorative Kanji ─── */}
       <div
         className="absolute top-20 right-10 pointer-events-none select-none text-foreground/[0.03] text-[15vw] font-black z-0 vertical-text uppercase"
         aria-hidden="true"
@@ -24,7 +33,6 @@ export default function ExperienceTimeline() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* ─── Section Header ─── */}
         <div className="exp-header mb-16 md:mb-20">
           <FadeIn y={40} duration={1} className="flex items-center gap-4 mb-6">
             <div className="w-12 h-[2px] bg-primary" />
@@ -44,7 +52,6 @@ export default function ExperienceTimeline() {
           </FadeIn>
         </div>
 
-        {/* ─── Experience Cards ─── */}
         <div className="flex flex-col gap-14 md:gap-20">
           {PORTFOLIO_DATA.experience.map((item, idx) => (
             <FadeIn x={idx % 2 === 0 ? -100 : 100} y={0} duration={1.2}
@@ -53,7 +60,6 @@ export default function ExperienceTimeline() {
             >
               {/* Left Column: Metadata */}
               <div className="flex flex-col gap-4">
-                {/* Period */}
                 <div className="flex items-center gap-3 text-on-surface-variant">
                   <Calendar size={14} strokeWidth={2} />
                   <span className="font-mono text-xs tracking-[0.15em] font-bold uppercase text-foreground/60">
@@ -61,12 +67,10 @@ export default function ExperienceTimeline() {
                   </span>
                 </div>
 
-                {/* Role */}
                 <span className="font-mono text-xs font-black uppercase tracking-[0.2em] text-accent">
                   {item.role}
                 </span>
 
-                {/* Company Name */}
                 <a
                   href={item.link}
                   target="_blank"
@@ -82,13 +86,11 @@ export default function ExperienceTimeline() {
                   />
                 </a>
 
-                {/* Location */}
                 <div className="flex items-center gap-2 text-on-surface-variant text-sm font-mono">
                   <MapPin size={12} strokeWidth={2} />
                   <span className="text-xs">{item.location}</span>
                 </div>
 
-                {/* Japanese Role Tag */}
                 {item.japaneseRole && (
                   <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 bg-foreground/[0.03] border-l-2 border-primary text-[0.625rem] font-mono font-bold text-foreground/60 tracking-[0.15em] w-fit">
                     <span className="text-primary-ink">JP</span>
@@ -99,13 +101,10 @@ export default function ExperienceTimeline() {
 
               {/* Right Column: Service Record Panel */}
               <TiltCard className="spotlight relative bg-surface/60 border border-foreground/5 backdrop-blur-sm group-hover:border-primary/20 transition-all duration-700 overflow-hidden">
-                {/* Red left accent border */}
                 <div className="absolute top-0 left-0 w-[3px] h-full bg-primary" />
 
-                {/* Large Index Number */}
                 <div className="absolute top-6 right-6 font-mono text-7xl md:text-8xl font-black text-foreground/[0.04] leading-none select-none group-hover:text-primary/10 transition-colors duration-700" aria-hidden="true" data-deco={`0${idx + 1}`} />
 
-                {/* Panel Header */}
                 <div className="relative z-10 px-6 md:px-12 pt-6 md:pt-8 pb-4 border-b border-foreground/5 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-accent" />
@@ -118,22 +117,18 @@ export default function ExperienceTimeline() {
                   </span>
                 </div>
 
-                {/* Description */}
                 <div className="relative z-10 px-6 md:px-12 py-6 md:py-8">
                   <p className="text-base md:text-lg font-light text-foreground/80 leading-relaxed border-l-2 border-foreground/10 pl-5 italic">
                     {item.description}
                   </p>
                 </div>
 
-                {/* Horizontal Rule */}
                 <div className="mx-6 md:mx-12 h-[1px] bg-foreground/5" />
 
-                {/* Details Checklist */}
                 <div className="relative z-10 px-6 md:px-12 py-6 md:py-8 flex flex-col gap-0">
                   {item.details.map((detail, i) => (
                     <div key={i}>
                       <div className="flex items-start gap-4 group/detail py-3">
-                        {/* Custom bullet */}
                         <div className="mt-1 shrink-0 flex items-center gap-2">
                           <span className="font-mono text-[0.5625rem] text-foreground/60 tabular-nums w-4">
                             {String(i + 1).padStart(2, "0")}
@@ -149,18 +144,16 @@ export default function ExperienceTimeline() {
                           {detail}
                         </span>
                       </div>
-                      {/* Horizontal rule between details */}
                       {i < item.details.length - 1 && (
                         <div className="h-[1px] bg-foreground/[0.03] ml-10" />
                       )}
                     </div>
                   ))}
-                  <BilingualNote label="ملخص عربي">
-                    سجل خبرة يوضح الدور والجهة والنتائج العملية والتفاصيل التي يمكن التحقق منها من الأدلة المرتبطة.
+                  <BilingualNote label="ملخص الدور // AR">
+                    {EXP_AR[item.company] ?? `${item.role} في ${item.company}: خبرة عملية موثقة بالنتائج والشهادات في مجال أمن المعلومات.`}
                   </BilingualNote>
                 </div>
 
-                {/* Proof: the certificate and the work, one click away */}
                 {(item.proof || item.cases) && (
                   <div className="relative z-10 px-6 md:px-12 pb-6 flex flex-wrap gap-3">
                     {item.proof && (
@@ -184,7 +177,6 @@ export default function ExperienceTimeline() {
                   </div>
                 )}
 
-                {/* Panel Footer */}
                 <div className="px-6 md:px-12 py-4 border-t border-foreground/5 flex items-center justify-between">
                   <span className="font-mono text-[0.5625rem] text-foreground/65 tracking-[0.2em] uppercase">
                     {item.details.length} {item.details.length === 1 ? "entry" : "entries"} logged

@@ -3,6 +3,13 @@ import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import FadeIn from "@/components/ui/FadeIn";
 import BilingualNote from "@/components/ui/BilingualNote";
 
+const PROCESS_AR: Record<string, string> = {
+  govern: "الحوكمة (Govern): حصر الأصول وتقييم المخاطر ومطابقة الضوابط مع ISO 27001 وNIST CSF وتحديد أولويات المعالجة.",
+  protect: "الحماية (Protect): تطبيق الصلاحية الأدنى (IAM / PAM)، وتقوية الأنظمة وفق CIS Benchmarks، وتشفير البيانات الحساسة.",
+  detect: "الكشف (Detect): بناء خط الأساس للأنشطة الطبيعية، ومراقبة السجلات والتنبيهات في SIEM، وربط الشذوذ بتكتيكات ATT&CK.",
+  respond: "الاستجابة (Respond): الاحتواء والاستئصال والتعافي وفق NIST 800-61، وتوثيق السبب الجذري والتوصيات لمنع تكرار الحادثة.",
+};
+
 export default function ProcessSection() {
   return (
     <section id="process" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
@@ -34,12 +41,11 @@ export default function ProcessSection() {
               <div className="jp-eyebrow text-[0.625rem] text-foreground/30 mb-3" lang="ja" aria-hidden="true" data-jp={p.japanese} />
               <h3 className="font-display text-xl font-black uppercase text-foreground mb-3">{p.title}</h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{p.description}</p>
-              <BilingualNote label="ملخص عربي">
-                مرحلة من منهج العمل تبدأ بفهم المخاطر وتنتهي بقرار موثق واستجابة قابلة للقياس.
+              <BilingualNote label="خطوة المنهجية // AR">
+                {PROCESS_AR[p.id] ?? "مرحلة أساسية من دورة العمل الأمني وفق إطار NIST CSF."}
               </BilingualNote>
               {idx < PORTFOLIO_DATA.process.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-[2px] bg-primary/40 overflow-visible" aria-hidden="true">
-                  {/* A packet travelling to the next step */}
                   <span className="process-packet absolute -top-[2px] left-0 h-[6px] w-[6px] bg-primary" style={{ animationDelay: `${idx * 0.45}s` }} />
                 </div>
               )}

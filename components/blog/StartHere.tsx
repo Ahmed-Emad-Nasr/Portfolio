@@ -9,6 +9,12 @@ import BilingualNote from "@/components/ui/BilingualNote";
 const KNOWN_IDS = new Set(caseEvidenceLibrary.map((item) => item.id));
 const ENTRIES = startHere.filter((entry) => KNOWN_IDS.has(entry.id));
 
+const START_HERE_AR: Record<string, string> = {
+  "3omda-custom-detection-rules": "حزمة تضم 52 قاعدة كشف مخصصة لـ Wazuh SIEM مرتبطة بتكتيكات MITRE ATT&CK ومعايير PCI DSS وGDPR لرصد هجمات Brute Force والـ Ransomware وDNS Tunneling.",
+  "data-exfiltration-investigation": "تحقيق جنائي رقمي شامل للذاكرة العشوائية (Volatility): إثبات تسريب الملفات عبر USB من سجل الأوامر، واستخراج وكسر بصمات NTLM، وبناء الخط الزمني الكامل للاختراق.",
+  "malware-analysis-wannacry": "تحليل ثابت وديناميكي متكامل لنسخة معدلة من فدية WannaCry داخل مختبر معزول — يشمل مؤشرات الاختراق (IOCs) و3 قواعد YARA وربط ATT&CK وخطة الاحتواء.",
+};
+
 export default function StartHere({
   note = "Three reports to start with — detection engineering, a full DFIR investigation and a malware teardown. The full library is below.",
   headingLevel: H = "h2",
@@ -41,8 +47,8 @@ export default function StartHere({
                 {entry.label}
               </h3>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">{entry.why}</p>
-              <BilingualNote label="ملخص عربي">
-                ابدأ بهذا التقرير لفهم الحالة والنتيجة والمنهجية قبل الانتقال إلى بقية مكتبة الحالات.
+              <BilingualNote label="تقرير مرشّح للبدء // AR">
+                {START_HERE_AR[entry.id] ?? "تقرير أساسي يوضح منهجية التحقيق والأدلة الفنية والنتيجة النهائية."}
               </BilingualNote>
             </PageLink>
           </li>

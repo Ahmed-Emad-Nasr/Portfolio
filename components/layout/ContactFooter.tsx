@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { m as motion, AnimatePresence } from "framer-motion";
 import PageLink from "@/components/ui/PageLink";
-import { MessageCircle, ArrowUpRight, Mail, Copy, Check, ShieldCheck } from "lucide-react";
+import { MessageCircle, ArrowUpRight, Mail, Copy, Check, ShieldCheck, MapPin } from "lucide-react";
 import { Github, Linkedin, Youtube, Instagram, XLogo } from "@/components/ui/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { normalizePublicHref } from "@/lib/shared";
@@ -11,49 +12,132 @@ import { useCopyLink } from "@/lib/use-copy-link";
 import { SECURITY_TXT_PATH } from "@/lib/security";
 import ScrambleText from "@/components/ui/ScrambleText";
 import FadeIn from "@/components/ui/FadeIn";
+import BilingualNote from "@/components/ui/BilingualNote";
 
-/* The last line of every page: the mark, the copyright, the legal pages and
+const QUICK_LINKS = [
+  { label: "Home", href: "#home" },
+  { label: "Services", href: "#services" },
+  { label: "Selected Work", href: "#work" },
+  { label: "Experience", href: "#experience" },
+  { label: "Teaching", href: "#teaching" },
+  { label: "Case Library", href: "/blog#cases" },
+  { label: "ATT&CK Matrix", href: "/blog#attack" },
+  { label: "Wazuh Rules", href: "/blog#detections" },
+  { label: "Proof Gallery", href: "/gallery" },
+  { label: "PortSwigger Track", href: "/collections/web-security-academy" },
+] as const;
+
+/* The last line of every page: the mark, the directory, the legal pages and
    the design credit. On the home page it closes the contact section; the
    other pages render it on its own. */
 export function FooterBar({ className = "" }: { className?: string }) {
   const currentYear = new Date().getFullYear();
+  const pathname = usePathname() || "/";
+  const onHome = pathname === "/";
+  const linkCls = "inline-flex min-h-6 items-center py-1 hover:text-primary-ink transition-colors";
+
   return (
-    <div className={`pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant font-mono text-[0.625rem] tracking-[0.3em] uppercase ${className}`}>
-      <div className="flex items-center gap-4">
-        <span className="text-primary-ink font-black text-base tracking-normal font-display">
-          AE.
-        </span>
-        <span>
-          © {currentYear} {PORTFOLIO_DATA.profile.name}
-        </span>
+    <div className={`pt-10 border-t border-foreground/10 flex flex-col gap-8 ${className}`}>
+      {/* Directory & Bilingual Summary Strip */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-8 border-b border-foreground/5">
+        <div className="flex flex-col gap-2 min-w-0">
+          <div className="flex items-center gap-3">
+            <span className="text-primary-ink font-black text-lg tracking-normal font-display">AE.</span>
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-foreground">
+              {PORTFOLIO_DATA.profile.name}
+            </span>
+          </div>
+          <p className="text-xs text-foreground/60 font-light leading-relaxed">
+            Information Security Officer &amp; Cybersecurity Instructor — GRC, SOC Operations, DFIR, Malware Analysis, IAM &amp; Data Security.
+          </p>
+          <p className="text-xs text-foreground/75 leading-[1.8] border-r-2 border-r-primary/40 pr-3 mt-1 [unicode-bidi:plaintext]" lang="ar" dir="rtl">
+            أحمد عماد نصر — مهندس ومحلل أمن معلومات ومحاضر أمن سيبراني متخصص في الحوكمة والامتثال (GRC)، ومراكز العمليات الأمنية (SOC)، والتحقيق الجنائي الرقمي والاستجابة للحوادث (DFIR)، وإدارة الهويات وحماية البيانات (IAM &amp; DLP).
+          </p>
+        </div>
+
+        <nav aria-label="Footer quick navigation" className="flex flex-col gap-2.5 min-w-0">
+          <span className="font-mono text-[0.5625rem] font-bold uppercase tracking-[0.3em] text-primary-ink">
+            Navigation // المسارات السريعة
+          </span>
+          <div className="flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-foreground/65">
+            {QUICK_LINKS.map((item) =>
+              item.href.startsWith("#") ? (
+                onHome ? (
+                  <a key={item.label} href={item.href} className={linkCls}>
+                    {item.label}
+                  </a>
+                ) : (
+                  <PageLink key={item.label} href={`/${item.href}`} className={linkCls}>
+                    {item.label}
+                  </PageLink>
+                )
+              ) : (
+                <PageLink key={item.label} href={item.href} className={linkCls}>
+                  {item.label}
+                </PageLink>
+              ),
+            )}
+          </div>
+        </nav>
+
+        <div className="flex flex-col gap-2.5 min-w-0">
+          <span className="font-mono text-[0.5625rem] font-bold uppercase tracking-[0.3em] text-accent">
+            Status &amp; Verification // الحالة والتوثيق
+          </span>
+          <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-foreground/75 flex items-center gap-2">
+            <span className="inline-block h-2 w-2 shrink-0 bg-accent" aria-hidden="true" />
+            <span>{PORTFOLIO_DATA.profile.availability}</span>
+          </p>
+          <p className="text-xs text-foreground/70 leading-[1.8] [unicode-bidi:plaintext]" lang="ar" dir="rtl">
+            متاح للعمل بدوام كامل أو جزئي، والاستشارات الأمنية، والتدريب التقني في القاهرة أو عن بُعد.
+          </p>
+          <div className="mt-1 flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-foreground/60">
+            <MapPin size={12} className="text-primary-ink shrink-0" aria-hidden="true" />
+            <span>{PORTFOLIO_DATA.profile.contact.location}</span>
+          </div>
+        </div>
       </div>
-      <nav aria-label="Site information" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <PageLink href="/cv" className="hover:text-primary-ink transition-colors">CV</PageLink>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <PageLink href="/privacy" className="hover:text-primary-ink transition-colors">Privacy</PageLink>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <PageLink href="/terms" className="hover:text-primary-ink transition-colors">Terms</PageLink>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <a href={normalizePublicHref("feed.xml")} className="hover:text-primary-ink transition-colors">RSS</a>
-        <span className="text-primary-ink" aria-hidden="true">•</span>
-        <a href={normalizePublicHref(SECURITY_TXT_PATH)} className="hover:text-primary-ink transition-colors normal-case tracking-[0.2em]">
-          security.txt
-        </a>
-      </nav>
-      <div className="flex items-center gap-2 text-on-surface-variant">
-        <span>
-          Design{" "}
-          <a
-            href={`https://github.com/${PORTFOLIO_DATA.profile.contact.github}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary-ink transition-colors"
-          >
-            Ahmed Emad Nasr
+
+      {/* Bottom Legal & Meta Row */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant font-mono text-[0.625rem] tracking-[0.3em] uppercase">
+        <div className="flex items-center gap-4">
+          <span className="text-primary-ink font-black text-base tracking-normal font-display">
+            AE.
+          </span>
+          <span>
+            © {currentYear} {PORTFOLIO_DATA.profile.name}
+          </span>
+        </div>
+        <nav aria-label="Site information" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          <PageLink href="/cv" className={linkCls}>CV</PageLink>
+          <span className="text-primary-ink" aria-hidden="true">•</span>
+          <PageLink href="/privacy" className={linkCls}>Privacy</PageLink>
+          <span className="text-primary-ink" aria-hidden="true">•</span>
+          <PageLink href="/terms" className={linkCls}>Terms</PageLink>
+          <span className="text-primary-ink" aria-hidden="true">•</span>
+          <a href={normalizePublicHref("feed.xml")} className={linkCls}>RSS</a>
+          <span className="text-primary-ink" aria-hidden="true">•</span>
+          <a href={normalizePublicHref("llms.txt")} className={`${linkCls} normal-case tracking-[0.2em]`}>llms.txt</a>
+          <span className="text-primary-ink" aria-hidden="true">•</span>
+          <a href={normalizePublicHref(SECURITY_TXT_PATH)} className={`${linkCls} normal-case tracking-[0.2em]`}>
+            security.txt
           </a>
-        </span>
-        <span className="text-primary-ink">•</span>
-        <span lang="ja" aria-hidden="true" data-jp="次のレベル" />
+        </nav>
+        <div className="flex items-center gap-2 text-on-surface-variant">
+          <span>
+            Design{" "}
+            <a
+              href={`https://github.com/${PORTFOLIO_DATA.profile.contact.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary-ink transition-colors"
+            >
+              Ahmed Emad Nasr
+            </a>
+          </span>
+          <span className="text-primary-ink">•</span>
+          <span lang="ja" aria-hidden="true" data-jp="次のレベル" />
+        </div>
       </div>
     </div>
   );
@@ -61,25 +145,17 @@ export function FooterBar({ className = "" }: { className?: string }) {
 
 type Draft = { subject: string; body: string };
 
-/* With a Web3Forms access key the form delivers the message itself (a static
-   site has no server, and Web3Forms is a form-to-e-mail relay that works from
-   the browser). Without one it falls back to opening the visitor's mail app.
-   The key is public by design — it only allows sending to the owner's inbox. */
 const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
 type SendState = "idle" | "sending" | "sent" | "error";
 
 const EMAIL = PORTFOLIO_DATA.profile.contact.email;
 
-/* Gmail's web composer, prefilled — for visitors with no mail app set up,
-   where a mailto: link silently does nothing. */
 const gmailComposeUrl = ({ subject, body }: Draft) =>
   `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
 export default function ContactFooter() {
   const { state: emailCopy, copy: copyEmail } = useCopyLink();
   const { state: draftCopy, copy: copyDraft } = useCopyLink();
-  /* The last message handed to the mail app — kept so the fallback panel
-     can offer the same text another way. */
   const [draft, setDraft] = useState<Draft | null>(null);
   const [sendState, setSendState] = useState<SendState>("idle");
 
@@ -121,8 +197,7 @@ export default function ContactFooter() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           {/* Brand Column */}
           <div className="flex flex-col">
-            <FadeIn y={30} duration={0.8}
->
+            <FadeIn y={30} duration={0.8}>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-[2px] bg-primary" />
                 <span className="text-primary-ink font-mono text-[0.625rem] tracking-[0.5em] uppercase font-bold">
@@ -130,14 +205,16 @@ export default function ContactFooter() {
                 </span>
               </div>
 
-              {/* Sized to its column: the fixed text-9xl ran past the half-width
-                  column into the form on every desktop width */}
-              <h2 className="font-display text-[clamp(2rem,10.5vw,5rem)] lg:text-[clamp(3rem,4.8vw,8rem)] font-black uppercase leading-[0.8] mb-12 tracking-tighter">
+              <h2 className="font-display text-[clamp(2rem,10.5vw,5rem)] lg:text-[clamp(3rem,4.8vw,8rem)] font-black uppercase leading-[0.8] mb-8 tracking-tighter">
                 Forge <br /> <span className="text-primary italic">Together.</span>
               </h2>
 
-              {/* Direct email: the one channel a recruiter usually wants,
-                  readable and copyable without opening anything. */}
+              <div className="mb-8 max-w-xl">
+                <BilingualNote label="تواصل مباشر // الاستشارات والتوظيف">
+                  هل تبحث عن مهندس أو محلل أمن معلومات (GRC · SOC · DFIR · IAM) أو محاضر تقني؟ يمكنك نسخ البريد الإلكتروني مباشرة أو التواصل عبر LinkedIn وWhatsApp أو إرسال تفاصيل الفرصة عبر النموذج المقابل.
+                </BilingualNote>
+              </div>
+
               <div className="mb-6 flex flex-wrap items-stretch gap-3">
                 <a
                   href={`mailto:${EMAIL}`}
@@ -157,7 +234,7 @@ export default function ContactFooter() {
                 </button>
               </div>
 
-              {/* Social Links  sharp-edged tags */}
+              {/* Social Links */}
               <div className="flex flex-wrap gap-3 mb-10">
                 {socialLinks.map((social) => (
                   <a
@@ -167,8 +244,6 @@ export default function ContactFooter() {
                     rel="noopener noreferrer"
                     className="group flex items-center gap-3 px-5 py-3 bg-foreground/5 border border-foreground/10 hover:border-primary/40 transition-all duration-300 text-foreground/80 hover:text-foreground"
                   >
-                    {/* Brand colour on the icon only: LinkedIn blue or YouTube
-                        red as 10px text fell below 4.5:1 on the dark theme. */}
                     <social.icon size={18} className={social.color} aria-hidden="true" />
                     <span className="font-mono font-bold uppercase tracking-[0.15em] text-[0.625rem]">
                       {social.name}
@@ -202,7 +277,7 @@ export default function ContactFooter() {
                 </p>
               </div>
 
-              {/* Languages  from portfolio data */}
+              {/* Languages */}
               <div className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[0.625rem] tracking-[0.25em] uppercase">
                 {PORTFOLIO_DATA.languages.map((l, i) => (
                   <span key={l.code} className="flex items-center gap-3">
@@ -220,22 +295,19 @@ export default function ContactFooter() {
             </FadeIn>
           </div>
 
-          {/* Form Column  Mission Briefing style */}
+          {/* Form Column */}
           <FadeIn y={40} duration={0.8} delay={0.2}
             className="relative bg-surface/60 backdrop-blur-xl border border-foreground/5 p-8 md:p-12 group"
           >
-            {/* Corner bracket accents */}
             <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-primary/40" />
             <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-primary/40" />
             <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-primary/40" />
             <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-primary/40" />
 
-            {/* Background mail icon */}
             <div className="absolute top-4 right-4 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
               <Mail size={120} className="text-primary-ink" />
             </div>
 
-            {/* Briefing header */}
             <div className="flex items-center gap-3 mb-2">
               <div className="w-6 h-[2px] bg-primary" />
               <span className="font-mono text-[0.5625rem] text-primary-ink tracking-[0.4em] uppercase font-bold">
@@ -256,7 +328,6 @@ export default function ContactFooter() {
 
                 const form = e.currentTarget;
                 const formData = new FormData(form);
-                /* Honeypot: people never see this field, bots fill it */
                 if (formData.get("botcheck")) return;
 
                 const name = formData.get("name")?.toString() || "";
@@ -295,7 +366,6 @@ export default function ContactFooter() {
                     throw new Error("send failed");
                   } catch {
                     setSendState("error");
-                    /* fall through to the mail-app route below */
                   }
                 }
 
@@ -365,7 +435,6 @@ export default function ContactFooter() {
                 disabled={sendState === "sending"}
                 className="btn-sheen relative overflow-hidden mt-4 w-full py-5 bg-primary text-white font-mono font-black uppercase tracking-[0.3em] text-sm hover:bg-foreground hover:text-background active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/20 disabled:cursor-wait"
               >
-                {/* Transmission bar while the message is on its way */}
                 {sendState === "sending" && <span className="send-progress absolute inset-y-0 left-0 bg-white/20" aria-hidden="true" />}
                 <span className="relative">
                   {sendState === "sending" ? "TRANSMITTING…" : sendState === "sent" ? "MESSAGE DELIVERED ✓" : "DISPATCH MESSAGE"}
@@ -386,9 +455,6 @@ export default function ContactFooter() {
                 )}
               </AnimatePresence>
 
-              {/* A static site has no server to send mail: the button opens
-                  the visitor's mail app. When none is set up nothing visible
-                  happens, so the same message is offered two other ways. */}
               <AnimatePresence>
                 {draft && (
                   <motion.div
