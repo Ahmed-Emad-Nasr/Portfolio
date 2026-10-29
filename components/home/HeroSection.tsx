@@ -317,7 +317,7 @@ export default function HeroSection({
                 </defs>
                 <text fontSize="8" letterSpacing="2.5" className="fill-foreground/30 font-mono uppercase">
                   <textPath href="#hero-orbit">
-                    GRC • ISO 27001 • Wazuh • Splunk • YARA • IAM • 侍 •
+                   SOC • GRC • ISO 27001 • Wazuh • Splunk • YARA • IAM • 侍 •
                   </textPath>
                 </text>
               </svg>
