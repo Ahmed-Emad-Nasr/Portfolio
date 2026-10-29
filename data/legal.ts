@@ -54,7 +54,7 @@ export const SITE_FACTS = {
     },
     {
       name: "github-contributions-api.jogruber.de",
-      when: "When you scroll near the GitHub contribution graph on the about page, to draw it",
+      when: "When you scroll near the GitHub contribution graph in the about section of the home page, to draw it",
       note: "A public, open-source service; it receives your IP address like any web request, and nothing else",
     },
     ...(process.env.NEXT_PUBLIC_WEB3FORMS_KEY

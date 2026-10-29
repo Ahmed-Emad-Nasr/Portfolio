@@ -8,7 +8,7 @@
 
 import sharp from "sharp";
 import { mkdir, stat } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
 
 const SOURCE = "public/Assets/art-gallery/Images/logo/3omda.webp";
 

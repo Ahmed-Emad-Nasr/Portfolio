@@ -150,7 +150,7 @@ export interface Stat {
   href?: string;
 }
 
-export interface Language {
+interface Language {
   code: string;
   name: string;
   level: string;

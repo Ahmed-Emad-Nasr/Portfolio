@@ -26,7 +26,6 @@ import { CONTENT_SECURITY_POLICY } from "@/lib/security";
 import KeyboardShortcuts from "@/components/layout/KeyboardShortcuts";
 import DeferredGlobalEffects from "@/components/layout/DeferredGlobalEffects";
 import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
-import Analytics from "@/components/layout/Analytics";
 import { normalizePublicHref, YOUTUBE_CHANNEL_URL } from "@/lib/shared";
 import { OG_IMAGE } from "@/lib/site";
 import {
@@ -257,7 +256,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <CursorMount />
               {children}
             </SmoothScroll>
-            <Analytics />
             <ServiceWorkerRegister />
           </ThemeFxProvider>
         </ThemeProvider>

@@ -32,7 +32,7 @@ function walk(dir, out = []) {
   return out;
 }
 
-const files = walk(ROOT);
+const files = ["app", "components", "lib", "data"].flatMap((d) => walk(d));
 const cssFiles = files.filter((f) => f.endsWith(".css"));
 const codeFiles = files.filter((f) => /\.tsx?$/.test(f));
 
@@ -65,7 +65,7 @@ for (const f of cssFiles) {
     for (const m of sel.matchAll(/\.(-?[A-Za-z_][\w-]*)(?![\w\\])/g)) names.add(m[1]);
   }
   /* yarl__… are the lightbox library's own classes, restyled from here */
-  const dead = [...names].filter((n) => !codeWords.has(n) && !n.startsWith("yarl__"));
+  const dead = [...names].filter((n) => !codeWords.has(n) && !n.startsWith("yarl__") && n !== "lenis-scrolling" && n !== "sticky");
   if (dead.length) {
     console.log(`   ${relative(".", f)}`);
     console.log(`      ${dead.join(", ")}`);

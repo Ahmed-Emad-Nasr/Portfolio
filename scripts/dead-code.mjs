@@ -29,7 +29,7 @@ function walk(dir, out = []) {
   return out;
 }
 
-const all = walk(join(ROOT, "app"));
+const all = ["app", "components", "lib", "data"].flatMap((d) => walk(join(ROOT, d)));
 const code = all.filter((f) => /\.tsx?$/.test(f));
 const read = (f) => readFileSync(f, "utf8");
 const rel = (f) => relative(ROOT, f);
