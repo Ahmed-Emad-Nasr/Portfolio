@@ -272,7 +272,7 @@ export default function HeroSection({
               <RevealText
                 text="Emad Nasr"
                 delay={0.72}
-                className="block md:ml-10 text-transparent whitespace-pre"
+                className="block md:ml-10 text-transparent whitespace-pre-wrap"
                 style={{ WebkitTextStroke: "2px #BC002D" }}
               />
             </h1>
