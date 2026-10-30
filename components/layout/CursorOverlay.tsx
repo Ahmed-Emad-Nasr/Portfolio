@@ -93,11 +93,6 @@ export default function CursorOverlay() {
           className={`relative w-full h-full transition-all duration-300 flex items-center justify-center
             ${isHovering ? "rounded-none" : "rounded-full border border-accent/60"}`}
         >
-          {/* Inner gold orbit */}
-          {!isHovering && (
-            <div className="absolute inset-1 rounded-full border border-accent/25 border-dashed animate-[spin_10s_linear_infinite_reverse]" />
-          )}
-
           {/* Red lock-on brackets */}
           <motion.div
             className="absolute inset-[-4px] pointer-events-none"

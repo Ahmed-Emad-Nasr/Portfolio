@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { ALL_GALLERY_CERTIFICATES, type GalleryCertGroup } from "@/data/certifications";
 import { TiltCard } from "@/components/ui/Motion";
@@ -54,6 +54,18 @@ const CERT_FILTERS: { id: GalleryCertGroup | "all"; label: string }[] = [
 const CERT_INDICES = new Set(ALL_GALLERY_CERTIFICATES.map((c) => c.galleryIndex));
 
 export default function ArtGallery() {
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const certParam = searchParams ? searchParams.get("cert") : null;
+
+  useEffect(() => {
+    if (certParam) {
+      const idx = Number(certParam) - 1;
+      if (!Number.isNaN(idx) && idx >= 0) {
+        setIndex(idx);
+        setOpen(true);
+      }
+    }
+  }, [certParam]);
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const [certFilter, setCertFilter] = useState<GalleryCertGroup | "all">("all");

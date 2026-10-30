@@ -3,7 +3,7 @@
 import { useState } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
-import type { WorkType } from "@/data/types";
+import type { WorkItem, WorkType } from "@/data/types";
 import { ExternalLink, FlaskConical, Microscope, Wrench, Server, Lock, PlayCircle, FileText } from "lucide-react";
 import PageLink from "@/components/ui/PageLink";
 import { Github } from "@/components/ui/BrandIcons";
@@ -25,9 +25,9 @@ const TYPE_ICON = {
   platform: Server,
 } as const;
 
-export default function WorkShowcase() {
+export default function WorkShowcase({ items: workList = PORTFOLIO_DATA.work }: { items?: WorkItem[] }) {
   const [filter, setFilter] = useState<WorkType | "all">("all");
-  const items = PORTFOLIO_DATA.work.filter((w) => filter === "all" || w.type === filter);
+  const items = workList.filter((w) => filter === "all" || w.type === filter);
 
   return (
     <section id="work" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">

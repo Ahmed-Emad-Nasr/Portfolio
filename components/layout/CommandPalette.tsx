@@ -246,9 +246,9 @@ export default function CommandPalette() {
         label: cert.title,
         hint: `${cert.issuer} · ${cert.kind}`,
         icon: Award,
-        run: () => go("#all-certificates"),
+        run: () => visit(`/gallery?cert=${cert.galleryIndex}#all-certificates`),
       })),
-    [go]
+    [visit]
   );
 
   const filtered = useMemo(() => {

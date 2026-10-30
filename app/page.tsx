@@ -34,6 +34,7 @@ import {
   LazyContributions,
 } from "@/components/home/dynamic";
 import { getTryHackMeStats } from "@/lib/api/tryhackme";
+import { getSyncedWorkItems } from "@/lib/api/github-repos";
 import { STATIC_PLATFORMS, tryHackMePlatform } from "@/data/platforms";
 import { LIVE_COPY } from "@/data/live-copy";
 import { knowledgeEducationItems } from "@/data/experience";
@@ -179,7 +180,7 @@ function structuredData() {
 const FORWARD_SCRIPT = homeForwardScript(normalizePublicHref("/").replace(/\/$/, ""));
 
 export default async function Home() {
-  const thm = await getTryHackMeStats();
+  const [thm, workItems] = await Promise.all([getTryHackMeStats(), getSyncedWorkItems()]);
 
   return (
     <main id="main-content" className="relative w-full bg-background text-foreground overflow-x-clip">
@@ -200,7 +201,7 @@ export default async function Home() {
       <SlashDivider label="01 // Evidence" japanese="証拠" origin="left" />
       <TickerStrip />
 
-      <WorkShowcase />
+      <WorkShowcase items={workItems} />
       <div id="experience">
         <ExperienceTimeline />
       </div>

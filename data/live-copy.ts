@@ -6,6 +6,7 @@
 
 import type { FaqItem, Stat } from "@/data/types";
 import { investigationReportCount, publishedCaseCount } from "@/data/cases";
+import { ALL_GALLERY_CERTIFICATES } from "@/data/certifications";
 import { coveredTechniqueCount } from "@/data/attack";
 import { CV_SUMMARY } from "@/data/cv";
 import { normalizePublicHref } from "@/lib/shared";
@@ -30,10 +31,8 @@ export const LIVE_COPY: LiveCopy = {
     { q: "How do I reach you?", a: "Email or LinkedIn. The form at the bottom of the page opens a pre-filled email — nothing is sent anywhere else." },
   ],
   stats: [
-    /* The full investigation reports, not every library entry: "79 cases"
-       counted 42 web labs and 9 notes too, and a recruiter who filtered the
-       library found the gap. The hero still gives both numbers. */
     { target: investigationReportCount, suffix: "", label: "IR / DFIR reports", japanese: "記録", href: `${normalizePublicHref("/blog")}?kind=investigation#cases` },
+    { target: ALL_GALLERY_CERTIFICATES.length, suffix: "", label: "Certificates & badges", japanese: "認定", href: `${normalizePublicHref("/gallery")}#all-certificates` },
     { target: 300, suffix: "+", label: "Students taught", japanese: "指導", href: "#teaching" },
     { target: 60, suffix: "K+", label: "Channel views", japanese: "動画", href: `${normalizePublicHref("/blog")}#videos` },
   ],
