@@ -22,51 +22,68 @@ const monthYear = (iso: string) => {
 /* Proof per role: the certificate in the gallery, and the case-library view
    of the work done there */
 const ROLE_PROOF: Record<string, Pick<Experience, "proof" | "cases">> = {
+  "AMIT Learning": { proof: { label: "CCEP educator certificate", href: normalizePublicHref(galleryImagePath(6)) } },
   "Banque Misr": { proof: { label: "Internship certificate", href: normalizePublicHref(galleryImagePath(1)) } },
   "Digital Egypt Pioneers Initiative (DEPI)": {
-    proof: { label: "DEPI certificate", href: normalizePublicHref(galleryImagePath(5)) },
+    proof: { label: "DEPI IR certificate", href: normalizePublicHref(galleryImagePath(5)) },
     cases: { label: "LetsDefend investigations", params: { q: "LetsDefend" } },
   },
   "Information Technology Institute (ITI)": {
     proof: { label: "ITI bootcamp certificate", href: normalizePublicHref(galleryImagePath(14)) },
-    cases: { label: "ITI projects", params: { q: "ITI" } },
+    cases: { label: "PortSwigger & ITI labs", params: { q: "PortSwigger" } },
   },
+  Huawei: { proof: { label: "HCIA-Datacom certificate", href: normalizePublicHref(galleryImagePath(24)) } },
   "Google Developer Groups (GDG)": { proof: { label: "GDG bootcamp certificate", href: normalizePublicHref(galleryImagePath(36)) } },
 };
 
 const ROLE_INTRO: Record<string, { intro: string; japanese: string; location: string }> = {
   "AMIT Learning": {
-    intro: "Teaching the security track end to end — networking and Linux first, then SOC, pentest, IAM and GRC labs.",
+    intro: "Teaching the 160-hour security track end to end — networking and Linux first, then SOC, pentest, IAM and GRC labs.",
     japanese: "サイバーセキュリティ講師",
     location: "Cairo, Egypt",
   },
+  "National Telecommunication Institute (NTI)": {
+    intro: "Instructing hands-on cohorts in Linux administration, enterprise networking, SOC operations and web/network VAPT.",
+    japanese: "技術講師・NTI",
+    location: "Cairo / Benha, Egypt",
+  },
   "Banque Misr": {
-    intro: "Auditing GRC, architecture and security operations inside one of Egypt's largest banks.",
+    intro: "Auditing GRC (ISO 27001, PCI DSS, COBIT, SWIFT), IAM/PAM architecture and SOC/DFIR workflows inside one of Egypt's largest banks.",
     japanese: "情報セキュリティ・インターン",
     location: "Cairo, Egypt",
   },
   "Digital Egypt Pioneers Initiative (DEPI)": {
-    intro: "Alert triage and detection engineering on SOC simulation platforms, following NIST 800-61.",
+    intro: "Alert triage, DFIR investigations and Wazuh/Suricata/YARA detection engineering following NIST 800-61.",
     japanese: "インシデント対応アナリスト",
-    location: "Egypt",
+    location: "Cairo, Egypt",
+  },
+  iSchool: {
+    intro: "Coordinating technical coding labs, session operations and mentoring for 470+ students across DEPI and DECI programs.",
+    japanese: "ティーチングアシスタント",
+    location: "Cairo, Egypt",
   },
   "Information Technology Institute (ITI)": {
-    intro: "Offensive security training: CTFs, exploitation, pivoting, and the eJPT path.",
+    intro: "Offensive security training: vulnerability assessment, exploitation, network pivoting, PortSwigger labs and the eJPT v2 path.",
     japanese: "ペネトレーションテスター研修生",
-    location: "Egypt",
+    location: "Benha, Egypt",
+  },
+  Huawei: {
+    intro: "Enterprise routing, switching and cloud security architectures on Huawei eNSP, earning HCIA-Datacom, HCIA-Cloud and HCCDA.",
+    japanese: "ネットワーク・クラウド研修",
+    location: "Cairo, Egypt",
   },
   "Google Developer Groups (GDG)": {
-    intro: "Security sessions and CTF challenge design for a student developer community.",
+    intro: "Delivering 35+ cybersecurity workshops and designing 10+ CTF challenges — ranked 1st among 250 instructors.",
     japanese: "サイバーセキュリティ講師",
-    location: "Egypt",
+    location: "Benha, Egypt",
   },
   IEEE: {
-    intro: "C and Python training for the engineering teams building robotics projects.",
+    intro: "C and Python programming instruction for student engineering teams building autonomous Arduino robotics projects.",
     japanese: "技術講師・委員",
     location: "Benha, Egypt",
   },
   "Benha University": {
-    intro: "Computer Science, majoring in Information Security & Digital Forensics.",
+    intro: "B.Sc. in Computer Science (Information Security & Digital Forensics) — Distinction with Honor, GPA 3.78/4.0, Ranked 8th of 900.",
     japanese: "コンピューターサイエンス学士",
     location: "Benha, Egypt",
   },
@@ -265,9 +282,9 @@ export const PORTFOLIO_DATA: PortfolioData = {
       "Information Security Officer",
       "Information Security Engineer",
       "GRC & Compliance Analyst",
-      "SOC Analyst",
+      "SOC Analyst (L1/L2)",
       "DFIR & Malware Analyst",
-      "IAM & Data Security",
+      "IAM & Data Security Analyst",
       "Cybersecurity Instructor",
     ],
     contact: {

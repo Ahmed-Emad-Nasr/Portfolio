@@ -1,10 +1,11 @@
 /*
- * RolesFit — one card per role family, each with three pieces of proof from
- * the site and the credential behind it. Server Component.
+ * RolesFit — Services & Roles I Fit: one card per role family and service area,
+ * each with focus areas, the written deliverable, three pieces of proof from
+ * the site, and the credential behind it. Server Component.
  */
 
 import PageLink from "@/components/ui/PageLink";
-import { ArrowUpRight, ClipboardCheck, Radar, Microscope, KeyRound, Download } from "lucide-react";
+import { ArrowUpRight, ClipboardCheck, Radar, KeyRound, Download, Bug, GraduationCap } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { TiltCard } from "@/components/ui/Motion";
 import { KanjiWatermark } from "@/components/ui/kit";
@@ -22,10 +23,12 @@ type Proof = { label: string; href?: string; params?: Record<string, string> };
 type Role = {
   id: string;
   title: string;
+  serviceArea: string;
   japanese: string;
   icon: typeof Radar;
   pitch: string;
   focus: string[];
+  deliverable: string;
   proof: Proof[];
   credential: string;
 };
@@ -33,11 +36,13 @@ type Role = {
 const ROLES: Role[] = [
   {
     id: "information-security-officer",
-    title: " Information Security Officer",
+    title: "Information Security Officer",
+    serviceArea: "Security Governance & Risk",
     japanese: "統制",
     icon: ClipboardCheck,
-    pitch: "Build a risk-led security program: governance, compliance, control ownership, remediation tracking and executive-ready evidence.",
-    focus: ["Risk & compliance", "Control assurance", "Security governance"],
+    pitch: "Support a risk-led security program: governance, compliance, control ownership, remediation tracking and audit-ready evidence.",
+    focus: ["ISO 27001", "PCI DSS", "NIST CSF", "Control Assurance"],
+    deliverable: "Risk register + control assurance report",
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
       { label: "VerifAI 360 — compliance and risk platform", href: "#work" },
@@ -48,10 +53,12 @@ const ROLES: Role[] = [
   {
     id: "information-security-engineer",
     title: "Information Security Engineer",
+    serviceArea: "Detection & System Hardening",
     japanese: "設計",
     icon: Radar,
-    pitch: "Turn security requirements into working controls across SIEM, endpoint telemetry, network detection, IAM and cloud services.",
-    focus: ["Security architecture", "Detection engineering", "Hardening & integration"],
+    pitch: "Turn security requirements into working controls across SIEM, endpoint telemetry, network detection, CIS hardening and cloud services.",
+    focus: ["Wazuh SIEM", "Suricata & Zeek", "Sysmon", "CIS Benchmarks"],
+    deliverable: "Tuned detection rules + hardened baseline",
     proof: [
       { label: "Wazuh + Sysmon detection environment", href: "/blog/soc-env-depi-r3-project" },
       { label: "Custom Wazuh detection rule pack", href: "/blog/3omda-custom-detection-rules" },
@@ -60,26 +67,14 @@ const ROLES: Role[] = [
     credential: "Wazuh · Suricata · Sysmon · YARA · AWS KMS",
   },
   {
-    id: "cybersecurity-instructor",
-    title: "Cybersecurity Instructor",
-    japanese: "指導",
-    icon: Microscope,
-    pitch: "Make difficult security concepts usable: structured curricula, hands-on labs, assessment and feedback for beginners and practitioners.",
-    focus: ["Curriculum design", "Hands-on labs", "Mentoring & communication"],
-    proof: [
-      { label: "300+ students at AMIT Learning", href: "#teaching" },
-      { label: "35+ GDG sessions and CTF challenges", href: "#experience" },
-      { label: "Security walkthroughs", href: "/blog#videos" },
-    ],
-    credential: "SOC & Cybersecurity Diploma · 160 hours",
-  },
-  {
     id: "grc",
     title: "GRC / Compliance Analyst",
+    serviceArea: "Governance, Risk & Compliance",
     japanese: "統治",
     icon: ClipboardCheck,
-    pitch: "Gap assessments against ISO 27001, PCI DSS, COBIT and SWIFT, and the remediation plan after them.",
-    focus: ["GRC assessments", "Remediation planning", "Compliance evidence"],
+    pitch: "Gap assessments against ISO 27001, PCI DSS, NIST CSF, COBIT and SWIFT CSP — then the policies and a remediation plan teams can follow.",
+    focus: ["Gap Assessments", "Remediation Planning", "COBIT & SWIFT", "GDPR"],
+    deliverable: "Gap report + remediation plan",
     proof: [
       { label: "Banque Misr — GRC gaps across 3 units", href: "#experience" },
       { label: "VerifAI 360 — my GRC platform", href: "#work" },
@@ -90,10 +85,12 @@ const ROLES: Role[] = [
   {
     id: "soc",
     title: "SOC Analyst (L1/L2)",
+    serviceArea: "Security Operations & Triage",
     japanese: "監視",
     icon: Radar,
-    pitch: "Alert triage to a written verdict, and the Wazuh rules that catch the next one.",
-    focus: ["Alert triage", "SIEM operations", "Incident reporting"],
+    pitch: "Alert triage, log analysis and SIEM tuning — separating real attacks from noise, writing a clear verdict, and building the rule that catches the next one.",
+    focus: ["Alert Triage", "Wazuh & Splunk", "ELK Stack", "Sysmon"],
+    deliverable: "Triage notes + tuned SIEM rules",
     proof: [
       { label: `${letsDefend} LetsDefend alerts investigated`, params: { q: "LetsDefend" } },
       { label: TITLE.get("3omda-custom-detection-rules") ?? "Custom Wazuh rules", href: "/blog/3omda-custom-detection-rules" },
@@ -104,10 +101,12 @@ const ROLES: Role[] = [
   {
     id: "dfir",
     title: "IR / DFIR & Malware Analyst",
+    serviceArea: "Incident Response, DFIR & Malware",
     japanese: "鑑識",
-    icon: Microscope,
-    pitch: "Memory, disk, registry and browser artifacts to a timeline; samples taken apart to IOCs and YARA.",
-    focus: ["DFIR timelines", "Malware analysis", "IOC extraction"],
+    icon: Bug,
+    pitch: "NIST 800-61 incident response: memory, disk, registry and browser artifacts to a timeline; malware samples dissected in an isolated lab to IOCs and YARA.",
+    focus: ["NIST 800-61", "Volatility & Autopsy", "YARA", "FakeNet-NG"],
+    deliverable: "IR report + forensic timeline + YARA/IOCs",
     proof: [
       { label: `${forensics} digital forensics cases`, params: { cat: "Digital Forensics" } },
       { label: `${malware} malware analysis reports`, params: { kind: "investigation", cat: "Malware Analysis" } },
@@ -117,11 +116,13 @@ const ROLES: Role[] = [
   },
   {
     id: "iam",
-    title: "IAM & Data Security",
+    title: "IAM & Data Security Analyst",
+    serviceArea: "IAM, PAM & Data Protection",
     japanese: "認証",
     icon: KeyRound,
-    pitch: "Access reviews, PAM and least privilege; where sensitive data goes and what stops it leaving.",
-    focus: ["IAM & PAM", "Least privilege", "Data protection"],
+    pitch: "Access reviews, PAM and least privilege; data classification, DLP and encryption — ensuring the right people reach the right data and nothing leaks.",
+    focus: ["IAM & PAM", "Least Privilege", "DLP", "AWS KMS"],
+    deliverable: "Access review + control gap report",
     proof: [
       { label: "Banque Misr — IAM, PAM & DevSecOps audit", href: "#experience" },
       { label: TITLE.get("soc257-pdf") ?? "Compromised VPN account", href: "/blog/soc257-pdf" },
@@ -129,19 +130,35 @@ const ROLES: Role[] = [
     ],
     credential: "Banque Misr internship · AWS KMS lab",
   },
+  {
+    id: "cybersecurity-instructor",
+    title: "Cybersecurity Instructor",
+    serviceArea: "Security Training & Labs",
+    japanese: "指導",
+    icon: GraduationCap,
+    pitch: "Make complex security concepts practical: structured curricula, hands-on labs, CTF challenges and mentoring for beginners and practitioners.",
+    focus: ["Curriculum Design", "Hands-On Labs", "CTF Design", "Mentoring"],
+    deliverable: "Structured course + hands-on labs",
+    proof: [
+      { label: "300+ students at AMIT Learning & NTI", href: "#teaching" },
+      { label: "35+ GDG sessions and CTF challenges", href: "#experience" },
+      { label: "Security walkthroughs", href: "/blog#videos" },
+    ],
+    credential: "CCEP · SOC & Cybersecurity Diploma (160h)",
+  },
 ];
 
 export default function RolesFit() {
   return (
-    <section id="roles" aria-label="Roles I fit" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
+    <section id="roles" aria-label="Services and roles I fit" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
       <KanjiWatermark chars="適任" side="left" />
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
-          eyebrow="Hiring for // Roles I fit"
+          eyebrow="Services & Roles // Where I fit"
           japanese="適任"
-          titleA="Roles"
-          titleB="I Fit."
-          description="One discipline, seven entry points. Pick the role you are hiring for — each comes with focus areas and evidence from the site."
+          titleA="Services &"
+          titleB="Roles I Fit."
+          description="Seven entry points across one discipline: information security. Pick the role or service you need — each card combines the scope, the written deliverable, and the proof from the site."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -150,27 +167,34 @@ export default function RolesFit() {
             return (
               <FadeIn y={36} duration={0.7} delay={idx * 0.1} key={r.id}>
                 <TiltCard className="group spotlight relative h-full flex flex-col bg-surface/60 border border-foreground/5 p-7 hover:border-primary/40 transition-colors duration-500 overflow-hidden">
-                  {/* The role's number climbs into view on hover */}
                   <span className="absolute -right-2 -bottom-6 font-display text-[7rem] font-black leading-none text-foreground/[0.03] group-hover:text-primary/10 group-hover:-translate-y-3 transition-all duration-700 select-none" aria-hidden="true" data-deco={`0${idx + 1}`} />
                   <div className="absolute top-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-primary group-hover:scale-x-100 transition-transform duration-700" aria-hidden="true" />
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="p-2.5 bg-primary/10 border border-primary/30">
                       <Icon size={18} className="text-primary-ink transition-transform duration-500 group-hover:scale-110" />
                     </div>
                     <span className="brush-jp text-xl text-foreground/25" lang="ja" aria-hidden="true" data-jp={r.japanese} />
                   </div>
+                  <span className="font-mono text-[0.5625rem] uppercase tracking-[0.25em] text-tertiary mb-1.5">
+                    {r.serviceArea}
+                  </span>
                   <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground mb-3 leading-tight">{r.title}</h3>
-                  <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6">{r.pitch}</p>
+                  <p className="text-sm text-foreground/60 font-light leading-relaxed mb-5">{r.pitch}</p>
+
+                  <ul className="mb-5 flex flex-wrap gap-2" aria-label={`${r.title} focus areas`}>
+                    {r.focus.map((focus) => (
+                      <li key={focus} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-tertiary bg-tertiary/10 border border-tertiary/20">
+                        {focus}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mb-5 py-2.5 px-3 border-l-2 border-accent bg-accent/5 font-mono text-[0.625rem] text-accent tracking-[0.15em] uppercase">
+                    → {r.deliverable}
+                  </div>
 
                   <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-foreground/60 mb-2">Proof</span>
-                          <ul className="mb-5 flex flex-wrap gap-2" aria-label={`${r.title} focus areas`}>
-                            {r.focus.map((focus) => (
-                              <li key={focus} className="px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-tertiary bg-tertiary/10 border border-tertiary/20">
-                                {focus}
-                              </li>
-                            ))}
-                          </ul>
-                          <ul className="grid gap-2 mb-6">
+                  <ul className="grid gap-2 mb-6">
                     {r.proof.map((p, i) => {
                       const cls = "group/p flex items-start gap-2 text-sm text-foreground/80 hover:text-primary-ink transition-colors";
                       const inner = (

@@ -772,12 +772,975 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "set-credential-harvesting": {
+    verdict: "Credentials harvested in cleartext via cloned Google sign-in portal on 192.168.10.200:80",
+    severity: "High",
     pages: 11,
+    facts: [
+      { label: "Tool", value: "Social-Engineer Toolkit (SET)" },
+      { label: "Attack Vector", value: "Website Attack Vectors → Credential Harvester Attack Method" },
+      { label: "Listener", value: "192.168.10.200:80 (Cloned https://accounts.google.com)" },
+    ],
     chain: [
       { step: "SET → Website Attack Vectors → Credential Harvester" },
       { step: "Google sign-in page cloned on 192.168.10.200:80", technique: "T1566.002" },
       { step: "Victim submits e-mail and password over HTTP POST" },
       { step: "Credentials printed in plain text; victim redirected to google.com" },
+    ],
+    response: [
+      "Enforce FIDO2 / WebAuthn phishing-resistant MFA (bound to the origin domain)",
+      "Block newly registered and uncategorized lookalike domains at the DNS/proxy layer",
+    ],
+  },
+
+  /* ── Cloud Security (AWS GuardDuty, KMS, S3 & Athena) ──────────────── */
+  "aws-guardduty-setup": {
+    verdict: "True positive — GuardDuty alerted on anomalous API calls, EC2 compromise indicators & S3 access",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "AWS Cloud Security Lab" },
+      { label: "Service", value: "Amazon GuardDuty · AWS Management Console" },
+      { label: "Telemetry", value: "AWS CloudTrail management/S3 events, VPC Flow Logs, DNS logs" },
+      { label: "Focus", value: "Continuous cloud threat detection & high-severity finding triage" },
+    ],
+    chain: [
+      { step: "GuardDuty enabled across the AWS account ingesting CloudTrail, VPC Flow & DNS logs" },
+      { step: "Simulated anomalous IAM API invocations from an unfamiliar principal", technique: "T1078.004" },
+      { step: "Detected suspicious outbound EC2 communication and reconnaissance behavior", technique: "T1046" },
+      { step: "Triaged unauthorized Amazon S3 bucket access findings and scoped affected resources", technique: "T1005" },
+    ],
+    response: [
+      "Rotate compromised IAM access keys and enforce least-privilege IAM policies",
+      "Isolate affected EC2 instances using restrictive Security Groups and NACLs",
+      "Enable S3 Block Public Access and enforce bucket encryption and object-level logging",
+      "Route high-severity GuardDuty findings to Amazon EventBridge for automated alerting",
+    ],
+    lessons: "GuardDuty correlates CloudTrail, VPC Flow Logs, and DNS logs without deploying agents, making it the fastest way to establish baseline threat detection in an AWS account.",
+  },
+  "aws-kms-security": {
+    verdict: "Resolved — AWS Organizations SCP explicit deny identified and remediated for KMS key operations",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "AWS Cryptographic Security Lab" },
+      { label: "Services", value: "AWS KMS · AWS IAM · AWS Organizations (SCP)" },
+      { label: "Key Type", value: "Customer Managed Keys (CMKs) & External Key Store (XKS)" },
+      { label: "Root Cause", value: "Explicit Deny statement in an AWS Organizations Service Control Policy" },
+    ],
+    chain: [
+      { step: "Provisioned Customer Managed Keys (CMKs) and authored least-privilege Key Policies" },
+      { step: "Attempted cryptographic operations and External Key Store (XKS) integration" },
+      { step: "Diagnosed AccessDenied exceptions despite valid IAM user/role permissions", technique: "T1098" },
+      { step: "Audited AWS Organizations Service Control Policies (SCPs) and removed the blocking explicit deny rule" },
+    ],
+    response: [
+      "Align AWS Organizations SCPs with workload KMS key usage requirements",
+      "Separate KMS Key Administrators from Key Users in the CMK key policy (separation of duties)",
+      "Enable automatic annual key rotation and CloudTrail logging on all kms:* API actions",
+    ],
+    lessons: "In AWS IAM evaluation logic, an explicit Deny in an AWS Organizations SCP overrides every allow in IAM policies and KMS key policies.",
+  },
+  "aws-athena-healthcare": {
+    verdict: "Serverless S3 + Athena healthcare data pipeline deployed with encrypted query results",
+    severity: "Low",
+    pages: 12,
+    facts: [
+      { label: "Platform", value: "AWS Data & Cloud Security Lab" },
+      { label: "Storage", value: "Amazon S3 (us-east-1) with server-side encryption" },
+      { label: "Catalog", value: "Amazon Athena · healthcaredata.patient_data (6 typed columns)" },
+      { label: "Serializer", value: "Hive LazySimpleSerDe (CSV)" },
+    ],
+    chain: [
+      { step: "Uploaded healthcare dataset CSV to a private Amazon S3 bucket in us-east-1" },
+      { step: "Configured an encrypted S3 query-results prefix for Amazon Athena" },
+      { step: "Created the healthcaredata database and patient_data table using LazySimpleSerDe" },
+      { step: "Executed analytical SQL queries and audited output formatting (identified missing skip.header.line.count=1 property)" },
+    ],
+    response: [
+      "Add TBLPROPERTIES ('skip.header.line.count'='1') to exclude the CSV header row from query results",
+      "Enforce SSE-KMS encryption on both the source S3 bucket and Athena query results bucket",
+      "Restrict table and bucket access via AWS Lake Formation and least-privilege IAM roles",
+    ],
+  },
+
+  /* ── Network, Wireless & CTF Walkthroughs ──────────────────────────── */
+  "wifi-cracking-walkthrough": {
+    verdict: "WPA2 pre-shared key recovered from 4-way EAPOL handshake via dictionary attack",
+    severity: "High",
+    pages: 18,
+    facts: [
+      { label: "Tool", value: "Aircrack-ng 1.7" },
+      { label: "Capture File", value: "wpa.full.cap (WPA 4-way handshake)" },
+      { label: "Wordlist", value: "rockyou.txt" },
+      { label: "Technique", value: "Offline WPA/WPA2 PSK dictionary cracking (T1110.002)" },
+    ],
+    chain: [
+      { step: "Captured the 4-way EAPOL handshake frames in wpa.full.cap" },
+      { step: "Ran aircrack-ng -w rockyou.txt wpa.full.cap to compute PMK/PTK MICs offline", technique: "T1110.002" },
+      { step: "Matched the calculated MIC against the captured EAPOL frame to recover the plaintext passphrase" },
+    ],
+    response: [
+      "Use a high-entropy WPA2/WPA3 passphrase (20+ random characters) resistant to wordlist attacks",
+      "Migrate to WPA3-SAE (Simultaneous Authentication of Equals) or WPA2/WPA3-Enterprise (802.1X/RADIUS)",
+      "Disable WPS (Wi-Fi Protected Setup) and monitor for deauthentication frame floods",
+    ],
+  },
+  "ettercap-case": {
+    verdict: "Active ARP cache poisoning MITM established between victim host and gateway",
+    severity: "High",
+    pages: 10,
+    facts: [
+      { label: "Environment", value: "Kali Linux Virtual Lab" },
+      { label: "Tool", value: "Ettercap GUI / Unified Sniffing" },
+      { label: "Target 1 (Victim)", value: "192.168.10.128" },
+      { label: "Target 2 (Gateway)", value: "192.168.10.2" },
+    ],
+    chain: [
+      { step: "Selected the active network interface and scanned the /24 subnet for live hosts" },
+      { step: "Assigned 192.168.10.128 as Target 1 and 192.168.10.2 as Target 2" },
+      { step: "Launched ARP poisoning with remote connection sniffing enabled", technique: "T1557.002" },
+      { step: "Intercepted and inspected bidirectional traffic between the victim and gateway", technique: "T1040" },
+    ],
+    iocs: [
+      { type: "ip", value: "192.168.10.128", note: "Victim endpoint" },
+      { type: "ip", value: "192.168.10.2", note: "Default gateway" },
+    ],
+    response: [
+      "Enable Dynamic ARP Inspection (DAI) with DHCP Snooping on enterprise switches",
+      "Enforce TLS/HTTPS and SSH everywhere so intercepted L2 traffic remains encrypted",
+      "Monitor for duplicate MAC-to-IP bindings in Zeek/Suricata and switch logs",
+    ],
+  },
+  "simple-ctf-writeup": {
+    verdict: "Full root compromise via CMS Made Simple SQLi (CVE-2019-9053) and sudo Vim escalation",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Simple CTF" },
+      { label: "Services", value: "21/tcp (FTP anon), 80/tcp (Apache /simple), 2222/tcp (SSH)" },
+      { label: "Vulnerability", value: "CVE-2019-9053 — CMS Made Simple < 2.2.10 Unauthenticated Time-Based SQLi" },
+      { label: "Privilege Escalation", value: "sudo vim -c ':!/bin/sh' (GTFOBins)" },
+    ],
+    chain: [
+      { step: "Enumerated open ports (21, 80, 2222) with Nmap and discovered /simple via Gobuster", technique: "T1595" },
+      { step: "Exploited CVE-2019-9053 time-based blind SQLi to dump the salted user password hash", technique: "T1190" },
+      { step: "Cracked the hash offline and authenticated as mitch over SSH on port 2222", technique: "T1110.002" },
+      { step: "Ran sudo -l, identified NOPASSWD on /usr/bin/vim, and spawned a root shell via :!/bin/sh", technique: "T1548" },
+    ],
+    iocs: [
+      { type: "other", value: "CVE-2019-9053", note: "CMS Made Simple SQLi" },
+      { type: "account", value: "mitch", note: "Compromised SSH user" },
+      { type: "other", value: "sudo vim -c ':!/bin/sh'", note: "GTFOBins root escalation" },
+    ],
+    response: [
+      "Patch CMS Made Simple to >= 2.2.10 and parameterize all database queries",
+      "Disable anonymous FTP access and enforce SSH key-based authentication",
+      "Remove unrestricted sudo privileges on interactive editors like vim (use sudoedit with restricted paths)",
+    ],
+  },
+  "easy-peasy-ctf-writeup": {
+    verdict: "Root compromise via hidden Nginx directory enumeration, multi-layer decoding & root cron job",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Easy Peasy CTF" },
+      { label: "Services", value: "80/tcp (Nginx), 6498/tcp (SSH), 65524/tcp (Apache)" },
+      { label: "Tools", value: "Nmap, Gobuster, CyberChef, Steghide, John the Ripper" },
+      { label: "Privilege Escalation", value: "Writable root cron job (.mysecretcronjob.sh)" },
+    ],
+    chain: [
+      { step: "Scanned all 65,535 TCP ports with Nmap and enumerated hidden directories with Gobuster", technique: "T1046" },
+      { step: "Decoded multi-layered Base64/Base62/Hex strings in CyberChef and cracked GOST hash", technique: "T1027" },
+      { step: "Extracted SSH credentials from steganographic image and logged in on port 6498", technique: "T1078" },
+      { step: "Appended a reverse shell payload to the user-writable root cron script /var/www/.mysecretcronjob.sh", technique: "T1053" },
+    ],
+    response: [
+      "Ensure cron scripts executed by root are owned by root:root with 0700/0755 permissions",
+      "Remove encoded credentials and sensitive comments from public HTML source files",
+      "Enforce key-based SSH authentication and restrict high-port web services",
+    ],
+  },
+  "bounty-hacker-ctf-writeup": {
+    verdict: "Root compromise via anonymous FTP wordlist leak, SSH Hydra brute force & sudo tar escalation",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Bounty Hacker" },
+      { label: "Services", value: "21/tcp (FTP anonymous), 22/tcp (SSH), 80/tcp (HTTP)" },
+      { label: "Tools", value: "Nmap, FTP, Hydra, SSH, GTFOBins (tar)" },
+      { label: "Privilege Escalation", value: "sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh" },
+    ],
+    chain: [
+      { step: "Discovered anonymous FTP access on port 21 and downloaded task.txt and locks.txt", technique: "T1083" },
+      { step: "Used Hydra with locks.txt to brute-force user lin's SSH password", technique: "T1110.001" },
+      { step: "Logged in via SSH as lin and checked sudo privileges with sudo -l", technique: "T1021" },
+      { step: "Abused sudo /bin/tar checkpoint-action to spawn an interactive root shell", technique: "T1548" },
+    ],
+    response: [
+      "Disable anonymous FTP access and never store password lists or task notes on public shares",
+      "Implement fail2ban / SSH rate limiting and require SSH key authentication",
+      "Audit /etc/sudoers to remove NOPASSWD permissions on binaries with shell-escape flags like tar",
+    ],
+  },
+  "guided-pentest-infrastructure": {
+    verdict: "Full system compromise via UnrealIRCd 3.2.8.1 backdoor RCE and plaintext root credentials",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Guided Pentest: Infrastructure" },
+      { label: "Vulnerable Service", value: "UnrealIRCd 3.2.8.1 on 6667/tcp (Backdoor Command Execution)" },
+      { label: "Initial Foothold", value: "webmaster user via Metasploit exploit/unix/irc/unreal_ircd_3281_backdoor" },
+      { label: "Privilege Escalation", value: "Plaintext root password in /etc/password.txt → SSH root login" },
+    ],
+    chain: [
+      { step: "Enumerated open ports and services with Nmap, identifying UnrealIRCd on port 6667", technique: "T1046" },
+      { step: "Executed the UnrealIRCd 3.2.8.1 backdoor exploit via Metasploit to gain a shell as webmaster", technique: "T1190" },
+      { step: "Performed local post-exploitation enumeration and discovered /etc/password.txt", technique: "T1552" },
+      { step: "Authenticated as root over SSH using the recovered password to capture the root flag", technique: "T1078" },
+    ],
+    response: [
+      "Decommission or replace trojanized UnrealIRCd 3.2.8.1 binaries and verify package checksums",
+      "Delete plaintext credential files (/etc/password.txt) and rotate root and service passwords",
+      "Disable direct root SSH login (PermitRootLogin no) in /etc/ssh/sshd_config",
+    ],
+  },
+  "vulnerability-scanning-tools": {
+    verdict: "Multiple high/medium vulnerabilities identified across FTP, SSH & HTTP using Nmap NSE, Nikto & OpenVAS",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Vulnerability Scanning Tools" },
+      { label: "Scanner Host", value: "10.128.162.243 (AttackBox)" },
+      { label: "Target Host", value: "10.128.147.232 (Ubuntu 24.04)" },
+      { label: "Tools", value: "Nmap (NSE), Nikto v2.1.5, OpenVAS / Greenbone v26.7.0 (169,731 NVTs)" },
+    ],
+    chain: [
+      { step: "Phase 1 (Nmap -A): Identified vsftpd 3.0.5 with anonymous FTP login (21/tcp), OpenSSH 9.6p1 (22/tcp), and WebSockify (80/tcp)", technique: "T1595" },
+      { step: "Phase 2 (Nikto on 8080/tcp): Uncovered exposed /info.php (OSVDB-3233), /static/ indexing, missing HttpOnly/X-Frame-Options, HTTP DEBUG verb, and RFI (/info.php?file=, OSVDB-5292)", technique: "T1190" },
+      { step: "Phase 3 (OpenVAS): Configured target & task (Min QoD 70), triaged CVSS 5.3 phpinfo() disclosure and CVE-1999-0497 Anonymous FTP Login" },
+    ],
+    iocs: [
+      { type: "ip", value: "10.128.147.232", note: "Scanned target host" },
+      { type: "other", value: "CVE-1999-0497", note: "Anonymous FTP Login enabled" },
+      { type: "url", value: "http://10.128.147.232:8080/info.php", note: "Exposed phpinfo() & RFI vector" },
+    ],
+    response: [
+      "Disable anonymous FTP in /etc/vsftpd.conf (anonymous_enable=NO)",
+      "Remove /info.php, disable directory listing (Options -Indexes), and disable allow_url_include in php.ini to prevent RFI",
+      "Add HttpOnly/Secure flags to PHPSESSID cookies, set X-Frame-Options: DENY, and disable the HTTP DEBUG method",
+    ],
+  },
+
+  /* ── SOC, DFIR, Malware & IAM TryHackMe Walkthroughs ───────────────── */
+  "iam-access-control-room": {
+    verdict: "Evaluated IAM pillars (IAAA), DAC/RBAC/MAC access control models & SSO replay mitigations",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "TryHackMe · IAM & Access Control" },
+      { label: "Pillars", value: "Identification, Authentication, Authorization, Accountability (IAAA)" },
+      { label: "Models", value: "DAC (Discretionary), RBAC (Role-Based), MAC (Mandatory)" },
+      { label: "Focus", value: "Least privilege, SSO architecture & credential replay prevention" },
+    ],
+    chain: [
+      { step: "Audited user identity lifecycle across Identification, Authentication, Authorization & Accountability" },
+      { step: "Compared DAC, RBAC and MAC enforcement models against enterprise security requirements" },
+      { step: "Investigated authentication weaknesses including cleartext token replay and missing MFA", technique: "T1078" },
+      { step: "Mapped role-based privilege assignment and audit logging controls", technique: "T1098" },
+    ],
+    response: [
+      "Enforce Role-Based Access Control (RBAC) with periodic quarterly access reviews",
+      "Require phishing-resistant Multi-Factor Authentication (MFA) on all SSO and privileged accounts",
+      "Bind session tokens to short lifetimes and TLS channels to prevent replay attacks",
+    ],
+  },
+  "offensive-security-intro": {
+    verdict: "Unprotected administrative portal (/bank-transfer) discovered via Dirb and exploited",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Offensive Security Intro" },
+      { label: "Target", value: "FakeBank Web Application" },
+      { label: "Tool", value: "Dirb (command-line web directory brute-forcer)" },
+      { label: "Flaw", value: "Broken Access Control — unauthenticated /bank-transfer admin page" },
+    ],
+    chain: [
+      { step: "Inspected the FakeBank user account page and noted negative balance on account #8881" },
+      { step: "Ran dirb http://fakebank.thm to enumerate hidden web directories", technique: "T1595" },
+      { step: "Discovered the unlinked /bank-transfer administrative endpoint", technique: "T1190" },
+      { step: "Executed an unauthorized transfer of $2,000 from account 2276 to account 8881" },
+    ],
+    response: [
+      "Enforce server-side authentication and role-based authorization on /bank-transfer",
+      "Require CSRF tokens and multi-step verification for financial transfer transactions",
+      "Rate-limit directory enumeration requests at the WAF/reverse proxy layer",
+    ],
+  },
+  "soc-l2-alert-triage": {
+    verdict: "Tier 2 alert triage workflow applied: multi-source SIEM correlation, root-cause analysis & containment",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · SOC Level 2" },
+      { label: "Role", value: "Tier 2 SOC Analyst / Escalation Handler" },
+      { label: "Methodology", value: "Threat Hunting Loop + Multi-Source SIEM Correlation" },
+      { label: "Actions", value: "Root-cause investigation, detection tuning & host containment" },
+    ],
+    chain: [
+      { step: "Received escalated alerts from Tier 1 and validated initial triage notes" },
+      { step: "Correlated endpoint, network and authentication logs in the SIEM to reconstruct the full attack timeline" },
+      { step: "Distinguished true threats from benign administrative activity to tune out recurring false positives" },
+      { step: "Executed targeted host isolation, credential resets and firewall blocks" },
+    ],
+    response: [
+      "Document root cause for every escalated alert to feed back into SIEM rule tuning",
+      "Standardize escalation playbooks between Tier 1 and Tier 2 analysts",
+      "Automate high-confidence IOC enrichment and host containment via SOAR playbooks",
+    ],
+  },
+  "report-writing-soc-l2": {
+    verdict: "Authored dual-audience incident reports: C-Level executive summaries & technical DFIR handovers",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Report Writing for SOC L2" },
+      { label: "Audiences", value: "C-Level Executives & Technical DFIR / Engineering Teams" },
+      { label: "Deliverables", value: "Executive Summary + Technical Incident Report + DFIR Handover" },
+    ],
+    chain: [
+      { step: "Structured the 5 Ws (Who, What, When, Where, Why) of the security incident" },
+      { step: "Drafted a concise C-Level Executive Summary translating technical findings into business risk and impact" },
+      { step: "Compiled a granular DFIR Handover table with defanged IOCs, MITRE ATT&CK TTPs, and UTC timestamps" },
+      { step: "Formulated prioritized short-term containment and long-term hardening recommendations" },
+    ],
+    response: [
+      "Always separate executive business-impact summaries from deep technical forensic appendices",
+      "Use UTC timestamps consistently across all timeline entries and log excerpts",
+      "Include actionable, owner-assigned remediation steps at the close of every incident report",
+    ],
+  },
+  "defensive-security-trends": {
+    verdict: "Completed SOC Level-Up track: SOAR automation, CTI integration & cloud-native detection engineering",
+    severity: "Low",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Defensive Security Trends" },
+      { label: "Badge", value: "SOC Level-Up Achievement" },
+      { label: "Focus", value: "SOAR, Threat Intelligence, Detection-as-Code & Cloud SOC" },
+    ],
+    chain: [
+      { step: "Evaluated modern SOC transitions from static signature alerts to behavioral ATT&CK detection" },
+      { step: "Analyzed SOAR playbook workflows for automated alert enrichment and containment" },
+      { step: "Reviewed Detection-as-Code (Sigma/YARA) and cloud-native telemetry pipelines" },
+    ],
+    response: [
+      "Integrate automated threat intelligence enrichment into SIEM/SOAR triage pipelines",
+      "Maintain detection rules as version-controlled code mapped to MITRE ATT&CK",
+    ],
+  },
+  "monitoring-active-directory": {
+    verdict: "Configured Windows auditpol policies and hunted Kerberos & privileged AD events in Splunk",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Monitoring Active Directory" },
+      { label: "Tools", value: "Splunk SIEM (SPL) · Windows auditpol.exe" },
+      { label: "Key Event IDs", value: "4624/4625 (Logon), 4768/4769 (Kerberos TGT/TGS), 4720/4728/4732 (Account/Group changes)" },
+    ],
+    chain: [
+      { step: "Configured granular Windows Advanced Audit Policies via auditpol.exe to log directory service and logon events" },
+      { step: "Queried Windows Security Event Logs in Splunk using SPL to establish normal onboarding baselines" },
+      { step: "Hunted anomalous Kerberos ticket requests (4768/4769) and logon types (Type 3 Network vs Type 10 RDP)", technique: "T1078" },
+      { step: "Detected unauthorized user creation (4720) and Domain Admins group membership modification (4728)", technique: "T1098" },
+    ],
+    detection: [
+      {
+        title: "Splunk SPL — Privileged AD group modification & account creation",
+        lang: "spl",
+        code: `index=windows sourcetype="WinEventLog:Security" EventCode IN (4720, 4728, 4732, 4756)
+| stats count values(EventCode) as EventCodes values(TargetUserName) as TargetUsers by SubjectUserName, ComputerName, _time
+| sort - _time`,
+      },
+    ],
+    response: [
+      "Enable Advanced Audit Policies for Account Management, Logon/Logoff, and Directory Service Changes on all Domain Controllers",
+      "Alert immediately on Event IDs 4720, 4728, 4732, and 4769 (RC4 encryption 0x17 for Kerberoasting)",
+    ],
+  },
+  "intro-to-antivirus": {
+    verdict: "Generated MD5 file signatures and custom ClamAV detection databases using sigtool & strings",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Introduction to Antivirus" },
+      { label: "Tools", value: "ClamAV (sigtool, clamscan) · strings" },
+      { label: "Techniques", value: "Static Hash Signatures (.hdb), Byte/String Signatures (.ndb) & Heuristics" },
+    ],
+    chain: [
+      { step: "Inspected suspect Windows binaries using strings to identify unique ASCII/Unicode indicators" },
+      { step: "Generated cryptographic MD5 hash signatures using sigtool --md5 sample.exe > custom.hdb" },
+      { step: "Validated detection efficacy by scanning the sample directory with clamscan -d custom.hdb" },
+    ],
+    response: [
+      "Combine static hash signatures with behavioral/heuristic rules (YARA + EDR telemetry) so recompiled binaries cannot evade detection",
+    ],
+  },
+  "intro-to-digital-forensics": {
+    verdict: "Extracted EXIF geolocation, camera serials & PDF author metadata while preserving Chain of Custody",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Intro to Digital Forensics" },
+      { label: "Tools", value: "exiftool · pdfinfo · sha256sum (Linux)" },
+      { label: "Evidence", value: "Suspect ransom/kidnapping letter PDF and street JPEG image" },
+    ],
+    chain: [
+      { step: "Verified forensic image integrity via cryptographic hashing before examination" },
+      { step: "Ran pdfinfo on the suspect PDF document to extract the Author identity and creation timestamps" },
+      { step: "Ran exiftool on the suspect JPEG image to recover camera model, GPS latitude/longitude coordinates and street location" },
+    ],
+    response: [
+      "Always compute and log SHA-256 hashes before and after forensic acquisition to maintain Chain of Custody",
+      "Strip EXIF and document metadata from publicly released files to prevent operational security leaks",
+    ],
+  },
+  "legal-considerations-dfir": {
+    verdict: "Investigated corporate AUP policy violation & insider data leak with SHA-1 Chain of Custody verification",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "TryHackMe · Legal Considerations in DFIR" },
+      { label: "Evidence", value: "OTRS support tickets, Outlook OST mailbox, IIS web logs" },
+      { label: "Compliance", value: "Corporate Acceptable Use Policy (AUP), GDPR & Chain of Custody" },
+    ],
+    chain: [
+      { step: "Reviewed corporate Acceptable Use Policy (AUP) and legal authorization scope prior to accessing employee artifacts" },
+      { step: "Analyzed OTRS ticketing records and Outlook (.ost) emails to identify the Person of Interest (POI)" },
+      { step: "Correlated IIS server logs with mailbox attachments and verified SHA-1 hashes across all collected evidence items" },
+    ],
+    response: [
+      "Ensure explicit written legal/HR authorization and a signed Acceptable Use Policy (AUP) before inspecting employee mailboxes",
+      "Maintain an unbroken Chain of Custody log with SHA-1/SHA-256 hashes for every forensic artifact",
+    ],
+  },
+  "owasp-juice-shop": {
+    verdict: "Exploited OWASP Top 10 vulnerabilities across SQLi, DOM/Reflected XSS, IDOR & Broken Access Control",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "OWASP Juice Shop" },
+      { label: "Tools", value: "Burp Suite Professional · Browser DevTools" },
+      { label: "Categories", value: "SQL Injection, XSS (DOM/Reflected), IDOR, Broken Access Control, Info Disclosure" },
+    ],
+    chain: [
+      { step: "Enumerated client-side JavaScript bundles in DevTools to uncover hidden routes (/score-board, /administration)", technique: "T1595" },
+      { step: "Injected \"' OR 1=1--\" into the login endpoint via Burp Suite to bypass authentication as administrator", technique: "T1190" },
+      { step: "Manipulated BasketId parameters in API requests (IDOR) to view other users' shopping baskets" },
+      { step: "Executed DOM and Reflected XSS payloads in the search and tracking fields" },
+    ],
+    response: [
+      "Use parameterized SQL queries / prepared statements for all authentication and search endpoints",
+      "Enforce server-side object-level authorization checks (preventing IDOR on BasketId)",
+      "Implement context-aware output encoding and a strict Content-Security-Policy (CSP)",
+    ],
+  },
+
+  /* ── PortSwigger Web Security Academy Labs (All 29 Labs Detailed) ───── */
+  "information-disclosure-module": {
+    verdict: "Extracted hardcoded admin credentials & secret keys via exposed .git repo, phpinfo() & backup files",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Scope", value: "Information Disclosure Module (5 labs)" },
+      { label: "Tools", value: "Burp Suite, wget, Git Cola, Browser DevTools" },
+    ],
+    chain: [
+      { step: "Mirrored exposed /.git directory using wget -r and inspected commit history in Git Cola to recover hardcoded admin password", technique: "T1552" },
+      { step: "Extracted SECRET_KEY environment variable from exposed /cgi-bin/phpinfo.php debug page", technique: "T1082" },
+      { step: "Bypassed front-end IP restrictions on /admin by injecting X-Custom-IP-Authorization: 127.0.0.1 in Burp Repeater", technique: "T1190" },
+      { step: "Retrieved database credentials from left-over source backup file (/backup/ProductTemplate.java.bak)" },
+    ],
+    response: [
+      "Block public access to version-control directories (.git, .svn) and remove .bak/.swp backup files from web roots",
+      "Disable debug pages (phpinfo, stack traces) in production environments",
+      "Never trust client-controllable headers (X-Forwarded-For, X-Custom-IP-Authorization) for access control",
+    ],
+  },
+  "idor-live-chat": {
+    verdict: "Plaintext password for user carlos exfiltrated via unauthenticated chat transcript IDOR (1.txt)",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Insecure Direct Object Reference (IDOR) · CWE-639" },
+      { label: "Endpoint", value: "GET /download-transcript/1.txt" },
+      { label: "Tool", value: "Burp Suite Proxy & Repeater" },
+    ],
+    chain: [
+      { step: "Sent a live chat message and clicked 'View transcript' to capture GET /download-transcript/2.txt in Burp Proxy" },
+      { step: "Noticed sequential numeric file naming with no ownership check", technique: "T1190" },
+      { step: "Modified the request to GET /download-transcript/1.txt in Burp Repeater and retrieved carlos's private chat transcript", technique: "T1005" },
+      { step: "Extracted carlos's plaintext password from the transcript and authenticated to his account", technique: "T1078" },
+    ],
+    response: [
+      "Bind chat transcripts to the authenticated user's server-side session rather than sequential filenames",
+      "Enforce object-level authorization checks before serving any downloadable transcript file",
+    ],
+  },
+  "os-command-injection-simple": {
+    verdict: "Remote Code Execution (RCE) achieved via unescaped shell command concatenation in storeId",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "OS Command Injection · CWE-78" },
+      { label: "Endpoint", value: "POST /product/stock (productId & storeId)" },
+      { label: "Payload", value: "productId=1&storeId=1|whoami" },
+    ],
+    chain: [
+      { step: "Intercepted POST /product/stock in Burp Suite Proxy" },
+      { step: "Identified that productId and storeId are passed directly to a server-side shell script (stockreport.sh)", technique: "T1190" },
+      { step: "Injected |whoami into the storeId parameter in Burp Repeater", technique: "T1059.004" },
+      { step: "Confirmed RCE from the returned system username in the HTTP response body" },
+    ],
+    response: [
+      "Avoid calling OS shell commands from web application code; use native language APIs instead",
+      "Strictly validate productId and storeId as integers (allowlist digits only)",
+    ],
+  },
+  "blind-os-injection-time-delays": {
+    verdict: "Blind OS command injection confirmed via 10-second ICMP ping time delay in feedback form",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Blind OS Command Injection · CWE-78" },
+      { label: "Endpoint", value: "POST /feedback/submit (email parameter)" },
+      { label: "Payload", value: "email=x||ping+-c+10+127.0.0.1||" },
+    ],
+    chain: [
+      { step: "Intercepted POST /feedback/submit in Burp Suite Repeater" },
+      { step: "Tested parameters with || ping -c 10 127.0.0.1 || to trigger a deterministic time delay", technique: "T1190" },
+      { step: "Observed a 10,000+ ms response delay when injected into the email parameter, confirming blind shell execution", technique: "T1059.004" },
+    ],
+    response: [
+      "Use a dedicated mail library (SMTP API) rather than invoking a shell mail command with user-supplied input",
+      "Validate the email field against a strict RFC-compliant format and escape shell metacharacters",
+    ],
+  },
+  "blind-os-injection-output": {
+    verdict: "Exfiltrated blind OS command execution output by redirecting stdout to /var/www/images/output.txt",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Blind OS Command Injection with Output Redirection · CWE-78" },
+      { label: "Write Path", value: "POST /feedback/submit → /var/www/images/output.txt" },
+      { label: "Read Path", value: "GET /image?filename=output.txt" },
+    ],
+    chain: [
+      { step: "Confirmed blind OS command injection in the email parameter of POST /feedback/submit", technique: "T1190" },
+      { step: "Injected ||whoami>/var/www/images/output.txt|| to redirect command stdout into the web-accessible images folder", technique: "T1059.004" },
+      { step: "Requested GET /image?filename=output.txt in Burp Repeater to read the exfiltrated system username" },
+    ],
+    response: [
+      "Eliminate shell command invocation in feedback processing",
+      "Mount web static/image directories as read-only for the application service account",
+    ],
+  },
+  "rce-web-shell-upload": {
+    verdict: "Unrestricted PHP web shell uploaded via avatar form to read /home/carlos/secret",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Unrestricted Upload of File with Dangerous Type · CWE-434" },
+      { label: "Endpoint", value: "POST /my-account/avatar → GET /files/avatars/shell.php" },
+      { label: "Payload", value: "<?php echo file_get_contents('/home/carlos/secret'); ?>" },
+    ],
+    chain: [
+      { step: "Uploaded a PHP script (shell.php) through the profile avatar upload form with no extension/content filtering", technique: "T1190" },
+      { step: "Inspected the profile HTML source in Burp Suite to locate /files/avatars/shell.php", technique: "T1505.003" },
+      { step: "Requested GET /files/avatars/shell.php to execute the PHP payload and exfiltrate /home/carlos/secret", technique: "T1005" },
+    ],
+    response: [
+      "Enforce a strict server-side extension allowlist (.jpg, .png, .webp) and verify magic bytes",
+      "Disable script execution (php_flag engine off) in the upload storage directory and serve uploads from a separate static domain/S3 bucket",
+    ],
+  },
+  "web-shell-content-type-bypass": {
+    verdict: "Content-Type filter bypassed by spoofing image/jpeg on a .php web shell upload",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "File Upload Content-Type Restriction Bypass · CWE-434" },
+      { label: "Bypass", value: "Content-Type: application/x-php → Content-Type: image/jpeg" },
+    ],
+    chain: [
+      { step: "Attempted uploading shell.php and observed a 403/rejection due to Content-Type: application/x-php" },
+      { step: "Intercepted the multipart POST /my-account/avatar in Burp Repeater and changed Content-Type to image/jpeg", technique: "T1190" },
+      { step: "Triggered GET /files/avatars/shell.php to execute arbitrary PHP code and read /home/carlos/secret", technique: "T1505.003" },
+    ],
+    response: [
+      "Never rely on the client-controlled Content-Type header to validate file types",
+      "Validate image content using server-side image parsing libraries and rename uploaded files with safe extensions",
+    ],
+  },
+  "unprotected-admin-functionality": {
+    verdict: "Unauthenticated /administrator-panel discovered via /robots.txt and used to delete target user",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Broken Access Control / Security by Obscurity · CWE-284" },
+      { label: "Disclosed Path", value: "GET /robots.txt → Disallow: /administrator-panel" },
+    ],
+    chain: [
+      { step: "Requested GET /robots.txt during initial web reconnaissance", technique: "T1595" },
+      { step: "Identified Disallow: /administrator-panel and browsed directly to the endpoint", technique: "T1190" },
+      { step: "Executed administrative user deletion without authentication" },
+    ],
+    response: [
+      "Enforce authentication and role-based access control on all administrative endpoints",
+      "Do not list sensitive internal paths in robots.txt",
+    ],
+  },
+  "unprotected-admin-unpredictable-url": {
+    verdict: "Obscured admin panel URL leaked in inline JavaScript source and accessed without admin privileges",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Broken Access Control & Source Code Disclosure · CWE-284" },
+      { label: "Source", value: "Inline JavaScript adminPanelTag.setAttribute('href', '/admin-…')" },
+    ],
+    chain: [
+      { step: "Reviewed the login page HTML/JavaScript source in Browser DevTools and Burp Suite" },
+      { step: "Found an inline script revealing the randomized /admin-<random> URL even for unauthenticated users", technique: "T1190" },
+      { step: "Navigated directly to the disclosed admin URL and deleted the target user" },
+    ],
+    response: [
+      "Require server-side admin role verification on every admin route rather than relying on URL secrecy",
+      "Never render privileged navigation script blocks to unauthenticated users",
+    ],
+  },
+  "user-role-request-parameter": {
+    verdict: "Vertical privilege escalation achieved by flipping Cookie: Admin=false to Admin=true",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Client-Side Authorization / Cookie Tampering · CWE-565" },
+      { label: "Tampered Cookie", value: "Cookie: Admin=true" },
+    ],
+    chain: [
+      { step: "Authenticated as wiener and inspected the Set-Cookie header in Burp Suite Proxy" },
+      { step: "Modified Cookie: Admin=false to Cookie: Admin=true on GET /admin in Burp Repeater", technique: "T1078" },
+      { step: "Accessed the administrative panel and deleted the target user" },
+    ],
+    response: [
+      "Store user roles and permissions in server-side session state or cryptographically signed tokens, never in plaintext cookies",
+    ],
+  },
+  "user-role-modified-profile": {
+    verdict: "Mass Assignment privilege escalation by injecting \"roleid\": 2 into POST /my-account/change-email",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Mass Assignment / Over-Posting · CWE-915" },
+      { label: "Endpoint", value: "POST /my-account/change-email" },
+      { label: "Payload", value: "{\"email\":\"wiener@normal-user.net\",\"roleid\":2}" },
+    ],
+    chain: [
+      { step: "Updated email address as wiener and observed {\"roleid\": 1} returned in the JSON response" },
+      { step: "Replayed POST /my-account/change-email in Burp Repeater with \"roleid\": 2 added to the JSON body", technique: "T1098" },
+      { step: "Verified roleid updated to 2 (administrator), accessed /admin, and deleted the target user" },
+    ],
+    response: [
+      "Use explicit DTO allowlists (only binding editable fields like email) instead of binding raw JSON bodies to user model objects",
+    ],
+  },
+  "user-id-controlled": {
+    verdict: "Horizontal privilege escalation (IDOR) via unverified ?id=carlos parameter on /my-account",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Insecure Direct Object Reference (IDOR) · CWE-639" },
+      { label: "Endpoint", value: "GET /my-account?id=carlos" },
+    ],
+    chain: [
+      { step: "Logged in as wiener and observed GET /my-account?id=wiener in Burp Proxy" },
+      { step: "Changed the query parameter to ?id=carlos in Burp Repeater", technique: "T1190" },
+      { step: "Retrieved carlos's profile page and extracted his private API key", technique: "T1005" },
+    ],
+    response: [
+      "Derive the current user identity from the authenticated server-side session rather than a URL query parameter",
+    ],
+  },
+  "user-id-unpredictable": {
+    verdict: "Harvested carlos's GUID from public blog post HTML and exploited IDOR on /my-account?id=<GUID>",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "IDOR with Unpredictable GUIDs · CWE-639" },
+      { label: "Endpoint", value: "GET /my-account?id=<carlos-guid>" },
+    ],
+    chain: [
+      { step: "Browsed public blog posts authored by carlos and inspected the author link (/blogs?userId=<GUID>)" },
+      { step: "Replaced wiener's GUID in GET /my-account?id= with carlos's GUID in Burp Repeater", technique: "T1190" },
+      { step: "Extracted carlos's API key from the unauthorized profile response", technique: "T1005" },
+    ],
+    response: [
+      "Using UUIDs/GUIDs is not a substitute for access control; verify that the session owner matches the requested user ID",
+    ],
+  },
+  "user-id-data-leakage": {
+    verdict: "Extracted carlos's API key from the HTML body of an HTTP 302 redirect response",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "IDOR with Sensitive Data Leakage in 302 Redirect · CWE-200" },
+      { label: "Endpoint", value: "GET /my-account?id=carlos (HTTP 302 Found)" },
+    ],
+    chain: [
+      { step: "Requested GET /my-account?id=carlos in Burp Repeater" },
+      { step: "Observed that the server returned HTTP 302 Found redirecting to /login, but still rendered the full profile HTML in the response body", technique: "T1190" },
+      { step: "Read carlos's API key directly from the raw 302 response in Burp Repeater", technique: "T1005" },
+    ],
+    response: [
+      "Immediately terminate request execution (return/exit) after issuing an authorization redirect so page templates are never rendered",
+    ],
+  },
+  "user-id-password-disclosure": {
+    verdict: "Administrator plaintext password extracted via IDOR on pre-populated password input field",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "IDOR + Plaintext Password Exposure in HTML · CWE-639 / CWE-522" },
+      { label: "Endpoint", value: "GET /my-account?id=administrator" },
+    ],
+    chain: [
+      { step: "Inspected GET /my-account?id=wiener and noticed <input type=password name=password value='...'>" },
+      { step: "Modified the request to GET /my-account?id=administrator in Burp Repeater", technique: "T1190" },
+      { step: "Extracted the administrator's plaintext password from the HTML source, logged in as administrator, and deleted carlos", technique: "T1552" },
+    ],
+    response: [
+      "Never store passwords in reversible form or pre-populate password fields in HTML responses",
+      "Enforce strict session-to-object ownership checks on /my-account",
+    ],
+  },
+  "basic-ssrf-local-server": {
+    verdict: "Internal loopback /admin interface accessed and user deleted via SSRF in stockApi parameter",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Server-Side Request Forgery (SSRF) · CWE-918" },
+      { label: "Parameter", value: "POST /product/stock → stockApi=http://localhost/admin" },
+    ],
+    chain: [
+      { step: "Confirmed direct browser access to /admin is blocked for external IP addresses" },
+      { step: "Intercepted POST /product/stock in Burp Repeater and changed stockApi to http://localhost/admin", technique: "T1190" },
+      { step: "Submitted stockApi=http://localhost/admin/delete?username=carlos to execute the administrative deletion via loopback SSRF" },
+    ],
+    response: [
+      "Replace full URL parameters (stockApi) with fixed server-side service identifiers",
+      "Block loopback (127.0.0.0/8, ::1) and RFC1918 private ranges in outbound HTTP client requests, and require authentication on /admin even from localhost",
+    ],
+  },
+  "sqli-login-bypass": {
+    verdict: "Authentication bypassed as administrator via SQL comment injection (administrator'--)",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "SQL Injection Authentication Bypass · CWE-89" },
+      { label: "Endpoint", value: "POST /login" },
+      { label: "Payload", value: "username=administrator'--" },
+    ],
+    chain: [
+      { step: "Intercepted the POST /login request in Burp Suite Proxy" },
+      { step: "Injected administrator'-- into the username parameter so the query became SELECT * FROM users WHERE username = 'administrator'--' AND password = '...'", technique: "T1190" },
+      { step: "Bypassed the password check completely and gained an authenticated administrator session", technique: "T1078" },
+    ],
+    response: [
+      "Use parameterized queries (PreparedStatement) for all database authentication lookups",
+    ],
+  },
+  "stored-xss-html-context": {
+    verdict: "Persistent JavaScript execution achieved via unencoded <script> payload in blog comments",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Stored Cross-Site Scripting (XSS) · CWE-79" },
+      { label: "Endpoint", value: "POST /post/comment (comment field)" },
+      { label: "Payload", value: "<script>alert(1)</script>" },
+    ],
+    chain: [
+      { step: "Submitted a test comment to verify how user input is rendered in the blog post HTML" },
+      { step: "Observed that comment text is inserted raw into the HTML body with zero entity encoding", technique: "T1189" },
+      { step: "Posted <script>alert(1)</script>, triggering persistent execution for every visitor viewing the post" },
+    ],
+    response: [
+      "HTML-encode all user-supplied comment content before rendering (&lt;, &gt;, &quot;, &#39;, &amp;) and deploy a strict CSP",
+    ],
+  },
+  "reflected-xss-html-context": {
+    verdict: "Reflected JavaScript execution via unencoded ?search=<script>alert(1)</script> parameter",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Reflected Cross-Site Scripting (XSS) · CWE-79" },
+      { label: "Endpoint", value: "GET /?search=<script>alert(1)</script>" },
+    ],
+    chain: [
+      { step: "Probed GET /?search=<h1>hello 3omda</h1> and confirmed raw HTML reflection in the response" },
+      { step: "Submitted GET /?search=<script>alert(1)</script> to execute arbitrary JavaScript in the browser context" },
+    ],
+    response: [
+      "Apply context-aware HTML output encoding to all reflected search parameters",
+    ],
+  },
+  "dom-xss-document-write": {
+    verdict: "DOM XSS exploited by breaking out of document.write('<img>') via ">"<svg onload=alert(1)>",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "DOM-Based XSS (location.search → document.write) · CWE-79" },
+      { label: "Payload", value: "?search=\"><svg onload=alert(1)>" },
+    ],
+    chain: [
+      { step: "Traced window.location.search into trackSearch() which calls document.write('<img src=\"/resources/images/tracker.gif?searchTerms=' + query + '\">')" },
+      { step: "Injected \"><svg onload=alert(1)> to close the src attribute and img tag and execute JavaScript" },
+    ],
+    response: [
+      "Avoid document.write(); create DOM elements safely with document.createElement() and encode URL parameters with encodeURIComponent()",
+    ],
+  },
+  "dom-xss-innerhtml-sink": {
+    verdict: "DOM XSS in innerHTML sink exploited via <img src=1 onerror=alert(1)>",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "DOM-Based XSS (location.search → element.innerHTML) · CWE-79" },
+      { label: "Payload", value: "?search=<img src=1 onerror=alert(1)>" },
+    ],
+    chain: [
+      { step: "Inspected doSearchQuery() and saw window.location.search assigned directly to document.getElementById('searchMessage').innerHTML" },
+      { step: "Bypassed innerHTML's <script> execution block by injecting <img src=1 onerror=alert(1)>" },
+    ],
+    response: [
+      "Use element.textContent instead of element.innerHTML when displaying plain text strings from URL parameters",
+    ],
+  },
+  "dom-xss-jquery-href": {
+    verdict: "DOM XSS in jQuery $('#backLink').attr('href') exploited via javascript:alert(document.cookie)",
+    severity: "Medium",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "DOM-Based XSS (location.search → jQuery attr('href')) · CWE-79" },
+      { label: "Payload", value: "/feedback?returnPath=javascript:alert(document.cookie)" },
+    ],
+    chain: [
+      { step: "Reviewed the /feedback page source and located $('#backLink').attr('href', (new URLSearchParams(window.location.search)).get('returnPath'))" },
+      { step: "Set returnPath=javascript:alert(document.cookie) and triggered the Back link" },
+    ],
+    response: [
+      "Validate that returnPath starts with a relative slash (/^\/[a-zA-Z0-9/_-]*$/) and reject javascript: or data: URIs",
+    ],
+  },
+  "xxe-retrieve-files": {
+    verdict: "Arbitrary file read (/etc/passwd) achieved via XML External Entity (XXE) injection in stockCheck",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "XML External Entity (XXE) Injection · CWE-611" },
+      { label: "Endpoint", value: "POST /product/stock (XML body)" },
+      { label: "Payload", value: "<!DOCTYPE test [ <!ENTITY xxe SYSTEM \"file:///etc/passwd\"> ]>" },
+    ],
+    chain: [
+      { step: "Intercepted POST /product/stock in Burp Repeater and identified XML payload parsing", technique: "T1190" },
+      { step: "Defined <!ENTITY xxe SYSTEM \"file:///etc/passwd\"> in the DOCTYPE header and referenced &xxe; inside <productId>", technique: "T1005" },
+      { step: "Extracted the full /etc/passwd file contents from the server's 'Invalid product ID' response" },
+    ],
+    response: [
+      "Disable DTDs (Document Type Definitions) and external entities completely in the XML parser configuration",
+    ],
+  },
+  "xxe-ssrf-aws-metadata": {
+    verdict: "AWS EC2 IAM admin credentials exfiltrated from 169.254.169.254 via XXE-to-SSRF escalation",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "XXE to SSRF targeting AWS IMDSv1 · CWE-611 / CWE-918" },
+      { label: "Target URL", value: "http://169.254.169.254/latest/meta-data/iam/security-credentials/admin" },
+    ],
+    chain: [
+      { step: "Injected <!ENTITY xxe SYSTEM \"http://169.254.169.254/\"> into POST /product/stock", technique: "T1190" },
+      { step: "Iteratively traversed /latest/meta-data/iam/security-credentials/admin via the error message output" },
+      { step: "Exfiltrated the AWS AccessKeyId, SecretAccessKey, and Session Token JSON object", technique: "T1552" },
+    ],
+    response: [
+      "Disable external XML entities and DTDs in the application XML parser",
+      "Enforce IMDSv2 (requiring session-oriented PUT token headers) on all EC2 instances",
+    ],
+  },
+  "jwt-unverified-signature": {
+    verdict: "Admin account takeover by modifying JWT sub claim to administrator without signature verification",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "JWT Unverified Signature · CWE-347" },
+      { label: "Modified Claim", value: "{\"sub\": \"administrator\"}" },
+    ],
+    chain: [
+      { step: "Authenticated as wiener and captured the RS256 session JWT in Burp Suite" },
+      { step: "Base64Url-decoded the JWT payload, changed \"sub\":\"wiener\" to \"sub\":\"administrator\", and re-encoded the payload", technique: "T1078" },
+      { step: "Sent GET /admin with the modified token; the server accepted the payload without verifying the signature and deleted carlos" },
+    ],
+    response: [
+      "Always call jwt.verify() (not jwt.decode()) using the server's cryptographic verification key on every request",
+    ],
+  },
+  "jwt-flawed-signature": {
+    verdict: "JWT signature verification bypassed via alg: none algorithm confusion attack",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "JWT 'alg: none' Signature Bypass · CWE-347" },
+      { label: "Modified Header", value: "{\"alg\": \"none\", \"typ\": \"JWT\"}" },
+    ],
+    chain: [
+      { step: "Captured wiener's session JWT in Burp Suite" },
+      { step: "Modified the JWT header to \"alg\": \"none\" and the payload to \"sub\": \"administrator\"", technique: "T1078" },
+      { step: "Stripped the signature bytes after the second dot (leaving the trailing dot) and accessed /admin to delete carlos" },
+    ],
+    response: [
+      "Explicitly whitelist allowed signing algorithms (e.g., algorithms: ['RS256']) and reject 'none' in the JWT verifier",
+    ],
+  },
+  "oauth-implicit-flow-bypass": {
+    verdict: "Account takeover on /authenticate by tampering email to carlos@carlos-montoya.net in OAuth implicit flow",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "OAuth 2.0 Implicit Flow Broken Token Binding · CWE-287" },
+      { label: "Endpoint", value: "POST /authenticate" },
+    ],
+    chain: [
+      { step: "Completed OAuth login as wiener and inspected POST /authenticate in Burp Proxy HTTP History" },
+      { step: "Observed the client sending {\"email\",\"username\",\"token\"} where the backend never verified that the access token belonged to that email", technique: "T1190" },
+      { step: "Changed email to carlos@carlos-montoya.net in Burp Repeater and used the returned session cookie to take over carlos's account", technique: "T1078" },
+    ],
+    response: [
+      "Migrate from OAuth Implicit Flow to Authorization Code Flow with PKCE, and verify the user identity server-side against the OAuth provider's /userinfo endpoint",
+    ],
+  },
+  "2fa-simple-bypass": {
+    verdict: "2FA step bypassed via forced browsing to /my-account after primary password login",
+    severity: "High",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "2FA Authentication State Bypass (Forced Browsing) · CWE-287" },
+      { label: "Endpoint", value: "GET /login2 → GET /my-account" },
+    ],
+    chain: [
+      { step: "Logged in with carlos's primary credentials and was redirected to GET /login2 for the 4-digit 2FA code" },
+      { step: "Observed in Burp Suite that a fully authenticated session cookie was already issued before 2FA verification", technique: "T1078" },
+      { step: "Requested GET /my-account directly, bypassing the /login2 2FA screen completely" },
+    ],
+    response: [
+      "Do not issue an authenticated session token until both primary authentication and MFA verification are completed",
+    ],
+  },
+  "password-reset-broken-logic": {
+    verdict: "Account takeover of carlos by tampering the hidden username parameter during password reset submission",
+    severity: "Critical",
+    facts: [
+      { label: "Platform", value: "PortSwigger Web Security Academy" },
+      { label: "Vulnerability", value: "Password Reset Unbound Token Logic Flaw · CWE-640" },
+      { label: "Endpoint", value: "POST /forgot-password?temp-forgot-password-token=..." },
+    ],
+    chain: [
+      { step: "Requested a legitimate password reset for controlled user wiener and opened the reset link from the email client" },
+      { step: "Intercepted the password submission POST request in Burp Repeater and noticed temp-forgot-password-token was not bound to username=wiener", technique: "T1190" },
+      { step: "Changed username=wiener to username=carlos with a new password, overwriting carlos's password and taking over his account", technique: "T1098" },
+    ],
+    response: [
+      "Cryptographically bind every password reset token to the single user ID that requested it in the backend database, and ignore client-supplied username fields",
     ],
   },
 };

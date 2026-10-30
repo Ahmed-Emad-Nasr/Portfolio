@@ -15,6 +15,7 @@ import StatsBar from "@/components/home/StatsBar";
 import SiteNav from "@/components/layout/SiteNav";
 import AreaIntro from "@/components/ui/AreaIntro";
 import BlogTeaser from "@/components/home/BlogTeaser";
+import GalleryTeaser from "@/components/home/GalleryTeaser";
 import PageEffects from "@/lib/perf/PageEffects";
 import AppLoader from "@/components/layout/AppLoader";
 import {
@@ -245,9 +246,15 @@ export default async function Home() {
         <LazyContributions />
       </div>
 
-      {/* ═══ 03 · The door to the blog ═══ */}
-      <SlashDivider label="03 // Field notes" japanese="記録" origin="left" />
-      <TickerStrip items={["事件", "調査", "報告", "証拠", "FIELD NOTES"]} />
+      {/* ═══ 03 · The door to the proof gallery & blog ═══ */}
+      <SlashDivider label="03 // Credentials & proof" japanese="収集" origin="left" />
+      <TickerStrip items={["証明", "認定", "記録", "軌跡", "PROOF GALLERY"]} />
+      <div className={DEFER}>
+        <GalleryTeaser />
+      </div>
+
+      <SlashDivider label="04 // Field notes" japanese="記録" origin="right" />
+      <TickerStrip reverse items={["事件", "調査", "報告", "証拠", "FIELD NOTES"]} />
       <div className={DEFER}>
         <BlogTeaser />
       </div>

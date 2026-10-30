@@ -157,7 +157,7 @@ const STRUCTURED_DATA_JSON = jsonLd({
       url: SITE_URL,
       mainEntityOfPage: { "@id": `${SITE_URL}#profilepage` },
       image: { "@type": "ImageObject", "@id": `${SITE_URL}#person-image`, url: PERSON_IMAGE, caption: PERSON_NAME },
-      jobTitle: ["Information Security Officer", "GRC Analyst", "SOC Analyst", "DFIR Analyst", "Cybersecurity Instructor"],
+      jobTitle: ["Information Security Officer", "Information Security Engineer", "GRC Analyst", "SOC Analyst", "DFIR Analyst", "Cybersecurity Instructor"],
       /* The standard occupation (O*NET 15-1212.00) plus the skills behind it —
          how Google matches a person to job-related searches. */
       hasOccupation: { ...OCCUPATION, skills: skillGroups.flatMap((group) => group.items).join(", ") },

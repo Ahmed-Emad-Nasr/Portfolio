@@ -43,6 +43,7 @@ const AREA_OF: Record<string, string> = {
   lab: "#about",
   process: "#about",
   contributions: "#about",
+  "gallery-preview": "/gallery",
   blog: "/blog",
   faq: "#contact",
 };
