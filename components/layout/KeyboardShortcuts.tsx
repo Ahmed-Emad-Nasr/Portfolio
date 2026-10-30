@@ -5,7 +5,7 @@
  *
  *   /        open the palette
  *   ?        the shortcuts sheet
- *   g + h/w/e/l/p/a/b/t   jump to a section, the case library, or the top
+ *   g + h/r/w/e/l/p/c/a/b/t   jump to a section, the case library, or the top
  *   3omda    the hidden terminal
  *
  * Both overlays are lazy — none of their code loads until first use.
@@ -25,11 +25,13 @@ type Overlay = "shortcuts" | "terminal" | null;
 
 const GO_TO_SECTION: Record<string, string> = {
   h: "home",
+  r: "roles",
   w: "work",
   e: "experience",
-  a: "attack",
   l: "teaching",
   p: "platforms",
+  c: "all-certificates",
+  a: "attack",
 };
 
 const SECRET = "3omda";

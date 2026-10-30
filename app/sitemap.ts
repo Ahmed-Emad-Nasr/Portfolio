@@ -82,12 +82,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: absoluteUrl("/collections/web-security-academy"),
-      lastModified: latestCaseDate,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
     ...caseEvidenceLibrary.map((item) => ({
       url: caseUrl(item.id),
       lastModified: parseDate(item.date),

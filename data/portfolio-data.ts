@@ -59,7 +59,7 @@ const ROLE_INTRO: Record<string, { intro: string; japanese: string; location: st
   },
   iSchool: {
     intro: "Coordinating technical coding labs, session operations and mentoring for 470+ students across DEPI and DECI programs.",
-    japanese: "ティーチングアシスタント",
+    japanese: "技術指導・委員",
     location: "Cairo, Egypt",
   },
   "Information Technology Institute (ITI)": {
@@ -69,7 +69,7 @@ const ROLE_INTRO: Record<string, { intro: string; japanese: string; location: st
   },
   Huawei: {
     intro: "Enterprise routing, switching and cloud security architectures on Huawei eNSP, earning HCIA-Datacom, HCIA-Cloud and HCCDA.",
-    japanese: "ネットワーク・クラウド研修",
+    japanese: "網・雲研修",
     location: "Cairo, Egypt",
   },
   "Google Developer Groups (GDG)": {

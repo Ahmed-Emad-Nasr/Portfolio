@@ -1217,7 +1217,7 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
     chain: [
       { step: "Enumerated client-side JavaScript bundles in DevTools to uncover hidden routes (/score-board, /administration)", technique: "T1595" },
-      { step: "Injected \"' OR 1=1--\" into the login endpoint via Burp Suite to bypass authentication as administrator", technique: "T1190" },
+      { step: "Injected '\" OR 1=1--' into the login endpoint via Burp Suite to bypass authentication as administrator", technique: "T1190" },
       { step: "Manipulated BasketId parameters in API requests (IDOR) to view other users' shopping baskets" },
       { step: "Executed DOM and Reflected XSS payloads in the search and tracking fields" },
     ],
@@ -1418,7 +1418,7 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "user-role-modified-profile": {
-    verdict: "Mass Assignment privilege escalation by injecting \"roleid\": 2 into POST /my-account/change-email",
+    verdict: "Mass Assignment privilege escalation by injecting 'roleid: 2' into POST /my-account/change-email",
     severity: "Critical",
     facts: [
       { label: "Platform", value: "PortSwigger Web Security Academy" },
@@ -1575,7 +1575,7 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
   "dom-xss-document-write": {
-    verdict: "DOM XSS exploited by breaking out of document.write('<img>') via ">"<svg onload=alert(1)>",
+    verdict: "DOM XSS exploited by breaking out of document.write('<img>') via '><svg onload=alert(1)>",
     severity: "Medium",
     facts: [
       { label: "Platform", value: "PortSwigger Web Security Academy" },

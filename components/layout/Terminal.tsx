@@ -12,6 +12,7 @@ import { m as motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { caseEvidenceLibrary } from "@/data/cases";
+import { ALL_GALLERY_CERTIFICATES } from "@/data/certifications";
 import { CV_PDF_HREF, normalizePublicHref } from "@/lib/shared";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
 import { STATIC_PLATFORMS, THM_SNAPSHOT, tryHackMePlatform } from "@/data/platforms";
@@ -98,6 +99,8 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             "ls                — list all cases",
             "ls <keyword>      — filter the list",
             "open <n|id>       — open a case page",
+            "certs [keyword]   — list all 48 certificates",
+            "work              — list open-source projects",
             "cat cv            — open the CV",
             "skills            — most used tools",
             "ranks             — public training profiles",
@@ -177,6 +180,30 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
           } else {
             print(`cat: ${arg || "missing operand"}: No such file`, "err");
           }
+          break;
+
+        case "certs": {
+          const list = arg
+            ? ALL_GALLERY_CERTIFICATES.filter((c) =>
+                `${c.title} ${c.issuer} ${c.kind} ${c.summary}`.toLowerCase().includes(arg.toLowerCase()),
+              )
+            : ALL_GALLERY_CERTIFICATES;
+          if (!list.length) {
+            print(`certs: no certificate matches "${arg}"`, "err");
+            break;
+          }
+          printAll(
+            list.map((c, idx) => `${String(idx + 1).padStart(2, "0")}  ${c.title}  [${c.issuer}]`),
+          );
+          break;
+        }
+
+        case "work":
+          printAll(
+            PORTFOLIO_DATA.work.map(
+              (w, idx) => `${String(idx + 1).padStart(2, "0")}  ${w.title.padEnd(26, " ")} [${w.type}] — ${w.tagline}`,
+            ),
+          );
           break;
 
         case "skills": {

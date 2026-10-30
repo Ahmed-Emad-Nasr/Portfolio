@@ -13,7 +13,7 @@ import { PageShell } from "@/components/ui/kit";
 import { absoluteUrl, caseUrl, summarize } from "@/lib/site";
 import { caseAttackMapping, parentTechnique, techniquesForCase } from "@/data/attack";
 import { caseDetails } from "@/data/case-details";
-import { caseKindOf, CASE_KINDS, WSA_COLLECTION } from "@/lib/shared";
+import { caseKindOf, CASE_KINDS } from "@/lib/shared";
 import { jsonLd, PERSON_ID, PERSON_NAME, SITE_URL } from "@/lib/seo";
 import { blogYoutubeVideos } from "@/data/youtube";
 
@@ -199,7 +199,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         relatedVideos={relatedVideos}
         detail={caseDetails[item.id]}
         kindLabel={CASE_KINDS.find((k) => k.id === caseKindOf(item))?.short ?? "Case"}
-        collection={item.platform === WSA_COLLECTION.platform ? { href: `/collections/${WSA_COLLECTION.id}`, title: WSA_COLLECTION.title } : undefined}
+        collection={item.platform === "PortSwigger" ? { href: "/blog?q=PortSwigger#cases", title: "Web Security Academy Track" } : undefined}
         />
       </PageShell>
     </>

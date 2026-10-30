@@ -21,10 +21,12 @@ const GROUPS: { title: string; items: { keys: string[]; label: string }[] }[] = 
     title: "Go to",
     items: [
       { keys: ["g", "h"], label: "Home" },
+      { keys: ["g", "r"], label: "Services & roles" },
       { keys: ["g", "w"], label: "Selected work" },
       { keys: ["g", "e"], label: "Experience" },
       { keys: ["g", "l"], label: "Teaching" },
       { keys: ["g", "p"], label: "Practice platforms" },
+      { keys: ["g", "c"], label: "All certificates" },
       { keys: ["g", "a"], label: "ATT&CK coverage" },
       { keys: ["g", "b"], label: "Case library" },
       { keys: ["g", "t"], label: "Back to top" },

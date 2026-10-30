@@ -247,8 +247,8 @@ export default async function Home() {
       </div>
 
       {/* ═══ 03 · The door to the proof gallery & blog ═══ */}
-      <SlashDivider label="03 // Credentials & proof" japanese="収集" origin="left" />
-      <TickerStrip items={["証明", "認定", "記録", "軌跡", "PROOF GALLERY"]} />
+      <SlashDivider label="03 // Credentials & proof" japanese="証明" origin="left" />
+      <TickerStrip items={["証明", "認定", "記録", "証拠", "PROOF GALLERY"]} />
       <div className={DEFER}>
         <GalleryTeaser />
       </div>

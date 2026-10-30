@@ -4,7 +4,7 @@
  *   /       the portfolio: pitch, about, FAQ, contact
  *   /blog   the evidence: start here, the case
  *           library, videos, ATT&CK coverage, detection rules, triage
- *   /gallery the visual proof archive
+ *   /gallery the visual proof archive & all 48 certificates
  *
  * Everything that links to a section by id (nav, command palette,
  * g-shortcuts, the stats bar, filter links) asks this file where it is.
@@ -19,27 +19,30 @@ type SitePage = "/" | "/blog" | "/gallery";
 const BLOG_IDS = new Set(["start-here", "cases", "videos", "youtube", "attack", "detections", "triage"]);
 const BLOG_PREFIX = /^(case|tactic)-/;
 
+/** Section ids that live on /gallery */
+const GALLERY_IDS = new Set(["art", "gallery-start-here", "all-certificates", "visual-archive"]);
+
 /** Search params that belong to the case library's filters */
 export const LIBRARY_PARAMS = ["q", "cat", "tools", "kind", "sort", "view"] as const;
 
 /** The page a section id lives on */
 export function pageOf(id: string): SitePage {
-  if (id === "art") return "/gallery";
+  if (GALLERY_IDS.has(id)) return "/gallery";
   return BLOG_IDS.has(id) || BLOG_PREFIX.test(id) ? "/blog" : "/";
 }
 
 /**
- * Inline script for the home page: an old link to one of the blog's
- * sections (shared on LinkedIn, in a CV, in search results — from before
- * the blog had its own page) opens /blog with the same filters and anchor.
+ * Inline script for the home page: an old link to one of the blog's or
+ * gallery's sections opens the target page with the same filters and anchor.
  * Runs before paint, so the home page never flashes first. `base` is the
  * deploy prefix ("/Portfolio" in production).
  */
 export function homeForwardScript(base: string): string {
   const ids = JSON.stringify([...BLOG_IDS]);
+  const gIds = JSON.stringify([...GALLERY_IDS]);
   const params = JSON.stringify(LIBRARY_PARAMS);
   return `(function(){try{var h=location.hash.slice(1),s=location.search,b=${ids}.indexOf(h)>-1||/^(case|tactic)-/.test(h);
-if(h==="art"){location.replace(${JSON.stringify(base)}+"/gallery"+s);return}
+if(${gIds}.indexOf(h)>-1){location.replace(${JSON.stringify(base)}+"/gallery"+s+(h==="art"?"":location.hash));return}
 if(!b&&s){var q=new URLSearchParams(s),k=${params};for(var i=0;i<k.length;i++)if(q.has(k[i])){b=true;break}}
 if(b)location.replace(${JSON.stringify(base)}+"/blog"+s+location.hash);}catch(e){}})();`;
 }

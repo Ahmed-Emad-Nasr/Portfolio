@@ -44,7 +44,7 @@ export const GALLERY_IMAGE_COUNT = 98;
 
 export type GalleryCertGroup = "core" | "labs" | "exams" | "badges";
 
-export type GalleryCertificateItem = {
+type GalleryCertificateItem = {
   /** 1-based image index in image_display_thumb/{galleryIndex}.webp */
   galleryIndex: number;
   title: string;

@@ -118,7 +118,7 @@ export default function ArtGallery() {
               <span className="text-primary-ink text-xs font-black tracking-[0.4em] uppercase font-mono">
                 <ScrambleText text="Gallery // Visual Archive" />
               </span>
-              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="収集" />
+              <span className="jp-eyebrow text-[0.6875rem] text-foreground/30 uppercase" lang="ja" aria-hidden="true" data-jp="証明" />
             </div>
             <h1 id="art-title" className="font-display title-fit [--title-n:9] font-black tracking-tighter uppercase leading-[0.85]">
               <span className="text-foreground">Proof</span> <br />
@@ -284,7 +284,7 @@ export default function ArtGallery() {
 
         {/* ─── 04 · Visual Archive (Masonry Grid of Scans & Event Photos) ─── */}
         <section id="visual-archive" className="relative scroll-mt-28" aria-labelledby="visual-archive-title">
-          <Eyebrow japanese="写真">Proof in Frame // Visual Grid</Eyebrow>
+          <Eyebrow japanese="証拠">Proof in Frame // Visual Grid</Eyebrow>
           <h2 id="visual-archive-title" className="font-display text-3xl md:text-5xl font-black uppercase tracking-tight text-foreground mb-3">
             Visual <span className="text-primary italic">Archive.</span>
           </h2>

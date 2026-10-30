@@ -34,11 +34,11 @@ const FAST_TRACK = [
 export default function GalleryTeaser() {
   return (
     <section id="gallery-preview" aria-label="Proof gallery" className="relative py-24 md:py-32 px-6 md:px-20 bg-background overflow-hidden">
-      <KanjiWatermark chars="収集" side="left" />
+      <KanjiWatermark chars="証明" side="left" />
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
           eyebrow="Gallery // Visual archive"
-          japanese="収集"
+          japanese="証明"
           titleA="Proof"
           titleB="Gallery."
           description={`${GALLERY_IMAGE_COUNT} certificates, events, classroom moments and digital badges — the complete proof behind my cybersecurity journey.`}

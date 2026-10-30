@@ -38,7 +38,7 @@ const ROLES: Role[] = [
     id: "information-security-officer",
     title: "Information Security Officer",
     serviceArea: "Security Governance & Risk",
-    japanese: "統制",
+    japanese: "統治",
     icon: ClipboardCheck,
     pitch: "Support a risk-led security program: governance, compliance, control ownership, remediation tracking and audit-ready evidence.",
     focus: ["ISO 27001", "PCI DSS", "NIST CSF", "Control Assurance"],

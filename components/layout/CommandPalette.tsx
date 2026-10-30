@@ -27,9 +27,11 @@ import {
   Crosshair,
   GraduationCap,
   Trophy,
+  Award,
 } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/BrandIcons";
 import { PORTFOLIO_DATA } from "@/data/portfolio-data";
+import { ALL_GALLERY_CERTIFICATES } from "@/data/certifications";
 import { normalizePublicHref } from "@/lib/shared";
 import { scrollToHash } from "@/lib/perf/jump";
 import { pageOf } from "@/lib/routes";
@@ -115,7 +117,7 @@ export default function CommandPalette() {
     return () => window.removeEventListener("sensei-fx-duration", onFx);
   }, []);
 
-  /* A section lives on the home page or the blog (lib/routes.ts):
+  /* A section lives on the home page, blog, or gallery (lib/routes.ts):
      jump to it on this page, or open its page at the anchor. */
   const go = useCallback(
     (hash: string) => {
@@ -145,7 +147,7 @@ export default function CommandPalette() {
     const isDark = resolvedTheme === "dark";
     return [
       { id: "home", group: "Go to", label: "Home", icon: Home, run: () => go("#home") },
-      { id: "roles", group: "Go to", label: "Roles I fit", icon: Briefcase, run: () => go("#roles") },
+      { id: "roles", group: "Go to", label: "Services & roles I fit", icon: Briefcase, run: () => go("#roles") },
       { id: "work", group: "Go to", label: "Selected work", icon: Code2, run: () => go("#work") },
       { id: "lab", group: "Go to", label: "Home lab architecture", icon: Code2, run: () => go("#lab") },
       { id: "experience", group: "Go to", label: "Experience", icon: Briefcase, run: () => go("#experience") },
@@ -153,10 +155,11 @@ export default function CommandPalette() {
       { id: "faq", group: "Go to", label: "FAQ", icon: MessageCircle, run: () => go("#faq") },
       { id: "platforms", group: "Go to", label: "Practice platforms (THM, HTB …)", icon: Trophy, run: () => go("#platforms") },
       { id: "gallery", group: "Pages", label: "Proof gallery", icon: Palette, run: () => visit("/gallery") },
+      { id: "all-certs", group: "Go to", label: `All certificates (${ALL_GALLERY_CERTIFICATES.length})`, icon: Award, run: () => go("#all-certificates") },
       { id: "attack", group: "Go to", label: "MITRE ATT&CK coverage", icon: Crosshair, run: () => go("#attack") },
       { id: "detections", group: "Go to", label: "Detection library (Wazuh rules)", icon: Crosshair, run: () => go("#detections") },
       { id: "triage", group: "Go to", label: "Triage challenge", icon: Crosshair, run: () => go("#triage") },
-      { id: "wsa", group: "Pages", label: "Web Security Academy track", icon: FolderSearch, run: () => visit("/collections/web-security-academy") },
+      { id: "wsa", group: "Go to", label: "PortSwigger Web Security Academy labs (29)", icon: FolderSearch, run: () => visit("/blog?q=PortSwigger#cases") },
       { id: "contact", group: "Go to", label: "Contact", icon: Mail, run: () => go("#contact") },
       { id: "blog-page", group: "Pages", label: "Blog — cases, ATT&CK, videos", icon: FileText, run: () => visit("/blog") },
       { id: "about-area", group: "Go to", label: "About — toolbox, lab, process", icon: FileText, run: () => go("#about") },
@@ -221,8 +224,7 @@ export default function CommandPalette() {
     ];
   }, [go, visit, resolvedTheme, transitionTo, copied, fxDuration]);
 
-  /* Cases only join the list once you type — 38 of them would bury the
-     commands on an empty query. */
+  /* Cases and certificates join the list once you type */
   const caseCommands: Command[] = useMemo(
     () =>
       cases.map((item) => ({
@@ -236,16 +238,29 @@ export default function CommandPalette() {
     [visit, cases]
   );
 
+  const certCommands: Command[] = useMemo(
+    () =>
+      ALL_GALLERY_CERTIFICATES.map((cert) => ({
+        id: `cert-${cert.galleryIndex}`,
+        group: "Certificates",
+        label: cert.title,
+        hint: `${cert.issuer} · ${cert.kind}`,
+        icon: Award,
+        run: () => go("#all-certificates"),
+      })),
+    [go]
+  );
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return commands;
-    return [...commands, ...caseCommands].filter(
+    return [...commands, ...caseCommands, ...certCommands].filter(
       (c) =>
         c.label.toLowerCase().includes(q) ||
         c.group.toLowerCase().includes(q) ||
         (c.hint ?? "").toLowerCase().includes(q)
     );
-  }, [commands, caseCommands, query]);
+  }, [commands, caseCommands, certCommands, query]);
 
   useEffect(() => setIndex(0), [query]);
 
@@ -292,7 +307,7 @@ export default function CommandPalette() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder="Type a command or search…"
+                placeholder="Type a command, case, or certificate…"
                 className="w-full bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-foreground/60"
                 aria-label="Search commands"
               />

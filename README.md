@@ -174,7 +174,6 @@ To add a case:
 - `/blog` — case library, videos, ATT&CK coverage, detections, and triage
 - `/blog/<case-id>` — detailed case report
 - `/gallery` — certificates, events, classroom, and security journey
-- `/collections/web-security-academy` — PortSwigger learning track
 - `/cv` — printable HTML CV
 - `/sitemap.xml` — machine-readable sitemap
 

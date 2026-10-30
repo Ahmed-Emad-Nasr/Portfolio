@@ -156,14 +156,6 @@ export const caseKindOf = (c: { id: string; type: string }): CaseKind =>
 
 export const isReportType = (type: string) => REPORT_TYPES.has(type);
 
-/* The PortSwigger Web Security Academy labs form one collection with its own
-   page, so 29 short labs read as one track instead of 29 separate cases. */
-export const WSA_COLLECTION = {
-  id: "web-security-academy",
-  title: "Web Security Academy Track",
-  platform: "PortSwigger",
-} as const;
-
 /* Show a network indicator without making it clickable or resolvable:
    84.38.130.118 → 84.38.130[.]118, http://a.b/c.sct → hxxp://a[.]b/c.sct,
    x@pm.me → x[@]pm[.]me. Hashes and file paths pass through unchanged. */

@@ -30,7 +30,7 @@ const navItems = [
   { name: "Experience", href: "#experience", icon: Briefcase, katakana: "経験" },
   { name: "About", href: "#about", icon: UserRound, katakana: "人物" },
   { name: "Blog", href: "/blog", icon: BookOpen, katakana: "記録" },
-  { name: "Gallery", href: "/gallery", icon: Images, katakana: "写真" },
+  { name: "Gallery", href: "/gallery", icon: Images, katakana: "証明" },
   { name: "Contact", href: "#contact", icon: Mail, katakana: "連絡" },
 ];
 

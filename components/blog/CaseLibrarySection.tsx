@@ -12,10 +12,9 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import SectionHeader from "@/components/ui/SectionHeader";
 import SlashDivider from "@/components/ui/SlashDivider";
 import TickerStrip from "@/components/ui/TickerStrip";
-import PageLink from "@/components/ui/PageLink";
 import FadeIn from "@/components/ui/FadeIn";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
-import { normalizePublicHref, WSA_COLLECTION, type CaseKind } from "@/lib/shared";
+import { normalizePublicHref, type CaseKind } from "@/lib/shared";
 import type { GalleryState } from "@/lib/shared";
 import CaseFilters from "@/components/blog/CaseFilters";
 import StartHere from "@/components/blog/StartHere";
@@ -52,7 +51,7 @@ const searchIndex: Record<string, string> = Object.fromEntries(
   ]),
 );
 
-const WSA_LAB_COUNT = sortedCases.filter((c) => c.platform === WSA_COLLECTION.platform).length;
+const WSA_LAB_COUNT = sortedCases.filter((c) => c.platform === "PortSwigger").length;
 
 export default function CaseLibrarySection() {
   const [gallery, setGallery] = useState<GalleryState | null>(null);
@@ -271,22 +270,26 @@ export default function CaseLibrarySection() {
           {/* The 29 PortSwigger labs also read as one track */}
           {(activeKind === null || activeKind === "lab") && !deferredQuery && (
             <FadeIn y={16} duration={0.6} className="mb-10">
-              <PageLink
-              href={`/collections/${WSA_COLLECTION.id}`}
-              className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-tertiary/25 bg-tertiary/5 px-6 py-5 overflow-hidden hover:border-tertiary/60 transition-colors duration-500"
-            >
-              <span className="absolute inset-y-0 left-0 w-[3px] bg-tertiary" aria-hidden="true" />
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-tertiary/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" aria-hidden="true" />
-              <span>
-                <span className="block font-mono text-[0.5625rem] font-bold uppercase tracking-[0.3em] text-tertiary">Collection · PortSwigger</span>
-                <span className="block mt-1 font-display text-lg md:text-xl font-black uppercase tracking-tight text-foreground">
-                  {WSA_COLLECTION.title} — {WSA_LAB_COUNT} labs by vulnerability class
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("PortSwigger");
+                  setActiveKind(null);
+                }}
+                className="group relative w-full text-left flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-tertiary/25 bg-tertiary/5 px-6 py-5 overflow-hidden hover:border-tertiary/60 transition-colors duration-500 cursor-pointer"
+              >
+                <span className="absolute inset-y-0 left-0 w-[3px] bg-tertiary" aria-hidden="true" />
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-tertiary/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" aria-hidden="true" />
+                <span>
+                  <span className="block font-mono text-[0.5625rem] font-bold uppercase tracking-[0.3em] text-tertiary">Collection · PortSwigger</span>
+                  <span className="block mt-1 font-display text-lg md:text-xl font-black uppercase tracking-tight text-foreground">
+                    Web Security Academy Track — {WSA_LAB_COUNT} labs by vulnerability class
+                  </span>
                 </span>
-              </span>
-              <span className="flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-tertiary">
-                Open the track <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-            </PageLink>
+                <span className="flex items-center gap-2 font-mono text-[0.625rem] font-bold uppercase tracking-[0.25em] text-tertiary">
+                  Filter {WSA_LAB_COUNT} labs <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </button>
             </FadeIn>
           )}
 
